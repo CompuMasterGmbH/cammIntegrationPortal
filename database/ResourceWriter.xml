@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>ResourceWriter</name>
+    <version>1.0.160.23331</version>
+    <fullname>ResourceWriter, Version=1.0.160.23331, Culture=neutral, PublicKeyToken=null</fullname>
+  </assembly>
+  <members>
+    <member name="M:CompuMaster.camm.WebManager.Utils.IfNull(System.Object,System.Object)">
+      <summary>
+     Checks for DBNull and returns the second value alternatively 
+ </summary>
+ <param name="CheckValueIfDBNull">The value to be checked</param>
+ <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
+ <returns>A value which is not DBNull</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member>
+    <member name="M:CompuMaster.camm.WebManager.Utils.Nz(System.Object)">
+      <summary>
+     Checks for DBNull and returns null (Nothing in VisualBasic) in that case 
+ </summary>
+ <param name="CheckValueIfDBNull">The value to be checked</param>
+ <returns>A value which is not DBNull</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member>
+    <member name="M:CompuMaster.camm.WebManager.Utils.Nz(System.Object,System.Object)">
+      <summary>
+     Checks for DBNull and returns the second value alternatively 
+ </summary>
+ <param name="CheckValueIfDBNull">The value to be checked</param>
+ <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
+ <returns>A value which is not DBNull</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member>
+    <member name="M:CompuMaster.camm.WebManager.Utils.Nz(System.Object,System.Int32)">
+      <summary>
+     Checks for DBNull and returns the second value alternatively 
+ </summary>
+ <param name="CheckValueIfDBNull">The value to be checked</param>
+ <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
+ <returns>A value which is not DBNull</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member>
+    <member name="M:CompuMaster.camm.WebManager.Utils.Nz(System.Object,System.Int64)">
+      <summary>
+     Checks for DBNull and returns the second value alternatively 
+ </summary>
+ <param name="CheckValueIfDBNull">The value to be checked</param>
+ <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
+ <returns>A value which is not DBNull</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member>
+    <member name="M:CompuMaster.camm.WebManager.Utils.Nz(System.Object,System.Boolean)">
+      <summary>
+     Checks for DBNull and returns the second value alternatively 
+ </summary>
+ <param name="CheckValueIfDBNull">The value to be checked</param>
+ <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
+ <returns>A value which is not DBNull</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member>
+    <member name="M:CompuMaster.camm.WebManager.Utils.Nz(System.Object,System.String)">
+      <summary>
+     Checks for DBNull and returns the second value alternatively 
+ </summary>
+ <param name="CheckValueIfDBNull">The value to be checked</param>
+ <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
+ <returns>A value which is not DBNull</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member>
+    <member name="M:CompuMaster.camm.WebManager.Utils.TryCLng(System.Object)">
+      <summary>
+     Tries to convert the expression into a long value, but never throws an exception 
+ </summary>
+ <param name="Expression">The expression to be converted</param>
+ <returns>The converted long value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member>
+    <member name="M:CompuMaster.camm.WebManager.Utils.TryCInt(System.Object)">
+      <summary>
+     Tries to convert the expression into a long value, but never throws an exception 
+ </summary>
+ <param name="Expression">The expression to be converted</param>
+ <returns>The converted long value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member>
+    <member name="M:CompuMaster.camm.WebManager.Utils.HTMLEncodeLineBreaks(System.String)">
+      <summary>
+     Converts all line breaks into HTML line breaks ("&lt;br&gt;") 
+ </summary>
+ <param name="Text" />
+ <returns />
+ <remarks>
+     Supported line breaks are linebreaks of Windows, MacOS as well as Linux/Unix. 
+ </remarks>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member>
+    <member name="M:CompuMaster.camm.WebManager.Utils.sprintf(System.String,System.Object[])">
+      <summary>
+     Replaces placeholders in a string by defined values 
+ </summary>
+ <param name="message">The string with the placeholders</param>
+ <param name="values">One or more values which should be used for replacement</param>
+ <returns>The new resulting string</returns>
+ <remarks>
+     Supported special character combinations are <code>\t</code>, <code>\r</code>, <code>\n</code>, <code>\\</code>, <code>\[</code><br>
+     Supported placeholders are <code>[*]</code>, <code>[n:1..9]</code>
+ <member name="M:CompuMaster.camm.WebManager.Utils.JoinNameValueCollectionToString(System.Collections.Specialized.NameValueCollection,System.String,System.String,System.String)"><summary>
+     Join all items of a NameValueCollection (for example Request.QueryString) to a simple string 
+ </summary>
+ <param name="NameValueCollectionToString">A collection like Request.Form or Request.QueryString</param>
+ <param name="BeginningOfItem">A string in front of a key</param>
+ <param name="KeyValueSeparator">The string between key and value</param>
+ <param name="EndOfItem">The string to be placed at the end of a value</param>
+ <returns>A string containing all elements of the collection</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	09.08.2004	Created 
+ </history></member><member name="M:CompuMaster.camm.WebManager.Utils.ConvertHTMLToText(System.String)"><summary>
+     Converts HTML messages to simple text 
+ </summary>
+ <param name="HTML">A string with HTML code</param>
+ <returns>The rendered output as plain text</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	09.08.2004	Created 
+ </history></member><member name="M:CompuMaster.camm.WebManager.Utils.ConvertProtocolAddressIntoHyperLink(System.String,System.String,System.String)"><summary>
+     Converts addresses or URLs in a string into HTML hyperlinks 
+ </summary>
+ <param name="LinkInitiator">Search for this start string of a word</param>
+ <param name="Msg">Search inside this string</param>
+ <param name="AdditionalProtocolInitiator">An additionally required prefix</param>
+ <returns>HTML with hyperlinks</returns>
+ <remarks>
+ </remarks>
+ <example language="vb">
+     Dim HTMLResult As String = ConvertProtocolAddressIntoHyperLink ("www.", Text, "http://") 
+ </example>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member><member name="M:CompuMaster.camm.WebManager.Utils.ConvertEMailAddressIntoHyperLink(System.String)"><summary>
+     Convert e-mail addresses into hyperlinks 
+ </summary>
+ <param name="Msg">The string where to search in</param>
+ <returns>HTML with hyperlinks</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member><member name="M:CompuMaster.camm.WebManager.Utils.HighlightLinksInMessage(System.String)"><summary>
+     Converts URLs and e-mail addresses in a string into HTML hyperlinks 
+ </summary>
+ <param name="Text">The standard text without any HTML</param>
+ <returns>HTML with hyperlinks</returns>
+ <remarks>
+ </remarks>
+ <history>
+ 	[adminwezel]	06.07.2004	Created 
+ </history></member></br></remarks></member>
+  </members>
+</doc>

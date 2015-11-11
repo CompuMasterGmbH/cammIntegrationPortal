@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<dataroot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" generated="2003-05-26T23:40:50">
+    <version>
+        <major>2</major>
+        <minor>0</minor>
+        <build>104</build>
+    </version>
+    <updatedetails>
+        <BuildFor>103</BuildFor>
+    </updatedetails>
+    <requires>
+        <product>MSSQLServer</product>
+        <version_major>7</version_major>
+        <version_minor>0</version_minor>
+	<file>camm_WebManager_build_104_updt.sql</file>
+        <execfile></execfile>
+    </requires>
+    <requires>
+        <product>MSSQLServer</product>
+        <version_major>8</version_major>
+        <version_minor>0</version_minor>
+	<file>camm_WebManager_build_104_updt.sql</file>
+        <execfile></execfile>
+    </requires>
+    <requires>
+        <product>MSSQLServer</product>
+        <version_major>9</version_major>
+        <version_minor>0</version_minor>
+	<file>camm_WebManager_build_104_updt.sql</file>
+        <execfile></execfile>
+    </requires>
+    <requires>
+        <product>MSSQLServer</product>
+        <version_major>10</version_major>
+        <version_minor>0</version_minor>
+	<file>camm_WebManager_build_104_updt.sql</file>
+        <execfile></execfile>
+    </requires>
+    <requires>
+            <product>MSSQLServer</product>
+            <version_major>11</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_104_updt.sql</file>
+        <execfile></execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>11</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_104_updt.azure.sql</file>
+        <execfile></execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServer</product>
+            <version_major>12</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_104_updt.sql</file>
+        <execfile></execfile>
+        </requires>
+</dataroot>
+</root>
