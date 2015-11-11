@@ -1,0 +1,42 @@
+Bitte beachten Sie unbedingt folgende Hinweise:
+===============================================
+
+1. In der Datenbank gibt es eine Abfrage "ToDo_Translation". Bitte diese öffnen und im folgenden Dialog die entsprechende Language-ID (202=japanisch, 259=russisch) angeben.
+
+2. Zu Übersetzen sind alle Werte der Spalte "Value2Setup".
+
+3. Um bekannten Problemen von MS Access aus dem Weg zu gehen: bei mehrzeiligen Einträgen in dieser Spalte bitte unbedingt folgenden Workflow einhalten:
+
+        1. Kopieren des Zellinhaltes über die Zwischenablage in einen Texteditor (z. B. Notepad)
+
+        2. Bearbeiten des Textbausteins
+
+        3. Über die Zwischenablage den fertigen Baustein wieder zurück in die Datenbank-Zelle schreiben
+
+3a. Bitte keinesfalls über MS Excel arbeiten, da sonst längere Textbausteine ab dem 256. Zeichen abgeschnitten werden!
+
+4. Alle Textbausteine beginnen und enden in aller Regel mit einem Anführungszeichen. Bitte diese nicht entfernen!
+
+5. Innerhalb der Textbausteine werden normale Anführungszeichen verdoppelt. Bitte daher die Anzahl der Anführungszeichen nicht verändern!
+
+6. Bitte insbesondere auf das Ende eines Textbausteins achten! Wenn dort ein Satzendezeichen (Punkt) ist, muss er auch in der Zielsprache ein Satzendezeichen stehen. Ist am Ende ein Doppelpunkt, muss dieser ebenfalls übernommen werden. Ist am Ende der Zeichenfolge ein Leerzeichen, so muss auch dieses erhalten bleiben, damit in der fertigen Anwendung nachfolgende Textbausteine nicht an das letzte Wort drangehangen werden.
+
+7. Der Textbaustein "LongDate" bitte nach folgenden Anweisungen übersetzen:
+
+        1. Nur die Monatsnamen sowie Wochentagsbezeichner übersetzen
+
+        2. In folgender Formel bitte die Reihenfolge der Platzhalter entsprechend richtig positionieren
+
+                        LongDate = WeekdayDescr & " de " & MonthDescr & " de " & Day(Now) & " de " & Year(Now)
+
+                Dabei ist der Platzhalten "WeekdayDescr" die Wochentagsbezeichnung, "MonthDescr" der Monatsname, "Day(Now)" die Nummer des Tages, "Year(Now)" die Jahreszahl
+                Das " de " ist jeweils die Verbindungszeichenfolge zwischen den variablen Platzhaltern. Bitte nach Bedarf der Zielsprache ändern!
+                Im Zweifelsfalle lieber nochmal mit mir kontakten!!
+
+8. Manche Textbausteine enthalten zusätzliche Bausteine für die spätere Textformatierung. Insbesondere sind dies HTML-Tags in spitzen Klammern wie z. B. <font color=…>. Diese Tags bitte NICHT übersetzen, den Inhalt außerhalb der spitzen Klammern jedoch schon! Weitere vorkommende Platzhalter können z. B. sein: "{0}", "[*]", "[n:0]", usw.
+
+9. Anhand der Textbausteine lässt sich der Sinn-Zusammenhang nur schwer erkennen. Wenn mehrere Möglichkeiten zum Übersetzen bereitstehen, lieber bei mir nochmal rückfragen!
+
+10. Generell gilt: die Textbausteine müssen einer speziellen Syntax der Programmiersprache entsprechen (z. B. das Einschließen in Anführungszeichen). Falls hier mal Schwierigkeiten auftreten sollte, bitte kurz mit mir Rücksprache halten!
+
+11. Sollten einzelne oder alle Anweisungen dieser e-mail nicht verständlich sein (das möchte ich nicht ausschließen), bitte möglichst VOR Tätigkeitsaufnahme nochmal bei mir Rücksprache halten.

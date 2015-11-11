@@ -1,0 +1,117 @@
+
+
+
+
+	
+.MenuBtnCss
+{
+	border:1px solid #D4D0C8; background-color:#D4D0C8;
+	color : Black ;
+	font-family :MS Sans Serif  ;
+	font-size : 11 ;
+	font-weight : normal ;
+	font-style : normal ;
+	text-decoration:none
+
+}
+
+.MenuBtnCss:hover
+{
+	border:1px solid #0A246A; background-color:#B6BDD2;
+	font-family :MS Sans Serif ;
+	font-size :11;
+	font-weight : normal;
+	font-style :normal ;
+	text-decoration :none
+}
+
+
+
+
+
+.TopGroup
+{
+	background-color:#D4D0C8; 
+	border-width:1px; 
+	border-color:#D4D0C8; 
+	border-style:solid;
+	cursor:default; 
+}
+
+.MenuGroup
+{
+	background-color:#D4D0C8; 
+	border-width:1px; 
+	border-color:#D4D0C8; 
+	border-style:solid;
+	cursor:default; 
+	filter:progid:DXImageTransform.Microsoft.Shadow(color='#636563', Direction=135, Strength=3); 
+
+}
+
+.TopMenuItem
+{
+	background-color:#D4D0C8; 
+	border-width:1px; 
+	border-color:#D4D0C8; 
+	border-style:solid;
+	border-bottom-style : none ;
+	color:#000000; 
+	font-family:MS Sans Serif; 
+	font-size:9px; 
+	padding:2px;
+	padding-left:10px;
+	padding-right:10px;
+	cursor:default; 
+}
+
+.TopMenuItemOver 
+{
+	background-color:#F7F3F7; 
+	border-width:1px; 
+	border-color:#636563; 
+	border-style:solid;
+	border-bottom-style :none ;
+	color:#000000; 
+	font-family:MS Sans Serif; 
+	font-size:9px; 
+	padding:2px;
+	padding-left:10px;
+	padding-right:10px;
+	cursor:default; 
+}
+
+.MenuItem
+{
+	background-color:#D4D0C8; 
+	border : 1px;
+	border-color: #D4D0C8;
+	border-style:solid ;
+	color:#000000; 
+	font-family:MS Sans Serif; 
+	font-size:9px; 
+	padding:3px;
+	padding-left:10px;
+	padding-right:10px;
+	cursor:default; 
+}
+
+.MenuItemOver 
+{
+	background-color:#B5BED6; 
+	border-width : 1px;
+	border-color : #D4D0C8;
+	border-style : solid;
+	color:#000000; 
+	font-family:MS Sans Serif; 
+	font-size:9px; 
+	padding:3px;
+	padding-left:10px;
+	padding-right:10px;
+	cursor:default; 
+}
+
+.MenuBreak
+{
+  margin-left:27px; 
+}

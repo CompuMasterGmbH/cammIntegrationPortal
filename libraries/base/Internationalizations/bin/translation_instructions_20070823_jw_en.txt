@@ -1,0 +1,42 @@
+Please take following details into consideration: 
+=================================================
+
+1. There is a query in the database named "ToDo_Translation". Please opened it and enter the respective language-id (202=Japanese, 259=Russian) in the dialogue. 
+
+2. Please translate all values in the "Value2Setup" column.
+
+3. To avoid known problems with MS Access: if there is more than one line in a cell, please consider the following workflow: 
+
+        1. Copy the content of the cell by using the clipboard to a text editor (e. g. Notepad) 
+
+        2. Edit the text module.
+
+        3. By using the clipboard, move the finished text module back into the database cell.
+
+3a. Please do not use MS Excel at all! If you do, text modules longer than 256 signs will be cut off! 
+
+4. All text modules usually begin and end with quotation marks. Please don't erase these!
+
+5. Within the text module, the normal quotation marks are doubled. Due to this, please do not change the number of quotation marks!
+
+6. Especially watch out for the end of the text module! If there is a sign noting that it's the end of the sentence (period) you have to enter a period in the target language. If there is a colon at the end it needs to be adopted. If there is a space at the end of the string it has to stay there so that the following text module isn't added to the last word in the completed application.
+
+7. Please translate the text module "LongDate" as follows:
+
+        1. Only translate the name of the month and the week day identifier. 
+
+        2. Please set the order of the following formula in the respective position 
+
+                        LongDate = WeekdayDescr & " de " & MonthDescr & " de " & Day(Now) & " de " & Year(Now)
+
+                "WeekdayDescr" is place holder for name of the week day, "MonthDescr" for name of month, "Day(Now)" for the day number, "Year(Now)" for the number of the year
+                " de " is the connection string between the variable placeholders. Please replace as required.
+                In case of doubt please contact me!!
+
+8. Some text modules have additional code for later text formatting. These especially are HTML-Tags in angle brackets e. g. <font color=…>. Please DO NOT translate these tags but do translate the content outside of them! Other placeholders could be e. g.: "{0}", "[*]", "[n:0]", etc.
+
+9. With these text modules, you are only able to guess the context. If there are more possibilities available or if you need additional context details for translation please ask me first!
+
+10. Generally it is essential that: the text modules have to match a special syntax of the programming language (e. g. closing with quotation marks). Should you have any doubts with this please contact me! 
+
+11. Should several or all applications of this e-mail not be understood (I don´t want to eliminate that possibility), please contact me (as best) BEFORE you start working on the task. 

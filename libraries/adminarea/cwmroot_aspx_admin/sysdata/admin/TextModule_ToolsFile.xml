@@ -1,0 +1,146 @@
+<!-- ==============================================================================================
+	Tools File valid structure:
+	<root>
+		<tools>
+			<tool />
+			<tool />
+			...
+		</tools>
+		<tools>
+			<tool />
+			...
+		</tools>
+		...
+	</root>
+
+	"tool" element valid attributes:
+	name (required):
+				Bold, Italic, Underline, StrikeThrough, Superscript, Subscript,
+				JustifyLeft, JustifyCenter, JustifyRight, JustifyFull, InsertOrderedList,
+				InsertUnorderedList, Outdent, Indent, Cut, Copy, Paste, Print,
+				Undo, Redo, InsertImage, AbsolutePosition, CreateLink, Unlink,
+				InsertHorizontalRule, InsertTable, ToggleBorders, Paragraph, Class, Font,
+				Links, Custom, Symbols, BackColor, ForeColor, InsertFlash,
+				InsertMedia, SpellCheck, Sweeper, InsertParagraph, InsertSnippet,
+				Help, FindAndReplace
+	title (required):
+				Some hint string
+	enabled (required):
+				true/false (Indicates whether the tool should appear in the toolbar or not)
+	separator (not required):
+				true/false (Indicates whether a separator should appear after the tool)
+
+	"link" element valid attributes:
+	(link elements should appear as child elements of a tool element with "name" attribute set to "Links")
+	name (required):
+				Link/Category Name/Alias
+	href (not required):
+				URL of the link/category
+
+	"font" element valid attributes:
+	(font elements should appear as child elements of a tool element with "name" attribute set to "Font")
+	name (required):
+				Font Name
+
+	"class" element valid attributes:
+	(class elements should appear as child elements of a tool element with "name" attribute set to "Class")
+	name (required):
+				Class Alias
+	value (required):
+				Class Name
+
+	"paragraph" element valid attributes:
+	(paragraph elements should appear as child elements of a tool element with "name" attribute set to "Paragraph")
+	name (required):
+				Paragraph Alias
+	value (required):
+				Paragraph Name
+
+	"color" element valid attributes:
+	(color elements should appear as child elements of a tool element with "name" attribute set to "ForeColor" or "BackColor")
+	value (required):
+				Hex value of the color
+
+	"snippet" element valid attributes:
+	(snippet elements should appear as child elements of a tool element with "name" attribute set to "InsertSnippet")
+	name (required):
+				Snippet Alias
+=============================================================================================== -->
+<root>
+	<tools>
+		<tool name="FindAndReplace" title="Find And Replace" enabled="false" />
+		<tool name="Print" title="Print" enabled="false" />
+		<tool name="SpellCheck" title="Spelling Check" enabled="false" separator="true" />
+		<tool name="Cut" title="Cut" enabled="true" />
+		<tool name="Copy" title="Copy" enabled="true" />
+		<tool name="Paste" title="Paste" enabled="true" separator="true" />
+		<tool name="Undo" title="Undo" enabled="true" />
+		<tool name="Redo" title="Redo" enabled="true" separator="true" />
+		<tool name="InsertImage" title="Insert Image" enabled="false" />
+		<tool name="AbsolutePosition" title="Set Absolute Position" enabled="false" />
+		<tool name="InsertTable" title="Insert Table" enabled="true" />
+		<tool name="InsertFlash" title="Insert Flash" enabled="false" />
+		<tool name="InsertMedia" title="Insert Media" enabled="false" separator="true" />
+		<tool name="CreateLink" title="Insert a Link" enabled="true" />
+		<tool name="Unlink" title="Remove Link" enabled="true" />
+		<tool name="Symbols" title="Insert Special Characters" enabled="true" />
+		<tool name="InsertParagraph" title="Insert Paragraph" enabled="true" />
+		<tool name="InsertDocument" title="Insert Document" enabled="false" />
+	</tools>
+	<tools>
+		<tool name="Bold" title="Bold" enabled="true" />
+		<tool name="Italic" title="Italic" enabled="true" />
+		<tool name="Underline" title="Underline" enabled="true" separator="true" />
+		<tool name="JustifyLeft" title="Left Justify" enabled="true" />
+		<tool name="JustifyCenter" title="Center Justify" enabled="true" />
+		<tool name="JustifyRight" title="Right Justify" enabled="true" />
+		<tool name="JustifyFull" title="Full Justify" enabled="true" separator="true" />
+		<tool name="InsertOrderedList" title="Numbered List" enabled="true" />
+		<tool name="InsertUnorderedList" title="Bullet List" enabled="true" />
+		<tool name="Outdent" title="Outdent" enabled="true" />
+		<tool name="Indent" title="Indent" enabled="true" separator="true" />
+		<tool name="InsertHorizontalRule" title="Insert Rule" enabled="false" />
+		<tool name="Superscript" title="Superscript" enabled="true" />
+		<tool name="Subscript" title="Subscript" enabled="true" />
+		<tool name="ToggleBorders" title="Toggle Table Borders" enabled="false" />
+		<tool name="InsertSnippet" title="Insert Code Snippet" enabled="false">
+			<snippet name="Snippet 1">
+				<![CDATA[
+					<b>S</b><br>ample snippet 1.
+				]]>
+			</snippet>
+			<snippet name="Snippet 2">
+				<![CDATA[
+					<b>S</b><br>ample snippet 2.
+				]]>
+			</snippet>
+			<snippet name="Snippet 3">
+				<![CDATA[
+					<b>S</b><br>ample snippet 2.
+				]]>
+			</snippet>
+		</tool>
+		<tool name="Help" title="Help" enabled="false" />
+	</tools>
+	<tools>
+		<tool name="Font" title="Font" enabled="true" />
+		<tool name="ForeColor" title="Foreground Color" enabled="true" />
+		<tool name="BackColor" title="Background Color" enabled="true" />
+		<tool name="Class" title="Class" enabled="false" />
+		<tool name="Links" title="Predefined Links" enabled="false">
+			<link name="Microsoft">
+				<link name="Microsoft1" href="http://www.microsoft.com" />
+				<link name="Microsoft2">
+					<link name="Microsoft2.1" href="http://www.microsoft.com" />
+					<link name="Microsoft2.1" href="http://www.microsoft.com" />
+				</link>
+			</link>
+			<link name="Telerik" href="http://www.telerik.com">
+				<link name="Telerik1" href="http://www.telerik.com" />
+				<link name="Telerik2" href="http://www.telerik.com" />
+			</link>
+		</tool>
+		<tool name="Paragraph" title="Paragraph" enabled="false" />
+		<tool name="Sweeper" title="Code Sweeper" enabled="false" />
+	</tools>
+</root>

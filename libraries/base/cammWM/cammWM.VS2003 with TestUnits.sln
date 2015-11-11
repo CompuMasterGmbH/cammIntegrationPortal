@@ -1,0 +1,119 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cammWM.VS2003", "cammWM.VS2003.vbproj", "{D77AB054-9583-491F-8463-CC8D9E16D26A}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cammWM.VSDebugApp", "..\Debug-TestApp\cammWM.VSDebugApp.vbproj", "{DA666BAD-0F09-48ED-B6EF-23462E212DE1}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cammWM.Test", "..\Tests\cammWM.Test\cammWM.Test.vbproj", "{52E83A75-9866-404A-9D9E-52105FE8E6FE}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		cwezel-testwebs-customized = cwezel-testwebs-customized
+		Debug = Debug
+		Debug @ c3dev = Debug @ c3dev
+		Debug @ CMM Dev Libs = Debug @ CMM Dev Libs
+		Debug @ DevWKSTMP01 = Debug @ DevWKSTMP01
+		Debug 2 CM Extranet = Debug 2 CM Extranet
+		Debug 2 CM Intranet = Debug 2 CM Intranet
+		Debug 2 cwezel = Debug 2 cwezel
+		Debug 2 Linux = Debug 2 Linux
+		Debug 2 TestProject = Debug 2 TestProject
+		Debug 2 wks04 = Debug 2 wks04
+		NAnt Debug = NAnt Debug
+		NAnt Release = NAnt Release
+		Release = Release
+		Release 2 CM Intranet = Release 2 CM Intranet
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.cwezel-testwebs-customized.ActiveCfg = cwezel-testwebs-customized|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.cwezel-testwebs-customized.Build.0 = cwezel-testwebs-customized|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug.ActiveCfg = Debug|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug.Build.0 = Debug|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug @ c3dev.ActiveCfg = Debug @ c3dev|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug @ c3dev.Build.0 = Debug @ c3dev|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug @ CMM Dev Libs.ActiveCfg = Debug @ CMM Dev Libs|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug @ CMM Dev Libs.Build.0 = Debug @ CMM Dev Libs|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug @ DevWKSTMP01.ActiveCfg = Debug @ DevWKSTMP01|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug 2 CM Extranet.ActiveCfg = Debug 2 CM Extranet|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug 2 CM Extranet.Build.0 = Debug 2 CM Extranet|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug 2 CM Intranet.ActiveCfg = Debug 2 CM Intranet|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug 2 CM Intranet.Build.0 = Debug 2 CM Intranet|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug 2 cwezel.ActiveCfg = Debug 2 cwezel|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug 2 cwezel.Build.0 = Debug 2 cwezel|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug 2 Linux.ActiveCfg = Debug 2 Linux|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug 2 Linux.Build.0 = Debug 2 Linux|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug 2 TestProject.ActiveCfg = Debug 2 TestProject|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug 2 TestProject.Build.0 = Debug 2 TestProject|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug 2 wks04.ActiveCfg = Debug 2 wks04|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Debug 2 wks04.Build.0 = Debug 2 wks04|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.NAnt Debug.ActiveCfg = NAnt Debug|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.NAnt Debug.Build.0 = NAnt Debug|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.NAnt Release.ActiveCfg = NAnt Release|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.NAnt Release.Build.0 = NAnt Release|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Release.ActiveCfg = Release|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Release.Build.0 = Release|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Release 2 CM Intranet.ActiveCfg = Release 2 CM Intranet|.NET
+		{D77AB054-9583-491F-8463-CC8D9E16D26A}.Release 2 CM Intranet.Build.0 = Release 2 CM Intranet|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.cwezel-testwebs-customized.ActiveCfg = cwezel-testwebs-customized|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.cwezel-testwebs-customized.Build.0 = cwezel-testwebs-customized|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug.ActiveCfg = Debug|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug.Build.0 = Debug|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug @ c3dev.ActiveCfg = Debug @ c3dev|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug @ c3dev.Build.0 = Debug @ c3dev|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug @ CMM Dev Libs.ActiveCfg = Debug @ CMM Dev Libs|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug @ DevWKSTMP01.ActiveCfg = Debug @ DevWKSTMP01|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug 2 CM Extranet.ActiveCfg = Debug 2 CM Extranet|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug 2 CM Intranet.ActiveCfg = Debug|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug 2 cwezel.ActiveCfg = Debug|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug 2 cwezel.Build.0 = Debug|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug 2 Linux.ActiveCfg = Debug 2 Linux|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug 2 Linux.Build.0 = Debug 2 Linux|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug 2 TestProject.ActiveCfg = Debug 2 TestProject|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug 2 TestProject.Build.0 = Debug 2 TestProject|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Debug 2 wks04.ActiveCfg = Debug 2 wks04|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.NAnt Debug.ActiveCfg = NAnt Debug|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.NAnt Debug.Build.0 = NAnt Debug|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.NAnt Release.ActiveCfg = Debug|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Release.ActiveCfg = Debug|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Release 2 CM Intranet.ActiveCfg = Debug|.NET
+		{DA666BAD-0F09-48ED-B6EF-23462E212DE1}.Release 2 CM Intranet.Build.0 = Debug|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.cwezel-testwebs-customized.ActiveCfg = cwezel-testwebs-customized|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.cwezel-testwebs-customized.Build.0 = cwezel-testwebs-customized|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug.ActiveCfg = Debug|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug.Build.0 = Debug|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug @ c3dev.ActiveCfg = Debug @ CMM Dev Libs|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug @ c3dev.Build.0 = Debug @ CMM Dev Libs|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug @ CMM Dev Libs.ActiveCfg = Debug @ CMM Dev Libs|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug @ CMM Dev Libs.Build.0 = Debug @ CMM Dev Libs|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug @ DevWKSTMP01.ActiveCfg = Debug @ CMM Dev Libs|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug 2 CM Extranet.ActiveCfg = Debug 2 Linux|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug 2 CM Extranet.Build.0 = Debug 2 Linux|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug 2 CM Intranet.ActiveCfg = Debug 2 Linux|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug 2 CM Intranet.Build.0 = Debug 2 Linux|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug 2 cwezel.ActiveCfg = Debug 2 Linux|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug 2 cwezel.Build.0 = Debug 2 Linux|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug 2 Linux.ActiveCfg = Debug 2 Linux|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug 2 Linux.Build.0 = Debug 2 Linux|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug 2 TestProject.ActiveCfg = Debug 2 Linux|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug 2 TestProject.Build.0 = Debug 2 Linux|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug 2 wks04.ActiveCfg = Debug 2 Linux|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Debug 2 wks04.Build.0 = Debug 2 Linux|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.NAnt Debug.ActiveCfg = NAnt Release|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.NAnt Debug.Build.0 = NAnt Release|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.NAnt Release.ActiveCfg = NAnt Release|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.NAnt Release.Build.0 = NAnt Release|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Release.ActiveCfg = Release|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Release.Build.0 = Release|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Release 2 CM Intranet.ActiveCfg = Release|.NET
+		{52E83A75-9866-404A-9D9E-52105FE8E6FE}.Release 2 CM Intranet.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

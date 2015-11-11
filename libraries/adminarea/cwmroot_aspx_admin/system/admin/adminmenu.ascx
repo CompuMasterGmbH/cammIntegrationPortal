@@ -1,0 +1,1 @@
+﻿<%@ Control AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Controls.Administration.FloatingMenu" %>

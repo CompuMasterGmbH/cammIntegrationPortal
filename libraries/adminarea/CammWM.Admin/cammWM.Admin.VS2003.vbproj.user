@@ -1,0 +1,48 @@
+<VisualStudioProject>
+    <VisualBasic LastOpenVersion = "7.10.6030" >
+        <Build>
+            <Settings ReferencePath = "G:\svn_repository\compumaster_products\camm\Web-Manager\libraries\adminarea\CammWM.Admin\libs\;R:\camm.biz\camm Web-Manager\Dev\Sources\Current\cwmsources\cammWM.Admin\CammWM.Admin\libs\;H:\SVN_Checkout\CammWM.Admin\libs\;\\srv15\camm.biz\camm Web-Manager\Dev\Sources\Current\cwmsources\cammWM.Admin\CammWM.Admin\libs\" >
+                <Config
+                    Name = "Debug"
+                    EnableASPDebugging = "false"
+                    EnableASPXDebugging = "false"
+                    EnableUnmanagedDebugging = "false"
+                    EnableSQLServerDebugging = "false"
+                    RemoteDebugEnabled = "false"
+                    RemoteDebugMachine = ""
+                    StartAction = "Project"
+                    StartArguments = ""
+                    StartPage = ""
+                    StartProgram = ""
+                    StartURL = ""
+                    StartWorkingDirectory = ""
+                    StartWithIE = "true"
+                />
+                <Config
+                    Name = "Release"
+                    EnableASPDebugging = "false"
+                    EnableASPXDebugging = "false"
+                    EnableUnmanagedDebugging = "false"
+                    EnableSQLServerDebugging = "false"
+                    RemoteDebugEnabled = "false"
+                    RemoteDebugMachine = ""
+                    StartAction = "Project"
+                    StartArguments = ""
+                    StartPage = ""
+                    StartProgram = ""
+                    StartURL = ""
+                    StartWorkingDirectory = ""
+                    StartWithIE = "false"
+                />
+            </Settings>
+        </Build>
+        <OtherProjectSettings
+            CopyProjectDestinationFolder = ""
+            CopyProjectUncPath = ""
+            CopyProjectOption = "0"
+            ProjectView = "ShowAllFiles"
+            ProjectTrust = "0"
+        />
+    </VisualBasic>
+</VisualStudioProject>
+

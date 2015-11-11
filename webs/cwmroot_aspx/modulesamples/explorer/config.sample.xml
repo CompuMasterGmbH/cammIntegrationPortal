@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <LanguageID0>
+        <General>
+            <AuthAppTitle2ViewOnly>@@anonymous</AuthAppTitle2ViewOnly>
+            <AuthAppTitle2ReadWrite>@@Public</AuthAppTitle2ReadWrite>
+            <PathStart>C:\temp</PathStart>
+            <ReadWriteModeEnabled>true</ReadWriteModeEnabled>
+        </General>
+        <BrowseFilter>
+            <ShowFolders>true</ShowFolders>
+            <FileFilter>*.*</FileFilter>
+        </BrowseFilter>
+        <HideFiles>
+            <File>index.aspx</File>
+            <File>downloadfile.aspx</File>
+            <File>explorer.vb</File>
+            <File>explorer.css</File>
+            <File>editor.aspx</File>
+            <File>config.xml</File>
+            <File>deditor.aspx</File>
+            <File>viewer.aspx</File>
+            <File>indexdata.xml</File>
+        </HideFiles>
+    </LanguageID0>
+    <LanguageID1>
+        <General>
+            <DirTitle>WEBSITE EXPLORER</DirTitle>
+        </General>
+    </LanguageID1>
+    <LanguageID2>
+        <General>
+            <DirTitle>WEBSITE EXPLORER</DirTitle>
+        </General>
+    </LanguageID2>
+    <LanguageID3>
+        <General>
+            <DirTitle>WEBSITE EXPLORER</DirTitle>
+        </General>
+    </LanguageID3>
+</config>

@@ -1,0 +1,33 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cammWM.Admin", "cammWM.Admin.VS2003.vbproj", "{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Atlas = Atlas
+		CommunityServer2 = CommunityServer2
+		Debug = Debug
+		Debug @ Mayur = Debug @ Mayur
+		Debug CM = Debug CM
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}.Atlas.ActiveCfg = Debug @ Mayur|.NET
+		{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}.Atlas.Build.0 = Debug @ Mayur|.NET
+		{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}.CommunityServer2.ActiveCfg = Debug @ Mayur|.NET
+		{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}.CommunityServer2.Build.0 = Debug @ Mayur|.NET
+		{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}.Debug.ActiveCfg = Debug|.NET
+		{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}.Debug.Build.0 = Debug|.NET
+		{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}.Debug @ Mayur.ActiveCfg = Debug @ Mayur|.NET
+		{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}.Debug @ Mayur.Build.0 = Debug @ Mayur|.NET
+		{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}.Debug CM.ActiveCfg = Debug @ Mayur|.NET
+		{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}.Debug CM.Build.0 = Debug @ Mayur|.NET
+		{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}.Release.ActiveCfg = Release|.NET
+		{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
