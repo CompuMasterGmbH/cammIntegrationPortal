@@ -1,0 +1,96 @@
+/applications
+/documentation
+/setup and distribution
+/tools
+/services
+/libraries/components
+/libraries/smarteditor/packages
+/libraries/smarteditor/radeditor3
+/libraries/smarteditor/PlainTextEditorTestNDevWeb
+/libraries/base/NDoc
+/libraries/base/Tests
+/libraries/base/Debug-TestApp
+/libraries/base/cammWM/bin
+/libraries/base/cammWM/obj
+/libraries/base/camm.WebControls
+/libraries/adminarea/CammWM.Admin/obj
+/libraries/adminarea/CammWM.Admin/!IMPORTANT BUILD INFORMATION.txt
+/libraries/adminarea/CammWM.Admin/nightly_start_manually.bat
+/libraries/adminarea/CammWM.Admin/nightly_start_nant.bat
+/libraries/adminarea/CammWM.Admin/libs
+/libraries/adminarea/cwmroot_aspx - released files at cwezel
+/webs/cwmroot_php
+/libraries/base/Internationalizations/bin/Dev-Arabisch
+/libraries/base/Internationalizations/bin/out/web-scripts-aspx
+/libraries/base/Internationalizations/bin/out/cwm-lib
+/libraries/base/Internationalizations/bin/out/db-sqls
+/libraries/base/Internationalizations/bin/out/web-scripts-asp
+/libraries/base/cammWM/build_tools
+/libraries/base/cammWM/libs_1_1
+/libraries/base/cammWM/libs_2_0
+/libraries/base/cammWM/libs
+/libraries/base/cammWM/doc
+/libraries/base/cammWM/packages
+/libraries/base/cammWM/nightly_resourcewriter.bat
+/libraries/base/cammWM/nightly.bat
+/libraries/base/cammWM/*.build
+/libraries/base/cammWM/Refresh DBSetup Resource.lnk
+/libraries/base/cammWM/Refresh DBSetup Resource - in Lw-R folder structure.cmd
+/libraries/base/cammWM/Refresh DBSetup Resource - in SVN folder structure.cmd
+/libraries/base/cammWM/WebEdit_sWcms3.vb
+/libraries/base/cammWM/WebEdit.resx
+/libraries/smarteditor/baseeditor/obj
+/libraries/smarteditor/baseeditor/bin
+/libraries/smarteditor/baseeditor/libs
+/database/ICSharpCode.SharpZipLib.dll
+/database/Important HowTo/Default Constraint.txt
+/libraries/adminarea/CheckFileConsistencyRessourceWriter/bin
+/webs/cwmroot_aspx/system/nav/componentart_webui_client
+/webs/cwmroot_aspx/system/nav/aspnetmenu_client
+/webs/cwmroot_aspx/RadControls
+/webs/cwmroot_aspx/sysdebug/componentart_navigation_samples
+/webs/cwmroot_aspx/aspnet_client
+/webs/cwmroot_aspx/modulesamples/navigation_2_advanced_componentart
+/webs/cwmroot_aspx/sysdebug/radspell
+/webs/cwmroot_aspx/sysdebug
+/webs/cwmroot_asp_optional
+/webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/ASPnetMenu.dll
+/webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/ComponentArt.Web.UI.dll
+/webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/ICSharpCode.SharpZipLib.dll
+/webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/Microsoft.Office.Interop.Word.dll
+/webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/Microsoft.Vbe.Interop.dll
+/webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/RadChart.dll
+/webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/RadEditor.DLL
+/webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/RadSpell.dll
+/database/howto-use ApprightsCummulatedFastEdition as table
+/database/Important HowTo
+/database/ToDo-AppsVsSecurityObjects
+/database/todo-brokenAppRightReferencesCleanUp
+/database/ToDo-ipV6-Support
+/sensitive code parts.txt
+/webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/ComponentArt.Web.UI.xml
+/webs/cwmroot_aspx/bin/cammWebExplorer.Base.dll.VisualState.xml
+/webs/cwmroot_aspx/bin/cammWebExplorer.Base.pdb
+/webs/cwmroot_aspx/bin/cammWebExplorer.Base.xml
+/webs/cwmroot_aspx/bin/ASPnetMenu.dll
+/webs/cwmroot_aspx/bin/camm.WebControls.dll
+/webs/cwmroot_aspx/bin/cammWebExplorer.Base.dll
+/webs/cwmroot_aspx/bin/ICSharpCode.SharpZipLib.dll
+/webs/cwmroot_aspx/bin/ComponentArt.Web.UI.dll
+/webs/cwmroot_aspx/bin/ComponentArt.Web.UI.dll.VisualState.xml
+/webs/cwmroot_aspx/bin/ComponentArt.Web.UI.pdb
+/webs/cwmroot_aspx/bin/ComponentArt.Web.UI.xml
+/webs/cwmroot_aspx/bin/CompuMaster.Imaging.dll
+/webs/cwmroot_aspx/bin/CompuMaster.Imaging.pdb
+/webs/cwmroot_aspx/bin/CompuMaster.Imaging.xml
+/webs/cwmroot_aspx/bin/Office.dll
+/webs/cwmroot_aspx/bin/RadChart.dll
+/webs/cwmroot_aspx/bin/RadEditor.dll
+/webs/cwmroot_aspx/bin/RadSpell.dll
+/webs/cwmroot_aspx/bin/SMTP.Net.dll
+/webs/cwmroot_aspx/bin/SMTP.Net.xml
+/webs/cwmroot_aspx/bin/stdole.dll
+/webs/cwmroot_aspx/bin/Microsoft.Office.Interop.Word.DLL
+/webs/cwmroot_aspx/bin/Microsoft.Vbe.Interop.DLL
+/libraries/smarteditor/.vs
+.vs
