@@ -40,6 +40,8 @@ Namespace CompuMaster.camm.SmartWebEditor
             Public Sub New()
                 MyBase.New()
                 Me.TextMode = TextBoxMode.MultiLine
+                Me.Columns = 40
+                Me.Rows = 25
             End Sub
 
             Public Property Editable As Boolean Implements IEditor.Editable

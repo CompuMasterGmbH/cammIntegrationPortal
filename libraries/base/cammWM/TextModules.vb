@@ -4,17 +4,8 @@ Option Strict On
 Namespace CompuMaster.camm.WebManager.Modules.Text
 
 #Region " Public Class TextModules "
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Modules.Text.TextModules
-    ''' 
-    ''' -----------------------------------------------------------------------------
-    ''' <summary>
-    ''' 
-    ''' </summary>
+    ''' <summary>Module for (legal) text management</summary>
     ''' <remarks>
-    '''     
-    ''' 
     '''     Note: WebManager web.config setting for cammWM.TextModule
     '''     1. TextModulesServerGroupIDDefault 
     '''         -   This value should be greater than or equal to 1
@@ -32,7 +23,7 @@ Namespace CompuMaster.camm.WebManager.Modules.Text
     ''' 	[patil]	07.06.2006	Created
     ''' </history>
     ''' -----------------------------------------------------------------------------
-	Public Class TextModules
+    Public Class TextModules
 
 		Private _Data As Administration.Data
 		Private ReadOnly Property Data() As Administration.Data
@@ -59,106 +50,92 @@ Namespace CompuMaster.camm.WebManager.Modules.Text
 			_webManager = webManager
 		End Sub
 
-		''' -----------------------------------------------------------------------------
-		''' Project	 : cammWMTextModule
-		''' Struct	 : camm.WebManager.Modules.Text.TextModules.ModuleItem
-		''' 
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     
-		''' </summary>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[adminsupport]	24.02.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		<Serializable()> Public Structure ModuleItem
-			''' -----------------------------------------------------------------------------
-			''' <summary>
-			'''     The official key
-			''' </summary>
-			''' <remarks>
-			''' </remarks>
-			''' <history>
-			''' 	[adminsupport]	24.02.2006	Created
-			''' </history>
-			''' -----------------------------------------------------------------------------
-			Public Key As String
-			''' -----------------------------------------------------------------------------
-			''' <summary>
-			'''     A plain text string or HTML code (defined by the variable type) with the complete value of the text
-			''' </summary>
-			''' <remarks>
-			''' </remarks>
-			''' <history>
-			''' 	[patil]	23.02.2006	Created
-			''' </history>
-			''' -----------------------------------------------------------------------------
-			Public Value As String
-			''' -----------------------------------------------------------------------------
-			''' <summary>
-			'''     Type of Text Module
-			''' </summary>
-			''' <remarks>
-			''' </remarks>
-			''' <history>
-			''' 	[patil]	01.03.2006	Created
-			''' </history>
-			''' -----------------------------------------------------------------------------
-			Public TypeID As TextModuleType
-			''' -----------------------------------------------------------------------------
-			''' <summary>
-			'''     Defines released state of text module
-			''' </summary>
-			''' <remarks>
-			''' </remarks>
-			''' <history>
-			''' 	[patil]	06.03.2006	Created
-			''' </history>
-			''' -----------------------------------------------------------------------------
-			Public Released As Boolean
-			''' -----------------------------------------------------------------------------
-			''' <summary>
-			'''     Version of text module
-			''' </summary>
-			''' <remarks>
-			''' </remarks>
-			''' <history>
-			''' 	[patil]	06.03.2006	Created
-			''' </history>
-			''' -----------------------------------------------------------------------------
-			Public Version As Integer
-			''' -----------------------------------------------------------------------------
-			''' <summary>
-			'''     Published date of text module
-			''' </summary>
-			''' <remarks>
-			'''     PublishedOn = nothing means text module is unreleased
-			''' </remarks>
-			''' <history>
-			''' 	[patil]	06.03.2006	Created
-			''' </history>
-			''' -----------------------------------------------------------------------------
-			Public PublishedOn As DateTime
-		End Structure
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Defines type of text variable.
-		''' </summary>
-		''' <remarks>
-		'''     Variable types are, _
-		'''     1. PlainTextString
-		'''     2. PlainTextBlock, can contain sub variables/blocks
-		'''     3. HtmlTextBlock, can contain sub variables/blocks
-		'''     4. HtmlTemplate, i.e. collection of one or more or all variable types from 1, 2, 3., can contain sub variables/blocks
-		'''     Please pay attention: an html variable type can include plain text types, but inclusion of html types in plain text types will throw exceptions!
-		''' </remarks>
-		''' <history>
-		''' 	[patil]	09.01.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		Public Enum TextModuleType As Byte
+        <Serializable()> Public Structure ModuleItem
+            ''' -----------------------------------------------------------------------------
+            ''' <summary>
+            '''     The official key
+            ''' </summary>
+            ''' <remarks>
+            ''' </remarks>
+            ''' <history>
+            ''' 	[adminsupport]	24.02.2006	Created
+            ''' </history>
+            ''' -----------------------------------------------------------------------------
+            Public Key As String
+            ''' -----------------------------------------------------------------------------
+            ''' <summary>
+            '''     A plain text string or HTML code (defined by the variable type) with the complete value of the text
+            ''' </summary>
+            ''' <remarks>
+            ''' </remarks>
+            ''' <history>
+            ''' 	[patil]	23.02.2006	Created
+            ''' </history>
+            ''' -----------------------------------------------------------------------------
+            Public Value As String
+            ''' -----------------------------------------------------------------------------
+            ''' <summary>
+            '''     Type of Text Module
+            ''' </summary>
+            ''' <remarks>
+            ''' </remarks>
+            ''' <history>
+            ''' 	[patil]	01.03.2006	Created
+            ''' </history>
+            ''' -----------------------------------------------------------------------------
+            Public TypeID As TextModuleType
+            ''' -----------------------------------------------------------------------------
+            ''' <summary>
+            '''     Defines released state of text module
+            ''' </summary>
+            ''' <remarks>
+            ''' </remarks>
+            ''' <history>
+            ''' 	[patil]	06.03.2006	Created
+            ''' </history>
+            ''' -----------------------------------------------------------------------------
+            Public Released As Boolean
+            ''' -----------------------------------------------------------------------------
+            ''' <summary>
+            '''     Version of text module
+            ''' </summary>
+            ''' <remarks>
+            ''' </remarks>
+            ''' <history>
+            ''' 	[patil]	06.03.2006	Created
+            ''' </history>
+            ''' -----------------------------------------------------------------------------
+            Public Version As Integer
+            ''' -----------------------------------------------------------------------------
+            ''' <summary>
+            '''     Published date of text module
+            ''' </summary>
+            ''' <remarks>
+            '''     PublishedOn = nothing means text module is unreleased
+            ''' </remarks>
+            ''' <history>
+            ''' 	[patil]	06.03.2006	Created
+            ''' </history>
+            ''' -----------------------------------------------------------------------------
+            Public PublishedOn As DateTime
+        End Structure
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Defines type of text variable.
+        ''' </summary>
+        ''' <remarks>
+        '''     Variable types are, _
+        '''     1. PlainTextString
+        '''     2. PlainTextBlock, can contain sub variables/blocks
+        '''     3. HtmlTextBlock, can contain sub variables/blocks
+        '''     4. HtmlTemplate, i.e. collection of one or more or all variable types from 1, 2, 3., can contain sub variables/blocks
+        '''     Please pay attention: an html variable type can include plain text types, but inclusion of html types in plain text types will throw exceptions!
+        ''' </remarks>
+        ''' <history>
+        ''' 	[patil]	09.01.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        Public Enum TextModuleType As Byte
 			''' -----------------------------------------------------------------------------
 			''' <summary>
 			'''     Plain string
