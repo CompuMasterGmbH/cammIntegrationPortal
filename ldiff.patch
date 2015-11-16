@@ -1,0 +1,362 @@
+1482d1481
+< declare @CurrentLoginViaRemoteIP varchar(32)
+1484c1483
+< 	SELECT @AccountAccessability = AccountAccessability, @LoginDisabled = LoginDisabled, @LoginLockedTill =LoginLockedTill, @CurrentLoginViaRemoteIP = CurrentLoginViaRemoteIP FROM Benutzer WHERE ID = @ID
+---
+> 	SELECT @AccountAccessability = AccountAccessability, @LoginDisabled = LoginDisabled, @LoginLockedTill =LoginLockedTill FROM Benutzer WHERE ID = @ID
+1493,1500d1491
+< 	If @CurrentLoginViaRemoteIP Is Not Null
+< 	Begin	
+< 		update dbo.Benutzer 
+< 		set CurrentLoginViaRemoteIP = Null 
+< 		WHERE (ID = @ID)
+< 		-- Logging
+< 		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, URL, ConflictType) values (@ID, GetDate(), '0.0.0.0', '0.0.0.0', 'Logout by Administrator', 99)
+< 	End
+1502c1493
+< 	SELECT @AccountAccessability As AccountAccessability, @LoginDisabled As LoginDisabled, @LoginLockedTill As LoginLockedTill, @CurrentLoginViaRemoteIP As CurrentLoginViaRemoteIP
+---
+> 	SELECT @AccountAccessability As AccountAccessability, @LoginDisabled As LoginDisabled, @LoginLockedTill As LoginLockedTill, NULL As CurrentLoginViaRemoteIP
+2260d2250
+< 		UPDATE dbo.Benutzer SET System_SessionID = @CurUserStatus_InternalSessionID WHERE LoginName = @UserName
+2406,2410c2396,2401
+< FROM         System_WebAreasAuthorizedForSession INNER JOIN
+<                       System_Servers ON System_WebAreasAuthorizedForSession.Server = System_Servers.ID INNER JOIN
+<                       System_ScriptEngines ON System_WebAreasAuthorizedForSession.ScriptEngine_ID = System_ScriptEngines.ID INNER JOIN
+<                       Benutzer ON System_WebAreasAuthorizedForSession.SessionID = Benutzer.System_SessionID
+< WHERE     (System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID IS NOT NULL) AND (Benutzer.Loginname = @Username) AND (System_Servers.ID > 0)
+---
+> FROM System_WebAreasAuthorizedForSession 
+>       INNER JOIN System_Servers ON System_WebAreasAuthorizedForSession.Server = System_Servers.ID 
+>       INNER JOIN System_ScriptEngines ON System_WebAreasAuthorizedForSession.ScriptEngine_ID = System_ScriptEngines.ID 
+> WHERE (System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID IS NOT NULL)
+> 		AND System_WebAreasAuthorizedForSession.SessionID = @CurSessionID
+> 		AND (System_Servers.ID > 0)
+2733a2725
+> DECLARE @CurrentSessionID int
+2744a2737,2744
+> -- Lookup internal session ID
+> SELECT TOP 1 @CurrentSessionID = SessionID
+> FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) 
+> WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID 
+> 	AND ScriptEngine_ID = @ScriptEngine_ID
+> 	AND Server = @ServerID
+> 	AND SessionID IN (SELECT ID_Session FROM [dbo].[System_UserSessions] WITH (NOLOCK) WHERE ID_User = (SELECT ID FROM dbo.Benutzer WITH (NOLOCK) WHERE LoginName = @Username))
+> 
+2747,2766c2747,2767
+< SELECT     System_WebAreasAuthorizedForSession.ID, System_WebAreasAuthorizedForSession.SessionID, System_Servers.IP, 
+<              
+<          System_Servers.ServerDescription, System_Servers.ServerProtocol, System_Servers.ServerName, System_Servers.ServerPort, 
+<                       System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID, System_ScriptEngines.EngineName, System_WebAreasAuthorizedForSession.ScriptEngine_ID,
+<                       System_ScriptEngines.FileName_EngineLogin, System_WebAreasAuthorizedForSession.ScriptEngine_SessionID
+< FROM         System_WebAreasAuthorizedForSession WITH (NOLOCK) INNER JOIN
+<                       System_Servers WITH (NOLOCK) ON System_WebAreasAuthorizedForSession.Server = System_Servers.ID INNER JOIN
+<                       System_ScriptEngines WITH (NOLOCK) ON System_WebAreasAuthorizedForSession.ScriptEngine_ID = System_ScriptEngines.ID INNER JOIN
+<                       Benutzer WITH (NOLOCK) ON System_WebAreasAuthorizedForSession.SessionID = Benutzer.System_SessionID
+< WHERE     (System_WebAreasAuthorizedForSession.ScriptEngine_SessionID IS NULL) AND (System_Servers.ID > 0) AND 
+< 		(System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID IS NOT NULL) AND 
+< 		(Benutzer.Loginname = @Username)
+< 	 OR
+<                 (System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID IS NOT NULL) AND (System_Servers.ID > 0) AND 
+< 		(Benutzer.Loginname = @Username) 
+<  			-- never show the current script engine session
+< 			AND NOT (System_WebAreasAuthorizedForSession.ScriptEngine_SessionID = @ScriptEngine_SessionID 
+< 				AND System_WebAreasAuthorizedForSession.ScriptEngine_ID = @ScriptEngine_ID
+< 				AND System_WebAreasAuthorizedForSession.Server = @ServerID)
+< 			AND System_WebAreasAuthorizedForSession.LastSessionStateRefresh < DATEADD(minute, - 3, GETDATE())
+---
+> SELECT System_WebAreasAuthorizedForSession.ID, System_WebAreasAuthorizedForSession.SessionID, System_Servers.IP, 
+> 	System_Servers.ServerDescription, System_Servers.ServerProtocol, System_Servers.ServerName, System_Servers.ServerPort, 
+> 	System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID, System_ScriptEngines.EngineName, System_WebAreasAuthorizedForSession.ScriptEngine_ID,
+> 	System_ScriptEngines.FileName_EngineLogin, System_WebAreasAuthorizedForSession.ScriptEngine_SessionID
+> FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) 
+> 	INNER JOIN System_Servers WITH (NOLOCK) ON System_WebAreasAuthorizedForSession.Server = System_Servers.ID 
+> 	INNER JOIN System_ScriptEngines WITH (NOLOCK) ON System_WebAreasAuthorizedForSession.ScriptEngine_ID = System_ScriptEngines.ID 
+> WHERE System_WebAreasAuthorizedForSession.ScriptEngine_SessionID IS NULL
+> 		AND System_Servers.ID > 0
+> 		AND System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID IS NOT NULL
+> 		AND System_WebAreasAuthorizedForSession.SessionID = @CurrentSessionID
+> 	OR System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID IS NOT NULL
+> 		AND System_Servers.ID > 0
+> 		AND System_WebAreasAuthorizedForSession.SessionID = @CurrentSessionID
+> 		-- never show the current script engine session
+> 		AND NOT (
+> 			System_WebAreasAuthorizedForSession.ScriptEngine_SessionID = @ScriptEngine_SessionID 
+> 			AND System_WebAreasAuthorizedForSession.ScriptEngine_ID = @ScriptEngine_ID
+> 			AND System_WebAreasAuthorizedForSession.Server = @ServerID
+> 			)
+> 		AND System_WebAreasAuthorizedForSession.LastSessionStateRefresh < DATEADD(minute, - 3, GETDATE())
+2878d2878
+< DECLARE @CurPrimarySystem_SessionID int
+2903c2903
+< 		SELECT @CurUserID = ID, @CurPrimarySystem_SessionID = System_SessionID from dbo.Benutzer where LoginName = @Username
+---
+> 		SELECT @CurUserID = ID from dbo.Benutzer where LoginName = @Username
+2909a2910
+> 			AND SessionID IN (SELECT ID_Session FROM [dbo].[System_UserSessions] WITH (NOLOCK) WHERE ID_User = @CurUserID)
+2924,2933d2924
+< -- CurUserCurrentLoginViaRemoteIP und SessionIDs zurücksetzen
+< if @ScriptEngine_ID <> -1 -- not a Net client (stand-alone)
+< BEGIN
+< 	IF @CurPrimarySystem_SessionID = @System_SessionID -- if the primary system session ID has been the current system session id
+< 	BEGIN
+< 		UPDATE dbo.Benutzer 
+< 		SET CurrentLoginViaRemoteIP = Null, System_SessionID = Null WHERE LoginName = @Username
+< 	END
+< END
+< 
+2937a2929
+> 
+2958a2951
+> 
+3000d2992
+< DECLARE @CurUserCurrentLoginViaRemoteIP nvarchar(32)
+3011d3002
+< DECLARE @bufferLastLoginRemoteIP nvarchar(32)
+3016,3017d3006
+< DECLARE @CurrentlyLoggedOn bit
+< DECLARE @ReAuthByIPPossible bit
+3020d3008
+< DECLARE @CurUserStatus_InternalSessionID int
+3029c3017
+< 		@bufferLastLoginOn = LastLoginOn, @bufferLastLoginRemoteIP = LastLoginViaRemoteIP
+---
+> 		@bufferLastLoginOn = LastLoginOn
+3099,3131d3086
+< ------------------------------------------------------------------------
+< -- Überprüfung, ob bereits (an anderer Station) angemeldet --
+< ------------------------------------------------------------------------
+< SELECT @WebSessionTimeOut = dbo.System_Servers.WebSessionTimeOut, @ReAuthByIPPossible = dbo.System_Servers.ReAuthenticateByIP, @LoginFailureDelayHours = dbo.System_Servers.LockTimeout
+< 	FROM dbo.System_Servers
+< 	WHERE dbo.System_Servers.IP = @ServerIP
+< If dateadd(minute,  + @WebSessionTimeOut, @bufferLastLoginOn) > GetDate() 
+< 	SELECT @CurrentlyLoggedOn = 1
+< If @CurrentlyLoggedOn = 1
+< 	-- Anmeldung vorhanden, jedoch evtl. an der gleichen Station (vergleiche mit SessionID) und dann genehmigt
+< 	BEGIN
+< 		SELECT @CurUserStatus_InternalSessionID = System_SessionID FROM dbo.Benutzer WHERE LoginName = @UserName
+< 		If @CurUserStatus_InternalSessionID Is Not Null 
+< 			BEGIN
+< 				-- Stimmt die übermittelte SessionID der ScriptSprache mit der protokollierten überein?
+< 				select @Logged_ScriptEngine_SessionID = scriptengine_sessionid from System_WebAreasAuthorizedForSession where sessionid=@CurUserStatus_InternalSessionID and scriptengine_id = @ScriptEngine_ID -- and server=@ServerID 
+< 				IF @Logged_ScriptEngine_SessionID Is Not Null 
+< 					IF @Logged_ScriptEngine_SessionID = @ScriptEngine_SessionID 
+< 						-- Anmeldung mit gleicher Session erlaubt
+< 						SELECT @CurrentlyLoggedOn = 0
+< 					Else
+< 						-- Anmeldung bereits von anderer Session vorliegend
+< 						SELECT @CurrentlyLoggedOn = 1 	--Standardlogin ohne ForceLogin - Login derzeit noch nicht gewährt
+< 				Else
+< 					-- Session-Anmeldungseintrag nicht (mehr) vorhanden
+< 					SELECT @CurrentlyLoggedOn = 0
+< 	
+< 			END
+< 		Else
+< 			-- sollte eigentlich nicht vorkommen, falls aber doch...lass eine Übernahme der Anmeldung zu...
+< 			SET @CurrentlyLoggedOn = 0
+< 	END
+< 
+3194c3149
+< 		SELECT Result = -1, @CurrentlyLoggedOn AS CurrentlyLoggedOn FROM dbo.Benutzer WHERE LoginName = @Username
+---
+> 		SELECT Result = -1, CAST (0 AS bit) AS CurrentlyLoggedOn FROM dbo.Benutzer WHERE LoginName = @Username
+3272d3226
+< DECLARE @bufferLastLoginRemoteIP nvarchar(32)
+3276,3277d3229
+< DECLARE @CurrentlyLoggedOn bit
+< DECLARE @ReAuthByIPPossible bit
+3279,3280d3230
+< DECLARE @CurUserStatus_InternalSessionID int
+< DECLARE @Registered_ScriptEngine_SessionID varchar(512)
+3446d3395
+< DECLARE @bufferLastLoginRemoteIP nvarchar(32)
+3539d3487
+< DECLARE @bufferLastLoginRemoteIP varchar(32)
+3715d3662
+< 
+3718d3664
+< DECLARE @CurUserCurrentLoginViaRemoteIP nvarchar(32)
+3732d3677
+< DECLARE @bufferLastLoginRemoteIP nvarchar(32)
+3737,3738d3681
+< DECLARE @CurrentlyLoggedOn bit
+< DECLARE @ReAuthByIPPossible bit
+3740,3741d3682
+< DECLARE @CurUserStatus_InternalSessionID int
+< DECLARE @Registered_ScriptEngine_SessionID nvarchar(512)
+3744a3686
+> DECLARE @CurrentSessionID int
+3878,3886d3819
+< ------------------------------------------------------------------------
+< -- Überprüfung, ob bereits (an anderer Station) angemeldet --
+< ------------------------------------------------------------------------
+< SELECT @WebSessionTimeOut = dbo.System_Servers.WebSessionTimeOut, @ReAuthByIPPossible = dbo.System_Servers.ReAuthenticateByIP, @LoginFailureDelayHours = dbo.System_Servers.LockTimeout
+< 	FROM dbo.System_Servers
+< 	WHERE dbo.System_Servers.IP = @ServerIP
+< If dateadd(minute,  + @WebSessionTimeOut, @bufferLastLoginOn) > GetDate() And (@CurUserStatus_InternalSessionID Is Not Null)
+< 	SELECT @CurrentlyLoggedOn = 1
+< 
+3888c3821
+< -- Versuch der Reauthentifizierung durch die mitgelieferte SessionID --
+---
+> -- Versuch der Authentifizierung durch die mitgelieferte SessionID --
+3889a3823,3830
+> -- Lookup internal session ID
+> SELECT TOP 1 @CurrentSessionID = SessionID
+> FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) 
+> WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID 
+> 	AND ScriptEngine_ID = @ScriptEngine_ID
+> 	AND Server = @RequestedServerID
+> 	AND SessionID IN (SELECT ID_Session FROM [dbo].[System_UserSessions] WHERE ID_User = @CurUserID)
+> 
+3891,3896c3832
+< SELECT @bufferLastLoginRemoteIP = (select LastLoginViaRemoteIP from dbo.Benutzer where LoginName = @Username)
+< SELECT     @Registered_ScriptEngine_SessionID = System_WebAreasAuthorizedForSession.ScriptEngine_SessionID
+< 	FROM         Benutzer INNER JOIN
+<                       System_WebAreasAuthorizedForSession ON Benutzer.System_SessionID = System_WebAreasAuthorizedForSession.SessionID
+< 	WHERE     (Benutzer.ID = @CurUserID) AND (System_WebAreasAuthorizedForSession.ScriptEngine_ID = @ScriptEngine_ID) AND ScriptEngine_SessionID = @ScriptEngine_SessionID
+< If @Registered_ScriptEngine_SessionID = @ScriptEngine_SessionID
+---
+> If @CurrentSessionID IS NOT NULL
+3898,3900c3834
+< If @ReAuthByIPPossible <> 0 And @ReAuthSuccessfull = 0
+< 	SELECT @ReAuthSuccessfull = 0
+< If @CurrentlyLoggedOn = 1 And @ReAuthSuccessfull = 0
+---
+> If @ReAuthSuccessfull = 0
+3903c3837
+< 		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, @WebAppID, -98, 'Currently logged in on host ' + @bufferLastLoginRemoteIP + ' or with a different session ID, CurrentlyLoggedOn = ' + Cast(@CurrentlyLoggedOn as varchar(30)) + ', ReAuthSuccessfull = ' + Cast(@ReAuthSuccessfull as varchar(30)) + ', Login denied')
+---
+> 		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, @WebAppID, -98, 'Browser/client session not found: ' + @ScriptEngine_SessionID + ', ReAuthSuccessfull = ' + Cast(@ReAuthSuccessfull as varchar(30)) + ', Login denied')
+3964c3898
+< 		update dbo.Benutzer set LastLoginViaRemoteIP = @RemoteIP, LastLoginOn = GetDate(), CurrentLoginViaRemoteIP = @RemoteIP where LoginName = @Username --, SessionID_ASP = @CurUserStatus_SessionID_ASP, SessionID_ASPX = @CurUserStatus_SessionID_ASPX, SessionID_SAP = @CurUserStatus_SessionID_SAP 
+---
+> 		update dbo.Benutzer set LastLoginViaRemoteIP = @RemoteIP, LastLoginOn = GetDate() where LoginName = @Username 
+3973,3977d3906
+< 		-- An welchen Systemen ist noch eine Anmeldung erforderlich?
+< 		SELECT @CurUserStatus_InternalSessionID = System_SessionID 
+< 		FROM dbo.Benutzer 
+< 		WHERE LoginName = @Username
+< 		SELECT @CurrentlyLoggedOn = 0
+3979c3908
+< 		update dbo.System_WebAreasAuthorizedForSession set LastSessionStateRefresh = getdate() where ScriptEngine_ID = @ScriptEngine_ID and SessionID = @CurUserStatus_InternalSessionID And Server = @RequestedServerID
+---
+> 		update dbo.System_WebAreasAuthorizedForSession set LastSessionStateRefresh = getdate() where ScriptEngine_ID = @ScriptEngine_ID and SessionID = @CurrentSessionID And Server = @RequestedServerID
+3982c3911
+< 		SELECT Result = -1, LoginName, @CurUserStatus_InternalSessionID As System_SessionID
+---
+> 		SELECT Result = -1, LoginName, @CurrentSessionID As System_SessionID
+4052,4059c3981,4000
+< UPDATE dbo.System_WebAreasAuthorizedForSession SET ScriptEngine_SessionID = @ScriptEngine_SessionID, LastSessionStateRefresh = GetDate()
+< FROM         System_WebAreasAuthorizedForSession INNER JOIN
+<                       System_Servers ON System_WebAreasAuthorizedForSession.Server = System_Servers.ID INNER JOIN
+<                       System_ScriptEngines ON System_WebAreasAuthorizedForSession.ScriptEngine_ID = System_ScriptEngines.ID INNER JOIN
+<                       Benutzer ON System_WebAreasAuthorizedForSession.SessionID = Benutzer.System_SessionID
+< WHERE     
+<                       (System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID = @GUID) AND (Benutzer.Loginname = @Username) AND 
+<                       (System_WebAreasAuthorizedForSession.ScriptEngine_ID = @ScriptEngine_ID) AND (System_Servers.IP = @ServerIP)
+---
+> -- Lookup internal session ID
+> SELECT TOP 1 @CurrentSessionID = SessionID
+> FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) 
+> WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID 
+> 	AND ScriptEngine_ID = @ScriptEngine_ID
+> 	AND Server IN (SELECT ID FROM System_Servers WHERE IP = @ServerIP AND Enabled <> 0)
+> 	AND SessionID IN (SELECT ID_Session FROM [dbo].[System_UserSessions] WHERE ID_User = @CurUserID)
+> IF @CurrentSessionID IS NULL
+> 	-- Session does not exist
+> 	Return 2
+> 	
+> UPDATE dbo.System_WebAreasAuthorizedForSession 
+> SET ScriptEngine_SessionID = @ScriptEngine_SessionID, LastSessionStateRefresh = GetDate()
+> FROM System_WebAreasAuthorizedForSession 
+> 	INNER JOIN System_Servers ON System_WebAreasAuthorizedForSession.Server = System_Servers.ID 
+> 	INNER JOIN System_ScriptEngines ON System_WebAreasAuthorizedForSession.ScriptEngine_ID = System_ScriptEngines.ID 
+> WHERE System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID = @GUID 
+> 	AND System_WebAreasAuthorizedForSession.SessionID = @CurrentSessionID
+> 	AND System_WebAreasAuthorizedForSession.ScriptEngine_ID = @ScriptEngine_ID
+> 	AND System_Servers.IP = @ServerIP
+4100d4040
+< DECLARE @CurUserCurrentLoginViaRemoteIP nvarchar(32)
+4111d4050
+< DECLARE @bufferLastLoginRemoteIP nvarchar(32)
+4116,4117d4054
+< DECLARE @CurrentlyLoggedOn bit
+< DECLARE @ReAuthByIPPossible bit
+4121a4059
+> DECLARE CurrentSessionID int
+4129c4067
+< 		@bufferLastLoginOn = LastLoginOn, @bufferLastLoginRemoteIP = LastLoginViaRemoteIP
+---
+> 		@bufferLastLoginOn = LastLoginOn
+4199,4247d4136
+< ------------------------------------------------------------------------
+< -- Überprüfung, ob bereits (an anderer Station) angemeldet --
+< ------------------------------------------------------------------------
+< SELECT @WebSessionTimeOut = dbo.System_Servers.WebSessionTimeOut, @ReAuthByIPPossible = dbo.System_Servers.ReAuthenticateByIP, @LoginFailureDelayHours = dbo.System_Servers.LockTimeout
+< 	FROM dbo.System_Servers
+< 	WHERE dbo.System_Servers.IP = @ServerIP
+< If dateadd(minute,  + @WebSessionTimeOut, @bufferLastLoginOn) > GetDate() 
+< 	SELECT @CurrentlyLoggedOn = 1
+< If @CurrentlyLoggedOn = 1
+< 	-- Anmeldung vorhanden, jedoch evtl. an der gleichen Station (vergleiche mit SessionID) und dann genehmigt
+< 	BEGIN
+< 		SELECT @CurUserStatus_InternalSessionID = System_SessionID FROM dbo.Benutzer WHERE LoginName = @UserName
+< 		If @CurUserStatus_InternalSessionID Is Not Null 
+< 			BEGIN
+< 				-- Stimmt die übermittelte SessionID der ScriptSprache mit der protokollierten überein?
+< 				select @Logged_ScriptEngine_SessionID = scriptengine_sessionid from System_WebAreasAuthorizedForSession where sessionid=@CurUserStatus_InternalSessionID and scriptengine_id = @ScriptEngine_ID -- and server=@ServerID 
+< 				IF @Logged_ScriptEngine_SessionID Is Not Null 
+< 					IF @Logged_ScriptEngine_SessionID = @ScriptEngine_SessionID 
+< 						-- Anmeldung mit gleicher Session erlaubt
+< 						SELECT @CurrentlyLoggedOn = 0
+< 					Else
+< 						-- Anmeldung bereits von anderer Session vorliegend
+< 						IF @ForceLogin <> 0 
+< 							SELECT @CurrentlyLoggedOn = 0 	--Attribut ForceLogin wurde mitgegeben, Anmeldung erfolgt!
+< 						Else
+< 							SELECT @CurrentlyLoggedOn = 1 	--Standardlogin ohne ForceLogin - Login derzeit noch nicht gewährt
+< 				Else
+< 					-- Session-Anmeldungseintrag nicht (mehr) vorhanden
+< 					SELECT @CurrentlyLoggedOn = 0
+< 	
+< 			END
+< 		Else
+< 			-- sollte eigentlich nicht vorkommen, falls aber doch...lass eine Übernahme der Anmeldung zu...
+< 			SET @CurrentlyLoggedOn = 0
+< 		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ConflictType, ConflictDescription) 
+< 			values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, -98, 'Already logged on (TimeDiff): CurUserStatus_InternalSessionID: ' +  cast(@CurUserStatus_InternalSessionID as nvarchar(10)))
+< 	END
+< If @CurrentlyLoggedOn = 1
+< 	-- Abbruch der Authentifizierung
+< 	BEGIN
+< 		-- Logging
+< 		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ConflictType, ConflictDescription) values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, -98, 'Currently logged in on host ' + @bufferLastLoginRemoteIP + ' or with a different session ID, CurrentlyLoggedOn = ' + Cast(@CurrentlyLoggedOn as varchar(30)) + ', Login denied')
+< 		-- Rückgabewert
+< 		SET NOCOUNT OFF
+< 		SELECT Result = -4, LastRemoteIP = @bufferLastLoginRemoteIP
+< 		-- Abbruch
+< 		Return
+< 	END
+< 
+4308c4197,4210
+< 
+---
+> 		-- Überprüfung auf bereits vorhandene User Session mit gleicher ScriptEngineSessionID
+> 		-- Lookup internal session ID
+> 		SELECT TOP 1 @CurrentSessionID = SessionID
+> 		FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) 
+> 		WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID 
+> 			AND ScriptEngine_ID = @ScriptEngine_ID
+> 			AND Server = @ServerID
+> 			AND SessionID IN (SELECT ID_Session FROM [dbo].[System_UserSessions] WITH (NOLOCK) WHERE ID_User = @CurUserID)
+> 		If @CurrentSessionID IS NOT NULL
+> 			-- Abbruch der bisherigen User Session, da gleich neue User Session erstellt wird
+> 			UPDATE dbo.System_WebAreasAuthorizedForSession
+> 			SET Inactive = 1
+> 			WHERE SessionID = @CurrentSessionID
+> 		
+4335c4237
+< 				update dbo.Benutzer set LastLoginViaRemoteIP = @RemoteIP, LastLoginOn = GetDate(), CurrentLoginViaRemoteIP = @RemoteIP, System_SessionID = @CurUserStatus_InternalSessionID where LoginName = @Username
+---
+> 				update dbo.Benutzer set LastLoginViaRemoteIP = @RemoteIP, LastLoginOn = GetDate() where LoginName = @Username
