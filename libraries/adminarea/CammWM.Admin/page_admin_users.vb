@@ -2208,6 +2208,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                         lblLoginAccessability.Text = Server.HtmlEncode(Utils.Nz(New camm.WebManager.WMSystem.AccessLevelInformation(CInt(Val(.Item("AccountAccessability"))), cammWebManager).Title, String.Empty))
                         lblLoginAccessability.Text = Server.HtmlEncode(Utils.Nz(New camm.WebManager.WMSystem.AccessLevelInformation(CInt(Val(.Item("AccountAccessability"))), cammWebManager).Remarks, String.Empty))
+
+                        If Not IsDBNull(.Item("CurrentLoginViaRemoteIP")) Then
+                            lblLogonStatus.Text = "!! User had been logged on from host address " & Utils.Nz(.Item("CurrentLoginViaRemoteIP"), String.Empty)
+                        Else
+                            lblLogonStatus.Text = " User hasn't been logged on."
+                        End If
                     End With
                     VisibleControl(False, True)
                 End If

@@ -388,13 +388,5 @@
       <ID>88</ID>
       <file>camm_WebManager_build_203.xml</file>
     </files>
-	<files>
-      <ID>89</ID>
-      <file>camm_WebManager_build_204.xml</file>
-    </files>
-	<files>
-      <ID>90</ID>
-      <file>camm_WebManager_build_205_func+sp.xml</file>
-    </files>
   </dataroot>
 </NewDataSet>
