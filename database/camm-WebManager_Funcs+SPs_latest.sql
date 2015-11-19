@@ -2927,28 +2927,6 @@ UPDATE dbo.System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes
 SET Inactive = 1
 WHERE [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes].inactive = 0 AND SessionID = @System_SessionID
 
--- Ggf. weitere Sessions schließen, welche noch offen sind und von der gleichen Browsersession geöffnet wurden
--- Konkreter Beispielfall: 
--- 2 Browserfenster wurden geöffnet, die Cookies und damit die Sessions sind die gleichen; 
--- in beiden Browsern wurde zeitnah eine Anmeldung unterschiedlicher Benutzer ausgeführt und damit 2 Sessions erstellt, 
--- wobei die zweite Session durch ein Logout i. d. R. geschlossen würde, die zweite Session aber geöffnet bleibt; 
--- dies würde zu einem Sicherheitsleck und zu Verwirrung im Programmablauf führen, da anhand der SessionID 
--- der aktuellen Scriptsprache doch wieder eine Session herausgefunden werden könnte und auch wieder 
--- aktiviert würde, auch wenn es ein anderer Benutzer wäre; man wäre dann mit dessen Identität angemeldet!!!
-update [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes]
-set inactive = 1
-where [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes].inactive = 0 AND sessionid in (
-	select RowsByScriptEngines.sessionid
-	from [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes] as RowsBySession
-		inner join [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes] as RowsByScriptEngines
-			on RowsBySession.servergroup = RowsByScriptEngines.servergroup
-			and RowsBySession.server = RowsByScriptEngines.server
-			and RowsBySession.scriptengine_sessionid = RowsByScriptEngines.scriptengine_sessionid
-			and RowsBySession.scriptengine_id = RowsByScriptEngines.scriptengine_id
-	where RowsBySession.sessionid = @System_SessionID
-		and RowsByScriptEngines.Inactive = 0
-	)
-
 -- Logging
 insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ConflictType, ConflictDescription) values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, 99, 'Logout')
 
@@ -3969,6 +3947,7 @@ AS
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 	
 DECLARE @CurUserID int
+DECLARE @CurrentSessionID int
 
 SET NOCOUNT ON
 
@@ -3981,7 +3960,8 @@ If @CurUserID Is Null
 -- Lookup internal session ID
 SELECT TOP 1 @CurrentSessionID = SessionID
 FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) 
-WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID 
+WHERE ScriptEngine_LogonGUID = @GUID
+    AND ScriptEngine_SessionID IS NULL
 	AND ScriptEngine_ID = @ScriptEngine_ID
 	AND Server IN (SELECT ID FROM System_Servers WHERE IP = @ServerIP AND Enabled <> 0)
 	AND SessionID IN (SELECT ID_Session FROM [dbo].[System_UserSessions] WHERE ID_User = @CurUserID)
@@ -4056,7 +4036,7 @@ DECLARE @ReAuthSuccessfull bit
 DECLARE @PasswordAuthSuccessfull bit
 DECLARE @CurUserStatus_InternalSessionID int
 DECLARE @Logged_ScriptEngine_SessionID nvarchar(512)
-DECLARE CurrentSessionID int
+DECLARE @CurrentSessionID int
 
 -- Wertzuweisungen Benutzereigenschaften --> lokale Variablen
 
@@ -4237,38 +4217,31 @@ IF @MyResult = 1
 				update dbo.Benutzer set LastLoginViaRemoteIP = @RemoteIP, LastLoginOn = GetDate() where LoginName = @Username
 				-- An welchen Systemen ist noch eine Anmeldung erforderlich?
 				INSERT INTO dbo.System_WebAreasAuthorizedForSession
-				                      (ServerGroup, Server, ScriptEngine_ID, SessionID, ScriptEngine_LogonGUID)
+				                      (ServerGroup, Server, ScriptEngine_ID, SessionID, ScriptEngine_LogonGUID, ScriptEngine_SessionID)
 				SELECT     dbo.System_Servers.ServerGroup, dbo.System_WebAreaScriptEnginesAuthorization.Server, 
 				                      dbo.System_WebAreaScriptEnginesAuthorization.ScriptEngine, @CurUserStatus_InternalSessionID AS InternalSessionID, cast(rand() * 1000000000 as int) AS RandomGUID
+									  ,CASE WHEN dbo.System_WebAreaScriptEnginesAuthorization.ScriptEngine = @ScriptEngine_ID 
+												AND dbo.System_WebAreaScriptEnginesAuthorization.Server = @ServerID THEN @ScriptEngine_SessionID ELSE NULL END
 				FROM         dbo.System_Servers INNER JOIN
 				                      dbo.System_WebAreaScriptEnginesAuthorization ON dbo.System_Servers.ID = dbo.System_WebAreaScriptEnginesAuthorization.Server
 				WHERE     (dbo.System_Servers.Enabled <> 0) AND (dbo.System_Servers.ServerGroup = @LocationID)
-				-- Weitere Sessions des gleichen Benutzers schließen, welche evtl. an anderen Servern nicht ausgeloggt wurden
-				update [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes]
-				set inactive = 1
-				from [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes] inner join [System_UserSessions]
-					on [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes].sessionid = [System_UserSessions].ID_Session
-				where [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes].inactive = 0 AND [System_UserSessions].ID_User = @CurUserID and sessionid <> @CurUserStatus_InternalSessionID
 				-- Ggf. weitere Sessions schließen, welche noch offen sind und von der gleichen Browsersession geöffnet wurden
 				-- Konkreter Beispielfall: 
 				-- 2 Browserfenster wurden geöffnet, die Cookies und damit die Sessions sind die gleichen; 
 				-- in beiden Browsern wurde zeitnah eine Anmeldung unterschiedlicher Benutzer ausgeführt und damit 2 Sessions erstellt, 
-				-- wobei die zweite Session durch ein Logout i. d. R. geschlossen würde, die zweite Session aber geöffnet bleibt; 
-				-- dies würde zu einem Sicherheitsleck und zu Verwirrung im Programmablauf führen, da anhand der SessionID 
-				-- der aktuellen Scriptsprache doch wieder eine Session herausgefunden werden könnte und auch wieder 
-				-- aktiviert würde, auch wenn es ein anderer Benutzer wäre; man wäre dann mit dessen Identität angemeldet!!!
+				-- wobei die erste Session durch ein Logout NUN zu schließen ist, die zweite Session aber geöffnet bleibt
 				update [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes]
 				set inactive = 1
-				where [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes].inactive = 0 AND sessionid <> @CurUserStatus_InternalSessionID and sessionid in (
-					select RowsByScriptEngines.sessionid
-					from [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes] as RowsBySession
-						inner join [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes] as RowsByScriptEngines
-							on RowsBySession.servergroup = RowsByScriptEngines.servergroup
-							and RowsBySession.server = RowsByScriptEngines.server
-							and RowsBySession.scriptengine_sessionid = RowsByScriptEngines.scriptengine_sessionid
-							and RowsBySession.scriptengine_id = RowsByScriptEngines.scriptengine_id
-					where RowsBySession.sessionid = @CurUserStatus_InternalSessionID
-						and RowsByScriptEngines.Inactive = 0
+				where [System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes].inactive = 0 
+					AND sessionid in 
+					(
+						SELECT SessionID
+						FROM System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes WITH (NOLOCK) 
+						WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID 
+							AND ScriptEngine_ID = @ScriptEngine_ID
+							AND Server = @ServerID
+							AND Inactive = 0
+							AND SessionID IN (SELECT ID_Session FROM [dbo].[System_UserSessions] WITH (NOLOCK) WHERE ID_User <> @CurUserID)
 					)
 				DELETE 
 				FROM System_SessionValues
