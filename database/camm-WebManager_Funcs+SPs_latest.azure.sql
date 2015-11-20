@@ -2750,6 +2750,16 @@ WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID
 	AND Server = @ServerID
 	AND SessionID IN (SELECT ID_Session FROM [dbo].[System_UserSessions] WITH (NOLOCK) WHERE ID_User = (SELECT ID FROM dbo.Benutzer WITH (NOLOCK) WHERE LoginName = @Username))
 
+IF @CurrentSessionID IS NOT NULL
+	-- WebAreaSessionState aktualisieren
+	update dbo.System_WebAreasAuthorizedForSession 
+	set LastSessionStateRefresh = getdate() 
+	where ScriptEngine_ID = @ScriptEngine_ID 
+		AND SessionID = @CurrentSessionID 
+		AND Server = @ServerID
+		AND ScriptEngine_SessionID = @ScriptEngine_SessionID
+		AND LastSessionStateRefresh < DATEADD(minute, - 3, GETDATE())
+	
 -- Logon-ToDo-Liste übergeben
 SET NOCOUNT OFF
 SELECT System_WebAreasAuthorizedForSession.ID, System_WebAreasAuthorizedForSession.SessionID, System_Servers.IP, 
