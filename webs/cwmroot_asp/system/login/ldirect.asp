@@ -45,7 +45,7 @@
 		User_Auth_Validation_Cmd.Parameters.Append User_Auth_Validation_Cmd.CreateParameter("@Username", adVarWChar, adParamInput, len(Request.QueryString("User")), Request.QueryString("User"))
 		User_Auth_Validation_Cmd.Parameters.Append User_Auth_Validation_Cmd.CreateParameter("@GUID", adInteger, adParamInput, 4, CLng(Request.QueryString("GUID")))
 		User_Auth_Validation_Cmd.Parameters.Append User_Auth_Validation_Cmd.CreateParameter("@ServerIP", adVarWChar, adParamInput, 32, CStr(strServerIP))
-		User_Auth_Validation_Cmd.Parameters.Append User_Auth_Validation_Cmd.CreateParameter("@RemoteIP", adVarWChar, adParamInput, 32, Request.ServerVariables("REMOTE_ADDR"))
+		'User_Auth_Validation_Cmd.Parameters.Append User_Auth_Validation_Cmd.CreateParameter("@RemoteIP", adVarWChar, adParamInput, 32, Request.ServerVariables("REMOTE_ADDR"))
 		User_Auth_Validation_Cmd.Parameters.Append User_Auth_Validation_Cmd.CreateParameter("@ScriptEngine_ID", adInteger, adParamInput, 4, 1)
 		User_Auth_Validation_Cmd.Parameters.Append User_Auth_Validation_Cmd.CreateParameter("@ScriptEngine_SessionID", adVarWChar, adParamInput, 512, Session.SessionID)
 
@@ -89,6 +89,14 @@
 		If MyRedirectTo <> "" Then
 			'e.g. frame_sub.asp
 			MyResponseRedirect = MyRedirectTo
+			If UserLoginName2Set = "" Then
+				'no session and no next logon URI - typically because of invalid session cookie (ID changed by app restart at server)
+				If Instr(MyResponseRedirect, "?") > 0 Then
+					MyResponseRedirect = MyResponseRedirect & "&RoundTrip=completed"
+				Else
+					MyResponseRedirect = MyResponseRedirect & "?RoundTrip=completed"
+				End If
+			End If
 		Else
 			'MyResponseRedirect = User_Auth_Validation_NoRefererURL
 			MyResponseRedirect = User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_SystemData & "login/loginprocedurefinished.aspx"

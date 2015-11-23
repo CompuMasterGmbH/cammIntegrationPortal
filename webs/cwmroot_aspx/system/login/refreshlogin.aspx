@@ -5,7 +5,7 @@
 	dim TestSessionTermination as boolean
 	TestSessionTermination = False
 	'Roundtrip to all server/script engine combinations to refresh their session information
-	If Session("System_Username") <> "" Then
+	If Session("System_Username") <> "" AndAlso Request.QueryString("RoundTrip") <> "completed" Then
 		dim System_RedirectURI as string
 		System_RedirectURI = cammWebManager.System_GetNextLogonURI (Session("System_Username"))
 		If System_RedirectURI <> "" Then
