@@ -1340,31 +1340,7 @@ dim MyRowCounter
 End Function
 
 Function System_Debug_GetComponentsAndVersions()
-dim resultbuffer
-dim buffer
-	resultbuffer = resultbuffer & "<?xml version=""1.0""?>" & vbnewline & "<root>" & vbnewline
-	on error resume next
-	dim mailman
-	set mailman = Server.CreateObject("ChilkatWebMail2.WebMailMan2")
-	if err<>0 then
-		set mailman = Server.CreateObject("ChilkatWebMail.WebMailMan")
-	end if
-	If IsNothing(mailman) Then
-		buffer = mailman.Version
-	Else
-		buffer = "#ERROR (object is nothing)"
-	End If
-	if err<>0 then buffer = "N/A"
-	on error goto 0
-	resultbuffer = resultbuffer & "<component><name>"
-	resultbuffer = resultbuffer & "ChilkatWebMail.WebMailMan"
-	resultbuffer = resultbuffer & "</name><version>"
-	resultbuffer = resultbuffer & buffer
-	resultbuffer = resultbuffer & "</version></component>" & vbnewline
-	err.clear
-	resultbuffer = resultbuffer & "</root>"
-	System_Debug_GetComponentsAndVersions = resultbuffer
-
+	System_Debug_GetComponentsAndVersions = ""
 End Function
 
 
