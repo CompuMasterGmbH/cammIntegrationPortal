@@ -105,7 +105,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
             Dim System_RedirectURI As String = ""
             Dim MyRedirectTo As String 'The address when the ldirect-refresh-cycle has been completed
             MyRedirectTo = Request.QueryString("redirectto")
-            If cammWebManager.IsLoggedOn Then
+            If cammWebManager.IsLoggedOn AndAlso Request.QueryString("LogonID") = "" Then 'Request.QueryString("LogonID") <> "" AND IsLoggedOn might happen when ASP session can't be restored while ASP.NET session remains available
                 System_RedirectURI = cammWebManager.System_GetNextLogonURI(cammWebManager.CurrentUserLoginName)
             Else
                 System_RedirectURI = cammWebManager.System_GetNextLogonURIOfUserAnonymous()
