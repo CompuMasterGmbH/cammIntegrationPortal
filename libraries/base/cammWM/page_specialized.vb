@@ -166,7 +166,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Specialized
                     If UserDataRead Then
                         ErrorDetailDataFromServer4eMailAttachment = ErrorDetailDataFromServer4eMailAttachment & "<br>" & "Last login from: " & Utils.Nz(MyDebugRecSet("LastLoginViaRemoteIP"), "")
                         ErrorDetailDataFromServer4eMailAttachment = ErrorDetailDataFromServer4eMailAttachment & "<br>" & "Last login on: " & Utils.Nz(MyDebugRecSet("LastLoginOn"), "")
-                        ErrorDetailDataFromServer4eMailAttachment = ErrorDetailDataFromServer4eMailAttachment & "<br>" & "Current login from: " & Utils.Nz(MyDebugRecSet("CurrentLoginViaRemoteIP"), "")
                     End If
                     ErrorDetailDataFromServer4eMailAttachment = ErrorDetailDataFromServer4eMailAttachment & "<br>" & "Current server date/time: " & Now()
                     ErrorDetailDataFromServer4eMailAttachment = ErrorDetailDataFromServer4eMailAttachment & "<br>" & "ServerAddress: " & cammWebManager.CurrentServerIdentString

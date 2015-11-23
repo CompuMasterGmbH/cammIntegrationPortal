@@ -1,0 +1,52 @@
+remove everything with
+- DONE: @bufferLastLoginRemoteIP
+- DONE: @Registered_ScriptEngine_SessionID
+- DONE: @CurrentlyLoggedOn
+- DONE: @CurUserStatus_InternalSessionID
+- DONE: System_SessionID
+- DONE: CurrentLoginViaRemoteIP
+
+
+
+
+
+-- Lookup internal session ID
+SELECT TOP 1 @CurrentSessionID = SessionID
+FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) 
+WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID 
+	AND ScriptEngine_ID = @ScriptEngine_ID
+	AND Server = @ServerID
+	AND SessionID IN (SELECT ID_Session FROM [dbo].[System_UserSessions] WITH (NOLOCK) WHERE ID_User = @CurUserID)
+
+
+	AND SessionID IN (SELECT ID_Session FROM [dbo].[System_UserSessions] WITH (NOLOCK) WHERE ID_User = (SELECT ID FROM dbo.Benutzer WITH (NOLOCK) WHERE LoginName = @Username))
+
+	AND Server IN (SELECT ID FROM System_Servers WITH (NOLOCK) WHERE IP = @ServerIP AND Enabled <> 0)
+
+
+
+
+
+
+------------------------------------------------------------------------
+-- Überprüfung auf bereits vorhandene User Session --
+------------------------------------------------------------------------
+-- Lookup internal session ID
+SELECT TOP 1 @CurrentSessionID = SessionID
+FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) 
+WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID 
+	AND ScriptEngine_ID = @ScriptEngine_ID
+	AND Server = @ServerID
+	AND SessionID IN (SELECT ID_Session FROM [dbo].[System_UserSessions] WITH (NOLOCK) WHERE ID_User = @CurUserID)
+If @CurrentSessionID IS NULL
+	-- Abbruch der Authentifizierung
+	BEGIN
+		-- Logging
+		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ConflictType, ConflictDescription) values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, -98, 'Browser/client session not found: ' + @ScriptEngine_SessionID + ', Login denied')
+		-- Rückgabewert
+		SET NOCOUNT OFF
+		SELECT Result = -4, LastRemoteIP = @bufferLastLoginRemoteIP
+		-- Abbruch
+		Return
+	END
+
