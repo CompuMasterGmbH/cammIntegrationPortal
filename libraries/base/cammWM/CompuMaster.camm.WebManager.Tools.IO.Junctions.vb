@@ -1,7 +1,7 @@
 ﻿Option Explicit On 
 Option Strict On
 
-'Entkoppelt von Ursprungs-Version durch ge�nderten Namespace
+'Entkoppelt von Ursprungs-Version durch geänderten Namespace
 
 Imports System.Runtime.InteropServices
 Imports System
