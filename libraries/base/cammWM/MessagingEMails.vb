@@ -1,4 +1,4 @@
-Option Explicit On 
+﻿Option Explicit On 
 Option Strict On
 
 Imports System.Data
@@ -1119,9 +1119,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     Valid parameter values are e. g. 
         ''' <list>
-        ''' <item>l?nc\,\.\:\;\@\[\]\(\)ma9\'\\\&lt;\&gt;kljkj &lt;compumaster@web.de&gt;, her\,ma9\'\\\&lt;\&gt;kljkj &lt;jwezel@compumaster.de&gt;</item>
-        ''' <item>&lt;compumaster@web.de&gt;,&lt;jwezel@compumaster.de&gt;</item>
-        ''' <item>compumaster@web.de,jwezel@compumaster.de</item>
+        ''' <item>l?nc\,\.\:\;\@\[\]\(\)ma9\'\\\&lt;\&gt;kljkj &lt;your2ndaccount@yourcompany.com&gt;, her\,ma9\'\\\&lt;\&gt;kljkj &lt;yourname@yourcompany.com&gt;</item>
+        ''' <item>&lt;your2ndaccount@yourcompany.com&gt;,&lt;yourname@yourcompany.com&gt;</item>
+        ''' <item>your2ndaccount@yourcompany.com,yourname@yourcompany.com</item>
         ''' </list>
         ''' </remarks>
         ''' <history>
@@ -1132,13 +1132,13 @@ Namespace CompuMaster.camm.WebManager.Messaging
             Dim Result As String() = Utils.SplitString(receipientsCommaSeparated, ","c, "\"c)
             For MyCounter As Integer = 0 To Result.Length - 1
                 'Now we got strings like
-                '"l?nc\,\.\:\;\@\[\]\(\)ma9\'\\\<\>kljkj <compumaster@web.de>"
-                '" her\,ma9\'\\\<\>kljkj <jwezel@compumaster.de>"
-                '" ""Jochen"" <jwezel@compumaster.de>" <------------TOCHECK!
-                '" <compumaster@web.de>"
-                '"<jwezel@compumaster.de>" 
-                '"compumaster@web.de"
-                '"jwezel@compumaster.de"
+                '"l?nc\,\.\:\;\@\[\]\(\)ma9\'\\\<\>kljkj <your2ndaccount@yourcompany.com>"
+                '" her\,ma9\'\\\<\>kljkj <yourname@yourcompany.com>"
+                '" ""Your Yourself"" <yourname@yourcompany.com>" <------------TOCHECK!
+                '" <your2ndaccount@yourcompany.com>"
+                '"<yourname@yourcompany.com>" 
+                '"your2ndaccount@yourcompany.com"
+                '"yourname@yourcompany.com"
                 Dim AddressStart As Integer = Result(MyCounter).LastIndexOf("<")
                 If AddressStart > 0 Then
                     Result(MyCounter) = Mid(Result(MyCounter), AddressStart)
@@ -1148,12 +1148,12 @@ Namespace CompuMaster.camm.WebManager.Messaging
                     Result(MyCounter) = ""
                 End If
                 'Now we got strings like
-                '"<compumaster@web.de>"
-                '"<jwezel@compumaster.de>"
-                '"<compumaster@web.de>"
-                '"<jwezel@compumaster.de>" 
-                '"compumaster@web.de"
-                '"jwezel@compumaster.de"
+                '"<your2ndaccount@yourcompany.com>"
+                '"<yourname@yourcompany.com>"
+                '"<your2ndaccount@yourcompany.com>"
+                '"<yourname@yourcompany.com>" 
+                '"your2ndaccount@yourcompany.com"
+                '"yourname@yourcompany.com"
                 If Left(Result(MyCounter), 1) = "<" AndAlso Right(Result(MyCounter), 1) = ">" Then
                     Result(MyCounter) = Mid(Result(MyCounter), 2, Len(Result(MyCounter)) - 2)
                 End If
@@ -1274,7 +1274,7 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Private Function System_SendEMailEx_EasyMail(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal MsgCharset As String, ByRef bufErrorDetails As String, ByVal Attachments As EMailAttachment(), ByVal Priority As CompuMaster.camm.WebManager.Messaging.EMails.Priority, ByVal Sensitivity As CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity, ByVal RequestTransmissionConfirmation As Boolean, ByVal RequestReadingConfirmation As Boolean, ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection) As Boolean
-            'This application utilizes a licensed copy of EasyMail .Net Edition. EasyMail .Net Edition is Copyright ?2002 Quiksoft Corporation. All rights reserved. Use of the EasyMail .Net Edition assemblies outside of the context of this application is a violation of United States and international copyright laws and other applicable laws."
+            'This application utilizes a licensed copy of EasyMail .Net Edition. EasyMail .Net Edition is Copyright (c)2002 Quiksoft Corporation. All rights reserved. Use of the EasyMail .Net Edition assemblies outside of the context of this application is a violation of United States and international copyright laws and other applicable laws."
             Quiksoft.EasyMail.SMTP.License.Key = "CompuMaster (Single Developer)/6760698F377573281250F963#7C9CE86#"
 
             Dim eMail As New Quiksoft.EasyMail.SMTP.EmailMessage
@@ -2431,12 +2431,12 @@ Namespace CompuMaster.camm.WebManager.Messaging
 
             'Setup mail receipt confirmations
             If RequestReadingConfirmation Then
-                'Disposition-Notification-To: "Jochen Wezel" <compumaster@web.de> 'Lesebest?tigung
+                'Disposition-Notification-To: "You Yourself" <your2ndaccount@yourcompany.com> 'Lesebestätigung
                 MyMail.Headers.Add("Disposition-Notification-To", SenderAddress)
             End If
             'TODO: The bug is that nothing happens :( _
             If RequestTransmissionConfirmation Then
-                'Return-Receipt-To: "Jochen Wezel" <compumaster@web.de> '?bermittlungsbest?tigung
+                'Return-Receipt-To: "Your 2nd Account" <your2ndaccount@yourcompany.com> 'Übermittlungsbest?tigung
                 MyMail.Headers.Add("Return-Receipt-To", SenderAddress)
             End If
 

@@ -1,4 +1,4 @@
-Option Explicit On 
+ï»¿Option Explicit On 
 Option Strict On
 
 'Entkoppelt von Ursprungs-Version durch geänderten Namespace
@@ -15,7 +15,7 @@ Namespace CompuMaster.camm.WebManager.Tools.IO
     ''' <remarks>
     ''' </remarks>
     ''' <history>
-    ''' 	[Jochen Wezel, jwezel@compumaster.de]	2003	Created
+    ''' 	[Jochen Wezel]	2003	Created
     ''' </history>
     ''' -----------------------------------------------------------------------------
     Friend Class NamespaceDoc
@@ -28,7 +28,7 @@ Namespace CompuMaster.camm.WebManager.Tools.IO
     ''' <remarks>
     ''' </remarks>
     ''' <history>
-    ''' 	[Jochen Wezel, jwezel@compumaster.de]	2003	Created
+    ''' 	[Jochen Wezel]	2003	Created
     ''' </history>
     ''' -----------------------------------------------------------------------------
     Friend Class Junctions
