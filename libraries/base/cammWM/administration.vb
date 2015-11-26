@@ -943,8 +943,6 @@ Namespace CompuMaster.camm.WebManager
 
     End Class
 
-#If True Then 'NUnit Then
-    'TODO: only make this available through project configuration as well as NAnt compilation when compiling for and testing with NUnit
     ''' -----------------------------------------------------------------------------
     ''' Project	 : camm WebManager
     ''' Class	 : camm.WebManager.TestLayer
@@ -960,8 +958,7 @@ Namespace CompuMaster.camm.WebManager
     '''     [zeutzheim]     02.07.2009  Modified
     ''' </history>
     ''' -----------------------------------------------------------------------------
-    <Obsolete("Only for NUnit testings"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
-    Public Class TestLayer
+    Friend Class TestLayer
         Public Shared Function ActiveAndDeletedUsers(ByVal WebManager As IWebManager) As Hashtable
             Return CompuMaster.camm.WebManager.DataLayer.Current.ActiveAndDeletedUsers(WebManager)
         End Function
@@ -1002,6 +999,5 @@ Namespace CompuMaster.camm.WebManager
             Return CompuMaster.camm.WebManager.DataLayer.Current.SetUserDetail(WebManager, dbConnection, userID, propertyName, value, doNotLogSuccess)
         End Function
     End Class
-#End If
 
 End Namespace

@@ -96,3 +96,5 @@
 .vs
 /Partially published sources on GitHub.url
 /libraries/base/cammWM/MessagingEMails.vb
+/libraries/adminarea/CammWM.Admin/cammWM.snk
+/libraries/base/cammWM/cammWM.snk

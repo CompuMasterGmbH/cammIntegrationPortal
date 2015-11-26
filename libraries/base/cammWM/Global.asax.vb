@@ -397,16 +397,16 @@ Namespace CompuMaster.camm.WebManager.Application
         Protected MustOverride Sub ReportRequiredComponentsFailures(ByVal data As DataTable)
 
         Private Sub Page_EndRequest(sender As Object, e As EventArgs) Handles MyBase.EndRequest
-            Try
-
-                Dim registration As New Registration.ProductRegistration(Me.cammWebManager)
-                If registration.IsRefreshFromServerRequired(48) Then
-                    registration.CheckRegistration()
-                End If
-
-            Catch ex As Exception
-                Me.cammWebManager.Log.Exception(ex, False)
-            End Try
+            If Configuration.SuppressProductRegistrationServiceConnection = False Then
+                Try
+                    Dim registration As New Registration.ProductRegistration(Me.cammWebManager)
+                    If registration.IsRefreshFromServerRequired(48) Then
+                        registration.CheckRegistration()
+                    End If
+                Catch ex As Exception
+                    Me.cammWebManager.Log.Exception(ex, False)
+                End Try
+            End If
         End Sub
 
     End Class

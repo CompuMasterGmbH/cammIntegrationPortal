@@ -1262,11 +1262,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim CurUserID As Long
             If CLng(Request.QueryString("ID")) <> 0 AndAlso Request.QueryString("DEL") = "NOW" AndAlso Request.QueryString("token") = Session.SessionID Then
                 CurUserID = cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)
-                Dim sqlParams As SqlParameter() = {
-                                                    New SqlParameter("@ReleasedByUserID", CurUserID), _
-                                                    New SqlParameter("@IDApp", CLng(Request.QueryString("ID"))), _
-                                                    New SqlParameter("@InheritsFrom", DBNull.Value)
-                                                }
+                Dim sqlParams As SqlParameter() = {New SqlParameter("@ReleasedByUserID", CurUserID), New SqlParameter("@IDApp", CLng(Request.QueryString("ID"))), New SqlParameter("@InheritsFrom", DBNull.Value)}
                 Try
                     Dim ResulT As Object
                     ResulT = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_SetAuthorizationInherition", CommandType.StoredProcedure, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection)

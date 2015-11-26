@@ -2005,14 +2005,16 @@ Namespace CompuMaster.camm.WebManager
 
 
         Friend Sub PageOnUnLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Unload
-            Try
-                Dim registration As New Registration.ProductRegistration(Me)
-                If registration.IsRefreshFromServerRequired(48) Then
-                    registration.CheckRegistration()
-                End If
-            Catch ex As Exception
-                Me.Log.Exception(ex, False)
-            End Try
+            If Configuration.SuppressProductRegistrationServiceConnection = False Then
+                Try
+                    Dim registration As New Registration.ProductRegistration(Me)
+                    If registration.IsRefreshFromServerRequired(48) Then
+                        registration.CheckRegistration()
+                    End If
+                Catch ex As Exception
+                    Me.Log.Exception(ex, False)
+                End Try
+            End If
         End Sub
 
         Friend Sub PageOnLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load

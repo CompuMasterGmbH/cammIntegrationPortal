@@ -8,7 +8,11 @@ Imports System.Web
 #Region "WebManager base controls"
 Namespace CompuMaster.camm.WebManager.Controls
 
-    <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class cammWebManager
+#If NetFramework <> "1_1" Then
+    <System.Runtime.InteropServices.ComVisible(False), ToolboxData("<{0}:WebManager ID=""cammWebManager"" runat=""server"" SecurityObjet=""""></{0}:WebManager>"), System.Web.UI.NonVisualControl()> Public MustInherit Class cammWebManager
+#Else
+    <System.Runtime.InteropServices.ComVisible(False), ToolboxData("<{0}:WebManager ID=""cammWebManager"" runat=""server"" SecurityObjet=""""></{0}:WebManager>")> Public MustInherit Class cammWebManager
+#End If
         Inherits CompuMaster.camm.WebManager.WMSystem
 
         ''' -----------------------------------------------------------------------------

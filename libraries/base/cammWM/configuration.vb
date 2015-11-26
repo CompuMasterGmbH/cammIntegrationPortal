@@ -1088,6 +1088,12 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
+        Friend Shared ReadOnly Property SuppressProductRegistrationServiceConnection As Boolean
+            Get
+                Return LoadBooleanSetting("WebManager.SuppressProductRegistrationServiceConnection", False, True)
+            End Get
+        End Property
+
         Public Shared ReadOnly Property PasswordTokenExpirationHours() As Integer
             Get
                 Return LoadIntegerSetting("WebManager.PasswordToken.ExpirationHours", 24, True)
