@@ -119,8 +119,8 @@ Namespace CompuMaster.camm.WebManager.WebServices
                 If FoundException Is Nothing Then FoundException = ex 
             End Try
 
-
             Try
+                'Store the current datetime stamp for review in CWM about page
                 SetLastServiceExecutionDate()
             Catch ex As Exception
                 If FoundException Is Nothing Then FoundException = ex 'nur neuen Fehler schreiben, wenn nicht bereits ein Fehler auftrat
@@ -257,19 +257,18 @@ Namespace CompuMaster.camm.WebManager.WebServices
 
         Private Sub VerifyProductRegistration()
             Dim productRegistration As New Registration.ProductRegistration(Me.cammWebManager)
-            productRegistration.CheckRegistration()
+            productRegistration.CheckRegistration(False)
         End Sub
 
 
         Private Sub SetLastServiceExecutionDate()
-            Dim sql As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDateTime=GetDate() WHERE PropertyName = 'LastWebServiceExecutionDate'" & vbNewLine & _
+            Dim TriggerServiceVersion As String = System.Web.HttpContext.Current.Request.Headers("X-CWM-TriggerServiceVersion")
+            Dim sql As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDateTime=GetDate(), ValueNText = @VersionString WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager' " & vbNewLine & _
                 "IF @@ROWCOUNT = 0 " & vbNewLine & _
-                "INSERT INTO [dbo].[System_GlobalProperties] (PropertyName, ValueDateTime) VALUES ('LastWebServiceExecutionDate', GetDate()) "
-
-
-            Dim connection As New System.Data.SqlClient.SqlConnection(Me.cammWebManager.ConnectionString)
-            Dim cmd As New System.Data.SqlClient.SqlCommand(sql, connection)
+                "INSERT INTO [dbo].[System_GlobalProperties] (PropertyName, ValueNVarChar, ValueNText, ValueDateTime) VALUES ('LastWebServiceExecutionDate', 'camm WebManager', @VersionString, GetDate()) "
+            Dim cmd As New System.Data.SqlClient.SqlCommand(sql, New System.Data.SqlClient.SqlConnection(Me.cammWebManager.ConnectionString))
             cmd.CommandType = CommandType.Text
+            cmd.Parameters.Add("@VersionString", SqlDbType.NText).Value = Utils.StringNotEmptyOrAlternativeValue(TriggerServiceVersion, "0.0.0.0")
             CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Sub
 

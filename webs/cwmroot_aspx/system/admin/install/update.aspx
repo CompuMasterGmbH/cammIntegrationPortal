@@ -48,6 +48,31 @@
                         </td>
                     </tr>
                     <tr>
+                        <td valign="top" align="right">
+                            <font face="Verdana" size="2"><em>Update to database version:</em></font>
+                        </td>
+                        <td valign="top">
+                            <font face="Verdana" size="2"><asp:TextBox visible="true" id="TextboxUpdateToDBVersion" runat="server"></asp:TextBox></font>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" colspan="2">
+                            <h3>Reported instances (since last update)</h3>
+							<asp:DataGrid runat="server" ID="GridInstanceBuildNos" ItemStyle-BackColor="LightGrey" AlternatingItemStyle-BackColor="White" HeaderStyle-Font-Bold="" BorderWidth="1" BorderColor="Black" AutoGenerateColumns="false">
+								<Columns>
+									<asp:TemplateColumn HeaderText="Instance location">
+										<ItemTemplate>
+										 <%#Replace(Container.DataItem("Instance location"), vbCrLf, "<br>")%>
+										</ItemTemplate>
+									</asp:TemplateColumn>
+									<asp:BoundColumn HeaderText="Assembly Build No" DataField="Assembly Build No" />
+									<asp:BoundColumn HeaderText="Application compatible with build no" DataField="Application compatible with build no" />
+									<asp:BoundColumn HeaderText="Reported on" DataField="Reported on" />
+								</Columns>
+							</asp:DataGrid>
+                        </td>
+                    </tr>
+                    <tr>
                         <td valign="top" colspan="2">
                             <font color="#FF0000" face="Verdana" size="2"><asp:Label id="LabelUpdateWarning" runat="server">&nbsp;<br>Before you update the database, you should ensure that all servers and all their web applications have been updated with the current assembly files of camm Web-Manager. This is the cammWM.dll file in the /bin folders.<br><br>It is recommend to create a backup of your sql server database, first, before you continue.</asp:Label></font>
                         </td>

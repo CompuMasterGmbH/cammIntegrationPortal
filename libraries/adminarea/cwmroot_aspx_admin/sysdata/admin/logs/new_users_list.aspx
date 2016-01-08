@@ -1,1 +1,0 @@
-﻿<!--#include virtual="/system/admin/logs/new_users_list.aspx"-->

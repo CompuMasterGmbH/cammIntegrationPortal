@@ -2,6 +2,7 @@
 Option Explicit On
 
 Namespace CompuMaster.camm.WebManager.Registration
+#Const ProdRegServiceCodeLocationIsClient = True
 
     ''' <summary>
     ''' Data sent to the webservice, used for validation purposes
@@ -32,6 +33,27 @@ Namespace CompuMaster.camm.WebManager.Registration
             End Set
         End Property
         Public VersionDatabase As String
+        ''' <summary>
+        ''' CIM database version
+        ''' </summary>
+        Public VersionWebCron As String
+        Friend Property webCronVersion As Version
+            Get
+                If Me.VersionWebCron = Nothing Then
+                    Return New Version()
+                Else
+                    Return New Version(Me.VersionWebCron)
+                End If
+            End Get
+            Set(value As Version)
+                If value Is Nothing Then
+                    Me.VersionWebCron = Nothing
+                Else
+                    Me.VersionWebCron = value.ToString
+                End If
+            End Set
+        End Property
+        Public WebCronLastExecution As DateTime
         Public appInstancesCount As Integer
         Public serverGroupsCount As Integer
         Public serversCount As Integer
@@ -41,15 +63,20 @@ Namespace CompuMaster.camm.WebManager.Registration
         Public membershipAssignmentsCount As Long
         Public usersCountTotal As Long
         Public usersCountPerServerGroup As Integer()
+        Public AuthsDirectlyCount As Long
+        Public AuthsIndirectlyCount As Long
+        Public GroupAuthsDirectlyCount As Long
         Public supervisorsCount As Integer
         Public securityAdministratorsCount As Integer
         Public securityRelatedContactsCount As Integer
         Public dataProtectionCoordinatorsCount As Integer
+        Public ActiveMarketsCount As Integer
         Public RequestTime As DateTime
         Public ValidationHash As Byte()
+        Public WebAppInstanceID As String
 
         ''' <summary>
-        ''' Sign the transaction data
+        ''' Sign the transaction data and validate its completeness
         ''' </summary>
         Friend Sub SignData()
             Me.ValidationHash = GenerateTokenForInstallationInfo(Me)
@@ -62,8 +89,42 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' <param name="info"></param>
         ''' <returns></returns>
         Friend Shared Function ValidateInstallationInfo(ByVal info As CwmInstallationInfo) As Boolean
-            If info.instanceId = Nothing OrElse info.RequestTime = Nothing OrElse info.VersionAssembly = Nothing OrElse info.VersionDatabase = Nothing OrElse info.ValidationHash Is Nothing OrElse info.ValidationHash.Length = 0 Or info.serverGroupsCount = 0 OrElse info.serversCount = 0 OrElse info.usersCountPerServerGroup Is Nothing OrElse info.usersCountPerServerGroup.Length <> info.serverGroupsCount Then
-                Return False
+            Dim ValidationLevel As Byte = 0 'ValidationLevel: 0 for full validation by client with throwing exceptions, 1 for basic checks at server and without throwing of exceptions
+#If ProdRegServiceCodeLocationIsClient <> True Then
+            ValidationLevel = 1
+#End If
+            If info.instanceId = Nothing Then
+                If ValidationLevel = 0 Then Throw New Exception("Missing instance ID") Else Return False
+            ElseIf info.RequestTime = Nothing Then
+                If ValidationLevel = 0 Then Throw New Exception("Missing RequestTime") Else Return False
+            ElseIf ValidationLevel = 0 AndAlso info.VersionAssembly = Nothing Then
+                If ValidationLevel = 0 Then Throw New Exception("Missing VersionAssembly") Else Return False
+            ElseIf ValidationLevel = 0 AndAlso info.VersionDatabase = Nothing Then
+                If ValidationLevel = 0 Then Throw New Exception("Missing VersionDatabase") Else Return False
+            ElseIf info.ValidationHash Is Nothing OrElse info.ValidationHash.Length = 0 Then
+                If ValidationLevel = 0 Then Throw New Exception("Missing ValidationHash") Else Return False
+            ElseIf info.ActiveMarketsCount = 0 Then
+                If ValidationLevel = 0 Then Throw New Exception("Missing ActiveMarketsCount") Else Return False
+            ElseIf info.serverGroupsCount = 0 Then
+                If ValidationLevel = 0 Then Throw New Exception("Missing serverGroupsCount") Else Return False
+            ElseIf info.serversCount = 0 Then
+                If ValidationLevel = 0 Then Throw New Exception("Missing serversCount") Else Return False
+            ElseIf ValidationLevel = 0 AndAlso info.usersCountPerServerGroup Is Nothing OrElse info.usersCountPerServerGroup.Length <> info.serverGroupsCount Then
+                'Always validate carefully
+                If ValidationLevel = 0 Then Throw New Exception("Missing or invalid usersCountPerServerGroup") Else Return False
+            ElseIf ValidationLevel = 1 AndAlso info.usersCountPerServerGroup Is Nothing Then
+                'Always accept all data
+                info.usersCountPerServerGroup = New Integer() {}
+#If NetFrameWork <> "1_1" Then
+            ElseIf info.version >= New Version(4, 10, 206) AndAlso info.AuthsDirectlyCount = 0 Then 'can never be 0 even in fresh setup instances since supervisors are already present and authoirized
+                If ValidationLevel = 0 Then Throw New Exception("Missing AuthsDirectlyCount") Else Return False
+            ElseIf info.version >= New Version(4, 10, 206) AndAlso info.AuthsIndirectlyCount = 0 Then 'can never be 0 even in fresh setup instances since supervisors are already present and authoirized
+                If ValidationLevel = 0 Then Throw New Exception("Missing AuthsIndirectlyCount") Else Return False
+            ElseIf info.version >= New Version(4, 10, 206) AndAlso info.GroupAuthsDirectlyCount = 0 Then 'can never be 0 even in fresh setup instances since supervisors are already present and authoirized
+                If ValidationLevel = 0 Then Throw New Exception("Missing GroupAuthsDirectlyCount") Else Return False
+            ElseIf info.version >= New Version(4, 10, 206) AndAlso info.WebAppInstanceID = "" Then
+                If ValidationLevel = 0 Then Throw New Exception("Missing WebAppInstanceID") Else Return False
+#End If
             Else
                 Return True
             End If
@@ -78,22 +139,28 @@ Namespace CompuMaster.camm.WebManager.Registration
             Dim hmac As New System.Security.Cryptography.HMACSHA1(New Byte() {62, 2, 42, 75, 222, 54, 200, 199, 20, 12})
             Dim memoryStream As New System.IO.MemoryStream
             Dim binaryWriter As New System.IO.BinaryWriter(memoryStream)
+            'Most current interface standard
             binaryWriter.Write(info.appInstancesCount)
-            binaryWriter.Write(info.databaseVersion.ToString())
-            binaryWriter.Write(info.dataProtectionCoordinatorsCount)
-            binaryWriter.Write(info.enginesCount)
-            binaryWriter.Write(info.groupsCount)
-            binaryWriter.Write(info.instanceId)
-            binaryWriter.Write(info.membershipAssignmentsCount)
-            binaryWriter.Write(info.securityAdministratorsCount)
-            binaryWriter.Write(info.securityObjectsCount)
-            binaryWriter.Write(info.securityRelatedContactsCount)
-            binaryWriter.Write(info.serverGroupsCount)
-            binaryWriter.Write(info.serversCount)
-            binaryWriter.Write(info.supervisorsCount)
-            binaryWriter.Write(info.usersCountTotal)
-            binaryWriter.Write(info.version.ToString())
-            binaryWriter.Write(info.RequestTime.Ticks)
+            binaryWriter.Write("/" & info.databaseVersion.ToString())
+            binaryWriter.Write("/" & info.dataProtectionCoordinatorsCount)
+            binaryWriter.Write("/" & info.enginesCount)
+            binaryWriter.Write("/" & info.groupsCount)
+            binaryWriter.Write("/" & info.instanceId)
+            binaryWriter.Write("/" & info.membershipAssignmentsCount)
+            binaryWriter.Write("/" & info.securityAdministratorsCount)
+            binaryWriter.Write("/" & info.securityObjectsCount)
+            binaryWriter.Write("/" & info.securityRelatedContactsCount)
+            binaryWriter.Write("/" & info.serverGroupsCount)
+            binaryWriter.Write("/" & info.serversCount)
+            binaryWriter.Write("/" & info.ActiveMarketsCount)
+            binaryWriter.Write("/" & info.AuthsDirectlyCount)
+            binaryWriter.Write("/" & info.AuthsIndirectlyCount)
+            binaryWriter.Write("/" & info.GroupAuthsDirectlyCount)
+            binaryWriter.Write("/" & info.supervisorsCount)
+            binaryWriter.Write("/" & info.usersCountTotal)
+            binaryWriter.Write("/" & info.version.ToString())
+            binaryWriter.Write("/" & info.RequestTime.Ticks)
+            binaryWriter.Write("/" & info.WebAppInstanceID)
             Dim result As Byte() = hmac.ComputeHash(memoryStream)
             binaryWriter.Close()
             memoryStream.Close()
@@ -101,6 +168,9 @@ Namespace CompuMaster.camm.WebManager.Registration
         End Function
     End Class
 
+    ''' <summary>
+    ''' Create instance of CwmInstallationInfo
+    ''' </summary>
     Friend Class CwmInstallationInfoFactory
 
         Private cammWebManger As WMSystem
@@ -108,50 +178,70 @@ Namespace CompuMaster.camm.WebManager.Registration
             Me.cammWebManger = cwm
         End Sub
 
+        ''' <summary>
+        ''' Lookup the number of users per server group
+        ''' </summary>
+        ''' <param name="serversGroupsCount"></param>
+        ''' <returns></returns>
         Private Function GetCountPerServerGroup(ByVal serversGroupsCount As Integer) As Integer()
-            Dim result As New ArrayList
-
-            Dim cmd As New SqlClient.SqlCommand
-            cmd.CommandText = "SELECT System_ServerGroups.ID, COUNT(Benutzer.ID) FROM Benutzer INNER JOIN System_Servers ON Benutzer.AccountAccessability = System_Servers.ID INNER JOIN System_ServerGroups ON System_ServerGroups.ID = System_Servers.ServerGroup GROUP BY System_ServerGroups.ID"
+            Dim Sql As String = "SELECT COUNT(Benutzer.ID) " & vbNewLine & _
+                "FROM Benutzer " & vbNewLine & _
+                "    RIGHT JOIN [dbo].[System_ServerGroupsAndTheirUserAccessLevels] ON Benutzer.AccountAccessability = [dbo].[System_ServerGroupsAndTheirUserAccessLevels].ID_AccessLevel " & vbNewLine & _
+                "    RIGHT JOIN System_ServerGroups ON System_ServerGroups.ID = [dbo].[System_ServerGroupsAndTheirUserAccessLevels].ID_ServerGroup " & vbNewLine & _
+                "GROUP BY System_ServerGroups.ID " & vbNewLine & _
+                "ORDER BY System_ServerGroups.ID"
+            Dim cmd As New SqlClient.SqlCommand(Sql, New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString))
             cmd.CommandType = CommandType.Text
-            Dim reader As System.Data.IDataReader = Nothing
-            Try
-                Dim connection As New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
-                cmd.Connection = connection
-                reader = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReader(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-                While reader.Read()
-                    'TODO: it didn't work with a two-dimensional array, which would be the more reasonable solution
-                    Dim serverGroup As Integer = CType(Utils.Nz(reader(0)), Integer)
-                    Dim userCount As Integer = CType(Utils.Nz(reader(1)), Integer)
-                    result.Add(serverGroup)
-                    result.Add(userCount)
-                End While
-            Finally
-                CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(cmd.Connection)
-                If Not reader Is Nothing Then
-                    reader.Close()
-                    reader.Dispose()
-                End If
-
-            End Try
-
+            Dim result As ArrayList
+            result = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoArrayList(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             Return CType(result.ToArray(GetType(Integer)), Integer())
         End Function
 
+        ''' <summary>
+        ''' Query from db command without automatic changes on connection status
+        ''' </summary>
+        ''' <param name="cmd"></param>
+        ''' <returns></returns>
+        Private Function GetDatetimeNzResult(ByVal cmd As IDbCommand) As DateTime
+            Return Utils.Nz(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.None), New DateTime())
+        End Function
 
+        ''' <summary>
+        ''' Query from db command without automatic changes on connection status
+        ''' </summary>
+        ''' <param name="cmd"></param>
+        ''' <returns></returns>
+        Private Function GetStringNzResult(ByVal cmd As IDbCommand) As String
+            Return Utils.Nz(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.None), CType(Nothing, String))
+        End Function
+
+        ''' <summary>
+        ''' Query from db command without automatic changes on connection status
+        ''' </summary>
+        ''' <param name="cmd"></param>
+        ''' <returns></returns>
         Private Function GetIntegerResult(ByVal cmd As IDbCommand) As Integer
             Return CType(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.None), Integer)
         End Function
 
+        ''' <summary>
+        ''' Query from db command without automatic changes on connection status
+        ''' </summary>
+        ''' <param name="cmd"></param>
+        ''' <returns></returns>
         Private Function GetLongResult(ByVal cmd As IDbCommand) As Long
             Return CType(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.None), Long)
         End Function
 
+        ''' <summary>
+        ''' Collect statistics and information on the current camm Web-Manager instance
+        ''' </summary>
+        ''' <returns></returns>
         Public Function CollectInstallationInfo() As CwmInstallationInfo
             Dim result As New CwmInstallationInfo
-            result.InstanceId = Me.cammWebManger.Environment.LicenceKey
-            result.Version = Me.cammWebManger.System_Version_Ex()
-            result.DatabaseVersion = Me.cammWebManger.System_DBVersion_Ex()
+            result.instanceId = Me.cammWebManger.Environment.LicenceKey
+            result.version = Me.cammWebManger.System_Version_Ex()
+            result.databaseVersion = Me.cammWebManger.System_DBVersion_Ex()
 
             Dim cmd As New SqlClient.SqlCommand
             Try
@@ -163,62 +253,92 @@ Namespace CompuMaster.camm.WebManager.Registration
                 cmd.CommandText = "Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;"
                 Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.None)
 
-                cmd.CommandText = "Select count(*) As AppInstancesCount From system_globalproperties WHERE propertyname Like 'AppInstance_%' and valuenvarchar = 'camm WebManager' and valuedatetime > dateadd(mm, -1, getdate())"
-                result.AppInstancesCount = GetIntegerResult(cmd)
+                cmd.CommandText = "Select count(*) As AppInstancesCount FROM system_globalproperties WHERE propertyname Like 'AppInstance_%' and valuenvarchar = 'camm WebManager' and valuedatetime > dateadd(mm, -1, getdate()) and propertyname not like 'AppInstance_{ERROR detecting AssemblyLocation: %}' and ValueNText not like 'ServerIdentString={not yet configured at execution time}%Request={Nothing}' and ValueNText not like 'Error while looking up current assembly location'"
+                result.appInstancesCount = GetIntegerResult(cmd)
 
                 cmd.CommandText = "SELECT count(ID) FROM System_ServerGroups"
-                result.ServerGroupsCount = GetIntegerResult(cmd)
+                result.serverGroupsCount = GetIntegerResult(cmd)
 
                 cmd.CommandText = "SELECT COUNT(ID) FROM System_Servers"
-                result.ServersCount = GetIntegerResult(cmd)
+                result.serversCount = GetIntegerResult(cmd)
+
+                cmd.CommandText = "SELECT COUNT(ID) FROM [System_Languages] WHERE IsActive <> 0"
+                result.ActiveMarketsCount = GetIntegerResult(cmd)
 
                 cmd.CommandText = "SELECT COUNT(ID) FROM System_WebAreaScriptEnginesAuthorization" 'TODO
-                result.EnginesCount = GetIntegerResult(cmd)
+                result.enginesCount = GetIntegerResult(cmd)
 
                 cmd.CommandText = "SELECT COUNT(ID) FROM dbo.SecurityObjects_CurrentAndInactiveOnes"
-                result.SecurityObjectsCount = GetLongResult(cmd)
+                result.securityObjectsCount = GetLongResult(cmd)
 
                 cmd.CommandText = "SELECT COUNT(ID) FROM Gruppen"
-                result.GroupsCount = GetLongResult(cmd)
+                result.groupsCount = GetLongResult(cmd)
 
                 cmd.CommandText = "SELECT count(*) as MembershipAssignmentsCount from memberships"
-                result.MembershipAssignmentsCount = GetLongResult(cmd)
+                result.membershipAssignmentsCount = GetLongResult(cmd)
+
+                cmd.CommandText = "SELECT count(*) as AuthsCount from [ApplicationsRightsByUser]"
+                result.AuthsDirectlyCount = GetLongResult(cmd)
+
+                cmd.CommandText = "SELECT count(*) as AuthsCount from [view_ApplicationRights_CommulatedPerUser_FAST]"
+                result.AuthsIndirectlyCount = GetLongResult(cmd)
+
+                cmd.CommandText = "SELECT count(*) as AuthsCount from [ApplicationsRightsByGroup]"
+                result.GroupAuthsDirectlyCount = GetLongResult(cmd)
 
                 cmd.CommandText = "SELECT COUNT(ID) FROM Benutzer"
-                result.UsersCountTotal = GetLongResult(cmd)
+                result.usersCountTotal = GetLongResult(cmd)
 
                 cmd.CommandText = "SELECT COUNT(ID) FROM dbo.Memberships WHERE ID_GROUP = " & CompuMaster.camm.WebManager.WMSystem.SpecialGroups.Group_SecurityAdministrators
-                result.SecurityAdministratorsCount = GetIntegerResult(cmd)
+                result.securityAdministratorsCount = GetIntegerResult(cmd)
 
                 cmd.CommandText = "SELECT COUNT(ID) FROM dbo.Memberships WHERE ID_GROUP = " & CompuMaster.camm.WebManager.WMSystem.SpecialGroups.Group_Supervisors
-                result.SupervisorsCount = GetIntegerResult(cmd)
+                result.supervisorsCount = GetIntegerResult(cmd)
 
                 cmd.CommandText = "SELECT COUNT(ID) FROM dbo.Memberships WHERE ID_GROUP = " & CompuMaster.camm.WebManager.WMSystem.SpecialGroups.Group_SecurityRelatedContacts
-                result.SecurityRelatedContactsCount = GetIntegerResult(cmd)
+                result.securityRelatedContactsCount = GetIntegerResult(cmd)
 
                 cmd.CommandText = "Select COUNT(ID) FROM dbo.Memberships WHERE ID_GROUP = " & CompuMaster.camm.WebManager.WMSystem.SpecialGroups.Group_DataProtectionCoordinators
-                result.DataProtectionCoordinatorsCount = GetIntegerResult(cmd)
+                result.dataProtectionCoordinatorsCount = GetIntegerResult(cmd)
 
-                result.UsersCountPerServerGroup = GetCountPerServerGroup(result.ServerGroupsCount)
+                result.WebAppInstanceID = cammWebManger.CurrentWebAppInstanceID
+
+                cmd.CommandText = "SELECT ValueDateTime FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager'"
+                result.WebCronLastExecution = GetDatetimeNzResult(cmd)
+                If result.WebCronLastExecution = Nothing Then
+                    'no full webcron activated, watch for last mail processing meaning version 1 or 4.10 of CWM WebCron (no)trigger service (or JIT mail processing without service) 
+                    cmd.CommandText = "SELECT ValueDateTime FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastMailQueueProcessing' AND ValueNVarChar = 'camm WebManager'"
+                    result.WebCronLastExecution = GetDatetimeNzResult(cmd)
+                    result.webCronVersion = New Version(4, 10, 0, 0)
+                Else
+                    'try to find a version info from trigger service
+                    cmd.CommandText = "SELECT ValueNText FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager'"
+                    Dim versionString As String = GetStringNzResult(cmd)
+                    If versionString = Nothing Then
+                        result.webCronVersion = Nothing
+                    Else
+                        result.webCronVersion = New Version(versionString)
+                    End If
+                End If
+
+                result.usersCountPerServerGroup = GetCountPerServerGroup(result.serverGroupsCount)
                 result.RequestTime = DateTime.Now.ToUniversalTime()
-                result.SignData()
+                result.SignData() 'Sign and validate the completeness of the data
                 Return result
 
             Finally
                 If Not cmd Is Nothing Then
-                    If Not cmd.Connection Is Nothing Then
-                        Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(cmd.Connection)
-                    End If
-
+                    Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(cmd.Connection)
                 End If
             End Try
-
 
         End Function
 
     End Class
 
-
+    ''' <summary>
+    ''' License details
+    ''' </summary>
     Public Class LicenceData
         Public Enum LicenseModel As Byte
             Community = 7
@@ -244,6 +364,9 @@ Namespace CompuMaster.camm.WebManager.Registration
 
     End Class
 
+    ''' <summary>
+    ''' License checks
+    ''' </summary>
     Public Class LicenceInfo
         ''' <summary>
         ''' Returns whether support is provided for the passed licence model
@@ -251,7 +374,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' <param name="model"></param>
         ''' <returns></returns>
         Public Shared Function IsLicenceModelWithSupport(ByVal model As LicenceData.LicenseModel) As Boolean
-            Return Not (model = LicenceData.LicenseModel.Community OrElse model = LicenceData.LicenseModel.Demo OrElse model = LicenceData.LicenseModel.Trial)
+            Return Not (model = LicenceData.LicenseModel.Community OrElse model = LicenceData.LicenseModel.Demo OrElse model = LicenceData.LicenseModel.Trial OrElse model = LicenceData.LicenseModel.None)
         End Function
 
         ''' <summary>
@@ -259,12 +382,14 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' </summary>
         ''' <param name="model"></param>
         ''' <returns></returns>
-        Public Shared Function IsExpiringLicenceModel(ByVal model As LicenceData.LicenseModel) As Boolean
+        Friend Shared Function IsExpiringLicenceModel(ByVal model As LicenceData.LicenseModel) As Boolean
             Return Not (model = LicenceData.LicenseModel.Demo OrElse model = LicenceData.LicenseModel.Community OrElse model = LicenceData.LicenseModel.None)
         End Function
     End Class
 
-
+    ''' <summary>
+    ''' Validation result data of the product registration service
+    ''' </summary>
     Public Class InstanceValidationResult
         ''' <summary>
         ''' Date when the the support and maintenance contract expires
@@ -274,6 +399,14 @@ Namespace CompuMaster.camm.WebManager.Registration
         Public LicenceData As LicenceData
         Public ResponseTime As DateTime
         Public ValidationHash As Byte()
+        ''' <summary>
+        ''' General update available
+        ''' </summary>
+        Public UpdateAvailable As Boolean
+        ''' <summary>
+        ''' Security update available - strongly recommended to update ASAP
+        ''' </summary>
+        Public SecurityUpdateAvailable As Boolean
 
         Friend Sub New()
             Me.LicenceData = New LicenceData()
@@ -291,8 +424,8 @@ Namespace CompuMaster.camm.WebManager.Registration
     ''' <summary>
     ''' The service client which contacts the server to ask whether licence etc. are still valid
     ''' </summary>
-    <System.Web.Services.WebServiceBindingAttribute(Name:="CimRegistrationServiceClient",
-                [Namespace]:="http://www.camm.biz/support/cim/services/")>
+    <System.Web.Services.WebServiceBindingAttribute(Name:="CimRegistrationServiceClient", _
+                [Namespace]:="http://www.camm.biz/support/cim/services/")> _
     Public Class ProductRegistrationClient
         Inherits System.Web.Services.Protocols.SoapHttpClientProtocol
 
@@ -306,27 +439,25 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' <summary>
         ''' Computes HMAC for passed InstanceValidationResult class, so we can check the data wasn't manipulated 
         ''' </summary>
-        ''' <param name="info"></param>
+        ''' <param name="validationResult"></param>
         ''' <returns></returns>
-        Friend Function GenerateTokenForValidationResult(ByVal info As InstanceValidationResult) As Byte()
+        Private Shared Function GenerateTokenForValidationResult(ByVal validationResult As InstanceValidationResult) As Byte()
             Dim hmac As New System.Security.Cryptography.HMACSHA1(New Byte() {62, 2, 42, 75, 222, 54, 200, 199, 20, 12})
             Dim memoryStream As New System.IO.MemoryStream
             Dim binaryWriter As New System.IO.BinaryWriter(memoryStream)
-            binaryWriter.Write(info.ResponseTime.Ticks)
+            binaryWriter.Write(validationResult.ResponseTime.Ticks)
 
-            If Not info.SupportContractExpirationDate = Nothing Then
-                binaryWriter.Write(info.SupportContractExpirationDate.Ticks)
+            If Not validationResult.SupportContractExpirationDate = Nothing Then
+                binaryWriter.Write(validationResult.SupportContractExpirationDate.Ticks)
             End If
-            If Not info.UpdateContractExpirationDate = Nothing Then
-                binaryWriter.Write(info.UpdateContractExpirationDate.Ticks)
+            If Not validationResult.UpdateContractExpirationDate = Nothing Then
+                binaryWriter.Write(validationResult.UpdateContractExpirationDate.Ticks)
             End If
-            If Not info.LicenceData.ExpirationDate = Nothing Then
-                binaryWriter.Write(info.LicenceData.ExpirationDate.Ticks)
+            If Not validationResult.LicenceData.ExpirationDate = Nothing Then
+                binaryWriter.Write(validationResult.LicenceData.ExpirationDate.Ticks)
             End If
-
-
-            binaryWriter.Write(info.LicenceData.Model)
-            binaryWriter.Write(info.LicenceData.Type)
+            binaryWriter.Write(validationResult.LicenceData.Model)
+            binaryWriter.Write(validationResult.LicenceData.Type)
 
             Dim result As Byte() = hmac.ComputeHash(memoryStream)
 
@@ -342,7 +473,8 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' </summary>
         ''' <param name="info"></param>
         ''' <returns></returns>
-        Private Function VerifyValidationResult(ByVal info As InstanceValidationResult) As Boolean
+        Friend Shared Function VerifyValidationResult(ByVal info As InstanceValidationResult) As Boolean
+            If info.ValidationHash Is Nothing OrElse info.ValidationHash.Length = 0 Then Return False
             Dim hash As Byte() = GenerateTokenForValidationResult(info)
             Dim isValid As Boolean = BitConverter.ToString(hash) = BitConverter.ToString(info.ValidationHash)
             If isValid Then 'attempt to mitigate replay attacks
@@ -354,12 +486,12 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' Lookup the version of the product registration server service
         ''' </summary>
         ''' <returns></returns>
-        <System.Diagnostics.DebuggerStepThrough(), System.Web.Services.Protocols.SoapDocumentMethodAttribute(
-            "http://www.camm.biz/support/cim/services/ServiceVersion",
-            RequestNamespace:="http://www.camm.biz/support/cim/services/",
-            ResponseNamespace:="http://www.camm.biz/support/cim/services/",
-            Use:=System.Web.Services.Description.SoapBindingUse.Literal,
-            ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Default)>
+        <System.Diagnostics.DebuggerStepThrough(), System.Web.Services.Protocols.SoapDocumentMethodAttribute( _
+            "http://www.camm.biz/support/cim/services/ServiceVersion", _
+            RequestNamespace:="http://www.camm.biz/support/cim/services/", _
+            ResponseNamespace:="http://www.camm.biz/support/cim/services/", _
+            Use:=System.Web.Services.Description.SoapBindingUse.Literal, _
+            ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Default)> _
         Public Function ServiceVersion() As Integer
             Dim result() As Object = Nothing
             Try
@@ -401,7 +533,25 @@ Namespace CompuMaster.camm.WebManager.Registration
         Protected Overrides Function GetWebRequest(ByVal uri As Uri) As System.Net.WebRequest
             Dim original As System.Net.WebRequest = MyBase.GetWebRequest(uri)
             original.Headers.Add("X-CWM-InstanceID", Me.info.instanceId)
+            original.Timeout = 5 * 1000
             Return original
+        End Function
+
+        ''' <summary>
+        ''' Send the validation data to the product registration server service and recieve its result
+        ''' </summary>
+        ''' <remarks>NEVER RUN THIS METHOD DIRECTLY - ONLY INTENDED FOR INTERNAL REFLECTION BY System.Web.Services</remarks>
+        ''' <returns></returns>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), _
+            System.Web.Services.Protocols.SoapDocumentMethodAttribute( _
+            "http://www.camm.biz/support/cim/services/ValidateInstallation", _
+            RequestNamespace:="http://www.camm.biz/support/cim/services/", _
+            ResponseNamespace:="http://www.camm.biz/support/cim/services/", _
+            Use:=System.Web.Services.Description.SoapBindingUse.Literal, _
+            ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Default)> _
+        Public Function ValidateInstallation(info As CwmInstallationInfo) As InstanceValidationResult
+            Me.Invoke("ValidateInstallation", New Object() {info})
+            Return Nothing
         End Function
 
 
@@ -409,25 +559,12 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' Send the validation data to the product registration server service and recieve its result
         ''' </summary>
         ''' <returns></returns>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute(
-            "http://www.camm.biz/support/cim/services/ValidateInstallation",
-            RequestNamespace:="http://www.camm.biz/support/cim/services/",
-            ResponseNamespace:="http://www.camm.biz/support/cim/services/",
-            Use:=System.Web.Services.Description.SoapBindingUse.Literal,
-            ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Default)>
-        Public Function ValidateInstallation(info As CwmInstallationInfo) As InstanceValidationResult
-            Me.Invoke("ValidateInstallation", New Object() {info})
-            Return Nothing
-        End Function
-
-
-        <System.Web.Services.Protocols.SoapDocumentMethodAttribute(
-            "http://www.camm.biz/support/cim/services/ValidateInstallation",
-            RequestNamespace:="http://www.camm.biz/support/cim/services/",
-            ResponseNamespace:="http://www.camm.biz/support/cim/services/",
-            Use:=System.Web.Services.Description.SoapBindingUse.Literal,
-            ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Default)>
+        <System.Web.Services.Protocols.SoapDocumentMethodAttribute( _
+            "http://www.camm.biz/support/cim/services/ValidateInstallation", _
+            RequestNamespace:="http://www.camm.biz/support/cim/services/", _
+            ResponseNamespace:="http://www.camm.biz/support/cim/services/", _
+            Use:=System.Web.Services.Description.SoapBindingUse.Literal, _
+            ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Default)> _
         Public Function ValidateInstallationHttpsOrHttp() As InstanceValidationResult
             If info Is Nothing Then Throw New NullReferenceException("info must contain a value")
             Dim result() As Object = Nothing
@@ -482,35 +619,36 @@ Namespace CompuMaster.camm.WebManager.Registration
 
     End Class
 
-    Public Enum ContractExpirationNotificationTypes As Integer
+    ''' <summary>
+    ''' The several kinds of notification e-mails
+    ''' </summary>
+    Friend Enum ContractExpirationNotificationTypes As Integer
         UpdateContract = 0
         SupportAndMaintananceContract = 1
         Licence = 2
     End Enum
 
-    Public Structure ContractExpirationRecipient
-        Public fullName As String
-        Public email As String
-    End Structure
+    ''' <summary>
+    ''' An e-mail recipient for expiration notifications
+    ''' </summary>
+    Friend Class ContractExpirationRecipient
+        Public FullName As String
+        Public EMail As String
+    End Class
 
-    Public Class ContractExpirationNotifier
-
+    Friend Class ContractExpirationNotifier
 
         Public Delegate Sub RecpientNotifcationFunction(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date)
 
         Private notificationFunction As RecpientNotifcationFunction
         Private recipients As New ArrayList
-
         Private expirationDate As DateTime
-
 
         Private cammwebmanager As WMSystem
         Public Sub New(ByVal cwm As WMSystem, ByVal expirationDate As DateTime, ByVal notificationType As ContractExpirationNotificationTypes)
             Me.cammwebmanager = cwm
             Me.expirationDate = expirationDate
-
             SetDelegate(notificationType)
-
         End Sub
 
         Private Sub SetDelegate(ByVal notificationType As ContractExpirationNotificationTypes)
@@ -523,21 +661,39 @@ Namespace CompuMaster.camm.WebManager.Registration
                     notificationFunction = New RecpientNotifcationFunction(AddressOf Me.cammwebmanager.Notifications.SendUpdateContractHasExpiredMessage)
             End Select
         End Sub
+
+        ''' <summary>
+        ''' Add a single user to the list of recipients
+        ''' </summary>
+        ''' <param name="recipient"></param>
         Public Sub AddRecipient(ByVal recipient As ContractExpirationRecipient)
             Me.recipients.Add(recipient)
         End Sub
 
+        ''' <summary>
+        ''' Add a single user to the list of recipients
+        ''' </summary>
+        ''' <param name="name"></param>
+        ''' <param name="email"></param>
         Public Sub AddRecipient(ByVal name As String, ByVal email As String)
             Dim recipient As New ContractExpirationRecipient
-            recipient.fullName = name
-            recipient.email = email
+            recipient.FullName = name
+            recipient.EMail = email
             AddRecipient(recipient)
         End Sub
 
-
+        ''' <summary>
+        ''' Add a single user to the list of recipients
+        ''' </summary>
+        ''' <param name="user"></param>
         Public Sub AddRecipient(ByVal user As WMSystem.UserInformation)
             AddRecipient(user.FullName, user.EMailAddress)
         End Sub
+
+        ''' <summary>
+        ''' Add all members of a group to the list of recipients
+        ''' </summary>
+        ''' <param name="group"></param>
         Public Sub AddRecipient(ByVal group As WMSystem.SpecialGroups)
             Dim groupInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(group, cammwebmanager)
             If Not groupInfo Is Nothing AndAlso Not groupInfo.Members Is Nothing Then
@@ -547,21 +703,25 @@ Namespace CompuMaster.camm.WebManager.Registration
             End If
         End Sub
 
+        ''' <summary>
+        ''' Send the notification e-mails to all recipients (but don't send 2 or more e-mails to the same e-mail address)
+        ''' </summary>
         Public Sub Notify()
             Dim sentAlready As New ArrayList
             For Each recipient As ContractExpirationRecipient In recipients
-                Dim email As String = recipient.email.Trim()
-                Dim name As String = recipient.fullName.Trim()
+                Dim email As String = recipient.EMail.Trim()
+                Dim name As String = recipient.FullName.Trim()
                 If Not sentAlready.Contains(email) Then
                     notificationFunction(name, email, Me.expirationDate)
                     sentAlready.Add(email)
                 End If
             Next
         End Sub
-
-
     End Class
 
+    ''' <summary>
+    ''' Client logic for the product registration service 
+    ''' </summary>
     Public Class ProductRegistration
 
         Public Const CacheKeyLastRegistrationUpdate As String = "LastFetchFromServer"
@@ -570,38 +730,33 @@ Namespace CompuMaster.camm.WebManager.Registration
 
         Private UpdateRegistrationDataFromServerFailed As Boolean = False
 
-
-
         ''' <summary>
         ''' Contacts our "licence server" and fetches expiration data etc.
         ''' </summary>
-        Private Function FetchValidationDataFromServer() As InstanceValidationResult
-            Dim factory As New CwmInstallationInfoFactory(Me.cammWebManger)
-
-            Dim client As New ProductRegistrationClient(factory.CollectInstallationInfo())
+        Private Function FetchValidationDataFromServer(throwExceptions As Boolean) As InstanceValidationResult
             Dim installationInfo As InstanceValidationResult = Nothing
             Try
+                Dim factory As New CwmInstallationInfoFactory(Me.cammWebManger)
+                Dim client As New ProductRegistrationClient(factory.CollectInstallationInfo())
                 installationInfo = client.ValidateInstallationHttpsOrHttp()
                 UpdateRegistrationDataFromServerFailed = False
             Catch ex As Exception
                 UpdateRegistrationDataFromServerFailed = True
-                Me.cammWebManger.Log.Exception(ex, False)
+                Me.cammWebManger.Log.Exception(ex, throwExceptions)
             End Try
-
             Return installationInfo
         End Function
 
-        Private Sub UpdateExpirationMailSendingDate(ByVal key As String, ByVal dateSent As DateTime)
-            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @dateSent WHERE PropertyName = @key " &
-                    "IF @@ROWCOUNT = 0 " &
-                    "INSERT INTO System_GlobalProperties (PropertyName, ValueDateTime) VALUES(@key, @dateSent) "
+        Private Sub UpdateExpirationMailSendingDateInGlobalPropertiesDbTable(ByVal key As String, ByVal dateSent As DateTime)
+            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @dateSent WHERE PropertyName = @key AND ValueNVarchar = 'camm WebManager'" & _
+                    "IF @@ROWCOUNT = 0 " & _
+                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarchar, ValueDateTime) VALUES(@key, 'camm WebManager', @dateSent) "
 
             Dim cmd As New SqlClient.SqlCommand(sql)
             cmd.Parameters.Add("@dateSent", SqlDbType.DateTime).Value = dateSent
             cmd.Parameters.Add("@key", SqlDbType.NVarChar).Value = key
             cmd.Connection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
             CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-
         End Sub
 
         ''' <summary>
@@ -610,9 +765,9 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' <param name="key"></param>
         ''' <returns></returns>
         ''' TODO: this doesn't belong to this class, it should probably be in one which is made for this purpose...
-        Private Function FetchDateFromDatabase(ByVal key As String) As DateTime
+        Private Function FetchDateFromGlobalPropertiesDbTable(ByVal key As String) As DateTime
             Dim cmd As New SqlClient.SqlCommand
-            cmd.CommandText = "SELECT ValueDateTime FROM [dbo].[System_GlobalProperties] WHERE PropertyName = @key"
+            cmd.CommandText = "SELECT ValueDateTime FROM [dbo].[System_GlobalProperties] WHERE PropertyName = @key AND ValueNVarchar = 'camm WebManager'"
             cmd.CommandType = CommandType.Text
             cmd.Connection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
             cmd.Parameters.Add("@key", SqlDbType.VarChar).Value = key
@@ -625,10 +780,11 @@ Namespace CompuMaster.camm.WebManager.Registration
         End Function
 
         Private Function MustSendMail(ByVal key As String) As Boolean
-            Dim mailsent As DateTime = Me.FetchDateFromDatabase(key)
+            Dim mailsent As DateTime = Me.FetchDateFromGlobalPropertiesDbTable(key)
             Return mailsent = Nothing OrElse DateTime.Now.ToUniversalTime().Subtract(mailsent).TotalHours >= 24
         End Function
 
+#Region "Mail distribution"
         ''' <summary>
         ''' Notifies appropriate recipients when the support and maintanence contract has expired
         ''' </summary>
@@ -662,7 +818,7 @@ Namespace CompuMaster.camm.WebManager.Registration
             Dim key As String = "SupportAndMaintanenceContractMailSent"
             If MustSendMail(key) Then
                 notifier.Notify()
-                UpdateExpirationMailSendingDate(key, currentDate)
+                UpdateExpirationMailSendingDateInGlobalPropertiesDbTable(key, currentDate)
             End If
         End Sub
 
@@ -681,7 +837,7 @@ Namespace CompuMaster.camm.WebManager.Registration
             Dim key As String = "UpdateContractExpirationMailSent"
             If MustSendMail(key) Then
                 notifier.Notify()
-                UpdateExpirationMailSendingDate(key, DateTime.Now.ToUniversalTime())
+                UpdateExpirationMailSendingDateInGlobalPropertiesDbTable(key, DateTime.Now.ToUniversalTime())
             End If
         End Sub
 
@@ -697,12 +853,10 @@ Namespace CompuMaster.camm.WebManager.Registration
             Dim key As String = "LicenceExpirationMailSent"
             If MustSendMail(key) Then
                 notifier.Notify()
-                UpdateExpirationMailSendingDate(key, DateTime.Now.ToUniversalTime())
+                UpdateExpirationMailSendingDateInGlobalPropertiesDbTable(key, DateTime.Now.ToUniversalTime())
             End If
         End Sub
-
-
-
+#End Region
 
         ''' <summary>
         ''' Returns whether the licence server is marked as being down 
@@ -714,7 +868,7 @@ Namespace CompuMaster.camm.WebManager.Registration
             If Not cacheValue Is Nothing Then
                 downDate = CType(cacheValue, DateTime)
             Else
-                downDate = FetchDateFromDatabase(CacheKeyServerIsDown)
+                downDate = FetchDateFromGlobalPropertiesDbTable(CacheKeyServerIsDown)
             End If
             Return downDate <> Nothing AndAlso DateTime.Now.Subtract(downDate).TotalMinutes < 5
         End Function
@@ -724,8 +878,8 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' </summary>
         Private Sub MarkLicenceServerOffline()
             Dim currentDate As DateTime = DateTime.Now
-            HttpContext.Current.Cache.Insert(CacheKeyServerIsDown, currentDate)
-            SaveDate(CacheKeyServerIsDown, currentDate)
+            HttpContext.Current.Cache(CacheKeyServerIsDown) = currentDate
+            SaveDate2GlobalPropertiesDbTable(CacheKeyServerIsDown, currentDate)
         End Sub
 
         ''' <summary>
@@ -733,19 +887,13 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' </summary>
         ''' <param name="hours">specifies how many hours must have passed since the last check</param>
         ''' <returns></returns>
-        Public Function IsRefreshFromServerRequired(ByVal hours As Integer) As Boolean
-
-            Dim lastCheckDate As DateTime = Nothing
-            Dim cacheValue As Object = HttpContext.Current.Cache.Item(CacheKeyLastRegistrationUpdate)
-            If Not cacheValue Is Nothing Then
-                lastCheckDate = CType(cacheValue, DateTime)
-            Else
-                lastCheckDate = FetchDateFromDatabase(CacheKeyLastRegistrationUpdate)
+        Friend Function IsRefreshFromServerRequired(ByVal hours As Integer) As Boolean
+            Dim lastCheckDate As DateTime = CachedLastRefreshDate
+            If lastCheckDate = Nothing Then
+                lastCheckDate = FetchDateFromGlobalPropertiesDbTable(CacheKeyLastRegistrationUpdate)
+                CachedLastRefreshDate = lastCheckDate
             End If
-
             Return lastCheckDate <> Nothing AndAlso DateTime.Now.Subtract(lastCheckDate).TotalHours >= hours
-
-
         End Function
 
         Private Sub DowngradeToTrialLicence()
@@ -816,35 +964,47 @@ Namespace CompuMaster.camm.WebManager.Registration
             End If
         End Sub
 
-        Private Sub SaveDate(ByVal key As String, ByVal datevalue As DateTime)
+        Private Sub SaveDate2GlobalPropertiesDbTable(ByVal key As String, ByVal datevalue As DateTime)
 
-            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @date WHERE PropertyName = @propertyname " &
-                    "IF @@ROWCOUNT = 0 " &
-                    "INSERT INTO System_GlobalProperties (PropertyName, ValueDateTime) VALUES(@propertyname, @date) "
+            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @date WHERE PropertyName = @propertyname AND ValueNVarchar = 'camm WebManager' " & _
+                    "IF @@ROWCOUNT = 0 " & _
+                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarchar, ValueDateTime) VALUES(@propertyname, 'camm WebManager', @date) "
 
             Dim cmd As New SqlClient.SqlCommand(sql)
             cmd.Parameters.Add("@date", SqlDbType.DateTime).Value = datevalue
             cmd.Parameters.Add("@propertyname", SqlDbType.NVarChar).Value = key
             cmd.Connection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
             CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-
         End Sub
 
         Private Sub SaveLastRefreshDate(ByVal refreshDate As DateTime)
-
-            HttpContext.Current.Cache.Insert(CacheKeyLastRegistrationUpdate, refreshDate)
-            SaveDate(CacheKeyLastRegistrationUpdate, refreshDate)
-
-
+            CachedLastRefreshDate = refreshDate
+            SaveDate2GlobalPropertiesDbTable(CacheKeyLastRegistrationUpdate, refreshDate)
         End Sub
 
-
+        Private _CachedLastRefreshDate As DateTime
+        Private Property CachedLastRefreshDate As DateTime
+            Get
+                If HttpContext.Current Is Nothing Then
+                    Return _CachedLastRefreshDate
+                Else
+                    Return CType(HttpContext.Current.Application(CacheKeyLastRegistrationUpdate), DateTime)
+                End If
+            End Get
+            Set(value As DateTime)
+                If HttpContext.Current Is Nothing Then
+                    _CachedLastRefreshDate = value
+                Else
+                    HttpContext.Current.Application(CacheKeyLastRegistrationUpdate) = value
+                End If
+            End Set
+        End Property
 
         ''' <summary>
-        ''' Fetches data from the licence server and saves it
+        ''' Fetches data from the licence server and saves it into SystemGlobalProperties database table
         ''' </summary>
-        Public Sub RefreshValidationDataFromServer()
-            Dim validationResult As InstanceValidationResult = FetchValidationDataFromServer()
+        Public Sub RefreshValidationDataFromServer(throwExceptions As Boolean)
+            Dim validationResult As InstanceValidationResult = FetchValidationDataFromServer(throwExceptions)
             If Not validationResult Is Nothing Then
                 Dim validationDao As New InstanceValidationDao(Me.cammWebManger)
                 validationDao.Save(validationResult)
@@ -854,22 +1014,24 @@ Namespace CompuMaster.camm.WebManager.Registration
             End If
         End Sub
 
+        ''' <summary>
+        ''' Load validation result data from cache data in SystemGlobalProperties database table
+        ''' </summary>
+        ''' <returns></returns>
         Public Function GetCachedValidationResult() As InstanceValidationResult
             Dim validationDao As New InstanceValidationDao(Me.cammWebManger)
             Return validationDao.Load()
-
         End Function
 
-        Shared CheckRegistrationLock As Object = New Object()
-
+        Private Shared CheckRegistrationLock As Object = New Object()
         ''' <summary>
         ''' Method called by the webservice to check the registration
         ''' </summary>
-        Public Sub CheckRegistration()
+        Friend Sub CheckRegistration(throwExceptions As Boolean)
             Try
                 SyncLock CheckRegistrationLock
                     If Not IsServerMarkedOffline() AndAlso IsRefreshFromServerRequired(24) Then
-                        RefreshValidationDataFromServer()
+                        RefreshValidationDataFromServer(throwExceptions)
                     End If
 
                     Dim validationResult As InstanceValidationResult = GetCachedValidationResult()
@@ -884,21 +1046,20 @@ Namespace CompuMaster.camm.WebManager.Registration
             End Try
         End Sub
 
-
-
-
-
         Public Sub New(ByVal cammWebManger As WMSystem)
             Me.cammWebManger = cammWebManger
         End Sub
 
-
     End Class
 
-
-    Public Class InstanceValidationDao
+    ''' <summary>
+    ''' Data access object/layer
+    ''' </summary>
+    Friend Class InstanceValidationDao
 
         Private cammWebManger As WMSystem
+
+
 
         Public Sub New(ByVal cwm As WMSystem)
             Me.cammWebManger = cwm
@@ -906,40 +1067,38 @@ Namespace CompuMaster.camm.WebManager.Registration
 
         Public Sub Save(ByVal validationResult As InstanceValidationResult)
             If Not validationResult Is Nothing Then
-                Dim sql As String = "UPDATE System_GlobalProperties SET ValueInt = @licenceType WHERE PropertyName = 'LicenceType' " &
-                    "IF @@ROWCOUNT = 0 " &
-                    "INSERT INTO System_GlobalProperties (PropertyName, ValueInt) VALUES('LicenceType', @licenceType) " & System.Environment.NewLine &
-                    "UPDATE System_GlobalProperties SET ValueDateTime = @licenceExpirationDate WHERE PropertyName = 'LicenceExpirationDate' " &
-                    "IF @@ROWCOUNT = 0 " &
-                    "INSERT INTO System_GlobalProperties (PropertyName, ValueDateTime) VALUES('LicenceExpirationDate', @licenceExpirationDate) " & System.Environment.NewLine &
-                     "UPDATE System_GlobalProperties SET ValueInt = @licenceModel WHERE PropertyName = 'LicenceModel' " &
-                     "IF @@ROWCOUNT = 0 " &
-                     "INSERT INTO System_GlobalProperties (PropertyName, ValueInt) VALUES('LicenceModel', @licenceModel) " & System.Environment.NewLine &
-                    "UPDATE System_GlobalProperties SET ValueDateTime = @supportContractExpirationDate WHERE PropertyName = 'SnMContractExpires' " &
-                    "IF @@ROWCOUNT = 0 " &
-                    "INSERT INTO System_GlobalProperties (PropertyName, ValueDateTime) VALUES('SnMContractExpires', @supportContractExpirationDate) " &
-                   "UPDATE System_GlobalProperties SET ValueDateTime = @updateContractExpires WHERE PropertyName = 'UpdateContractExpires' " &
-                    "IF @@ROWCOUNT = 0 " &
-                    "INSERT INTO System_GlobalProperties (PropertyName, ValueDateTime) VALUES('UpdateContractExpires', @updateContractExpires) "
+                Dim sql As String = "UPDATE System_GlobalProperties SET ValueInt = @licenceType WHERE PropertyName = 'LicenceType' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine & _
+                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine & _
+                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueInt) VALUES('LicenceType', 'camm WebManager', @licenceType) " & System.Environment.NewLine & System.Environment.NewLine & _
+                    "UPDATE System_GlobalProperties SET ValueDateTime = @licenceExpirationDate WHERE PropertyName = 'LicenceExpirationDate' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine & _
+                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine & _
+                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueDateTime) VALUES('LicenceExpirationDate', 'camm WebManager', @licenceExpirationDate) " & System.Environment.NewLine & _
+                     "UPDATE System_GlobalProperties SET ValueInt = @licenceModel WHERE PropertyName = 'LicenceModel' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine & _
+                     "IF @@ROWCOUNT = 0 " & System.Environment.NewLine & _
+                     "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueInt) VALUES('LicenceModel', 'camm WebManager', @licenceModel) " & System.Environment.NewLine & System.Environment.NewLine & _
+                    "UPDATE System_GlobalProperties SET ValueDateTime = @supportContractExpirationDate WHERE PropertyName = 'SnMContractExpires' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine & _
+                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine & _
+                    "INSERT INTO System_GlobalProperties (PropertyName,ValueNVarChar,  ValueDateTime) VALUES('SnMContractExpires', 'camm WebManager', @supportContractExpirationDate) " & System.Environment.NewLine & _
+                   "UPDATE System_GlobalProperties SET ValueDateTime = @updateContractExpires WHERE PropertyName = 'UpdateContractExpires' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine & _
+                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine & _
+                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueDateTime) VALUES('UpdateContractExpires', 'camm WebManager', @updateContractExpires) " & System.Environment.NewLine & _
+                   "UPDATE System_GlobalProperties SET ValueBoolean = @UpdatesAvailable WHERE PropertyName = 'UpdatesAvailable' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine & _
+                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine & _
+                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueBoolean) VALUES('UpdatesAvailable', 'camm WebManager', @UpdatesAvailable) " & System.Environment.NewLine & _
+                   "UPDATE System_GlobalProperties SET ValueBoolean = @SecurityUpdatesAvailable WHERE PropertyName = 'SecurityUpdatesAvailable' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine
                 Dim cmd As New SqlClient.SqlCommand(sql)
                 Dim connection As SqlClient.SqlConnection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
-                Try
-                    connection.Open()
-                    cmd.Connection = connection
-                    cmd.Transaction = connection.BeginTransaction()
-                    cmd.Parameters.Add("@updateContractExpires", SqlDbType.DateTime).Value = validationResult.UpdateContractExpirationDate
-                    cmd.Parameters.Add("@supportContractExpirationDate", SqlDbType.DateTime).Value = validationResult.SupportContractExpirationDate
-                    cmd.Parameters.Add("@licenceExpirationDate", SqlDbType.DateTime).Value = validationResult.LicenceData.ExpirationDate
-                    cmd.Parameters.Add("@licenceType", SqlDbType.Int).Value = validationResult.LicenceData.Type
-                    cmd.Parameters.Add("@licenceModel", SqlDbType.Int).Value = validationResult.LicenceData.Model
-                    cmd.ExecuteNonQuery()
-                    cmd.Transaction.Commit()
-                Finally
-                    If Not connection Is Nothing Then
-                        connection.Close()
-                        connection.Dispose()
-                    End If
-                End Try
+                cmd.Connection = connection
+                cmd.Parameters.Add("@updateContractExpires", SqlDbType.DateTime).Value = Utils.DateTimeNotNothingOrDBNull(validationResult.UpdateContractExpirationDate)
+                cmd.Parameters.Add("@supportContractExpirationDate", SqlDbType.DateTime).Value = Utils.DateTimeNotNothingOrDBNull(validationResult.SupportContractExpirationDate)
+                cmd.Parameters.Add("@licenceExpirationDate", SqlDbType.DateTime).Value = Utils.DateTimeNotNothingOrDBNull(validationResult.LicenceData.ExpirationDate)
+                cmd.Parameters.Add("@licenceType", SqlDbType.Int).Value = validationResult.LicenceData.Type
+                cmd.Parameters.Add("@licenceModel", SqlDbType.Int).Value = validationResult.LicenceData.Model
+                cmd.Parameters.Add("@UpdatesAvailable", SqlDbType.Bit).Value = validationResult.UpdateAvailable
+                cmd.Parameters.Add("@SecurityUpdatesAvailable", SqlDbType.Bit).Value = validationResult.SecurityUpdateAvailable
+                CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+
+                Me.cammWebManger.Environment.CachedProductName = Nothing
             End If
         End Sub
 
@@ -951,7 +1110,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' TODO: this doesn't belong to this class, it should probably be in one which is made for this purpose...
         Private Function GetExpirationDate(ByVal key As String) As DateTime
             Dim cmd As New SqlClient.SqlCommand
-            cmd.CommandText = "SELECT ValueDateTime FROM [dbo].[System_GlobalProperties] WHERE PropertyName = @key"
+            cmd.CommandText = "SELECT ValueDateTime FROM [dbo].[System_GlobalProperties] WHERE PropertyName = @key AND ValueNVarchar = 'camm WebManager'"
             cmd.CommandType = CommandType.Text
             cmd.Connection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
             cmd.Parameters.Add("@key", SqlDbType.VarChar).Value = key
@@ -963,27 +1122,25 @@ Namespace CompuMaster.camm.WebManager.Registration
             Return expirationDate
         End Function
 
-        ''' <summary>
-        ''' Returns the date on which the support and maintance contract expires
-        ''' </summary>
-        ''' <returns></returns>
-        Private Function GetSupportContractExpirationDate() As DateTime
-            Return GetExpirationDate("SnMContractExpires")
-        End Function
 
         ''' <summary>
-        ''' Returns the date on which the licence expires
+        ''' Fetches bit value with the corresponding key form the global properties table
         ''' </summary>
+        ''' <param name="key"></param>
         ''' <returns></returns>
-        Private Function GetLicenceExpirationDate() As DateTime
-            Return GetExpirationDate("LicenceExpirationDate")
-        End Function
-        ''' <summary>
-        ''' Returns the date on which the update contract expires
-        ''' </summary>
-        ''' <returns></returns>
-        Private Function GetUpdateContractExpirationDate() As DateTime
-            Return GetExpirationDate("UpdateContractExpires")
+        ''' TODO: this doesn't belong to this class, it should probably be in one which is made for this purpose...
+        Private Function GetBooleanValue(ByVal key As String, defaultValue As Boolean) As Boolean
+            Dim cmd As New SqlClient.SqlCommand
+            cmd.CommandText = "SELECT ValueBoolean FROM [dbo].[System_GlobalProperties] WHERE PropertyName = @key AND ValueNVarchar = 'camm WebManager'"
+            cmd.CommandType = CommandType.Text
+            cmd.Connection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
+            cmd.Parameters.Add("@key", SqlDbType.VarChar).Value = key
+            Dim value As Object = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+            If IsDBNull(value) OrElse value Is Nothing Then
+                Return defaultValue
+            Else
+                Return CType(value, Boolean)
+            End If
         End Function
 
         ''' <summary>
@@ -992,7 +1149,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' <returns></returns>
         Private Function GetLicenceModel() As LicenceData.LicenseModel
             Dim cmd As New SqlClient.SqlCommand
-            cmd.CommandText = "SELECT ValueInt FROM [dbo].[System_GlobalProperties] WHERE PropertyName = 'LicenceModel'"
+            cmd.CommandText = "SELECT ValueInt FROM [dbo].[System_GlobalProperties] WHERE PropertyName = 'LicenceModel' AND ValueNVarchar = 'camm WebManager'"
             cmd.CommandType = CommandType.Text
             cmd.Connection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
 
@@ -1006,7 +1163,7 @@ Namespace CompuMaster.camm.WebManager.Registration
 
         Private Function GetLicenceType() As LicenceData.LicenceType
             Dim cmd As New SqlClient.SqlCommand
-            cmd.CommandText = "SELECT ValueInt FROM [dbo].[System_GlobalProperties] WHERE PropertyName = 'LicenceType'"
+            cmd.CommandText = "SELECT ValueInt FROM [dbo].[System_GlobalProperties] WHERE PropertyName = 'LicenceType' AND ValueNVarchar = 'camm WebManager'"
             cmd.CommandType = CommandType.Text
             cmd.Connection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
 
@@ -1019,22 +1176,22 @@ Namespace CompuMaster.camm.WebManager.Registration
         End Function
 
         Public Function Load() As InstanceValidationResult
-            Dim instanceValidationResult As New InstanceValidationResult
-
-            instanceValidationResult.SupportContractExpirationDate = GetSupportContractExpirationDate()
-            instanceValidationResult.UpdateContractExpirationDate = GetUpdateContractExpirationDate()
-            instanceValidationResult.LicenceData = New LicenceData()
-            instanceValidationResult.LicenceData.ExpirationDate = GetLicenceExpirationDate()
-            instanceValidationResult.LicenceData.Model = GetLicenceModel()
-            instanceValidationResult.LicenceData.Type = GetLicenceType()
-
-            Return instanceValidationResult
+            Dim Result As New InstanceValidationResult
+            Result.SupportContractExpirationDate = GetExpirationDate("SnMContractExpires")
+            Result.UpdateContractExpirationDate = GetExpirationDate("UpdateContractExpires")
+            Result.LicenceData = New LicenceData()
+            Result.LicenceData.ExpirationDate = GetExpirationDate("LicenceExpirationDate")
+            Result.LicenceData.Model = GetLicenceModel()
+            Result.LicenceData.Type = GetLicenceType()
+            Result.UpdateAvailable = GetBooleanValue("UpdatesAvailable", False)
+            Result.SecurityUpdateAvailable = GetBooleanValue("SecurityUpdatesAvailable", False)
+            Return Result
         End Function
 
         Public Sub SetLicenceModel(ByVal model As LicenceData.LicenseModel)
-            Dim sql As String = "UPDATE System_GlobalProperties SET ValueInt = @licenceModel WHERE PropertyName = 'LicenceModel' " &
-                    "IF @@ROWCOUNT = 0 " &
-                    "INSERT INTO System_GlobalProperties (PropertyName, ValueInt) VALUES('LicenceModel', @licenceModel) "
+            Dim sql As String = "UPDATE System_GlobalProperties SET ValueInt = @licenceModel WHERE PropertyName = 'LicenceModel' AND ValueNVarchar = 'camm WebManager' " & _
+                    "IF @@ROWCOUNT = 0 " & _
+                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarchar, ValueInt) VALUES('LicenceModel', 'camm WebManager', @licenceModel) "
 
             Dim cmd As New SqlClient.SqlCommand(sql)
             cmd.Parameters.Add("@licenceModel", SqlDbType.Int).Value = model
@@ -1044,9 +1201,9 @@ Namespace CompuMaster.camm.WebManager.Registration
         End Sub
 
         Public Sub SetLicenceExpirationDate(ByVal expirationDate As DateTime)
-            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @expirationDate WHERE PropertyName = 'LicenceExpirationDate' " &
-                    "IF @@ROWCOUNT = 0 " &
-                    "INSERT INTO System_GlobalProperties (PropertyName, ValueDateTime) VALUES('LicenceExpirationDate', @expirationDate) "
+            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @expirationDate WHERE PropertyName = 'LicenceExpirationDate' AND ValueNVarchar = 'camm WebManager' " & _
+                    "IF @@ROWCOUNT = 0 " & _
+                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarchar, ValueDateTime) VALUES('LicenceExpirationDate', 'camm WebManager', @expirationDate) "
 
             Dim cmd As New SqlClient.SqlCommand(sql)
             cmd.Parameters.Add("@expirationDate", SqlDbType.DateTime).Value = expirationDate

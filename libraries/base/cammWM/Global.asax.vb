@@ -401,9 +401,15 @@ Namespace CompuMaster.camm.WebManager.Application
                 Try
                     Dim registration As New Registration.ProductRegistration(Me.cammWebManager)
                     If registration.IsRefreshFromServerRequired(48) Then
-                        registration.CheckRegistration()
+                        Application.Lock()
+                        Try
+                            registration.CheckRegistration(False)
+                        Finally
+                            Application.UnLock()
+                        End Try
                     End If
                 Catch ex As Exception
+                    Dim text As String = "Page_EndRequest: ERROR: " & ex.ToString()
                     Me.cammWebManager.Log.Exception(ex, False)
                 End Try
             End If

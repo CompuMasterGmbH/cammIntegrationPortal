@@ -129,6 +129,10 @@ Namespace CompuMaster.camm.WebManager.Tools.IO
                                 Dim DeletionWarning As String = Nothing
                                 If DeletionCountOut = TriState.True Then
                                     DeletionWarning = "WARNING: Deleting a previous file at target location FAILED" & vbNewLine
+                                ElseIf DeletionCountOut = TriState.False Then
+                                    DeletionWarning = "INFO: A previous file at target location has been DELETED" & vbNewLine
+                                Else
+                                    DeletionWarning = "INFO: No previous file existed" & vbNewLine
                                 End If
                                 Dim Win32ErrorMessage As System.ComponentModel.Win32Exception = GetWin32ErrorMessage()
                                 If Win32ErrorMessage Is Nothing Then

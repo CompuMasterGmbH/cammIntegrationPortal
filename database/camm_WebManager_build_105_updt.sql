@@ -1276,8 +1276,8 @@ alter table dbo.System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes
 alter column ScriptEngine_SessionID nvarchar(128) NULL
 GO
 
-if exists (select * from dbo.sysindexes where name = N'IX_System_WebAreasAuthorizedForSession_2' and id = object_id(N'[dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes]'))
-drop index [dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes].[IX_System_WebAreasAuthorizedForSession_2]
+if exists (select * from sys.indexes where name = N'IX_System_WebAreasAuthorizedForSession_2' and object_id = object_id(N'[dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes]'))
+DROP INDEX [IX_System_WebAreasAuthorizedForSession_2] ON [dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes]
 GO
 
  CREATE  INDEX [IX_System_WebAreasAuthorizedForSession_2] ON [dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes]([ScriptEngine_SessionID]) WITH  FILLFACTOR = 90 ON [PRIMARY]
@@ -1287,7 +1287,7 @@ GO
 SET ANSI_NULLS ON 
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetUserNameForScriptEngineSessionID]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetUserNameForScriptEngineSessionID]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 drop procedure [dbo].[Public_GetUserNameForScriptEngineSessionID]
 GO
 

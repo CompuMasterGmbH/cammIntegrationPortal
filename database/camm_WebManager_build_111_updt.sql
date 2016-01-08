@@ -1,4 +1,4 @@
-﻿if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[WebManager_DownloadHandler_Files]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+﻿if exists (select * from sys.objects where object_id = object_id(N'[dbo].[WebManager_DownloadHandler_Files]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 drop table dbo.[WebManager_DownloadHandler_Files]
 GO
 

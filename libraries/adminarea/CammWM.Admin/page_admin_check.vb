@@ -25,8 +25,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Next
             NotRequiredFlags.DataSource = resultDt
             NotRequiredFlags.DataBind()
-
         End Sub
+
         Private Function GetFlags(ByVal layer As CompuMaster.camm.WebManager.IDataLayer) As String()
             Return layer.ListOfAdditionalFlagsInUseByUserProfilesNotRequiredBySecurityObjects(cammWebManager)
         End Function

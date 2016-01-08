@@ -1,4 +1,4 @@
-﻿/*  Contains all functions and stored procedures cumulated in their latest version up to build 187 */
+﻿/*  Contains all functions and stored procedures cumulated in their latest version */
 
 ----------------------------------------------------
 -- dbo.AdminPrivate_CloneApplication
@@ -35,15 +35,15 @@ If @CurUserID Is Not Null
 
 				-- Add Group Authorizations
 				INSERT INTO dbo.ApplicationsRightsByGroup
-				                      (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application)
-				SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @NewAppID AS ID_Application
+				                      (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])
+				SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @NewAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application
 				FROM         dbo.ApplicationsRightsByGroup
 				WHERE     (ID_Application = @AppID)
 
 				-- Add User Authorizations
 				INSERT INTO dbo.ApplicationsRightsByUser
-				                      (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application)
-				SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @NewAppID AS ID_Application
+				                      (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])
+				SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @NewAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application
 				FROM         dbo.ApplicationsRightsByUser
 				WHERE     (ID_Application = @AppID)
 
@@ -76,7 +76,7 @@ If @CurUserID Is Not Null
 				INSERT INTO [dbo].[System_SubSecurityAdjustments]([UserID], [TableName], [TablePrimaryIDValue], [AuthorizationType])
 				SELECT [UserID], [TableName], @NewAppID, [AuthorizationType]
 				FROM [dbo].[System_SubSecurityAdjustments]
-				WHERE TableName = 'Applications' AND TablePrimaryIDValue = @AppID AND NOT ([AuthorizationType] = 'Owner' OR [AuthorizationType] = 'Update' OR [AuthorizationType] = 'UpdateRelations' OR [AuthorizationType] = 'Delete' OR [AuthorizationType] = 'View' OR [AuthorizationType] = 'ViewLogs')
+				WHERE TableName = 'Applications' AND TablePrimaryIDValue = @AppID AND [AuthorizationType] = 'ResponsibleContact'
 			END
 		
 		SET NOCOUNT OFF
@@ -736,7 +736,10 @@ GO
 ALTER PROCEDURE dbo.AdminPrivate_CreateApplicationRightsByGroup 
 	@ReleasedByUserID int,
 	@AppID int,
-	@GroupID int
+	@GroupID int,
+	@ServerGroupID int = -1,
+	@IsDevelopmentTeamMember bit = 0,
+	@IsDenyRule bit = 0
 WITH ENCRYPTION
 AS
 
@@ -777,8 +780,9 @@ If @CurUserID Is Not Null
 	-- Validation successfull, password will be updated now
 	BEGIN
 		-- Record update
-		INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application, ID_GroupOrPerson, ReleasedBy) VALUES (@AppID, @GroupID, @ReleasedByUserID)
-		EXEC Int_LogAuthChanges @CurUserID, @GroupID, @AppID, @ReleasedByUserID
+		INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application, ID_GroupOrPerson, ReleasedBy, DevelopmentTeamMember, IsDenyRule) 
+		VALUES (@AppID, @GroupID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule)
+		EXEC Int_LogAuthChanges @CurUserID, @GroupID, @AppID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule
 		-- Rückgabewert
 		SET NOCOUNT OFF
 		SELECT Result = -1
@@ -798,7 +802,9 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateApplicationRightsByUser
 	@ReleasedByUserID int,
 	@AppID int,
 	@UserID int,
-	@IsDevelopmentTeamMember bit
+	@ServerGroupID int = -1,
+	@IsDevelopmentTeamMember bit = 0,
+	@IsDenyRule bit = 0
 WITH ENCRYPTION
 AS
 
@@ -856,10 +862,10 @@ If @CurUserID Is Not Null
 	BEGIN
 		-- Record update
 		INSERT INTO dbo.ApplicationsRightsByUser 
-			(ID_Application, ID_GroupOrPerson, ReleasedBy, DevelopmentTeamMember) 
+			(ID_Application, ID_GroupOrPerson, ReleasedBy, DevelopmentTeamMember, IsDenyRule) 
 		VALUES 
-			(@AppID, @UserID, @ReleasedByUserID, @IsDevelopmentTeamMember)
-		EXEC Int_LogAuthChanges @UserID, Null, @AppID, @ReleasedByUserID
+			(@AppID, @UserID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule)
+		EXEC Int_LogAuthChanges @UserID, Null, @AppID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule
 		-- Rückgabewert
 		SET NOCOUNT OFF
 		SELECT Result = -1
@@ -888,9 +894,11 @@ AS
 
 declare @groupID int
 declare @AppID int
-select top 1 @groupid = id_grouporperson, @appid = id_application from dbo.ApplicationsRightsByGroup where id = @AuthID
+declare @IsDevelopmentTeamMember
+declare @IsDenyRule
+select top 1 @groupid = id_grouporperson, @appid = id_application, @IsDevelopmentTeamMember = DevelopmentTeamMember, @IsDenyRule = IsDenyRule from dbo.ApplicationsRightsByGroup where id = @AuthID
 
-EXEC Int_LogAuthChanges NULL, @GroupID, @AppID, @ReleasedByUserID 
+EXEC Int_LogAuthChanges NULL, @GroupID, @AppID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule 
 DELETE FROM dbo.ApplicationsRightsByGroup WHERE     (ID_GroupOrPerson IS NOT NULL) AND ID=@AuthID
 
 GO
@@ -906,13 +914,15 @@ WITH ENCRYPTION
 AS
 declare @UserID int
 declare @AppID int
-select top 1 @userid = id_grouporperson, @appid = id_application from dbo.ApplicationsRightsByUser where id = @AuthID
+declare @IsDevelopmentTeamMember
+declare @IsDenyRule
+select top 1 @userid = id_grouporperson, @appid = id_application, @IsDevelopmentTeamMember = DevelopmentTeamMember, @IsDenyRule = IsDenyRule from dbo.ApplicationsRightsByUser where id = @AuthID
 
-EXEC Int_LogAuthChanges @UserID, Null, @AppID, @ReleasedByUserID 
+EXEC Int_LogAuthChanges @UserID, Null, @AppID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule 
 DELETE FROM dbo.ApplicationsRightsByUser WHERE ID_GroupOrPerson Is Not Null And ID=@AuthID
 GO
 
-IF  EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_DeleteMemberships]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF  EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_DeleteMemberships]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[AdminPrivate_DeleteMemberships]
 GO
 
@@ -923,7 +933,8 @@ CREATE PROCEDURE [dbo].[AdminPrivate_DeleteMemberships]
 (
 	@ReleasedByUserID int,
 	@GroupID int,
-	@UserID int
+	@UserID int,
+	@IsDenyRule bit = 0
 )
 WITH ENCRYPTION
 AS
@@ -943,9 +954,10 @@ If @CurUserID Is Not Null
 		-- Rückgabewert
 		SELECT Result = -1
 		-- Record update
-		DELETE FROM dbo.Memberships WHERE ID_User=@UserID AND ID_Group=@GroupID
+		DELETE FROM dbo.Memberships WHERE ID_User=@UserID AND ID_Group=@GroupID AND IsDenyRule = @IsDenyRule
 		-- log group membership change
-		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) values (@UserID, GetDate(), '0.0.0.0', '0.0.0.0', NULL, -12, cast(@GroupID as nvarchar(50)))
+		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) 
+		values (@UserID, GetDate(), '0.0.0.0', '0.0.0.0', NULL, -12, cast(@GroupID as nvarchar(50)) + N'|' + cast(@IsDenyRule as nvarchar(5)))
 	END
 Else
 	-- Rückgabewert
@@ -1002,7 +1014,8 @@ GO
 ALTER PROCEDURE dbo.AdminPrivate_CreateMemberships 
 	@ReleasedByUserID int,
 	@GroupID int,
-	@UserID int
+	@UserID int,
+	@IsDenyRule bit = 0
 WITH ENCRYPTION
 AS
 -- Deklaration Variablen/Konstanten
@@ -1023,9 +1036,10 @@ If @MemberShipID Is Null
 				-- Rückgabewert
 				SELECT Result = -1
 				-- Record update
-				INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedBy) VALUES (@GroupID, @UserID, @ReleasedByUserID)
+				INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedBy, IsDenyRule) VALUES (@GroupID, @UserID, @ReleasedByUserID, @IsDenyRule)
 				-- log group membership change
-				insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) values (@UserID, GetDate(), '0.0.0.0', '0.0.0.0', NULL, -11, cast(@GroupID as nvarchar(50)))
+				insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) 
+				values (@UserID, GetDate(), '0.0.0.0', '0.0.0.0', NULL, -11, cast(@GroupID as nvarchar(50)) + N'|' + cast(@IsDenyRule as nvarchar(5)))
 			END
 		Else
 			-- Rückgabewert
@@ -1514,12 +1528,12 @@ WHERE     (ID = @IDApp)
 If (@InheritsFrom Is Null) 
 	Begin
 		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) 
-		values (@ReleasedByUserID, GetDate(), '0.0.0.0', '0.0.0.0', @IDApp, 31, 'Application now inhertis from nothing')
+		values (@ReleasedByUserID, GetDate(), '0.0.0.0', '0.0.0.0', @IDApp, 31, 'Application now inherits from nothing')
 	End
 Else
 	Begin
 		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) 
-		values (@ReleasedByUserID, GetDate(), '0.0.0.0', '0.0.0.0', @IDApp, 31, 'Application now inhertis from ID ' + Convert(varchar(50), @InheritsFrom))
+		values (@ReleasedByUserID, GetDate(), '0.0.0.0', '0.0.0.0', @IDApp, 31, 'Application now inherits from ID ' + Convert(varchar(50), @InheritsFrom))
 	End
 SET NOCOUNT ON
 SELECT Result = -1
@@ -1971,24 +1985,38 @@ ALTER PROCEDURE dbo.Int_LogAuthChanges
 @UserID int = Null,
 @GroupID int = Null,
 @AppID int,
-@ReleasedByUserID int = Null
+@ReleasedByUserID int = Null,
+@IsDevelopmentTeamMember int = NULL, 
+@IsDenyRule int = NULL, 
+@ServerGroupID int = NULL
 )
 WITH ENCRYPTION
 AS 
 
+declare @FlagInfo nvarchar(20)
+SELECT @FlagInfo = N''
+IF IsNull(@IsDevelopmentTeamMember, 0) <> 0 AND IsNull(@IsDenyRule, 0) <> 0
+	SELECT @FlagInfo = ' (Dev+DenyRule)'
+ELSE IF IsNull(@IsDevelopmentTeamMember, 0) <> 0
+	SELECT @FlagInfo = ' (Dev)'
+ELSE IF IsNull(@IsDenyRule, 0) <> 0
+	SELECT @FlagInfo = ' (DenyRule)'
+
 If @GroupID Is Not Null
 	begin
 		-- log indirect changes on users
-		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) 
-		select id_user, GetDate(), '0.0.0.0', '0.0.0.0', @AppID, -7, Null
+		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription, ServerGroupID) 
+		select id_user, GetDate(), '0.0.0.0', '0.0.0.0', @AppID, -7, Null, NULL
 		from view_Memberships_CummulatedWithAnonymous
 		where id_group = @GroupID
 		-- log group auth change
-		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) values (IsNull(@UserID, 0), GetDate(), '0.0.0.0', '0.0.0.0', @AppID, -8, cast(@GroupID as nvarchar(20)) + N' by user ' + cast(@ReleasedByUserID as nvarchar(20)))
+		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription, ServerGroupID) 
+		values (IsNull(@UserID, 0), GetDate(), '0.0.0.0', '0.0.0.0', @AppID, -8, cast(@GroupID as nvarchar(20)) + N' by user ' + cast(@ReleasedByUserID as nvarchar(20)) + @FlagInfo, NULL)
 	end
 Else
 	If @UserID Is Not Null
-		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) values (@UserID, GetDate(), '0.0.0.0', '0.0.0.0', @AppID, -6, N'by user ' + cast(@ReleasedByUserID as nvarchar(20)))
+		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription, ServerGroupID) 
+		values (@UserID, GetDate(), '0.0.0.0', '0.0.0.0', @AppID, -6, N'by user ' + cast(@ReleasedByUserID as nvarchar(20)) + @FlagInfo, NULL)
 GO
 
 
@@ -2045,7 +2073,7 @@ DECLARE @LoginName nvarchar(50)
 GO
 
 
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[IsAdministratorForAuthorizations]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[IsAdministratorForAuthorizations]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[IsAdministratorForAuthorizations]
 GO
 CREATE PROC [dbo].[IsAdministratorForAuthorizations]
@@ -2079,7 +2107,7 @@ ELSE
 	RETURN 1
 GO
 
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[IsAdministratorForMemberships]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[IsAdministratorForMemberships]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[IsAdministratorForMemberships]
 GO
 CREATE PROC [dbo].[IsAdministratorForMemberships]
@@ -2116,11 +2144,11 @@ GO
 --------------------------------------------------------------------------------------------------------------------------------
 -- FIX for previous build 162 (which has been already fixed, too): Remove SP which has got schema name of the current DB user --
 --------------------------------------------------------------------------------------------------------------------------------
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo_camm_WebManager].[LogMissingExternalUserAssignment]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo_camm_WebManager].[LogMissingExternalUserAssignment]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE dbo_camm_WebManager.LogMissingExternalUserAssignment
 GO
 
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[LogMissingExternalUserAssignment]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[LogMissingExternalUserAssignment]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE dbo.LogMissingExternalUserAssignment
 GO
 CREATE PROCEDURE dbo.LogMissingExternalUserAssignment
@@ -2156,7 +2184,7 @@ ELSE
 	END
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[LookupUserNameByScriptEngineSessionID]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[LookupUserNameByScriptEngineSessionID]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[LookupUserNameByScriptEngineSessionID]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[LookupUserNameByScriptEngineSessionID]
 GO
 CREATE PROC dbo.LookupUserNameByScriptEngineSessionID
 	(
@@ -2401,7 +2429,7 @@ WHERE (System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID IS NOT NULL)
 		AND (System_Servers.ID > 0)
 GO
 
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[Public_GetNavPointsOfGroup]') AND OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = object_id(N'[dbo].[Public_GetNavPointsOfGroup]') AND OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE [Public_GetNavPointsOfGroup]
 GO
 ----------------------------------------------------
@@ -2456,8 +2484,9 @@ IF @AllowedLocation Is Null
 UPDATE dbo.Applications_CurrentAndInactiveOnes SET IsNew = 0, IsUpdated = 0, ResetIsNewUpdatedStatusOn = Null WHERE (ResetIsNewUpdatedStatusOn < GETDATE())
 
 -- Recordset zurückgeben	
+		CREATE TABLE #NavUpdatedItems_Filtered (Level1Title nvarchar(255), Level2Title nvarchar(255), Level3Title nvarchar(255), Level4Title nvarchar(255), Level5Title nvarchar(255), Level6Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Filtered (Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title)
 		SELECT distinct Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title
-		into #NavUpdatedItems_Filtered
 			FROM dbo.view_ApplicationRights LEFT OUTER JOIN dbo.Memberships ON dbo.view_ApplicationRights.ID_Group = dbo.Memberships.ID_Group LEFT JOIN dbo.System_Servers ON dbo.view_ApplicationRights.LocationID = dbo.System_Servers.ID
 			WHERE (dbo.System_Servers.ServerGroup = @AllowedLocation And ((dbo.view_ApplicationRights.ID_Group = @GroupID) OR (dbo.Memberships.ID_Group = @GroupID) OR (dbo.view_ApplicationRights.ID_Group = @PublicGroupID) OR (dbo.view_ApplicationRights.ID_Group = @AnonymousGroupID)))  And dbo.view_ApplicationRights.LanguageID in (@LanguageID, @AlternativeLanguage) And (dbo.view_ApplicationRights.AppDisabled = 0 Or dbo.view_ApplicationRights.DevelopmentTeamMember = 1) 
 				AND dbo.view_ApplicationRights.Title <> 'System - Login'
@@ -2565,8 +2594,9 @@ If (@IsSecurityAdmin = 0)	-- True would be = 1
 
 	BEGIN
 
+		CREATE TABLE #NavUpdatedItems_Filtered (Level1Title nvarchar(255), Level2Title nvarchar(255), Level3Title nvarchar(255), Level4Title nvarchar(255), Level5Title nvarchar(255), Level6Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Filtered (Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title)
 		SELECT distinct Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title
-		into #NavUpdatedItems_Filtered
 			FROM dbo.view_ApplicationRights LEFT OUTER JOIN dbo.Memberships ON dbo.view_ApplicationRights.ID_Group = dbo.Memberships.ID_Group LEFT JOIN dbo.System_Servers ON dbo.view_ApplicationRights.LocationID = dbo.System_Servers.ID
 			WHERE (dbo.System_Servers.ServerGroup = @AllowedLocation And ((dbo.view_ApplicationRights.ID_User = @UserID) OR (dbo.Memberships.ID_User = @UserID) OR (dbo.view_ApplicationRights.ID_Group = @PublicGroupID) OR (dbo.view_ApplicationRights.ID_Group = @AnonymousGroupID)))  And dbo.view_ApplicationRights.LanguageID in (@LanguageID, @AlternativeLanguage) And (dbo.view_ApplicationRights.AppDisabled = 0 Or dbo.view_ApplicationRights.DevelopmentTeamMember = 1) 
 				AND dbo.view_ApplicationRights.Title <> 'System - Login'
@@ -2613,33 +2643,39 @@ Case When Substring(NavURL,1,1) = '/' Then ServerProtocol + '://' + ServerName +
 Else 
 	BEGIN
 
+		CREATE TABLE #NavUpdatedItems_Level1Title (Level1Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Level1Title (Level1Title)
 		SELECT distinct Level1Title
-		into #NavUpdatedItems_Level1Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
 
+		CREATE TABLE #NavUpdatedItems_Level2Title (Level2Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Level2Title (Level2Title)
 		SELECT distinct Level2Title
-		into #NavUpdatedItems_Level2Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
 
+		CREATE TABLE #NavUpdatedItems_Level3Title (Level3Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Level3Title (Level3Title)
 		SELECT distinct Level3Title
-		into #NavUpdatedItems_Level3Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
 
+		CREATE TABLE #NavUpdatedItems_Level4Title (Level4Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Level4Title (Level4Title)
 		SELECT distinct Level4Title
-		into #NavUpdatedItems_Level4Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
 
+		CREATE TABLE #NavUpdatedItems_Level5Title (Level5Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Level5Title (Level5Title)
 		SELECT distinct Level5Title
-		into #NavUpdatedItems_Level5Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
-
+
+		CREATE TABLE #NavUpdatedItems_Level6Title (Level6Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Level6Title (Level6Title)
 		SELECT distinct Level6Title
-		into #NavUpdatedItems_Level6Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
 
@@ -2835,7 +2871,7 @@ SELECT Result = @UserID
 Return @UserID
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetUserNameForScriptEngineSessionID]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetUserNameForScriptEngineSessionID]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 drop procedure [dbo].[Public_GetUserNameForScriptEngineSessionID]
 GO
 
@@ -2947,7 +2983,7 @@ SELECT Result = -1
 
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_PreValidateUser]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_PreValidateUser]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_PreValidateUser]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_PreValidateUser]
 GO
 CREATE PROCEDURE [dbo].[Public_PreValidateUser]
 AS 
@@ -3329,7 +3365,7 @@ DECLARE @CountOfValuesInTable int
 	return
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_UpdateUserDetails]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_UpdateUserDetails]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 drop procedure [dbo].[Public_UpdateUserDetails]
 GO
 
@@ -4304,7 +4340,7 @@ GO
 ---------------------------------------
 -- Update SP "Redirects_LogAndGetURL" 
 ---------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Redirects_LogAndGetURL]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Redirects_LogAndGetURL]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 drop procedure [dbo].[Redirects_LogAndGetURL]
 GO
 
@@ -4371,7 +4407,7 @@ BEGIN
 END
 GO
 
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[RefillSplittedSecObjAndNavPointsTables]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[RefillSplittedSecObjAndNavPointsTables]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[RefillSplittedSecObjAndNavPointsTables]
 GO
 CREATE PROCEDURE dbo.RefillSplittedSecObjAndNavPointsTables
@@ -4553,7 +4589,7 @@ GO
 EXEC RefillSplittedSecObjAndNavPointsTables
 
 GO
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[ApplicationRights_CumulatedPerUserAndServerGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationRights_CumulatedPerUserAndServerGroup]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE dbo.ApplicationRights_CumulatedPerUserAndServerGroup
 GO
 CREATE PROCEDURE dbo.ApplicationRights_CumulatedPerUserAndServerGroup

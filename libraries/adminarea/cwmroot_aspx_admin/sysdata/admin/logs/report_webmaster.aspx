@@ -1,1 +1,0 @@
-﻿<!--#include virtual="/system/admin/logs/report_webmaster.aspx"-->

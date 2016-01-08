@@ -274,21 +274,6 @@
                     AssemblyName = "System.Web.Services"
                 />
                 <Reference
-                    Name = "ASPnetMenu"
-                    AssemblyName = "ASPnetMenu"
-                    HintPath = "libs\ASPnetMenu.dll"
-                />
-                <Reference
-                    Name = "ComponentArt.Web.UI"
-                    AssemblyName = "ComponentArt.Web.UI"
-                    HintPath = "libs_1_1\ComponentArt.Web.UI.dll"
-                />
-                <Reference
-                    Name = "RadChart"
-                    AssemblyName = "RadChart"
-                    HintPath = "libs\RadChart.dll"
-                />
-                <Reference
                     Name = "system.directoryservices"
                     AssemblyName = "System.DirectoryServices"
                     HintPath = "E:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\system.directoryservices.dll"

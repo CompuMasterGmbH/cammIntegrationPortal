@@ -6,8 +6,15 @@ Namespace CompuMaster.camm.WebManager
     Public Interface IDataLayer
 
         Sub RemoveUserAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal userID As Long, ByVal serverGroupID As Integer)
+        Sub RemoveUserAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal userID As Long, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
         Sub RemoveGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer)
+        Sub RemoveGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
         Sub AddGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer)
+        Sub AddGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
+
+        'Still implemented in WMSystem.UserInformation because of some difficult stuff/magic inside
+        'Sub AddUserAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal userID As Long, ByVal serverGroupID As Integer)
+        'Sub AddUserAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal userID As Long, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
 
         ''' -----------------------------------------------------------------------------
         ''' <summary>
@@ -687,45 +694,99 @@ Namespace CompuMaster.camm.WebManager
                 Throw New NotImplementedException("Support for database version " & _DBVersion.ToString & " is currently not supported. Please update the camm WebManager software, first!")
             End If
 
-            Const sql As String = _
-                "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                "-- Copy missing user authorizations --" & vbNewLine & _
-                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
-                "           ([ID_Application]" & vbNewLine & _
-                "           ,[ID_GroupOrPerson]" & vbNewLine & _
-                "           ,[ReleasedOn]" & vbNewLine & _
-                "           ,[ReleasedBy]" & vbNewLine & _
-                "           ,[DevelopmentTeamMember])" & vbNewLine & _
-                "SELECT @DestinationSecObjID" & vbNewLine & _
-                "      ,[ID_GroupOrPerson]" & vbNewLine & _
-                "      ,[ReleasedOn]" & vbNewLine & _
-                "      ,[ReleasedBy]" & vbNewLine & _
-                "      ,[DevelopmentTeamMember]" & vbNewLine & _
-                "  FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
-                "where [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine & _
-                "	(" & vbNewLine & _
-                "	SELECT [ID_GroupOrPerson]" & vbNewLine & _
-                "	FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
-                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine & _
-                "	)" & vbNewLine & _
-                "" & vbNewLine & _
-                "-- Copy missing group authorizations --" & vbNewLine & _
-                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
-                "           ([ID_Application]" & vbNewLine & _
-                "           ,[ID_GroupOrPerson]" & vbNewLine & _
-                "           ,[ReleasedOn]" & vbNewLine & _
-                "           ,[ReleasedBy])" & vbNewLine & _
-                "SELECT @DestinationSecObjID" & vbNewLine & _
-                "      ,[ID_GroupOrPerson]" & vbNewLine & _
-                "      ,[ReleasedOn]" & vbNewLine & _
-                "      ,[ReleasedBy]" & vbNewLine & _
-                "  FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
-                "where [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine & _
-                "	(" & vbNewLine & _
-                "	SELECT [ID_GroupOrPerson]" & vbNewLine & _
-                "	FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
-                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine & _
+            Const sqlTillDbBuild204 As String =
+                "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                "-- Copy missing user authorizations --" & vbNewLine &
+                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine &
+                "           ([ID_Application]" & vbNewLine &
+                "           ,[ID_GroupOrPerson]" & vbNewLine &
+                "           ,[ReleasedOn]" & vbNewLine &
+                "           ,[ReleasedBy]" & vbNewLine &
+                "           ,[DevelopmentTeamMember])" & vbNewLine &
+                "SELECT @DestinationSecObjID" & vbNewLine &
+                "      ,[ID_GroupOrPerson]" & vbNewLine &
+                "      ,[ReleasedOn]" & vbNewLine &
+                "      ,[ReleasedBy]" & vbNewLine &
+                "      ,[DevelopmentTeamMember]" & vbNewLine &
+                "  FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine &
+                "where [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine &
+                "	(" & vbNewLine &
+                "	SELECT [ID_GroupOrPerson]" & vbNewLine &
+                "	FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine &
+                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine &
+                "	)" & vbNewLine &
+                "" & vbNewLine &
+                "-- Copy missing group authorizations --" & vbNewLine &
+                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
+                "           ([ID_Application]" & vbNewLine &
+                "           ,[ID_GroupOrPerson]" & vbNewLine &
+                "           ,[ReleasedOn]" & vbNewLine &
+                "           ,[ReleasedBy])" & vbNewLine &
+                "SELECT @DestinationSecObjID" & vbNewLine &
+                "      ,[ID_GroupOrPerson]" & vbNewLine &
+                "      ,[ReleasedOn]" & vbNewLine &
+                "      ,[ReleasedBy]" & vbNewLine &
+                "  FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
+                "where [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine &
+                "	(" & vbNewLine &
+                "	SELECT [ID_GroupOrPerson]" & vbNewLine &
+                "	FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
+                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine &
                 "	)"
+
+            Const sqlSinceDbBuild205 As String =
+                "Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                "-- Copy missing user authorizations --" & vbNewLine &
+                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine &
+                "           ([ID_Application]" & vbNewLine &
+                "           ,[ID_GroupOrPerson]" & vbNewLine &
+                "           ,[ReleasedOn]" & vbNewLine &
+                "           ,[ReleasedBy]" & vbNewLine &
+                "           ,[DevelopmentTeamMember]" & vbNewLine &
+                "           ,[IsDenyRule])" & vbNewLine &
+                "Select @DestinationSecObjID" & vbNewLine &
+                "      ,[ID_GroupOrPerson]" & vbNewLine &
+                "      ,[ReleasedOn]" & vbNewLine &
+                "      ,[ReleasedBy]" & vbNewLine &
+                "      ,[DevelopmentTeamMember]" & vbNewLine &
+                "      ,[IsDenyRule]" & vbNewLine &
+                "  FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine &
+                "where [ID_Application] = @SourceSecObjID And ID_GroupOrPerson Not In " & vbNewLine &
+                "	(" & vbNewLine &
+                "	Select [ID_GroupOrPerson]" & vbNewLine &
+                "	FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine &
+                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine &
+                "	)" & vbNewLine &
+                "" & vbNewLine &
+                "-- Copy missing group authorizations --" & vbNewLine &
+                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
+                "           ([ID_Application]" & vbNewLine &
+                "           ,[ID_GroupOrPerson]" & vbNewLine &
+                "           ,[ReleasedOn]" & vbNewLine &
+                "           ,[ReleasedBy]" & vbNewLine &
+                "           ,[DevelopmentTeamMember]" & vbNewLine &
+                "           ,[IsDenyRule])" & vbNewLine &
+                "Select @DestinationSecObjID" & vbNewLine &
+                "      ,[ID_GroupOrPerson]" & vbNewLine &
+                "      ,[ReleasedOn]" & vbNewLine &
+                "      ,[ReleasedBy]" & vbNewLine &
+                "      ,[DevelopmentTeamMember]" & vbNewLine &
+                "      ,[IsDenyRule]" & vbNewLine &
+                "  FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
+                "where [ID_Application] = @SourceSecObjID And ID_GroupOrPerson Not In " & vbNewLine &
+                "	(" & vbNewLine &
+                "	Select [ID_GroupOrPerson]" & vbNewLine &
+                "	FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
+                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine &
+                "	)"
+
+            Dim sql As String
+            If _DBVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                sql = sqlSinceDbBuild205
+            Else
+                sql = sqlTillDbBuild204
+            End If
+
             Dim cmd As New SqlClient.SqlCommand(sql, New SqlClient.SqlConnection(webmanager.ConnectionString))
             cmd.Parameters.Add("@SourceSecObjID", SqlDbType.Int).Value = sourceSecurityObjectID
             cmd.Parameters.Add("@DestinationSecObjID", SqlDbType.Int).Value = destinationSecurityObjectID
@@ -801,8 +862,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Public Function ActiveUsers(ByVal webmanager As IWebManager) As Long() Implements IDataLayer.ActiveUsers
-            Const sql As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT ID FROM Benutzer"
+            Const sql As String = "SELECT ID FROM Benutzer"
             Dim cmd As New SqlClient.SqlCommand(sql, New SqlClient.SqlConnection(webmanager.ConnectionString))
 
             'New code to fix InvalidCastException
@@ -830,14 +890,17 @@ Namespace CompuMaster.camm.WebManager
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Public Function ActiveAndDeletedUsers(ByVal webmanager As IWebManager) As Hashtable Implements IDataLayer.ActiveAndDeletedUsers
-            Const sql As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT IsNull(AllUsers.ID_User, Benutzer.ID) AS ID, CASE WHEN Benutzer.ID IS NULL THEN 1 ELSE 0 END AS Deleted FROM Benutzer full join (SELECT ID_User FROM Log_Users GROUP BY ID_User) as AllUsers on Benutzer.ID = AllUsers.ID_User"
+            Const sql As String = "SELECT IsNull(AllUsers.ID_User, Benutzer.ID) AS ID, CASE WHEN Benutzer.ID IS NULL THEN 1 ELSE 0 END AS Deleted FROM Benutzer full join (SELECT ID_User FROM Log_Users GROUP BY ID_User) as AllUsers on Benutzer.ID = AllUsers.ID_User"
             Dim cmd As New SqlClient.SqlCommand(sql, New SqlClient.SqlConnection(webmanager.ConnectionString))
             Return CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstTwoColumnsIntoHashtable(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
 
         Public Sub AddGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer) Implements IDataLayer.AddGroupAuthorization
-            If serverGroupID <> Nothing Then Throw New NotImplementedException("Specifying a server group ID is not yet supported in this release of camm Web-Manager")
+            AddGroupAuthorization(webmanager, securityObjectID, groupID, serverGroupID, False, False)
+        End Sub
+
+        Public Sub AddGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean) Implements IDataLayer.AddGroupAuthorization
+            If serverGroupID <> Nothing Then Throw New NotImplementedException("Specifying a server group ID Is Not yet supported In this release Of camm Web-Manager")
 
             If groupID = Nothing Then
                 Dim Message As String = "Group has to be created, first, before you can modify the list of authorizations"
@@ -853,6 +916,15 @@ Namespace CompuMaster.camm.WebManager
             MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.Int).Value = CType(webmanager, WMSystem).CurrentUserID(WMSystem.SpecialUsers.User_Code)
             MyCmd.Parameters.Add("@AppID", SqlDbType.Int).Value = securityObjectID
             MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupID
+            If Setup.DatabaseUtils.Version(webmanager, True).CompareTo(WMSystem.MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
+                MyCmd.Parameters.Add("@ServerGroupID", SqlDbType.Int).Value = serverGroupID
+            ElseIf serverGroupID <> 0 Then
+                Throw New NotSupportedException("MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects required")
+            End If
+            If Setup.DatabaseUtils.Version(webmanager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                MyCmd.Parameters.Add("@IsDevelopmentTeamMember", SqlDbType.Bit).Value = isDeveloperAuthorization
+                MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = isDenyRule
+            End If
 
             Dim Result As Object
             Result = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
@@ -877,6 +949,10 @@ Namespace CompuMaster.camm.WebManager
         End Sub
 
         Public Sub RemoveGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer) Implements IDataLayer.RemoveGroupAuthorization
+            RemoveGroupAuthorization(webmanager, securityObjectID, groupID, serverGroupID, False, False)
+        End Sub
+
+        Public Sub RemoveGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean) Implements IDataLayer.RemoveGroupAuthorization
             If serverGroupID <> Nothing Then Throw New NotImplementedException("Specifying a server group ID is not yet supported in this release of camm Web-Manager")
 
             If groupID = Nothing Then
@@ -891,14 +967,26 @@ Namespace CompuMaster.camm.WebManager
             'Find the auth ID
             MyCmd = New SqlClient.SqlCommand("", New SqlClient.SqlConnection(webmanager.ConnectionString))
             MyCmd.CommandType = CommandType.Text
-            MyCmd.CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select top 1 id as AuthID from dbo.ApplicationsRightsByGroup where id_grouporperson = @groupid and id_application = @SecurityObjectID"
+            If Setup.DatabaseUtils.Version(webmanager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                MyCmd.CommandText = "select top 1 id as AuthID from dbo.ApplicationsRightsByGroup where id_grouporperson = @groupid and id_application = @SecurityObjectID and [DevelopmentTeamMember] = @IsDeveloperAuthorization and [IsDenyRule] = @IsDenyRule"
+            Else
+                MyCmd.CommandText = "select top 1 id as AuthID from dbo.ApplicationsRightsByGroup where id_grouporperson = @groupid and id_application = @SecurityObjectID"
+            End If
             MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupID
             MyCmd.Parameters.Add("@SecurityObjectID", SqlDbType.Int).Value = securityObjectID
+            If Setup.DatabaseUtils.Version(webmanager, True).CompareTo(WMSystem.MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
+                MyCmd.Parameters.Add("@ServerGroupID", SqlDbType.Int).Value = serverGroupID
+            ElseIf serverGroupID <> 0 Then
+                Throw New NotSupportedException("MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects required")
+            End If
+            If Setup.DatabaseUtils.Version(webmanager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                MyCmd.Parameters.Add("@IsDeveloperAuthorization", SqlDbType.Bit).Value = isDeveloperAuthorization
+                MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = isDenyRule
+            End If
             Dim AuthID As Integer = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), 0)
 
-            'Remove the auth line
-            If AuthID <> Nothing Then
+                'Remove the auth line
+                If AuthID <> Nothing Then
                 MyCmd = New SqlClient.SqlCommand("AdminPrivate_DeleteApplicationRightsByGroup", New SqlClient.SqlConnection(webmanager.ConnectionString))
                 MyCmd.CommandType = CommandType.StoredProcedure
                 MyCmd.Parameters.Add("@AuthID", SqlDbType.Int).Value = AuthID
@@ -911,6 +999,10 @@ Namespace CompuMaster.camm.WebManager
         End Sub
 
         Public Sub RemoveUserAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal userID As Long, ByVal serverGroupID As Integer) Implements IDataLayer.RemoveUserAuthorization
+            RemoveUserAuthorization(webmanager, securityObjectID, userID, serverGroupID, False, False)
+        End Sub
+
+        Public Sub RemoveUserAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal userID As Long, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean) Implements IDataLayer.RemoveUserAuthorization
             If serverGroupID <> Nothing Then Throw New NotImplementedException("Specifying a server group ID is not yet supported in this release of camm Web-Manager")
 
             If userID = Nothing Then
@@ -918,17 +1010,29 @@ Namespace CompuMaster.camm.WebManager
                 CType(webmanager, WMSystem).Log.RuntimeException(Message)
             ElseIf securityObjectID = Nothing Then
                 Dim Message As String = "Security object has to be created, first, before you can modify the list of authorizations"
-                CType(WebManager, WMSystem).Log.RuntimeException(Message)
+                CType(webmanager, WMSystem).Log.RuntimeException(Message)
             End If
 
             Dim MyCmd As SqlClient.SqlCommand
             'Find the auth ID
             MyCmd = New SqlClient.SqlCommand("", New SqlClient.SqlConnection(webmanager.ConnectionString))
             MyCmd.CommandType = CommandType.Text
-            MyCmd.CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select top 1 id as AuthID from dbo.ApplicationsRightsByUser where id_grouporperson = @userid and id_application = @SecurityObjectID"
+            If Setup.DatabaseUtils.Version(webmanager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                MyCmd.CommandText = "select top 1 id as AuthID from dbo.ApplicationsRightsByUser where id_grouporperson = @userid and id_application = @SecurityObjectID and [DevelopmentTeamMember] = @IsDeveloperAuthorization and [IsDenyRule] = @IsDenyRule"
+            Else
+                MyCmd.CommandText = "select top 1 id as AuthID from dbo.ApplicationsRightsByUser where id_grouporperson = @userid and id_application = @SecurityObjectID"
+            End If
             MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID
             MyCmd.Parameters.Add("@SecurityObjectID", SqlDbType.Int).Value = securityObjectID
+            If Setup.DatabaseUtils.Version(webmanager, True).CompareTo(WMSystem.MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
+                MyCmd.Parameters.Add("@ServerGroupID", SqlDbType.Int).Value = serverGroupID
+            ElseIf serverGroupID <> 0 Then
+                Throw New NotSupportedException("MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects required")
+            End If
+            If Setup.DatabaseUtils.Version(webmanager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                MyCmd.Parameters.Add("@IsDeveloperAuthorization", SqlDbType.Bit).Value = isDeveloperAuthorization
+                MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = isDenyRule
+            End If
             Dim AuthID As Integer = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), 0)
 
             'Remove the auth line

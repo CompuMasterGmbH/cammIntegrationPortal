@@ -1394,6 +1394,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 .Add("Subject", GetType(System.String))
                 .Add("ID", GetType(System.Int32))
                 .Add("Sent Time", GetType(System.DateTime))
+                .Add("ErrorDetails", GetType(System.String))
             End With
 
             Dim logDT As DataTable = Me.data.LoadMailMessages(ConnString)
@@ -1439,6 +1440,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             row("Subject") = mail.Subject
                             row("ID") = CInt(dRow("ID"))
                             row("Sent Time") = CDate(dRow("DateTime"))
+                            row("ErrorDetails") = Utils.Nz(dRow("ErrorDetails"), "")
 
                             result.Rows.Add(row)
                             rowCounter += 1
@@ -1473,6 +1475,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 .Add("Subject", GetType(System.String))
                 .Add("ID", GetType(System.Int32))
                 .Add("Sent Time", GetType(System.DateTime))
+                .Add("ErrorDetails", GetType(System.String))
             End With
 
             Dim statesToFilter As String = Me.SelectedStatesToFilter
@@ -1531,6 +1534,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         row("Subject") = mail.Subject
                         row("ID") = CInt(dRow("ID"))
                         row("Sent Time") = CDate(dRow("DateTime"))
+                        row("ErrorDetails") = Utils.Nz(dRow("ErrorDetails"), "")
 
                         result.Rows.Add(row)
                         rowCounter += 1
@@ -1808,7 +1812,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
             End If
 
-            If Not data Is Nothing AndAlso data.Rows.Count > 0 Then CompuMaster.camm.WebManager.Administration.Export.SendExportFileAsCsv(MyBase.cammWebManager, data, "UTF-8", "MailQueue")
+            If Not data Is Nothing AndAlso data.Rows.Count > 0 Then
+                CompuMaster.camm.WebManager.Administration.Export.SendExportFileAsCsv(MyBase.cammWebManager, data, "UTF-8", "MailQueue")
+            End If
         End Sub
         ''' -----------------------------------------------------------------------------
         ''' <summary>
@@ -2326,8 +2332,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ''' -----------------------------------------------------------------------------
             Public Function LoadMailMessages(ByVal ConnectionString As String) As DataTable
                 Dim query As String
-                query = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT Top 100 [ID], [UserID], [Data], [State], [DateTime] FROM [dbo].[Log_eMailMessages] "
+                query = "SELECT Top 100 [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] "
 
                 Return CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New System.Data.SqlClient.SqlCommand(query, New System.Data.SqlClient.SqlConnection(ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             End Function
@@ -2345,8 +2350,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ''' -----------------------------------------------------------------------------
             Public Function LoadErroDetails(ByVal ConnString As String, ByVal emailid As String) As String
                 Dim query As String
-                query = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT IsNull(ErrorDetails,'') FROM [dbo].[Log_eMailMessages] Where ID = " + emailid.ToString
+                query = "SELECT IsNull(ErrorDetails,'') FROM [Log_eMailMessages] Where ID = " + emailid.ToString
                 Return Trim(CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New System.Data.SqlClient.SqlCommand(query, New System.Data.SqlClient.SqlConnection(ConnString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
             End Function
             ''' -----------------------------------------------------------------------------
@@ -2366,8 +2370,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ''' -----------------------------------------------------------------------------
             Public Function LoadMailMessages(ByVal ConnectionString As String, ByVal emailID As Integer, ByVal statesToFilter As String, ByVal fromDate As DateTime, ByVal toDate As DateTime) As DataTable
                 Dim query As String
-                query = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT [ID], [UserID], [Data], [State], [DateTime] FROM [dbo].[Log_eMailMessages] " & vbNewLine & _
+                query = "SELECT [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine & _
                        ""
                 If emailID <> Nothing Then
                     If query.IndexOf("where") > 0 Then
@@ -2425,8 +2428,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Public Function LoadMailMessages(ByVal ConnString As String, ByVal emailID As Integer, ByVal statesToFilter As String, ByVal fromDate As DateTime, ByVal toDate As DateTime, ByVal iTop As Integer) As DataTable
                 Dim query As String
-                query = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT Top 100 [ID], [UserID], [Data], [State], [DateTime] FROM [dbo].[Log_eMailMessages] " & vbNewLine & _
+                query = "SELECT Top 100 [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine & _
                        ""
                 If emailID <> Nothing Then
                     If query.IndexOf("where") > 0 Then
@@ -2497,8 +2499,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ''' -----------------------------------------------------------------------------
             Public Function LoadMailMessages(ByVal ConnString As String, ByVal emailID As Integer, ByVal state As Byte, ByVal fromDate As DateTime, ByVal toDate As DateTime) As DataTable
                 Dim query As String
-                query = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT [ID], [UserID], [Data], [State], [DateTime] FROM [dbo].[Log_eMailMessages] " & vbNewLine & _
+                query = "SELECT [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine & _
                        ""
                 If emailID <> Nothing Then
                     If query.IndexOf("where") > 0 Then
@@ -2636,8 +2637,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             btnSend.Attributes.Add("onclick", "return ValidateEmailId('" + txtTo.ClientID + "','" + txtCc.ClientID + "','" + txtBcc.ClientID + "');")
             btnClose.Attributes.Add("onclick", "javascript:window.close();")
             Dim emailId As String = Request.QueryString("ID")
-            Dim dtEmail As DataTable = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT [ID], [Data] FROM [dbo].[Log_eMailMessages] where [ID] =" + emailId, New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+            Dim dtEmail As DataTable = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlCommand("SELECT [ID], [Data] FROM [Log_eMailMessages] where [ID] =" + emailId, New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             Dim xmlData As String = CStr(dtEmail.Rows(0)("Data"))
             mail = New Messaging.MailMessage(xmlData, Me.cammWebManager)
             ds = New DataSet

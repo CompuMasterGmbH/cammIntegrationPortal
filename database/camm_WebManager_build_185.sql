@@ -10,7 +10,7 @@ GO
 -- Refresh schema of view by recreating it --
 ---------------------------------------------
 	
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Applications]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[Applications]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Applications]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[Applications]
 GO
 CREATE VIEW dbo.Applications
 AS
@@ -110,7 +110,7 @@ Else
 
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_ApplicationRights]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_ApplicationRights]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 drop view [dbo].[view_ApplicationRights]
 GO
 

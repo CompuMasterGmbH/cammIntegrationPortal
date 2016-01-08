@@ -40,9 +40,46 @@ Namespace CompuMaster.camm.SmartWebEditor
             Public Sub New()
                 MyBase.New()
                 Me.TextMode = TextBoxMode.MultiLine
-                Me.Columns = 40
-                Me.Rows = 25
             End Sub
+
+            Public Property CssWidth As String Implements IEditor.CssWidth
+                Get
+                    Return Me.Style.Item("width")
+                End Get
+                Set(value As String)
+                    Me.Style.Add("width", value)
+                End Set
+            End Property
+
+            Public Property CssHeight As String Implements IEditor.CssHeight
+                Get
+                    Return Me.Style.Item("height")
+                End Get
+                Set(value As String)
+                    Me.Style.Add("height", value)
+                End Set
+            End Property
+
+            Public Property TextareaColumns As Integer Implements IEditor.TextareaColumns
+                Get
+                    Return Me.Columns
+                End Get
+                Set(value As Integer)
+                    Me.Columns = value
+                End Set
+            End Property
+
+            Public Property TextareaRows As Integer Implements IEditor.TextareaRows
+                Get
+                    Return Me.Rows
+                End Get
+                Set(value As Integer)
+                    Me.Rows = value
+                End Set
+            End Property
+
+
+
 
             Public Property Editable As Boolean Implements IEditor.Editable
                 Get

@@ -54,7 +54,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim index As Integer = 0
             Dim conflictTypeValues As Integer() = CType([Enum].GetValues(GetType(camm.WebManager.WMSystem.Logging_ConflictTypes)), Integer())
             Dim conflictTypeNames As String() = CType([Enum].GetNames(GetType(camm.WebManager.WMSystem.Logging_ConflictTypes)), String())
-
+#If NetFramework <> "1_1" Then
+            System.Array.Sort(Of String)(conflictTypeNames)
+#End If
             SetConflictTypeTableHeader()
 
             Dim defaultMaxAgeInDays As String = CStr(cammWebManager.Log.MaxRetentionDays)

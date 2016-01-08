@@ -297,10 +297,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected WithEvents CheckboxStep3SuppressAllNotificationMails As CheckBox
         Protected WithEvents PanelStep3MembershipsImportType As Panel
         Protected WithEvents PanelStep3AuthorizationsImportType As Panel
+        Protected WithEvents PanelStep3AdditionalFlagsImportType As Panel
         Protected WithEvents RadioStep3ActionMembershipsFitExact As RadioButton
         Protected WithEvents RadioStep3ActionMembershipsInsertOnly As RadioButton
         Protected WithEvents RadioStep3ActionAuthorizationsFitExact As RadioButton
         Protected WithEvents RadioStep3ActionAuthorizationsInsertOnly As RadioButton
+        Protected WithEvents RadioStep3ActionAdditionalFlagsFitExact As RadioButton
+        Protected WithEvents RadioStep3ActionAdditionalFlagsDefinedKeysOnly As RadioButton
         Protected LabelStep1Errors As Label
         Protected LabelStep2Errors As Label
         Protected LabelStep3Errors As Label
@@ -510,9 +513,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             CheckResult.Columns.Add("Required column", GetType(String))
             CheckResult.Columns.Add("Data type", GetType(String))
             CheckResult.Columns.Add("Errors", GetType(String))
-            Dim Result As Boolean = True
             Try
-                If importtable Is Nothing Then
+                If ImportTable Is Nothing Then
                     Throw New Exception("No import data available, has the session been reset?")
                 End If
                 'Determine the correct culture
@@ -521,6 +523,20 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Else
                     ImportFileCulture = System.Globalization.CultureInfo.CreateSpecificCulture(Trim(Me.TextboxStep3Culture.Text))
                 End If
+            Catch ex As Exception
+                If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                    LabelStep3Errors.Text = "Error resolving the culture ID: " & ex.ToString.Replace(vbNewLine, "<br>") & "<br>"
+                Else
+                    LabelStep3Errors.Text = "Error resolving the culture ID: " & ex.Message & "<br>"
+                End If
+                Return False
+            End Try
+            Dim Result As Boolean = True
+            Try
+                'Reset errors tag
+                LabelStep3Errors.Text = Nothing
+                Me.LabelStep4Errors.Text = Nothing
+                Me.MessagesLog = Nothing
                 'Determine the selected import action type
                 If Me.RadioStep3ActionInsertOnly.Checked = True Then
                     Me.ImportAction = ImportBase.ImportActions.InsertOnly
@@ -534,7 +550,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     If preValidateOnly = False Then
                         LabelStep3Errors.Text = "You must select an action before you continue<br>"
                         Result = False
-                        Exit Try
                     End If
                 End If
                 If Me.RadioStep3ActionAuthorizationsFitExact.Checked = True Then
@@ -547,6 +562,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Else
                     Me.ImportActionMemberships = ImportBase.ImportActions.InsertOnly
                 End If
+
                 'Suppress notification mails?
                 Me.SuppressNotificationMails = Me.CheckboxStep3SuppressAllNotificationMails.Checked
                 'Check column by column for existance as well as correct type of content
@@ -589,7 +605,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         LabelStep3Errors.Text = "Error: duplicates found in column ""User_LoginName""<br>"
                         If preValidateOnly = False Then
                             Result = False
-                            Exit Try
                         End If
                     End If
                 End If
@@ -604,10 +619,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Else
                     Me.PanelStep3AuthorizationsImportType.Visible = False
                 End If
-                'Reset errors tag
-                LabelStep3Errors.Text = Nothing
-                Me.LabelStep4Errors.Text = Nothing
-                Me.MessagesLog = Nothing
+                If Me.ImportTable.Columns.Contains("User_AdditionalFlags") Then
+                    Me.PanelStep3AdditionalFlagsImportType.Visible = True
+                Else
+                    Me.PanelStep3AdditionalFlagsImportType.Visible = False
+                End If
             Catch ex As Exception
                 If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
                     LabelStep3Errors.Text = "Error resolving the culture ID: " & ex.ToString.Replace(vbNewLine, "<br>") & "<br>"
@@ -659,6 +675,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     MyRow(2) = "<font color=""red"">Column must exist for selected action type</font>"
                 ElseIf Me.ImportAction = ImportBase.ImportActions.InsertOrUpdate And (requiredColumnForInsert = True Or requiredColumnForUpdate = True) Then
                     MyRow(2) = "<font color=""red"">Column must exist for selected action type</font>"
+                ElseIf columnName.ToLowerInvariant = "user_password" AndAlso Me.CheckboxStep3SuppressAllNotificationMails.Checked = False Then
+                    MyRow(2) = "<font color=""" & System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.DarkOliveGreen) & """>Column doesn't exist; password will be generated dynamically and user will get a notification e-mail</font>"
+                    checkTable.Rows.Add(MyRow)
+                    Return True
+                ElseIf columnName.ToLowerInvariant = "user_password" AndAlso Me.CheckboxStep3SuppressAllNotificationMails.Checked = True Then
+                    MyRow(2) = "<font color=""" & System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.DarkOrange) & """>Column doesn't exist; new accounts can't be created</font>"
+                    checkTable.Rows.Add(MyRow)
+                    Return True
                 Else
                     MyRow(2) = "<font color=""" & System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.DarkOliveGreen) & """>Column doesn't exist; no data will be imported/updated for this field</font>"
                     checkTable.Rows.Add(MyRow)
@@ -886,6 +910,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Me.PrepareStep4(True)
         End Sub
 
+        Private Sub CheckboxStep3SuppressAllNotificationMails_CheckedChanged(sender As Object, e As EventArgs) Handles CheckboxStep3SuppressAllNotificationMails.CheckedChanged
+            Me.PrepareStep4(True)
+        End Sub
+
     End Class
 
     ''' -----------------------------------------------------------------------------
@@ -1088,7 +1116,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     End If
                     'And save all changes (as well as the password)
                     If userIDToUpdate = -1 Then
-                        'New account
+                        'New account - and set up the password
                         Dim userPassword As String
                         If userData.Table.Columns.Contains("User_Password") Then
                             userPassword = Utils.Nz(userData("User_Password"), "")
@@ -1097,7 +1125,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         End If
                         Try
                             If userPassword = "" Then
-                                Throw New Exception("Must create a new password")
+                                If Me.SuppressNotificationMails = True Then
+                                    Throw New Exception("Must create a new password when suppressing all notifications to user") 'so, DO FAIL completely!
+                                Else
+                                    Throw New CompuMaster.camm.WebManager.PasswordTooWeakException("Force creating a new password while notification of user is enabled")
+                                End If
                             End If
                             MyUser.Save(userPassword, Me.SuppressNotificationMails)
                         Catch ex As CompuMaster.camm.WebManager.PasswordTooWeakException
@@ -1105,13 +1137,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             Dim userAccesslevel As Integer = CType(userData("User_AccessLevel"), Integer)
                             Dim newPW As String = cammWebManager.PasswordSecurity.InspectionSeverities(userAccesslevel).CreateRandomSecurePassword
                             If MyUser.ID <> Nothing Then
-                                'User account has been already created in the try block
+                                'User account has already been created in the try block
                                 MyUser.SetPassword(newPW, SuppressNotificationMails)
                             Else
                                 MyUser.Save(newPW, SuppressNotificationMails)
                             End If
                             Dim passwordMessage As String
                             If Me.SuppressNotificationMails Then
+                                'usually not called code blocksince throwing a regular exception in try-block above doesn't end up in this code block any more
+                                'this behaviour is desired by redesign of import tool by JW on 2016-01-08
                                 passwordMessage = "Password too weak; it originally was """ & userPassword & """ for login name """ & userLoginName & """, the new password is now """ & newPW & """."
                             Else
                                 passwordMessage = "Password too weak; it originally was """ & userPassword & """ for login name """ & userLoginName & """, the new password is now a random password."
@@ -1119,7 +1153,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             Me.MessagesLog &= "<font color=""#A04444"">Row #" & rowID & ": " & passwordMessage & "</font>" & vbNewLine
                         End Try
                     Else
-                        'Existing account
+                        'Existing account - never change the password
                         MyUser.Save(Me.SuppressNotificationMails)
                     End If
 
@@ -1264,11 +1298,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
             If userData.Table.Columns.Contains("User_AdditionalFlags") Then
                 Dim value As String = Utils.Nz(userData("User_AdditionalFlags"), "")
-                Dim collection As New Collections.Specialized.NameValueCollection
-                Utils.ReFillNameValueCollection(collection, value)
-                'user.AdditionalFlags = collection -- This isn't compatible with newer versions of the main cammwebmanager lib.
-                user.AdditionalFlags.Clear()
-                user.AdditionalFlags.Add(collection)
+                'Just update the existing AdditionalFlags collection with newer/updated/removed values (removal = assignment of empty string)
+                Utils.ReFillNameValueCollection(user.AdditionalFlags, value)
             End If
 
         End Sub

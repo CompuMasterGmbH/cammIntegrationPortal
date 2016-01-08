@@ -1,1 +1,0 @@
-﻿<!--#include virtual="/system/admin/logs/current_activity.aspx"-->

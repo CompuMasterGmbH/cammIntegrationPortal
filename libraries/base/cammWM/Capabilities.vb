@@ -108,30 +108,6 @@ Namespace CompuMaster.camm.WebManager
             Return System.Reflection.Assembly.GetAssembly(GetType(Quiksoft.EasyMail.SMTP.SMTP)).GetName.Version.ToString
         End Function
 
-        Private Sub RequiredComponentsDetailedCheckForComponentArtWebUI()
-            Dim MyComponent As New ComponentArt.Web.UI.Menu
-        End Sub
-
-        Private Function RequiredComponentsDetailedCheckVersionOfComponentArtWebUI() As String
-            Return System.Reflection.Assembly.GetAssembly(GetType(ComponentArt.Web.UI.Menu)).GetName.Version.ToString
-        End Function
-
-        Private Sub RequiredComponentsDetailedCheckForCyberaktAspNet()
-            Dim MyComponent As New CYBERAKT.WebControls.Navigation.ASPnetMenu
-        End Sub
-
-        Private Function RequiredComponentsDetailedCheckVersionOfCyberaktAspNet() As String
-            Return System.Reflection.Assembly.GetAssembly(GetType(CYBERAKT.WebControls.Navigation.ASPnetMenu)).GetName.Version.ToString
-        End Function
-
-        Private Sub RequiredComponentsDetailedCheckForTelerikRadChart()
-            Dim MyComponent As New Telerik.WebControls.RadChart
-        End Sub
-
-        Private Function RequiredComponentsDetailedCheckVersionOfTelerikRadChart() As String
-            Return System.Reflection.Assembly.GetAssembly(GetType(Telerik.WebControls.RadChart)).GetName.Version.ToString
-        End Function
-
         Private Sub RequiredComponentsDetailedCheckForTelerikRadEditor()
             Dim MyComponent As New Telerik.WebControls.RadEditor
         End Sub
@@ -187,60 +163,6 @@ Namespace CompuMaster.camm.WebManager
             End Try
             Try
                 newRow("Version") = RequiredComponentsDetailedCheckVersionOfQuiksoftSmtp()
-            Catch
-                newRow("Version") = Nothing
-            End Try
-            Result.Rows.Add(newRow)
-
-            'Check ComponentArt component
-            newRow = Result.NewRow
-            newRow("ComponentName") = "ComponentArt.Web.UI"
-            newRow("ErrorDetails") = Nothing
-            Try
-                RequiredComponentsDetailedCheckForComponentArtWebUI()
-                newRow("Status") = "Working"
-            Catch ex As Exception
-                newRow("Status") = "Missing or failing"
-                newRow("ErrorDetails") = ex.ToString
-            End Try
-            Try
-                newRow("Version") = RequiredComponentsDetailedCheckVersionOfComponentArtWebUI()
-            Catch
-                newRow("Version") = Nothing
-            End Try
-            Result.Rows.Add(newRow)
-
-            'Check AspNetMenu component
-            newRow = Result.NewRow
-            newRow("ComponentName") = "ASPnetMenu"
-            newRow("ErrorDetails") = Nothing
-            Try
-                RequiredComponentsDetailedCheckForCyberaktAspNet()
-                newRow("Status") = "Working"
-            Catch ex As Exception
-                newRow("Status") = "Missing or failing"
-                newRow("ErrorDetails") = ex.ToString
-            End Try
-            Try
-                newRow("Version") = RequiredComponentsDetailedCheckVersionOfCyberaktAspNet()
-            Catch
-                newRow("Version") = Nothing
-            End Try
-            Result.Rows.Add(newRow)
-
-            'Check RadChart component
-            newRow = Result.NewRow
-            newRow("ComponentName") = "RadChart"
-            newRow("ErrorDetails") = Nothing
-            Try
-                RequiredComponentsDetailedCheckForTelerikRadChart()
-                newRow("Status") = "Working"
-            Catch ex As Exception
-                newRow("Status") = "Missing or failing"
-                newRow("ErrorDetails") = ex.ToString
-            End Try
-            Try
-                newRow("Version") = RequiredComponentsDetailedCheckVersionOfTelerikRadChart()
             Catch
                 newRow("Version") = Nothing
             End Try

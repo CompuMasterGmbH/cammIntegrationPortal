@@ -1,13 +1,12 @@
 Option Strict On
-Option Explicit On 
+Option Explicit On
 
-Imports System.Web
 Imports System.Data
-Imports System.Reflection
 Imports System.Data.SqlClient
 Imports System.Web.UI.WebControls
 Imports System.Web.UI.HtmlControls
 Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider
+Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery
 Imports CompuMaster.camm.WebManager.Administration
 Namespace CompuMaster.camm.WebManager.Pages.Administration
 
@@ -151,7 +150,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             TopClause = ""
 
-            strQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            strQuery = _
                 "select " & TopClause & " ID_Application,AppDisabled,AuthsAsAppID,TitleAdminArea,Title,AppReleasedByVorname,AppReleasedByID," & _
                 "AppReleasedByNachname,AppReleasedOn,NavURL,(select top 1 Description from Languages l where l.ID=view_ApplicationRights.LanguageID) As Abbreviation,(select top 1 ServerDescription from System_Servers s where s.ID=view_ApplicationRights.LocationID) as ServerDescription " & _
                 ",(SELECT top 1 AuthsAsAppID FROM Applications a WHERE a.ID = view_ApplicationRights.[AuthsAsAppID]) as NextAuthsAsAppID from [view_ApplicationRights] " & WhereClause.ToString & " group by ID_Application,AppDisabled,AuthsAsAppID,TitleAdminArea,Title,AppReleasedByVorname," & _
@@ -208,9 +207,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 MyDt.Dispose()
             End If
         End Sub
-
-
-
 #End Region
 
 #Region "Control Events"
@@ -261,8 +257,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                     If Trim(Request.QueryString("Showall")) <> "" OrElse Trim(Request.QueryString("Application")) <> "" Then
                         'Check for required flags
-                        Dim sqlstr As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT count([RequiredUserProfileFlags]) FROM [dbo].[Applications_CurrentAndInactiveOnes] where id = @AppID"
+                        Dim sqlstr As String = "SELECT count([RequiredUserProfileFlags]) FROM [dbo].[Applications_CurrentAndInactiveOnes] where id = @AppID"
                         Dim cmd As New SqlCommand(sqlstr, New SqlConnection(cammWebManager.ConnectionString))
                         cmd.Parameters.Add("@AppID", SqlDbType.Int).Value = .Item("ID_Application").ToString
                         If Val(ExecuteScalar(cmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)) > 0 Then
@@ -301,8 +296,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         tempStr = New Text.StringBuilder
 
                         Dim sqlParams As SqlParameter() = {New SqlParameter("@AppID", NewAppID)}
-                        strQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select LoginDisabled,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_Group,DevelopmentTeamMember,Name,Vorname,Description from [view_ApplicationRights] where id_application=@AppID and isnull(ID_Group,0)<>0 order by Name"
+                        strQuery = "select LoginDisabled,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_Group,DevelopmentTeamMember,Name,Vorname,Description,IsDenyRule from [view_ApplicationRights] where id_application=@AppID and isnull(ID_Group,0)<>0 order by Name, IsDenyRule"
                         dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                         If Not dt Is Nothing AndAlso dt.Rows.Count > 0 Then
@@ -314,6 +308,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             tempStr.Append("<TR>")
                             tempStr.Append("<TD WIDTH=""30px""> &nbsp;</TD>")
                             tempStr.Append("<TD BGCOLOR=""#E1E1E1"" WIDTH=""60""><P class=""boldFont"">Group ID</P></TD>")
+                            tempStr.Append("<TD BGCOLOR=""#E1E1E1""><P class=""boldFont"">Rule</b>&nbsp;</P></TD>")
                             tempStr.Append("<TD BGCOLOR=""#E1E1E1""><P class=""boldFont"">Name</b>&nbsp;</P></TD>")
                             tempStr.Append("<TD BGCOLOR=""#E1E1E1""><P class=""boldFont"">Description</b>&nbsp;</P></TD>")
                             tempStr.Append("<TD BGCOLOR=""#E1E1E1""><P class=""boldFont"">Action&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
@@ -326,6 +321,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 tempStr.Append("<TR>")
                                 tempStr.Append("<TD>&nbsp;</TD>")
                                 tempStr.Append("<TD><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(dt.Rows(j)("ID_Group"), 0).ToString) & IIf(Utils.Nz(dt.Rows(j)("DevelopmentTeamMember"), False), "<b>{Dev}</b>", "").ToString & "&nbsp;</P></TD>")
+                                tempStr.Append("<TD><P class=""normalFont"">" & IIf(Utils.Nz(dt.Rows(j)("IsDenyRule"), False) = False, "GRANT", "DENY").ToString & "</P></TD>")
                                 tempStr.Append("<TD WIDTH=""170""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(dt.Rows(j)("Name"), String.Empty)) & "</P></TD>")
                                 tempStr.Append("<TD WIDTH=""200""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(dt.Rows(j)("Description"), String.Empty)) & "&nbsp;</P></TD>")
                                 tempStr.Append("<TD><P class=""normalFont"">")
@@ -339,8 +335,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                                 If Not Request.QueryString("ShowAllUsers") Is Nothing AndAlso Utils.Nz(Request.QueryString("ShowAllUsers"), 0) = 1 Then
                                     MyDt = New DataTable
-                                    strQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                                "SELECT * FROM [view_Memberships] WHERE ID_Group = " & Utils.Nz(dt.Rows(j)("ID_Group"), 0).ToString & " And ID_Group not in (Select id_group_public from system_servergroups) and ID_Group not in (Select id_group_anonymous from system_servergroups) and (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR 0 in (select tableprimaryidvalue from System_SubSecurityAdjustments Where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " AND TableName = 'Applications' AND AuthorizationType In ('SecurityMaster','ViewAllRelations')) OR id_group in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " AND TableName = 'Applications' AND AuthorizationType In ('UpdateRelations','ViewRelations','Owner'))) ORDER BY Nachname, Name, ID_Group, Vorname"
+                                    strQuery = "SELECT * FROM [view_Memberships] WHERE ID_Group = " & Utils.Nz(dt.Rows(j)("ID_Group"), 0).ToString & " And ID_Group not in (Select id_group_public from system_servergroups) and ID_Group not in (Select id_group_anonymous from system_servergroups) and (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR 0 in (select tableprimaryidvalue from System_SubSecurityAdjustments Where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " AND TableName = 'Applications' AND AuthorizationType In ('SecurityMaster','ViewAllRelations')) OR id_group in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " AND TableName = 'Applications' AND AuthorizationType In ('UpdateRelations','ViewRelations','Owner'))) ORDER BY Nachname, Name, ID_Group, Vorname"
                                     MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                                     If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then
                                         'CType(e.Item.FindControl("rptShowGroupUsers"), Repeater).DataSource = MyDt
@@ -366,8 +361,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         MyDt = New DataTable
                         tempStr = New Text.StringBuilder
                         Dim sqlParams1 As SqlParameter() = {New SqlParameter("@AppID", NewAppID)}
-                        strQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select name1,LoginDisabled,DevelopmentTeamMember,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_User,Nachname,Vorname,LoginName from [view_ApplicationRights] where id_application=@AppID and isnull(ID_User,0)<>0 order by Nachname"
+                        strQuery = "select companyname,name1,LoginDisabled,DevelopmentTeamMember,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_User,Nachname,Vorname,LoginName, IsDenyRule from [view_ApplicationRights] where id_application=@AppID and isnull(ID_User,0)<>0 order by Nachname, CompanyName, IsDenyRule"
                         MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, sqlParams1, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                         If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then
@@ -386,8 +380,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             tempStr.Append("<TR>")
                             tempStr.Append("<TD WIDTH=""30"">&nbsp;</TD>")
                             tempStr.Append("<TD BGCOLOR=""#E1E1E1"" WIDTH=""60""><P class=""boldFont"">User ID</P></TD>")
+                            tempStr.Append("<TD BGCOLOR=""#E1E1E1""><P class=""boldFont"">Rule</b>&nbsp;</P></TD>")
                             tempStr.Append("<TD BGCOLOR=""#E1E1E1""><P class=""boldFont"">Name&nbsp;</P></TD>")
                             tempStr.Append("<TD BGCOLOR=""#E1E1E1""><P class=""boldFont"">Login&nbsp;</P></TD>")
+                            tempStr.Append("<TD BGCOLOR=""#E1E1E1""><P class=""boldFont"">Company&nbsp;</P></TD>")
                             tempStr.Append("<TD BGCOLOR=""#E1E1E1""><P class=""boldFont"">Action")
 
                             Dim tempLit As New Label
@@ -397,21 +393,23 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             End If
                             tempStr.Append("</P></TD></TR>")
 
-                            For i As Integer = 0 To MyDt.Rows.Count - 1
+                            For RowCounterI As Integer = 0 To MyDt.Rows.Count - 1
                                 tempStr.Append("<TR>")
                                 tempStr.Append("<TD>&nbsp;</TD>")
-                                tempStr.Append("<TD><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(i)("ID_User"), 0).ToString) & IIf(Utils.Nz(MyDt.Rows(i)("DevelopmentTeamMember"), False), "<b>{Dev}</b>", "").ToString)
-                                If Not IsDBNull(MyDt.Rows(i)("LoginDisabled")) Then If Utils.Nz(MyDt.Rows(i)("LoginDisabled"), True) = True Then tempStr.Append("<span title="""" Disabled"""">(D)</span>&nbsp;</P></TD>")
+                                tempStr.Append("<TD><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("ID_User"), 0).ToString) & IIf(Utils.Nz(MyDt.Rows(RowCounterI)("DevelopmentTeamMember"), False), "<b>{Dev}</b>", "").ToString)
+                                If Utils.Nz(MyDt.Rows(RowCounterI)("LoginDisabled"), False) = True Then tempStr.Append("<span title="""" Disabled"""">(D)</span>")
+                                tempStr.Append("&nbsp;</P></TD>")
+                                tempStr.Append("<TD><P class=""normalFont"">" & IIf(MyDt.Columns.Contains("IsDenyRule") = False OrElse Utils.Nz(MyDt.Rows(RowCounterI)("IsDenyRule"), False) = False, "GRANT", "DENY").ToString & "</P></TD>")
                                 tempStr.Append("<TD WIDTH=""170""><P class=""normalFont"">")
 
-                                Dim MyDBVersion As Version = cammWebManager.System_DBVersion_Ex
-                                If MyDBVersion.Build >= 147 Then tempStr.Append(Server.HtmlEncode(Utils.Nz(MyDt.Rows(i)("Name1"), String.Empty))) Else tempStr.Append(Server.HtmlEncode(Utils.Nz(MyDt.Rows(i)("VorName"), String.Empty)) + " " + Server.HtmlEncode(Utils.Nz(MyDt.Rows(i)("NachName"), String.Empty)))
+                                If Me.CurrentDbVersion.Build >= 147 Then tempStr.Append(Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("Name1"), String.Empty))) Else tempStr.Append(Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("VorName"), String.Empty)) + " " + Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("NachName"), String.Empty)))
 
                                 tempStr.Append("&nbsp;</P></TD>")
-                                tempStr.Append("<TD WIDTH=""200""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(i)("LoginName"), String.Empty)) & "&nbsp;</P></TD>")
+                                tempStr.Append("<TD WIDTH=""200""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("LoginName"), String.Empty)) & "&nbsp;</P></TD>")
+                                tempStr.Append("<TD WIDTH=""200""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("CompanyName"), String.Empty)) & "&nbsp;</P></TD>")
                                 tempStr.Append("<TD><P class=""normalFont"">")
-                                If IsDBNull(MyDt.Rows(i)("ThisAuthIsFromAppID")) Then
-                                    If Not IsDBNull(MyDt.Rows(i)("ID_AppRight")) Then tempStr.Append("<a href=""apprights_delete_users.aspx?ID=" & Utils.Nz(MyDt.Rows(i)("ID_AppRight"), 0) & "&AuthsAsAppID=" & Utils.Nz(MyDt.Rows(i)("AuthsAsAppID"), 0).ToString & """>Delete</a>")
+                                If IsDBNull(MyDt.Rows(RowCounterI)("ThisAuthIsFromAppID")) Then
+                                    If Not IsDBNull(MyDt.Rows(RowCounterI)("ID_AppRight")) Then tempStr.Append("<a href=""apprights_delete_users.aspx?ID=" & Utils.Nz(MyDt.Rows(RowCounterI)("ID_AppRight"), 0) & "&AuthsAsAppID=" & Utils.Nz(MyDt.Rows(RowCounterI)("AuthsAsAppID"), 0).ToString & """>Delete</a>")
                                 Else
                                     tempStr.Append("<em>Inherited</em>")
                                 End If
@@ -460,6 +458,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected WithEvents drp_App As DropDownList
         Protected WithEvents rptUserList As Repeater
         Protected MyDt As DataTable
+        Protected WithEvents chk_deny As CheckBox
+        Protected WithEvents chk_devteam As CheckBox
 #End Region
 
 #Region "Page Events"
@@ -507,13 +507,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 If SearchWords.Replace("%", "") = String.Empty Then WhereClause = String.Empty
 
                 Dim sb As New System.Text.StringBuilder
-                sb.Append("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT " & TopClause & " System_AccessLevels.Title As AccessLevel_Title, Benutzer.*, ISNULL(Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Namenszusatz, ''), 1, 1)) }) + Nachname + ', ' + Vorname AS UserNameComplete FROM [Benutzer] LEFT JOIN System_AccessLevels ON Benutzer.AccountAccessability = System_AccessLevels.ID" & vbNewLine)
+                sb.Append("SELECT " & TopClause & " System_AccessLevels.Title As AccessLevel_Title, Benutzer.*, ISNULL(Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Namenszusatz, ''), 1, 1)) }) + Nachname + ', ' + Vorname AS UserNameComplete FROM [Benutzer] LEFT JOIN System_AccessLevels ON Benutzer.AccountAccessability = System_AccessLevels.ID" & vbNewLine)
                 sb.Append(WhereClause & " ORDER BY Nachname, Vorname" & vbNewLine)
 
                 Dim SqlQuery As String = sb.ToString
 
-                Dim cmd As New SqlClient.SqlCommand(SqlQuery, New SqlConnection(cammWebManager.ConnectionString))
+                Dim cmd As New System.Data.SqlClient.SqlCommand(SqlQuery, New SqlConnection(cammWebManager.ConnectionString))
                 cmd.Parameters.Add("@SearchWords", SqlDbType.NVarChar).Value = SearchWords
                 cmd.Parameters.Add("@AppID", SqlDbType.Int).Value = AppID
                 For myWordCounter2 As Integer = 0 To searchItems.Length - 1
@@ -553,8 +552,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Sub ListApps()
             Dim sqlParams As SqlParameter() = {New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))}
             Dim WhereClause As String = "WHERE (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR Applications.ID in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND Applications.ID in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND AuthorizationType In ('UpdateRelations','Owner')))) "
-            Dim sql As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT Applications.ID, Applications.Title, Applications.AppDisabled, System_Servers.ServerDescription, Languages.Description FROM (Applications LEFT JOIN Languages ON Applications.LanguageID = Languages.ID) LEFT JOIN System_Servers ON Applications.LocationID = System_Servers.ID " & WhereClause & " ORDER BY Title"
+            Dim sql As String = "SELECT Applications.ID, Applications.Title, Applications.AppDisabled, System_Servers.ServerDescription, Languages.Description FROM (Applications LEFT JOIN Languages ON Applications.LanguageID = Languages.ID) LEFT JOIN System_Servers ON Applications.LocationID = System_Servers.ID " & WhereClause & " ORDER BY Title"
 
             Dim AppTable As DataTable = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), sql, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             For Each row As DataRow In AppTable.Rows
@@ -575,6 +573,18 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region "Control Events"
+        ''' <summary>
+        ''' Is a checkbox checked or unchecked/missing?
+        ''' </summary>
+        ''' <param name="control"></param>
+        ''' <returns></returns>
+        Private Function IsChecked(control As CheckBox) As Boolean
+            If control Is Nothing Then
+                Return False
+            Else
+                Return control.Checked
+            End If
+        End Function
 
         Private Sub searchUserBtnClick(ByVal sender As Object, ByVal e As EventArgs) Handles searchUserBtn.Click
             ListOfUsers(CInt(drp_App.SelectedValue))
@@ -626,19 +636,37 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ListOfUsers(CInt(CType(sender, DropDownList).SelectedValue))
         End Sub
 
-        Public Function IsUserAlreadyAuthorized(ByVal userId As Integer, ByVal applicationID As Integer) As Boolean
-            Dim commandText As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                     "SELECT count([ID]) FROM [dbo].[ApplicationsRightsByUser] WHERE [ID_GroupOrPerson] = @UserID  AND [ID_Application] =  @AppID"
-            Dim commandParams As SqlParameter() = {New SqlParameter("@UserID", userId), New SqlParameter("@AppID", applicationID)}
-            Dim RecordCount As Object = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), commandText, CommandType.Text, commandParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+        Public Function IsUserAlreadyAuthorized(ByVal userID As Long, ByVal applicationID As Integer) As Boolean
+            If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                Throw New NotSupportedException("DbVersion.Build >= " & WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule.ToString & " requires calling an overloaded version of this method")
+            End If
+            Dim commandText As String = "SELECT count([ID]) FROM [dbo].[ApplicationsRightsByUser] WHERE [ID_GroupOrPerson] = @UserID  AND [ID_Application] =  @AppID"
+            Dim MyCmd As New System.Data.SqlClient.SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
+            MyCmd.CommandType = CommandType.Text
+            MyCmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = userID
+            MyCmd.Parameters.Add("@AppID", SqlDbType.Int).Value = applicationID
+            Dim RecordCount As Integer = CType(ExecuteScalar(MyCmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
+            Return CInt(RecordCount) > 0
+        End Function
 
+        Public Function IsUserAlreadyAuthorized(ByVal userID As Long, ByVal applicationID As Integer, isDev As Boolean, isDenyRule As Boolean) As Boolean
+            If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
+                Throw New NotSupportedException("DbVersion.Build < " & WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule.ToString & " requires calling an overloaded version of this method")
+            End If
+            Dim commandText As String = "SELECT count([ID]) FROM [dbo].[ApplicationsRightsByUser] WHERE [ID_GroupOrPerson] = @UserID  AND [ID_Application] =  @AppID AND IsNull(IsDenyRule, 0) = @IsDenyRule AND IsNull(DevelopmentTeamMember, 0) = @IsDev"
+            Dim MyCmd As New System.Data.SqlClient.SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
+            MyCmd.CommandType = CommandType.Text
+            MyCmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = userID
+            MyCmd.Parameters.Add("@AppID", SqlDbType.Int).Value = applicationID
+            MyCmd.Parameters.Add("@IsDev", SqlDbType.Bit).Value = isDev
+            MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = isDenyRule
+            Dim RecordCount As Integer = CType(ExecuteScalar(MyCmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
             Return CInt(RecordCount) > 0
         End Function
 
         Public Function GetRequiredUserFlagsForApplication(ByVal applicationID As Integer) As String()
             Dim commandParams As SqlParameter() = {New SqlParameter("@AppID", applicationID)}
-            Dim commandText As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "Select RequiredUserProfileFlags  From Applications_CurrentAndInactiveOnes Where ID = @AppID" '& dropAppID
+            Dim commandText As String = "Select RequiredUserProfileFlags  From Applications_CurrentAndInactiveOnes Where ID = @AppID" '& dropAppID
             Dim RequiredUserFlags As String = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), commandText, CommandType.Text, commandParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection).ToString()
 
             If RequiredUserFlags = String.Empty Then
@@ -650,7 +678,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Function
 
         Private Sub btnOKClick(ByVal sender As Object, ByVal args As EventArgs) Handles btnOK.Click
-            Dim authorize As Boolean = True
 
             Dim dropAppID As Integer = CInt(drp_App.SelectedValue)
             Dim dropAppText As String = drp_App.SelectedItem.Text
@@ -660,32 +687,42 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             For Each MyListItem As UI.Control In rptUserList.Controls
                 For Each MyControl As UI.Control In MyListItem.Controls
-                    If MyControl.GetType Is GetType(System.Web.UI.WebControls.CheckBox) AndAlso (MyControl.ID = "chk_user" Or MyControl.ID = "chk_devteam") Then
-                        If CType(MyListItem.FindControl("chk_user"), CheckBox).Checked AndAlso CType(MyListItem.FindControl("chk_devteam"), CheckBox).Checked Then
-                            If MyControl.ID = "chk_user" Then
-                                authorize = False
-                            End If
+                    Dim authorize As Boolean = True
+                    If MyControl.GetType Is GetType(System.Web.UI.WebControls.CheckBox) AndAlso (MyControl.ID = "chk_user" Or MyControl.ID = "chk_devteam" Or MyControl.ID = "chk_deny") Then
+                        If MyControl.ID <> "chk_user" Then
+                            'only create authorization once and never again on next controls in For-Each-Loop
+                            authorize = False
                         End If
 
                         If authorize Then
 
                             Dim chk As CheckBox = CType(MyControl, CheckBox)
-                            If chk.Checked Then
+                            If chk.Checked OrElse IsChecked(CType(MyListItem.FindControl("chk_deny"), CheckBox)) = True Then
                                 Dim dropUserText As String = CType(MyListItem.FindControl("lblLoginName"), UI.HtmlControls.HtmlAnchor).InnerText
                                 Dim dropUserID As Integer = CInt(CType(MyListItem.FindControl("lblID"), Label).Text)
 
                                 Dim userInfo As WMSystem.UserInformation = cammWebManager.System_GetUserInfo(CType(dropUserID, Long))
 
-                                If IsUserAlreadyAuthorized(dropUserID, dropAppID) Then
+                                'Show or hide controls for MilestoneDBVersion_AuthsWithSupportForDenyRule depending on environment support
+                                'If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                                'Hint: what is:
+                                ' - If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
+                                ' - If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Equal OR Newer
+                                If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 AndAlso IsUserAlreadyAuthorized(dropUserID, dropAppID) Then
+                                    lblErr.Text &= "User " + dropUserText.ToString() + " is already authorized for application " + dropAppText.Trim & "<br />"
+                                    authorize = False
+                                ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso MyListItem.FindControl("chk_deny") IsNot Nothing AndAlso IsUserAlreadyAuthorized(dropUserID, dropAppID, IsChecked(CType(MyListItem.FindControl("chk_devteam"), CheckBox)), IsChecked(CType(MyListItem.FindControl("chk_deny"), CheckBox))) Then
+                                    lblErr.Text &= "User " + dropUserText.ToString() + " (development access: " & IsChecked(CType(MyListItem.FindControl("chk_devteam"), CheckBox)).ToString.ToLower & ", deny rule: " & IsChecked(CType(MyListItem.FindControl("chk_deny"), CheckBox)).ToString.ToLower & ") is already authorized for application " + dropAppText.Trim & "<br />"
+                                    authorize = False
+                                ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso IsUserAlreadyAuthorized(dropUserID, dropAppID, IsChecked(CType(MyListItem.FindControl("chk_devteam"), CheckBox)), False) Then
                                     lblErr.Text &= "User " + dropUserText.ToString() + " is already authorized for application " + dropAppText.Trim & "<br />"
                                     authorize = False
                                 ElseIf Not ((cammWebManager.System_GetSubAuthorizationStatus("Applications", CInt(Request("ID")), cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "Owner") Or cammWebManager.System_GetSubAuthorizationStatus("Applications", CInt(Request("ID")), cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "UpdateRelations"))) Then
-                                    Response.Write("No authorization to administrate this application.")
+                                    Response.Write("No authorization To administrate this application.")
                                     Response.End()
                                 ElseIf dropAppText.ToString.Trim() <> "" And dropUserText.ToString.Trim() <> "" Then
-                                    Dim MyDBVersion As Version = cammWebManager.System_DBVersion_Ex
-
-                                    If MyDBVersion.Build >= 147 Then 'Newer
+                                    If IsChecked(CType(MyListItem.FindControl("chk_deny"), CheckBox)) = False AndAlso Me.CurrentDbVersion.Build >= 147 Then 'Newer
+                                        'Allow-rule requires flag-check
                                         If Not userInfo Is Nothing Then
                                             Dim validationResults As FlagValidation.FlagValidationResult() = FlagValidation.GetFlagValidationResults(userInfo, arrRequiredUserFlags)
                                             flagsUpdateLinks &= CompuMaster.camm.WebManager.Administration.Utils.FormatLinksToFlagUpdatePages(validationResults, userInfo)
@@ -700,7 +737,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                         Try
                                             'Use implemented workflow of camm WebManager to send Authorization-Mail if user is authorized the first time
                                             'HINT: SapFlag checks will be checked continually, but no information on missing flag name is given here any more
-                                            userInfo.AddAuthorization(dropAppID, CType(Nothing, Integer), CType(MyListItem.FindControl("chk_devteam"), CheckBox).Checked, Nothing)
+                                            If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
+                                                userInfo.AddAuthorization(dropAppID, CType(Nothing, Integer), CType(MyListItem.FindControl("chk_devteam"), CheckBox).Checked, CType(Nothing, Notifications.INotifications))
+                                            Else
+                                                userInfo.AddAuthorization(dropAppID, CType(Nothing, Integer), CType(MyListItem.FindControl("chk_devteam"), CheckBox).Checked, IsChecked(CType(MyListItem.FindControl("chk_deny"), CheckBox)), CType(Nothing, Notifications.INotifications))
+                                            End If
 
                                             lblMsg.Text &= dropUserText + " has been authorized for application " + dropAppText & "<br />"
                                         Catch ex As Exception
@@ -716,7 +757,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             End If
                         End If
                     End If
-                    authorize = True
                 Next
             Next
 
@@ -724,8 +764,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 lblErr.Text = "Couldn't update the authorization due to problems with the following additional flags:<br />" & flagsUpdateLinks
                 lblErr.Text &= "<br>Please make sure the users have the required additional flags and that the value is correct for the specific type of the flag."
             End If
-
-
 
         End Sub
 #End Region
@@ -755,6 +793,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected lblMsg As Label
         Protected WithEvents btnOK As Button
         Protected WithEvents drp_apps, drp_groups As DropDownList
+        Protected WithEvents chk_deny As CheckBox
+        Protected WithEvents chk_devteam As CheckBox
 #End Region
 
 #Region "Page Events"
@@ -765,6 +805,17 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 ListApps()
                 LoadGroups()
             End If
+
+            If Me.IsPostBack = False AndAlso Me.chk_deny IsNot Nothing AndAlso Me.chk_devteam IsNot Nothing Then
+                'Show or hide controls for MilestoneDBVersion_AuthsWithSupportForDenyRule depending on environment support
+                If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                    Me.chk_deny.Visible = True
+                    Me.chk_devteam.Visible = True
+                Else
+                    Me.chk_deny.Visible = False
+                    Me.chk_devteam.Visible = False
+                End If
+            End If
         End Sub
 
 #End Region
@@ -774,8 +825,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim GrpTable As New DataTable
 
             If HttpContext.Current.Cache("CammWM.Admin.Table.AllGroups") Is Nothing Then
-                GrpTable = FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM Gruppen ORDER BY Name", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+                GrpTable = FillDataTable(New SqlCommand("SELECT * FROM Gruppen ORDER BY Name", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                 HttpContext.Current.Cache.Insert("CammWM.Admin.Table.AllGroups", GrpTable, Nothing, Now.AddMinutes(20), Caching.Cache.NoSlidingExpiration)
             Else
                 GrpTable = CType(HttpContext.Current.Cache("CammWM.Admin.Table.AllGroups"), DataTable)
@@ -801,8 +851,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Sub ListApps()
             Dim sqlParams As SqlParameter() = {New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))}
             Dim WhereClause As String = "WHERE (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR Applications.ID in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND Applications.ID in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND AuthorizationType In ('UpdateRelations','Owner')))) "
-            Dim sql As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT Applications.ID, Applications.Title, Applications.AppDisabled, System_Servers.ServerDescription, Languages.Description FROM (Applications LEFT JOIN Languages ON Applications.LanguageID = Languages.ID) LEFT JOIN System_Servers ON Applications.LocationID = System_Servers.ID " & WhereClause & " ORDER BY Title"
+            Dim sql As String = "SELECT Applications.ID, Applications.Title, Applications.AppDisabled, System_Servers.ServerDescription, Languages.Description FROM (Applications LEFT JOIN Languages ON Applications.LanguageID = Languages.ID) LEFT JOIN System_Servers ON Applications.LocationID = System_Servers.ID " & WhereClause & " ORDER BY Title"
             Dim AppTable As DataTable = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), sql, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
             For Each row As DataRow In AppTable.Rows
@@ -821,7 +870,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Sub
 #End Region
 
-
         ''' <summary>
         ''' Checks whether the given group is authorization for the application
         ''' </summary>
@@ -830,17 +878,43 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function IsGroupAuthorizedForApplication(ByVal groupId As Integer, ByVal applicationId As Integer) As Boolean
-            Dim commandText As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT count([ID]) FROM [dbo].[ApplicationsRightsByGroup] WHERE [ID_GroupOrPerson] = @GroupId AND [ID_Application] =  @AppID"
-            Dim commandParameters As SqlParameter() = {New SqlParameter("@GroupId", groupId), New SqlParameter("@AppID", applicationId)}
-            Dim RecordCount As Integer = CType(ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), commandText, CommandType.Text, commandParameters, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
+            If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                Throw New NotSupportedException("DbVersion.Build >= " & WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule.ToString & " requires calling an overloaded version of this method")
+            End If
+            Dim commandText As String = "SELECT count([ID]) FROM [dbo].[ApplicationsRightsByGroup] WHERE [ID_GroupOrPerson] = @GroupId AND [ID_Application] =  @AppID"
+            Dim MyCmd As New System.Data.SqlClient.SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
+            MyCmd.CommandType = CommandType.Text
+            MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupId
+            MyCmd.Parameters.Add("@AppID", SqlDbType.Int).Value = applicationId
+            Dim RecordCount As Integer = CType(ExecuteScalar(MyCmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
+            Return RecordCount > 0
+        End Function
+
+        ''' <summary>
+        ''' Checks whether the given group is authorization for the application
+        ''' </summary>
+        ''' <param name="groupId"></param>
+        ''' <param name="applicationId"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Private Function IsGroupAuthorizedForApplication(ByVal groupID As Integer, ByVal applicationID As Integer, isDev As Boolean, isDenyRule As Boolean) As Boolean
+            If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
+                Throw New NotSupportedException("DbVersion.Build < " & WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule.ToString & " requires calling an overloaded version of this method")
+            End If
+            Dim commandText As String = "SELECT count([ID]) FROM [dbo].[ApplicationsRightsByGroup] WHERE [ID_GroupOrPerson] = @GroupId AND [ID_Application] =  @AppID AND IsNull(IsDenyRule, 0) = @IsDenyRule AND IsNull(DevelopmentTeamMember, 0) = @IsDev"
+            Dim MyCmd As New System.Data.SqlClient.SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
+            MyCmd.CommandType = CommandType.Text
+            MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupID
+            MyCmd.Parameters.Add("@AppID", SqlDbType.Int).Value = applicationID
+            MyCmd.Parameters.Add("@IsDev", SqlDbType.Bit).Value = isDev
+            MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = isDenyRule
+            Dim RecordCount As Integer = CType(ExecuteScalar(MyCmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
             Return RecordCount > 0
         End Function
 
         Public Function GetRequiredUserFlagsForApplication(ByVal applicationID As Integer) As String()
             Dim commandParams As SqlParameter() = {New SqlParameter("@AppID", applicationID)}
-            Dim commandText As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "Select RequiredUserProfileFlags  From Applications_CurrentAndInactiveOnes Where ID = @AppID" '& dropAppID
+            Dim commandText As String = "Select RequiredUserProfileFlags FROM Applications_CurrentAndInactiveOnes Where ID = @AppID" '& dropAppID
             Dim RequiredUserFlags As String = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), commandText, CommandType.Text, commandParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection).ToString().Trim()
 
             If RequiredUserFlags = String.Empty Then
@@ -853,6 +927,18 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 
 #Region "Control Events"
+        ''' <summary>
+        ''' Is a checkbox checked or unchecked/missing?
+        ''' </summary>
+        ''' <param name="control"></param>
+        ''' <returns></returns>
+        Private Function IsChecked(control As CheckBox) As Boolean
+            If control Is Nothing Then
+                Return False
+            Else
+                Return control.Checked
+            End If
+        End Function
 
         Private Sub btnOKClick(ByVal sender As Object, ByVal args As EventArgs) Handles btnOK.Click
             Dim GroupTable As New DataTable
@@ -867,7 +953,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             dropGroupText = Utils.Nz(drp_groups.SelectedItem.Text, String.Empty)
             dropGroupID = CInt(Utils.Nz(drp_groups.SelectedValue, String.Empty))
 
-            If IsGroupAuthorizedForApplication(dropGroupID, dropAppID) Then
+            'Hint: what is:
+            ' - If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
+            ' - If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Equal OR Newer
+            If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 AndAlso IsGroupAuthorizedForApplication(dropGroupID, dropAppID) Then
+                lblErr.Text = "Group " + dropGroupText.ToString.Trim + " is already authorized for application " + dropAppText.Trim
+            ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso Me.chk_devteam IsNot Nothing AndAlso Me.chk_deny IsNot Nothing AndAlso IsGroupAuthorizedForApplication(dropGroupID, dropAppID, Me.chk_devteam.Checked, Me.chk_deny.Checked) Then
+                lblErr.Text = "Group " & dropGroupText.ToString.Trim & " (development access: " & IsChecked(Me.chk_devteam).ToString.ToLower & ", deny rule: " & IsChecked(Me.chk_deny).ToString.ToLower & ") is already authorized for application " & dropAppText.Trim
+            ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso IsGroupAuthorizedForApplication(dropGroupID, dropAppID, False, False) Then
                 lblErr.Text = "Group " + dropGroupText.ToString.Trim + " is already authorized for application " + dropAppText.Trim
             ElseIf Not ((cammWebManager.System_GetSubAuthorizationStatus("Applications", CInt(Request("ID")), cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "Owner") Or cammWebManager.System_GetSubAuthorizationStatus("Applications", CInt(Request("ID")), cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "UpdateRelations"))) Then
                 Response.Write("No authorization to administrate this application.")
@@ -875,15 +968,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ElseIf dropAppText.Trim <> "" And dropGroupText.ToString.Trim <> "" Then
                 CurUserID = cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)
 
-                Dim MyDBVersion As Version = cammWebManager.System_DBVersion_Ex
-                If MyDBVersion.Build >= 147 Then
-
+                If IsChecked(Me.chk_deny) = False AndAlso Me.CurrentDbVersion.Build >= 147 Then
+                    'Allow-rules require flags-check
                     Dim requiredFlags() As String = GetRequiredUserFlagsForApplication(dropAppID)
 
-                    Dim commandText As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT A.ID_USER [ID], (Select   ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname FROM Benutzer Where ID = A.ID_USER) AS [Name] From Memberships A Where ID_Group =  @GroupID" '+ CStr(id_grouporperson.SelectedItem.Id)
-                    Dim commandParameter As SqlParameter() = {New SqlParameter("@GroupID", dropGroupID)}
-                    Dim DTUser As DataTable = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), commandText, CommandType.Text, commandParameter, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+                    Dim commandText As String = "SELECT A.ID_USER [ID], (Select   ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname FROM Benutzer Where ID = A.ID_USER) AS [Name] From Memberships A Where ID_Group =  @GroupID" '+ CStr(id_grouporperson.SelectedItem.Id)
+                    Dim MyCmd As New System.Data.SqlClient.SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
+                    MyCmd.CommandType = CommandType.Text
+                    MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = dropGroupID
+                    Dim DTUser As DataTable = FillDataTable(MyCmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                     Dim flagsUpdateLinks As String = String.Empty
                     If Not DTUser Is Nothing AndAlso DTUser.Rows.Count > 0 Then
@@ -907,7 +1000,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     'Use implemented workflow of camm WebManager to send Authorization-Mail if user is authorized the first time
                     'HINT: SapFlag checks will be checked continually, but no information on missing flag name is given here any more
                     Dim grpInfo As New WebManager.WMSystem.GroupInformation(dropGroupID, cammWebManager)
-                    grpInfo.AddAuthorization(dropAppID, CType(Nothing, Integer))
+                    grpInfo.AddAuthorization(dropAppID, CType(Nothing, Integer), IsChecked(Me.chk_devteam), IsChecked(Me.chk_deny))
                     lblErr.Text = ""
                     lblMsg.Text = dropGroupText.Trim + " has been authorized for application " + dropAppText
                 Catch ex As Exception
@@ -1254,33 +1347,63 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #Region "Variable Declaration"
         Protected gcAddHtml As HtmlGenericControl
         Protected lblErrMsg As Label
-        Protected hypNoDelete, hypDelete As HyperLink
+        Protected hypNoDelete, hypDelete, hypDeleteButCopyAuths As HyperLink
 #End Region
 
 #Region "Page Events"
         Private Sub AppRightsDeleteTransmission_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
             Dim CurUserID As Long
-            If CLng(Request.QueryString("ID")) <> 0 AndAlso Request.QueryString("DEL") = "NOW" AndAlso Request.QueryString("token") = Session.SessionID Then
+            If CInt(Request.QueryString("AuthsAsAppID")) <> 0 AndAlso CLng(Request.QueryString("ID")) <> 0 AndAlso Request.QueryString("DEL") = "NOW" AndAlso Request.QueryString("token") = Session.SessionID Then
                 CurUserID = cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)
-                Dim sqlParams As SqlParameter() = {New SqlParameter("@ReleasedByUserID", CurUserID), New SqlParameter("@IDApp", CLng(Request.QueryString("ID"))), New SqlParameter("@InheritsFrom", DBNull.Value)}
+                Dim Success As Boolean = True
                 Try
+                    Dim MyCmd As New System.Data.SqlClient.SqlCommand("AdminPrivate_SetAuthorizationInherition", New SqlConnection(cammWebManager.ConnectionString))
+                    MyCmd.CommandType = CommandType.StoredProcedure
+                    MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.BigInt).Value = CurUserID
+                    MyCmd.Parameters.Add("@IDApp", SqlDbType.Int).Value = CInt(Request.QueryString("ID"))
+                    MyCmd.Parameters.Add("@InheritsFrom", SqlDbType.Int).Value = DBNull.Value
                     Dim ResulT As Object
-                    ResulT = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_SetAuthorizationInherition", CommandType.StoredProcedure, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection)
+                    ResulT = ExecuteScalar(MyCmd, Automations.AutoOpenAndCloseAndDisposeConnection)
                     If ResulT Is Nothing OrElse IsDBNull(ResulT) Then
                         lblErrMsg.Text = "Undefined error detected!"
+                        Success = False
                     ElseIf CInt(ResulT) = -1 Then
-                        Response.Redirect("apprights.aspx?Application=" & CInt(Request.QueryString("ID")))
+                        'Success :-)
                     Else
                         lblErrMsg.Text = "Erasing of transmission failed!"
+                        Success = False
                     End If
-                Catch
-                    lblErrMsg.Text = "Erasing of transmission failed!"
+                Catch ex As Exception
+                    lblErrMsg.Text = "Erasing of transmission failed (" & ex.Message & ")!"
+                    Success = False
                 End Try
+                If Success AndAlso Request.QueryString("CopyAuths") = "1" Then
+                    Try
+                        Dim Sql As String = "-- Add Group Authorizations" & vbNewLine & _
+                                            "INSERT INTO dbo.ApplicationsRightsByGroup (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])" & vbNewLine & _
+                                            "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application" & vbNewLine & _
+                                            "FROM         dbo.ApplicationsRightsByGroup" & vbNewLine & _
+                                            "WHERE     (ID_Application = @SourceAppID)"
+                        Dim MyCmd As New System.Data.SqlClient.SqlCommand(Sql, New SqlConnection(cammWebManager.ConnectionString))
+                        MyCmd.CommandType = CommandType.Text
+                        MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.BigInt).Value = CurUserID
+                        MyCmd.Parameters.Add("@TargetAppID", SqlDbType.Int).Value = CInt(Request.QueryString("ID"))
+                        MyCmd.Parameters.Add("@SourceAppID", SqlDbType.Int).Value = CInt(Request.QueryString("AuthsAsAppID"))
+                        AnyIDataProvider.ExecuteNonQuery(MyCmd, Automations.AutoOpenAndCloseAndDisposeConnection)
+                    Catch ex As Exception
+                        If lblErrMsg.Text <> Nothing Then lblErrMsg.Text &= "<br />"
+                        lblErrMsg.Text = "Copying authorizations from inherited security object failed (" & ex.Message & ")!"
+                        Success = False
+                    End Try
+                End If
+                If Success Then
+                    Response.Redirect("apprights.aspx?Application=" & CInt(Request.QueryString("ID")))
+                End If
             Else
                 Dim DisplAppID As Integer
                 Dim LanguageDescription As String
                 Dim ServerDescription As String
-                Dim strBilder As New Text.StringBuilder
+                Dim strBuilder As New Text.StringBuilder
                 Dim dtResult As DataTable
                 Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CLng(Request.QueryString("ID")))}
                 dtResult = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
@@ -1288,23 +1411,30 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim iCount As Integer = 0
                 While iCount < dtResult.Rows.Count
                     If Utils.Nz(Request.QueryString("ID"), 0L) = Utils.Nz(dtResult.Rows(iCount)("ID"), 0L) Then
-                        strBilder.Append("ID " & CLng(Request.QueryString("ID")) & ", " & Server.HtmlEncode(Utils.Nz(dtResult.Rows(iCount)("Title"), String.Empty)))
+                        strBuilder.Append("ID " & CLng(Request.QueryString("ID")) & ", " & Server.HtmlEncode(Utils.Nz(dtResult.Rows(iCount)("Title"), String.Empty)))
                         DisplAppID = Utils.Nz(dtResult.Rows(iCount)("ID"), 0)
                         LanguageDescription = CompuMaster.camm.WebManager.Utils.Nz(dtResult.Rows(iCount)("Description"), String.Empty)
                         ServerDescription = Utils.Nz(New camm.WebManager.WMSystem.ServerInformation(CInt(Val(dtResult.Rows(iCount)("LocationID"))), cammWebManager).Description, String.Empty)
-                        strBilder.Append(" (" & Server.HtmlEncode(ServerDescription) & " / " & Server.HtmlEncode(LanguageDescription))
-                        strBilder.Append(")<input type=""hidden"" name=""app_id"" value=""")
-                        strBilder.Append(DisplAppID & """")
+                        strBuilder.Append(" (" & Server.HtmlEncode(ServerDescription) & " / " & Server.HtmlEncode(LanguageDescription))
+                        strBuilder.Append(")<input type=""hidden"" name=""app_id"" value=""")
+                        strBuilder.Append(DisplAppID & """")
                     Else
-                        strBilder.Append("<font color=""red"">Application not found!</font>")
+                        strBuilder.Append("<font color=""red"">Application not found!</font>")
                     End If
                     iCount += 1
                 End While
-                gcAddHtml.InnerHtml = strBilder.ToString
-                hypDelete.NavigateUrl = "apprights_delete_transmission.aspx?ID=" + Request.QueryString("ID").ToString + "&DEL=NOW&APPID=" + Request.QueryString("ID").ToString & "&token=" & Session.SessionID
+                gcAddHtml.InnerHtml = strBuilder.ToString
+                hypDelete.NavigateUrl = "apprights_delete_transmission.aspx?ID=" & Request.QueryString("ID").ToString & "&AuthsAsAppID=" & Request.QueryString("AuthsAsAppID") & "&DEL=NOW&APPID=" & Request.QueryString("ID").ToString & "&token=" & Session.SessionID
                 hypDelete.Text = "Yes, delete it!"
-                hypNoDelete.NavigateUrl = "apprights.aspx?Application=" + Request.QueryString("ID").ToString
+                hypNoDelete.NavigateUrl = "apprights.aspx?Application=" & Request.QueryString("ID").ToString & "&AuthsAsAppID=" & Request.QueryString("AuthsAsAppID")
                 hypNoDelete.Text = "No! Don't touch it!"
+                If Not hypDeleteButCopyAuths Is Nothing Then
+                    'Rename first choice to be more appropriate
+                    hypDelete.Text = "Yes, delete it and drop all inherited authorizations!"
+                    'Provide 2nd delete button
+                    hypDeleteButCopyAuths.Text = "Yes, delete it, but keep a copy of all inherited authorizations"
+                    hypDeleteButCopyAuths.NavigateUrl = "apprights_delete_transmission.aspx?ID=" & Request.QueryString("ID").ToString & "&AuthsAsAppID=" & Request.QueryString("AuthsAsAppID") & "&DEL=NOW&APPID=" & Request.QueryString("ID").ToString & "&CopyAuths=1&token=" & Session.SessionID
+                End If
             End If
         End Sub
 #End Region
@@ -1624,7 +1754,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Function
 
         Private Function GetUsersByAppID(ByVal ID As Integer) As DataTable
-            Dim cmd As New SqlClient.SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            Dim cmd As New System.Data.SqlClient.SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "Select * From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_USer from Memberships where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a Group by ID_User", New SqlConnection(cammWebManager.ConnectionString))
             cmd.Parameters.Add("@ID", SqlDbType.Int).Value = ID
             Return FillDataTable(cmd, Automations.AutoOpenAndCloseAndDisposeConnection, "usertable")

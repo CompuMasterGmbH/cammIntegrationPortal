@@ -1134,7 +1134,13 @@ Namespace CompuMaster.camm.WebManager
 
         Friend Shared ReadOnly Property WebManagerSettings() As System.Collections.Specialized.NameValueCollection
             Get
+#If VS2015OrHigher = True Then
+#Disable Warning BC40000 'disable obsolete warnings because this code must be compatible to .NET 1.1
+#End If
                 Return System.Configuration.ConfigurationSettings.AppSettings
+#If VS2015OrHigher = True Then
+#Enable Warning BC40000 'obsolete warnings
+#End If
             End Get
         End Property
 

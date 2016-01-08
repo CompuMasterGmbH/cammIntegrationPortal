@@ -76,7 +76,7 @@ If @CurUserID Is Not Null
 				INSERT INTO [dbo].[System_SubSecurityAdjustments]([UserID], [TableName], [TablePrimaryIDValue], [AuthorizationType])
 				SELECT [UserID], [TableName], @NewAppID, [AuthorizationType]
 				FROM [dbo].[System_SubSecurityAdjustments]
-				WHERE TableName = 'Applications' AND TablePrimaryIDValue = @AppID AND NOT ([AuthorizationType] = 'Owner' OR [AuthorizationType] = 'Update' OR [AuthorizationType] = 'UpdateRelations' OR [AuthorizationType] = 'Delete' OR [AuthorizationType] = 'View' OR [AuthorizationType] = 'ViewLogs')
+				WHERE TableName = 'Applications' AND TablePrimaryIDValue = @AppID AND [AuthorizationType] = 'ResponsibleContact'
 			END
 		
 		SET NOCOUNT OFF
@@ -912,7 +912,7 @@ EXEC Int_LogAuthChanges @UserID, Null, @AppID, @ReleasedByUserID
 DELETE FROM dbo.ApplicationsRightsByUser WHERE ID_GroupOrPerson Is Not Null And ID=@AuthID
 GO
 
-IF  EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_DeleteMemberships]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF  EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_DeleteMemberships]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[AdminPrivate_DeleteMemberships]
 GO
 
@@ -1835,6 +1835,7 @@ Else
 	SELECT Result = 0
 GO
 
+
 ALTER PROCEDURE [dbo].[AdminPrivate_UpdateSubSecurityAdjustment]
 (
 	@ActionTypeSave bit,
@@ -2054,7 +2055,7 @@ DECLARE @LoginName nvarchar(50)
 GO
 
 
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[IsAdministratorForAuthorizations]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[IsAdministratorForAuthorizations]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[IsAdministratorForAuthorizations]
 GO
 CREATE PROC [dbo].[IsAdministratorForAuthorizations]
@@ -2088,7 +2089,7 @@ ELSE
 	RETURN 1
 GO
 
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[IsAdministratorForMemberships]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[IsAdministratorForMemberships]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[IsAdministratorForMemberships]
 GO
 CREATE PROC [dbo].[IsAdministratorForMemberships]
@@ -2125,11 +2126,11 @@ GO
 --------------------------------------------------------------------------------------------------------------------------------
 -- FIX for previous build 162 (which has been already fixed, too): Remove SP which has got schema name of the current DB user --
 --------------------------------------------------------------------------------------------------------------------------------
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo_camm_WebManager].[LogMissingExternalUserAssignment]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo_camm_WebManager].[LogMissingExternalUserAssignment]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE dbo_camm_WebManager.LogMissingExternalUserAssignment
 GO
 
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[LogMissingExternalUserAssignment]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[LogMissingExternalUserAssignment]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE dbo.LogMissingExternalUserAssignment
 GO
 CREATE PROCEDURE dbo.LogMissingExternalUserAssignment
@@ -2165,7 +2166,7 @@ ELSE
 	END
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[LookupUserNameByScriptEngineSessionID]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[LookupUserNameByScriptEngineSessionID]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[LookupUserNameByScriptEngineSessionID]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[LookupUserNameByScriptEngineSessionID]
 GO
 CREATE PROC dbo.LookupUserNameByScriptEngineSessionID
 	(
@@ -2410,7 +2411,7 @@ FROM         System_WebAreasAuthorizedForSession INNER JOIN
 WHERE     (System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID IS NOT NULL) AND (Benutzer.Loginname = @Username) AND (System_Servers.ID > 0)
 GO
 
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[Public_GetNavPointsOfGroup]') AND OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = object_id(N'[dbo].[Public_GetNavPointsOfGroup]') AND OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE [Public_GetNavPointsOfGroup]
 GO
 ----------------------------------------------------
@@ -2465,8 +2466,9 @@ IF @AllowedLocation Is Null
 UPDATE dbo.Applications_CurrentAndInactiveOnes SET IsNew = 0, IsUpdated = 0, ResetIsNewUpdatedStatusOn = Null WHERE (ResetIsNewUpdatedStatusOn < GETDATE())
 
 -- Recordset zurückgeben	
+		CREATE TABLE #NavUpdatedItems_Filtered (Level1Title nvarchar(255), Level2Title nvarchar(255), Level3Title nvarchar(255), Level4Title nvarchar(255), Level5Title nvarchar(255), Level6Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Filtered (Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title)
 		SELECT distinct Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title
-		into #NavUpdatedItems_Filtered
 			FROM dbo.view_ApplicationRights LEFT OUTER JOIN dbo.Memberships ON dbo.view_ApplicationRights.ID_Group = dbo.Memberships.ID_Group LEFT JOIN dbo.System_Servers ON dbo.view_ApplicationRights.LocationID = dbo.System_Servers.ID
 			WHERE (dbo.System_Servers.ServerGroup = @AllowedLocation And ((dbo.view_ApplicationRights.ID_Group = @GroupID) OR (dbo.Memberships.ID_Group = @GroupID) OR (dbo.view_ApplicationRights.ID_Group = @PublicGroupID) OR (dbo.view_ApplicationRights.ID_Group = @AnonymousGroupID)))  And dbo.view_ApplicationRights.LanguageID in (@LanguageID, @AlternativeLanguage) And (dbo.view_ApplicationRights.AppDisabled = 0 Or dbo.view_ApplicationRights.DevelopmentTeamMember = 1) 
 				AND dbo.view_ApplicationRights.Title <> 'System - Login'
@@ -2574,8 +2576,9 @@ If (@IsSecurityAdmin = 0)	-- True would be = 1
 
 	BEGIN
 
+		CREATE TABLE #NavUpdatedItems_Filtered (Level1Title nvarchar(255), Level2Title nvarchar(255), Level3Title nvarchar(255), Level4Title nvarchar(255), Level5Title nvarchar(255), Level6Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Filtered (Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title)
 		SELECT distinct Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title
-		into #NavUpdatedItems_Filtered
 			FROM dbo.view_ApplicationRights LEFT OUTER JOIN dbo.Memberships ON dbo.view_ApplicationRights.ID_Group = dbo.Memberships.ID_Group LEFT JOIN dbo.System_Servers ON dbo.view_ApplicationRights.LocationID = dbo.System_Servers.ID
 			WHERE (dbo.System_Servers.ServerGroup = @AllowedLocation And ((dbo.view_ApplicationRights.ID_User = @UserID) OR (dbo.Memberships.ID_User = @UserID) OR (dbo.view_ApplicationRights.ID_Group = @PublicGroupID) OR (dbo.view_ApplicationRights.ID_Group = @AnonymousGroupID)))  And dbo.view_ApplicationRights.LanguageID in (@LanguageID, @AlternativeLanguage) And (dbo.view_ApplicationRights.AppDisabled = 0 Or dbo.view_ApplicationRights.DevelopmentTeamMember = 1) 
 				AND dbo.view_ApplicationRights.Title <> 'System - Login'
@@ -2622,33 +2625,39 @@ Case When Substring(NavURL,1,1) = '/' Then ServerProtocol + '://' + ServerName +
 Else 
 	BEGIN
 
+		CREATE TABLE #NavUpdatedItems_Level1Title (Level1Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Level1Title (Level1Title)
 		SELECT distinct Level1Title
-		into #NavUpdatedItems_Level1Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
 
+		CREATE TABLE #NavUpdatedItems_Level2Title (Level2Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Level2Title (Level2Title)
 		SELECT distinct Level2Title
-		into #NavUpdatedItems_Level2Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
 
+		CREATE TABLE #NavUpdatedItems_Level3Title (Level3Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Level3Title (Level3Title)
 		SELECT distinct Level3Title
-		into #NavUpdatedItems_Level3Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
 
+		CREATE TABLE #NavUpdatedItems_Level4Title (Level4Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Level4Title (Level4Title)
 		SELECT distinct Level4Title
-		into #NavUpdatedItems_Level4Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
 
+		CREATE TABLE #NavUpdatedItems_Level5Title (Level5Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Level5Title (Level5Title)
 		SELECT distinct Level5Title
-		into #NavUpdatedItems_Level5Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
-
+
+		CREATE TABLE #NavUpdatedItems_Level6Title (Level6Title nvarchar(255));
+		INSERT INTO #NavUpdatedItems_Level6Title (Level6Title)
 		SELECT distinct Level6Title
-		into #NavUpdatedItems_Level6Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
 
@@ -2730,7 +2739,7 @@ ALTER PROCEDURE dbo.Public_GetToDoLogonList
 WITH ENCRYPTION
 AS
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
---SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
 -- GUIDs alter Sessions zurücksetzen
 SET NOCOUNT ON
@@ -2824,7 +2833,7 @@ SELECT Result = @UserID
 Return @UserID
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetUserNameForScriptEngineSessionID]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetUserNameForScriptEngineSessionID]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 drop procedure [dbo].[Public_GetUserNameForScriptEngineSessionID]
 GO
 
@@ -2966,7 +2975,7 @@ SELECT Result = -1
 
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_PreValidateUser]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_PreValidateUser]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_PreValidateUser]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_PreValidateUser]
 GO
 CREATE PROCEDURE [dbo].[Public_PreValidateUser]
 AS 
@@ -3391,7 +3400,7 @@ DECLARE @CountOfValuesInTable int
 	return
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_UpdateUserDetails]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_UpdateUserDetails]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 drop procedure [dbo].[Public_UpdateUserDetails]
 GO
 
@@ -3706,7 +3715,6 @@ AS
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 --SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 	
-
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
 DECLARE @CurUserPW varchar(4096)
@@ -3759,7 +3767,7 @@ ELSE
 SELECT @CurUserID = ID, @CurUserPW = LoginPW, @CurUserLoginDisabled = LoginDisabled, @CurUserLoginLockedTill = LoginLockedTill, 
 		@CurUserLoginFailures = LoginFailures, @CurUserLoginCount = LoginCount, @CurUserAccountAccessability = AccountAccessability,
 		@bufferLastLoginOn = LastLoginOn
-FROM dbo.Benutzer WITH (XLOCK, ROWLOCK)
+FROM dbo.Benutzer  WITH (XLOCK, ROWLOCK)
 WHERE LoginName = @Username
 
 -------------------------------------------------------------------------------------------------------------------------
@@ -4419,7 +4427,7 @@ GO
 ---------------------------------------
 -- Update SP "Redirects_LogAndGetURL" 
 ---------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Redirects_LogAndGetURL]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Redirects_LogAndGetURL]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 drop procedure [dbo].[Redirects_LogAndGetURL]
 GO
 
@@ -4486,7 +4494,7 @@ BEGIN
 END
 GO
 
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[RefillSplittedSecObjAndNavPointsTables]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[RefillSplittedSecObjAndNavPointsTables]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[RefillSplittedSecObjAndNavPointsTables]
 GO
 CREATE PROCEDURE dbo.RefillSplittedSecObjAndNavPointsTables
@@ -4668,7 +4676,7 @@ GO
 EXEC RefillSplittedSecObjAndNavPointsTables
 
 GO
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[ApplicationRights_CumulatedPerUserAndServerGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationRights_CumulatedPerUserAndServerGroup]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE dbo.ApplicationRights_CumulatedPerUserAndServerGroup
 GO
 CREATE PROCEDURE dbo.ApplicationRights_CumulatedPerUserAndServerGroup

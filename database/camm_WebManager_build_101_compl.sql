@@ -8,7 +8,7 @@ print 'TABLECREATION - BEGIN'
 ----------------------------------------------------
 -- dbo.Applications_CurrentAndInactiveOnes
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Applications_CurrentAndInactiveOnes]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[Applications_CurrentAndInactiveOnes]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Applications_CurrentAndInactiveOnes]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[Applications_CurrentAndInactiveOnes]
 GO
 CREATE TABLE [dbo].[Applications_CurrentAndInactiveOnes]
 (
@@ -58,7 +58,7 @@ GO
 ----------------------------------------------------
 -- dbo.ApplicationsRightsByGroup
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[ApplicationsRightsByGroup]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[ApplicationsRightsByGroup]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationsRightsByGroup]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[ApplicationsRightsByGroup]
 GO
 CREATE TABLE [dbo].[ApplicationsRightsByGroup]
 (
@@ -75,7 +75,7 @@ GO
 ----------------------------------------------------
 -- dbo.ApplicationsRightsByUser
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[ApplicationsRightsByUser]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[ApplicationsRightsByUser]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationsRightsByUser]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[ApplicationsRightsByUser]
 GO
 CREATE TABLE [dbo].[ApplicationsRightsByUser]
 (
@@ -93,7 +93,7 @@ GO
 ----------------------------------------------------
 -- dbo.Benutzer
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Benutzer]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[Benutzer]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Benutzer]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[Benutzer]
 GO
 CREATE TABLE [dbo].[Benutzer]
 (
@@ -137,7 +137,7 @@ GO
 ----------------------------------------------------
 -- dbo.Gruppen
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Gruppen]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[Gruppen]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Gruppen]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[Gruppen]
 GO
 CREATE TABLE [dbo].[Gruppen]
 (
@@ -157,9 +157,9 @@ GO
 ----------------------------------------------------
 -- dbo.Languages
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[Languages]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[Languages]
 GO
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[Languages]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[Languages]
 GO
 CREATE TABLE [dbo].[Languages]
 (
@@ -177,7 +177,7 @@ GO
 ----------------------------------------------------
 -- dbo.Log
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Log]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[Log]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Log]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[Log]
 GO
 CREATE TABLE [dbo].[Log]
 (
@@ -198,7 +198,7 @@ GO
 ----------------------------------------------------
 -- dbo.Log_eMail_Attachments
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Log_eMail_Attachments]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[Log_eMail_Attachments]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Log_eMail_Attachments]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[Log_eMail_Attachments]
 GO
 CREATE TABLE [dbo].[Log_eMail_Attachments]
 (
@@ -213,7 +213,7 @@ GO
 ----------------------------------------------------
 -- dbo.Log_eMailMessages
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Log_eMailMessages]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[Log_eMailMessages]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Log_eMailMessages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[Log_eMailMessages]
 GO
 CREATE TABLE [dbo].[Log_eMailMessages]
 (
@@ -233,7 +233,7 @@ GO
 ----------------------------------------------------
 -- dbo.Log_TextMessages
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Log_TextMessages]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[Log_TextMessages]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Log_TextMessages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[Log_TextMessages]
 GO
 CREATE TABLE [dbo].[Log_TextMessages]
 (
@@ -254,7 +254,7 @@ GO
 ----------------------------------------------------
 -- dbo.Log_Users
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Log_Users]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[Log_Users]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Log_Users]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[Log_Users]
 GO
 CREATE TABLE [dbo].[Log_Users]
 (
@@ -271,7 +271,7 @@ GO
 ----------------------------------------------------
 -- dbo.Memberships
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Memberships]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[Memberships]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Memberships]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[Memberships]
 GO
 CREATE TABLE [dbo].[Memberships]
 (
@@ -288,7 +288,7 @@ GO
 ----------------------------------------------------
 -- dbo.System_AccessLevels
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[System_AccessLevels]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[System_AccessLevels]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[System_AccessLevels]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[System_AccessLevels]
 GO
 CREATE TABLE [dbo].[System_AccessLevels]
 (
@@ -307,7 +307,7 @@ GO
 ----------------------------------------------------
 -- dbo.System_ScriptEngines
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[System_ScriptEngines]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[System_ScriptEngines]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[System_ScriptEngines]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[System_ScriptEngines]
 GO
 CREATE TABLE [dbo].[System_ScriptEngines]
 (
@@ -322,7 +322,7 @@ GO
 ----------------------------------------------------
 -- dbo.System_ServerGroups
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[System_ServerGroups]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[System_ServerGroups]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[System_ServerGroups]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[System_ServerGroups]
 GO
 CREATE TABLE [dbo].[System_ServerGroups]
 (
@@ -360,7 +360,7 @@ GO
 ----------------------------------------------------
 -- dbo.System_ServerGroupsAndTheirUserAccessLevels
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[System_ServerGroupsAndTheirUserAccessLevels]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[System_ServerGroupsAndTheirUserAccessLevels]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[System_ServerGroupsAndTheirUserAccessLevels]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[System_ServerGroupsAndTheirUserAccessLevels]
 GO
 CREATE TABLE [dbo].[System_ServerGroupsAndTheirUserAccessLevels]
 (
@@ -376,7 +376,7 @@ GO
 ----------------------------------------------------
 -- dbo.System_Servers
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[System_Servers]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[System_Servers]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[System_Servers]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[System_Servers]
 GO
 CREATE TABLE [dbo].[System_Servers]
 (
@@ -400,7 +400,7 @@ GO
 ----------------------------------------------------
 -- dbo.System_SessionValues
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[System_SessionValues]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[System_SessionValues]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[System_SessionValues]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[System_SessionValues]
 GO
 CREATE TABLE [dbo].[System_SessionValues]
 (
@@ -424,7 +424,7 @@ GO
 ----------------------------------------------------
 -- dbo.System_UserSessions
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[System_UserSessions]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[System_UserSessions]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[System_UserSessions]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[System_UserSessions]
 GO
 CREATE TABLE [dbo].[System_UserSessions]
 (
@@ -439,7 +439,7 @@ GO
 ----------------------------------------------------
 -- dbo.System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes]
 GO
 CREATE TABLE [dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes]
 (
@@ -460,7 +460,7 @@ GO
 ----------------------------------------------------
 -- dbo.System_WebAreaScriptEnginesAuthorization
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[System_WebAreaScriptEnginesAuthorization]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[System_WebAreaScriptEnginesAuthorization]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[System_WebAreaScriptEnginesAuthorization]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) drop table [dbo].[System_WebAreaScriptEnginesAuthorization]
 GO
 CREATE TABLE [dbo].[System_WebAreaScriptEnginesAuthorization]
 (
@@ -1056,7 +1056,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_DeleteApplicationRightsByGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_DeleteApplicationRightsByGroup]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_DeleteApplicationRightsByGroup]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_DeleteApplicationRightsByGroup]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_DeleteApplicationRightsByGroup] 
 AS 
@@ -1072,7 +1072,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_DeleteApplicationRightsByUser]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_DeleteApplicationRightsByUser]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_DeleteApplicationRightsByUser]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_DeleteApplicationRightsByUser]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_DeleteApplicationRightsByUser] 
 AS 
@@ -1088,7 +1088,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_ValidateUser]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_ValidateUser]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_ValidateUser]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_ValidateUser]
 GO
 CREATE PROCEDURE [dbo].[Public_ValidateUser] 
 AS 
@@ -1105,7 +1105,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_ServerDebug]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_ServerDebug]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_ServerDebug]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_ServerDebug]
 GO
 CREATE PROCEDURE [dbo].[Public_ServerDebug] 
 AS 
@@ -1121,7 +1121,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_ValidateGUIDLogin]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_ValidateGUIDLogin]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_ValidateGUIDLogin]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_ValidateGUIDLogin]
 GO
 CREATE PROCEDURE [dbo].[Public_ValidateGUIDLogin] 
 AS 
@@ -1137,7 +1137,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_ValidateDocument]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_ValidateDocument]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_ValidateDocument]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_ValidateDocument]
 GO
 CREATE PROCEDURE [dbo].[Public_ValidateDocument] 
 AS 
@@ -1153,7 +1153,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_UserIsAuthorizedForApp]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_UserIsAuthorizedForApp]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_UserIsAuthorizedForApp]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_UserIsAuthorizedForApp]
 GO
 CREATE PROCEDURE [dbo].[Public_UserIsAuthorizedForApp] 
 AS 
@@ -1169,7 +1169,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_UpdateUserPW]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_UpdateUserPW]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_UpdateUserPW]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_UpdateUserPW]
 GO
 CREATE PROCEDURE [dbo].[Public_UpdateUserPW] 
 AS 
@@ -1185,7 +1185,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_UpdateUserDetails]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_UpdateUserDetails]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_UpdateUserDetails]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_UpdateUserDetails]
 GO
 CREATE PROCEDURE [dbo].[Public_UpdateUserDetails] 
 AS 
@@ -1201,7 +1201,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_SetUserDetailData]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_SetUserDetailData]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_SetUserDetailData]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_SetUserDetailData]
 GO
 CREATE PROCEDURE [dbo].[Public_SetUserDetailData] 
 AS 
@@ -1217,7 +1217,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_RestorePassword]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_RestorePassword]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_RestorePassword]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_RestorePassword]
 GO
 CREATE PROCEDURE [dbo].[Public_RestorePassword] 
 AS 
@@ -1233,7 +1233,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_Logout]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_Logout]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_Logout]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_Logout]
 GO
 CREATE PROCEDURE [dbo].[Public_Logout] 
 AS 
@@ -1249,7 +1249,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetUserID]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetUserID]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetUserID]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetUserID]
 GO
 CREATE PROCEDURE [dbo].[Public_GetUserID] 
 AS 
@@ -1265,7 +1265,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetUserDetailData]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetUserDetailData]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetUserDetailData]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetUserDetailData]
 GO
 CREATE PROCEDURE [dbo].[Public_GetUserDetailData] 
 AS 
@@ -1281,7 +1281,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetToDoLogonList]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetToDoLogonList]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetToDoLogonList]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetToDoLogonList]
 GO
 CREATE PROCEDURE [dbo].[Public_GetToDoLogonList] 
 AS 
@@ -1297,7 +1297,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetServerConfig]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetServerConfig]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetServerConfig]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetServerConfig]
 GO
 CREATE PROCEDURE [dbo].[Public_GetServerConfig] 
 AS 
@@ -1313,7 +1313,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetNavPointsOfUser]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetNavPointsOfUser]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetNavPointsOfUser]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetNavPointsOfUser]
 GO
 CREATE PROCEDURE [dbo].[Public_GetNavPointsOfUser] 
 AS 
@@ -1329,7 +1329,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetLogonList]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetLogonList]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetLogonList]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetLogonList]
 GO
 CREATE PROCEDURE [dbo].[Public_GetLogonList] 
 AS 
@@ -1345,7 +1345,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetEMailAddressesOfAllSecurityAdmins]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetEMailAddressesOfAllSecurityAdmins]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetEMailAddressesOfAllSecurityAdmins]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetEMailAddressesOfAllSecurityAdmins]
 GO
 CREATE PROCEDURE [dbo].[Public_GetEMailAddressesOfAllSecurityAdmins] 
 AS 
@@ -1361,7 +1361,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetCurServerLogonList]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetCurServerLogonList]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetCurServerLogonList]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetCurServerLogonList]
 GO
 CREATE PROCEDURE [dbo].[Public_GetCurServerLogonList] 
 AS 
@@ -1377,7 +1377,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetCompleteUserInfo]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetCompleteUserInfo]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetCompleteUserInfo]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetCompleteUserInfo]
 GO
 CREATE PROCEDURE [dbo].[Public_GetCompleteUserInfo] 
 AS 
@@ -1393,7 +1393,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetCompleteName]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetCompleteName]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetCompleteName]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetCompleteName]
 GO
 CREATE PROCEDURE [dbo].[Public_GetCompleteName] 
 AS 
@@ -1409,7 +1409,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetCompleteAddresses]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetCompleteAddresses]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetCompleteAddresses]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_GetCompleteAddresses]
 GO
 CREATE PROCEDURE [dbo].[Public_GetCompleteAddresses] 
 AS 
@@ -1425,7 +1425,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_CreateUserAccount]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Public_CreateUserAccount]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_CreateUserAccount]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Public_CreateUserAccount]
 GO
 CREATE PROCEDURE [dbo].[Public_CreateUserAccount] 
 AS 
@@ -1441,7 +1441,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Int_LogAuthChanges]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Int_LogAuthChanges]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Int_LogAuthChanges]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Int_LogAuthChanges]
 GO
 CREATE PROCEDURE [dbo].[Int_LogAuthChanges] 
 AS 
@@ -1457,7 +1457,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Int_UpdateUserDetailDataWithProfileData]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[Int_UpdateUserDetailDataWithProfileData]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Int_UpdateUserDetailDataWithProfileData]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[Int_UpdateUserDetailDataWithProfileData]
 GO
 CREATE PROCEDURE [dbo].[Int_UpdateUserDetailDataWithProfileData] 
 AS 
@@ -1473,7 +1473,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_UpdateUserPW]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateUserPW]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_UpdateUserPW]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateUserPW]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_UpdateUserPW] 
 AS 
@@ -1489,7 +1489,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_UpdateUserDetails]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateUserDetails]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_UpdateUserDetails]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateUserDetails]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_UpdateUserDetails] 
 AS 
@@ -1505,7 +1505,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_UpdateStatusLoginDisabled]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateStatusLoginDisabled]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_UpdateStatusLoginDisabled]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateStatusLoginDisabled]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_UpdateStatusLoginDisabled] 
 AS 
@@ -1521,7 +1521,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_UpdateServerGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateServerGroup]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_UpdateServerGroup]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateServerGroup]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_UpdateServerGroup] 
 AS 
@@ -1537,7 +1537,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_UpdateServer]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateServer]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_UpdateServer]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateServer]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_UpdateServer] 
 AS 
@@ -1553,7 +1553,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_UpdateApp]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateApp]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_UpdateApp]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateApp]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_UpdateApp] 
 AS 
@@ -1569,7 +1569,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_UpdateAccessLevel]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateAccessLevel]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_UpdateAccessLevel]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_UpdateAccessLevel]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_UpdateAccessLevel] 
 AS 
@@ -1585,7 +1585,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_SetScriptEngineActivation]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_SetScriptEngineActivation]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_SetScriptEngineActivation]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_SetScriptEngineActivation]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_SetScriptEngineActivation] 
 AS 
@@ -1601,7 +1601,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_SetAuthorizationInherition]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_SetAuthorizationInherition]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_SetAuthorizationInherition]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_SetAuthorizationInherition]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_SetAuthorizationInherition] 
 AS 
@@ -1617,7 +1617,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_ResetLoginLockedTill]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_ResetLoginLockedTill]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_ResetLoginLockedTill]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_ResetLoginLockedTill]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_ResetLoginLockedTill] 
 AS 
@@ -1633,7 +1633,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_GetScriptEnginesOfServer]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_GetScriptEnginesOfServer]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_GetScriptEnginesOfServer]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_GetScriptEnginesOfServer]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_GetScriptEnginesOfServer] 
 AS 
@@ -1649,7 +1649,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_GetCompleteUserInfo]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_GetCompleteUserInfo]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_GetCompleteUserInfo]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_GetCompleteUserInfo]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_GetCompleteUserInfo] 
 AS 
@@ -1665,7 +1665,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_DeleteServerGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_DeleteServerGroup]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_DeleteServerGroup]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_DeleteServerGroup]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_DeleteServerGroup] 
 AS 
@@ -1681,7 +1681,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_DeleteServer]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_DeleteServer]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_DeleteServer]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_DeleteServer]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_DeleteServer] 
 AS 
@@ -1697,7 +1697,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_DeleteAccessLevel]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_DeleteAccessLevel]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_DeleteAccessLevel]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_DeleteAccessLevel]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_DeleteAccessLevel] 
 AS 
@@ -1713,7 +1713,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_CreateUserAccount]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateUserAccount]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_CreateUserAccount]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateUserAccount]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_CreateUserAccount] 
 AS 
@@ -1729,7 +1729,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_CreateServerGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateServerGroup]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_CreateServerGroup]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateServerGroup]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_CreateServerGroup] 
 AS 
@@ -1745,7 +1745,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_CreateServer]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateServer]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_CreateServer]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateServer]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_CreateServer] 
 AS 
@@ -1761,7 +1761,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_CreateMemberships]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateMemberships]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_CreateMemberships]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateMemberships]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_CreateMemberships] 
 AS 
@@ -1777,7 +1777,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_CreateMasterServerNavPoints]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateMasterServerNavPoints]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_CreateMasterServerNavPoints]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateMasterServerNavPoints]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_CreateMasterServerNavPoints] 
 AS 
@@ -1793,7 +1793,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_CreateGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateGroup]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_CreateGroup]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateGroup]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_CreateGroup] 
 AS 
@@ -1809,7 +1809,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_CreateApplicationRightsByUser]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateApplicationRightsByUser]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_CreateApplicationRightsByUser]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateApplicationRightsByUser]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_CreateApplicationRightsByUser] 
 AS 
@@ -1825,7 +1825,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_CreateApplicationRightsByGroup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateApplicationRightsByGroup]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_CreateApplicationRightsByGroup]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateApplicationRightsByGroup]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_CreateApplicationRightsByGroup] 
 AS 
@@ -1841,7 +1841,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_CreateApplication]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateApplication]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_CreateApplication]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateApplication]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_CreateApplication] 
 AS 
@@ -1857,7 +1857,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_CreateAdminServerNavPoints]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateAdminServerNavPoints]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_CreateAdminServerNavPoints]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateAdminServerNavPoints]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_CreateAdminServerNavPoints] 
 AS 
@@ -1873,7 +1873,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_CreateAccessLevel]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateAccessLevel]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_CreateAccessLevel]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CreateAccessLevel]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_CreateAccessLevel] 
 AS 
@@ -1889,7 +1889,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_DeleteUser]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_DeleteUser]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_DeleteUser]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_DeleteUser]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_DeleteUser] 
 AS 
@@ -1905,7 +1905,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_CloneApplication]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CloneApplication]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_CloneApplication]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1) drop procedure [dbo].[AdminPrivate_CloneApplication]
 GO
 CREATE PROCEDURE [dbo].[AdminPrivate_CloneApplication] 
 AS 
@@ -1933,7 +1933,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Applications]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[Applications]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Applications]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[Applications]
 GO
 CREATE VIEW dbo.Applications
 AS
@@ -1955,7 +1955,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[System_WebAreasAuthorizedForSession]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[System_WebAreasAuthorizedForSession]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[System_WebAreasAuthorizedForSession]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[System_WebAreasAuthorizedForSession]
 GO
 CREATE VIEW dbo.System_WebAreasAuthorizedForSession
 AS
@@ -1976,7 +1976,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Memberships]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Memberships]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Memberships]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Memberships]
 GO
 CREATE VIEW dbo.view_Memberships
 AS
@@ -2001,7 +2001,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_ApplicationRights]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_ApplicationRights]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_ApplicationRights]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_ApplicationRights]
 GO
 CREATE VIEW dbo.view_ApplicationRights
 AS
@@ -2088,7 +2088,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Applications]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Applications]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Applications]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Applications]
 GO
 CREATE VIEW dbo.view_Applications
 AS
@@ -2121,7 +2121,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_eMailAccounts_of_Groups]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_eMailAccounts_of_Groups]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_eMailAccounts_of_Groups]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_eMailAccounts_of_Groups]
 GO
 CREATE VIEW dbo.view_eMailAccounts_of_Groups
 AS
@@ -2142,7 +2142,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Groups]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Groups]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Groups]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Groups]
 GO
 CREATE VIEW dbo.view_Groups
 AS
@@ -2167,7 +2167,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Languages]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Languages]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Languages]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Languages]
 GO
 CREATE VIEW dbo.view_Languages
 AS
@@ -2187,7 +2187,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Base4Analysis]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Base4Analysis]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Base4Analysis]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Base4Analysis]
 GO
 CREATE VIEW dbo.view_Log_Base4Analysis
 AS
@@ -2216,7 +2216,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_AccessStatistics_Complete - Pre1]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_AccessStatistics_Complete - Pre1]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_AccessStatistics_Complete - Pre1]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_AccessStatistics_Complete - Pre1]
 GO
 CREATE VIEW dbo.[view_Log_AccessStatistics_Complete - Pre1]
 AS
@@ -2239,7 +2239,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_Application_Complete]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_Application_Complete]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_Application_Complete]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_Application_Complete]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_Application_Complete
 AS
@@ -2261,7 +2261,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_Application_CurrentMonth]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_Application_CurrentMonth]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_Application_CurrentMonth]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_Application_CurrentMonth]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_Application_CurrentMonth
 AS
@@ -2283,7 +2283,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_ServerApplication_Complete]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerApplication_Complete]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_ServerApplication_Complete]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerApplication_Complete]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_ServerApplication_Complete
 AS
@@ -2305,7 +2305,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_ServerApplication_CurrentMonth]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerApplication_CurrentMonth]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_ServerApplication_CurrentMonth]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerApplication_CurrentMonth]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_ServerApplication_CurrentMonth
 AS
@@ -2327,7 +2327,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_User_Complete]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_User_Complete]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_User_Complete]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_User_Complete]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_User_Complete
 AS
@@ -2354,7 +2354,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_User_CurrentMonth]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_User_CurrentMonth]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_User_CurrentMonth]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_User_CurrentMonth]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_User_CurrentMonth
 AS
@@ -2381,7 +2381,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_UserList]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_UserList]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_UserList]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_UserList]
 GO
 CREATE VIEW dbo.view_UserList
 AS
@@ -2402,7 +2402,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_AccessStatistics_Complete - Pre2]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_AccessStatistics_Complete - Pre2]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_AccessStatistics_Complete - Pre2]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_AccessStatistics_Complete - Pre2]
 GO
 CREATE VIEW dbo.[view_Log_AccessStatistics_Complete - Pre2]
 AS
@@ -2424,7 +2424,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_ServerUserApplication_Complete]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerUserApplication_Complete]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_ServerUserApplication_Complete]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerUserApplication_Complete]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_ServerUserApplication_Complete
 AS
@@ -2448,7 +2448,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_ServerUserApplication_CurrentMonth]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerUserApplication_CurrentMonth]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_ServerUserApplication_CurrentMonth]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerUserApplication_CurrentMonth]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_ServerUserApplication_CurrentMonth
 AS
@@ -2472,7 +2472,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_User_Statistics_LastLogonDates]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_User_Statistics_LastLogonDates]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_User_Statistics_LastLogonDates]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_User_Statistics_LastLogonDates]
 GO
 CREATE VIEW dbo.view_User_Statistics_LastLogonDates
 AS
@@ -2494,7 +2494,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_ServerRelations]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[AdminPrivate_ServerRelations]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_ServerRelations]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[AdminPrivate_ServerRelations]
 GO
 CREATE VIEW dbo.AdminPrivate_ServerRelations
 AS
@@ -2530,7 +2530,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_ServerGroupAccessLevels]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[AdminPrivate_ServerGroupAccessLevels]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_ServerGroupAccessLevels]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[AdminPrivate_ServerGroupAccessLevels]
 GO
 CREATE VIEW dbo.AdminPrivate_ServerGroupAccessLevels
 AS
@@ -2554,7 +2554,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Memberships_CummulatedWithAnonymous]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Memberships_CummulatedWithAnonymous]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Memberships_CummulatedWithAnonymous]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Memberships_CummulatedWithAnonymous]
 GO
 create view dbo.[view_Memberships_CummulatedWithAnonymous]
 as
@@ -2577,7 +2577,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_ApplicationRights_CommulatedPerUser]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_ApplicationRights_CommulatedPerUser]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_ApplicationRights_CommulatedPerUser]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_ApplicationRights_CommulatedPerUser]
 GO
 create view dbo.[view_ApplicationRights_CommulatedPerUser]
 as

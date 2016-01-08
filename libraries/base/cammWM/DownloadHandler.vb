@@ -312,11 +312,17 @@ Namespace CompuMaster.camm.WebManager
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Public Shared Function FileSystemCompatibleString(ByVal filename As String) As String
+#If VS2015OrHigher = True Then
+#Disable Warning BC40000 'disable obsolete warnings because this code must be compatible to .NET 1.1
+#End If
             Dim Result As String = filename.Replace(System.IO.Path.PathSeparator, "_"c).Replace(System.IO.Path.DirectorySeparatorChar, "_"c).Replace(System.IO.Path.AltDirectorySeparatorChar, "_"c).Replace("+"c, "_"c).Replace("-"c, "_"c).Replace(System.IO.Path.VolumeSeparatorChar, "_"c).Replace(ControlChars.Back, " "c).Replace(ControlChars.Cr, " "c).Replace(ControlChars.FormFeed, " "c).Replace(ControlChars.Lf, " "c).Replace(ControlChars.NullChar, " "c).Replace(ControlChars.Tab, " "c).Replace(ControlChars.VerticalTab, " "c).Replace("*"c, "p"c).Replace(","c, "4"c).Replace("?"c, "w"c).Replace("<"c, "I"c).Replace(">"c, "D"c).Replace("|"c, "x"c).Replace(""""c, "p"c).Replace("="c, "t"c).Replace("@"c, "G"c)
             For Each MyChar As Char In System.IO.Path.InvalidPathChars 'usage of .GetInvalidFileNameChars available with .NET 2 or higher, obsolete .InvalidPathChars required for .NET 1.1 compatibility
                 Result = Result.Replace(MyChar, "k"c)
             Next
             Return Result
+#If VS2015OrHigher = True Then
+#Enable Warning BC40000 'obsolete warnings
+#End If
         End Function
         Private Shared Function ConvertBytesToBase64String(ByVal byteData As Byte()) As String
             Return System.Convert.ToBase64String(byteData)
@@ -1730,7 +1736,13 @@ Namespace CompuMaster.camm.WebManager
                                     Dim CreationOfHardlinkFailed As Boolean = False
                                     Try
 #If Not Linux Then
-                                        CompuMaster.camm.WebManager.Tools.IO.Junctions.Create(sourceFileInfo.FullName, targetFileFullPath, CompuMaster.camm.WebManager.Tools.IO.Junctions.LinkTypeDirectives.HardLink)
+                                        Try
+                                            'Don't run simultaneously in web/http context (e.g. double click requesting a hardlink twice at the same time results in file-already-present race exceptions)
+                                            If Not System.Web.HttpContext.Current Is Nothing Then System.Web.HttpContext.Current.Application.Lock()
+                                            CompuMaster.camm.WebManager.Tools.IO.Junctions.Create(sourceFileInfo.FullName, targetFileFullPath, CompuMaster.camm.WebManager.Tools.IO.Junctions.LinkTypeDirectives.HardLink)
+                                        Finally
+                                            If Not System.Web.HttpContext.Current Is Nothing Then System.Web.HttpContext.Current.Application.UnLock()
+                                        End Try
 #Else
                                         Throw New NotSupportedException("copy the file since hard links are not available")
 #End If

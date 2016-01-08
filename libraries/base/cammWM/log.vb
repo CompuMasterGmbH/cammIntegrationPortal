@@ -59,6 +59,102 @@ Namespace CompuMaster.camm.WebManager
         End Sub
 #End Region
 
+#Region "FileLog in AppData"
+#If NetFramework <> "1_1" Then
+        ''' <summary>
+        ''' Collect and write error data into the error log file on webserver disk (see app_data directory)
+        ''' </summary>
+        <Obsolete("The preferred log mechanism should be to database or e-mail")> _
+        Friend Shared Sub LogToFileError(exception As Exception)
+            Dim filePath As String = System.Web.HttpContext.Current.Server.MapPath("~/app_data/error.log")
+            Dim basePath As String = System.IO.Path.GetDirectoryName(filePath)
+            If System.IO.Directory.Exists(basePath) = False Then System.IO.Directory.CreateDirectory(basePath)
+            Dim LogData As String = exception.ToString
+            LogData &= vbNewLine & "REQUEST QUERY ITEMS"
+            For Each key As String In System.Web.HttpContext.Current.Request.QueryString
+                LogData &= vbNewLine & "  - " & key & "=" & System.Web.HttpContext.Current.Request.QueryString(key)
+            Next
+            LogData &= vbNewLine & "REQUEST FORM ITEMS"
+            For Each key As String In System.Web.HttpContext.Current.Request.Form
+                LogData &= vbNewLine & "  - " & key & "=" & System.Web.HttpContext.Current.Request.Form(key)
+            Next
+            LogData &= vbNewLine & "REQUEST SERVER ITEMS"
+            For Each key As String In System.Web.HttpContext.Current.Request.ServerVariables
+                If key.StartsWith("ALL_") = False AndAlso System.Web.HttpContext.Current.Request.ServerVariables(key) <> Nothing Then
+                    LogData &= vbNewLine & "  - " & key & "=" & System.Web.HttpContext.Current.Request.ServerVariables(key)
+                End If
+            Next
+            Try
+                System.Web.HttpContext.Current.Application.Lock()
+                System.IO.File.AppendAllText(filePath, vbNewLine & vbNewLine & "ERROR ON " & Now.ToString("yyyy-MM-dd HH:mm:ss") & vbNewLine & LogData)
+            Finally
+                System.Web.HttpContext.Current.Application.UnLock()
+            End Try
+        End Sub
+
+        ''' <summary>
+        ''' Collect and write warning data into the warning log file on webserver disk (see app_data directory)
+        ''' </summary>
+        <Obsolete("The preferred log mechanism should be to database or e-mail")> _
+        Friend Shared Sub LogToFileWarning(exception As Exception)
+            Dim filePath As String = System.Web.HttpContext.Current.Server.MapPath("~/app_data/warning.log")
+            Dim basePath As String = System.IO.Path.GetDirectoryName(filePath)
+            If System.IO.Directory.Exists(basePath) = False Then System.IO.Directory.CreateDirectory(basePath)
+            Dim LogData As String = exception.ToString
+            LogData &= vbNewLine & "REQUEST QUERY ITEMS"
+            For Each key As String In System.Web.HttpContext.Current.Request.QueryString
+                LogData &= vbNewLine & "  - " & key & "=" & System.Web.HttpContext.Current.Request.QueryString(key)
+            Next
+            LogData &= vbNewLine & "REQUEST FORM ITEMS"
+            For Each key As String In System.Web.HttpContext.Current.Request.Form
+                LogData &= vbNewLine & "  - " & key & "=" & System.Web.HttpContext.Current.Request.Form(key)
+            Next
+            LogData &= vbNewLine & "REQUEST SERVER ITEMS"
+            For Each key As String In System.Web.HttpContext.Current.Request.ServerVariables
+                If key.StartsWith("ALL_") = False AndAlso System.Web.HttpContext.Current.Request.ServerVariables(key) <> Nothing Then
+                    LogData &= vbNewLine & "  - " & key & "=" & System.Web.HttpContext.Current.Request.ServerVariables(key)
+                End If
+            Next
+            Try
+                System.Web.HttpContext.Current.Application.Lock()
+                System.IO.File.AppendAllText(filePath, vbNewLine & vbNewLine & "WARNING ON " & Now.ToString("yyyy-MM-dd HH:mm:ss") & vbNewLine & LogData)
+            Finally
+                System.Web.HttpContext.Current.Application.UnLock()
+            End Try
+        End Sub
+
+        ''' <summary>
+        ''' Collect and write debug data into the debug log file on webserver disk (see app_data directory)
+        ''' </summary>
+        <Obsolete("The preferred log mechanism should be to database or e-mail")> _
+        Friend Shared Sub LogToFileDebugInfo(logData As String)
+            Dim filePath As String = System.Web.HttpContext.Current.Server.MapPath("~/app_data/debug.log")
+            Dim basePath As String = System.IO.Path.GetDirectoryName(filePath)
+            If System.IO.Directory.Exists(basePath) = False Then System.IO.Directory.CreateDirectory(basePath)
+            logData &= vbNewLine & "REQUEST QUERY ITEMS"
+            For Each key As String In System.Web.HttpContext.Current.Request.QueryString
+                logData &= vbNewLine & "  - " & key & "=" & System.Web.HttpContext.Current.Request.QueryString(key)
+            Next
+            logData &= vbNewLine & "REQUEST FORM ITEMS"
+            For Each key As String In System.Web.HttpContext.Current.Request.Form
+                logData &= vbNewLine & "  - " & key & "=" & System.Web.HttpContext.Current.Request.Form(key)
+            Next
+            logData &= vbNewLine & "REQUEST SERVER ITEMS"
+            For Each key As String In System.Web.HttpContext.Current.Request.ServerVariables
+                If key.StartsWith("ALL_") = False AndAlso System.Web.HttpContext.Current.Request.ServerVariables(key) <> Nothing Then
+                    logData &= vbNewLine & "  - " & key & "=" & System.Web.HttpContext.Current.Request.ServerVariables(key)
+                End If
+            Next
+            Try
+                System.Web.HttpContext.Current.Application.Lock()
+                System.IO.File.AppendAllText(filePath, vbNewLine & vbNewLine & "DEBUG INFO ON " & Now.ToString("yyyy-MM-dd HH:mm:ss") & vbNewLine & logData)
+            Finally
+                System.Web.HttpContext.Current.Application.UnLock()
+            End Try
+        End Sub
+#End If
+#End Region
+
 #Region "Send error e-mail"
 
         ''' -----------------------------------------------------------------------------
@@ -1072,9 +1168,9 @@ Namespace CompuMaster.camm.WebManager
                 If HttpContext.Current Is Nothing OrElse HttpContext.Current.Session Is Nothing Then
                     'Console, windows and webservice applications
                     If message = Nothing Then
-                        Throw New Exception
+                        Throw New SystemException
                     Else
-                        Throw New Exception(message)
+                        Throw New SystemException(message)
                     End If
                 Else
                     _WebManager.RedirectToErrorPage(message, Nothing, Nothing)
@@ -1105,7 +1201,7 @@ Namespace CompuMaster.camm.WebManager
 
             WriteLogItem(ExDetails, Logging_ConflictTypes.ApplicationException, DebugLevels.NoDebug, False)
             If throwException = True Then
-                Throw New System.Exception("Exception logged by camm Web-Manager", exception)
+                Throw New SystemException("Exception logged by camm Web-Manager", exception)
             End If
         End Sub
 
@@ -1132,9 +1228,9 @@ Namespace CompuMaster.camm.WebManager
             WriteLogItem(message & vbNewLine & WorkaroundStackTrace.ToString, Logging_ConflictTypes.ApplicationException, DebugLevels.NoDebug)
             If throwException = True Then
                 If message = Nothing Then
-                    Throw New Exception
+                    Throw New SystemException
                 Else
-                    Throw New Exception(message)
+                    Throw New SystemException(message)
                 End If
             End If
         End Sub
@@ -1799,8 +1895,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks></remarks>
         Private Function CountRowsInLogTable() As Long
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-            Dim MyCmd As SqlCommand = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select count(ID) as RowsNumber from log", MyConn)
+            Dim MyCmd As SqlCommand = New SqlCommand("select count(*) as RowsNumber from log", MyConn)
             MyCmd.Connection = MyConn
             Return CType(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Long)
         End Function
@@ -1899,6 +1994,24 @@ Namespace CompuMaster.camm.WebManager
         End Sub
 #End Region
 
+        ''' <summary>
+        ''' An exception of the internal system
+        ''' </summary>
+        Public Class SystemException
+            Inherits Exception
+
+            Friend Sub New()
+                MyBase.New
+            End Sub
+
+            Friend Sub New(message As String)
+                MyBase.New(message)
+            End Sub
+
+            Friend Sub New(message As String, innerException As Exception)
+                MyBase.New(message, innerException)
+            End Sub
+        End Class
     End Class
 
 End Namespace

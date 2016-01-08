@@ -6,11 +6,11 @@ GO
 
 
 -- Remove old, unused objects
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetCompleteUserInfo]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetCompleteUserInfo]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 drop procedure [dbo].[Public_GetCompleteUserInfo]
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_GetCompleteAddresses]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_GetCompleteAddresses]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 drop procedure [dbo].[Public_GetCompleteAddresses]
 GO
 
@@ -32,7 +32,7 @@ GO
 ------------------------------------------------------------------------------------------
 
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Public_UpdateUserDetails]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Public_UpdateUserDetails]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 drop procedure [dbo].[Public_UpdateUserDetails]
 GO
 
@@ -386,7 +386,8 @@ Else
 		into #NavUpdatedItems_Level5Title
 		FROM dbo.Applications
 		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
-
+
+
 		SELECT distinct Level6Title
 		into #NavUpdatedItems_Level6Title
 		FROM dbo.Applications

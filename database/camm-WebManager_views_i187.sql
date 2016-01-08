@@ -8,7 +8,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_ServerGroupAccessLevels]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[AdminPrivate_ServerGroupAccessLevels]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_ServerGroupAccessLevels]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[AdminPrivate_ServerGroupAccessLevels]
 GO
 CREATE VIEW dbo.AdminPrivate_ServerGroupAccessLevels
 AS
@@ -31,7 +31,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[AdminPrivate_ServerRelations]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[AdminPrivate_ServerRelations]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_ServerRelations]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[AdminPrivate_ServerRelations]
 GO
 CREATE VIEW dbo.AdminPrivate_ServerRelations
 AS
@@ -66,7 +66,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Applications]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[Applications]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Applications]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[Applications]
 GO
 CREATE VIEW dbo.Applications
 AS
@@ -78,7 +78,7 @@ SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[SecurityObjects]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[SecurityObjects]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[SecurityObjects]
 GO
 CREATE VIEW [dbo].[SecurityObjects]
@@ -89,7 +89,7 @@ FROM dbo.SecurityObjects_CurrentAndInactiveOnes
 WHERE IsNull(Deleted, 0) = 0
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[SecurityObjects_CumulatedAuthsPerUser]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[SecurityObjects_CumulatedAuthsPerUser]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[SecurityObjects_CumulatedAuthsPerUser]
 GO
 CREATE VIEW [dbo].[SecurityObjects_CumulatedAuthsPerUser]
@@ -152,7 +152,7 @@ from dbo.securityobjects
 where dbo.SecurityObjects_AuthsByGroup.ID_ServerGroup = dbo.System_ServerGroups.ID
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[debug_SecurityObjects_CumulatedAuthsPerUser_woDuplicates]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[debug_SecurityObjects_CumulatedAuthsPerUser_woDuplicates]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[debug_SecurityObjects_CumulatedAuthsPerUser_woDuplicates]
 GO
 CREATE VIEW [dbo].[debug_SecurityObjects_CumulatedAuthsPerUser_woDuplicates]
@@ -162,7 +162,7 @@ from [SecurityObjects_CumulatedAuthsPerUser]
 group by id_securityobject, id_servergroup, id_user
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[debug_CumulatedAuths_OldSchema]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[debug_CumulatedAuths_OldSchema]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[debug_CumulatedAuths_OldSchema]
 GO
 CREATE VIEW [dbo].[debug_CumulatedAuths_OldSchema]
@@ -178,7 +178,7 @@ from applications
 	inner join dbo.System_Servers on Applications.LocationID = dbo.System_Servers.ID
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[debug_CumulatedAuths_NewSchema]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[debug_CumulatedAuths_NewSchema]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[debug_CumulatedAuths_NewSchema]
 GO
 CREATE VIEW [dbo].[debug_CumulatedAuths_NewSchema]
@@ -196,7 +196,7 @@ from navitems
 	inner join Benutzer on auths.ID_User = Benutzer.ID
 where dbo.System_Servers.ServerGroup = auths.ID_ServerGroup
 GO
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_ApplicationRights_CommulatedPerUser_FAST]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_ApplicationRights_CommulatedPerUser_FAST]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[view_ApplicationRights_CommulatedPerUser_FAST]
 GO
 CREATE view [dbo].[view_ApplicationRights_CommulatedPerUser_FAST]
@@ -258,7 +258,7 @@ from dbo.Applications
 ) as AppAuths
 group by ID_Application, ID_User
 GO
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) 
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) 
 UPDATE System_Languages
 SET System_Languages.IsActive = Languages.IsActive
 FROM System_Languages INNER JOIN Languages ON System_Languages.ID = Languages.ID
@@ -268,10 +268,10 @@ GO
 ----------------------------------------------------
 -- dbo.Languages
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) 
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) 
 drop table [dbo].[Languages]
 GO
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 drop view [dbo].[Languages]
 GO
 
@@ -289,7 +289,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Applications]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[Applications]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Applications]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[Applications]
 GO
 CREATE VIEW dbo.Applications
 AS
@@ -301,7 +301,7 @@ SET ANSI_NULLS OFF
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_ApplicationRights]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_ApplicationRights]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 drop view [dbo].[view_ApplicationRights]
 GO
 
@@ -392,7 +392,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_ApplicationRights_CommulatedPerUser]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_ApplicationRights_CommulatedPerUser]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_ApplicationRights_CommulatedPerUser]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_ApplicationRights_CommulatedPerUser]
 GO
 create view dbo.[view_ApplicationRights_CommulatedPerUser]
 as
@@ -413,7 +413,7 @@ GO
 SET QUOTED_IDENTIFIER OFF
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_ApplicationRights_CommulatedPerUser_woDups]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_ApplicationRights_CommulatedPerUser_woDups]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[view_ApplicationRights_CommulatedPerUser_woDups]
 GO
 CREATE view [dbo].[view_ApplicationRights_CommulatedPerUser_woDups]
@@ -445,7 +445,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Applications]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Applications]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Applications]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Applications]
 GO
 CREATE VIEW dbo.view_Applications
 AS
@@ -478,7 +478,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_eMailAccounts_of_Groups]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_eMailAccounts_of_Groups]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_eMailAccounts_of_Groups]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_eMailAccounts_of_Groups]
 GO
 CREATE VIEW dbo.view_eMailAccounts_of_Groups
 AS
@@ -499,7 +499,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Groups]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Groups]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Groups]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Groups]
 GO
 CREATE VIEW dbo.view_Groups
 AS
@@ -524,7 +524,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Languages]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Languages]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Languages]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Languages]
 GO
 CREATE VIEW dbo.view_Languages
 AS
@@ -544,7 +544,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_AccessStatistics_Complete - Pre1]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_AccessStatistics_Complete - Pre1]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_AccessStatistics_Complete - Pre1]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_AccessStatistics_Complete - Pre1]
 GO
 CREATE VIEW dbo.[view_Log_AccessStatistics_Complete - Pre1]
 AS
@@ -567,7 +567,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_AccessStatistics_Complete - Pre2]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_AccessStatistics_Complete - Pre2]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_AccessStatistics_Complete - Pre2]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_AccessStatistics_Complete - Pre2]
 GO
 CREATE VIEW dbo.[view_Log_AccessStatistics_Complete - Pre2]
 AS
@@ -589,7 +589,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Base4Analysis]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Base4Analysis]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Base4Analysis]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Base4Analysis]
 GO
 CREATE VIEW dbo.view_Log_Base4Analysis
 AS
@@ -617,7 +617,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_Application_Complete]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_Application_Complete]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_Application_Complete]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_Application_Complete]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_Application_Complete
 AS
@@ -639,7 +639,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_Application_CurrentMonth]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_Application_CurrentMonth]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_Application_CurrentMonth]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_Application_CurrentMonth]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_Application_CurrentMonth
 AS
@@ -661,7 +661,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_ServerApplication_Complete]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerApplication_Complete]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_ServerApplication_Complete]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerApplication_Complete]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_ServerApplication_Complete
 AS
@@ -683,7 +683,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_ServerApplication_CurrentMonth]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerApplication_CurrentMonth]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_ServerApplication_CurrentMonth]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerApplication_CurrentMonth]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_ServerApplication_CurrentMonth
 AS
@@ -704,7 +704,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_User_Complete]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_User_Complete]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_User_Complete]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_User_Complete]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_User_Complete
 AS
@@ -731,7 +731,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_User_CurrentMonth]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_User_CurrentMonth]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_User_CurrentMonth]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_User_CurrentMonth]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_User_CurrentMonth
 AS
@@ -757,7 +757,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_UserList]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_UserList]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_UserList]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_UserList]
 GO
 CREATE VIEW dbo.view_UserList
 AS
@@ -777,7 +777,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_ServerUserApplication_Complete]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerUserApplication_Complete]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_ServerUserApplication_Complete]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerUserApplication_Complete]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_ServerUserApplication_Complete
 AS
@@ -801,7 +801,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_Log_Statistics_By_ServerUserApplication_CurrentMonth]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerUserApplication_CurrentMonth]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_ServerUserApplication_CurrentMonth]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_Log_Statistics_By_ServerUserApplication_CurrentMonth]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_ServerUserApplication_CurrentMonth
 AS
@@ -825,7 +825,7 @@ GO
 SET ANSI_NULLS ON
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_User_Statistics_LastLogonDates]') and OBJECTPROPERTY(id, N'IsView') = 1) drop view [dbo].[view_User_Statistics_LastLogonDates]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_User_Statistics_LastLogonDates]') and OBJECTPROPERTY(object_id, N'IsView') = 1) drop view [dbo].[view_User_Statistics_LastLogonDates]
 GO
 CREATE VIEW dbo.view_User_Statistics_LastLogonDates
 AS

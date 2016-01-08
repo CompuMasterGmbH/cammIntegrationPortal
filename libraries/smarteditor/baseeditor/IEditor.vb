@@ -17,6 +17,13 @@ Namespace CompuMaster.camm.SmartWebEditor
 
         ReadOnly Property ClientID As String
 
+        Property CssWidth As String
+        Property CssHeight As String
+
+        Property TextareaRows As Integer
+        Property TextareaColumns As Integer
+
+
     End Interface
 
 End Namespace

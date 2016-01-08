@@ -158,7 +158,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <summary>
         '''     Contains informations about how to handle the viewonly mode in different market, langs
         ''' </summary>
-        ''' <remarks>
+        ''' <remarks>2
         ''' </remarks>
         ''' <history>
         ''' 	[Swiercz]	31.10.2005	Created

@@ -24,7 +24,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title><asp:Literal runat="server" id="PageTitle">Automatic logon</asp:Literal></title>
-<link rel="stylesheet" type="text/css" href="/sysdata/style_standard.css.css">
+<link rel="stylesheet" type="text/css" href="/sysdata/style_standard.css">
 <style>
 body {
 	BACKGROUND-COLOR: #FFFFFF;

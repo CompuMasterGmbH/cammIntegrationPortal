@@ -434,6 +434,9 @@ Namespace CompuMaster.camm.WebManager
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Public Shared Function GetWorkstationID() As String
+#If VS2015OrHigher = True Then
+#Disable Warning BC40000 'disable obsolete warnings because this code must be compatible to .NET 1.1
+#End If
 
             Dim host As System.Net.IPHostEntry = System.Net.Dns.Resolve(System.Net.Dns.GetHostName)
 
@@ -451,6 +454,9 @@ Namespace CompuMaster.camm.WebManager
             'If not already returned with a found IP, return with the host name
             Return System.Net.Dns.GetHostName
 
+#If VS2015OrHigher = True Then
+#Enable Warning BC40000 'obsolete warnings
+#End If
         End Function
 
         ''' -----------------------------------------------------------------------------
@@ -1169,11 +1175,32 @@ Namespace CompuMaster.camm.WebManager
             End If
         End Function
 
+
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Return the datetime value which is not nothing or otherwise return DBNull.Value 
+        ''' </summary>
+        ''' <param name="value">The datetime value to be validated</param>
+        ''' <returns></returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[adminsupport]	09.11.2004	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        Public Shared Function DateTimeNotNothingOrDBNull(ByVal value As DateTime) As Object
+            If value = Nothing Then
+                Return DBNull.Value
+            Else
+                Return value
+            End If
+        End Function
+
         ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the object which is not nothing or otherwise return DBNull.Value 
         ''' </summary>
-        ''' <param name="value">The string to be validated</param>
+        ''' <param name="value">The object to be validated</param>
         ''' <returns></returns>
         ''' <remarks>
         ''' </remarks>
@@ -1193,7 +1220,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Return the object which is not nothing or otherwise return DBNull.Value 
         ''' </summary>
-        ''' <param name="value">The string to be validated</param>
+        ''' <param name="value">The object to be validated</param>
         ''' <returns></returns>
         ''' <remarks>
         ''' </remarks>

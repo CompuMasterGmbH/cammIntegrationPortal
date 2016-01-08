@@ -68,7 +68,7 @@
 								<TD VAlign="Top" Width="160"><P><FONT face="Arial" size="2"><a runat="server" id="ancUserNameComplete" /></FONT></P></TD>
 								<TD VAlign="Top" Width="130"><P><FONT face="Arial" size="2"><a runat="server" id="lblLoginName" /></FONT></P></TD>
 								<TD VAlign="Top" Width="130"><P><FONT face="Arial" size="2"><asp:Label runat="server" id="lblCompany" /></FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:checkbox runat="server" id="chk_user" text="Authorize for selected application" /><br /><asp:checkbox runat="server" id="chk_devteam" text="Is development team member" /></FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:checkbox runat="server" id="chk_user" text="Authorize for selected application" /><br /><asp:checkbox runat="server" id="chk_deny" text="Deny access for selected application" /><br /><asp:checkbox runat="server" id="chk_devteam" text="Is development team member" /></FONT></P></TD>
 							</TR>
 						</ItemTemplate>
 						<AlternatingItemTemplate>
@@ -77,7 +77,7 @@
 								<TD BGCOLOR="#E1E1E1" VAlign="Top" Width="160"><P><FONT face="Arial" size="2"><a runat="server" id="ancUserNameComplete" /></FONT></P></TD>
 								<TD BGCOLOR="#E1E1E1" VAlign="Top" Width="130"><P><FONT face="Arial" size="2"><a runat="server" id="lblLoginName" /></FONT></P></TD>
 													<TD BGCOLOR="#E1E1E1" VAlign="Top" Width="130"><P><FONT face="Arial" size="2"><asp:Label runat="server" id="lblCompany" /></FONT></P></TD>
-								<TD BGCOLOR="#E1E1E1" VAlign="Top"><P><FONT face="Arial" size="2"><asp:checkbox runat="server" id="chk_user" text="Authorize for selected application" /><br /><asp:checkbox runat="server" id="chk_devteam" text="Is development team member" /></FONT></P></TD>
+								<TD BGCOLOR="#E1E1E1" VAlign="Top"><P><FONT face="Arial" size="2"><asp:checkbox runat="server" id="chk_user" text="Authorize for selected application" /><br /><asp:checkbox runat="server" id="chk_deny" text="Deny access for selected application" /><br /><asp:checkbox runat="server" id="chk_devteam" text="Is development team member" /></FONT></P></TD>
 							</TR>
 						</AlternatingItemTemplate>
 					</asp:Repeater>

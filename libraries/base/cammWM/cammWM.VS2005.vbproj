@@ -50,17 +50,9 @@
     <DefineConstants>LicenceGenerator=True,NET="2_0"</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ASPnetMenu, Version=1.2.1.0, Culture=neutral, PublicKeyToken=9bc9f846553156bb">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\ASPnetMenu.dll</HintPath>
-    </Reference>
     <Reference Include="camm.WebControls, Version=4.10.127.29062, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\camm.WebControls.dll</HintPath>
-    </Reference>
-    <Reference Include="ComponentArt.Web.UI, Version=3.0.1545.14951, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs_2_0\ComponentArt.Web.UI.dll</HintPath>
     </Reference>
     <Reference Include="CompuMaster.Imaging, Version=1.0.2205.23725, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
@@ -69,10 +61,6 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.83.1.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs_2_0\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="RadChart, Version=1.0.0.0, Culture=neutral, PublicKeyToken=edb6b3214a4cf331">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\RadChart.dll</HintPath>
     </Reference>
     <Reference Include="RadEditor, Version=3.1.0.0, Culture=neutral, PublicKeyToken=3427f733bae69f1b">
       <SpecificVersion>False</SpecificVersion>

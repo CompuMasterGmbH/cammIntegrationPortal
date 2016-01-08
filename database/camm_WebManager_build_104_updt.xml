@@ -11,20 +11,6 @@
     </updatedetails>
     <requires>
         <product>MSSQLServer</product>
-        <version_major>7</version_major>
-        <version_minor>0</version_minor>
-	<file>camm_WebManager_build_104_updt.sql</file>
-        <execfile></execfile>
-    </requires>
-    <requires>
-        <product>MSSQLServer</product>
-        <version_major>8</version_major>
-        <version_minor>0</version_minor>
-	<file>camm_WebManager_build_104_updt.sql</file>
-        <execfile></execfile>
-    </requires>
-    <requires>
-        <product>MSSQLServer</product>
         <version_major>9</version_major>
         <version_minor>0</version_minor>
 	<file>camm_WebManager_build_104_updt.sql</file>
@@ -46,9 +32,9 @@
         </requires>
         <requires>
             <product>MSSQLServerAzure</product>
-            <version_major>11</version_major>
+            <version_major>12</version_major>
             <version_minor>0</version_minor>
-            <file>camm_WebManager_build_104_updt.azure.sql</file>
+            <file>camm_WebManager_build_104_updt.sql</file>
         <execfile></execfile>
         </requires>
         <requires>

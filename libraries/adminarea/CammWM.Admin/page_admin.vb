@@ -261,6 +261,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(connection)
         End Sub
 
+        Protected Friend Function CurrentDbVersion() As Version
+            Static MyDBVersion As Version
+            If MyDBVersion Is Nothing Then
+                MyDBVersion = cammWebManager.System_DBVersion_Ex
+            End If
+            Return MyDBVersion
+        End Function
+
     End Class
 
     ''' -----------------------------------------------------------------------------
@@ -302,6 +310,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected ltrlUpdateContractExpirationDate As Literal
         Protected ltrlSupportContractExpirationDate As Literal
         Protected ltrlLicenceExpirationDate As Literal
+        Protected ltrlUpdateHint As Literal
+        Protected ltrlLicenceModel As Literal
+        Protected ltrlLicenceType As Literal
 
         Protected instanceValidationData As Registration.InstanceValidationResult
 
@@ -454,12 +465,37 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 brDbUpdate.Visible = True
             End If
 
-            LoadLicenceData()
             SetLastWebCronExecutionDate()
-            SetExpirationDates()
-            SetLicenceDescription()
 
-            'End If
+            Try
+                LoadLicenceData()
+                SetLabelsWithExpirationDates()
+                SetLicenceDescription()
+                SetLabelsLicenseDetailsAndUpdateHint()
+            Catch ex As CompuMaster.camm.WebManager.Log.SystemException
+                cammWebManager.Log.Exception(ex, False)
+                If Not Me.lblErrMsg Is Nothing Then
+                    If ex.InnerException Is Nothing Then
+                        Me.lblErrMsg.Text &= "<p>ERROR ON LICENSE QUERY: " & Server.HtmlEncode(ex.Message) & "</p>"
+                        'Me.lblErrMsg.Text = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(ex.ToString))
+                    ElseIf ex.InnerException.Message = "Data layer exception" AndAlso Not ex.InnerException.InnerException Is Nothing Then
+                        Me.lblErrMsg.Text &= "<p>ERROR ON LICENSE QUERY: " & Server.HtmlEncode(ex.InnerException.InnerException.Message) & "</p>"
+                        'Me.lblErrMsg.Text = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(ex.ToString))
+                    Else
+                        'Me.lblErrMsg.Text &= "<p>ERROR ON LICENSE QUERY: " & Server.HtmlEncode(ex.InnerException.Message) & "</p>"
+                        Me.lblErrMsg.Text &= "<p>ERROR ON LICENSE QUERY: " & Server.HtmlEncode(ex.ToString) & "</p>"
+                        'Me.lblErrMsg.Text = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(ex.ToString))
+                    End If
+                End If
+            Catch ex As Exception
+                cammWebManager.Log.Exception(ex, False)
+                If Not Me.lblErrMsg Is Nothing Then
+                    'Me.lblErrMsg.Text &= "<p>ERROR ON LICENSE QUERY: " & Server.HtmlEncode(ex.Message) & "</p>"
+                    Me.lblErrMsg.Text &= "<p>ERROR ON LICENSE QUERY: " & Server.HtmlEncode(ex.ToString) & "</p>"
+                    'Me.lblErrMsg.Text = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(ex.ToString))
+                End If
+            End Try
+
         End Sub
 
         Private Sub About_PreRender(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.PreRender
@@ -471,13 +507,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
         End Sub
 
+        ''' <summary>
+        ''' Load license data from database cache or from CompuMaster license/registration server
+        ''' </summary>
         Private Sub LoadLicenceData()
             Dim productRegistration As New CompuMaster.camm.WebManager.Registration.ProductRegistration(Me.cammWebManager)
 
             Dim forceFetch As String = Request.Item("forceserverrefresh")
-            Dim fetchFromServer As Boolean = forceFetch <> Nothing AndAlso CType(forceFetch, Boolean)
-            If fetchFromServer Then
-                productRegistration.RefreshValidationDataFromServer()
+            Dim forceFetchFromServer As Boolean = forceFetch <> Nothing AndAlso CType(forceFetch, Boolean)
+            If forceFetchFromServer Then
+                productRegistration.RefreshValidationDataFromServer(True)
             End If
             instanceValidationData = productRegistration.GetCachedValidationResult()
             If instanceValidationData Is Nothing Then
@@ -486,47 +525,79 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Sub
 
         Private Sub SetLastWebCronExecutionDate()
-            Dim lastServiceExecution As Date = GetLastServiceExecutionDate()
-            If lastServiceExecution = Nothing Then
-                lblLastWebCronExecution.Text = "never"
-            Else
-                lblLastWebCronExecution.Text = lastServiceExecution.ToString()
+            If Not Me.lblLastWebCronExecution Is Nothing Then
+                Dim lastServiceExecution As Date = GetLastServiceExecutionDate()
+                If lastServiceExecution = Nothing Then
+                    lblLastWebCronExecution.Text = "never"
+                Else
+                    lblLastWebCronExecution.Text = lastServiceExecution.ToString()
+                End If
             End If
         End Sub
 
         Private Function CreateContractExpirationString(ByVal expirationDate As DateTime) As String
             Dim currentDate As DateTime = DateTime.Now.ToUniversalTime()
             Const expirationAppendix As String = " - <b>expired!</b>"
-            Dim result As String = expirationDate.ToString()
-            If expirationDate < currentDate Then
-                result &= expirationAppendix
+            Dim result As String
+            If expirationDate = Nothing Then
+                result = "No contract/subscription ordered"
+            Else
+                result = expirationDate.ToString()
+                If expirationDate < currentDate Then
+                    result &= expirationAppendix
+                End If
             End If
             Return result
         End Function
 
-        Private Sub SetExpirationDates()
+        Private Sub SetLabelsWithExpirationDates()
             If Not Me.instanceValidationData Is Nothing Then
-                ltrlSupportContractExpirationDate.Text = CreateContractExpirationString(Me.instanceValidationData.SupportContractExpirationDate)
-                ltrlUpdateContractExpirationDate.Text = CreateContractExpirationString(Me.instanceValidationData.UpdateContractExpirationDate)
-                ltrlLicenceExpirationDate.Text = CreateContractExpirationString(Me.instanceValidationData.LicenceData.ExpirationDate)
-
+                If Not Me.ltrlSupportContractExpirationDate Is Nothing Then Me.ltrlSupportContractExpirationDate.Text = CreateContractExpirationString(Me.instanceValidationData.SupportContractExpirationDate)
+                If Not Me.ltrlUpdateContractExpirationDate Is Nothing Then Me.ltrlUpdateContractExpirationDate.Text = CreateContractExpirationString(Me.instanceValidationData.UpdateContractExpirationDate)
+                If Not Me.ltrlLicenceExpirationDate Is Nothing Then Me.ltrlLicenceExpirationDate.Text = CreateContractExpirationString(Me.instanceValidationData.LicenceData.ExpirationDate)
             End If
         End Sub
+
+        Private Sub SetLabelsLicenseDetailsAndUpdateHint()
+            If Not Me.ltrlUpdateHint Is Nothing Then
+                If Me.instanceValidationData Is Nothing Then 'No updates
+                    Me.ltrlUpdateHint.Text = "" '"no service info from server available"
+                ElseIf Not Me.instanceValidationData Is Nothing AndAlso Now.ToUniversalTime < Me.instanceValidationData.UpdateContractExpirationDate Then
+                    If Me.instanceValidationData.SecurityUpdateAvailable = True Then
+                        Me.ltrlUpdateHint.Text = "(security update available, please update as soon as possible)"
+                    ElseIf Me.instanceValidationData.UpdateAvailable = True
+                        Me.ltrlUpdateHint.Text = "(update available)"
+                    Else 'current contract, but no updates
+                        Me.ltrlUpdateHint.Text = "" '"update subscription active, but no updates available"
+                    End If
+                Else 'old contract, no updates
+                    Me.ltrlUpdateHint.Text = "" '"service info available, but update subscription outdated"
+                End If
+            End If
+            If Not Me.ltrlLicenceModel Is Nothing AndAlso Not Me.instanceValidationData Is Nothing AndAlso Not Me.instanceValidationData.LicenceData Is Nothing Then
+                Me.ltrlLicenceModel.Text = [Enum].GetName(Me.instanceValidationData.LicenceData.Model.GetType(), Me.instanceValidationData.LicenceData.Model)
+            End If
+            If Not Me.ltrlLicenceType Is Nothing AndAlso Not Me.instanceValidationData Is Nothing AndAlso Not Me.instanceValidationData.LicenceData Is Nothing Then
+                ltrlLicenceType.Text = [Enum].GetName(Me.instanceValidationData.LicenceData.Type.GetType(), Me.instanceValidationData.LicenceData.Type)
+            End If
+        End Sub
+
         Private Sub SetLicenceDescription()
             Dim text As String = ""
-
             If Not instanceValidationData Is Nothing Then
-
                 Dim currentDate As DateTime = DateTime.Now.ToUniversalTime()
-
                 If CompuMaster.camm.WebManager.Registration.LicenceInfo.IsLicenceModelWithSupport(instanceValidationData.LicenceData.Model) Then
-                    If currentDate < instanceValidationData.UpdateContractExpirationDate Then
+                    If instanceValidationData.UpdateContractExpirationDate = Nothing Then
+                        text &= "without updates (contract missing)"
+                    ElseIf currentDate < instanceValidationData.UpdateContractExpirationDate Then
                         text &= "with updates"
                     Else
                         text &= "without updates (contract expired)"
                     End If
 
-                    If currentDate < instanceValidationData.SupportContractExpirationDate Then
+                    If instanceValidationData.SupportContractExpirationDate = Nothing Then
+                        text &= ", without support and maintenance service (contract missing) "
+                    ElseIf currentDate < instanceValidationData.SupportContractExpirationDate Then
                         text &= ", with support and maintenance service "
                     Else
                         text &= ", without support and maintenance service (contract expired) "
@@ -535,7 +606,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     text = "Without updates, without support and maintenance service "
                 End If
             End If
-            lblLicenceDescription.Text = text
+            If Not Me.lblLicenceDescription Is Nothing Then
+                lblLicenceDescription.Text = text
+            End If
         End Sub
 
         ''' ----------------------------------------------------------------------------- 
@@ -554,12 +627,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim errors As New Collections.Specialized.NameValueCollection
             For MyCounter As Integer = 0 To files.Length - 1
                 Try
-
                     Dim MyDBVersion As Version = cammWebManager.System_DBVersion_Ex
                     ' If MyDBVersion.Build >= 147 Then
                     If (files(MyCounter).Trim().EndsWith("/")) Then
                         System.IO.Directory.Delete(Server.MapPath(files(MyCounter)), True)
-
                     Else
                         System.IO.File.Delete(Server.MapPath(files(MyCounter)))
                     End If
@@ -611,34 +682,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Function
 
         Private Function GetLastServiceExecutionDate() As Date
-            Dim connection As System.Data.SqlClient.SqlConnection = Nothing
-            Dim cmd As System.Data.SqlClient.SqlCommand = Nothing
-            Try
-                connection = New SqlClient.SqlConnection(Me.cammWebManager.ConnectionString)
-                connection.Open()
-                cmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT ValueDateTime FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastWebServiceExecutionDate'", connection)
-
-                Dim result As Object = cmd.ExecuteScalar()
-                If result Is Nothing OrElse CompuMaster.camm.WebManager.Utils.Nz(result) Is Nothing Then
-                    Return Nothing
-                End If
-                Return CType(cmd.ExecuteScalar(), Date)
-            Finally
-                If Not connection Is Nothing Then
-                    If connection.State <> ConnectionState.Closed Then
-                        connection.Close()
-                        connection.Dispose()
-                    End If
-                End If
-
-                If Not cmd Is Nothing Then
-                    cmd.Dispose()
-                End If
-            End Try
+            Dim cmd As System.Data.SqlClient.SqlCommand
+            cmd = New SqlCommand("SELECT ValueDateTime FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager'", New SqlClient.SqlConnection(Me.cammWebManager.ConnectionString))
+            Dim result As Object = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Automations.AutoOpenAndCloseAndDisposeConnection)
+            If result Is Nothing OrElse CompuMaster.camm.WebManager.Utils.Nz(result) Is Nothing Then
+                Return Nothing
+            End If
+            Return CType(result, Date)
         End Function
-
-
 
     End Class
 

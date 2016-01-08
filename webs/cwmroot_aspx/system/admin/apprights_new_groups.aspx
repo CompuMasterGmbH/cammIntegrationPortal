@@ -50,6 +50,17 @@
 					</TD>
 					</TR>					
 					<TR>
+					<TD VAlign="Top"><P><FONT face="Arial" size="2">&nbsp;</FONT></P></TD>
+					<TD VAlign="Top"><P><FONT face="Arial" size="2">
+					
+					<div>
+						<asp:checkbox runat="server" id="chk_deny" text="Deny access for selected application" /><br />
+						<asp:checkbox runat="server" id="chk_devteam" text="Is development team member" />
+						</div>
+						</FONT></P>
+					</TD>
+					</TR>	
+					<TR>
 					<TD VAlign="Top" ><P><FONT face="Arial" size="2">
 						<input type="text" style="display:none" />
 						<asp:Button runat="Server" ID="btnOK" Text="Create authorization" ></asp:Button></FONT></P></TD>

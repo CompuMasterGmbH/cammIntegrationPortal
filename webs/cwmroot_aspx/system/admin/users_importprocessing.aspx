@@ -29,7 +29,8 @@ Else
 	var TotalItems = <%= TotalRecords %>;
 	var ProgressMessage = '<p>Processed: ' + ProgressState + '/' + TotalItems + '</p>';
 	window.parent.document.getElementById('LabelStep4ProcessingStatus').innerHTML = ProgressMessage;
-	window.location = window.location.reload();
+	window.location.reload(true)
+	//window.location = window.location.reload();
 <%
 End If
 %>

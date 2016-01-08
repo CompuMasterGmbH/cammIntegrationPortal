@@ -1,8 +1,0 @@
-<chart width="630" height="400" backcolor="transparent" chartborder="false" frameborder="false" framecolor="#F7F7F7">
-<margins right="10" bottom="15" left="50" top="10" />
-<xaxis color="black" marklength="2" markcolor="black" showmarks="true" 
-itemfont="Arial, 10px" itemcolor="black" />
-<yaxis color="black" marklength="2" markcolor="black" showmarks="true" itemcolor="black" 
-itemfont="Arial, 10px" />
-<gridlines visible="true" color="#c9c8c7" />
-</chart>

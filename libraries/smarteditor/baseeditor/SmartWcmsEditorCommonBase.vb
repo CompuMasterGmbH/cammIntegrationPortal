@@ -323,9 +323,19 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property 'MyRequestMode()
 
-        Private ReadOnly Property IsEditVersionAvailable() As Boolean
+        Protected ReadOnly Property IsEditVersionAvailable() As Boolean
             Get
-                Dim result As Boolean = False
+                Return CountAvailableEditVersions() > 0
+            End Get
+        End Property
+        ''' <summary>
+        ''' Counts available edit versions
+        ''' </summary>
+        ''' <remarks>Based on old IsEditVersionAvailable() Code, slightly modified</remarks>
+        ''' <returns></returns>
+        Protected ReadOnly Property CountAvailableEditVersions() As Integer
+            Get
+                Dim result As Integer = 0
                 Dim myDataTable As DataTable = Database.ReadAllData(Me.ContentOfServerID, DocumentID, Me.EditorID)
                 If myDataTable.Rows.Count > 0 Then
                     'Find highest version
@@ -336,15 +346,18 @@ Namespace CompuMaster.camm.SmartWebEditor
                     'If highest version is activated, this is a release version, otherwise it must be an edit version
                     Dim myRows() As DataRow
                     myRows = myDataTable.Select("version=" & MaxVersion)
-                    If myRows.Length > 0 Then
+
+                    For Each row As DataRow In myRows
                         If CType(myRows(0)("IsActive"), Boolean) = False Then
-                            result = True
+                            result += 1
                         End If
-                    End If
+                    Next
+
                 End If
                 Return result
             End Get
-        End Property 'IsEditVersionAvailable()
+        End Property
+
 
         ''' -----------------------------------------------------------------------------
         ''' <summary>
@@ -890,7 +903,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Next
                 End If
             ElseIf Me.MarketLookupMode = MarketLookupModes.SingleMarket Then
-                ErrorMessageInCaseOfMissingData = "No version available for for this file"
+                ErrorMessageInCaseOfMissingData = "No version available for this file"
                 For Each myLang As Integer In myLangs
                     If myLang = 0 Then
                         IsLangExisting = True
@@ -1499,6 +1512,12 @@ Namespace CompuMaster.camm.SmartWebEditor
                     ElseIf RequestMode = RequestModes.DropCurrentMarketData Then
                         'Drop the current market's data
                         Me.Database.RemoveMarketFromEditVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID, Me.LanguageToShow)
+                        If Not Me.IsEditVersionAvailable Then
+                            RequestMode = RequestModes.NewVersion
+                            CreateANewPageVersion()
+                            CurrentVersion = Me.Database.MaxVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
+                        End If
+
                         'The cache data doesn't need to be refreshed since released data hasn't changed
                     End If
 
@@ -1622,36 +1641,11 @@ Namespace CompuMaster.camm.SmartWebEditor
 
 #Region "Anything else "
 
-        ''' -----------------------------------------------------------------------------
-        ''' <summary>
-        '''     Provides the HTML links needed for version and language browsing
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[Swiercz]	25.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        Public Function PrepareAvailableLanguages() As String
 
-            Dim result As New System.Text.StringBuilder
-            'Opening HTML
-            result.Append("<table style='border:1px solid black' width='100%' height='100%'>")
-            result.Append("   <tr>")
-            result.Append("     <td valign='top'>")
-            result.Append("<table border='0' cellspacing='0' cellpadding='2' width='100%' height='100%'>")
-            result.Append("   <tr>")
 
-            Dim ColCounter As Integer = 0
-            Const NumberOfColumns As Integer = 3
 
-            'Add neutral element
-            result.Append("<td valign='top'>")
-            result.Append("<div style=\""margin:2px;cursor:default;border:1px solid gray;font:icon\"" onclick=\""parent.document.getElementById('" & Me.ClientID & "_txtRedirUrl').innerText =  '" & CType(CurrentVersion, String) & ";0';parent.document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();\"" unselectable=\""on\"">0 / Neutral/All</div>")
-            result.Append("</td>")
-            ColCounter += 1
 
+        Public Function GetAvailableLanguagesDataTable() As DataTable
             Dim myLanguages As DataTable = Nothing
             Select Case Me.MarketLookupMode
                 Case MarketLookupModes.BestMatchingLanguage, MarketLookupModes.Market
@@ -1673,52 +1667,53 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Case Else
                     Throw New Exception("Invalid market lookup mode " & Me.MarketLookupMode)
             End Select
+            Return myLanguages
+        End Function
+
+        Public Structure AvailableLanguage
+            Public id As Integer
+            Public languageDescriptionEnglish As String
+            Public available As Boolean
+        End Structure
+
+        ''' <summary>
+        ''' Returns an array of available languages
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks>Based on code by Swiercz, extracted into this function to not mix it with HTML code</remarks>
+        Public Function GetAvailableLanguages() As AvailableLanguage()
+            Dim result As AvailableLanguage() = Nothing
+            Dim myLanguages As DataTable = GetAvailableLanguagesDataTable()
             If Not myLanguages Is Nothing Then
                 Dim myDataRows() As DataRow = Database.ReadAllData(Me.ContentOfServerID, DocumentID, Me.EditorID).Select("Version=" & CurrentVersion)
                 Dim myDocumentsGivenLanguages() As Integer = Nothing
                 Dim myIndex As Integer = 0
+
                 For Each myDataRow As DataRow In myDataRows
                     ReDim Preserve myDocumentsGivenLanguages(myIndex)
                     myDocumentsGivenLanguages(myIndex) = CType(myDataRow("LanguageID"), Integer)
                     myIndex = myIndex + 1
                 Next
+                ReDim result(myLanguages.Rows.Count - 1)
+
+                Dim index As Integer = 0
                 For Each myDataRow As DataRow In myLanguages.Rows
                     'Detect availability of activated market in current editor data
                     Dim myIsAvailable As Boolean = False
-                    If (Not myDocumentsGivenLanguages Is Nothing) Then
-                        For Each myLang As Integer In myDocumentsGivenLanguages
-                            If CType(myDataRow("ID"), Integer) = myLang Then
-                                myIsAvailable = True
-                                Exit For
-                            End If
-                        Next
+                    If Not myDocumentsGivenLanguages Is Nothing Then
+                        myIsAvailable = Array.IndexOf(myDocumentsGivenLanguages, myDataRow("ID")) > -1
                     End If
-                    'Add new table cell
-                    result.Append("<td valign='top'>")
-                    If myIsAvailable = False Then
-                        result.Append("<div style=\""margin:2px;cursor:default;border:1px solid gray;font:icon\"" onclick=\""parent.document.getElementById('" & Me.ClientID & "_txtRedirUrl').innerText =  '" & CType(CurrentVersion, String) & ";" & CType(myDataRow("ID"), String) & "';parent.document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();\"" unselectable=\""on\""><font color=\""gray\"">" & CType(myDataRow("ID"), String) & " / " & CType(myDataRow("Description_English"), String) & "</font></div>")
-                    Else
-                        result.Append("<div style=\""margin:2px;cursor:default;border:1px solid gray;font:icon\"" onclick=\""parent.document.getElementById('" & Me.ClientID & "_txtRedirUrl').innerText =  '" & CType(CurrentVersion, String) & ";" & CType(myDataRow("ID"), String) & "';parent.document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();\"" unselectable=\""on\""><font color=\""darkgreen\"">" & CType(myDataRow("ID"), String) & " / " & CType(myDataRow("Description_English"), String) & "</font></div>")
-                    End If
-                    result.Append("</td>")
-                    ColCounter += 1
-                    'New line check
-                    If ColCounter >= NumberOfColumns Then
-                        result.Append("   </tr>")
-                        result.Append("   <tr>")
-                        ColCounter = 0
-                    End If
-                Next
-            End If
-            result.Append("   </tr>")
-            result.Append("</table>")
 
-            'Closing HTML
-            result.Append("     </td>")
-            result.Append("   </tr>")
-            result.Append("</table>")
-            Return result.ToString
+                    result(index).id = CType(myDataRow("ID"), Integer)
+                    result(index).languageDescriptionEnglish = CType(myDataRow("Description_English"), String)
+                    result(index).available = myIsAvailable
+                    index += 1
+                Next
+
+            End If
+            Return result
         End Function
+
 
         ''' -----------------------------------------------------------------------------
         ''' <summary>

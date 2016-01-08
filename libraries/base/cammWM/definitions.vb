@@ -1109,8 +1109,9 @@ Namespace CompuMaster.camm.WebManager
         End Enum
 
         Friend Shared MilestoneDBBuildNumber_MailQueue As Integer = 122
-        <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects As New Version(4, 20)
+        <Obsolete("ATTENTION INCOMPATIBILITY CWM-SecObj Milestone"), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects As New Version(4, 20)
         'Friend Shared MilestoneVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects As New Version(4, 20)
+        <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_AuthsWithSupportForDenyRule As New Version(3, 12, 206)
 
         ''' <summary>
         ''' Values for the different events in the protocol
@@ -1780,6 +1781,23 @@ Namespace CompuMaster.camm.WebManager
                         Me.Internationalization.User_Auth_Config_CurServerURL = Me.CalculateUrl(Me.CurrentServerInfo.ID, ScriptEngines.ASPNet, "") ' Me.System_GetServerURL(CurrentServerIdentString)
                         Me.Internationalization.User_Auth_Config_UserAuthMasterServer = Me.CalculateUrl(Me.CurrentServerInfo.ParentServerGroup.MasterServer.ID, ScriptEngines.ASPNet, "") 'Me.System_GetMasterServerURL(CurrentServerIdentString)
                     End If
+                Catch ex As Exception
+                    Dim ErrMessage As String
+                    ErrMessage = "Server ID for """ & CurrentServerIdentString & """ not registered in camm Web-Manager database with connection string """ & Utils.ConnectionStringWithoutPasswords(ConnectionString) & """"
+                    If Me.DebugLevel >= DebugLevels.Medium_LoggingAndRedirectAllEMailsToDeveloper Then
+                        ErrMessage &= vbNewLine & "Exact error message=""" & ex.Message & ex.StackTrace & """"
+                    ElseIf Me.DebugLevel >= DebugLevels.Medium_LoggingOfDebugInformation Then
+                        ErrMessage &= vbNewLine & "Exact error message=""" & ex.Message & """"
+                    End If
+                    If Not SafeMode Then
+                        If Me.DebugLevel >= DebugLevels.Medium_LoggingOfDebugInformation Then
+                            Throw New Exception(ErrMessage, ex)
+                        Else
+                            Me.Log.RuntimeException(New Exception(ErrMessage, ex), False, True)
+                        End If
+                    End If
+                End Try
+                Try
                     Me.Internationalization.User_Auth_Validation_NoRefererURL = Me.Internationalization.User_Auth_Config_UserAuthMasterServer & Me.Internationalization.User_Auth_Config_Paths_UserAuthSystem & "index.aspx"
                     Me.Internationalization.User_Auth_Validation_LogonScriptURL = Me.Internationalization.User_Auth_Config_UserAuthMasterServer & Me.Internationalization.User_Auth_Config_Paths_SystemData & "logon.aspx"
                     Me.Internationalization.User_Auth_Validation_AfterLogoutURL = Me.Internationalization.User_Auth_Config_UserAuthMasterServer & Me.Internationalization.User_Auth_Config_Paths_SystemData & "logon.aspx?ErrID=44"
@@ -1793,10 +1811,10 @@ Namespace CompuMaster.camm.WebManager
                     Me.Internationalization.OfficialServerGroup_Company_FormerTitle = CType(Me.System_GetServerConfig(CurrentServerIdentString, "AreaCompanyFormerTitle"), String)
                 Catch ex As Exception
                     Dim ErrMessage As String
-                    ErrMessage = "Server ID for """ & CurrentServerIdentString & """ not registered in camm Web-Manager database with connection string """ & Utils.ConnectionStringWithoutPasswords(ConnectionString) & """"
-                    If Me.DebugLevel >= DebugLevels.Medium_LoggingAndRedirectAllEMailsToDeveloper Then
+                    ErrMessage = "Failed initializing environment"
+                    If Me.DebugLevel >= DebugLevels.Low_WarningMessagesOnAccessError_AdditionalDetails Then
                         ErrMessage &= vbNewLine & "Exact error message=""" & ex.Message & ex.StackTrace & """"
-                    ElseIf Me.DebugLevel >= DebugLevels.Medium_LoggingOfDebugInformation Then
+                    ElseIf Me.DebugLevel >= DebugLevels.Low_WarningMessagesOnAccessError Then
                         ErrMessage &= vbNewLine & "Exact error message=""" & ex.Message & """"
                     End If
                     If Not SafeMode Then
@@ -1902,6 +1920,63 @@ Namespace CompuMaster.camm.WebManager
             WebManager.Log.WriteEventLogTrace("CheckCompatibilityToDatabaseByBuildNumber:End")
         End Sub
 
+        ''' <summary>
+        ''' A unique assembly location for each logical (IIS) web application
+        ''' </summary>
+        ''' <returns></returns>
+        Private Function CurrentWebAppAssemblyLocation() As String
+            Dim AssemblyLocation As String
+            Dim AssemblyBuildNo As Integer = Setup.ApplicationUtils.Version.Build
+            If HttpContext.Current Is Nothing Then
+                Try
+                    AssemblyLocation = "MachineName=" & System.Environment.MachineName & ControlChars.NewLine
+                Catch
+                    AssemblyLocation = "MachineName={Error while looking up machine name}" & ControlChars.NewLine
+                End Try
+                Try
+                    AssemblyLocation &= "Path=" & System.Environment.GetCommandLineArgs(0) & ControlChars.NewLine
+                Catch
+                    AssemblyLocation &= "Path={Error while looking up local path}" & ControlChars.NewLine
+                End Try
+            Else
+                Dim CurrentRequest As System.Web.HttpRequest = Nothing
+                Try
+                    CurrentRequest = HttpContext.Current.Request
+                Catch
+                    'above statement might fail in certain circumstances (e.g. build failures?!?) with
+                    'Anforderung steht in diesem Kontext nicht zur Verfügung bei System.Web.HttpContext.get_Request()
+                End Try
+                If Me.CurrentServerIdentString <> Nothing Then
+                    AssemblyLocation = "ServerIdentString=" & Me.CurrentServerIdentString & ControlChars.NewLine
+                    If Not CurrentRequest Is Nothing Then
+                        AssemblyLocation &= "RequestUrl=" & CurrentRequest.Url.Scheme & Uri.SchemeDelimiter & CurrentRequest.Url.Host & ":" & CurrentRequest.Url.Port & CurrentRequest.ApplicationPath
+                    Else
+                        AssemblyLocation &= "Request={Nothing}"
+                    End If
+                    Try
+                        AssemblyLocation &= ControlChars.NewLine & "ServerUrl=" & Me.CurrentServerInfo.ServerURL & CurrentRequest.ApplicationPath
+                    Catch
+                    End Try
+                Else
+                    AssemblyLocation = "ServerIdentString={not yet configured at execution time}" & ControlChars.NewLine
+                    If Not CurrentRequest Is Nothing Then
+                        AssemblyLocation &= "RequestUrl=" & CurrentRequest.Url.Scheme & Uri.SchemeDelimiter & CurrentRequest.Url.Host & ":" & CurrentRequest.Url.Port & CurrentRequest.ApplicationPath
+                    Else
+                        AssemblyLocation &= "Request={Nothing}"
+                    End If
+                End If
+            End If
+            Return AssemblyLocation
+        End Function
+
+        ''' <summary>
+        ''' A unique hash ID for each logical (IIS) web application
+        ''' </summary>
+        ''' <returns></returns>
+        Friend Function CurrentWebAppInstanceID() As String
+            Return Utils.ComputeHash(CurrentWebAppAssemblyLocation)
+        End Function
+
         ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Log the current assembly version and its execution location to the database
@@ -1926,51 +2001,30 @@ Namespace CompuMaster.camm.WebManager
             If DoLogging = True Then
                 Dim AssemblyLocation As String
                 Dim AssemblyBuildNo As Integer = Setup.ApplicationUtils.Version.Build
-                Dim sql As String = "DECLARE @RowNumber int" & vbNewLine & _
-                    "SELECT @RowNumber = COUNT(*)" & vbNewLine & _
-                    "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
-                    "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = @PropertyName" & vbNewLine & _
-                    "SELECT @RowNumber" & vbNewLine & _
-                    "IF @RowNumber = 0 " & vbNewLine & _
-                    "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
-                    "		(ValueNVarChar, PropertyName, ValueDateTime, ValueInt, ValueDecimal, ValueNText)" & vbNewLine & _
-                    "	VALUES (N'camm WebManager', @PropertyName, GetDate(), @BuildNoAsIs, @BuildNoAsCompatible, @DetailsText)" & vbNewLine & _
-                    "ELSE" & vbNewLine & _
-                    "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
-                    "	SET ValueDateTime = GetDate(), ValueInt = @BuildNoAsIs, ValueDecimal = @BuildNoAsCompatible, ValueNText = @DetailsText" & vbNewLine & _
-                    "	WHERE ValueNVarChar = N'camm WebManager' AND PropertyName = @PropertyName"
+                Dim AssemblyLocationHash As String
                 Try
-                    If HttpContext.Current Is Nothing Then
-                        Try
-                            AssemblyLocation = "MachineName=" & System.Environment.MachineName & ControlChars.NewLine
-                        Catch
-                            AssemblyLocation = "MachineName={Error while looking up machine name}" & ControlChars.NewLine
-                        End Try
-                        Try
-                            AssemblyLocation &= "Path=" & System.Environment.GetCommandLineArgs(0) & ControlChars.NewLine
-                        Catch
-                            AssemblyLocation &= "Path={Error while looking up local path}" & ControlChars.NewLine
-                        End Try
-                    Else
-                        If Me.CurrentServerIdentString <> Nothing Then
-                            AssemblyLocation = "ServerIdentString=" & Me.CurrentServerIdentString & ControlChars.NewLine & _
-                                "RequestUrl=" & HttpContext.Current.Request.Url.Scheme & Uri.SchemeDelimiter & HttpContext.Current.Request.Url.Host & ":" & HttpContext.Current.Request.Url.Port & HttpContext.Current.Request.ApplicationPath
-                            Try
-                                AssemblyLocation &= ControlChars.NewLine & "ServerUrl=" & Me.CurrentServerInfo.ServerURL & HttpContext.Current.Request.ApplicationPath
-                            Catch
-                            End Try
-                        Else
-                            AssemblyLocation = "ServerIdentString={not yet configured at execution time}" & ControlChars.NewLine & "RequestUrl=" & HttpContext.Current.Request.Url.Scheme & Uri.SchemeDelimiter & HttpContext.Current.Request.Url.Host & ":" & HttpContext.Current.Request.Url.Port & HttpContext.Current.Request.ApplicationPath
-                        End If
-                    End If
+                    AssemblyLocation = CurrentWebAppAssemblyLocation()
+                    AssemblyLocationHash = Utils.ComputeHash(AssemblyLocation)
                 Catch ex As Exception
                     AssemblyLocation = "Error while looking up current assembly location"
-                    If DebugLevel >= DebugLevels.Medium_LoggingOfDebugInformation Then
-                        AssemblyLocation &= ":" & ControlChars.NewLine & ex.ToString
-                    End If
+                    AssemblyLocation &= ": " & ControlChars.NewLine & ex.ToString
+                    AssemblyLocationHash = "{ERROR detecting AssemblyLocation: " & ex.Message & "}"
                 End Try
-                Dim AssemblyLocationHash As String = Utils.ComputeHash(AssemblyLocation)
                 Try
+                    Dim sql As String = "DECLARE @RowNumber int" & vbNewLine & _
+                        "SELECT @RowNumber = COUNT(*)" & vbNewLine & _
+                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = @PropertyName" & vbNewLine & _
+                        "SELECT @RowNumber" & vbNewLine & _
+                        "IF @RowNumber = 0 " & vbNewLine & _
+                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "		(ValueNVarChar, PropertyName, ValueDateTime, ValueInt, ValueDecimal, ValueNText)" & vbNewLine & _
+                        "	VALUES (N'camm WebManager', @PropertyName, GetDate(), @BuildNoAsIs, @BuildNoAsCompatible, @DetailsText)" & vbNewLine & _
+                        "ELSE" & vbNewLine & _
+                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "	SET ValueDateTime = GetDate(), ValueInt = @BuildNoAsIs, ValueDecimal = @BuildNoAsCompatible, ValueNText = @DetailsText" & vbNewLine & _
+                        "	WHERE ValueNVarChar = N'camm WebManager' AND PropertyName = @PropertyName"
+
                     'Set flag that logging has been done for this application
                     Dim MyCmd As New SqlCommand(sql, New SqlClient.SqlConnection(Me.ConnectionString))
                     MyCmd.CommandType = CommandType.Text
@@ -2009,7 +2063,7 @@ Namespace CompuMaster.camm.WebManager
                 Try
                     Dim registration As New Registration.ProductRegistration(Me)
                     If registration.IsRefreshFromServerRequired(48) Then
-                        registration.CheckRegistration()
+                        registration.CheckRegistration(False)
                     End If
                 Catch ex As Exception
                     Me.Log.Exception(ex, False)
@@ -2250,7 +2304,6 @@ Namespace CompuMaster.camm.WebManager
         Public Overridable Function CalculateUrl(ByVal serverID As Integer, ByVal scriptEngineID As Integer, ByVal pathFromRootDirectory As String) As String
             Dim server As ServerInformation
             Dim ServerOfAnotherServerGroup As Boolean = False
-            Dim ServerSessionID As String = Nothing
             'Retrieve the required server info object
             If serverID = Me.CurrentServerInfo.ID Then
                 server = Me.CurrentServerInfo
@@ -2262,17 +2315,19 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End If
             'Retrieve the appropriate session ID
+            Dim ServerSessionID As String = Nothing
             If ServerOfAnotherServerGroup = False Then
                 ServerSessionID = LookupScriptEngineSessionID(serverID, scriptEngineID)
             End If
+            Dim UrlPartForSession As String = Nothing
             Select Case scriptEngineID
                 Case 1, 2 'ASP, ASP.NET
-                    ServerSessionID = "/(" & ServerSessionID & ")"
+                    UrlPartForSession = "/(" & ServerSessionID & ")"
                 Case Else 'PHP and others
-                    ServerSessionID = "/(" & ServerSessionID & ")" 'ToDo: use correct syntax, handle 
+                    UrlPartForSession = "/(" & ServerSessionID & ")" 'ToDo: use correct syntax, handle 
             End Select
             'Construct the new URL
-            Return CalculateUrlConstructor(server.ServerURL, scriptEngineID, ServerSessionID, pathFromRootDirectory)
+            Return CalculateUrlConstructor(server.ServerURL, scriptEngineID, UrlPartForSession, pathFromRootDirectory)
         End Function
 
         'TODO: change parameter scriptEngineID to type WMSystem.ScriptEngines
@@ -2282,7 +2337,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="serverUrlWithoutTrailingSlash">Protocol and server name and port</param>
         ''' <param name="scriptEngineID">The script engine ID in charge</param>
-        ''' <param name="sessionIDOfScriptEngine">The session ID string as it can be inserted into the URL inclusive a leading path separator</param>
+        ''' <param name="urlPartForSessionIDOfScriptEngine">The session ID string as it can be inserted into the URL inclusive a leading path separator</param>
         ''' <param name="pathFromRootDirectory">The path to the requested file on the server</param>
         ''' <returns></returns>
         ''' <remarks>
@@ -2291,9 +2346,9 @@ Namespace CompuMaster.camm.WebManager
         ''' 	[adminsupport]	23.04.2005	Created
         ''' </history>
         ''' -----------------------------------------------------------------------------
-        Protected Overridable Function CalculateUrlConstructor(ByVal serverUrlWithoutTrailingSlash As String, ByVal scriptEngineID As Integer, ByVal sessionIDOfScriptEngine As String, ByVal pathFromRootDirectory As String) As String
-            If Configuration.CookieLess AndAlso sessionIDOfScriptEngine <> "" Then
-                Return serverUrlWithoutTrailingSlash & sessionIDOfScriptEngine & pathFromRootDirectory
+        Protected Overridable Function CalculateUrlConstructor(ByVal serverUrlWithoutTrailingSlash As String, ByVal scriptEngineID As Integer, ByVal urlPartForSessionIDOfScriptEngine As String, ByVal pathFromRootDirectory As String) As String
+            If Configuration.CookieLess AndAlso urlPartForSessionIDOfScriptEngine <> "" Then
+                Return serverUrlWithoutTrailingSlash & urlPartForSessionIDOfScriptEngine & pathFromRootDirectory
             Else
                 Return serverUrlWithoutTrailingSlash & pathFromRootDirectory
             End If
@@ -8082,131 +8137,105 @@ Namespace CompuMaster.camm.WebManager
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
-        '''     Lookup the script engine session ID of the current user on a server
+        '''     Lookup the script engine session ID of the current user on a server/script engine
         ''' </summary>
         ''' <param name="serverID">The server that is part of the same server group</param>
         ''' <param name="scriptEngineID">An ID of a script engine which runs on that server</param>
         ''' <returns>The session ID of the script engine on the specified server</returns>
         ''' <remarks>
+        ''' Nothing will be returned e.g. WebService context is always without session data, so every lookup for a session must fail
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	23.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
+        ''' <return>The session ID for the specified server and scriptEngine or Nothing (null) in case that the current session can't be used to lookup the CWM session details</return>
         Private Function LookupScriptEngineSessionID(ByVal serverID As Integer, ByVal scriptEngineID As Integer) As String
-            Static SessionData As New Hashtable
-            Dim ScriptEngineSessionIDValue As String
-            If IsNothing(SessionData(serverID)) Then
-                'Add a new hashtable into the hashtable
-                SessionData.Add(serverID, New Hashtable)
-            End If
-            Dim ServerSessionData As Hashtable = CType(SessionData(serverID), Hashtable)
-            If ServerSessionData(scriptEngineID) Is Nothing Then
-                Dim MySessionID As String
-                If Not Me.IsLoggedOn Then
-                    'Build a new valid Session ID
-                    MySessionID = CurrentScriptEngineSessionID
+            If Not HttpContext.Current Is Nothing OrElse HttpContext.Current.Session Is Nothing Then
+                'typical environment for being run in a webservice environment
+                Return Nothing
+            ElseIf HttpContext.Current Is Nothing
+                'typical environment for non-web environments
+                'CurrentScriptEngineSessionID will be created on-the-fly - other servers are never involved into this type of session
+                If scriptEngineID = ScriptEngines.NetClient AndAlso serverID = Me.CurrentServerInfo.ID Then
+                    Return Me.CurrentScriptEngineSessionID
                 Else
-                    If Me.System_DebugLevel < DebugLevels.Medium_LoggingOfDebugInformation Then
-                        Try
-                            MySessionID = System_GetScriptEngineSessionIDOfUserName(Me.CurrentUserLoginName, scriptEngineID)
-                            If MySessionID = Nothing Then
-                                MySessionID = CurrentScriptEngineSessionID
-                            End If
-                        Catch
-                            'Build a new valid Session ID to prevent immediate errors
-                            MySessionID = CurrentScriptEngineSessionID
-                        End Try
+                    Return Nothing
+                End If
+            Else
+                'typical environment for web page requests
+                Static SessionData As New Hashtable 'for caching within the current request
+                Dim ScriptEngineSessionIDValue As String
+                If IsNothing(SessionData(serverID)) Then
+                    'Add a new hashtable into the hashtable 
+                    SessionData.Add(serverID, New Hashtable)
+                End If
+                Dim ServerSessionData As Hashtable = CType(SessionData(serverID), Hashtable)
+                If ServerSessionData(scriptEngineID) Is Nothing Then
+                    Dim MySessionID As String
+                    If Not Me.IsLoggedOn Then
+                        'Build a new valid Session ID for the anonymous user session (logic in CurrentScriptEngineSessionID)
+                        MySessionID = CurrentScriptEngineSessionID 'TODO: this seems to be WRONG, but no other quick workaround for the scenario with a 2nd script engine (e.g. classic ASP) available as long as there hasn't been a full login at all servers/script engines yet
+                    Else 'If Me.IsLoggedOn
+                        MySessionID = LookupBrowserSessionIDForAnotherServerOrScriptEngineTarget(Me.CurrentUserLoginName, serverID, scriptEngineID, Me.CurrentServerInfo.ID, ScriptEngines.ASPNet, Me.CurrentScriptEngineSessionID)
+                    End If
+                    If MySessionID <> Nothing Then
+                        ServerSessionData.Add(scriptEngineID, MySessionID)
                     Else
-                        MySessionID = System_GetScriptEngineSessionIDOfUserName(Me.CurrentUserLoginName, scriptEngineID)
-                        If MySessionID = Nothing Then
-                            MySessionID = CurrentScriptEngineSessionID
-                        End If
+                        Dim WorkaroundStackTrace As String
+                        Try
+                            'following statement may fail if not running in full trust mode - 
+                            WorkaroundStackTrace = System.Environment.StackTrace 'contains full stacktrace
+                        Catch
+                            'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class
+                            Dim WorkaroundEx As New Exception("")
+                            WorkaroundStackTrace = WorkaroundEx.StackTrace 'contains only last few lines of stacktrace
+                        End Try
+                        Me.Log.RuntimeWarning("Session ID not availabe for server " & serverID & " and script engine " & scriptEngineID, WorkaroundStackTrace, DebugLevels.Low_WarningMessagesOnAccessError_AdditionalDetails, False, False)
                     End If
                 End If
-                If MySessionID <> Nothing Then
-                    ServerSessionData.Add(scriptEngineID, MySessionID)
-                Else
-                    'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class
-                    Dim WorkaroundEx As New Exception("")
-                    Dim WorkaroundStackTrace As String = WorkaroundEx.StackTrace 'contains only last few lines of stacktrace
-                    Try
-                        WorkaroundStackTrace = System.Environment.StackTrace 'contains full stacktrace
-                    Catch
-                    End Try
-                    Me.Log.RuntimeWarning("Session ID not availabe for server " & serverID & " and script engine " & scriptEngineID, WorkaroundStackTrace, DebugLevels.Low_WarningMessagesOnAccessError_AdditionalDetails, False, False)
-                End If
+                ScriptEngineSessionIDValue = CType(ServerSessionData(scriptEngineID), String)
+                Return ScriptEngineSessionIDValue
             End If
-            ScriptEngineSessionIDValue = CType(ServerSessionData(scriptEngineID), String)
-            Return ScriptEngineSessionIDValue
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Retrieve the session ID of the current script engine on the current server from the camm Web-Manager session
         ''' </summary>
-        ''' <param name="UserName">The login name of a user</param>
-        ''' <param name="ScriptEngineID">A script engine ID</param>
-        ''' <returns>A string with the complete session ID</returns>
-        ''' <remarks>
-        '''     Sometimes it happens that a user has logged on, but the server cannot identify the user again by the session ID of the current server. 
-        '''     For example the virtual Microsoft IIS web server has been divided into several applications. Each application tracks its own session information. The one application wouldn't know anything about choosen language, logged on users, etc.
-        '''     In this situation, camm Web-Manager can try to detect the correct session ID and recreate all necessary basic information in this separate session store.
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        Private Function System_GetScriptEngineSessionIDOfUserName(ByVal UserName As String, ByVal ScriptEngineID As Integer) As String
-            Dim User_Auth_Validation_DBConn As New SqlConnection
-            Dim User_Auth_Validation_RecSet As SqlDataReader = Nothing
-            Dim User_Auth_Validation_Cmd As New SqlCommand
-            Dim Result As String
+        ''' <param name="userName">The login name of a user</param>
+        ''' <param name="requiredServerID">The desired server for which to lookup the browser session ID</param>
+        ''' <param name="requiredScriptEngineID">The desired script engine for which to lookup the browser session ID</param>
+        ''' <param name="currentServerID">The current server with a valid/registered session</param>
+        ''' <param name="currentScriptEngineID">The current script engine with a valid/registered session</param>
+        ''' <param name="currentScriptEngineSessionID">The browser session ID for the current session</param>
+        ''' <returns>The browser session ID on the requested target or Nothing (null) if session hasn't been found</returns>
+        Private Function LookupBrowserSessionIDForAnotherServerOrScriptEngineTarget(ByVal userName As String, ByVal requiredServerID As Integer, requiredScriptEngineID As Integer, currentServerID As Integer, currentScriptEngineID As ScriptEngines, currentScriptEngineSessionID As String) As String
+            Const Sql As String = "    DECLARE @CurrentSessionID int" & vbNewLine & _
+                "    SELECT @CurrentSessionID = SessionID" & vbNewLine & _
+                "          from benutzer " & vbNewLine & _
+                "            inner join System_UserSessions on benutzer.id = System_UserSessions.id_user" & vbNewLine & _
+                "            inner join System_WebAreasAuthorizedForSession on System_WebAreasAuthorizedForSession.SessionID = System_UserSessions.ID_Session" & vbNewLine & _
+                "		WHERE benutzer.loginname = @Username" & vbNewLine & _
+                "            and ScriptEngine_SessionID = @CurrentScriptEngineSessionID " & vbNewLine & _
+                "			AND ScriptEngine_ID = @CurrentScriptEngineID" & vbNewLine & _
+                "			AND Server = @CurrentServerID" & vbNewLine & _
+                "    If @CurrentSessionID IS NOT NULL" & vbNewLine & _
+                "		-- gewünschten Session ID Wert ausliefern" & vbNewLine & _
+                "        select System_WebAreasAuthorizedForSession.ScriptEngine_SessionID" & vbNewLine & _
+                "  		FROM System_WebAreasAuthorizedForSession " & vbNewLine & _
+                "          where System_WebAreasAuthorizedForSession.Server = @RequiredServerID" & vbNewLine & _
+                "            and System_WebAreasAuthorizedForSession.ScriptEngine_ID = @RequiredScriptEngineID" & vbNewLine & _
+                "            and System_WebAreasAuthorizedForSession.SessionID = @CurrentSessionID"
+            Dim MyCmd As New SqlCommand(Sql, New SqlConnection(ConnectionString))
+            With MyCmd
+                .CommandText = Sql
+                .CommandType = CommandType.Text
 
-            'Create connection
-            User_Auth_Validation_DBConn.ConnectionString = ConnectionString
-            Try
-                User_Auth_Validation_DBConn.Open()
-
-                'Get parameter value and append parameter
-                With User_Auth_Validation_Cmd
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes.scriptengine_sessionid from System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes inner join benutzer ON System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes.sessionid = benutzer.system_sessionid where loginname=@Username and scriptengine_id = @ScriptEngineID"
-                    .CommandType = CommandType.Text
-
-                    .Parameters.Add("@Username", SqlDbType.NVarChar).Value = UserName
-                    .Parameters.Add("@ScriptEngineID", SqlDbType.Int).Value = ScriptEngineID
-                End With
-
-                'Create recordset by executing the command
-                User_Auth_Validation_Cmd.Connection = User_Auth_Validation_DBConn
-                User_Auth_Validation_RecSet = User_Auth_Validation_Cmd.ExecuteReader()
-
-                If User_Auth_Validation_RecSet.Read() Then
-                    Result = Utils.Nz(User_Auth_Validation_RecSet(0), CType(Nothing, String))
-                Else
-                    Throw New Exception("No session registered for user """ & UserName & """, currently")
-                End If
-
-            Finally
-                If Not User_Auth_Validation_RecSet Is Nothing AndAlso Not User_Auth_Validation_RecSet.IsClosed Then
-                    User_Auth_Validation_RecSet.Close()
-                End If
-                If Not User_Auth_Validation_Cmd Is Nothing Then
-                    User_Auth_Validation_Cmd.Dispose()
-                End If
-                If Not User_Auth_Validation_DBConn Is Nothing Then
-                    If User_Auth_Validation_DBConn.State <> ConnectionState.Closed Then
-                        User_Auth_Validation_DBConn.Close()
-                    End If
-                    User_Auth_Validation_DBConn.Dispose()
-                End If
-            End Try
-
-            Return Result
-
+                .Parameters.Add("@CurrentServerID", SqlDbType.Int).Value = currentServerID
+                .Parameters.Add("@CurrentScriptEngineID", SqlDbType.Int).Value = currentScriptEngineID
+                .Parameters.Add("@CurrentScriptEngineSessionID", SqlDbType.NVarChar).Value = currentScriptEngineSessionID
+                .Parameters.Add("@Username", SqlDbType.NVarChar).Value = userName
+                .Parameters.Add("@RequiredServerID", SqlDbType.Int).Value = requiredServerID
+                .Parameters.Add("@RequiredScriptEngineID", SqlDbType.Int).Value = requiredScriptEngineID
+            End With
+            Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), "")
         End Function
 
         ''' -----------------------------------------------------------------------------
@@ -11568,7 +11597,6 @@ Namespace CompuMaster.camm.WebManager
             Public Sub AddAuthorization(ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, Optional ByVal notifications As Notifications.INotifications = Nothing)
                 AddAuthorization(securityObjectID, serverGroupID, False, notifications)
             End Sub
-
             ''' <summary>
             ''' Add an authorization to a security object (doesn't require saving, action is performed immediately on database)
             ''' </summary>
@@ -11578,6 +11606,19 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="notifications">A notification class which contains the e-mail templates which might be sent</param>
             ''' <remarks>This action will be done immediately without the need for saving</remarks>
             Public Sub AddAuthorization(ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, ByVal developerAuthorization As Boolean, Optional ByVal notifications As Notifications.INotifications = Nothing)
+                AddAuthorization(securityObjectID, serverGroupID, developerAuthorization, False, notifications)
+            End Sub
+
+            ''' <summary>
+            ''' Add an authorization to a security object (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="securityObjectID">The security object ID</param>
+            ''' <param name="serverGroupID">The authorization will be related only for the given server group ID, otherwise use 0 (zero value) for assigning authorization to all server groups</param>
+            ''' <param name="developerAuthorization">The developer authorization allows a user to see/access applications with this security objects even if it is currently disabled</param>
+            ''' <param name="isDenyRule">True for a deny rule or False for a grant access rule</param>
+            ''' <param name="notifications">A notification class which contains the e-mail templates which might be sent</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub AddAuthorization(ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, ByVal developerAuthorization As Boolean, isDenyRule As Boolean, Optional ByVal notifications As Notifications.INotifications = Nothing)
                 If serverGroupID <> Nothing Then Throw New NotImplementedException("Specifying a server group ID is not yet supported in this release of camm Web-Manager")
 
                 If _ID = Nothing Then
@@ -11591,7 +11632,11 @@ Namespace CompuMaster.camm.WebManager
                 MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Code)
                 MyCmd.Parameters.Add("@AppID", SqlDbType.Int).Value = securityObjectID
                 MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = _ID
-                MyCmd.Parameters.Add("@IsDevelopmentTeamMember", SqlDbType.Bit, 4).Value = developerAuthorization
+                MyCmd.Parameters.Add("@IsDevelopmentTeamMember", SqlDbType.Bit).Value = developerAuthorization
+                Dim _DBVersion As Version = Setup.DatabaseUtils.Version(WebManager, True) 'Environment check
+                If _DBVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                    MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = isDenyRule
+                End If
                 Dim Result As Object
                 Result = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
                 If IsDBNull(Result) OrElse Result Is Nothing Then
@@ -12659,7 +12704,19 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="serverGroupID">The authorization will be related only for the given server group ID, otherwise use 0 (zero value) for assigning authorization to all server groups</param>
             ''' <remarks>This action will be done immediately without the need for saving</remarks>
             Public Sub AddAuthorization(ByVal securityObjectID As Integer, ByVal serverGroupID As Integer)
-                CompuMaster.camm.WebManager.DataLayer.Current.AddGroupAuthorization(Me._WebManager, securityObjectID, Me._ID, serverGroupID)
+                Me.AddAuthorization(securityObjectID, serverGroupID, False, False)
+            End Sub
+
+            ''' <summary>
+            ''' Add an authorization to a security object (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="securityObjectID">The security object ID</param>
+            ''' <param name="serverGroupID">The authorization will be related only for the given server group ID, otherwise use 0 (zero value) for assigning authorization to all server groups</param>
+            ''' <param name="isDeveloperAuthorization">Group members will be considered for development access</param>
+            ''' <param name="isDenyRule">True for a deny rule, false for an allow rule (default)</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub AddAuthorization(ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
+                CompuMaster.camm.WebManager.DataLayer.Current.AddGroupAuthorization(Me._WebManager, securityObjectID, Me._ID, serverGroupID, isDeveloperAuthorization, isDenyRule)
                 'Requery the list of authorization next time it's required
                 _Authorizations = Nothing
             End Sub
@@ -12687,7 +12744,19 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="serverGroupID">The authorization related only to the given server group ID will be removed, otherwise use 0 (zero value) for specifying the authorization to all server groups</param>
             ''' <remarks>This action will be done immediately without the need for saving</remarks>
             Public Sub RemoveAuthorization(ByVal securityObjectID As Integer, ByVal serverGroupID As Integer)
-                CompuMaster.camm.WebManager.DataLayer.Current.RemoveGroupAuthorization(Me._WebManager, securityObjectID, Me._ID, serverGroupID)
+                RemoveAuthorization(securityObjectID, serverGroupID, False, False)
+            End Sub
+
+            ''' <summary>
+            ''' Remove an authorization (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="securityObjectID">The security object ID the user shall not be authorized for any more</param>
+            ''' <param name="serverGroupID">The authorization related only to the given server group ID will be removed, otherwise use 0 (zero value) for specifying the authorization to all server groups</param>
+            ''' <param name="isDeveloperAuthorization">Group members will be considered for development access</param>
+            ''' <param name="isDenyRule">True for a deny rule, false for an allow rule (default)</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub RemoveAuthorization(ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
+                CompuMaster.camm.WebManager.DataLayer.Current.RemoveGroupAuthorization(Me._WebManager, securityObjectID, Me._ID, serverGroupID, isDeveloperAuthorization, isDenyRule)
                 _Authorizations = Nothing
             End Sub
 

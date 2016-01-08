@@ -11,14 +11,6 @@
         </updatedetails>
         <requires>
             <product>MSSQLServer</product>
-            <version_major>8</version_major>
-            <version_minor>0</version_minor>
-            <file>camm-WebManager_trigger_latest.sql</file>
-            <execfile>
-            </execfile>
-        </requires>
-        <requires>
-            <product>MSSQLServer</product>
             <version_major>9</version_major>
             <version_minor>0</version_minor>
              <file>camm-WebManager_trigger_latest.sql</file>
@@ -43,9 +35,9 @@
         </requires>
         <requires>
             <product>MSSQLServerAzure</product>
-            <version_major>11</version_major>
+            <version_major>12</version_major>
             <version_minor>0</version_minor>
-			<file>camm-WebManager_trigger_latest.azure.sql</file>
+			<file>camm-WebManager_trigger_latest.sql</file>
             <execfile>
             </execfile>
         </requires>

@@ -1,4 +1,4 @@
-﻿if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[NavItems]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+﻿if exists (select * from sys.objects where object_id = object_id(N'[dbo].[NavItems]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 drop table [dbo].[NavItems]
 GO
 CREATE TABLE [dbo].[NavItems] (
@@ -42,7 +42,7 @@ CREATE TABLE [dbo].[NavItems] (
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[SecurityObjects_vs_NavItems]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[SecurityObjects_vs_NavItems]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 drop table [dbo].[SecurityObjects_vs_NavItems]
 GO
 CREATE TABLE [dbo].[SecurityObjects_vs_NavItems] (
@@ -56,7 +56,7 @@ CREATE TABLE [dbo].[SecurityObjects_vs_NavItems] (
 ) ON [PRIMARY]
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[SecurityObjects_CurrentAndInactiveOnes]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[SecurityObjects_CurrentAndInactiveOnes]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 drop table [dbo].[SecurityObjects_CurrentAndInactiveOnes]
 GO
 CREATE TABLE [dbo].[SecurityObjects_CurrentAndInactiveOnes] (
@@ -91,7 +91,7 @@ CREATE  INDEX [IX_SecurityObjects_1] ON [dbo].[SecurityObjects_CurrentAndInactiv
 CREATE  INDEX [IX_SecurityObjects_2] ON [dbo].[SecurityObjects_CurrentAndInactiveOnes]([SystemAppType]) WITH  FILLFACTOR = 90 ON [PRIMARY]
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[SecurityObjects_AuthsByGroup]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[SecurityObjects_AuthsByGroup]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 DROP TABLE [dbo].[SecurityObjects_AuthsByGroup]
 GO
 CREATE TABLE [dbo].[SecurityObjects_AuthsByGroup](
@@ -110,7 +110,7 @@ GO
 ALTER TABLE [dbo].[SecurityObjects_AuthsByGroup] ADD DEFAULT (getdate()) FOR [ReleasedOn]
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[SecurityObjects_AuthsByUser]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[SecurityObjects_AuthsByUser]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 DROP TABLE [dbo].[SecurityObjects_AuthsByUser]
 GO
 CREATE TABLE [dbo].[SecurityObjects_AuthsByUser](
@@ -132,7 +132,7 @@ GO
 ALTER TABLE [dbo].[SecurityObjects_AuthsByUser] ADD  DEFAULT (0) FOR [DevelopmentTeamMember]
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Apps2SecObj_SyncWarnLog]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Apps2SecObj_SyncWarnLog]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 DROP TABLE [dbo].[Apps2SecObj_SyncWarnLog]
 GO
 CREATE TABLE [dbo].[Apps2SecObj_SyncWarnLog](
@@ -146,7 +146,7 @@ CREATE TABLE [dbo].[Apps2SecObj_SyncWarnLog](
 
 GO
 -- New VIEWS --
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[SecurityObjects]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[SecurityObjects]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[SecurityObjects]
 GO
 CREATE VIEW [dbo].[SecurityObjects]
@@ -157,7 +157,7 @@ FROM dbo.SecurityObjects_CurrentAndInactiveOnes
 WHERE IsNull(Deleted, 0) = 0
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[SecurityObjects_CumulatedAuthsPerUser]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[SecurityObjects_CumulatedAuthsPerUser]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[SecurityObjects_CumulatedAuthsPerUser]
 GO
 CREATE VIEW [dbo].[SecurityObjects_CumulatedAuthsPerUser]
@@ -220,7 +220,7 @@ from dbo.securityobjects
 where dbo.SecurityObjects_AuthsByGroup.ID_ServerGroup = dbo.System_ServerGroups.ID
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[debug_SecurityObjects_CumulatedAuthsPerUser_woDuplicates]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[debug_SecurityObjects_CumulatedAuthsPerUser_woDuplicates]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[debug_SecurityObjects_CumulatedAuthsPerUser_woDuplicates]
 GO
 CREATE VIEW [dbo].[debug_SecurityObjects_CumulatedAuthsPerUser_woDuplicates]
@@ -230,7 +230,7 @@ from [SecurityObjects_CumulatedAuthsPerUser]
 group by id_securityobject, id_servergroup, id_user
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[debug_CumulatedAuths_OldSchema]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[debug_CumulatedAuths_OldSchema]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[debug_CumulatedAuths_OldSchema]
 GO
 CREATE VIEW [dbo].[debug_CumulatedAuths_OldSchema]
@@ -246,7 +246,7 @@ from applications
 	inner join dbo.System_Servers on Applications.LocationID = dbo.System_Servers.ID
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[debug_CumulatedAuths_NewSchema]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[debug_CumulatedAuths_NewSchema]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[debug_CumulatedAuths_NewSchema]
 GO
 CREATE VIEW [dbo].[debug_CumulatedAuths_NewSchema]
@@ -265,7 +265,7 @@ from navitems
 where dbo.System_Servers.ServerGroup = auths.ID_ServerGroup
 GO
 
-IF EXISTS (select * from dbo.sysobjects where id = object_id(N'[dbo].[RefillSplittedSecObjAndNavPointsTables]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[RefillSplittedSecObjAndNavPointsTables]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE dbo.RefillSplittedSecObjAndNavPointsTables
 GO
 CREATE PROCEDURE dbo.RefillSplittedSecObjAndNavPointsTables
@@ -446,7 +446,7 @@ EXEC RefillSplittedSecObjAndNavPointsTables
 
 GO
 -- New VIEWS --
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_ApplicationRights_CommulatedPerUser_woDups]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_ApplicationRights_CommulatedPerUser_woDups]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[view_ApplicationRights_CommulatedPerUser_woDups]
 GO
 CREATE view [dbo].[view_ApplicationRights_CommulatedPerUser_woDups]
@@ -471,7 +471,7 @@ group by ID_Application, ID_User
 GO
 
 -- New VIEWS --
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[view_ApplicationRights_CommulatedPerUser_FAST]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_ApplicationRights_CommulatedPerUser_FAST]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[view_ApplicationRights_CommulatedPerUser_FAST]
 GO
 CREATE view [dbo].[view_ApplicationRights_CommulatedPerUser_FAST]

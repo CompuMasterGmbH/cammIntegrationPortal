@@ -36,6 +36,26 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
+
+        Private _CachedProductName As String
+        Public Const CacheKeyProductName As String = "CwmProductName"
+        Public Property CachedProductName As String
+            Get
+                If HttpContext.Current Is Nothing Then
+                    Return _CachedProductName
+                Else
+                    Return CType(HttpContext.Current.Application(CacheKeyProductName), String)
+                End If
+            End Get
+            Set(value As String)
+                If HttpContext.Current Is Nothing Then
+                    _CachedProductName = value
+                Else
+                    HttpContext.Current.Application(CacheKeyProductName) = value
+                End If
+            End Set
+        End Property
+
         ''' <summary>
         ''' Product name of camm Web-Manager
         ''' </summary>
@@ -43,29 +63,58 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>Product name could be for example "camm Enterprise WebManager"</remarks>
         Public ReadOnly Property ProductName() As String
             Get
-                Const ProductType_Enterprise As String = "camm Enterprise WebManager"
-                Const ProductType_Standard As String = "camm WebManager"
-                Const ProductType_SmallBusiness As String = "camm WebManager Small Business Edition"
-                Const ProductType_CommunityEdition As String = "camm WebManager Community Edition"
+                If CachedProductName = Nothing Then
+                    Dim validationDao As New Registration.InstanceValidationDao(Me._WebManager)
+                    Dim licenceModel As Registration.LicenceData.LicenseModel = validationDao.Load().LicenceData.Model
 
-                Dim validationDao As New Registration.InstanceValidationDao(Me._WebManager)
-
-                Dim licenceModel As Registration.LicenceData.LicenseModel = validationDao.Load().LicenceData.Model
-                Select Case licenceModel
-                    Case Registration.LicenceData.LicenseModel.Enterprise
-                        Return ProductType_Enterprise
-                    Case Registration.LicenceData.LicenseModel.Standard
-                        Return ProductType_Standard
-                    Case Registration.LicenceData.LicenseModel.Light, Registration.LicenceData.LicenseModel.Professional
-                        Return ProductType_SmallBusiness
-                    Case Registration.LicenceData.LicenseModel.Demo, Registration.LicenceData.LicenseModel.Trial, Registration.LicenceData.LicenseModel.Community
-                        Return ProductType_CommunityEdition
-                    Case Else
-                        'ToDo: Verify if this matches the product philosophie of the camm product line
-                        Return ProductType_CommunityEdition
-                End Select
+                    Dim Result As String
+                    Select Case licenceModel
+                        Case Registration.LicenceData.LicenseModel.Enterprise
+                            Result = "camm WebManager Enterprise Edition"
+                        Case Registration.LicenceData.LicenseModel.Standard
+                            Result = "camm WebManager Standard Edition"
+                        Case Registration.LicenceData.LicenseModel.Light
+                            Result = "camm WebManager Light Edition"
+                        Case Registration.LicenceData.LicenseModel.Professional
+                            Result = "camm WebManager Professional Edition"
+                        Case Registration.LicenceData.LicenseModel.Demo
+                            Result = "camm WebManager Demo Edition"
+                        Case Registration.LicenceData.LicenseModel.Trial
+                            Result = "camm WebManager Trial Edition"
+                        Case Registration.LicenceData.LicenseModel.Community
+                            Result = "camm WebManager Community Edition"
+                        Case Else
+                            'TODO: Verify if this matches the product philosophie of the camm product line
+                            Result = "camm WebManager Community Edition"
+                    End Select
+                    CachedProductName = Result
+                    Return Result
+                Else
+                    Return CachedProductName
+                End If
             End Get
         End Property
+
+        Private _CachedLicenceKey As String
+        Private Property CachedLicenceKey As String
+            Get
+                If HttpContext.Current Is Nothing Then
+                    Return _CachedLicenceKey
+                Else
+                    Return CType(HttpContext.Current.Application("CwmLicenceKey"), String)
+                End If
+            End Get
+            Set(value As String)
+                If value <> _ExceptionalDefaultKey Then
+                    If HttpContext.Current Is Nothing Then
+                        _CachedLicenceKey = value
+                    Else
+                        HttpContext.Current.Application("CwmLicenceKey") = value
+                    End If
+                End If
+            End Set
+        End Property
+
         ''' <summary>
         ''' Licence hash code for camm Web-Manager
         ''' </summary>
@@ -73,29 +122,34 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks></remarks>
         Public ReadOnly Property LicenceKey() As String
             Get
-                Try
-                    Dim cmd As New SqlClient.SqlCommand
-                    cmd.CommandText = "SELECT ValueNVarChar FROM [dbo].[System_GlobalProperties] WHERE PropertyName = 'LicenceKey'"
-                    cmd.CommandType = CommandType.Text
-                    cmd.Connection = New SqlClient.SqlConnection(Me._WebManager.ConnectionString)
+                If CachedLicenceKey <> Nothing Then
+                    Return CachedLicenceKey
+                Else
+                    Try
+                        Dim cmd As New SqlClient.SqlCommand
+                        cmd.CommandText = "SELECT ValueNVarChar FROM [dbo].[System_GlobalProperties] WHERE PropertyName = 'LicenceKey'"
+                        cmd.CommandType = CommandType.Text
+                        cmd.Connection = New SqlClient.SqlConnection(Me._WebManager.ConnectionString)
 
-                    Dim key As Object = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-                    If IsDBNull(key) OrElse key Is Nothing Then
-                        Dim newLicenceKey As String = Guid.NewGuid().ToString("N")
-                        Dim insertCommand As New SqlClient.SqlCommand
-                        insertCommand.CommandText = "INSERT INTO [dbo].[System_GlobalProperties] (ValueNVarChar, PropertyName) VALUES(@guid, 'LicenceKey')"
-                        insertCommand.CommandType = CommandType.Text
-                        insertCommand.Connection = New SqlClient.SqlConnection(Me._WebManager.ConnectionString)
-                        insertCommand.Parameters.Add("@guid", SqlDbType.NVarChar).Value = newLicenceKey
-                        CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(insertCommand, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-                        Return newLicenceKey
-                    Else
-                        Return CType(key, String)
-                    End If
-                Catch ex As Exception
-                    _WebManager.Log.ReportErrorViaEMail(ex, "Error accessing System_GlobalProperties table")
-                    Return _ExceptionalDefaultKey
-                End Try
+                        Dim key As String = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), "")
+                        If key = Nothing Then
+                            'JIT-create a new license key and also store it to the database
+                            Dim newLicenceKey As String = Guid.NewGuid().ToString("N")
+                            Dim insertCommand As New SqlClient.SqlCommand
+                            insertCommand.CommandText = "INSERT INTO [dbo].[System_GlobalProperties] (ValueNVarChar, PropertyName) VALUES(@guid, 'LicenceKey')"
+                            insertCommand.CommandType = CommandType.Text
+                            insertCommand.Connection = New SqlClient.SqlConnection(Me._WebManager.ConnectionString)
+                            insertCommand.Parameters.Add("@guid", SqlDbType.NVarChar).Value = newLicenceKey
+                            CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(insertCommand, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+                            key = newLicenceKey
+                        End If
+                        CachedLicenceKey = key
+                        Return key
+                    Catch ex As Exception
+                        _WebManager.Log.ReportErrorViaEMail(ex, "Error accessing System_GlobalProperties table")
+                        Return _ExceptionalDefaultKey
+                    End Try
+                End If
             End Get
         End Property
     End Class
@@ -107,7 +161,24 @@ Namespace CompuMaster.camm.WebManager
             _WebManager = cammWebManager
         End Sub
 
-        Private _Licencee As String
+        Private _CachedLicencee As String
+        Private Property CachedLicencee As String
+            Get
+                If HttpContext.Current Is Nothing Then
+                    Return _CachedLicencee
+                Else
+                    Return CType(HttpContext.Current.Application("CwmLicenceeName"), String)
+                End If
+            End Get
+            Set(value As String)
+                If HttpContext.Current Is Nothing Then
+                    _CachedLicencee = value
+                Else
+                    HttpContext.Current.Application("CwmLicenceeName") = value
+                End If
+            End Set
+        End Property
+
         ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The licencee, the name or an identifier of the organization 
@@ -121,9 +192,12 @@ Namespace CompuMaster.camm.WebManager
         ''' -----------------------------------------------------------------------------
         Public Property Licencee() As String
             Get
-                If _Licencee Is Nothing Then
-                    _Licencee = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(_WebManager.ConnectionString), "SELECT [ValueNText] FROM [dbo].[System_GlobalProperties] WHERE [PropertyName] = 'LicenceName' AND ValueNVarChar = 'camm WebManager'", CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, String))
-                    If _Licencee = Nothing Then
+                If CachedLicencee = Nothing Then
+                    Dim Result As String = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(_WebManager.ConnectionString), "SELECT [ValueNText] FROM [dbo].[System_GlobalProperties] WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = 'camm WebManager'", CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, String))
+                    If Result <> Nothing Then
+                        CachedLicencee = Result
+                    Else
+                        'JIT-create the licensee name based on first server group name
                         'Take the name of the first server group with a positive ID
                         Dim ServerGroupName As String
                         ServerGroupName = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(_WebManager.ConnectionString), "SELECT TOP 1 ServerGroup FROM dbo.System_ServerGroups WHERE ID > 0", CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, String))
@@ -131,23 +205,23 @@ Namespace CompuMaster.camm.WebManager
                         Me.Licencee = ServerGroupName
                     End If
                 End If
-                Return _Licencee
+                Return CachedLicencee
             End Get
             Set(ByVal Value As String)
                 Dim MyCmd As New SqlCommand( _
                     "declare @ExistingValue bit" & vbNewLine & _
                         "SELECT TOP 1 @ExistingValue  = 1" & vbNewLine & _
                         "FROM [dbo].[System_GlobalProperties] " & vbNewLine & _
-                        "WHERE [PropertyName] = 'LicenceName' AND ValueNVarChar = 'camm WebManager'" & vbNewLine & _
+                        "WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = 'camm WebManager'" & vbNewLine & _
                         "IF @ExistingValue IS NULL" & vbNewLine & _
                         "	INSERT INTO [dbo].[System_GlobalProperties]([PropertyName], [ValueNVarChar], [ValueNText])" & vbNewLine & _
-                        "	VALUES ('LicenceName', 'camm WebManager', @Name)" & vbNewLine & _
+                        "	VALUES ('LicenceeName', 'camm WebManager', @Name)" & vbNewLine & _
                         "ELSE" & vbNewLine & _
-                        "	UPDATE [dbo].[System_GlobalProperties] SET [ValueNText] = @Name WHERE [PropertyName] = 'LicenceName' AND ValueNVarChar = 'camm WebManager'", _
+                        "	UPDATE [dbo].[System_GlobalProperties] SET [ValueNText] = @Name WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = 'camm WebManager'", _
                     New SqlConnection(_WebManager.ConnectionString))
                 MyCmd.Parameters.Add("@Name", SqlDbType.NText).Value = Value
                 CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(mycmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-                _Licencee = Value
+                CachedLicencee = Value
             End Set
         End Property
 

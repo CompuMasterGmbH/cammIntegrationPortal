@@ -152,20 +152,24 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 
             'Search for the hole searchword in every column
-            WhereClause = "Where Loginname LIKE @SearchWords Or Namenszusatz LIKE @SearchWords Or company LIKE @SearchWords or Nachname LIKE @SearchWords Or Vorname LIKE @SearchWords"
+            WhereClause = "Where (Loginname LIKE @SearchWords Or Namenszusatz LIKE @SearchWords Or company LIKE @SearchWords or Nachname LIKE @SearchWords Or Vorname LIKE @SearchWords Or [E-Mail] LIKE @SearchWords)"
 
             'Search for every single word (space-seperated) in searchword
-            For myWordCounter As Integer = 0 To searchItems.Length - 1
-                WhereClause &= " or Loginname LIKE @SearchItem" & myWordCounter & " Or Namenszusatz LIKE @SearchItem" & myWordCounter & " Or company LIKE @SearchItem" & myWordCounter & " or Nachname LIKE @SearchItem" & myWordCounter & " Or Vorname LIKE @SearchItem" & myWordCounter & ""
-            Next
+            If searchItems.Length > 1 Then
+                WhereClause &= " OR ("
+                For myWordCounter As Integer = 0 To searchItems.Length - 1
+                    If myWordCounter <> 0 Then WhereClause &= " AND "
+                    WhereClause &= " (Loginname LIKE @SearchItem" & myWordCounter & " Or Namenszusatz LIKE @SearchItem" & myWordCounter & " Or company LIKE @SearchItem" & myWordCounter & " or Nachname LIKE @SearchItem" & myWordCounter & " Or Vorname LIKE @SearchItem" & myWordCounter & " Or [E-Mail] LIKE @SearchItem" & myWordCounter & ")"
+                Next
+                WhereClause &= " )"
+            End If
 
             Dim TopClause As String = ""
             If CheckBoxTop50Results.Checked = True Then TopClause = "TOP 50" Else TopClause = ""
 
             Try
                 If SearchWords = String.Empty Then WhereClause = String.Empty
-                Dim SqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT " & TopClause & " System_AccessLevels.Title As AccessLevel_Title, Benutzer.*, ISNULL(Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Namenszusatz, ''), 1, 1)) }) + Nachname + ', ' + Vorname AS UserNameComplete FROM [Benutzer] LEFT JOIN System_AccessLevels ON Benutzer.AccountAccessability = System_AccessLevels.ID " & WhereClause & " ORDER BY Nachname, Vorname"
+                Dim SqlQuery As String = "SELECT " & TopClause & " System_AccessLevels.Title As AccessLevel_Title, Benutzer.*, ISNULL(Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Namenszusatz, ''), 1, 1)) }) + Nachname + ', ' + Vorname AS UserNameComplete FROM [Benutzer] LEFT JOIN System_AccessLevels ON Benutzer.AccountAccessability = System_AccessLevels.ID " & WhereClause & " ORDER BY Nachname, Vorname"
 
                 Dim cmd As New SqlClient.SqlCommand(SqlQuery, New SqlConnection(cammWebManager.ConnectionString))
                 cmd.Parameters.Add("@SearchWords", SqlDbType.NVarChar).Value = SearchWords

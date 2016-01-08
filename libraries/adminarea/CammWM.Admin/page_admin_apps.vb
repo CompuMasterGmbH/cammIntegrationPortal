@@ -800,7 +800,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         If Utils.Nz(dr("ItemType"), 0) = 1 Then
                             strBlr.Append("<TR><TD VAlign=""Top"" WIDTH=""160""><P><FONT face=""Arial"" size=""2"">Group</FONT></P></TD><TD VAlign=""Top"" Width=""240""><P><FONT face=""Arial"" size=""2""><a href=""groups_update.aspx?ID=" & Utils.Nz(dr("ID_Group"), 0).ToString & """>" & Server.HtmlEncode(Utils.Nz(dr("Name"), String.Empty)) & "</a></FONT></P></TD></TR>")
                         Else
+#If VS2015OrHigher = True Then
+#Disable Warning BC40000 ' Der Typ oder Member ist veraltet.
+#End If
                             strBlr.Append("<TR><TD VAlign=""Top"" WIDTH=""160""><P><FONT face=""Arial"" size=""2"">User</FONT></P></TD><TD VAlign=""Top"" Width=""240""><P><FONT face=""Arial"" size=""2""><a href=""users_update.aspx?ID=" & Utils.Nz(dr("ID_User"), 0).ToString & """>" & Server.HtmlEncode(Utils.Nz(cammWebManager.System_GetUserDetail(dr("ID_User"), "CompleteName"), String.Empty)) & " (" & Server.HtmlEncode(Utils.Nz(dr("LoginName"), String.Empty)) & ")</a>" & Utils.Nz(IIf(Utils.Nz(dr("LoginDisabled"), False), "&nbsp;<em><font color= ""#D1D1D1"">(Disabled)</font></em>", ""), String.Empty) & "</FONT></P></TD></TR>")
+#If VS2015OrHigher = True Then
+#Enable Warning BC40000 ' Der Typ oder Member ist veraltet.
+#End If
                         End If
                     Next
                 End If

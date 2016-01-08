@@ -33,43 +33,96 @@ Namespace CompuMaster.camm.SmartWebEditor
                 End Get
             End Property
 
-            Protected Overrides Sub CreateChildControls()
-                MyBase.CreateChildControls()
+            Public Property CssWidth As String
+                Get
+                    Return Me.editorMain.CssWidth
+                End Get
+                Set(value As String)
+                    Me.editorMain.CssWidth = value
+                End Set
+            End Property
 
+            Public Property CssHeight As String
+                Get
+                    Return Me.editorMain.CssHeight
+                End Get
+                Set(value As String)
+                    Me.editorMain.CssHeight = value
+                End Set
+            End Property
+
+            Public Property Columns As Integer
+                Get
+                    Return Me.editorMain.TextareaColumns
+                End Get
+                Set(value As Integer)
+                    Me.editorMain.TextareaColumns = value
+                End Set
+            End Property
+
+            Public Property Rows As Integer
+                Get
+                    Return Me.editorMain.TextareaRows
+                End Get
+                Set(value As Integer)
+                    Me.editorMain.TextareaRows = value
+                End Set
+            End Property
+
+
+            Public Sub New()
                 editorMain = New PlainTextEditor
                 editorMain.Editable = True
                 editorMain.EnableViewState = False
 
+            End Sub
+            Protected Overrides Sub CreateChildControls()
+                MyBase.CreateChildControls()
+
                 Controls.Add(editorMain)
             End Sub
 
-            Private Sub SetToolbar(ByVal toolbar As ToolbarSettings)
-                Dim saveButton As System.Web.UI.WebControls.Button = New System.Web.UI.WebControls.Button()
-                saveButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'update'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
-                saveButton.Text = "Save"
+            Private SaveButton As System.Web.UI.WebControls.Button = Nothing
+            Private ActivateButton As System.Web.UI.WebControls.Button = Nothing
+            Private PreviewButton As System.Web.UI.WebControls.Button = Nothing
+            Private NewVersionButton As System.Web.UI.WebControls.Button = Nothing
+            Private DeleteLanguageButton As System.Web.UI.WebControls.Button = Nothing
+
+            Private VersionDropDownBox As New System.Web.UI.WebControls.DropDownList
+            Private LanguagesDropDownBox As System.Web.UI.WebControls.DropDownList
+
+            Private Sub CreateToolBarButtons()
+                Me.SaveButton = New System.Web.UI.WebControls.Button()
+                Me.SaveButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'update'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                Me.SaveButton.Text = "Save"
 
 
-                Dim activateButton As New System.Web.UI.WebControls.Button
-                activateButton.OnClientClick = "document.getElementById('" & Me.txtActivate.ClientID & "').value = 'activate'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
-                activateButton.Text = "Aktivieren"
+                Me.ActivateButton = New System.Web.UI.WebControls.Button
+                Me.ActivateButton.OnClientClick = "document.getElementById('" & Me.txtActivate.ClientID & "').value = 'activate'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                Me.ActivateButton.Text = "Activate"
 
-                Dim previewButton As System.Web.UI.WebControls.Button = New System.Web.UI.WebControls.Button()
-                previewButton.OnClientClick = "document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'false'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
-                previewButton.Text = "Preview"
+                Me.PreviewButton = New System.Web.UI.WebControls.Button()
+                Me.PreviewButton.OnClientClick = "document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'false'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                Me.PreviewButton.Text = "Preview"
 
-                Dim newVersion As New System.Web.UI.WebControls.Button
-                newVersion.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'newversion'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
-                newVersion.Text = "New Version"
+                Me.NewVersionButton = New System.Web.UI.WebControls.Button()
+                Me.NewVersionButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'newversion'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                Me.NewVersionButton.Text = "New Version"
+            End Sub
 
-                Dim versionDropDown As New System.Web.UI.WebControls.DropDownList
+            ''' <summary>
+            ''' Fil the verison dropdown box with the versions available for this document.
+            ''' <remarks>I have for now overall copied the code from the original smartwcms editor. Needs refactoring </remarks>
+            ''' </summary>
+            Private Sub InitializeVersionDropDownBox()
                 Dim myDataTable As DataTable = Database.ReadAllData(Me.ContentOfServerID, DocumentID, Me.EditorID)
-                Dim counter As Integer = 0
-
-                Dim versionRows As DataRow() = myDataTable.Select(Nothing, "Version ASC")
+                Dim counter As Integer = 1
+                Dim versionRows As DataRow() = myDataTable.Select("LanguageID = " & Me.LanguageToShow.ToString(), "Version DESC")
                 For Each row As DataRow In versionRows
                     If counter = 7 Then
                         Exit For
                     End If
+                    Dim version As Integer = CType(row("Version"), Integer)
                     Dim myDate As Date = Utils.Nz(row("ReleasedOn"), CType(Nothing, Date))
                     Dim ReleaseDate As String
                     If myDate = Nothing Then
@@ -78,32 +131,81 @@ Namespace CompuMaster.camm.SmartWebEditor
                         ReleaseDate = myDate.ToShortDateString()
                     End If
                     Dim listItem As New System.Web.UI.WebControls.ListItem
-                    listItem.Text = "v" & counter & " " & ReleaseDate
-                    listItem.Value = CType(row("Version"), Integer) & ";" & "0"
-
-                    versionDropDown.Items.Add(listItem)
+                    listItem.Text = "v" & version & " " & ReleaseDate
+                    listItem.Value = version.ToString() & ";" & Me.LanguageToShow.ToString()
+                    Me.VersionDropDownBox.Items.Insert(0, listItem)
                     counter += 1
 
                 Next
                 Dim dropDownScript As String = "document.getElementById('" & txtBrowseToMarketVersion.ClientID & "').value = this.value;"
-                versionDropDown.Attributes.Add("onchange", dropDownScript & "document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();")
+                Me.VersionDropDownBox.Attributes.Add("onchange", dropDownScript & "document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();")
 
-                versionDropDown.SelectedValue = Me.CurrentVersion & ";0"
+                Me.VersionDropDownBox.SelectedValue = Me.CurrentVersion & ";" & LanguageToShow.ToString()
+            End Sub
 
-                If toolbar = ToolbarSettings.EditEditableVersion Then
-                    Me.pnlEditorToolbar.Controls.Add(saveButton)
-                    Me.pnlEditorToolbar.Controls.Add(activateButton)
-                    Me.pnlEditorToolbar.Controls.Add(previewButton)
-                    Me.pnlEditorToolbar.Controls.Add(versionDropDown)
-                ElseIf toolbar = ToolbarSettings.EditNoneEditableVersions Then
-                    Me.pnlEditorToolbar.Controls.Add(newVersion)
-                    Me.pnlEditorToolbar.Controls.Add(previewButton)
-                    Me.pnlEditorToolbar.Controls.Add(versionDropDown)
-                ElseIf toolbar = ToolbarSettings.EditWithValidEditVersion Then
-                    Me.pnlEditorToolbar.Controls.Add(previewButton)
-                    Me.pnlEditorToolbar.Controls.Add(versionDropDown)
+            ''' <summary>
+            ''' Fill the languages/market drop down list...
+            ''' </summary>
+            Private Sub InitializeLanguageDropDownList()
+                Me.LanguagesDropDownBox = New System.Web.UI.WebControls.DropDownList
+                Dim neutralItem As New System.Web.UI.WebControls.ListItem
+                neutralItem.Text = "0 / Neutral / All"
+                neutralItem.Value = CurrentVersion.ToString() & ";0"
+                LanguagesDropDownBox.Items.Add(neutralItem)
 
+                Dim languages As AvailableLanguage() = GetAvailableLanguages()
+                If Not languages Is Nothing Then
+                    For Each language As AvailableLanguage In languages
+                        Dim text As String = language.id.ToString() & " / " & language.languageDescriptionEnglish
+                        Dim value As String = CurrentVersion.ToString() & ";" & language.id.ToString()
+                        Dim item As New System.Web.UI.WebControls.ListItem
+                        If Not language.available Then
+                            text &= " (inactive)"
+                        End If
+                        item.Text = text
+                        item.Value = value
+                        LanguagesDropDownBox.Items.Add(item)
+                    Next
+                    LanguagesDropDownBox.SelectedValue = CurrentVersion.ToString() & ";" & LanguageToShow.ToString()
                 End If
+
+                Dim script As String = "document.getElementById('" & txtBrowseToMarketVersion.ClientID & "').value = this.value;"
+                LanguagesDropDownBox.Attributes.Add("onchange", script & "document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();")
+            End Sub
+            ''' <summary>
+            ''' Shows the buttons that we need
+            ''' </summary>
+            ''' <param name="toolbartype"></param>
+            Private Sub AssembleToolbar(ByVal toolbartype As ToolbarSettings)
+                If toolbartype = ToolbarSettings.EditEditableVersion Then
+                    Me.pnlEditorToolbar.Controls.Add(SaveButton)
+                    Me.pnlEditorToolbar.Controls.Add(ActivateButton)
+                    Me.pnlEditorToolbar.Controls.Add(PreviewButton)
+                    Me.pnlEditorToolbar.Controls.Add(VersionDropDownBox)
+                ElseIf toolbartype = ToolbarSettings.EditNoneEditableVersions Then
+                    Me.pnlEditorToolbar.Controls.Add(NewVersionButton)
+                    Me.pnlEditorToolbar.Controls.Add(PreviewButton)
+                    Me.pnlEditorToolbar.Controls.Add(VersionDropDownBox)
+                ElseIf toolbartype = ToolbarSettings.EditWithValidEditVersion Then
+                    Me.pnlEditorToolbar.Controls.Add(PreviewButton)
+                    Me.pnlEditorToolbar.Controls.Add(VersionDropDownBox)
+                End If
+                If Me.MarketLookupMode <> MarketLookupModes.SingleMarket Then
+                    Me.DeleteLanguageButton = New UI.WebControls.Button()
+                    Me.DeleteLanguageButton.Text = "Delete unsaved data for this market"
+                    Me.DeleteLanguageButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'dropcurrentmarket'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                    InitializeLanguageDropDownList()
+                    Me.pnlEditorToolbar.Controls.Add(Me.LanguagesDropDownBox)
+                    If Me.CountAvailableEditVersions() > 1 AndAlso Me.pnlEditorToolbar.Controls.Contains(SaveButton) Then
+                        Me.pnlEditorToolbar.Controls.Add(Me.DeleteLanguageButton)
+                    End If
+                End If
+            End Sub
+            Private Sub SetToolbar(ByVal toolbar As ToolbarSettings)
+                CreateToolBarButtons()
+                InitializeVersionDropDownBox()
+
+                AssembleToolbar(toolbar)
 
 
 
@@ -118,14 +220,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 End If
 
 
-                If Me.ToolbarSetting = ToolbarSettings.EditEditableVersion Then
-
-                ElseIf Me.ToolbarSetting = ToolbarSettings.EditNoneEditableVersions Then
-                    label.Text = "EditNonEditableVersion"
-                    Me.pnlEditorToolbar.Controls.Add(label)
-                ElseIf Me.ToolbarSetting = ToolbarSettings.EditWithValidEditVersion Then
-                    Me.pnlEditorToolbar.Controls.Add(label)
-                ElseIf Me.ToolbarSetting = ToolbarSettings.NoVersionAvailable Then
+                If Me.ToolbarSetting = ToolbarSettings.NoVersionAvailable Then
                     label.Text = "Non versions available"
                     Me.pnlEditorToolbar.Controls.Add(label)
                 End If

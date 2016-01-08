@@ -1599,11 +1599,11 @@ GO
 ----------------------------------------------------
 -- dbo.System_Languages
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[System_Languages]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) 
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) 
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[System_Languages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) 
 drop table [dbo].[System_Languages]
 GO
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) 
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) 
 CREATE TABLE [dbo].[System_Languages]
 (
 [ID]                                INT IDENTITY(1,1) NOT NULL,
@@ -1626,7 +1626,7 @@ GO
 -----------------------------------------------------------
 --Insert data into dbo.Languages
 -----------------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) 
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) 
 BEGIN
 	IF(	IDENT_INCR( 'dbo.System_Languages' ) IS NOT NULL OR IDENT_SEED('dbo.System_Languages') IS NOT NULL ) SET IDENTITY_INSERT dbo.System_Languages ON
 	INSERT INTO [dbo].[System_Languages] ([ID],[Abbreviation],[Description_OwnLang],[Description_English],[BrowserLanguageID],[AlternativeLanguage],[Description_German]) VALUES('1','eng','English','English','en',NULL,'Englisch')
@@ -2166,7 +2166,7 @@ END
 
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) 
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) 
 UPDATE System_Languages
 SET System_Languages.IsActive = Languages.IsActive
 FROM System_Languages INNER JOIN Languages ON System_Languages.ID = Languages.ID
@@ -2176,10 +2176,10 @@ GO
 ----------------------------------------------------
 -- dbo.Languages
 ----------------------------------------------------
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) 
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) 
 drop table [dbo].[Languages]
 GO
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(id, N'IsView') = 1)
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 drop view [dbo].[Languages]
 GO
 
