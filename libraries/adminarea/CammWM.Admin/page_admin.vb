@@ -526,7 +526,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
         Private Sub SetLastWebCronExecutionDate()
             If Not Me.lblLastWebCronExecution Is Nothing Then
-                Dim lastServiceExecution As Date = GetLastServiceExecutionDate()
+                Dim lastServiceExecution As Date = DataLayer.Current.QueryLastServiceExecutionDate(Me.cammWebManager, Nothing)
                 If lastServiceExecution = Nothing Then
                     lblLastWebCronExecution.Text = "never"
                 Else
@@ -679,16 +679,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 cammWebManager.DownloadHandler.Add(rawData, "webmanager")
                 Return cammWebManager.DownloadHandler.ProcessAndGetPlainDownloadLink(DownloadHandler.DownloadLocations.PublicCache, "camm")
             End If
-        End Function
-
-        Private Function GetLastServiceExecutionDate() As Date
-            Dim cmd As System.Data.SqlClient.SqlCommand
-            cmd = New SqlCommand("SELECT ValueDateTime FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager'", New SqlClient.SqlConnection(Me.cammWebManager.ConnectionString))
-            Dim result As Object = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Automations.AutoOpenAndCloseAndDisposeConnection)
-            If result Is Nothing OrElse CompuMaster.camm.WebManager.Utils.Nz(result) Is Nothing Then
-                Return Nothing
-            End If
-            Return CType(result, Date)
         End Function
 
     End Class

@@ -413,8 +413,8 @@ Namespace CompuMaster.camm.WebManager.Notifications
             Dim BackupOfCurrentLanguageID As Integer = cammWebManager.UI.MarketID
             'Creation of the e-mails for the security admins
             Dim MySecurityAdmins As New GroupInformation(WMSystem.SpecialGroups.Group_SecurityAdministrators, cammWebManager)
-            If Not MySecurityAdmins Is Nothing AndAlso Not MySecurityAdmins.Members Is Nothing Then
-                For Each MySecurityAdmin As UserInformation In MySecurityAdmins.Members
+            If Not MySecurityAdmins Is Nothing AndAlso Not MySecurityAdmins.MembersByRule.Effective Is Nothing Then
+                For Each MySecurityAdmin As UserInformation In MySecurityAdmins.MembersByRule.Effective
                     MailLanguage = cammWebManager.System_Get1stPreferredLanguageWhichIsSupportedByTheSystem(MySecurityAdmin)
                     cammWebManager.Internationalization.LoadLanguageStrings(MailLanguage)
                     'GetLanguageTitles

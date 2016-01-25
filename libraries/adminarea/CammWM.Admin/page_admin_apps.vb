@@ -64,7 +64,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     lblErrMsg.Text = "No records found matching your search request."
                 End If
             Catch ex As Exception
-                Throw
+                Throw New Exception("Unexpected exception", ex)
             Finally
                 MyDt.Dispose()
             End Try
@@ -97,7 +97,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Next
                 End If
             Catch ex As Exception
-                Throw
+                Throw New Exception("Unexpected exception", ex)
             Finally
                 dt.Dispose()
             End Try
@@ -140,7 +140,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Try
                 MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             Catch ex As Exception
-                Throw
+                Throw New Exception("Unexpected exception", ex)
             Finally
                 MyDt.Dispose()
             End Try
@@ -390,7 +390,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim dr As DataRow
             Dim strBlr As New Text.StringBuilder
 
-            hypUsersMissingFlags.NavigateUrl = "apps_users_missing_flags.aspx?ID=" & Request.QueryString("ID")
+            hypUsersMissingFlags.NavigateUrl = "apps_users_missing_flags.aspx?ID=" & CType(Request.QueryString("ID"), Integer)
 
             Try
                 lblField_ID.Text = Server.HtmlEncode(Trim(Request.QueryString("ID")))
@@ -430,9 +430,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         txtField_NavJSOnClick.Text = Utils.Nz(dr("OnClick"), String.Empty)
                         txtField_Sort.Text = Utils.Nz(dr("Sort"), String.Empty)
                         txtField_RequiredUserFlags.Text = Utils.Nz(dr("RequiredUserProfileFlags"), String.Empty)
+                        txtField_GeneralRemarks.Text = Utils.Nz(dr("Remarks"), String.Empty)
                         If cammWebManager.System_DBVersion_Ex.Build >= 185 Then
                             txtField_RequiredUserFlagsRemarks.Text = Utils.Nz(dr("RequiredUserProfileFlagsRemarks"), String.Empty)
-                            txtField_GeneralRemarks.Text = Utils.Nz(dr("Remarks"), String.Empty)
                         End If
 
                         If CBool(dr("IsNew")) Then
@@ -462,7 +462,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Catch ex As ArgumentNullException
                     hypCreatedBy.Text = "{User ID 0}"
                 Catch ex As Exception
-                    Throw
+                    Throw New Exception("Unexpected exception", ex)
                 End Try
 
                 lblField_ModifiedOn.Text = Utils.Nz(MySecurityObjectInfo.ModifiedOn, String.Empty)
@@ -483,7 +483,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Catch ex As ArgumentNullException
                     hypLastModifiedBy.Text = "{User ID 0}"
                 Catch ex As Exception
-                    Throw
+                    Throw New Exception("Unexpected exception", ex)
                 End Try
 
                 Try
@@ -503,13 +503,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Next
                     End If
                 Catch ex As Exception
-                    Throw
+                    Throw New Exception("Unexpected exception", ex)
                 End Try
 
                 strBlr.Append("</table>")
                 tdAddLinks.InnerHtml = strBlr.ToString
             Catch ex As Exception
-                Throw
+                Throw New Exception("Unexpected exception", ex)
             Finally
                 dtUpdate.Dispose()
                 dr = Nothing
@@ -535,7 +535,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     If cmbLocation.Items.Count > 0 AndAlso Val(Field_LocationID & "") <> 0 Then cmbLocation.SelectedValue = Utils.Nz(Field_LocationID, 0).ToString
                 End If
             Catch ex As Exception
-                Throw
+                Throw New Exception("Unexpected exception", ex)
             End Try
 
             Try
@@ -553,7 +553,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     If cmbLanguage.Items.Count > 0 AndAlso Val(Field_Language & "") <> 0 Then cmbLanguage.SelectedValue = Utils.Nz(Field_Language, 0).ToString
                 End If
             Catch ex As Exception
-                Throw
+                Throw New Exception("Unexpected exception", ex)
             End Try
 
             'bind AppDisabled dropdownlist
@@ -610,16 +610,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Dim remarks As String = ""
             If cammWebManager.System_DBVersion_Ex.Build >= 185 Then
-                remarks = "RequiredUserProfileFlagsRemarks = @UserProfileFlagsRemarks, Remarks = @GeneralRemarks "
-
+                remarks = ", RequiredUserProfileFlagsRemarks = @UserProfileFlagsRemarks"
             End If
 
-            Dim cmd3 As New SqlCommand("Update Applications_CurrentAndInactiveOnes SET RequiredUserProfileFlags = @RequiredFlags, " & remarks & " Where ID = @ID", New SqlConnection(cammWebManager.ConnectionString))
-            cmd3.Parameters.Add("@RequiredFlags", SqlDbType.NVarChar).Value = Trim(txtField_RequiredUserFlags.Text)
+            Dim cmd3 As New SqlCommand("Update Applications_CurrentAndInactiveOnes SET RequiredUserProfileFlags = @RequiredFlags, Remarks = @GeneralRemarks" & remarks & " Where ID = @ID", New SqlConnection(cammWebManager.ConnectionString))
             cmd3.Parameters.Add("@ID", SqlDbType.Int).Value = CType(lblField_ID.Text, Integer)
+            cmd3.Parameters.Add("@RequiredFlags", SqlDbType.NVarChar).Value = Trim(txtField_RequiredUserFlags.Text)
+            cmd3.Parameters.Add("@GeneralRemarks", SqlDbType.NVarChar).Value = txtField_GeneralRemarks.Text.Trim()
             If cammWebManager.System_DBVersion_Ex.Build >= 185 Then
                 cmd3.Parameters.Add("@UserProfileFlagsRemarks", SqlDbType.NVarChar).Value = txtField_RequiredUserFlagsRemarks.Text.Trim()
-                cmd3.Parameters.Add("@GeneralRemarks", SqlDbType.NVarChar).Value = txtField_GeneralRemarks.Text.Trim()
             End If
             ExecuteNonQuery(cmd3, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Sub
@@ -786,7 +785,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Next
                 End If
             Catch ex As Exception
-                Throw
+                Throw New Exception("Unexpected exception", ex)
             End Try
 
             Try
@@ -811,7 +810,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Next
                 End If
             Catch ex As Exception
-                Throw
+                Throw New Exception("Unexpected exception", ex)
             Finally
                 dtDelete.Dispose()
             End Try

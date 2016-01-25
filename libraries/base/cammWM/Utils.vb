@@ -650,6 +650,21 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Nz"
+
+        ''' <summary>
+        ''' Try to access a column value if it exists, otherwise DBNull.Value
+        ''' </summary>
+        ''' <param name="row"></param>
+        ''' <param name="columnName"></param>
+        ''' <returns></returns>
+        Friend Shared Function CellValueIfColumnExists(row As System.Data.DataRow, columnName As String) As Object
+            If row.Table.Columns.Contains(columnName) Then
+                Return row(columnName)
+            Else
+                Return DBNull.Value
+            End If
+        End Function
+
         ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
@@ -1672,7 +1687,7 @@ Namespace CompuMaster.camm.WebManager
             If text = Nothing Then
                 Return text
             Else
-                Return text.Replace(ControlChars.CrLf, "<br>").Replace(ControlChars.Cr, "<br>").Replace(ControlChars.Lf, "<br>")
+                Return text.Replace(ControlChars.CrLf, "<br />").Replace(ControlChars.Cr, "<br />").Replace(ControlChars.Lf, "<br />")
             End If
         End Function
 

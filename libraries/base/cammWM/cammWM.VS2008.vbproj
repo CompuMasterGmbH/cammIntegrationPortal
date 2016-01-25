@@ -143,6 +143,14 @@
 	<Compile Include="Crypt\EncDecMod.vb" />
 	<Compile Include="Crypt\PBKDF2.vb" />
 	<Compile Include="Crypt\SymmetricCrypt.vb" />
+    <Compile Include="Security\BaseGroupAuthorizationItemsByRule.vb" />	
+    <Compile Include="Security\GroupAuthorizationItemsByRuleForGroups.vb" />	
+    <Compile Include="Security\GroupAuthorizationItemsByRuleForSecurityObjects.vb" />	
+    <Compile Include="Security\MemberIDsByRule.vb" />	
+    <Compile Include="Security\MemberItemsByRule.vb" />	
+    <Compile Include="Security\MembershipItemsByRule.vb" />	
+    <Compile Include="Security\NavigationInformation.vb" />	
+    <Compile Include="Security\UserAuthorizationItemsByRule.vb" />	
     <Compile Include="definitions.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>

@@ -134,8 +134,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Specialized
                 MyDBConn.Open()
                 Try
                     With MyCmd
-                        .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM Benutzer WHERE LoginName = @Username"
+                        .CommandText = "SELECT * FROM Benutzer WHERE LoginName = @Username"
                         .CommandType = CommandType.Text
                     End With
                     MyCmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = cammWebManager.CurrentUserLoginName

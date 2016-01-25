@@ -549,11 +549,14 @@ Namespace CompuMaster.camm.SmartWebEditor
             If CType(ViewState("WebEditorXXL.CurrentEditorInEditMode"), String) = "" OrElse CType(ViewState("WebEditorXXL.CurrentEditorInEditMode"), String) = Me.EditorID Then
                 ViewState("WebEditorXXL.CurrentEditorInEditMode") = Me.EditorID
                 editorMain.Visible = True
-                editorMain.Editable = True
+
                 Me.ibtnSwitchToEditMode.Visible = False
                 EditModeAsDefinedInViewstate = TriState.True
                 'Switch version to edit version!
                 Me.CurrentVersion = Me.Database.MaxVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
+                Dim releasedVersion As Integer = Me.Database.ReleasedVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
+                editorMain.Editable = Me.CurrentVersion <> releasedVersion
+
             End If
         End Sub
 
@@ -1359,7 +1362,7 @@ Namespace CompuMaster.camm.SmartWebEditor
             'First, reset visibilities after viewstate-loading
             Me.lblViewOnlyContent.Visible = False
             Me.editorMain.Visible = False
-
+            Me.editorMain.Editable = False
             'CurrentVersion must be initialized before the JavaScriptRegistration method gets fired
             If Me.ShowWithEditRights Then
 
@@ -1414,7 +1417,8 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Dim myDocInfo() As String = Split(txtBrowseToMarketVersion.Value, ";")
                     Dim RequestedVersion As Integer = Integer.Parse(myDocInfo(0))
                     Dim RequestedMarket As Integer = Integer.Parse(myDocInfo(1))
-                    If RequestedVersion > Me.Database.ReleasedVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID) Then
+                    Dim ReleasedVersion As Integer = Me.Database.ReleasedVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
+                    If RequestedVersion > ReleasedVersion Then
                         'Yes, it's sure that we are in an edit version, currently
                         Dim PreviouslyShownContent As String = Me.editorMain.Html
                         'Deactivated by JW until this feature is requested (but this code might be already stable) - 20060218
@@ -1426,6 +1430,8 @@ Namespace CompuMaster.camm.SmartWebEditor
                             'The market hasn't existed yet - create it now on the fly
                             Me.SaveEditorContent(Me.ContentOfServerID, Me.DocumentID, Me.EditorID, RequestedMarket, PreviouslyShownContent, Me.cammWebManager.CurrentUserID(CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous))
                         End If
+                    Else
+                        editorMain.Editable = False
                     End If
                     CurrentVersion = RequestedVersion
                     If Not LanguageToShow = RequestedMarket Then
@@ -1436,7 +1442,6 @@ Namespace CompuMaster.camm.SmartWebEditor
                     End If
                     txtBrowseToMarketVersion.Value = "" 'Reset the value
                     editorMain.Visible = True
-                    editorMain.Editable = True
                     ibtnSwitchToEditMode.Visible = False
                 End If
 
@@ -1483,6 +1488,8 @@ Namespace CompuMaster.camm.SmartWebEditor
                         Database.ReleaseLatestVersion(Me.ContentOfServerID, DocumentID, Me.EditorID, Me.cammWebManager.CurrentUserID(CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous))
                         'The cache data has to be refreshed
                         ClearCache()
+
+                        Me.editorMain.Editable = False
                         'This redirect is necessary because of the javascript for versionbrowsing used by the RadEditor
                     ElseIf RequestMode = RequestModes.Update Then
                         'Do update or create document in new language action will be triggered here
@@ -1512,12 +1519,6 @@ Namespace CompuMaster.camm.SmartWebEditor
                     ElseIf RequestMode = RequestModes.DropCurrentMarketData Then
                         'Drop the current market's data
                         Me.Database.RemoveMarketFromEditVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID, Me.LanguageToShow)
-                        If Not Me.IsEditVersionAvailable Then
-                            RequestMode = RequestModes.NewVersion
-                            CreateANewPageVersion()
-                            CurrentVersion = Me.Database.MaxVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
-                        End If
-
                         'The cache data doesn't need to be refreshed since released data hasn't changed
                     End If
 

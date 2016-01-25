@@ -132,6 +132,23 @@ Namespace CompuMaster.camm.WebManager
         ReadOnly Property IsSupported() As WMCapabilities
 #End If
 
+        ''' <summary>
+        ''' camm Web-Manager assembly/library version
+        ''' </summary>
+        ''' <returns></returns>
+        Function VersionAssembly() As Version
+        ''' <summary>
+        ''' camm Web-Manager database version
+        ''' </summary>
+        ''' <returns></returns>
+        Function VersionDatabase() As Version
+        ''' <summary>
+        ''' camm Web-Manager database version
+        ''' </summary>
+        ''' <param name="allowCaching">True to allow reading from cache</param>
+        ''' <returns></returns>
+        Function VersionDatabase(allowCaching As Boolean) As Version
+
     End Interface
 
     ''' <summary>
@@ -819,8 +836,7 @@ Namespace CompuMaster.camm.WebManager
                 MyCmd = New SqlCommand("LookupUserNameByScriptEngineSessionID", New SqlConnection(Me.ConnectionString))
                 MyCmd.CommandType = CommandType.StoredProcedure
             Else 'full SQL command text
-                Const sql As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                    "SELECT Benutzer.LoginName" & vbNewLine & _
+                Const sql As String = "SELECT Benutzer.LoginName" & vbNewLine & _
                     "FROM [System_WebAreasAuthorizedForSession] As SSID" & vbNewLine & _
                     "	LEFT JOIN System_UserSessions As USID On SSID.SessionID = USID.ID_Session" & vbNewLine & _
                     "	LEFT JOIN Benutzer On USID.ID_User = Benutzer.ID" & vbNewLine & _
@@ -851,8 +867,7 @@ Namespace CompuMaster.camm.WebManager
         ''' -----------------------------------------------------------------------------
         Friend Function LookupUserNameByScriptEngineSessionID(ByVal scriptEngineID As CompuMaster.camm.WebManager.WMSystem.ScriptEngines, ByVal scriptEngineSessionID As String) As String
             Dim MyCmd As SqlCommand
-            Const sql As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                    "SELECT Benutzer.LoginName" & vbNewLine & _
+            Const sql As String = "SELECT Benutzer.LoginName" & vbNewLine & _
                     "FROM [System_WebAreasAuthorizedForSession] As SSID" & vbNewLine & _
                     "	LEFT JOIN System_UserSessions As USID On SSID.SessionID = USID.ID_Session" & vbNewLine & _
                     "	LEFT JOIN Benutzer On USID.ID_User = Benutzer.ID" & vbNewLine & _
@@ -880,8 +895,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Private Function LookupUserSessionIDByScriptEngineSessionID(ByVal serverID As Integer, ByVal scriptEngineID As CompuMaster.camm.WebManager.WMSystem.ScriptEngines, ByVal scriptEngineSessionID As String) As Long
-            Const sql As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                "SELECT SSID.SessionID" & vbNewLine & _
+            Const sql As String = "SELECT SSID.SessionID" & vbNewLine & _
                 "FROM [System_WebAreasAuthorizedForSession] As SSID" & vbNewLine & _
                 "WHERE SSID.Server = @ServerID" & vbNewLine & _
                 "	And SSID.ScriptEngine_ID = @ScriptEngineID" & vbNewLine & _
@@ -1111,7 +1125,7 @@ Namespace CompuMaster.camm.WebManager
         Friend Shared MilestoneDBBuildNumber_MailQueue As Integer = 122
         <Obsolete("ATTENTION INCOMPATIBILITY CWM-SecObj Milestone"), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects As New Version(4, 20)
         'Friend Shared MilestoneVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects As New Version(4, 20)
-        <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_AuthsWithSupportForDenyRule As New Version(3, 12, 206)
+        <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_AuthsWithSupportForDenyRule As New Version(4, 12, 2000)
 
         ''' <summary>
         ''' Values for the different events in the protocol
@@ -2320,12 +2334,14 @@ Namespace CompuMaster.camm.WebManager
                 ServerSessionID = LookupScriptEngineSessionID(serverID, scriptEngineID)
             End If
             Dim UrlPartForSession As String = Nothing
-            Select Case scriptEngineID
-                Case 1, 2 'ASP, ASP.NET
-                    UrlPartForSession = "/(" & ServerSessionID & ")"
-                Case Else 'PHP and others
-                    UrlPartForSession = "/(" & ServerSessionID & ")" 'ToDo: use correct syntax, handle 
-            End Select
+            If ServerSessionID <> Nothing Then
+                Select Case scriptEngineID
+                    Case 1, 2 'ASP, ASP.NET
+                        UrlPartForSession = "/(" & ServerSessionID & ")"
+                    Case Else 'PHP and others
+                        UrlPartForSession = "/(" & ServerSessionID & ")" 'ToDo: use correct syntax, handle 
+                End Select
+            End If
             'Construct the new URL
             Return CalculateUrlConstructor(server.ServerURL, scriptEngineID, UrlPartForSession, pathFromRootDirectory)
         End Function
@@ -2485,8 +2501,7 @@ Namespace CompuMaster.camm.WebManager
 
             Dim MyCmd As New SqlClient.SqlCommand
             MyCmd.Connection = New SqlClient.SqlConnection(ConnectionString)
-            MyCmd.CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                    "SELECT ValueInt FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LoginPWAlgorithm' AND ValueNVarChar = 'camm WebManager'"
+            MyCmd.CommandText = "SELECT ValueInt FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LoginPWAlgorithm' AND ValueNVarChar = 'camm WebManager'"
             MyCmd.CommandType = CommandType.Text
 
             Dim fallbackAlgorithm As PasswordAlgorithm
@@ -2530,8 +2545,7 @@ Namespace CompuMaster.camm.WebManager
 
             Dim MyCmd As New SqlClient.SqlCommand
             MyCmd.Connection = New SqlClient.SqlConnection(ConnectionString)
-            MyCmd.CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                    "SELECT ValueInt FROM [dbo].System_GlobalProperties WHERE PropertyName = 'PasswordResetBehavior' AND ValueNVarChar = 'camm WebManager'"
+            MyCmd.CommandText = "SELECT ValueInt FROM [dbo].System_GlobalProperties WHERE PropertyName = 'PasswordResetBehavior' AND ValueNVarChar = 'camm WebManager'"
             MyCmd.CommandType = CommandType.Text
 
             Dim behavior As Integer = CType(CompuMaster.camm.WebManager.Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), PasswordRecoveryBehavior.DecryptIfPossible), Integer)
@@ -2565,8 +2579,7 @@ Namespace CompuMaster.camm.WebManager
         Public Function System_GetCryptedUserPassword(ByVal username As String) As String
             Dim MyCmd As New SqlClient.SqlCommand
             MyCmd.Connection = New SqlClient.SqlConnection(Me.ConnectionString)
-            MyCmd.CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                    "SELECT LoginPW FROM [dbo].Benutzer WHERE LoginName = @username"
+            MyCmd.CommandText = "SELECT LoginPW FROM [dbo].Benutzer WHERE LoginName = @username"
             MyCmd.CommandType = CommandType.Text
             MyCmd.Parameters.Add("@username", SqlDbType.NVarChar).Value = username
 
@@ -3526,8 +3539,7 @@ Namespace CompuMaster.camm.WebManager
                 'Get parameter value and append parameter
                 With MyCmd
 
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT ID FROM Languages WHERE ID = " & LanguageID.ToString
+                    .CommandText = "SELECT ID FROM Languages WHERE ID = " & LanguageID.ToString
                     .CommandType = CommandType.Text
 
                 End With
@@ -3586,8 +3598,7 @@ Namespace CompuMaster.camm.WebManager
                 'Get parameter value and append parameter
                 With MyCmd
 
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM [System_SessionValues] WHERE SessionID IN (SELECT System_SessionID FROM Benutzer WHERE LoginName = N'" & Replace(Me.CurrentUserLoginName, "'", "''") & "') AND VarName = N'" & SettingName.Replace("'", "''") & "'"
+                    .CommandText = "SELECT * FROM [System_SessionValues] WHERE SessionID IN (SELECT System_SessionID FROM Benutzer WHERE LoginName = N'" & Replace(Me.CurrentUserLoginName, "'", "''") & "') AND VarName = N'" & SettingName.Replace("'", "''") & "'"
                     .CommandType = CommandType.Text
 
                 End With
@@ -4444,8 +4455,7 @@ Namespace CompuMaster.camm.WebManager
             If externalAccountName = Nothing Then
                 Throw New ArgumentNullException("externalAccountName")
             End If
-            Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                    "SELECT dbo.Benutzer.ID FROM dbo.Benutzer INNER JOIN (SELECT ID_User FROM dbo.Log_Users WHERE Type = N'ExternalAccount' AND Value = @ExternalUserName) AS ListOfExternalAccounts ON dbo.Benutzer.ID = ListOfExternalAccounts.ID_User GROUP BY dbo.Benutzer.ID", New SqlConnection(Me.ConnectionString))
+            Dim MyCmd As New SqlCommand("SELECT dbo.Benutzer.ID FROM dbo.Benutzer INNER JOIN (SELECT ID_User FROM dbo.Log_Users WHERE Type = N'ExternalAccount' AND Value = @ExternalUserName) AS ListOfExternalAccounts ON dbo.Benutzer.ID = ListOfExternalAccounts.ID_User GROUP BY dbo.Benutzer.ID", New SqlConnection(Me.ConnectionString))
             MyCmd.CommandType = CommandType.Text
             MyCmd.Parameters.Add("@ExternalUserName", SqlDbType.NVarChar).Value = externalAccountName
             Dim ResultList As ArrayList = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoArrayList(MyCmd, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
@@ -5690,8 +5700,7 @@ Namespace CompuMaster.camm.WebManager
                 'Get parameter value and append parameter
                 With MyCmd
 
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM Languages WHERE ID = " & LanguageID.ToString
+                    .CommandText = "SELECT * FROM Languages WHERE ID = " & LanguageID.ToString
                     .CommandType = CommandType.Text
 
                 End With
@@ -5771,8 +5780,7 @@ Namespace CompuMaster.camm.WebManager
                 'Get parameter value and append parameter
                 With MyCmd
 
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT ID, ServerGroup FROM System_ServerGroups"
+                    .CommandText = "SELECT ID, ServerGroup FROM System_ServerGroups"
                     .CommandType = CommandType.Text
 
                 End With
@@ -7142,8 +7150,7 @@ Namespace CompuMaster.camm.WebManager
 
             'Get parameter value and append parameter
             With MyCmd
-                .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT LoginName FROM Benutzer WHERE LoginName = @Username AND LoginPW = @Passcode COLLATE Latin1_General_CS_AS"
+                .CommandText = "SELECT LoginName FROM Benutzer WHERE LoginName = @Username AND LoginPW = @Passcode COLLATE Latin1_General_CS_AS"
                 .CommandType = CommandType.Text
                 .Parameters.Add("@Username", SqlDbType.NVarChar).Value = loginName
                 .Parameters.Add("@Passcode", SqlDbType.VarChar).Value = transformedPassword
@@ -8148,10 +8155,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </remarks>
         ''' <return>The session ID for the specified server and scriptEngine or Nothing (null) in case that the current session can't be used to lookup the CWM session details</return>
         Private Function LookupScriptEngineSessionID(ByVal serverID As Integer, ByVal scriptEngineID As Integer) As String
-            If Not HttpContext.Current Is Nothing OrElse HttpContext.Current.Session Is Nothing Then
-                'typical environment for being run in a webservice environment
-                Return Nothing
-            ElseIf HttpContext.Current Is Nothing
+            If HttpContext.Current Is Nothing Then
                 'typical environment for non-web environments
                 'CurrentScriptEngineSessionID will be created on-the-fly - other servers are never involved into this type of session
                 If scriptEngineID = ScriptEngines.NetClient AndAlso serverID = Me.CurrentServerInfo.ID Then
@@ -8159,6 +8163,9 @@ Namespace CompuMaster.camm.WebManager
                 Else
                     Return Nothing
                 End If
+            ElseIf Not HttpContext.Current Is Nothing OrElse HttpContext.Current.Session Is Nothing Then
+                'typical environment for being run in a webservice environment
+                Return Nothing
             Else
                 'typical environment for web page requests
                 Static SessionData As New Hashtable 'for caching within the current request
@@ -8275,8 +8282,6 @@ Namespace CompuMaster.camm.WebManager
                         Case Else '>=4
                             .CommandText = "SELECT ServerID FROM Applications_NavItems_HirarchyID WHERE ID = @NavID"
                     End Select
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    .CommandText
                     .CommandType = CommandType.Text
 
                     .Parameters.Add("@NavID", SqlDbType.Int).Value = NavID
@@ -8826,7 +8831,7 @@ Namespace CompuMaster.camm.WebManager
         ''' 	[adminwezel]	06.07.2004	Created
         ''' </history>
         ''' -----------------------------------------------------------------------------
-        Public Function System_Version_Ex() As Version
+        Public Function System_Version_Ex() As Version Implements IWebManager.VersionAssembly
             Return Setup.ApplicationUtils.Version
         End Function
 
@@ -8873,10 +8878,20 @@ Namespace CompuMaster.camm.WebManager
         ''' 	[adminwezel]	06.07.2004	Created
         ''' </history>
         ''' -----------------------------------------------------------------------------
-        Public Function System_DBVersion_Ex() As Version
+        Public Function System_DBVersion_Ex() As Version Implements IWebManager.VersionDatabase
             Return Setup.DatabaseUtils.Version(Me, False)
         End Function
 
+        ''' <summary>
+        '''     Get the version information from the current camm Web-Manager database
+        ''' </summary>
+        ''' <param name="allowCaching">True to allow reading from cache</param>
+        ''' <returns>The version of the connected camm Web-Manager database</returns>
+        ''' <remarks>
+        ''' </remarks>
+        Public Function System_DBVersion_Ex(allowCaching As Boolean) As Version Implements IWebManager.VersionDatabase
+            Return Setup.DatabaseUtils.Version(Me, allowCaching)
+        End Function
 #End Region
 
 #Region "Extended WebManager methods"
@@ -9029,8 +9044,6 @@ Namespace CompuMaster.camm.WebManager
             Private _LoginLockedTemporary As Boolean
             Private _LoginLockedTemporaryTill As DateTime
             Private _LoginDeleted As Boolean
-            Private _Memberships As CompuMaster.camm.WebManager.WMSystem.GroupInformation()
-            Private _Authorizations As CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForUser()
             Private _AdditionalFlags As New Collections.Specialized.NameValueCollection
             Private _AccessLevel As AccessLevelInformation
             Private _AccessLevelID As Integer = Integer.MinValue
@@ -9287,40 +9300,48 @@ Namespace CompuMaster.camm.WebManager
             End Sub
 
             ''' <summary>
-            ''' Returns a value from the database which indicates whether the authorizations for this user have already been set.
+            ''' Returns a value from the database which indicates whether the authorizations for this user have already been set
             ''' </summary>
             ''' <returns></returns>
             ''' <remarks></remarks>
             Private Function ReadInitAuthorizationsDoneValue() As Boolean
                 Dim result As Boolean = False
                 If _ID <> Nothing Then
-                    Dim conn As New SqlConnection(_WebManager.ConnectionString)
-                    Dim cmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT [ID_User],[Type],[Value] FROM Log_Users WHERE Type='InitAuthorizationsDone' AND ID_User = @ID", conn)
-                    cmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
-                    Try
-                        conn.Open()
-                        Dim reader As SqlDataReader = Nothing
-                        Try
-                            reader = cmd.ExecuteReader()
-                            If reader.Read() Then
-                                result = CType(IIf(Convert.ToString(Utils.Nz(reader("Value"), "")) = "1", True, False), Boolean)
-                            End If
-                        Finally
-                            If Not reader Is Nothing AndAlso Not reader.IsClosed Then
-                                reader.Close()
-                            End If
-                        End Try
-                    Finally
-                        If Not cmd Is Nothing Then
-                            cmd.Dispose()
-                        End If
-                        Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(conn)
-                    End Try
+                    result = ReadInitAuthorizationsDoneValue(New SqlConnection(_WebManager.ConnectionString), _ID)
                 End If
                 Return result
             End Function
-
+            ''' <summary>
+            ''' Returns a value from the database which indicates whether the authorizations for this user have already been set
+            ''' </summary>
+            ''' <param name="dbConnection"></param>
+            ''' <param name="userID"></param>
+            ''' <returns></returns>
+            Friend Shared Function ReadInitAuthorizationsDoneValue(dbConnection As SqlConnection, userID As Long) As Boolean
+                Dim result As Boolean = False
+                Dim cmd As New SqlCommand("SELECT [ID_User],[Type],[Value] FROM Log_Users WHERE Type='InitAuthorizationsDone' AND ID_User = @ID", dbConnection)
+                cmd.Parameters.Add("@ID", SqlDbType.Int).Value = userID
+                Try
+                    dbConnection.Open()
+                    Dim reader As SqlDataReader = Nothing
+                    Try
+                        reader = cmd.ExecuteReader()
+                        If reader.Read() Then
+                            result = CType(IIf(Convert.ToString(Utils.Nz(reader("Value"), "")) = "1", True, False), Boolean)
+                        End If
+                    Finally
+                        If Not reader Is Nothing AndAlso Not reader.IsClosed Then
+                            reader.Close()
+                        End If
+                    End Try
+                Finally
+                    If Not cmd Is Nothing Then
+                        cmd.Dispose()
+                    End If
+                    Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(dbConnection)
+                End Try
+                Return result
+            End Function
 
             ''' -----------------------------------------------------------------------------
             ''' <summary>
@@ -9530,7 +9551,7 @@ Namespace CompuMaster.camm.WebManager
                 _LoginDeleted = True 'will be resetted to False again later if it exists
                 _PartiallyLoadedDataCurrently = False 'Now, the data will be loaded
                 Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; select * from benutzer where benutzer.id = @ID", MyConn)
+                Dim MyCmd As New SqlCommand("select * from benutzer where benutzer.id = @ID", MyConn)
                 Dim AccountNotExists As Boolean
                 Dim LogUsersDataFound As Boolean = False
                 MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
@@ -9586,7 +9607,7 @@ Namespace CompuMaster.camm.WebManager
                             MyReader.Close()
                         End If
                     End Try
-                    MyCmd.CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; select * from Log_Users where id_user = @ID"
+                    MyCmd.CommandText = "select * from Log_Users where id_user = @ID"
                     Try
                         MyReader = MyCmd.ExecuteReader()
                         While MyReader.Read
@@ -9695,7 +9716,7 @@ Namespace CompuMaster.camm.WebManager
                     Return False
                 End If
 
-                Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; SELECT LoginPW FROM dbo.Benutzer WHERE ID = @ID", New SqlConnection(_WebManager.ConnectionString))
+                Dim MyCmd As New SqlCommand("SELECT LoginPW FROM dbo.Benutzer WHERE ID = @ID", New SqlConnection(_WebManager.ConnectionString))
                 MyCmd.CommandType = CommandType.Text
                 MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = Me.IDLong
 
@@ -10090,11 +10111,27 @@ Namespace CompuMaster.camm.WebManager
                 NewUser.Save(newPassword)  'Intermediate save point
 
                 'Following actions take place at database directly
-                For MyCounter As Integer = 0 To TemplateUser.Memberships.Length - 1
-                    NewUser.AddMembership(TemplateUser.Memberships(MyCounter).ID)
+                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule.AllowRule.Length - 1
+                    NewUser.AddMembership(TemplateUser.MembershipsByRule.AllowRule(MyCounter).ID)
                 Next
-                For MyCounter As Integer = 0 To TemplateUser.Authorizations.Length - 1
-                    NewUser.AddAuthorization(TemplateUser.Authorizations(MyCounter).SecurityObjectID, TemplateUser.Authorizations(MyCounter).ServerGroupID, TemplateUser.Authorizations(MyCounter).IsDeveloperAuthorization)
+                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule.DenyRule.Length - 1
+                    NewUser.AddMembership(TemplateUser.MembershipsByRule.DenyRule(MyCounter).ID)
+                Next
+                For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.AllowRuleDevelopers.Length - 1
+                    Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.AllowRuleDevelopers(MyCounter)
+                    NewUser.AddAuthorization(usrItem.SecurityObjectID, usrItem.ServerGroupID, usrItem.IsDeveloperAuthorization, usrItem.IsDenyRule)
+                Next
+                For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.AllowRuleStandard.Length - 1
+                    Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.AllowRuleStandard(MyCounter)
+                    NewUser.AddAuthorization(usrItem.SecurityObjectID, usrItem.ServerGroupID, usrItem.IsDeveloperAuthorization, usrItem.IsDenyRule)
+                Next
+                For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.DenyRuleDevelopers.Length - 1
+                    Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.DenyRuleDevelopers(MyCounter)
+                    NewUser.AddAuthorization(usrItem.SecurityObjectID, usrItem.ServerGroupID, usrItem.IsDeveloperAuthorization, usrItem.IsDenyRule)
+                Next
+                For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.DenyRuleStandard.Length - 1
+                    Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.DenyRuleStandard(MyCounter)
+                    NewUser.AddAuthorization(usrItem.SecurityObjectID, usrItem.ServerGroupID, usrItem.IsDeveloperAuthorization, usrItem.IsDenyRule)
                 Next
 
                 Return NewUser
@@ -11191,50 +11228,47 @@ Namespace CompuMaster.camm.WebManager
             ''' 	[adminsupport]	18.02.2005	Created
             ''' </history>
             ''' -----------------------------------------------------------------------------
-            Public ReadOnly Property Memberships() As CompuMaster.camm.WebManager.WMSystem.GroupInformation()
+            <Obsolete("Use MembershipsByRule instead")> Public ReadOnly Property Memberships() As CompuMaster.camm.WebManager.WMSystem.GroupInformation()
+                Get
+                    Return MembershipsByRule.Effective
+                End Get
+            End Property
+
+            Private _MembershipsByRule As Security.MembershipItemsByRule
+            ''' <summary>
+            ''' Memberships of the current user by rule-set
+            ''' </summary>
+            ''' <returns></returns>
+            Public ReadOnly Property MembershipsByRule As Security.MembershipItemsByRule
                 Get
                     If _PartiallyLoadedDataCurrently Then
                         ReadCompleteUserInformation()
                     End If
-                    If _Memberships Is Nothing Then
+                    If _MembershipsByRule Is Nothing Then
                         Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                        Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select gruppen.* from memberships left join gruppen on memberships.id_group = gruppen.id where id_user = @ID and gruppen.id is not null", MyConn)
-                        MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
-                        Dim MyDA As SqlDataAdapter = Nothing
-                        Dim MyDataSet As DataSet = New DataSet
-                        Try
-                            MyConn.Open()
-                            MyDA = New SqlDataAdapter(MyCmd)
-                            MyDA.Fill(MyDataSet, "Groups")
-                            MyCmd.Dispose()
-                            MyCmd = Nothing
-                        Finally
-                            If Not MyDA Is Nothing Then
-                                MyDA.Dispose()
-                            End If
-                            If Not MyCmd Is Nothing Then
-                                MyCmd.Dispose()
-                            End If
-                            If Not MyConn Is Nothing Then
-                                If MyConn.State <> ConnectionState.Closed Then
-                                    MyConn.Close()
-                                End If
-                                MyConn.Dispose()
-                            End If
-                        End Try
-                        If MyDataSet.Tables("Groups").Rows.Count > 0 Then
-                            ReDim Preserve _Memberships(MyDataSet.Tables("Groups").Rows.Count - 1)
-                            Dim MyCounter As Integer = 0
-                            For Each MyDataRow As DataRow In MyDataSet.Tables("Groups").Rows
-                                _Memberships(MyCounter) = New CompuMaster.camm.WebManager.WMSystem.GroupInformation(CType(MyDataRow("ID"), Integer), CType(MyDataRow("Name"), String), Utils.Nz(MyDataRow("Description"), CType(Nothing, String)), CType(IIf(CType(MyDataRow("SystemGroup"), Integer) <> 0, True, False), Boolean), _WebManager)
-                                MyCounter += 1
-                            Next
+                        Dim MyCmd As New SqlCommand("", MyConn)
+                        MyCmd.CommandType = CommandType.Text
+                        If Setup.DatabaseUtils.Version(WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                            MyCmd.CommandText = "select gruppen.*, IsNull(memberships.IsDenyRule, 0) AS IsDenyRule from memberships left join gruppen on memberships.id_group = gruppen.id where id_user = @ID and gruppen.id is not null"
                         Else
-                            _Memberships = New GroupInformation() {}
+                            MyCmd.CommandText = "select gruppen.*, CAST (0 AS bit) AS IsDenyRule from memberships left join gruppen on memberships.id_group = gruppen.id where id_user = @ID and gruppen.id is not null"
                         End If
+                        MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
+                        Dim MemberGroups As DataTable = Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "MemberGroups")
+                        Dim AllowRuleMemberGroups As New ArrayList
+                        Dim DenyRuleMemberGroups As New ArrayList
+                        For MyCounter As Integer = 0 To MemberGroups.Rows.Count - 1
+                            Dim MyDataRow As DataRow = MemberGroups.Rows(MyCounter)
+                            Dim grp As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(CType(MyDataRow("ID"), Integer), CType(MyDataRow("Name"), String), Utils.Nz(MyDataRow("Description"), CType(Nothing, String)), CType(IIf(CType(MyDataRow("SystemGroup"), Integer) <> 0, True, False), Boolean), _WebManager)
+                            If Utils.Nz(MyDataRow("IsDenyRule"), False) = False Then
+                                AllowRuleMemberGroups.Add(grp)
+                            Else
+                                DenyRuleMemberGroups.Add(grp)
+                            End If
+                        Next
+                        _MembershipsByRule = New Security.MembershipItemsByRule(CType(AllowRuleMemberGroups.ToArray(GetType(GroupInformation)), GroupInformation()), CType(DenyRuleMemberGroups.ToArray(GetType(GroupInformation)), GroupInformation()))
                     End If
-                    Return _Memberships
+                    Return _MembershipsByRule
                 End Get
             End Property
 
@@ -11270,6 +11304,18 @@ Namespace CompuMaster.camm.WebManager
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Sub AddMembership(ByVal groupID As Integer, Optional ByVal notifications As Notifications.INotifications = Nothing)
+                AddMembership(groupID, False, notifications)
+            End Sub
+
+            ''' <summary>
+            '''     Add a membership to a user group (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="groupID">The group ID</param>
+            ''' <param name="notifications">A notification class which contains the e-mail templates which might be sent</param>
+            ''' <remarks>
+            ''' This action will be done immediately without the need for saving. If the membership already exists, it won't be created for a 2nd time.
+            ''' </remarks>
+            Public Sub AddMembership(ByVal groupID As Integer, isDenyRule As Boolean, Optional ByVal notifications As Notifications.INotifications = Nothing)
 
                 If _ID = SpecialUsers.User_Anonymous OrElse _ID = SpecialUsers.User_Public OrElse _ID = SpecialUsers.User_Code OrElse _ID = SpecialUsers.User_UpdateProcessor Then
                     Dim Message As String = "An 'anonymous' user or a 'public' user never can be a member of another group"
@@ -11285,30 +11331,21 @@ Namespace CompuMaster.camm.WebManager
                 MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Code)
                 MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupID
                 MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = _ID
-                Try
-                    MyConn.Open()
-                    Dim Result As Object
-                    Result = MyCmd.ExecuteScalar
-                    If IsDBNull(Result) OrElse Result Is Nothing Then
-                        Dim Message As String = "Membership creation failed"
-                        _WebManager.Log.RuntimeException(Message)
-                    ElseIf CType(Result, Integer) = -1 Then
-                        'Success
-                    Else
-                        Dim Message As String = String.Format("Membership creation failed ({0})", CType(Result, Integer))
-                        _WebManager.Log.RuntimeException(Message & " UID=" & _ID & " GID=" & groupID & " AID=" & _WebManager.CurrentUserID(SpecialUsers.User_Code))
-                    End If
-                Finally
-                    If Not MyCmd Is Nothing Then
-                        MyCmd.Dispose()
-                    End If
-                    If Not MyConn Is Nothing Then
-                        If MyConn.State <> ConnectionState.Closed Then
-                            MyConn.Close()
-                        End If
-                        MyConn.Dispose()
-                    End If
-                End Try
+                If Setup.DatabaseUtils.Version(WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                    MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = isDenyRule
+                ElseIf isDenyRule Then
+                    Throw New NotSupportedException("Current DB build doesn't support feature DenyRule")
+                End If
+                Dim Result As Object = Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+                If IsDBNull(Result) OrElse Result Is Nothing Then
+                    Dim Message As String = "Membership creation failed"
+                    _WebManager.Log.RuntimeException(Message)
+                ElseIf CType(Result, Integer) = -1 Then
+                    'Success
+                Else
+                    Dim Message As String = String.Format("Membership creation failed ({0})", CType(Result, Integer))
+                    _WebManager.Log.RuntimeException(Message & " UID=" & _ID & " GID=" & groupID & " AID=" & _WebManager.CurrentUserID(SpecialUsers.User_Code))
+                End If
 
                 If _System_InitOfAuthorizationsDone = False Then
                     'send e-mail when first membership has been set up
@@ -11327,9 +11364,31 @@ Namespace CompuMaster.camm.WebManager
                 End If
 
                 'Requery the list of memberships next time it's required
-                _Memberships = Nothing
+                _MembershipsByRule = Nothing
 
             End Sub
+
+            ''' <summary>
+            '''     Add a membership to a user group (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="groupInfo">The group</param>
+            ''' <param name="notifications">A notification class which contains the e-mail templates which might be sent</param>
+            ''' <remarks>
+            ''' This action will be done immediately without the need for saving. If the membership already exists, it won't be created for a 2nd time.
+            ''' </remarks>
+            Public Sub AddMembership(ByVal groupInfo As GroupInformation, isDenyRule As Boolean, Optional ByVal notifications As Notifications.INotifications = Nothing)
+                AddMembership(groupInfo.ID, isDenyRule, notifications)
+                groupInfo.ResetMembershipsCache()
+            End Sub
+
+
+            ''' <summary>
+            ''' Reset cached/calculated authorizations
+            ''' </summary>
+            Friend Sub ResetMembershipsCache()
+                _MembershipsByRule = Nothing
+            End Sub
+
             ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Remove a membership (doesn't require saving, action is performed immediately on database)
@@ -11343,7 +11402,16 @@ Namespace CompuMaster.camm.WebManager
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Sub RemoveMembership(ByVal GroupID As Integer)
-
+                RemoveMembership(GroupID, False)
+            End Sub
+            ''' <summary>
+            '''     Remove a membership (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="GroupID">The group ID the user shall not be member of any more</param>
+            ''' <remarks>
+            ''' This action will be done immediately without the need for saving
+            ''' </remarks>
+            Public Sub RemoveMembership(ByVal groupID As Integer, isDenyRule As Boolean)
                 If _ID = SpecialUsers.User_Anonymous OrElse _ID = SpecialUsers.User_Public OrElse _ID = SpecialUsers.User_Code OrElse _ID = SpecialUsers.User_UpdateProcessor Then
                     Dim Message As String = "An 'anonymous' user or a 'public' user never can be a member of another group"
                     _WebManager.Log.RuntimeException(Message)
@@ -11351,29 +11419,35 @@ Namespace CompuMaster.camm.WebManager
                     Dim Message As String = "User has to be created, first, before you can modify the list of memberships"
                     _WebManager.Log.RuntimeException(Message)
                 End If
-
+                'Save to DB
                 Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                Dim MyCmd As New SqlCommand("DELETE FROM dbo.Memberships WHERE ID_User=@UserID AND ID_Group=@GroupID", MyConn)
+                Dim MyCmd As New SqlCommand("", MyConn)
                 MyCmd.CommandType = CommandType.Text
-                MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = _ID
-                MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = GroupID
-                Try
-                    MyConn.Open()
-                    MyCmd.ExecuteNonQuery()
-                Finally
-                    If Not MyCmd Is Nothing Then
-                        MyCmd.Dispose()
-                    End If
-                    If Not MyConn Is Nothing Then
-                        If MyConn.State <> ConnectionState.Closed Then
-                            MyConn.Close()
-                        End If
-                        MyConn.Dispose()
-                    End If
-                End Try
-
-                _Memberships = Nothing
-
+                If Setup.DatabaseUtils.Version(WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                    MyCmd.CommandText = "DELETE FROM dbo.Memberships WHERE ID_User=@UserID AND ID_Group=@GroupID AND IsDenyRule = @IsDenyRule"
+                    MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = _ID
+                    MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupID
+                    MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = isDenyRule
+                Else
+                    If isDenyRule Then Throw New NotSupportedException("Current DB build doesn't support feature DenyRule")
+                    MyCmd.CommandText = "DELETE FROM dbo.Memberships WHERE ID_User=@UserID AND ID_Group=@GroupID"
+                    MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = _ID
+                    MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupID
+                End If
+                Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+                'Requery the list of memberships next time it's required
+                _MembershipsByRule = Nothing
+            End Sub
+            ''' <summary>
+            '''     Remove a membership (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="GroupInfo">The group the user shall not be member of any more</param>
+            ''' <remarks>
+            ''' This action will be done immediately without the need for saving
+            ''' </remarks>
+            Public Sub RemoveMembership(ByVal groupInfo As GroupInformation, isDenyRule As Boolean)
+                RemoveMembership(groupInfo.ID, isDenyRule)
+                groupInfo.ResetMembershipsCache()
             End Sub
 
             ''' -----------------------------------------------------------------------------
@@ -11389,8 +11463,8 @@ Namespace CompuMaster.camm.WebManager
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Function IsMember(ByVal groupName As String) As Boolean
-                For MyCounter As Integer = 0 To Me.Memberships.Length - 1
-                    If LCase(Me.Memberships(MyCounter).Name) = LCase(groupName) Then
+                For MyCounter As Integer = 0 To Me.MembershipsByRule.Effective.Length - 1
+                    If LCase(Me.MembershipsByRule.Effective(MyCounter).Name) = LCase(groupName) Then
                         Return True
                     End If
                 Next
@@ -11409,8 +11483,8 @@ Namespace CompuMaster.camm.WebManager
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Function IsMember(ByVal groupID As Integer) As Boolean
-                For MyCounter As Integer = 0 To Me.Memberships.Length - 1
-                    If Me.Memberships(MyCounter).ID = groupID Then
+                For MyCounter As Integer = 0 To Me.MembershipsByRule.Effective.Length - 1
+                    If Me.MembershipsByRule.Effective(MyCounter).ID = groupID Then
                         Return True
                     End If
                 Next
@@ -11532,41 +11606,96 @@ Namespace CompuMaster.camm.WebManager
             End Property
 
             ''' <summary>
-            '''     The authorizations list where the user is authorized for 
+            '''     The list of authorizations for standard access by the current user (AllowDevelopment - DenyDevelopment + AllowStandard - DenyStandard)
             ''' </summary>
             ''' <value></value>
             ''' <remarks>
             ''' </remarks>
-            Public ReadOnly Property Authorizations() As SecurityObjectAuthorizationForUser()
+            <Obsolete("Use AuthorizationsByRule instead")> Public ReadOnly Property Authorizations() As SecurityObjectAuthorizationForUser()
                 Get
-                    If _Authorizations Is Nothing Then
-                        'Prepare data query
-                        Dim sql As String
-                        Dim _DBVersion As Version = Setup.DatabaseUtils.Version(_WebManager, True)
-                        If _DBVersion.CompareTo(MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
-                            Throw New NotImplementedException("Support for database version " & _DBVersion.ToString & " is currently not supported. Please update the camm WebManager software, first!")
-                        Else
-                            sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select applicationsrightsbyuser.ID as AuthorizationID, applicationsrightsbyuser.ID_Application as AuthorizationSecurityObjectID, applicationsrightsbyuser.ID_GroupOrPerson as AuthorizationGroupID, NULL as AuthorizationServerGroupID, applicationsrightsbyuser.ReleasedOn as AuthorizationReleasedOn, applicationsrightsbyuser.ReleasedBy as AuthorizationReleasedBy, applicationsrightsbyuser.DevelopmentTeamMember as AuthorizationIsDeveloper, Applications_CurrentAndInactiveOnes.* from applicationsrightsbyuser inner join Applications_CurrentAndInactiveOnes on applicationsrightsbyuser.id_application = Applications_CurrentAndInactiveOnes.id where applicationsrightsbyuser.id_grouporperson = @ID and Applications_CurrentAndInactiveOnes.id is not null"
-                        End If
-                        'Load the data
+                    Return AuthorizationsByRule.EffectiveStandard()
+                End Get
+            End Property
+
+            Private _AuthorizationsByRule As Security.UserAuthorizationItemsByRuleForUsers
+            ''' <summary>
+            ''' Authorizations of the current user by rule-set
+            ''' </summary>
+            ''' <returns></returns>
+            Public ReadOnly Property AuthorizationsByRule As Security.UserAuthorizationItemsByRuleForUsers
+                Get
+                    If _PartiallyLoadedDataCurrently Then
+                        ReadCompleteUserInformation()
+                    End If
+                    If _AuthorizationsByRule Is Nothing Then
                         Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                        Dim MyCmd As New SqlCommand(sql, MyConn)
+                        Dim MyCmd As New SqlCommand("", MyConn)
+                        MyCmd.CommandType = CommandType.Text
+                        If Setup.DatabaseUtils.Version(WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                            MyCmd.CommandText = "Select applicationsrightsbyuser.ID As AuthorizationID, applicationsrightsbyuser.ID_Application As AuthorizationSecurityObjectID, applicationsrightsbyuser.ID_GroupOrPerson As AuthorizationGroupID, applicationsrightsbyuser.ID_ServerGroup As AuthorizationServerGroupID, applicationsrightsbyuser.ReleasedOn As AuthorizationReleasedOn, applicationsrightsbyuser.ReleasedBy As AuthorizationReleasedBy, applicationsrightsbyuser.DevelopmentTeamMember As AuthorizationIsDeveloper, applicationsrightsbyuser.IsDenyRule, Applications_CurrentAndInactiveOnes.* From applicationsrightsbyuser inner Join Applications_CurrentAndInactiveOnes On applicationsrightsbyuser.id_application = Applications_CurrentAndInactiveOnes.id Where applicationsrightsbyuser.id_grouporperson = @ID And Applications_CurrentAndInactiveOnes.id Is Not null"
+                        Else
+                            MyCmd.CommandText = "Select applicationsrightsbyuser.ID As AuthorizationID, applicationsrightsbyuser.ID_Application As AuthorizationSecurityObjectID, applicationsrightsbyuser.ID_GroupOrPerson As AuthorizationGroupID, NULL As AuthorizationServerGroupID, applicationsrightsbyuser.ReleasedOn As AuthorizationReleasedOn, applicationsrightsbyuser.ReleasedBy As AuthorizationReleasedBy, applicationsrightsbyuser.DevelopmentTeamMember As AuthorizationIsDeveloper, CAST(0 As bit) As IsDenyRule, Applications_CurrentAndInactiveOnes.* From applicationsrightsbyuser inner Join Applications_CurrentAndInactiveOnes On applicationsrightsbyuser.id_application = Applications_CurrentAndInactiveOnes.id Where applicationsrightsbyuser.id_grouporperson = @ID And Applications_CurrentAndInactiveOnes.id Is Not null"
+                        End If
                         MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
                         Dim SecObjects As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "SecurityObjects")
-                        If SecObjects.Rows.Count > 0 Then
-                            ReDim Preserve _Authorizations(SecObjects.Rows.Count - 1)
-                            Dim MyCounter As Integer = 0
-                            For Each MyDataRow As DataRow In SecObjects.Rows
-                                Dim secObjInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(CType(MyDataRow("ID"), Integer), CType(MyDataRow("Title"), String), Utils.Nz(MyDataRow("TitleAdminArea"), CType(Nothing, String)), Utils.Nz(MyDataRow("Remarks"), CType(Nothing, String)), CType(MyDataRow("ModifiedBy"), Long), Utils.Nz(MyDataRow("ModifiedOn"), CType(Nothing, Date)), CType(MyDataRow("ReleasedBy"), Long), Utils.Nz(MyDataRow("ReleasedOn"), CType(Nothing, Date)), Utils.Nz(MyDataRow("AppDisabled"), False), Utils.Nz(MyDataRow("AppDeleted"), False), Utils.Nz(MyDataRow("AuthsAsAppID"), 0), Utils.Nz(MyDataRow("SystemAppType"), 0), _WebManager)
-                                _Authorizations(MyCounter) = New SecurityObjectAuthorizationForUser(_WebManager, CType(MyDataRow("AuthorizationID"), Integer), CType(MyDataRow("AuthorizationGroupID"), Integer), CType(MyDataRow("AuthorizationSecurityObjectID"), Integer), Utils.Nz(MyDataRow("AuthorizationServerGroupID"), 0), Me, secObjInfo, Nothing, Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False), CType(MyDataRow("AuthorizationReleasedOn"), DateTime), CType(MyDataRow("AuthorizationReleasedBy"), Integer))
-                                MyCounter += 1
-                            Next
-                        Else
-                            _Authorizations = New SecurityObjectAuthorizationForUser() {}
-                        End If
+                        Dim AllowRuleAuthsNonDev As New ArrayList
+                        Dim AllowRuleAuthsIsDev As New ArrayList
+                        Dim DenyRuleAuthsNonDev As New ArrayList
+                        Dim DenyRuleAuthsIsDev As New ArrayList
+                        For MyCounter As Integer = 0 To SecObjects.Rows.Count - 1
+                            Dim MyDataRow As DataRow = SecObjects.Rows(MyCounter)
+                            Dim NavInfo As New Security.NavigationInformation( _
+                                        0, _
+                                        Nothing, _
+                                        Utils.Nz(MyDataRow("Level1Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level2Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level3Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level4Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level5Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level6Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level1TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level2TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level3TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level4TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level5TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level6TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("NavURL"), String.Empty), _
+                                        Utils.Nz(MyDataRow("NavFrame"), String.Empty), _
+                                        Utils.Nz(MyDataRow("NavTooltipText"), String.Empty), _
+                                        Utils.Nz(MyDataRow("AddLanguageID2URL"), False), _
+                                        Utils.Nz(MyDataRow("LanguageID"), 0), _
+                                        Utils.Nz(MyDataRow("LocationID"), 0), _
+                                        Utils.Nz(MyDataRow("Sort"), 0), _
+                                        Utils.Nz(MyDataRow("IsNew"), False), _
+                                        Utils.Nz(MyDataRow("IsUpdated"), False), _
+                                        Utils.Nz(MyDataRow("ResetIsNewUpdatedStatusOn"), DateTime.MinValue), _
+                                        Utils.Nz(MyDataRow("OnMouseOver"), String.Empty), _
+                                        Utils.Nz(MyDataRow("OnMouseOut"), String.Empty), _
+                                        Utils.Nz(MyDataRow("OnClick"), String.Empty))
+                            Dim secObjInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(CType(MyDataRow("ID"), Integer), CType(MyDataRow("Title"), String), Utils.Nz(MyDataRow("TitleAdminArea"), CType(Nothing, String)), Utils.Nz(MyDataRow("Remarks"), CType(Nothing, String)), CType(MyDataRow("ModifiedBy"), Long), Utils.Nz(MyDataRow("ModifiedOn"), CType(Nothing, Date)), CType(MyDataRow("ReleasedBy"), Long), Utils.Nz(MyDataRow("ReleasedOn"), CType(Nothing, Date)), Utils.Nz(MyDataRow("AppDisabled"), False), Utils.Nz(MyDataRow("AppDeleted"), False), Utils.Nz(MyDataRow("AuthsAsAppID"), 0), Utils.Nz(MyDataRow("SystemAppType"), 0), Utils.Nz(Utils.CellValueIfColumnExists(MyDataRow, "RequiredUserProfileFlags"), ""), Utils.Nz(Utils.CellValueIfColumnExists(MyDataRow, "RequiredUserProfileFlagsRemarks"), ""), NavInfo, _WebManager)
+                            Dim secObjAuth As New SecurityObjectAuthorizationForUser(_WebManager, CType(MyDataRow("AuthorizationID"), Integer), CType(MyDataRow("AuthorizationGroupID"), Integer), CType(MyDataRow("AuthorizationSecurityObjectID"), Integer), Utils.Nz(MyDataRow("AuthorizationServerGroupID"), 0), Me, secObjInfo, Nothing, Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False), Utils.Nz(MyDataRow("IsDenyRule"), False), CType(MyDataRow("AuthorizationReleasedOn"), DateTime), CType(MyDataRow("AuthorizationReleasedBy"), Integer))
+                            If Utils.Nz(MyDataRow("IsDenyRule"), False) = False Then
+                                If Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False) = True Then
+                                    AllowRuleAuthsIsDev.Add(secObjAuth)
+                                Else
+                                    AllowRuleAuthsNonDev.Add(secObjAuth)
+                                End If
+                            Else
+                                If Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False) = True Then
+                                    DenyRuleAuthsIsDev.Add(secObjAuth)
+                                Else
+                                    DenyRuleAuthsNonDev.Add(secObjAuth)
+                                End If
+                            End If
+                        Next
+                        _AuthorizationsByRule = New Security.UserAuthorizationItemsByRuleForUsers( _
+                            _WebManager.CurrentServerInfo.ParentServerGroupID, _
+                            CType(AllowRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
+                            CType(AllowRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
+                            CType(DenyRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
+                            CType(DenyRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()))
                     End If
-                    Return _Authorizations
+                    Return _AuthorizationsByRule
                 End Get
             End Property
 
@@ -11619,66 +11748,27 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="notifications">A notification class which contains the e-mail templates which might be sent</param>
             ''' <remarks>This action will be done immediately without the need for saving</remarks>
             Public Sub AddAuthorization(ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, ByVal developerAuthorization As Boolean, isDenyRule As Boolean, Optional ByVal notifications As Notifications.INotifications = Nothing)
-                If serverGroupID <> Nothing Then Throw New NotImplementedException("Specifying a server group ID is not yet supported in this release of camm Web-Manager")
-
-                If _ID = Nothing Then
-                    Dim Message As String = "User has to be created, first, before you can modify the list of authorizations"
-                    _WebManager.Log.RuntimeException(Message)
-                End If
-
-                Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                Dim MyCmd As New SqlCommand("AdminPrivate_CreateApplicationRightsByUser", MyConn)
-                MyCmd.CommandType = CommandType.StoredProcedure
-                MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Code)
-                MyCmd.Parameters.Add("@AppID", SqlDbType.Int).Value = securityObjectID
-                MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = _ID
-                MyCmd.Parameters.Add("@IsDevelopmentTeamMember", SqlDbType.Bit).Value = developerAuthorization
-                Dim _DBVersion As Version = Setup.DatabaseUtils.Version(WebManager, True) 'Environment check
-                If _DBVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                    MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = isDenyRule
-                End If
-                Dim Result As Object
-                Result = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-                If IsDBNull(Result) OrElse Result Is Nothing Then
-                    Dim Message As String = "Authorization creation failed"
-                    _WebManager.Log.RuntimeException(Message)
-                ElseIf CType(Result, Integer) = -1 Then
-                    'Success
-                ElseIf CType(Result, Integer) = 0 Then
-                    Dim Message As String = "Authorization creation failed (invalid release-by-user)"
-                    _WebManager.Log.RuntimeException(Message)
-                ElseIf CType(Result, Integer) = 3 Then
-                    Dim Message As String = "Authorization creation failed (invalid application ID)"
-                    _WebManager.Log.RuntimeException(Message)
-                ElseIf CType(Result, Integer) = 2 Then
-                    Dim Message As String = "Authorization creation failed (special SAP application requires a flag)"
-                    _WebManager.Log.RuntimeException(Message)
-                ElseIf CType(Result, Integer) = 5 Then
-                    Dim Message As String = "Authorization creation failed (invalid user ID)"
-                    _WebManager.Log.RuntimeException(Message)
-                Else
-                    Dim Message As String = "Authorization creation failed unexpectedly"
-                    _WebManager.Log.RuntimeException(Message)
-                End If
-
-                If _System_InitOfAuthorizationsDone = False Then
-                    'send e-mail when first authorization has been set up 
-                    _System_InitOfAuthorizationsDone = True 'save this value locally in this class instance
-                    'Check wether InitAuthorizationsDone flag has been set
-                    If DataLayer.Current.SetUserDetail(_WebManager, Nothing, _ID, "InitAuthorizationsDone", "1", True) Then
-                        Try
-                            If notifications Is Nothing Then
-                                _WebManager.Notifications.NotificationForUser_AuthorizationsSet(Me)
-                            Else
-                                notifications.NotificationForUser_AuthorizationsSet(Me)
-                            End If
-                        Catch
-                        End Try
-                    End If
-                End If
-
+                Try
+                    DataLayer.Current.AddUserAuthorization(_WebManager, Nothing, securityObjectID, serverGroupID, Me, Me.IDLong, developerAuthorization, isDenyRule, _WebManager.CurrentUserID(SpecialUsers.User_Anonymous), notifications)
+                Catch ex As Exception
+                    _WebManager.Log.RuntimeException(ex, False, False)
+                End Try
                 'Requery the list of authorization next time it's required
-                _Authorizations = Nothing
+                _AuthorizationsByRule = Nothing
+            End Sub
+
+            ''' <summary>
+            ''' Add an authorization to a security object (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="securityObjectInfo">The security object</param>
+            ''' <param name="serverGroupID">The authorization will be related only for the given server group ID, otherwise use 0 (zero value) for assigning authorization to all server groups</param>
+            ''' <param name="developerAuthorization">The developer authorization allows a user to see/access applications with this security objects even if it is currently disabled</param>
+            ''' <param name="isDenyRule">True for a deny rule or False for a grant access rule</param>
+            ''' <param name="notifications">A notification class which contains the e-mail templates which might be sent</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub AddAuthorization(ByVal securityObjectInfo As SecurityObjectInformation, ByVal serverGroupID As Integer, ByVal developerAuthorization As Boolean, isDenyRule As Boolean, Optional ByVal notifications As Notifications.INotifications = Nothing)
+                AddAuthorization(securityObjectInfo.ID, serverGroupID, developerAuthorization, isDenyRule, notifications)
+                securityObjectInfo.ResetAuthorizationsCacheForUsers()
             End Sub
 
             ''' -----------------------------------------------------------------------------
@@ -11706,8 +11796,35 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="serverGroupID">The authorization related only to the given server group ID will be removed, otherwise use 0 (zero value) for specifying the authorization to all server groups</param>
             ''' <remarks>This action will be done immediately without the need for saving</remarks>
             Public Sub RemoveAuthorization(ByVal securityObjectID As Integer, ByVal serverGroupID As Integer)
-                CompuMaster.camm.WebManager.DataLayer.Current.RemoveUserAuthorization(Me._WebManager, securityObjectID, Me._ID, serverGroupID)
-                _Authorizations = Nothing
+                RemoveAuthorization(securityObjectID, serverGroupID, False, False)
+            End Sub
+            ''' <summary>
+            ''' Remove an authorization (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="securityObjectID">The security object ID the user shall not be authorized for any more</param>
+            ''' <param name="serverGroupID">The authorization related only to the given server group ID will be removed, otherwise use 0 (zero value) for specifying the authorization to all server groups</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub RemoveAuthorization(ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, isDevRule As Boolean, isDenyRule As Boolean)
+                CompuMaster.camm.WebManager.DataLayer.Current.RemoveUserAuthorization(Me._WebManager, securityObjectID, Me._ID, serverGroupID, isDevRule, isDenyRule)
+                _AuthorizationsByRule = Nothing
+            End Sub
+            ''' <summary>
+            ''' Remove an authorization (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="securityObject">The security object the user shall not be authorized for any more</param>
+            ''' <param name="serverGroupID">The authorization related only to the given server group ID will be removed, otherwise use 0 (zero value) for specifying the authorization to all server groups</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub RemoveAuthorization(ByVal securityObject As WMSystem.SecurityObjectInformation, ByVal serverGroupID As Integer, isDevRule As Boolean, isDenyRule As Boolean)
+                CompuMaster.camm.WebManager.DataLayer.Current.RemoveUserAuthorization(Me._WebManager, securityObject.ID, Me._ID, serverGroupID, isDevRule, isDenyRule)
+                securityObject.ResetAuthorizationsCacheForUsers()
+                _AuthorizationsByRule = Nothing
+            End Sub
+
+            ''' <summary>
+            ''' Reset cached/calculated authorizations
+            ''' </summary>
+            Friend Sub ResetAuthorizationsCache()
+                _AuthorizationsByRule = Nothing
             End Sub
 
             ''' -----------------------------------------------------------------------------
@@ -11792,8 +11909,7 @@ Namespace CompuMaster.camm.WebManager
             Public Sub New(ByVal ID As Integer, ByRef WebManager As WMSystem)
                 _WebManager = WebManager
                 Dim MyConn As New SqlConnection(WebManager.ConnectionString)
-                Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from Languages where id = @ID", MyConn)
+                Dim MyCmd As New SqlCommand("Select * From Languages Where ID = @ID", MyConn)
                 MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = ID
                 Dim MyReader As SqlDataReader = Nothing
                 Try
@@ -11921,7 +12037,7 @@ Namespace CompuMaster.camm.WebManager
                         Case "ltr", "rtl"
                             'okay
                         Case Else
-                            Throw New ArgumentOutOfRangeException("Value", Value, "For direction are allowed values ""ltr"" and ""rtl"" only")
+                            Throw New ArgumentOutOfRangeException("Value", Value, "For direction are allowed values ""ltr"" And ""rtl"" only")
                     End Select
                     _Direction = Value
                 End Set
@@ -12011,8 +12127,7 @@ Namespace CompuMaster.camm.WebManager
             Public Sub New(ByVal ID As Integer, ByRef WebManager As WMSystem)
                 _WebManager = WebManager
                 Dim MyConn As New SqlConnection(WebManager.ConnectionString)
-                Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from system_accesslevels where id = @ID", MyConn)
+                Dim MyCmd As New SqlCommand("Select * From system_accesslevels Where ID = @ID", MyConn)
                 MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = ID
                 Dim MyReader As SqlDataReader = Nothing
                 Try
@@ -12129,8 +12244,7 @@ Namespace CompuMaster.camm.WebManager
             Public ReadOnly Property UserIDs() As Long()
                 Get
                     Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                    Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select benutzer.id from benutzer where benutzer.AccountAccessability = @ID order by [1stPreferredLanguage]", MyConn)
+                    Dim MyCmd As New SqlCommand("Select benutzer.id From benutzer Where benutzer.AccountAccessability = @ID Order By [1stPreferredLanguage]", MyConn)
                     MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
                     Dim MyUsers As ArrayList = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoArrayList(MyCmd, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
                     Dim Result As Long()
@@ -12157,8 +12271,7 @@ Namespace CompuMaster.camm.WebManager
                 Get
                     If _Users Is Nothing Then
                         Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                        Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from benutzer where benutzer.AccountAccessability = @ID order by [1stPreferredLanguage]", MyConn)
+                        Dim MyCmd As New SqlCommand("Select * From benutzer Where benutzer.AccountAccessability = @ID Order By [1stPreferredLanguage]", MyConn)
                         MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
                         Dim MyUsers As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "Users")
                         If MyUsers.Rows.Count > 0 Then
@@ -12230,7 +12343,7 @@ Namespace CompuMaster.camm.WebManager
             Dim _Name As String
             Dim _Description As String
             Dim _IsSystemGroup As Boolean
-            Dim _Members As CompuMaster.camm.WebManager.WMSystem.UserInformation()
+
             Friend Sub New(ByVal GroupID As Integer, ByVal InternalName As String, ByVal Description As String, ByVal IsSystemGroup As Boolean, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem)
                 _ID = GroupID
                 _Name = InternalName
@@ -12254,8 +12367,7 @@ Namespace CompuMaster.camm.WebManager
             Public Sub New(ByVal GroupID As Integer, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem)
                 _WebManager = WebManager
                 Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from gruppen where id = @ID", MyConn)
+                Dim MyCmd As New SqlCommand("Select * From gruppen Where id = @ID", MyConn)
                 MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = GroupID
                 Dim MyReader As SqlDataReader = Nothing
                 Try
@@ -12364,7 +12476,6 @@ Namespace CompuMaster.camm.WebManager
                 End Set
             End Property
 
-            Private _MemberIDs As Long()
             ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A list of user IDs of all members
@@ -12376,27 +12487,46 @@ Namespace CompuMaster.camm.WebManager
             ''' 	[adminsupport]	28.04.2005	Created
             ''' </history>
             ''' -----------------------------------------------------------------------------
-            Public ReadOnly Property MemberUserIDs() As Long()
+            <Obsolete("Use MembersByRule instead")> Public ReadOnly Property MemberUserIDs() As Long()
                 Get
-                    If _MemberIDs Is Nothing Then
-                        Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                        Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select benutzer.ID from memberships left join benutzer on memberships.id_user = benutzer.id where memberships.id_group = @ID and benutzer.id is not null", MyConn)
-                        MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
-                        MyCmd.Connection = New SqlConnection(_WebManager.ConnectionString)
-                        Dim MemberUsers As ArrayList = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoArrayList(MyCmd, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-                        If MemberUsers.Count = 0 Then
-                            _MemberIDs = New Long() {}
-                        Else
-                            ReDim _MemberIDs(MemberUsers.Count - 1)
-                            For MyCounter As Integer = 0 To MemberUsers.Count - 1
-                                _MemberIDs(MyCounter) = CType(MemberUsers(MyCounter), Long)
-                            Next
-                        End If
-                    End If
-                    Return _MemberIDs
+                    Return MemberUserIDsByRule.Effective
                 End Get
             End Property
+
+            Private _MemberIDsByRule As Security.MemberIDsByRule
+            ''' <summary>
+            ''' Memberships of the current user by rule-set
+            ''' </summary>
+            ''' <returns></returns>
+            Public ReadOnly Property MemberUserIDsByRule As Security.MemberIDsByRule
+                Get
+                    If _MemberIDsByRule Is Nothing Then
+                        Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
+                        Dim MyCmd As New SqlCommand("", MyConn)
+                        MyCmd.CommandType = CommandType.Text
+                        If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                            MyCmd.CommandText = "Select benutzer.ID, memberships.IsDenyRule From memberships left Join benutzer On memberships.id_user = benutzer.id Where memberships.id_group = @ID And benutzer.id Is Not null"
+                        Else
+                            MyCmd.CommandText = "Select benutzer.ID, CAST(0 AS bit) AS IsDenyRule From memberships left Join benutzer On memberships.id_user = benutzer.id Where memberships.id_group = @ID And benutzer.id Is Not null"
+                        End If
+                        MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
+                        Dim MemberUsers As DictionaryEntry() = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(MyCmd, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+                        Dim AllowRuleMemberGroups As New ArrayList
+                        Dim DenyRuleMemberGroups As New ArrayList
+                        For MyCounter As Integer = 0 To MemberUsers.Length - 1
+                            Dim usr As Long = CType(MemberUsers(MyCounter).Key, Long)
+                            If Utils.Nz(MemberUsers(MyCounter).Value, False) = False Then
+                                AllowRuleMemberGroups.Add(usr)
+                            Else
+                                DenyRuleMemberGroups.Add(usr)
+                            End If
+                        Next
+                        _MemberIDsByRule = New Security.MemberIDsByRule(CType(AllowRuleMemberGroups.ToArray(GetType(Long)), Long()), CType(DenyRuleMemberGroups.ToArray(GetType(Long)), Long()))
+                    End If
+                    Return _MemberIDsByRule
+                End Get
+            End Property
+
             ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A list of members
@@ -12408,37 +12538,35 @@ Namespace CompuMaster.camm.WebManager
             ''' 	[adminsupport]	18.02.2005	Created
             ''' </history>
             ''' -----------------------------------------------------------------------------
-            Public ReadOnly Property Members() As CompuMaster.camm.WebManager.WMSystem.UserInformation()
+            <Obsolete("Use MembersByRule instead")> Public ReadOnly Property Members() As CompuMaster.camm.WebManager.WMSystem.UserInformation()
                 Get
-                    If _Members Is Nothing Then
+                    Return MembersByRule.Effective
+                End Get
+            End Property
+
+            Private _MembersByRule As Security.MemberItemsByRule
+            ''' <summary>
+            ''' Memberships of the current user by rule-set
+            ''' </summary>
+            ''' <returns></returns>
+            Public ReadOnly Property MembersByRule As Security.MemberItemsByRule
+                Get
+                    If _MembersByRule Is Nothing Then
                         Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                        Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select benutzer.* from memberships left join benutzer on memberships.id_user = benutzer.id where memberships.id_group = @ID and benutzer.id is not null", MyConn)
+                        Dim MyCmd As New SqlCommand("", MyConn)
+                        MyCmd.CommandType = CommandType.Text
+                        If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                            MyCmd.CommandText = "Select benutzer.*, memberships.IsDenyRule From memberships left Join benutzer On memberships.id_user = benutzer.id Where memberships.id_group = @ID and benutzer.id is not null"
+                        Else
+                            MyCmd.CommandText = "Select benutzer.*, CAST(0 AS bit) AS IsDenyRule From memberships left Join benutzer On memberships.id_user = benutzer.id Where memberships.id_group = @ID and benutzer.id is not null"
+                        End If
                         MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
-                        Dim MyDataSet As DataSet = New DataSet
-                        Dim MyDA As SqlDataAdapter = New SqlDataAdapter(MyCmd)
-                        Try
-                            MyConn.Open()
-                            MyDA.Fill(MyDataSet, "Users")
-                        Finally
-                            If Not MyDA Is Nothing Then
-                                MyDA.Dispose()
-                            End If
-                            If Not MyCmd Is Nothing Then
-                                MyCmd.Dispose()
-                            End If
-                            If Not MyConn Is Nothing Then
-                                If MyConn.State <> ConnectionState.Closed Then
-                                    MyConn.Close()
-                                End If
-                                MyConn.Dispose()
-                            End If
-                        End Try
-                        If MyDataSet.Tables("Users").Rows.Count > 0 Then
-                            ReDim Preserve _Members(MyDataSet.Tables("Users").Rows.Count - 1)
-                            Dim MyCounter As Integer = 0
-                            For Each MyDataRow As DataRow In MyDataSet.Tables("Users").Rows
-                                _Members(MyCounter) = New CompuMaster.camm.WebManager.WMSystem.UserInformation(CType(MyDataRow("ID"), Long), _
+                        Dim MemberUsers As DataTable = Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "MemberUsers")
+                        Dim AllowRuleMemberGroups As New ArrayList
+                        Dim DenyRuleMemberGroups As New ArrayList
+                        For MyCounter As Integer = 0 To MemberUsers.Rows.Count - 1
+                            Dim MyDataRow As DataRow = MemberUsers.Rows(MyCounter)
+                            Dim usr As New CompuMaster.camm.WebManager.WMSystem.UserInformation(CType(MyDataRow("ID"), Long), _
                                                 CType(MyDataRow("LoginName"), String), _
                                                 CType(MyDataRow("E-Mail"), String), _
                                                 False, _
@@ -12462,20 +12590,18 @@ Namespace CompuMaster.camm.WebManager
                                                 CType(MyDataRow("AccountAccessability"), Integer), _
                                                 _WebManager, _
                                                 Nothing)
-                                If _Members(MyCounter).Gender = Sex.Undefined AndAlso (_Members(MyCounter).FirstName = Nothing OrElse _Members(MyCounter).LastName = Nothing) Then
-                                    'Regard it as a group of persons without a specific name
-                                    _Members(MyCounter).Gender = Sex.MissingNameOrGroupOfPersons
-                                End If
-                                MyCounter += 1
-                            Next
-                        Else
-                            _Members = New UserInformation() {}
-                            _MemberIDs = New Long() {}
-                        End If
+                            If Utils.Nz(MyDataRow("IsDenyRule"), False) = False Then
+                                AllowRuleMemberGroups.Add(usr)
+                            Else
+                                DenyRuleMemberGroups.Add(usr)
+                            End If
+                        Next
+                        _MembersByRule = New Security.MemberItemsByRule(CType(AllowRuleMemberGroups.ToArray(GetType(UserInformation)), UserInformation()), CType(DenyRuleMemberGroups.ToArray(GetType(UserInformation)), UserInformation()))
                     End If
-                    Return _Members
+                    Return _MembersByRule
                 End Get
             End Property
+
             ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Add a new user to the list of members
@@ -12489,6 +12615,17 @@ Namespace CompuMaster.camm.WebManager
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Sub AddMember(ByRef UserInfo As UserInformation, Optional ByVal Notifications As WMNotifications = Nothing)
+                AddMember(UserInfo, False, Notifications)
+            End Sub
+
+            ''' <summary>
+            '''     Add a new user to the list of members
+            ''' </summary>
+            ''' <param name="UserInfo">The new user</param>
+            ''' <param name="Notifications">A notification class which can be user for sending messages to the user</param>
+            ''' <remarks>
+            ''' </remarks>
+            Public Sub AddMember(ByRef UserInfo As UserInformation, IsDenyRule As Boolean, Optional ByVal Notifications As CompuMaster.camm.WebManager.Notifications.INotifications = Nothing)
 
                 If UserInfo.ID = SpecialUsers.User_Anonymous OrElse UserInfo.ID = SpecialUsers.User_Public OrElse UserInfo.ID = SpecialUsers.User_UpdateProcessor OrElse UserInfo.ID = SpecialUsers.User_Code Then
                     Dim Message As String = "An 'anonymous' user or a 'public' user never can be a member of another group"
@@ -12504,30 +12641,21 @@ Namespace CompuMaster.camm.WebManager
                 MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Code)
                 MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = _ID
                 MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = UserInfo.ID
-                Try
-                    MyConn.Open()
-                    Dim Result As Object
-                    Result = MyCmd.ExecuteScalar
-                    If IsDBNull(Result) OrElse Result Is Nothing Then
-                        Dim Message As String = "Membership creation failed"
-                        _WebManager.Log.RuntimeException(Message)
-                    ElseIf CType(Result, Integer) = -1 Then
-                        'Success
-                    Else
-                        Dim Message As String = "Membership creation failed"
-                        _WebManager.Log.RuntimeException(Message)
-                    End If
-                Finally
-                    If Not MyCmd Is Nothing Then
-                        MyCmd.Dispose()
-                    End If
-                    If Not MyConn Is Nothing Then
-                        If MyConn.State <> ConnectionState.Closed Then
-                            MyConn.Close()
-                        End If
-                        MyConn.Dispose()
-                    End If
-                End Try
+                If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                    MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = IsDenyRule
+                ElseIf IsDenyRule Then
+                    Throw New NotSupportedException("Current DB build doesn't support feature DenyRule")
+                End If
+                Dim Result As Object = Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+                If IsDBNull(Result) OrElse Result Is Nothing Then
+                    Dim Message As String = "Membership creation failed"
+                    _WebManager.Log.RuntimeException(Message)
+                ElseIf CType(Result, Integer) = -1 Then
+                    'Success
+                Else
+                    Dim Message As String = "Membership creation failed"
+                    _WebManager.Log.RuntimeException(Message)
+                End If
 
                 If UserInfo.AccountAuthorizationsAlreadySet = False Then
                     'send e-mail when first membership has been set up
@@ -12545,9 +12673,8 @@ Namespace CompuMaster.camm.WebManager
                     End If
                 End If
 
-                _Members = Nothing
-                _MemberIDs = Nothing
-
+                UserInfo.ResetMembershipsCache
+                ResetMembershipsCache()
             End Sub
             ''' -----------------------------------------------------------------------------
             ''' <summary>
@@ -12577,7 +12704,17 @@ Namespace CompuMaster.camm.WebManager
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Sub AddMember(ByVal UserID As Long, Optional ByVal Notifications As WMNotifications = Nothing)
+                AddMember(UserID, False, Notifications)
+            End Sub
 
+            ''' <summary>
+            '''     Add a new user to the list of members
+            ''' </summary>
+            ''' <param name="UserID">The ID value of the new user</param>
+            ''' <param name="Notifications">A notification class which can be user for sending messages to the user</param>
+            ''' <remarks>
+            ''' </remarks>
+            Public Sub AddMember(ByVal UserID As Long, IsDenyRule As Boolean, Optional ByVal Notifications As CompuMaster.camm.WebManager.Notifications.INotifications = Nothing)
                 If UserID = SpecialUsers.User_Anonymous OrElse UserID = SpecialUsers.User_Public OrElse UserID = SpecialUsers.User_Code OrElse UserID = SpecialUsers.User_UpdateProcessor Then
                     Dim Message As String = "An 'anonymous' user or a 'public' user never can be a member of another group"
                     _WebManager.Log.RuntimeException(Message)
@@ -12585,8 +12722,7 @@ Namespace CompuMaster.camm.WebManager
                     Dim Message As String = "Group has to be created, first, before you can modify the list of members"
                     _WebManager.Log.RuntimeException(Message)
                 End If
-                AddMember(New CompuMaster.camm.WebManager.WMSystem.UserInformation(UserID, _WebManager), Notifications)
-
+                AddMember(New CompuMaster.camm.WebManager.WMSystem.UserInformation(UserID, _WebManager), IsDenyRule, Notifications)
             End Sub
             ''' -----------------------------------------------------------------------------
             ''' <summary>
@@ -12601,8 +12737,8 @@ Namespace CompuMaster.camm.WebManager
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Function HasMember(ByVal userID As Long) As Boolean
-                For MyCounter As Integer = 0 To MemberUserIDs.Length - 1
-                    If MemberUserIDs(MyCounter) = userID Then
+                For MyCounter As Integer = 0 To MemberUserIDsByRule.Effective.Length - 1
+                    If MemberUserIDsByRule.Effective(MyCounter) = userID Then
                         Return True
                     End If
                 Next
@@ -12654,8 +12790,30 @@ Namespace CompuMaster.camm.WebManager
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Sub RemoveMember(ByVal UserID As Long)
+                RemoveMember(UserID, False)
+            End Sub
 
-                If UserID = SpecialUsers.User_Anonymous OrElse UserID = SpecialUsers.User_Public OrElse UserID = SpecialUsers.User_Code OrElse UserID = SpecialUsers.User_UpdateProcessor Then
+            ''' <summary>
+            '''     Remove a user from the list of members
+            ''' </summary>
+            ''' <param name="userInfo">The ID value of the user</param>
+            ''' <remarks>
+            ''' </remarks>
+            Public Sub RemoveMember(ByVal userInfo As UserInformation, isDenyRule As Boolean)
+                RemoveMember(userInfo.IDLong, isDenyRule)
+                userInfo.ResetMembershipsCache()
+            End Sub
+
+            ''' <summary>
+            '''     Remove a user from the list of members
+            ''' </summary>
+            ''' <param name="userID">The ID value of the user</param>
+            ''' <remarks>
+            ''' </remarks>
+            Public Sub RemoveMember(ByVal userID As Long, isDenyRule As Boolean)
+
+
+                If userID = SpecialUsers.User_Anonymous OrElse userID = SpecialUsers.User_Public OrElse userID = SpecialUsers.User_Code OrElse userID = SpecialUsers.User_UpdateProcessor Then
                     Dim Message As String = "An 'anonymous' user or a 'public' user never can be a member of another group"
                     _WebManager.Log.RuntimeException(Message)
                 ElseIf _ID = Nothing Then
@@ -12665,16 +12823,25 @@ Namespace CompuMaster.camm.WebManager
 
                 Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
                 Dim MyCmd As SqlCommand
-                If Setup.DatabaseUtils.Version(_WebManager, True).Build >= 176 Then  'Newer - build 176 introduced SP [AdminPrivate_DeleteMemberships]
+                If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
                     MyCmd = New SqlCommand("AdminPrivate_DeleteMemberships", MyConn)
                     MyCmd.CommandType = CommandType.StoredProcedure
                     MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Anonymous)
                     MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = _ID
-                    MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = UserID
+                    MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID
+                    MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = isDenyRule
+                ElseIf Setup.DatabaseUtils.Version(_WebManager, True).Build >= 176 Then  'Newer - build 176 introduced SP [AdminPrivate_DeleteMemberships]
+                    If isDenyRule Then Throw New NotSupportedException("Current DB build doesn't support feature DenyRule")
+                    MyCmd = New SqlCommand("AdminPrivate_DeleteMemberships", MyConn)
+                    MyCmd.CommandType = CommandType.StoredProcedure
+                    MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Anonymous)
+                    MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = _ID
+                    MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID
                 Else
+                    If isDenyRule Then Throw New NotSupportedException("Current DB build doesn't support feature DenyRule")
                     MyCmd = New SqlCommand("DELETE FROM dbo.Memberships WHERE ID_User=@UserID AND ID_Group=@GroupID", MyConn)
                     MyCmd.CommandType = CommandType.Text
-                    MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = UserID
+                    MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID
                     MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = _ID
                 End If
                 Try
@@ -12692,8 +12859,7 @@ Namespace CompuMaster.camm.WebManager
                     End If
                 End Try
 
-                _Members = Nothing
-                _MemberIDs = Nothing
+                ResetMembershipsCache()
 
             End Sub
 
@@ -12718,7 +12884,20 @@ Namespace CompuMaster.camm.WebManager
             Public Sub AddAuthorization(ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
                 CompuMaster.camm.WebManager.DataLayer.Current.AddGroupAuthorization(Me._WebManager, securityObjectID, Me._ID, serverGroupID, isDeveloperAuthorization, isDenyRule)
                 'Requery the list of authorization next time it's required
-                _Authorizations = Nothing
+                _AuthorizationsByRule = Nothing
+            End Sub
+
+            ''' <summary>
+            ''' Add an authorization to a security object (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="securityObjectInfo">The security object ID</param>
+            ''' <param name="serverGroupID">The authorization will be related only for the given server group ID, otherwise use 0 (zero value) for assigning authorization to all server groups</param>
+            ''' <param name="isDeveloperAuthorization">Group members will be considered for development access</param>
+            ''' <param name="isDenyRule">True for a deny rule, false for an allow rule (default)</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub AddAuthorization(ByVal securityObjectInfo As SecurityObjectInformation, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
+                AddAuthorization(securityObjectInfo.ID, serverGroupID, isDeveloperAuthorization, isDenyRule)
+                securityObjectInfo.ResetAuthorizationsCacheForGroups()
             End Sub
 
             ''' -----------------------------------------------------------------------------
@@ -12757,7 +12936,35 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>This action will be done immediately without the need for saving</remarks>
             Public Sub RemoveAuthorization(ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
                 CompuMaster.camm.WebManager.DataLayer.Current.RemoveGroupAuthorization(Me._WebManager, securityObjectID, Me._ID, serverGroupID, isDeveloperAuthorization, isDenyRule)
-                _Authorizations = Nothing
+                _AuthorizationsByRule = Nothing
+            End Sub
+
+            ''' <summary>
+            ''' Remove an authorization (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="securityObjectInfo">The security object the user shall not be authorized for any more</param>
+            ''' <param name="serverGroupID">The authorization related only to the given server group ID will be removed, otherwise use 0 (zero value) for specifying the authorization to all server groups</param>
+            ''' <param name="isDeveloperAuthorization">Group members will be considered for development access</param>
+            ''' <param name="isDenyRule">True for a deny rule, false for an allow rule (default)</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub RemoveAuthorization(ByVal securityObjectInfo As SecurityObjectInformation, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
+                RemoveAuthorization(securityObjectInfo.ID, serverGroupID, isDeveloperAuthorization, isDenyRule)
+                securityObjectInfo.ResetAuthorizationsCacheForGroups()
+            End Sub
+
+            ''' <summary>
+            ''' Reset cached/calculated authorizations
+            ''' </summary>
+            Friend Sub ResetMembershipsCache()
+                _MemberIDsByRule = Nothing
+                _MembersByRule = Nothing
+            End Sub
+
+            ''' <summary>
+            ''' Reset cached/calculated authorizations
+            ''' </summary>
+            Friend Sub ResetAuthorizationsCache()
+                _AuthorizationsByRule = Nothing
             End Sub
 
             ''' -----------------------------------------------------------------------------
@@ -12776,54 +12983,192 @@ Namespace CompuMaster.camm.WebManager
                 Me.RemoveAuthorization(securityObjectID, 0)
             End Sub
 
-            Private _Authorizations As CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForGroup() = Nothing
             ''' <summary>
             '''     The authorizations list where the group is authorized for
             ''' </summary>
             ''' <value></value>
             ''' <remarks>
             ''' </remarks>
-            Public ReadOnly Property Authorizations() As SecurityObjectAuthorizationForGroup()
+            <Obsolete("Use MembersByRule instead")> Public ReadOnly Property Authorizations() As SecurityObjectAuthorizationForGroup()
                 Get
-                    If _Authorizations Is Nothing Then
-                        'Prepare data query
-                        Dim sql As String
-                        Dim _DBVersion As Version = Setup.DatabaseUtils.Version(_WebManager, True)
-                        If _DBVersion.CompareTo(MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
-                            Throw New NotImplementedException("Support for database version " & _DBVersion.ToString & " is currently not supported. Please update the camm WebManager software, first!")
-                        Else
-                            sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select applicationsrightsbygroup.ID as AuthorizationID, applicationsrightsbygroup.ID_Application as AuthorizationSecurityObjectID, applicationsrightsbygroup.ID_GroupOrPerson as AuthorizationGroupID, NULL as AuthorizationServerGroupID, applicationsrightsbygroup.ReleasedOn as AuthorizationReleasedOn, applicationsrightsbygroup.ReleasedBy as AuthorizationReleasedBy, Applications_CurrentAndInactiveOnes.* from applicationsrightsbygroup inner join Applications_CurrentAndInactiveOnes on applicationsrightsbygroup.id_application = Applications_CurrentAndInactiveOnes.id where applicationsrightsbygroup.id_grouporperson = @ID and Applications_CurrentAndInactiveOnes.id is not null"
-                        End If
-                        'Load the data
-                        Dim MyCmd As New SqlCommand(sql, New SqlConnection(_WebManager.ConnectionString))
-                        MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
-                        Dim SecObjects As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "SecurityObjects")
-                        If SecObjects.Rows.Count > 0 Then
-                            ReDim Preserve _Authorizations(SecObjects.Rows.Count - 1)
-                            Dim MyCounter As Integer = 0
-                            For Each MyDataRow As DataRow In SecObjects.Rows
-                                Dim secObjInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(CType(MyDataRow("ID"), Integer), CType(MyDataRow("Title"), String), Utils.Nz(MyDataRow("TitleAdminArea"), CType(Nothing, String)), Utils.Nz(MyDataRow("Remarks"), CType(Nothing, String)), CType(MyDataRow("ModifiedBy"), Long), Utils.Nz(MyDataRow("ModifiedOn"), CType(Nothing, Date)), CType(MyDataRow("ReleasedBy"), Long), Utils.Nz(MyDataRow("ReleasedOn"), CType(Nothing, Date)), Utils.Nz(MyDataRow("AppDisabled"), False), Utils.Nz(MyDataRow("AppDeleted"), False), Utils.Nz(MyDataRow("AuthsAsAppID"), 0), Utils.Nz(MyDataRow("SystemAppType"), 0), _WebManager)
-                                _Authorizations(MyCounter) = New SecurityObjectAuthorizationForGroup(_WebManager, CType(MyDataRow("AuthorizationID"), Integer), CType(MyDataRow("AuthorizationGroupID"), Integer), CType(MyDataRow("AuthorizationSecurityObjectID"), Integer), Utils.Nz(MyDataRow("AuthorizationServerGroupID"), 0), Me, secObjInfo, Nothing, CType(MyDataRow("AuthorizationReleasedOn"), DateTime), CType(MyDataRow("AuthorizationReleasedBy"), Integer))
-                                MyCounter += 1
-                            Next
-                        Else
-                            _Authorizations = New SecurityObjectAuthorizationForGroup() {}
-                        End If
-                    End If
-                    Return _Authorizations
+                    Return AuthorizationsByRule.EffectiveStandard()
                 End Get
             End Property
+
+            Private _AuthorizationsByRule As Security.GroupAuthorizationItemsByRuleForGroups
+            ''' <summary>
+            ''' Authorizations of the current user by rule-set
+            ''' </summary>
+            ''' <returns></returns>
+            Public ReadOnly Property AuthorizationsByRule As Security.GroupAuthorizationItemsByRuleForGroups
+                Get
+                    If _AuthorizationsByRule Is Nothing Then
+                        Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
+                        Dim MyCmd As New SqlCommand("", MyConn)
+                        MyCmd.CommandType = CommandType.Text
+                        If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                            MyCmd.CommandText = "select applicationsrightsbygroup.ID as AuthorizationID, applicationsrightsbygroup.ID_Application as AuthorizationSecurityObjectID, applicationsrightsbygroup.ID_GroupOrPerson as AuthorizationGroupID, applicationsrightsbygroup.ID_ServerGroup as AuthorizationServerGroupID, applicationsrightsbygroup.ReleasedOn as AuthorizationReleasedOn, applicationsrightsbygroup.ReleasedBy as AuthorizationReleasedBy, applicationsrightsbygroup.DevelopmentTeamMember As AuthorizationIsDeveloper, applicationsrightsbygroup.IsDenyRule, Applications_CurrentAndInactiveOnes.* from applicationsrightsbygroup inner join Applications_CurrentAndInactiveOnes on applicationsrightsbygroup.id_application = Applications_CurrentAndInactiveOnes.id where applicationsrightsbygroup.id_grouporperson = @ID and Applications_CurrentAndInactiveOnes.id is not null"
+                        Else
+                            MyCmd.CommandText = "select applicationsrightsbygroup.ID as AuthorizationID, applicationsrightsbygroup.ID_Application as AuthorizationSecurityObjectID, applicationsrightsbygroup.ID_GroupOrPerson as AuthorizationGroupID, NULL as AuthorizationServerGroupID, applicationsrightsbygroup.ReleasedOn as AuthorizationReleasedOn, applicationsrightsbygroup.ReleasedBy as AuthorizationReleasedBy, CAST(0 As bit) As AuthorizationIsDeveloper, CAST(0 As bit) As IsDenyRule, Applications_CurrentAndInactiveOnes.* from applicationsrightsbygroup inner join Applications_CurrentAndInactiveOnes on applicationsrightsbygroup.id_application = Applications_CurrentAndInactiveOnes.id where applicationsrightsbygroup.id_grouporperson = @ID and Applications_CurrentAndInactiveOnes.id is not null"
+                        End If
+                        MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
+                        Dim SecObjects As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "SecurityObjects")
+                        Dim AllowRuleAuthsNonDev As New ArrayList
+                        Dim AllowRuleAuthsIsDev As New ArrayList
+                        Dim DenyRuleAuthsNonDev As New ArrayList
+                        Dim DenyRuleAuthsIsDev As New ArrayList
+                        For MyCounter As Integer = 0 To SecObjects.Rows.Count - 1
+                            Dim MyDataRow As DataRow = SecObjects.Rows(MyCounter)
+                            Dim NavInfo As New Security.NavigationInformation( _
+                                        0, _
+                                        Nothing, _
+                                        Utils.Nz(MyDataRow("Level1Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level2Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level3Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level4Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level5Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level6Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level1TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level2TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level3TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level4TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level5TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level6TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("NavURL"), String.Empty), _
+                                        Utils.Nz(MyDataRow("NavFrame"), String.Empty), _
+                                        Utils.Nz(MyDataRow("NavTooltipText"), String.Empty), _
+                                        Utils.Nz(MyDataRow("AddLanguageID2URL"), False), _
+                                        Utils.Nz(MyDataRow("LanguageID"), 0), _
+                                        Utils.Nz(MyDataRow("LocationID"), 0), _
+                                        Utils.Nz(MyDataRow("Sort"), 0), _
+                                        Utils.Nz(MyDataRow("IsNew"), False), _
+                                        Utils.Nz(MyDataRow("IsUpdated"), False), _
+                                        Utils.Nz(MyDataRow("ResetIsNewUpdatedStatusOn"), DateTime.MinValue), _
+                                        Utils.Nz(MyDataRow("OnMouseOver"), String.Empty), _
+                                        Utils.Nz(MyDataRow("OnMouseOut"), String.Empty), _
+                                        Utils.Nz(MyDataRow("OnClick"), String.Empty))
+                            Dim secObjInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(CType(MyDataRow("ID"), Integer), CType(MyDataRow("Title"), String), Utils.Nz(MyDataRow("TitleAdminArea"), CType(Nothing, String)), Utils.Nz(MyDataRow("Remarks"), CType(Nothing, String)), CType(MyDataRow("ModifiedBy"), Long), Utils.Nz(MyDataRow("ModifiedOn"), CType(Nothing, Date)), CType(MyDataRow("ReleasedBy"), Long), Utils.Nz(MyDataRow("ReleasedOn"), CType(Nothing, Date)), Utils.Nz(MyDataRow("AppDisabled"), False), Utils.Nz(MyDataRow("AppDeleted"), False), Utils.Nz(MyDataRow("AuthsAsAppID"), 0), Utils.Nz(MyDataRow("SystemAppType"), 0), Utils.Nz(Utils.CellValueIfColumnExists(MyDataRow, "RequiredUserProfileFlags"), ""), Utils.Nz(Utils.CellValueIfColumnExists(MyDataRow, "RequiredUserProfileFlagsRemarks"), ""), NavInfo, _WebManager)
+                            Dim secObjAuth As New SecurityObjectAuthorizationForGroup(_WebManager, CType(MyDataRow("AuthorizationID"), Integer), CType(MyDataRow("AuthorizationGroupID"), Integer), CType(MyDataRow("AuthorizationSecurityObjectID"), Integer), Utils.Nz(MyDataRow("AuthorizationServerGroupID"), 0), Me, secObjInfo, Nothing, Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False), Utils.Nz(MyDataRow("IsDenyRule"), False), CType(MyDataRow("AuthorizationReleasedOn"), DateTime), CType(MyDataRow("AuthorizationReleasedBy"), Integer))
+                            If Utils.Nz(MyDataRow("IsDenyRule"), False) = False Then
+                                If Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False) = True Then
+                                    AllowRuleAuthsIsDev.Add(secObjAuth)
+                                Else
+                                    AllowRuleAuthsNonDev.Add(secObjAuth)
+                                End If
+                            Else
+                                If Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False) = True Then
+                                    DenyRuleAuthsIsDev.Add(secObjAuth)
+                                Else
+                                    DenyRuleAuthsNonDev.Add(secObjAuth)
+                                End If
+                            End If
+                        Next
+                        _AuthorizationsByRule = New Security.GroupAuthorizationItemsByRuleForGroups( _
+                            _WebManager.CurrentServerInfo.ParentServerGroupID, _
+                            CType(AllowRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
+                            CType(AllowRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
+                            CType(DenyRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
+                            CType(DenyRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()))
+                    End If
+                    Return _AuthorizationsByRule
+                End Get
+            End Property
+
+#Region "Modification/Release information"
+            Dim _ModifiedBy_UserID As Long
+            Dim _ModifiedBy_UserInfo As UserInformation
+            Dim _ModifiedOn As DateTime
+            Dim _ReleasedBy_UserID As Long
+            Dim _ReleasedBy_UserInfo As UserInformation
+            Dim _ReleasedOn As DateTime
+
+            ''' <summary>
+            '''     Last modification by this user
+            ''' </summary>
+            Public Property ModifiedBy_UserID() As Long
+                Get
+                    Return CType(_ModifiedBy_UserID, Long)
+                End Get
+                Set(ByVal Value As Long)
+                    _ModifiedBy_UserID = Value
+                    _ModifiedBy_UserInfo = Nothing
+                End Set
+            End Property
+            ''' <summary>
+            '''     Last modification by this user
+            ''' </summary>
+            Public Property ModifiedBy_UserInfo() As UserInformation
+                Get
+                    If _ModifiedBy_UserInfo Is Nothing Then
+                        _ModifiedBy_UserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(_ModifiedBy_UserID, _WebManager, True)
+                    End If
+                    Return _ModifiedBy_UserInfo
+                End Get
+                Set(ByVal Value As UserInformation)
+                    _ModifiedBy_UserInfo = Value
+                    _ModifiedBy_UserID = _ModifiedBy_UserInfo.ID
+                End Set
+            End Property
+            ''' <summary>
+            '''     The date and time of the last modification
+            ''' </summary>
+            Public Property ModifiedOn() As DateTime
+                Get
+                    Return _ModifiedOn
+                End Get
+                Set(ByVal Value As DateTime)
+                    _ModifiedOn = Value
+                End Set
+            End Property
+            ''' <summary>
+            '''     The release has been done by this user
+            ''' </summary>
+            Public Property ReleasedBy_UserID() As Long
+                Get
+                    Return CType(_ReleasedBy_UserID, Long)
+                End Get
+                Set(ByVal Value As Long)
+                    _ReleasedBy_UserID = Value
+                    _ReleasedBy_UserInfo = Nothing
+                End Set
+            End Property
+            ''' <summary>
+            '''     The release has been done by this user
+            ''' </summary>
+            Public Property ReleasedBy_UserInfo() As UserInformation
+                Get
+                    If _ReleasedBy_UserInfo Is Nothing Then
+                        _ReleasedBy_UserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(_ReleasedBy_UserID, _WebManager, True)
+                    End If
+                    Return _ReleasedBy_UserInfo
+                End Get
+                Set(ByVal Value As UserInformation)
+                    _ReleasedBy_UserInfo = Value
+                    _ReleasedBy_UserID = _ReleasedBy_UserInfo.ID
+                End Set
+            End Property
+            ''' <summary>
+            '''     The release has been done on this date/time
+            ''' </summary>
+            Public Property ReleasedOn() As DateTime
+                Get
+                    Return _ReleasedOn
+                End Get
+                Set(ByVal Value As DateTime)
+                    _ReleasedOn = Value
+                End Set
+            End Property
+#End Region
 
         End Class
 
         Public Class SecurityObjectAuthorizationForUser
 
-            Friend Sub New(ByVal webmanager As WMSystem, ByVal authorizationID As Integer, ByVal userID As Long, ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, ByVal isDeveloperAuthorization As Boolean, ByVal releasedOn As DateTime, ByVal releasedBy As Long)
-                Me.New(webmanager, authorizationID, userID, securityObjectID, serverGroupID, Nothing, Nothing, Nothing, isDeveloperAuthorization, releasedOn, releasedBy)
+            Friend Sub New(ByVal webmanager As WMSystem, ByVal authorizationID As Integer, ByVal userID As Long, ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, ByVal isDeveloperAuthorization As Boolean, isDenyRule As Boolean, ByVal releasedOn As DateTime, ByVal releasedBy As Long)
+                Me.New(webmanager, authorizationID, userID, securityObjectID, serverGroupID, Nothing, Nothing, Nothing, isDeveloperAuthorization, isDenyRule, releasedOn, releasedBy)
             End Sub
 
-            Friend Sub New(ByVal webmanager As WMSystem, ByVal authorizationID As Integer, ByVal userID As Long, ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, ByVal userInfo As UserInformation, ByVal securityObjectInfo As SecurityObjectInformation, ByVal serverGroupInfo As ServerGroupInformation, ByVal isDeveloperAuthorization As Boolean, ByVal releasedOn As DateTime, ByVal releasedBy As Long)
+            Friend Sub New(ByVal webmanager As WMSystem, ByVal authorizationID As Integer, ByVal userID As Long, ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, ByVal userInfo As UserInformation, ByVal securityObjectInfo As SecurityObjectInformation, ByVal serverGroupInfo As ServerGroupInformation, ByVal isDeveloperAuthorization As Boolean, isDenyRule As Boolean, ByVal releasedOn As DateTime, ByVal releasedBy As Long)
                 Me._WebManager = webmanager
                 Me.AuthorizationID = authorizationID
                 Me.UserID = userID
@@ -12835,6 +13180,7 @@ Namespace CompuMaster.camm.WebManager
                 Me.IsDeveloperAuthorization = isDeveloperAuthorization
                 Me.ReleasedOn = releasedOn
                 Me.ReleasedByUserID = releasedBy
+                Me.IsDenyRule = isDenyRule
             End Sub
 
             Private _WebManager As WMSystem
@@ -12948,15 +13294,25 @@ Namespace CompuMaster.camm.WebManager
                 End Set
             End Property
 
+            Private _IsDenyRule As Boolean
+            Public Property IsDenyRule() As Boolean
+                Get
+                    Return _IsDenyRule
+                End Get
+                Set(ByVal value As Boolean)
+                    _IsDenyRule = value
+                End Set
+            End Property
+
         End Class
 
         Public Class SecurityObjectAuthorizationForGroup
 
-            Friend Sub New(ByVal webmanager As WMSystem, ByVal authorizationID As Integer, ByVal groupID As Integer, ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, ByVal releasedOn As DateTime, ByVal releasedBy As Long)
-                Me.New(webmanager, authorizationID, groupID, securityObjectID, serverGroupID, Nothing, Nothing, Nothing, releasedOn, releasedBy)
+            Friend Sub New(ByVal webmanager As WMSystem, ByVal authorizationID As Integer, ByVal groupID As Integer, ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, ByVal isDeveloperAuthorization As Boolean, isDenyRule As Boolean, ByVal releasedOn As DateTime, ByVal releasedBy As Long)
+                Me.New(webmanager, authorizationID, groupID, securityObjectID, serverGroupID, Nothing, Nothing, Nothing, isDeveloperAuthorization, isDenyRule, releasedOn, releasedBy)
             End Sub
 
-            Friend Sub New(ByVal webmanager As WMSystem, ByVal authorizationID As Integer, ByVal groupID As Integer, ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, ByVal groupInfo As GroupInformation, ByVal securityObjectInfo As SecurityObjectInformation, ByVal serverGroupInfo As ServerGroupInformation, ByVal releasedOn As DateTime, ByVal releasedBy As Long)
+            Friend Sub New(ByVal webmanager As WMSystem, ByVal authorizationID As Integer, ByVal groupID As Integer, ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, ByVal groupInfo As GroupInformation, ByVal securityObjectInfo As SecurityObjectInformation, ByVal serverGroupInfo As ServerGroupInformation, ByVal isDeveloperAuthorization As Boolean, isDenyRule As Boolean, ByVal releasedOn As DateTime, ByVal releasedBy As Long)
                 Me._WebManager = webmanager
                 Me.AuthorizationID = authorizationID
                 Me.GroupID = groupID
@@ -12967,6 +13323,8 @@ Namespace CompuMaster.camm.WebManager
                 Me.ServerGroupInfo = serverGroupInfo
                 Me.ReleasedOn = releasedOn
                 Me.ReleasedByUserID = releasedBy
+                Me.IsDenyRule = isDenyRule
+                Me.IsDevRule = isDeveloperAuthorization
             End Sub
 
             Private _WebManager As WMSystem
@@ -13070,6 +13428,25 @@ Namespace CompuMaster.camm.WebManager
                 End Set
             End Property
 
+            Private _IsDevRule As Boolean
+            Public Property IsDevRule() As Boolean
+                Get
+                    Return _IsDevRule
+                End Get
+                Set(ByVal value As Boolean)
+                    _IsDevRule = value
+                End Set
+            End Property
+
+            Private _IsDenyRule As Boolean
+            Public Property IsDenyRule() As Boolean
+                Get
+                    Return _IsDenyRule
+                End Get
+                Set(ByVal value As Boolean)
+                    _IsDenyRule = value
+                End Set
+            End Property
         End Class
 
         ''' -----------------------------------------------------------------------------
@@ -13144,8 +13521,7 @@ Namespace CompuMaster.camm.WebManager
             Public Sub New(ByVal ServerGroupID As Integer, ByRef WebManager As WMSystem)
                 _WebManager = WebManager
                 Dim MyConn As New SqlConnection(WebManager.ConnectionString)
-                Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from system_servergroups where id = @ID", MyConn)
+                Dim MyCmd As New SqlCommand("select * from system_servergroups where id = @ID", MyConn)
                 MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = ServerGroupID
                 Dim MyReader As SqlDataReader = Nothing
                 Try
@@ -13639,8 +14015,7 @@ Namespace CompuMaster.camm.WebManager
             ''' -----------------------------------------------------------------------------
             Private Sub LoadServerInfoFromDatabase(ByVal ServerID As Integer)
                 Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from system_servers where id = @ID", MyConn)
+                Dim MyCmd As New SqlCommand("select * from system_servers where id = @ID", MyConn)
                 MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = ServerID
                 Dim MyReader As SqlDataReader = Nothing
                 Try
@@ -13944,12 +14319,19 @@ Namespace CompuMaster.camm.WebManager
                 Dim _GroupInfo As GroupInformation
                 Dim _ServerGroupID As Integer
                 Dim _ServerGroupInfo As ServerGroupInformation
-                Sub New(ByRef WebManager As WMSystem, ByVal ID As Integer, ByVal SecurityObjectID As Integer, ByVal GroupID As Integer, ByVal ServerGroupID As Integer)
+                Dim _IsDenyRule As Boolean
+                Dim _IsDevRule As Boolean
+
+                Friend Sub New(ByRef WebManager As WMSystem, ByVal ID As Integer, ByVal SecurityObjectID As Integer, ByVal GroupID As Integer, ByVal ServerGroupID As Integer, IsDevelopmentAuth As Boolean, ReleasedOn As DateTime, ReleasedByUserID As Long, IsDenyRule As Boolean)
                     _WebManager = WebManager
                     _ID = ID
                     _SecurityObjectID = SecurityObjectID
                     _GroupID = GroupID
                     _ServerGroupID = ServerGroupID
+                    _ReleasedBy_UserID = ReleasedByUserID
+                    _ReleasedOn = ReleasedOn
+                    _IsDenyRule = IsDenyRule
+                    _IsDevRule = IsDenyRule
                 End Sub
                 ''' -----------------------------------------------------------------------------
                 ''' <summary>
@@ -14090,6 +14472,77 @@ Namespace CompuMaster.camm.WebManager
                         _ServerGroupInfo = Value
                     End Set
                 End Property
+
+                ''' <summary>
+                ''' Allow-rules GRANT access, Deny-rules DENY the access
+                ''' </summary>
+                ''' <returns></returns>
+                Public Property IsDenyRule() As Boolean
+                    Get
+                        Return _IsDenyRule
+                    End Get
+                    Set(ByVal Value As Boolean)
+                        _IsDenyRule = Value
+                    End Set
+                End Property
+
+                ''' <summary>
+                ''' Allow-rules GRANT access, Deny-rules DENY the access
+                ''' </summary>
+                ''' <returns></returns>
+                Public Property IsDevRule() As Boolean
+                    Get
+                        Return _IsDevRule
+                    End Get
+                    Set(ByVal Value As Boolean)
+                        _IsDevRule = Value
+                    End Set
+                End Property
+
+#Region "Modification/Release information"
+                Dim _ReleasedBy_UserID As Long
+                Dim _ReleasedBy_UserInfo As UserInformation
+                Dim _ReleasedOn As DateTime
+                ''' <summary>
+                '''     The release has been done by this user
+                ''' </summary>
+                Public Property ReleasedBy_UserID() As Long
+                    Get
+                        Return CType(_ReleasedBy_UserID, Long)
+                    End Get
+                    Set(ByVal Value As Long)
+                        _ReleasedBy_UserID = Value
+                        _ReleasedBy_UserInfo = Nothing
+                    End Set
+                End Property
+                ''' <summary>
+                '''     The release has been done by this user
+                ''' </summary>
+                Public Property ReleasedBy_UserInfo() As UserInformation
+                    Get
+                        If _ReleasedBy_UserInfo Is Nothing Then
+                            _ReleasedBy_UserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(_ReleasedBy_UserID, _WebManager, True)
+                        End If
+                        Return _ReleasedBy_UserInfo
+                    End Get
+                    Set(ByVal Value As UserInformation)
+                        _ReleasedBy_UserInfo = Value
+                        _ReleasedBy_UserID = _ReleasedBy_UserInfo.ID
+                    End Set
+                End Property
+                ''' <summary>
+                '''     The release has been done on this date/time
+                ''' </summary>
+                Public Property ReleasedOn() As DateTime
+                    Get
+                        Return _ReleasedOn
+                    End Get
+                    Set(ByVal Value As DateTime)
+                        _ReleasedOn = Value
+                    End Set
+                End Property
+#End Region
+
             End Class
             ''' -----------------------------------------------------------------------------
             ''' Project	 : camm WebManager
@@ -14117,13 +14570,18 @@ Namespace CompuMaster.camm.WebManager
                 Dim _ServerGroupID As Integer
                 Dim _ServerGroupInfo As ServerGroupInformation
                 Dim _AlsoVisibleIfDisabled As Boolean
-                Sub New(ByRef WebManager As WMSystem, ByVal ID As Integer, ByVal SecurityObjectID As Integer, ByVal UserID As Integer, ByVal ServerGroupID As Integer, ByVal AlsoVisibleIfDisabled As Boolean)
+                Dim _IsDenyRule As Boolean
+
+                Friend Sub New(ByRef WebManager As WMSystem, ByVal ID As Integer, ByVal SecurityObjectID As Integer, ByVal UserID As Long, ByVal ServerGroupID As Integer, ByVal AlsoVisibleIfDisabled As Boolean, ReleasedOn As DateTime, ReleasedByUserID As Long, IsDenyRule As Boolean)
                     _WebManager = WebManager
                     _ID = ID
                     _SecurityObjectID = SecurityObjectID
                     _UserID = UserID
                     _ServerGroupID = ServerGroupID
                     _AlsoVisibleIfDisabled = AlsoVisibleIfDisabled
+                    _ReleasedBy_UserID = ReleasedByUserID
+                    _ReleasedOn = ReleasedOn
+                    _IsDenyRule = IsDenyRule
                 End Sub
                 ''' -----------------------------------------------------------------------------
                 ''' <summary>
@@ -14162,6 +14620,18 @@ Namespace CompuMaster.camm.WebManager
                     End Get
                     Set(ByVal Value As Boolean)
                         _AlsoVisibleIfDisabled = Value
+                    End Set
+                End Property
+                ''' <summary>
+                ''' Allow-rules GRANT access, Deny-rules DENY the access
+                ''' </summary>
+                ''' <returns></returns>
+                Public Property IsDenyRule() As Boolean
+                    Get
+                        Return _IsDenyRule
+                    End Get
+                    Set(ByVal Value As Boolean)
+                        _IsDenyRule = Value
                     End Set
                 End Property
                 ''' -----------------------------------------------------------------------------
@@ -14284,6 +14754,51 @@ Namespace CompuMaster.camm.WebManager
                         _ServerGroupInfo = Value
                     End Set
                 End Property
+
+#Region "Modification/Release information"
+                Dim _ReleasedBy_UserID As Long
+                Dim _ReleasedBy_UserInfo As UserInformation
+                Dim _ReleasedOn As DateTime
+                ''' <summary>
+                '''     The release has been done by this user
+                ''' </summary>
+                Public Property ReleasedBy_UserID() As Long
+                    Get
+                        Return CType(_ReleasedBy_UserID, Long)
+                    End Get
+                    Set(ByVal Value As Long)
+                        _ReleasedBy_UserID = Value
+                        _ReleasedBy_UserInfo = Nothing
+                    End Set
+                End Property
+                ''' <summary>
+                '''     The release has been done by this user
+                ''' </summary>
+                Public Property ReleasedBy_UserInfo() As UserInformation
+                    Get
+                        If _ReleasedBy_UserInfo Is Nothing Then
+                            _ReleasedBy_UserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(_ReleasedBy_UserID, _WebManager, True)
+                        End If
+                        Return _ReleasedBy_UserInfo
+                    End Get
+                    Set(ByVal Value As UserInformation)
+                        _ReleasedBy_UserInfo = Value
+                        _ReleasedBy_UserID = _ReleasedBy_UserInfo.ID
+                    End Set
+                End Property
+                ''' <summary>
+                '''     The release has been done on this date/time
+                ''' </summary>
+                Public Property ReleasedOn() As DateTime
+                    Get
+                        Return _ReleasedOn
+                    End Get
+                    Set(ByVal Value As DateTime)
+                        _ReleasedOn = Value
+                    End Set
+                End Property
+#End Region
+
             End Class
             Dim _AuthorizedGroups As New Collection
             Dim _AuthorizedUsers As New Collection
@@ -14397,8 +14912,7 @@ Namespace CompuMaster.camm.WebManager
                     Dim filter As String
 
                     'Fill the list of authorized users
-                    MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM [dbo].[ApplicationsRightsByUser] WHERE 1 = 1", MyConn)
+                    MyCmd = New SqlCommand("SELECT * FROM [dbo].[ApplicationsRightsByUser] WHERE 1 = 1", MyConn)
                     filter = Nothing
                     If securityObjectID <> Nothing Then
                         filter &= vbNewLine & "AND ID_Application = @IDApplication"
@@ -14425,18 +14939,26 @@ Namespace CompuMaster.camm.WebManager
                         Else
                             MyServerGroup = Nothing
                         End If
+                        Dim MyIsDenyRule As Boolean
+                        If MyReader.GetSchemaTable.Columns.Contains("IsDenyRule") Then
+                            MyIsDenyRule = Utils.Nz(MyReader("IsDenyRule"), False)
+                        Else
+                            MyIsDenyRule = Nothing
+                        End If
                         _AuthorizedUsers.Add(New UserAuthorizationInformation(_WebManager, _
                             CType(MyReader("ID"), Integer), _
                             CType(MyReader("ID_Application"), Integer), _
-                            CType(MyReader("ID_GroupOrPerson"), Integer), _
+                            CType(MyReader("ID_GroupOrPerson"), Long), _
                             MyServerGroup, _
-                            Utils.Nz(MyReader("DevelopmentTeamMember"), False)))
+                            Utils.Nz(MyReader("DevelopmentTeamMember"), False), _
+                            CType(MyReader("ReleasedOn"), DateTime), _
+                            CType(MyReader("ReleasedBy"), Long), _
+                            MyIsDenyRule))
                     End While
                     MyReader.Close()
 
                     'Fill the list of authorized groups
-                    MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM [dbo].[ApplicationsRightsByGroup] WHERE 1 = 1", MyConn)
+                    MyCmd = New SqlCommand("SELECT * FROM [dbo].[ApplicationsRightsByGroup] WHERE 1 = 1", MyConn)
                     filter = Nothing
                     If securityObjectID <> Nothing Then
                         filter &= vbNewLine & "AND ID_Application = @IDApplication"
@@ -14463,11 +14985,21 @@ Namespace CompuMaster.camm.WebManager
                         Else
                             MyServerGroup = Nothing
                         End If
+                        Dim MyIsDenyRule As Boolean
+                        If MyReader.GetSchemaTable.Columns.Contains("IsDenyRule") Then
+                            MyIsDenyRule = Utils.Nz(MyReader("IsDenyRule"), False)
+                        Else
+                            MyIsDenyRule = Nothing
+                        End If
                         _AuthorizedGroups.Add(New GroupAuthorizationInformation(_WebManager, _
                             CType(MyReader("ID"), Integer), _
                             CType(MyReader("ID_Application"), Integer), _
                             CType(MyReader("ID_GroupOrPerson"), Integer), _
-                            MyServerGroup))
+                            MyServerGroup, _
+                            Utils.Nz(MyReader("DevelopmentTeamMember"), False), _
+                            CType(MyReader("ReleasedOn"), DateTime), _
+                            CType(MyReader("ReleasedBy"), Long), _
+                            MyIsDenyRule))
                     End While
                     MyReader.Close()
 
@@ -14690,6 +15222,10 @@ Namespace CompuMaster.camm.WebManager
             End Function
 
             Public Sub AddGroupAuthorization(ByVal GroupID As Integer, ByVal ServerGroupID As Integer, Optional ByVal SecurityObjectID As Integer = Nothing)
+                AddGroupAuthorization(GroupID, ServerGroupID, SecurityObjectID, False, False)
+            End Sub
+
+            Public Sub AddGroupAuthorization(ByVal GroupID As Integer, ByVal ServerGroupID As Integer, ByVal SecurityObjectID As Integer, IsDenyRule As Boolean, IsDevRule As Boolean)
 
                 'Welche SecurityObjectID?
                 Dim MySecurityObjectID As Integer
@@ -14702,22 +15238,30 @@ Namespace CompuMaster.camm.WebManager
                 'Alle Vorbedingungen erfüllt?
                 If MySecurityObjectID = Nothing Then
                     Throw New Exception("Parameter 'SecurityObjectID' required")
-                ElseIf ServerGroupID <> Nothing AndAlso (_DBVersion.Major < 4 OrElse (_DBVersion.Major = 4 AndAlso _DBVersion.Minor < 10)) Then
-                    Throw New Exception("Parameter 'ServerGroupID' not supported by the currently used database version")
                 End If
 
                 'Fill the list of authorized users
                 Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
                 Dim MyCmd As New SqlCommand
                 MyCmd.Connection = MyConn
-                If _DBVersion.CompareTo(MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
-                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND ID_ServerGroup = @IDServerGroup" & vbNewLine & _
-                                        "INSERT INTO [dbo].[ApplicationsRightsByGroup] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, ID_ServerGroup) VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate(), @IDServerGroup)"
+                If _DBVersion.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND IsNull(ID_ServerGroup, 0) = @IDServerGroup AND IsDenyRule = @IsDenyRule AND DevelopmentTeamMember = @IsDevRule" & vbNewLine & _
+                                        "INSERT INTO [dbo].[ApplicationsRightsByGroup] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, ID_ServerGroup, DevelopmentTeamMember, IsDenyRule) " & _
+                                        "VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate(), @IDServerGroup, @IsDevRule, @IsDenyRule)"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = GroupID
-                    MyCmd.Parameters.Add("@IDServerGroup", SqlDbType.Int).Value = IIf(ServerGroupID = Nothing, DBNull.Value, ServerGroupID)
+                    MyCmd.Parameters.Add("@IDServerGroup", SqlDbType.Int).Value = ServerGroupID
                     MyCmd.Parameters.Add("@IDCurUser", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Code)
+                    MyCmd.Parameters.Add("@IsDevRule", SqlDbType.Bit).Value = IsDevRule
+                    MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = IsDenyRule
                 Else
+                    If ServerGroupID <> Nothing Then
+                        Throw New Exception("Parameter 'ServerGroupID' not supported by the currently used database version")
+                    ElseIf IsDenyRule = True Then
+                        Throw New Exception("Parameter 'IsDenyRule' not supported by the currently used database version")
+                    ElseIf IsDevRule = True Then
+                        Throw New Exception("Parameter 'IsDevRule' not supported by the currently used database version")
+                    End If
                     MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson" & vbNewLine & _
                                         "INSERT INTO [dbo].[ApplicationsRightsByGroup] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn) VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate())"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
@@ -14748,6 +15292,10 @@ Namespace CompuMaster.camm.WebManager
 
             End Sub
             Public Sub AddUserAuthorization(ByRef UserInfo As UserInformation, ByVal ServerGroupID As Integer, Optional ByVal AlsoVisibleWhileSecurityObjectIsDisabled As Boolean = False, Optional ByVal SecurityObjectID As Integer = Nothing, Optional ByVal Notifications As WMNotifications = Nothing)
+                AddUserAuthorization(UserInfo, False, ServerGroupID, AlsoVisibleWhileSecurityObjectIsDisabled, SecurityObjectID, Notifications)
+            End Sub
+
+            Public Sub AddUserAuthorization(ByRef UserInfo As UserInformation, IsDenyRule As Boolean, ByVal ServerGroupID As Integer, Optional ByVal AlsoVisibleWhileSecurityObjectIsDisabled As Boolean = False, Optional ByVal SecurityObjectID As Integer = Nothing, Optional ByVal Notifications As WMNotifications = Nothing)
 
                 'mycmd.CommandText = "SELECT * FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDApplication AND ID_ServerGroup = @IDServerGroup"
                 'Welches SecurityObjectID?
@@ -14761,23 +15309,27 @@ Namespace CompuMaster.camm.WebManager
                 'Alle Vorbedingungen erfüllt?
                 If MySecurityObjectID = Nothing Then
                     Throw New Exception("Parameter 'SecurityObjectID' required")
-                ElseIf ServerGroupID <> Nothing AndAlso (_DBVersion.Major < 4 OrElse (_DBVersion.Major = 4 AndAlso _DBVersion.Minor < 10)) Then
-                    Throw New Exception("Parameter 'ServerGroupID' not supported by the currently used database version")
                 End If
 
                 'Fill the list of authorized users
                 Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
                 Dim MyCmd As New SqlCommand
                 MyCmd.Connection = MyConn
-                If _DBVersion.CompareTo(MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
-                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND ID_ServerGroup = @IDServerGroup AND DevelopmentTeamMember = @DevelopmentTeamMember" & vbNewLine & _
-                                        "INSERT INTO [dbo].[ApplicationsRightsByUser] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, ID_ServerGroup, DevelopmentTeamMember) VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate(), @IDServerGroup, @DevelopmentTeamMember)"
+                If _DBVersion.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND IsNull(ID_ServerGroup, 0) = @IDServerGroup AND DevelopmentTeamMember = @DevelopmentTeamMember AND IsDenyRule = @IsDenyRule" & vbNewLine & _
+                                        "INSERT INTO [dbo].[ApplicationsRightsByUser] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, ID_ServerGroup, DevelopmentTeamMember, IsDenyRule) VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate(), @IDServerGroup, @DevelopmentTeamMember, @IsDenyRule)"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Code)
-                    MyCmd.Parameters.Add("@IDServerGroup", SqlDbType.Int).Value = IIf(ServerGroupID = Nothing, DBNull.Value, ServerGroupID)
+                    MyCmd.Parameters.Add("@IDServerGroup", SqlDbType.Int).Value = ServerGroupID
                     MyCmd.Parameters.Add("@IDCurUser", SqlDbType.Int).Value = UserInfo.ID
                     MyCmd.Parameters.Add("@DevelopmentTeamMember", SqlDbType.Bit).Value = AlsoVisibleWhileSecurityObjectIsDisabled
+                    MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = IsDenyRule
                 Else
+                    If ServerGroupID <> Nothing Then
+                        Throw New Exception("Parameter 'ServerGroupID' not supported by the currently used database version")
+                    ElseIf IsDenyRule = True Then
+                        Throw New Exception("Parameter 'IsDenyRule' not supported by the currently used database version")
+                    End If
                     MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND DevelopmentTeamMember = @DevelopmentTeamMember" & vbNewLine & _
                                         "INSERT INTO [dbo].[ApplicationsRightsByUser] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, DevelopmentTeamMember) VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate(), @DevelopmentTeamMember)"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
@@ -14830,18 +15382,25 @@ Namespace CompuMaster.camm.WebManager
             Public Sub AddUserAuthorization(ByVal UserID As Long, ByVal ServerGroupID As Integer, Optional ByVal AlsoVisibleWhileSecurityObjectIsDisabled As Boolean = False, Optional ByVal SecurityObjectID As Integer = Nothing, Optional ByVal Notifications As WMNotifications = Nothing)
                 AddUserAuthorization(New CompuMaster.camm.WebManager.WMSystem.UserInformation(UserID, _WebManager), ServerGroupID, AlsoVisibleWhileSecurityObjectIsDisabled, SecurityObjectID, Notifications)
             End Sub
-            ' TODO: change to sub
+
             Public Function RemoveGroupAuthorization(ByVal GroupID As Integer, ByVal ServerGroupID As Integer) As Object
+                RemoveGroupAuthorization(GroupID, ServerGroupID, False, False)
+                Return Nothing
+            End Function
+
+            Public Sub RemoveGroupAuthorization(ByVal GroupID As Integer, ByVal ServerGroupID As Integer, IsDevRule As Boolean, IsDenyRule As Boolean)
 
                 'Fill the list of authorized users
                 Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
                 Dim MyCmd As New SqlCommand
                 MyCmd.Connection = MyConn
-                If _DBVersion.CompareTo(MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
-                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND ID_ServerGroup = @IDServerGroup"
+                If _DBVersion.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND IsNull(ID_ServerGroup, 0) = @IDServerGroup AND DevelopmentTeamMember = @IsDevRule AND IsDenyRule = @IsDenyRule"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = GroupID
-                    MyCmd.Parameters.Add("@IDServerGroup", SqlDbType.Int).Value = IIf(ServerGroupID = Nothing, DBNull.Value, ServerGroupID)
+                    MyCmd.Parameters.Add("@IDServerGroup", SqlDbType.Int).Value = ServerGroupID
+                    MyCmd.Parameters.Add("@IsDevRule", SqlDbType.Bit).Value = IsDevRule
+                    MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = IsDenyRule
                 Else
                     MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
@@ -14867,8 +15426,8 @@ Namespace CompuMaster.camm.WebManager
                 'Internes Objekt aktualisieren
                 _ReloadData = True
 
-                Return Result
-            End Function
+                'Return Result
+            End Sub
             ' TODO: change to sub
             Public Function RemoveGroupAuthorization(ByVal AuthorizationID As Integer) As Object
 
@@ -14906,17 +15465,23 @@ Namespace CompuMaster.camm.WebManager
             End Function
             ' TODO: change to sub
             Public Function RemoveUserAuthorization(ByVal UserID As Long, ByVal ServerGroupID As Integer, Optional ByVal AlsoVisibleWhileSecurityObjectIsDisabled As Boolean = False) As Object
+                RemoveUserAuthorization(UserID, ServerGroupID, AlsoVisibleWhileSecurityObjectIsDisabled, False)
+                Return Nothing
+            End Function
+
+            Public Sub RemoveUserAuthorization(ByVal UserID As Long, ByVal ServerGroupID As Integer, ByVal AlsoVisibleWhileSecurityObjectIsDisabled As Boolean, IsDenyRule As Boolean)
 
                 'Fill the list of authorized users
                 Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
                 Dim MyCmd As New SqlCommand
                 MyCmd.Connection = MyConn
-                If _DBVersion.CompareTo(MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
-                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND ID_ServerGroup = @IDServerGroup AND DevelopmentTeamMember = @DevelopmentTeamMember"
+                If _DBVersion.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND IsNull(ID_ServerGroup, 0) = @IDServerGroup AND DevelopmentTeamMember = @DevelopmentTeamMember AND IsDenyRule = @IsDenyRule"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = UserID
-                    MyCmd.Parameters.Add("@IDServerGroup", SqlDbType.Int).Value = IIf(ServerGroupID = Nothing, DBNull.Value, ServerGroupID)
+                    MyCmd.Parameters.Add("@IDServerGroup", SqlDbType.Int).Value = ServerGroupID
                     MyCmd.Parameters.Add("@DevelopmentTeamMember", SqlDbType.Bit).Value = AlsoVisibleWhileSecurityObjectIsDisabled
+                    MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = IsDenyRule
                 Else
                     MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND DevelopmentTeamMember = @DevelopmentTeamMember"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
@@ -14943,9 +15508,9 @@ Namespace CompuMaster.camm.WebManager
                 'Internes Objekt aktualisieren
                 _ReloadData = True
 
-                Return Result
+                'Return Result
 
-            End Function
+            End Sub
             ' TODO: change to sub
             Public Function RemoveUserAuthorization(ByVal AuthorizationID As Integer) As Object
 
@@ -15014,6 +15579,10 @@ Namespace CompuMaster.camm.WebManager
             Dim _ReleasedOn As DateTime
             Dim _Remarks As String
             Dim _DBVersion As Version
+            Dim _RequiredFlags As String
+            Dim _RequiredFlagsRemarks As String
+
+            'TODO: Property AdministrationPrivileges As AdministrationPrivilegesInformation
 
             Public Sub New(ByVal SecurityObjectID As Integer, ByRef WebManager As WMSystem, Optional ByVal AlsoSearchForDeletedSecurityObjects As Boolean = False)
                 _WebManager = WebManager
@@ -15035,8 +15604,7 @@ Namespace CompuMaster.camm.WebManager
                 Try
                     MyConn.Open()
 
-                    MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM [dbo].[Applications_CurrentAndInactiveOnes] WHERE ID = @ID", MyConn)
+                    MyCmd = New SqlCommand("SELECT * FROM [dbo].[Applications_CurrentAndInactiveOnes] WHERE ID = @ID", MyConn)
                     MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = SecurityObjectID
                     MyReader = MyCmd.ExecuteReader()
                     If MyReader.Read AndAlso (AlsoSearchForDeletedSecurityObjects = True OrElse Utils.Nz(MyReader("AppDeleted"), False) = False) Then
@@ -15052,6 +15620,38 @@ Namespace CompuMaster.camm.WebManager
                         _ReleasedOn = Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime))
                         _Remarks = Utils.Nz(MyReader("Remarks"), CType(Nothing, String))
                         _SystemType = Utils.Nz(MyReader("SystemAppType"), 0)
+                        _RequiredFlags = Utils.Nz(MyReader("RequiredUserProfileFlags"), CType(Nothing, String))
+                        If Setup.DatabaseUtils.Version(WebManager, True).Build >= 185 Then
+                            _RequiredFlagsRemarks = Utils.Nz(MyReader("RequiredUserProfileFlagsRemarks"), CType(Nothing, String))
+                        End If
+                        _NavigationItems = New Security.NavigationInformation() {New Security.NavigationInformation( _
+                            _ID, _
+                            Me, _
+                            Utils.Nz(MyReader("Level1Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level2Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level3Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level4Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level5Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level6Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level1TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level2TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level3TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level4TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level5TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level6TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("NavURL"), String.Empty), _
+                            Utils.Nz(MyReader("NavFrame"), String.Empty), _
+                            Utils.Nz(MyReader("NavTooltipText"), String.Empty), _
+                            Utils.Nz(MyReader("AddLanguageID2URL"), False), _
+                            Utils.Nz(MyReader("LanguageID"), 0), _
+                            Utils.Nz(MyReader("LocationID"), 0), _
+                            Utils.Nz(MyReader("Sort"), 0), _
+                            Utils.Nz(MyReader("IsNew"), False), _
+                            Utils.Nz(MyReader("IsUpdated"), False), _
+                            Utils.Nz(MyReader("ResetIsNewUpdatedStatusOn"), DateTime.MinValue), _
+                            Utils.Nz(MyReader("OnMouseOver"), String.Empty), _
+                            Utils.Nz(MyReader("OnMouseOut"), String.Empty), _
+                            Utils.Nz(MyReader("OnClick"), String.Empty))}
                     Else
                         'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class
                         Dim WorkaroundEx As New Exception("")
@@ -15080,20 +15680,48 @@ Namespace CompuMaster.camm.WebManager
                 End Try
 
             End Sub
-            Friend Sub New(ByVal SecurityObjectID As Integer, ByVal Name As String, ByVal DisplayName As String, ByVal Remarks As String, ByVal ModifiedByUserID As Long, ByVal ModifiedOn As DateTime, ByVal ReleasedByUserID As Long, ByVal ReleasedOn As DateTime, ByVal Disabled As Boolean, ByVal Deleted As Boolean, ByVal InheritedFromSecurityObjectID As Integer, ByVal SystemType As Integer, ByRef WebManager As WMSystem)
-                _WebManager = WebManager
-                _ID = SecurityObjectID
-                _Deleted = Deleted
-                _Disabled = Disabled
-                _DisplayName = DisplayName
-                _InheritFrom_SecurityObjectID = InheritedFromSecurityObjectID
-                _ModifiedBy_UserID = ModifiedByUserID
-                _ModifiedOn = ModifiedOn
-                _Name = Name
-                _ReleasedBy_UserID = ReleasedByUserID
-                _ReleasedOn = ReleasedOn
-                _Remarks = Remarks
-                _SystemType = SystemType
+
+            ''' <summary>
+            ''' Create a SecurityObjectInformation instance
+            ''' </summary>
+            ''' <param name="securityObjectID">ID</param>
+            ''' <param name="name">Name</param>
+            ''' <param name="displayName">Title in administration area</param>
+            ''' <param name="remarks">User's comment on this security object</param>
+            ''' <param name="modifiedByUserID">Who modified this item last time</param>
+            ''' <param name="modifiedOn">When has this item been modified</param>
+            ''' <param name="releasedByUserID">Who released this item last time</param>
+            ''' <param name="releasedOn">When has this item been released</param>
+            ''' <param name="disabled">Is this item enabled (active) or disabled (only accessible with development authorizations)</param>
+            ''' <param name="deleted">It this security object deleted</param>
+            ''' <param name="inheritedFromSecurityObjectID">An ID of another security object whose authorizations apply also to this one</param>
+            ''' <param name="systemType">A type value for system purposes as well as for custom purposes (0 for normal items, 1 for master server items, 2 for administration server items, negative values for custom values)</param>
+            ''' <param name="requiredFlags">Comma-separated list of required flag names/definitions</param>
+            ''' <param name="requiredFlagsRemarks">Remarks on required flags</param>
+            ''' <param name="navigationItems">Navigation items related to this SecurityObject</param>
+            ''' <param name="webManager">A reference to a cammWebManager instance</param>
+            Friend Sub New(ByVal securityObjectID As Integer, ByVal name As String, ByVal displayName As String, ByVal remarks As String, ByVal modifiedByUserID As Long, ByVal modifiedOn As DateTime, ByVal releasedByUserID As Long, ByVal releasedOn As DateTime, ByVal disabled As Boolean, ByVal deleted As Boolean, ByVal inheritedFromSecurityObjectID As Integer, ByVal systemType As Integer, requiredFlags As String, requiredFlagsRemarks As String, navigationItems As Security.NavigationInformation, webManager As WMSystem)
+                _WebManager = webManager
+                _ID = securityObjectID
+                _Deleted = deleted
+                _Disabled = disabled
+                _DisplayName = displayName
+                _InheritFrom_SecurityObjectID = inheritedFromSecurityObjectID
+                _ModifiedBy_UserID = modifiedByUserID
+                _ModifiedOn = modifiedOn
+                _Name = name
+                _ReleasedBy_UserID = releasedByUserID
+                _ReleasedOn = releasedOn
+                _Remarks = remarks
+                _SystemType = systemType
+                _RequiredFlags = requiredFlags
+                _RequiredFlagsRemarks = requiredFlagsRemarks
+                If navigationItems.SecurityObjectID = 0 AndAlso navigationItems.SecurityObjectInfo Is Nothing Then
+                    navigationItems.SetSecurityObjectInfoInternal(Me)
+                Else
+                    Throw New NotSupportedException("NavSplit feature not yet supported")
+                End If
+                _NavigationItems = New Security.NavigationInformation() {navigationItems}
             End Sub
 
             ''' -----------------------------------------------------------------------------
@@ -15112,6 +15740,11 @@ Namespace CompuMaster.camm.WebManager
                     Return _ID
                 End Get
             End Property
+
+            <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Friend Sub SetIDInternal(value As Integer)
+                _ID = value
+            End Sub
+
             ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The name of this security object
@@ -15159,11 +15792,38 @@ Namespace CompuMaster.camm.WebManager
                     End If
                 End Set
             End Property
+
+            ''' <summary>
+            ''' Comma-separated list of reqired flags/definitions
+            ''' </summary>
+            ''' <returns></returns>
+            Public Property RequiredFlags() As String
+                Get
+                    Return _RequiredFlags
+                End Get
+                Set(ByVal Value As String)
+                    _RequiredFlags = Value
+                End Set
+            End Property
+
+            ''' <summary>
+            ''' User comments on required flags
+            ''' </summary>
+            ''' <returns></returns>
+            Public Property RequiredFlagsRemarks() As String
+                Get
+                    Return _RequiredFlagsRemarks
+                End Get
+                Set(ByVal Value As String)
+                    _RequiredFlagsRemarks = Value
+                End Set
+            End Property
+
             ''' -----------------------------------------------------------------------------
             ''' <summary>
-            '''     A system type value, not set in standard scenarios
+            '''     A type value for system purposes as well as for custom purposes (0 for normal items, 1 for master server items, 2 for administration server items, negative values for custom values)
             ''' </summary>
-            ''' <value>Nothing for normal items, 1 for master server items, 2 for administration server items, negative values for custom values</value>
+            ''' <value>0 for normal items, 1 for master server items, 2 for administration server items, negative values for custom values</value>
             ''' <remarks>
             ''' </remarks>
             ''' <history>
@@ -15294,7 +15954,7 @@ Namespace CompuMaster.camm.WebManager
             Public Property ModifiedBy_UserInfo() As UserInformation
                 Get
                     If _ModifiedBy_UserInfo Is Nothing Then
-                        _ModifiedBy_UserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(_ModifiedBy_UserID, _WebManager)
+                        _ModifiedBy_UserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(_ModifiedBy_UserID, _WebManager, True)
                     End If
                     Return _ModifiedBy_UserInfo
                 End Get
@@ -15357,7 +16017,7 @@ Namespace CompuMaster.camm.WebManager
             Public Property ReleasedBy_UserInfo() As UserInformation
                 Get
                     If _ReleasedBy_UserInfo Is Nothing Then
-                        _ReleasedBy_UserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(_ReleasedBy_UserID, _WebManager)
+                        _ReleasedBy_UserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(_ReleasedBy_UserID, _WebManager, True)
                     End If
                     Return _ReleasedBy_UserInfo
                 End Get
@@ -15405,81 +16065,137 @@ Namespace CompuMaster.camm.WebManager
                 End Set
             End Property
 
-            Private _AuthorizationsForUsers As CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForUser() = Nothing
+            Private _NavigationItems As Security.NavigationInformation()
+            Public Property NavigationItems As Security.NavigationInformation()
+                Get
+                    Return _NavigationItems
+                End Get
+                Set(value As Security.NavigationInformation())
+                    _NavigationItems = value
+                End Set
+            End Property
+
+            Private _AuthorizationsForGroupsByRule As Security.GroupAuthorizationItemsByRuleForSecurityObjects
+            ''' <summary>
+            ''' Authorizations of the current user by rule-set
+            ''' </summary>
+            ''' <returns></returns>
+            Public ReadOnly Property AuthorizationsForGroupsByRule As Security.GroupAuthorizationItemsByRuleForSecurityObjects
+                Get
+                    If _AuthorizationsForGroupsByRule Is Nothing Then
+                        Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
+                        Dim MyCmd As New SqlCommand("", MyConn)
+                        MyCmd.CommandType = CommandType.Text
+                        If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                            MyCmd.CommandText = "select applicationsrightsbygroup.ID as AuthorizationID, applicationsrightsbygroup.ID_Application as AuthorizationSecurityObjectID, applicationsrightsbygroup.ID_GroupOrPerson as AuthorizationGroupID, applicationsrightsbygroup.ID_ServerGroup as AuthorizationServerGroupID, applicationsrightsbygroup.ReleasedOn as AuthorizationReleasedOn, applicationsrightsbygroup.ReleasedBy as AuthorizationReleasedBy, applicationsrightsbygroup.DevelopmentTeamMember As AuthorizationIsDeveloper, applicationsrightsbygroup.IsDenyRule from applicationsrightsbygroup inner join Applications_CurrentAndInactiveOnes on applicationsrightsbygroup.id_application = Applications_CurrentAndInactiveOnes.id where applicationsrightsbygroup.id_application = @ID and Applications_CurrentAndInactiveOnes.id is not null"
+                        Else
+                            MyCmd.CommandText = "select applicationsrightsbygroup.ID as AuthorizationID, applicationsrightsbygroup.ID_Application as AuthorizationSecurityObjectID, applicationsrightsbygroup.ID_GroupOrPerson as AuthorizationGroupID, NULL as AuthorizationServerGroupID, applicationsrightsbygroup.ReleasedOn as AuthorizationReleasedOn, applicationsrightsbygroup.ReleasedBy as AuthorizationReleasedBy, CAST(0 As bit) As AuthorizationIsDeveloper, CAST(0 As bit) As IsDenyRule from applicationsrightsbygroup inner join Applications_CurrentAndInactiveOnes on applicationsrightsbygroup.id_application = Applications_CurrentAndInactiveOnes.id where applicationsrightsbygroup.id_application = @ID and Applications_CurrentAndInactiveOnes.id is not null"
+                        End If
+                        MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
+                        Dim SecObjects As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "SecurityObjects")
+                        Dim AllowRuleAuthsNonDev As New ArrayList
+                        Dim AllowRuleAuthsIsDev As New ArrayList
+                        Dim DenyRuleAuthsNonDev As New ArrayList
+                        Dim DenyRuleAuthsIsDev As New ArrayList
+                        For MyCounter As Integer = 0 To SecObjects.Rows.Count - 1
+                            Dim MyDataRow As DataRow = SecObjects.Rows(MyCounter)
+                            Dim secObjAuth As New SecurityObjectAuthorizationForGroup(_WebManager, CType(MyDataRow("AuthorizationID"), Integer), CType(MyDataRow("AuthorizationGroupID"), Integer), CType(MyDataRow("AuthorizationSecurityObjectID"), Integer), Utils.Nz(MyDataRow("AuthorizationServerGroupID"), 0), Nothing, Me, Nothing, Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False), Utils.Nz(MyDataRow("IsDenyRule"), False), CType(MyDataRow("AuthorizationReleasedOn"), DateTime), CType(MyDataRow("AuthorizationReleasedBy"), Integer))
+                            If Utils.Nz(MyDataRow("IsDenyRule"), False) = False Then
+                                If Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False) = True Then
+                                    AllowRuleAuthsIsDev.Add(secObjAuth)
+                                Else
+                                    AllowRuleAuthsNonDev.Add(secObjAuth)
+                                End If
+                            Else
+                                If Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False) = True Then
+                                    DenyRuleAuthsIsDev.Add(secObjAuth)
+                                Else
+                                    DenyRuleAuthsNonDev.Add(secObjAuth)
+                                End If
+                            End If
+                        Next
+                        _AuthorizationsForGroupsByRule = New Security.GroupAuthorizationItemsByRuleForSecurityObjects( _
+                            _WebManager.CurrentServerInfo.ParentServerGroupID, _
+                            CType(AllowRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
+                            CType(AllowRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
+                            CType(DenyRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
+                            CType(DenyRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()))
+                    End If
+                    Return _AuthorizationsForGroupsByRule
+                End Get
+            End Property
+
+            Private _AuthorizationsForUsersByRule As Security.UserAuthorizationItemsByRuleForSecurityObjects
+            ''' <summary>
+            ''' Authorizations of the current user by rule-set
+            ''' </summary>
+            ''' <returns></returns>
+            Public ReadOnly Property AuthorizationsForUsersByRule As Security.UserAuthorizationItemsByRuleForSecurityObjects
+                Get
+                    If _AuthorizationsForUsersByRule Is Nothing Then
+                        Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
+                        Dim MyCmd As New SqlCommand("", MyConn)
+                        MyCmd.CommandType = CommandType.Text
+                        If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                            MyCmd.CommandText = "select applicationsrightsbyuser.ID as AuthorizationID, applicationsrightsbyuser.ID_Application as AuthorizationSecurityObjectID, applicationsrightsbyuser.ID_GroupOrPerson as AuthorizationGroupID, applicationsrightsbyuser.ID_ServerGroup as AuthorizationServerGroupID, applicationsrightsbyuser.ReleasedOn as AuthorizationReleasedOn, applicationsrightsbyuser.ReleasedBy as AuthorizationReleasedBy, applicationsrightsbyuser.DevelopmentTeamMember as AuthorizationIsDeveloper, applicationsrightsbyuser.IsDenyRule from applicationsrightsbyuser inner join Applications_CurrentAndInactiveOnes on applicationsrightsbyuser.id_application = Applications_CurrentAndInactiveOnes.id where applicationsrightsbyuser.id_application = @ID and Applications_CurrentAndInactiveOnes.id is not null"
+                        Else
+                            MyCmd.CommandText = "select applicationsrightsbyuser.ID as AuthorizationID, applicationsrightsbyuser.ID_Application as AuthorizationSecurityObjectID, applicationsrightsbyuser.ID_GroupOrPerson as AuthorizationGroupID, NULL as AuthorizationServerGroupID, applicationsrightsbyuser.ReleasedOn as AuthorizationReleasedOn, applicationsrightsbyuser.ReleasedBy as AuthorizationReleasedBy, applicationsrightsbyuser.DevelopmentTeamMember as AuthorizationIsDeveloper, CAST(0 As bit) As IsDenyRule from applicationsrightsbyuser inner join Applications_CurrentAndInactiveOnes on applicationsrightsbyuser.id_application = Applications_CurrentAndInactiveOnes.id where applicationsrightsbyuser.id_application = @ID and Applications_CurrentAndInactiveOnes.id is not null"
+                        End If
+                        MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
+                        Dim SecObjects As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "SecurityObjects")
+                        Dim AllowRuleAuthsNonDev As New ArrayList
+                        Dim AllowRuleAuthsIsDev As New ArrayList
+                        Dim DenyRuleAuthsNonDev As New ArrayList
+                        Dim DenyRuleAuthsIsDev As New ArrayList
+                        For MyCounter As Integer = 0 To SecObjects.Rows.Count - 1
+                            Dim MyDataRow As DataRow = SecObjects.Rows(MyCounter)
+                            Dim secObjAuth As New SecurityObjectAuthorizationForUser(_WebManager, CType(MyDataRow("AuthorizationID"), Integer), CType(MyDataRow("AuthorizationGroupID"), Integer), CType(MyDataRow("AuthorizationSecurityObjectID"), Integer), Utils.Nz(MyDataRow("AuthorizationServerGroupID"), 0), Nothing, Me, Nothing, Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False), Utils.Nz(MyDataRow("IsDenyRule"), False), CType(MyDataRow("AuthorizationReleasedOn"), DateTime), CType(MyDataRow("AuthorizationReleasedBy"), Integer))
+                            If Utils.Nz(MyDataRow("IsDenyRule"), False) = False Then
+                                If Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False) = True Then
+                                    AllowRuleAuthsIsDev.Add(secObjAuth)
+                                Else
+                                    AllowRuleAuthsNonDev.Add(secObjAuth)
+                                End If
+                            Else
+                                If Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False) = True Then
+                                    DenyRuleAuthsIsDev.Add(secObjAuth)
+                                Else
+                                    DenyRuleAuthsNonDev.Add(secObjAuth)
+                                End If
+                            End If
+                        Next
+                        _AuthorizationsForUsersByRule = New Security.UserAuthorizationItemsByRuleForSecurityObjects( _
+                            _WebManager.CurrentServerInfo.ParentServerGroupID, _
+                            CType(AllowRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
+                            CType(AllowRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
+                            CType(DenyRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
+                            CType(DenyRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()))
+                    End If
+                    Return _AuthorizationsForUsersByRule
+                End Get
+            End Property
+
             ''' <summary>
             '''     The authorizations list which users are authorized for this security object
             ''' </summary>
             ''' <value></value>
             ''' <remarks>
             ''' </remarks>
-            Public ReadOnly Property AuthorizationsForUsers() As SecurityObjectAuthorizationForUser()
+            <Obsolete("Use AuthorizationsForUsersByRule instead")> Public ReadOnly Property AuthorizationsForUsers() As SecurityObjectAuthorizationForUser()
                 Get
-                    If _AuthorizationsForUsers Is Nothing Then
-                        'Prepare data query
-                        Dim sql As String
-                        Dim _DBVersion As Version = Setup.DatabaseUtils.Version(_WebManager, True)
-                        If _DBVersion.CompareTo(MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
-                            Throw New NotImplementedException("Support for database version " & _DBVersion.ToString & " is currently not supported. Please update the camm WebManager software, first!")
-                        Else
-                            sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select applicationsrightsbyuser.ID as AuthorizationID, applicationsrightsbyuser.ID_Application as AuthorizationSecurityObjectID, applicationsrightsbyuser.ID_GroupOrPerson as AuthorizationGroupID, NULL as AuthorizationServerGroupID, applicationsrightsbyuser.ReleasedOn as AuthorizationReleasedOn, applicationsrightsbyuser.ReleasedBy as AuthorizationReleasedBy, applicationsrightsbyuser.DevelopmentTeamMember as AuthorizationIsDeveloper from applicationsrightsbyuser inner join Applications_CurrentAndInactiveOnes on applicationsrightsbyuser.id_application = Applications_CurrentAndInactiveOnes.id where applicationsrightsbyuser.id_application = @ID and Applications_CurrentAndInactiveOnes.id is not null"
-                        End If
-                        'Load the data
-                        Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                        Dim MyCmd As New SqlCommand(sql, MyConn)
-                        MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
-                        Dim SecObjects As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "SecurityObjects")
-                        If SecObjects.Rows.Count > 0 Then
-                            ReDim Preserve _AuthorizationsForUsers(SecObjects.Rows.Count - 1)
-                            Dim MyCounter As Integer = 0
-                            For Each MyDataRow As DataRow In SecObjects.Rows
-                                _AuthorizationsForUsers(MyCounter) = New SecurityObjectAuthorizationForUser(_WebManager, CType(MyDataRow("AuthorizationID"), Integer), CType(MyDataRow("AuthorizationGroupID"), Integer), CType(MyDataRow("AuthorizationSecurityObjectID"), Integer), Utils.Nz(MyDataRow("AuthorizationServerGroupID"), 0), Nothing, Me, Nothing, Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False), CType(MyDataRow("AuthorizationReleasedOn"), DateTime), CType(MyDataRow("AuthorizationReleasedBy"), Integer))
-                                MyCounter += 1
-                            Next
-                        Else
-                            _AuthorizationsForUsers = New SecurityObjectAuthorizationForUser() {}
-                        End If
-                    End If
-                    Return _AuthorizationsForUsers
+                    Return AuthorizationsForUsersByRule.EffectiveStandard()
                 End Get
             End Property
 
-            Private _AuthorizationsForGroups As CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForGroup() = Nothing
             ''' <summary>
             '''     The authorizations list which groups are authorized for this security object
             ''' </summary>
             ''' <value></value>
             ''' <remarks>
             ''' </remarks>
-            Public ReadOnly Property AuthorizationsForGroups() As SecurityObjectAuthorizationForGroup()
+            <Obsolete("Use AuthorizationsForGroupsByRule instead")> Public ReadOnly Property AuthorizationsForGroups() As SecurityObjectAuthorizationForGroup()
                 Get
-                    If _AuthorizationsForGroups Is Nothing Then
-                        'Prepare data query
-                        Dim sql As String
-                        Dim _DBVersion As Version = Setup.DatabaseUtils.Version(_WebManager, True)
-                        If _DBVersion.CompareTo(MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
-                            Throw New NotImplementedException("Support for database version " & _DBVersion.ToString & " is currently not supported. Please update the camm WebManager software, first!")
-                        Else
-                            sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select applicationsrightsbygroup.ID as AuthorizationID, applicationsrightsbygroup.ID_Application as AuthorizationSecurityObjectID, applicationsrightsbygroup.ID_GroupOrPerson as AuthorizationGroupID, NULL as AuthorizationServerGroupID, applicationsrightsbygroup.ReleasedOn as AuthorizationReleasedOn, applicationsrightsbygroup.ReleasedBy as AuthorizationReleasedBy from applicationsrightsbygroup inner join Applications_CurrentAndInactiveOnes on applicationsrightsbygroup.id_application = Applications_CurrentAndInactiveOnes.id where applicationsrightsbygroup.id_application = @ID and Applications_CurrentAndInactiveOnes.id is not null"
-                        End If
-                        'Load the data
-                        Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                        Dim MyCmd As New SqlCommand(sql, MyConn)
-                        MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
-                        Dim SecObjects As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "SecurityObjects")
-                        If SecObjects.Rows.Count > 0 Then
-                            ReDim Preserve _AuthorizationsForGroups(SecObjects.Rows.Count - 1)
-                            Dim MyCounter As Integer = 0
-                            For Each MyDataRow As DataRow In SecObjects.Rows
-                                _AuthorizationsForGroups(MyCounter) = New SecurityObjectAuthorizationForGroup(_WebManager, CType(MyDataRow("AuthorizationID"), Integer), CType(MyDataRow("AuthorizationGroupID"), Integer), CType(MyDataRow("AuthorizationSecurityObjectID"), Integer), Utils.Nz(MyDataRow("AuthorizationServerGroupID"), 0), Nothing, Me, Nothing, CType(MyDataRow("AuthorizationReleasedOn"), DateTime), CType(MyDataRow("AuthorizationReleasedBy"), Integer))
-                                MyCounter += 1
-                            Next
-                        Else
-                            _AuthorizationsForGroups = New SecurityObjectAuthorizationForGroup() {}
-                        End If
-                    End If
-                    Return _AuthorizationsForGroups
+                    Return AuthorizationsForGroupsByRule.EffectiveStandard()
                 End Get
             End Property
 
@@ -15503,10 +16219,36 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="notifications">A notification class which contains the e-mail templates which might be sent</param>
             ''' <remarks>This action will be done immediately without the need for saving</remarks>
             Public Sub AddAuthorizationForUser(ByVal userID As Long, ByVal serverGroupID As Integer, ByVal developerAuthorization As Boolean, Optional ByVal notifications As Notifications.INotifications = Nothing)
-                Dim userInfo As New UserInformation(userID, _WebManager, False)
-                userInfo.AddAuthorization(Me._ID, serverGroupID, notifications)
+                AddAuthorizationForUser(userID, serverGroupID, developerAuthorization, False, notifications)
+            End Sub
+
+            ''' <summary>
+            ''' Add an authorization to a security object (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="userID">The user ID</param>
+            ''' <param name="serverGroupID">The authorization will be related only for the given server group ID, otherwise use 0 (zero value) for assigning authorization to all server groups</param>
+            ''' <param name="developerAuthorization">The developer authorization allows a user to see/access applications with this security objects even if it is currently disabled</param>
+            ''' <param name="notifications">A notification class which contains the e-mail templates which might be sent</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub AddAuthorizationForUser(ByVal userID As Long, ByVal serverGroupID As Integer, ByVal developerAuthorization As Boolean, isDenyRule As Boolean, Optional ByVal notifications As Notifications.INotifications = Nothing)
+                DataLayer.Current.AddUserAuthorization(_WebManager, Nothing, Me._ID, serverGroupID, Nothing, userID, developerAuthorization, isDenyRule, _WebManager.CurrentUserID(SpecialUsers.User_Anonymous), notifications)
                 'Requery the list of authorization next time it's required
-                _AuthorizationsForUsers = Nothing
+                _AuthorizationsForUsersByRule = Nothing
+            End Sub
+
+            ''' <summary>
+            ''' Add an authorization to a security object (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="userInfo">The user object</param>
+            ''' <param name="serverGroupID">The authorization will be related only for the given server group ID, otherwise use 0 (zero value) for assigning authorization to all server groups</param>
+            ''' <param name="developerAuthorization">The developer authorization allows a user to see/access applications with this security objects even if it is currently disabled</param>
+            ''' <param name="notifications">A notification class which contains the e-mail templates which might be sent</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub AddAuthorizationForUser(ByVal userInfo As UserInformation, ByVal serverGroupID As Integer, ByVal developerAuthorization As Boolean, isDenyRule As Boolean, Optional ByVal notifications As Notifications.INotifications = Nothing)
+                DataLayer.Current.AddUserAuthorization(_WebManager, Nothing, Me._ID, serverGroupID, userInfo, userInfo.IDLong, developerAuthorization, isDenyRule, _WebManager.CurrentUserID(SpecialUsers.User_Anonymous), notifications)
+                'Requery the list of authorization next time it's required
+                _AuthorizationsForUsersByRule = Nothing
+                userInfo.ResetAuthorizationsCache()
             End Sub
 
             ''' <summary>
@@ -15516,8 +16258,44 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="serverGroupID">The authorization related only to the given server group ID will be removed, otherwise use 0 (zero value) for specifying the authorization to all server groups</param>
             ''' <remarks>This action will be done immediately without the need for saving</remarks>
             Public Sub RemoveAuthorizationForUser(ByVal userID As Long, ByVal serverGroupID As Integer)
-                CompuMaster.camm.WebManager.DataLayer.Current.RemoveUserAuthorization(Me._WebManager, Me._ID, userID, serverGroupID)
-                _AuthorizationsForUsers = Nothing
+                RemoveAuthorizationForUser(userID, serverGroupID, False, False)
+            End Sub
+
+            ''' <summary>
+            ''' Remove an authorization (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="userID">The user ID</param>
+            ''' <param name="serverGroupID">The authorization related only to the given server group ID will be removed, otherwise use 0 (zero value) for specifying the authorization to all server groups</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub RemoveAuthorizationForUser(ByVal userID As Long, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
+                CompuMaster.camm.WebManager.DataLayer.Current.RemoveUserAuthorization(Me._WebManager, Me._ID, userID, serverGroupID, isDeveloperAuthorization, isDenyRule)
+                _AuthorizationsForUsersByRule = Nothing
+            End Sub
+
+            ''' <summary>
+            ''' Remove an authorization (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="userInfo">The user</param>
+            ''' <param name="serverGroupID">The authorization related only to the given server group ID will be removed, otherwise use 0 (zero value) for specifying the authorization to all server groups</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub RemoveAuthorizationForUser(ByVal userInfo As WMSystem.UserInformation, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
+                CompuMaster.camm.WebManager.DataLayer.Current.RemoveUserAuthorization(Me._WebManager, Me._ID, userInfo.IDLong, serverGroupID, isDeveloperAuthorization, isDenyRule)
+                userInfo.ResetAuthorizationsCache()
+                _AuthorizationsForUsersByRule = Nothing
+            End Sub
+
+            ''' <summary>
+            ''' Reset cached/calculated authorizations
+            ''' </summary>
+            Friend Sub ResetAuthorizationsCacheForGroups()
+                _AuthorizationsForGroupsByRule = Nothing
+            End Sub
+
+            ''' <summary>
+            ''' Reset cached/calculated authorizations
+            ''' </summary>
+            Friend Sub ResetAuthorizationsCacheForUsers()
+                _AuthorizationsForUsersByRule = Nothing
             End Sub
 
             ''' <summary>
@@ -15527,8 +16305,27 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="serverGroupID">The authorization will be related only for the given server group ID, otherwise use 0 (zero value) for assigning authorization to all server groups</param>
             ''' <remarks>This action will be done immediately without the need for saving</remarks>
             Public Sub AddAuthorizationForGroup(ByVal groupID As Integer, ByVal serverGroupID As Integer)
-                CompuMaster.camm.WebManager.DataLayer.Current.AddGroupAuthorization(Me._WebManager, Me._ID, groupID, serverGroupID)
-                _AuthorizationsForGroups = Nothing
+                AddAuthorizationForGroup(groupID, serverGroupID)
+            End Sub
+            ''' <summary>
+            ''' Add an authorization to a security object (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="groupID">The group ID</param>
+            ''' <param name="serverGroupID">The authorization will be related only for the given server group ID, otherwise use 0 (zero value) for assigning authorization to all server groups</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub AddAuthorizationForGroup(ByVal groupID As Integer, ByVal serverGroupID As Integer, ByVal developerAuthorization As Boolean, isDenyRule As Boolean)
+                CompuMaster.camm.WebManager.DataLayer.Current.AddGroupAuthorization(Me._WebManager, Me._ID, groupID, serverGroupID, developerAuthorization, isDenyRule)
+                _AuthorizationsForGroupsByRule = Nothing
+            End Sub
+            ''' <summary>
+            ''' Add an authorization to a security object (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="groupInfo">The group</param>
+            ''' <param name="serverGroupID">The authorization will be related only for the given server group ID, otherwise use 0 (zero value) for assigning authorization to all server groups</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub AddAuthorizationForGroup(ByVal groupInfo As GroupInformation, ByVal serverGroupID As Integer, ByVal developerAuthorization As Boolean, isDenyRule As Boolean)
+                AddAuthorizationForGroup(groupInfo.ID, serverGroupID, developerAuthorization, isDenyRule)
+                groupInfo.ResetAuthorizationsCache()
             End Sub
 
             ''' <summary>
@@ -15538,8 +16335,30 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="serverGroupID">The authorization related only to the given server group ID will be removed, otherwise use 0 (zero value) for specifying the authorization to all server groups</param>
             ''' <remarks>This action will be done immediately without the need for saving</remarks>
             Public Sub RemoveAuthorizationForGroup(ByVal groupID As Integer, ByVal serverGroupID As Integer)
-                CompuMaster.camm.WebManager.DataLayer.Current.RemoveGroupAuthorization(Me._WebManager, Me._ID, groupID, serverGroupID)
-                _AuthorizationsForGroups = Nothing
+                RemoveAuthorizationForGroup(groupID, serverGroupID, False, False)
+            End Sub
+
+            ''' <summary>
+            ''' Remove an authorization (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="groupID">The user ID</param>
+            ''' <param name="serverGroupID">The authorization related only to the given server group ID will be removed, otherwise use 0 (zero value) for specifying the authorization to all server groups</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub RemoveAuthorizationForGroup(ByVal groupID As Integer, ByVal serverGroupID As Integer, ByVal developerAuthorization As Boolean, isDenyRule As Boolean)
+                CompuMaster.camm.WebManager.DataLayer.Current.RemoveGroupAuthorization(Me._WebManager, Me._ID, groupID, serverGroupID, developerAuthorization, isDenyRule)
+                _AuthorizationsForGroupsByRule = Nothing
+            End Sub
+
+            ''' <summary>
+            ''' Remove an authorization (doesn't require saving, action is performed immediately on database)
+            ''' </summary>
+            ''' <param name="groupInfo">The user ID</param>
+            ''' <param name="serverGroupID">The authorization related only to the given server group ID will be removed, otherwise use 0 (zero value) for specifying the authorization to all server groups</param>
+            ''' <remarks>This action will be done immediately without the need for saving</remarks>
+            Public Sub RemoveAuthorizationForGroup(ByVal groupInfo As GroupInformation, ByVal serverGroupID As Integer, ByVal developerAuthorization As Boolean, isDenyRule As Boolean)
+                CompuMaster.camm.WebManager.DataLayer.Current.RemoveGroupAuthorization(Me._WebManager, Me._ID, groupInfo.ID, serverGroupID, developerAuthorization, isDenyRule)
+                groupInfo.ResetAuthorizationsCache
+                _AuthorizationsForGroupsByRule = Nothing
             End Sub
 
         End Class
@@ -15619,12 +16438,10 @@ Namespace CompuMaster.camm.WebManager
             Dim MyCmd As SqlCommand
             If alsoFindInactiveLanguages = True Then
                 'return all languages
-                MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from languages", MyConn)
+                MyCmd = New SqlCommand("select * from languages", MyConn)
             Else
                 'only search for activated languages
-                MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from languages Where [isactive] = @IsActive", MyConn)
+                MyCmd = New SqlCommand("select * from languages Where [isactive] = @IsActive", MyConn)
                 MyCmd.Parameters.Add("@IsActive", SqlDbType.Bit, 4).Value = True
             End If
             If Not marketIDs Is Nothing Then
@@ -15729,12 +16546,10 @@ Namespace CompuMaster.camm.WebManager
 
             If AccessLevelID < 0 Then
                 'return all server groups
-                MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select system_servergroups.* from system_servergroups", MyConn)
+                MyCmd = New SqlCommand("select system_servergroups.* from system_servergroups", MyConn)
             Else
                 'only search for server groups allowed for the current user
-                MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select system_servergroups.* from system_servergroups inner join [System_ServerGroupsAndTheirUserAccessLevels] on system_servergroups.id = [System_ServerGroupsAndTheirUserAccessLevels].[ID_ServerGroup] Where [ID_AccessLevel] = @ID", MyConn)
+                MyCmd = New SqlCommand("select system_servergroups.* from system_servergroups inner join [System_ServerGroupsAndTheirUserAccessLevels] on system_servergroups.id = [System_ServerGroupsAndTheirUserAccessLevels].[ID_ServerGroup] Where [ID_AccessLevel] = @ID", MyConn)
                 MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = AccessLevelID
             End If
             Dim MyDataSet As DataSet = New DataSet
@@ -15801,8 +16616,7 @@ Namespace CompuMaster.camm.WebManager
         ''' -----------------------------------------------------------------------------
         Friend Function System_GetAccessLevelInfos(ByVal serverGroupID As Integer) As AccessLevelInformation()
             Dim MyConn As New SqlConnection(ConnectionString)
-            Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select system_accesslevels.* from system_accesslevels inner join System_ServerGroupsAndTheirUserAccessLevels on system_accesslevels.id = System_ServerGroupsAndTheirUserAccessLevels.id_accesslevel where System_ServerGroupsAndTheirUserAccessLevels.id_servergroup = @ID ORDER BY Title", MyConn)
+            Dim MyCmd As New SqlCommand("select system_accesslevels.* from system_accesslevels inner join System_ServerGroupsAndTheirUserAccessLevels on system_accesslevels.id = System_ServerGroupsAndTheirUserAccessLevels.id_accesslevel where System_ServerGroupsAndTheirUserAccessLevels.id_servergroup = @ID ORDER BY Title", MyConn)
             MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = serverGroupID
             Dim MyAccessLevels As DataTable
             MyAccessLevels = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "AccessLevels")
@@ -15835,8 +16649,7 @@ Namespace CompuMaster.camm.WebManager
         Public Function System_GetAccessLevelInfos() As AccessLevelInformation()
             If _AllAccessLevelInfos Is Nothing Then
                 Dim MyConn As New SqlConnection(ConnectionString)
-                Dim MyCmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from system_accesslevels ORDER BY Title", MyConn)
+                Dim MyCmd As New SqlCommand("select * from system_accesslevels ORDER BY Title", MyConn)
                 Dim MyAccessLevels As DataTable
                 MyAccessLevels = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "AccessLevels")
 
@@ -15874,12 +16687,10 @@ Namespace CompuMaster.camm.WebManager
             Dim MyCmd As SqlCommand
             If ServerGroupID = Nothing Then
                 'return all servers
-                MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from system_servers", MyConn)
+                MyCmd = New SqlCommand("select * from system_servers", MyConn)
             Else
                 'only search for server groups allowed for the current user
-                MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from system_servers where servergroup = @ID", MyConn)
+                MyCmd = New SqlCommand("select * from system_servers where servergroup = @ID", MyConn)
                 MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = ServerGroupID
             End If
             Dim ServerData As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "Servers")
@@ -15946,6 +16757,10 @@ Namespace CompuMaster.camm.WebManager
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Public Sub System_CreateGroup(ByVal groupName As String, ByVal changedByUserID As Long, Optional ByVal groupDescription As String = Nothing)
+            Me.System_CreateNewGroup(groupName, changedByUserID, groupDescription)
+        End Sub
+
+        Friend Function System_CreateNewGroup(ByVal groupName As String, ByVal changedByUserID As Long, Optional ByVal groupDescription As String = Nothing) As Integer
 
             If groupName = Nothing Then
                 Throw New ArgumentNullException("groupName")
@@ -15964,11 +16779,13 @@ Namespace CompuMaster.camm.WebManager
 
             ' Create recordset by executing the command.
             Dim RetValue As Integer = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), 0)
-            If RetValue <> -1 Then
+            If RetValue = 0 Then
                 Throw New Exception("Group creation failed")
+            Else
+                Return RetValue
             End If
 
-        End Sub
+        End Function
 
         ''' -----------------------------------------------------------------------------
         ''' <summary>
@@ -16424,7 +17241,7 @@ Namespace CompuMaster.camm.WebManager
                 CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(MyConn)
             End Try
 
-            Return CType(WriteForUserID, Integer)
+            Return WriteForUserID
 
         End Function
 
@@ -16571,8 +17388,7 @@ Namespace CompuMaster.camm.WebManager
         ''' -----------------------------------------------------------------------------
         Public Function System_GetUserInfos() As UserInformation()
             'Prepare the sql statement
-            Dim SqlCommand As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from benutzer"
+            Dim SqlCommand As String = "select * from benutzer"
             'Now execute the created command
             Dim MyConn As New SqlConnection(Me.ConnectionString)
             Dim MyCmd As IDbCommand
@@ -16595,13 +17411,13 @@ Namespace CompuMaster.camm.WebManager
         Private Function System_GetUserInfos(ByVal dbCommand As IDbCommand) As UserInformation()
 
             Dim _WebManager As WMSystem = Me
-            Dim _Members As UserInformation()
+            Dim Result As UserInformation()
             Dim MyUsers As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(dbCommand, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "Users")
             If MyUsers.Rows.Count > 0 Then
-                ReDim Preserve _Members(MyUsers.Rows.Count - 1)
+                ReDim Preserve Result(MyUsers.Rows.Count - 1)
                 Dim MyCounter As Integer = 0
                 For Each MyDataRow As DataRow In MyUsers.Rows
-                    _Members(MyCounter) = New CompuMaster.camm.WebManager.WMSystem.UserInformation(CType(MyDataRow("ID"), Long), _
+                    Result(MyCounter) = New CompuMaster.camm.WebManager.WMSystem.UserInformation(CType(MyDataRow("ID"), Long), _
                                     CType(MyDataRow("LoginName"), String), _
                                     CType(MyDataRow("E-Mail"), String), _
                                     False, _
@@ -16625,16 +17441,16 @@ Namespace CompuMaster.camm.WebManager
                                     CType(MyDataRow("AccountAccessability"), Integer), _
                                     _WebManager, _
                                     Nothing)
-                    If _Members(MyCounter).Gender = Sex.Undefined AndAlso (_Members(MyCounter).FirstName = Nothing OrElse _Members(MyCounter).LastName = Nothing) Then
+                    If Result(MyCounter).Gender = Sex.Undefined AndAlso (Result(MyCounter).FirstName = Nothing OrElse Result(MyCounter).LastName = Nothing) Then
                         'Regard it as a group of persons without a specific name
-                        _Members(MyCounter).Gender = Sex.MissingNameOrGroupOfPersons
+                        Result(MyCounter).Gender = Sex.MissingNameOrGroupOfPersons
                     End If
                     MyCounter += 1
                 Next
             Else
-                _Members = Nothing
+                Result = Nothing
             End If
-            Return _Members
+            Return Result
 
         End Function
 
@@ -16699,8 +17515,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Public Function System_GetGroupInfos() As GroupInformation()
-            Return _System_GetGroupInfos("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from gruppen")
+            Return _System_GetGroupInfos("select * from gruppen")
         End Function
         ''' -----------------------------------------------------------------------------
         ''' <summary>
@@ -16750,8 +17565,7 @@ Namespace CompuMaster.camm.WebManager
                     ListOfGroups.Append(GroupID)
                 End If
             Next
-            Return _System_GetGroupInfos("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select * from gruppen where id in (" & ListOfGroups.ToString & ")")
+            Return _System_GetGroupInfos("select * from gruppen where id in (" & ListOfGroups.ToString & ")")
         End Function
 
         ''' -----------------------------------------------------------------------------
@@ -16770,8 +17584,7 @@ Namespace CompuMaster.camm.WebManager
             If groupName = Nothing Then
                 Throw New ArgumentNullException("groupName", "Value must contain a valid group name")
             End If
-            Dim Result As GroupInformation() = _System_GetGroupInfos("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select top 1 * from gruppen where name = N'" & groupName.Replace("'", "''") & "'")
+            Dim Result As GroupInformation() = _System_GetGroupInfos("select top 1 * from gruppen where name = N'" & groupName.Replace("'", "''") & "'")
             If Result Is Nothing OrElse Result.Length = 0 Then
                 Return Nothing
             Else
@@ -16840,26 +17653,56 @@ Namespace CompuMaster.camm.WebManager
 
                 If Not SecurityObjectName Is Nothing Then
                     If _DBVersion.CompareTo(MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
-                        MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM [dbo].[Applications_SecurityObjects] WHERE Title = @SecurityObjectName AND AppDeleted = 0", MyConn)
+                        MyCmd = New SqlCommand("SELECT * FROM [dbo].[Applications_SecurityObjects] WHERE Title = @SecurityObjectName AND AppDeleted = 0", MyConn)
                         MyCmd.Parameters.Add("@SecurityObjectName", SqlDbType.NVarChar).Value = SecurityObjectName
                     Else
-                        MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM [dbo].[Applications_CurrentAndInactiveOnes] WHERE Title = @SecurityObjectName AND AppDeleted = 0", MyConn)
+                        MyCmd = New SqlCommand("SELECT * FROM [dbo].[Applications_CurrentAndInactiveOnes] WHERE Title = @SecurityObjectName AND AppDeleted = 0", MyConn)
                         MyCmd.Parameters.Add("@SecurityObjectName", SqlDbType.NVarChar).Value = SecurityObjectName
                     End If
                 Else
                     If _DBVersion.CompareTo(MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
-                        MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM [dbo].[Applications_SecurityObjects] WHERE AppDeleted = 0", MyConn)
+                        MyCmd = New SqlCommand("SELECT * FROM [dbo].[Applications_SecurityObjects] WHERE AppDeleted = 0", MyConn)
                     Else
-                        MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM [dbo].[Applications_CurrentAndInactiveOnes] WHERE AppDeleted = 0", MyConn)
+                        MyCmd = New SqlCommand("SELECT * FROM [dbo].[Applications_CurrentAndInactiveOnes] WHERE AppDeleted = 0", MyConn)
                     End If
                 End If
                 MyReader = MyCmd.ExecuteReader()
+                Dim RequiredFlagsSupported As Boolean = False
+                If Me.System_DBVersion_Ex(True).Build >= 185 Then
+                    RequiredFlagsSupported = True
+                End If
                 While MyReader.Read
-                    MyTempCollection.Add(New SecurityObjectInformation( _
+                    Dim secObj As SecurityObjectInformation
+                    Dim navItem As New Security.NavigationInformation( _
+                            0, _
+                            Nothing, _
+                            Utils.Nz(MyReader("Level1Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level2Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level3Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level4Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level5Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level6Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level1TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level2TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level3TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level4TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level5TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level6TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("NavURL"), String.Empty), _
+                            Utils.Nz(MyReader("NavFrame"), String.Empty), _
+                            Utils.Nz(MyReader("NavTooltipText"), String.Empty), _
+                            Utils.Nz(MyReader("AddLanguageID2URL"), False), _
+                            Utils.Nz(MyReader("LanguageID"), 0), _
+                            Utils.Nz(MyReader("LocationID"), 0), _
+                            Utils.Nz(MyReader("Sort"), 0), _
+                            Utils.Nz(MyReader("IsNew"), False), _
+                            Utils.Nz(MyReader("IsUpdated"), False), _
+                            Utils.Nz(MyReader("ResetIsNewUpdatedStatusOn"), DateTime.MinValue), _
+                            Utils.Nz(MyReader("OnMouseOver"), String.Empty), _
+                            Utils.Nz(MyReader("OnMouseOut"), String.Empty), _
+                            Utils.Nz(MyReader("OnClick"), String.Empty))
+                    If RequiredFlagsSupported Then
+                        secObj = New SecurityObjectInformation( _
                                     Utils.Nz(MyReader("ID"), 0), _
                                     Utils.Nz(MyReader("Title"), CType(Nothing, String)), _
                                     Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)), _
@@ -16872,7 +17715,30 @@ Namespace CompuMaster.camm.WebManager
                                     Utils.Nz(MyReader("AppDeleted"), False), _
                                     Utils.Nz(MyReader("AuthsAsAppID"), 0), _
                                     Utils.Nz(MyReader("SystemAppType"), 0), _
-                                    Me))
+                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""), _
+                                    Utils.Nz(MyReader("RequiredUserProfileFlagsRemarks"), ""), _
+                                    navItem, _
+                                    Me)
+                    Else
+                        secObj = New SecurityObjectInformation( _
+                                    Utils.Nz(MyReader("ID"), 0), _
+                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("ModifiedBy"), 0&), _
+                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)), _
+                                    Utils.Nz(MyReader("ReleasedBy"), 0&), _
+                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)), _
+                                    Utils.Nz(MyReader("AppDisabled"), False), _
+                                    Utils.Nz(MyReader("AppDeleted"), False), _
+                                    Utils.Nz(MyReader("AuthsAsAppID"), 0), _
+                                    Utils.Nz(MyReader("SystemAppType"), 0), _
+                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""), _
+                                    "", _
+                                    navItem, _
+                                    Me)
+                    End If
+                    MyTempCollection.Add(secObj)
                 End While
             Finally
                 If Not MyReader Is Nothing AndAlso Not MyReader.IsClosed Then
@@ -17079,8 +17945,7 @@ Namespace CompuMaster.camm.WebManager
                 'Get parameter value and append parameter
                 With MyCmd
 
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT COUNT(*) FROM System_SubSecurityAdjustments Where (TablePrimaryIDValue = 0 AND UserID = " & CLng(UserID) & " AND AuthorizationType = N'SecurityMaster') OR ((TablePrimaryIDValue = 0 OR TablePrimaryIDValue = " & CLng(TablePrimID) & ") AND TableName = N'" & Replace(TableName, "'", "''") & "' AND UserID = @UserID AND AuthorizationType = N'" & Replace(RequiredAuth, "'", "''") & "')"
+                    .CommandText = "SELECT COUNT(*) FROM System_SubSecurityAdjustments Where (TablePrimaryIDValue = 0 AND UserID = " & CLng(UserID) & " AND AuthorizationType = N'SecurityMaster') OR ((TablePrimaryIDValue = 0 OR TablePrimaryIDValue = " & CLng(TablePrimID) & ") AND TableName = N'" & Replace(TableName, "'", "''") & "' AND UserID = @UserID AND AuthorizationType = N'" & Replace(RequiredAuth, "'", "''") & "')"
                     .CommandType = CommandType.Text
 
                     .Parameters.Add("@UserID", SqlDbType.Int).Value = CLng(UserID)
@@ -17196,8 +18061,7 @@ Namespace CompuMaster.camm.WebManager
                 'Get parameter value and append parameter
                 With MyCmd
 
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT COUNT(*) FROM System_SubSecurityAdjustments Where (TablePrimaryIDValue = 0 AND UserID = @UserID AND AuthorizationType = N'SecurityMaster' AND TableName = @TableName)"
+                    .CommandText = "SELECT COUNT(*) FROM System_SubSecurityAdjustments Where (TablePrimaryIDValue = 0 AND UserID = @UserID AND AuthorizationType = N'SecurityMaster' AND TableName = @TableName)"
                     .CommandType = CommandType.Text
 
                     .Parameters.Add("@UserID", SqlDbType.Int).Value = CLng(UserID)
@@ -17288,8 +18152,7 @@ Namespace CompuMaster.camm.WebManager
                 'Get parameter value and append parameter
                 With MyCmd
 
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT ID_User FROM Memberships WHERE ID_Group = 6 AND ID_User = @UserID"
+                    .CommandText = "SELECT ID_User FROM Memberships WHERE ID_Group = 6 AND ID_User = @UserID"
                     .CommandType = CommandType.Text
 
                     .Parameters.Add("@UserID", SqlDbType.Int).Value = CLng(UserID)
@@ -17353,8 +18216,7 @@ Namespace CompuMaster.camm.WebManager
             Dim Result As Boolean
 
             Try
-                MyCmd = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT ID_User FROM Memberships INNER JOIN Gruppen ON Memberships.ID_Group = Gruppen.ID WHERE Gruppen.Name = @GroupName AND ID_User= @UserID", New SqlConnection(ConnectionString))
+                MyCmd = New SqlCommand("SELECT ID_User FROM Memberships INNER JOIN Gruppen ON Memberships.ID_Group = Gruppen.ID WHERE Gruppen.Name = @GroupName AND ID_User= @UserID", New SqlConnection(ConnectionString))
                 MyCmd.CommandType = CommandType.Text
                 MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = CLng(userID)
                 MyCmd.Parameters.Add("@GroupName", SqlDbType.NVarChar).Value = groupName
@@ -17427,8 +18289,7 @@ Namespace CompuMaster.camm.WebManager
                 'Get parameter value and append parameter
                 With MyCmd
 
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT ID_User FROM Memberships WHERE ID_Group IN (6, 7) AND ID_User = @UserID"
+                    .CommandText = "SELECT ID_User FROM Memberships WHERE ID_Group IN (6, 7) AND ID_User = @UserID"
                     .CommandType = CommandType.Text
 
                     .Parameters.Add("@UserID", SqlDbType.Int).Value = CLng(UserID)

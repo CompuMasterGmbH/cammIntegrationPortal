@@ -781,7 +781,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 If Request.QueryString("ID") = "" Then
                     Return 0
                 Else
-                    Return Utils.Nz(Request.QueryString("ID"), 0L)
+                    Return CType(Request.QueryString("ID"), Long)
                 End If
             End Get
         End Property
@@ -2289,18 +2289,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             'Added if condtion for showing Navigation Preview for all groups.
             If (Not Request.QueryString("GroupName") Is Nothing) Then 'AndAlso Not Request.QueryString("UserView") Is Nothing) Then
                 lblHeading.Text = "Administration - Navigation preview of " + Request.QueryString("GroupName").ToString
-                'Dim lMembers() As CompuMaster.camm.WebManager.WMSystem.UserInformation
-                'lMembers = GetGroupMembers(Request.QueryString("GroupName").ToString)
-                'lMembers = GetGroupApplications(Request.QueryString("GroupName").ToString)
-                'For icount As Integer = 0 To lMembers.Length - 1
                 gc.InnerHtml += GetNavigationLinksApplication()  ' cammWebManager.System_WriteNavPreviewNav_TR2TR_2Cols(CType(CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous, Int64), "Anonymous")
-                'Next
                 tdAnonymous.Controls.Add(gc)
-
-                'ElseIf (Not Request.QueryString("GroupName") Is Nothing) Then
-                '    lblHeading.Text = "Administration - Navigation preview of " + Request.QueryString("GroupName").ToString
-                '    gc.InnerHtml = DefaultNavPreviewLinks(cammWebManager.CurrentUserID, Request.QueryString("GroupName").ToString)
-                '    tdAnonymous.Controls.Add(gc)
             Else
                 lblHeading.Text = "Administration - Navigation preview of special users"
                 gc.InnerHtml = cammWebManager.System_WriteNavPreviewNav_TR2TR_2Cols(CType(CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous, Int64), "Anonymous")
@@ -2403,15 +2393,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
             Next
             Return False
-        End Function
-        'Added by I-link on 06.08.2008
-        'This function returns the array of group members for showing navigation link member wise.
-        Private Function GetGroupMembers(ByVal GroupName As String) As CompuMaster.camm.WebManager.WMSystem.UserInformation()
-            Dim Groups As CompuMaster.camm.WebManager.WMSystem.GroupInformation
-            Dim s As String = ("<TR><TD BGCOLOR=""#C1C1C1"" ColSpan=""2""><P><FONT face=""Arial"" size=""2""><b>" & GroupName & ":</b></FONT></P></TD></TR><TR><TD ColSpan=""2"" VAlign=""Top""><FONT face=""Arial"" size=""2"">")
-            Dim webManager As WMSystem = cammWebManager
-            Groups = cammWebManager.System_GetGroupInfo(GroupName)
-            Return Groups.Members
         End Function
 
         Private Function GetNavigationLinksApplication() As String

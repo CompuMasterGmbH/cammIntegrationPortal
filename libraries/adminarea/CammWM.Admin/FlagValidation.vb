@@ -191,7 +191,7 @@ Namespace CompuMaster.camm.WebManager.Administration
             Dim result As New ArrayList
             If Not userinfo Is Nothing AndAlso Not requiredFlags Is Nothing Then
                 For Each requiredFlag As String In requiredFlags
-                    If requiredFlag <> String.Empty Then
+                    If Trim(requiredFlag) <> String.Empty Then
                         Dim flagValidation As New FlagValidation(Trim(requiredFlag))
                         Dim validationResult As FlagValidationResult = flagValidation.Validate(userinfo)
                         result.Add(validationResult)

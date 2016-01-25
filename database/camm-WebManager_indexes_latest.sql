@@ -1,12 +1,3 @@
-/***************************************************************************************************************************************
-
-WHEN CHECKING FOR EXISTING INDEXES, SQL 2000 ONLY SUPPORTS (AND SQL AZURE MIGHT NOT SUPPORT ANY MORE!!)
-select * from sysindexes WHERE name='IX_Applications' AND id = OBJECT_ID('[dbo].[Applications_CurrentAndInactiveOnes]')
-
-BEGINNING WITH SQL 2005, FOLLOWING SYNTAX IS RECOMMENDED
-select * from sys.indexes WHERE name='IX_Applications' AND object_id = OBJECT_ID('[dbo].[Applications_CurrentAndInactiveOnes]')
-
-****************************************************************************************************************************************/
 /****** Object:  Index [IX_Applications]    Script Date: 02.07.2015 15:06:08 ******/
 IF NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name='IX_Applications' AND object_id = OBJECT_ID('[dbo].[Applications_CurrentAndInactiveOnes]')) 
 CREATE NONCLUSTERED INDEX [IX_Applications] ON [dbo].[Applications_CurrentAndInactiveOnes]
@@ -138,6 +129,14 @@ CREATE NONCLUSTERED INDEX [IX_Log] ON [dbo].[Log]
 (
 	[UserID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
+GO
+IF NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name='_dta_index_Log_5_1188199283__K8_1_3' AND object_id = OBJECT_ID('[dbo].[Log]')) 
+CREATE NONCLUSTERED INDEX [_dta_index_Log_5_1188199283__K8_1_3] ON [dbo].[Log]
+(
+	[ConflictType] ASC
+)
+INCLUDE ( 	[ID],
+	[LoginDate]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_Log_1]    Script Date: 02.07.2015 15:06:08 ******/
 IF NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name='IX_Log_1' AND object_id = OBJECT_ID('[dbo].[Log]')) 

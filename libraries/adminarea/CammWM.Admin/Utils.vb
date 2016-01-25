@@ -130,7 +130,7 @@ Namespace CompuMaster.camm.WebManager.Administration
                     problem = "invalid value for type"
                 End If
 
-                result = "<a target=""_blank"" Href=users_update_flag.aspx?ID=" & userInfo.ID.ToString() & "&Type=" & System.Web.HttpUtility.UrlEncode(validationResult.flag) & ">" & userInfo.LoginName & " - Flag: " & validationResult.flag & ", Problem: " & problem & "</a>"
+                result = "<a target=""_blank"" href=""users_update_flag.aspx?ID=" & userInfo.ID.ToString() & "&Type=" & System.Web.HttpUtility.UrlEncode(validationResult.Flag) & """>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & " - Flag: " & System.Web.HttpUtility.HtmlEncode(validationResult.Flag) & ", Problem: " & System.Web.HttpUtility.HtmlEncode(problem) & "</a>"
             End If
             Return result
         End Function

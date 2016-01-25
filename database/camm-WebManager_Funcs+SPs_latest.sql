@@ -737,7 +737,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateApplicationRightsByGroup
 	@ReleasedByUserID int,
 	@AppID int,
 	@GroupID int,
-	@ServerGroupID int = -1,
+	@ServerGroupID int = 0,
 	@IsDevelopmentTeamMember bit = 0,
 	@IsDenyRule bit = 0
 WITH ENCRYPTION
@@ -780,9 +780,9 @@ If @CurUserID Is Not Null
 	-- Validation successfull, password will be updated now
 	BEGIN
 		-- Record update
-		INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application, ID_GroupOrPerson, ReleasedBy, DevelopmentTeamMember, IsDenyRule) 
-		VALUES (@AppID, @GroupID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule)
-		EXEC Int_LogAuthChanges @CurUserID, @GroupID, @AppID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule
+		INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application, ID_GroupOrPerson, ReleasedBy, DevelopmentTeamMember, IsDenyRule, ID_ServerGroup) 
+		VALUES (@AppID, @GroupID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule, @ServerGroupID)
+		EXEC Int_LogAuthChanges @CurUserID, @GroupID, @AppID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule, @ServerGroupID
 		-- Rückgabewert
 		SET NOCOUNT OFF
 		SELECT Result = -1
@@ -802,7 +802,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateApplicationRightsByUser
 	@ReleasedByUserID int,
 	@AppID int,
 	@UserID int,
-	@ServerGroupID int = -1,
+	@ServerGroupID int = 0,
 	@IsDevelopmentTeamMember bit = 0,
 	@IsDenyRule bit = 0
 WITH ENCRYPTION
@@ -862,10 +862,10 @@ If @CurUserID Is Not Null
 	BEGIN
 		-- Record update
 		INSERT INTO dbo.ApplicationsRightsByUser 
-			(ID_Application, ID_GroupOrPerson, ReleasedBy, DevelopmentTeamMember, IsDenyRule) 
+			(ID_Application, ID_GroupOrPerson, ReleasedBy, DevelopmentTeamMember, IsDenyRule, ID_ServerGroup) 
 		VALUES 
-			(@AppID, @UserID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule)
-		EXEC Int_LogAuthChanges @UserID, Null, @AppID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule
+			(@AppID, @UserID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule, @ServerGroupID)
+		EXEC Int_LogAuthChanges @UserID, Null, @AppID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule, @ServerGroupID
 		-- Rückgabewert
 		SET NOCOUNT OFF
 		SELECT Result = -1
@@ -894,11 +894,12 @@ AS
 
 declare @groupID int
 declare @AppID int
-declare @IsDevelopmentTeamMember
-declare @IsDenyRule
-select top 1 @groupid = id_grouporperson, @appid = id_application, @IsDevelopmentTeamMember = DevelopmentTeamMember, @IsDenyRule = IsDenyRule from dbo.ApplicationsRightsByGroup where id = @AuthID
+declare @IsDevelopmentTeamMember bit
+declare @IsDenyRule bit
+declare @ServerGroupID int
+select top 1 @groupid = id_grouporperson, @appid = id_application, @IsDevelopmentTeamMember = DevelopmentTeamMember, @IsDenyRule = IsDenyRule, @ServerGroupID = ID_ServerGroup from dbo.ApplicationsRightsByGroup where id = @AuthID
 
-EXEC Int_LogAuthChanges NULL, @GroupID, @AppID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule 
+EXEC Int_LogAuthChanges NULL, @GroupID, @AppID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule, @ServerGroupID 
 DELETE FROM dbo.ApplicationsRightsByGroup WHERE     (ID_GroupOrPerson IS NOT NULL) AND ID=@AuthID
 
 GO
@@ -914,11 +915,12 @@ WITH ENCRYPTION
 AS
 declare @UserID int
 declare @AppID int
-declare @IsDevelopmentTeamMember
-declare @IsDenyRule
-select top 1 @userid = id_grouporperson, @appid = id_application, @IsDevelopmentTeamMember = DevelopmentTeamMember, @IsDenyRule = IsDenyRule from dbo.ApplicationsRightsByUser where id = @AuthID
+declare @IsDevelopmentTeamMember bit
+declare @IsDenyRule bit
+declare @ServerGroupID int
+select top 1 @userid = id_grouporperson, @appid = id_application, @IsDevelopmentTeamMember = DevelopmentTeamMember, @IsDenyRule = IsDenyRule, @ServerGroupID = ID_ServerGroup from dbo.ApplicationsRightsByUser where id = @AuthID
 
-EXEC Int_LogAuthChanges @UserID, Null, @AppID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule 
+EXEC Int_LogAuthChanges @UserID, Null, @AppID, @ReleasedByUserID, @IsDevelopmentTeamMember, @IsDenyRule, @ServerGroupID 
 DELETE FROM dbo.ApplicationsRightsByUser WHERE ID_GroupOrPerson Is Not Null And ID=@AuthID
 GO
 
@@ -979,12 +981,10 @@ DECLARE @NewGroupID int
 SELECT @CurUserID = (select ID from dbo.Benutzer where id = @ReleasedByUserID)
 If @CurUserID Is Not Null
 	BEGIN
-		
-		SELECT Result = -1
-		
 		INSERT INTO dbo.Gruppen (Name, Description, ReleasedBy, ModifiedBy) VALUES (@Name, @Description, @ReleasedByUserID, @ReleasedByUserID)
 		SELECT @NewGroupID = SCOPE_IDENTITY()
 		EXEC AdminPrivate_UpdateSubSecurityAdjustment 1, @ReleasedByUserID, 'Groups', @NewGroupID, 'Owner', @ReleasedByUserID
+		SELECT Result = @NewGroupID 
 	END
 Else
 	SELECT Result = 0
@@ -1026,7 +1026,7 @@ If @ReleasedByUserID <> -33 And @ReleasedByUserID <> -43  And @ReleasedByUserID 
 	EXEC @CurUserID = dbo.IsAdministratorForMemberships 'UpdateRelations', @ReleasedByUserID, @GroupID
 Else
 	SELECT @CurUserID = @ReleasedByUserID
-SELECT @MemberShipID = ID FROM dbo.Memberships WHERE ID_Group = @GroupID And ID_User = @UserID
+SELECT @MemberShipID = ID FROM dbo.Memberships WHERE ID_Group = @GroupID And ID_User = @UserID AND IsDenyRule = @IsDenyRule
 If @MemberShipID Is Null
 	BEGIN
 		-- Is releasing user a valid user ID?

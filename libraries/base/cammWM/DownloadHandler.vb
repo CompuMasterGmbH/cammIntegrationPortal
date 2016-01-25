@@ -3047,8 +3047,7 @@ Namespace CompuMaster.camm.WebManager
             Dim returnList As New System.Collections.Specialized.StringCollection
 
             Dim dbConn As New SqlConnection(Me.getConnectString)
-            Dim selectQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT [VirtualDownloadLocation], [TimeOfRemoval] FROM [dbo].[WebManager_DownloadHandler_Files] where [ServerID] = " & Me.ServerID
+            Dim selectQuery As String = "SELECT [VirtualDownloadLocation], [TimeOfRemoval] FROM [dbo].[WebManager_DownloadHandler_Files] where [ServerID] = " & Me.ServerID
             Dim reader As SqlDataReader = Nothing
             Dim location As String = ""
             Try
@@ -3091,8 +3090,7 @@ Namespace CompuMaster.camm.WebManager
         Private Function GetVirtualDownloadLocation(ByVal UniqueCrypticID As String) As String
             If UniqueCrypticID = Nothing Then Throw New ArgumentNullException("UniqueCrypticID")
             Dim dbConn As New SqlConnection(Me.getConnectString)
-            Dim selectQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT [VirtualDownloadLocation] FROM [dbo].[WebManager_DownloadHandler_Files] where [UniqueCrypticID] = N'" & Replace(UniqueCrypticID, "'", "''") & "' and [ServerID] = " & Me.ServerID
+            Dim selectQuery As String = "SELECT [VirtualDownloadLocation] FROM [dbo].[WebManager_DownloadHandler_Files] where [UniqueCrypticID] = N'" & Replace(UniqueCrypticID, "'", "''") & "' and [ServerID] = " & Me.ServerID
             Return CType(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(dbConn, selectQuery, CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), String)
         End Function
         ''' -----------------------------------------------------------------------------
@@ -3110,8 +3108,7 @@ Namespace CompuMaster.camm.WebManager
         Private Function GetUniqueCrypticID(ByVal VirtualDownloadLocation As String) As String
             Dim returnString As String = ""
             Dim dbConn As New SqlConnection(Me.getConnectString)
-            Dim selectQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT [UniqueCrypticID] FROM [dbo].[WebManager_DownloadHandler_Files] where [VirtualDownloadLocation] = N'" & VirtualDownloadLocation.Replace("'", "''") & "' and [ServerID] = " & Me.ServerID
+            Dim selectQuery As String = "SELECT [UniqueCrypticID] FROM [dbo].[WebManager_DownloadHandler_Files] where [VirtualDownloadLocation] = N'" & VirtualDownloadLocation.Replace("'", "''") & "' and [ServerID] = " & Me.ServerID
             Return CType(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(dbConn, selectQuery, CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), String)
         End Function
         ''' -----------------------------------------------------------------------------
@@ -3169,11 +3166,9 @@ Namespace CompuMaster.camm.WebManager
             Dim reader As SqlDataReader
             Try
                 If regardlessToTheirTimeout Then
-                    selectQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT [VirtualDownloadLocation] FROM [WebManager_DownloadHandler_Files] where [ServerID] = " & Me.ServerID
+                    selectQuery = "SELECT [VirtualDownloadLocation] FROM [WebManager_DownloadHandler_Files] where [ServerID] = " & Me.ServerID
                 Else
-                    selectQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT [VirtualDownloadLocation] FROM [WebManager_DownloadHandler_Files] where DATEDIFF(ss, TimeOfRemoval, GETDATE()) > 0 and [ServerID] = " & Me.ServerID
+                    selectQuery = "SELECT [VirtualDownloadLocation] FROM [WebManager_DownloadHandler_Files] where DATEDIFF(ss, TimeOfRemoval, GETDATE()) > 0 and [ServerID] = " & Me.ServerID
                 End If
                 cmd.CommandText = selectQuery
                 reader = cmd.ExecuteReader

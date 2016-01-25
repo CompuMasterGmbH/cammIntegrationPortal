@@ -443,7 +443,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <returns></returns>
         ''' <remarks>Based on TZ's code</remarks>
         Private Function GetRequiredApplicationFlags(ByVal groupId As Integer) As String()
-            Dim commandText As String = "DECLARE @EmployeeList varchar(4000) SELECT @EmployeeList = COALESCE(@EmployeeList + ', ', '') + RequiredUserProfileFlags From Applications_CurrentAndInactiveOnes Where ID IN (Select Distinct ID_Application From ApplicationsRightsByGroup Where ID_GroupOrPerson = @GroupID) Select @EmployeeList"
+            Dim commandText As String = "DECLARE @EmployeeList varchar(4000) SELECT @EmployeeList = COALESCE(@EmployeeList + ', ', '') + RequiredUserProfileFlags From Applications_CurrentAndInactiveOnes Where ID IN (Select ID_Application From ApplicationsRightsByGroup Where ID_GroupOrPerson = @GroupID) Select @EmployeeList"
             Dim command As New SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
             command.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupId
             Return ExecuteScalar(command, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection).ToString().Split(CChar(","))

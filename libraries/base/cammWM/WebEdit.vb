@@ -120,7 +120,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 Dim myConnection As SqlClient.SqlConnection
                 Dim myCommand As SqlClient.SqlCommand
                 Dim myQuery As String = _
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                     "select LanguageID from webmanager_webeditor where Url = @Url " & vbNewLine & _
                     "and EditorID = @EditorID and version = @Version AND ServerID = @ServerID group by LanguageID"
                 myConnection = New SqlClient.SqlConnection(ConnectionString)
@@ -459,7 +458,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                     Dim myConnection As SqlClient.SqlConnection
                     Dim myCommand As SqlClient.SqlCommand
                     Dim myQuery As String = _
-                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                         "select [ServerID],[LanguageID],[IsActive],[URL],[EditorID],[ModifiedOn],[ModifiedByUser],[ReleasedOn],[ReleasedByUser],[Version]" & vbNewLine & _
                         "from [dbo].[WebManager_WebEditor]" & vbNewLine & _
                         "where [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine & _
@@ -546,7 +544,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                     Dim myConnection As SqlClient.SqlConnection
                     Dim myCommand As SqlClient.SqlCommand
                     Dim myQuery As String = _
-                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                         "select ID, Description_English, AlternativeLanguage from system_languages where [IsActive] = 1"
                     myConnection = New SqlClient.SqlConnection(ConnectionString)
                     myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -601,7 +598,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' -----------------------------------------------------------------------------
             Public Function ReadReleasedContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer) As String
                 Dim MyCmd As New SqlClient.SqlCommand( _
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                     "SELECT [Content] " & vbNewLine & _
                     "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
                     "WHERE IsActive = 1 AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine, _
@@ -631,7 +627,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' -----------------------------------------------------------------------------
             Public Function ReadContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As String
                 Dim MyCmd As New SqlClient.SqlCommand( _
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                     "SELECT [Content] " & vbNewLine & _
                     "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
                     "WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine, _

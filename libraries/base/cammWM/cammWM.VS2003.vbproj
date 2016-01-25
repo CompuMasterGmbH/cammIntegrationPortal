@@ -65,7 +65,7 @@
                     DebugSymbols = "false"
                     IncrementalBuild = "false"
                     Optimize = "true"
-                    OutputPath = "R:\WebSites\CompuMaster\www.lan.compumaster.de\bin\"
+                    OutputPath = "bin\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
@@ -97,7 +97,7 @@
                     DebugSymbols = "true"
                     IncrementalBuild = "false"
                     Optimize = "false"
-                    OutputPath = "R:\WebSites\CompuMaster\www.lan.compumaster.de\bin\"
+                    OutputPath = "bin\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
@@ -225,7 +225,7 @@
                     DebugSymbols = "true"
                     IncrementalBuild = "false"
                     Optimize = "false"
-                    OutputPath = "R:\WebSites\CompuMaster\compumaster.dtdns.net_444\bin\"
+                    OutputPath = "bin\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
@@ -366,16 +366,11 @@
                 />
                 <File
                     RelPath = "Controls.vb"
-                    SubType = "Code"
+                    SubType = "ASPXCodeBehind"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Crypt\Crypt.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-				<File
-                    RelPath = "Crypt\TripleDES.vb"
+                    RelPath = "dataprotection.vb"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -396,11 +391,6 @@
                 />
                 <File
                     RelPath = "explorer.vb"
-                    SubType = "ASPXCodeBehind"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "dataprotection.vb"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -503,13 +493,18 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "PasswordReset.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "PasswordSecurity.vb"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-				<File
+                <File
                     RelPath = "ProductRegistration.vb"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -557,7 +552,7 @@
                 />
                 <File
                     RelPath = "WebEdit_sWcms3.vb"
-                    SubType = "ASPXCodeBehind"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -573,6 +568,76 @@
                 <File
                     RelPath = "windowsclient.vb"
                     SubType = "ASPXCodeBehind"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Crypt\AES.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Crypt\Crypt.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Crypt\DefaultAlgoCryptor.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Crypt\EncDecMod.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Crypt\SymmetricCrypt.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Crypt\TripleDES.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Security\BaseGroupAuthorizationItemsByRule.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Security\GroupAuthorizationItemsByRuleForGroups.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Security\GroupAuthorizationItemsByRuleForSecurityObjects.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Security\MemberIDsByRule.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Security\MemberItemsByRule.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Security\MembershipItemsByRule.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Security\NavigationInformation.vb"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Security\UserAuthorizationItemsByRule.vb"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
             </Include>

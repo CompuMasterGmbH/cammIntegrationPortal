@@ -72,9 +72,7 @@ Namespace CompuMaster.camm.SmartWebEditor
 
             Public Sub New()
                 editorMain = New PlainTextEditor
-                editorMain.Editable = True
                 editorMain.EnableViewState = False
-
             End Sub
             Protected Overrides Sub CreateChildControls()
                 MyBase.CreateChildControls()
@@ -106,7 +104,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Me.PreviewButton.Text = "Preview"
 
                 Me.NewVersionButton = New System.Web.UI.WebControls.Button()
-                Me.NewVersionButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'newversion'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                Me.NewVersionButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'newversion'; document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'true';  document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
                 Me.NewVersionButton.Text = "New Version"
             End Sub
 
@@ -137,8 +135,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     counter += 1
 
                 Next
-                Dim dropDownScript As String = "document.getElementById('" & txtBrowseToMarketVersion.ClientID & "').value = this.value;"
-                Me.VersionDropDownBox.Attributes.Add("onchange", dropDownScript & "document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();")
+                'TODO: maybe register it as a client script or move it to a file
+                Dim dropDownScript As String = "if(this.options[this.selectedIndex].innerHTML.indexOf('no release') > -1 ) document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'true'; else document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'false'; document.getElementById('" & txtBrowseToMarketVersion.ClientID & "').value = this.value;"
+                Me.VersionDropDownBox.Attributes.Add("onchange", dropDownScript & "this.selectedIndex = -1; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();  ")
 
                 Me.VersionDropDownBox.SelectedValue = Me.CurrentVersion & ";" & LanguageToShow.ToString()
             End Sub
@@ -147,13 +146,14 @@ Namespace CompuMaster.camm.SmartWebEditor
             ''' Fill the languages/market drop down list...
             ''' </summary>
             Private Sub InitializeLanguageDropDownList()
+                Dim languages As AvailableLanguage() = GetAvailableLanguages()
                 Me.LanguagesDropDownBox = New System.Web.UI.WebControls.DropDownList
                 Dim neutralItem As New System.Web.UI.WebControls.ListItem
                 neutralItem.Text = "0 / Neutral / All"
                 neutralItem.Value = CurrentVersion.ToString() & ";0"
                 LanguagesDropDownBox.Items.Add(neutralItem)
 
-                Dim languages As AvailableLanguage() = GetAvailableLanguages()
+
                 If Not languages Is Nothing Then
                     For Each language As AvailableLanguage In languages
                         Dim text As String = language.id.ToString() & " / " & language.languageDescriptionEnglish
@@ -170,7 +170,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 End If
 
                 Dim script As String = "document.getElementById('" & txtBrowseToMarketVersion.ClientID & "').value = this.value;"
-                LanguagesDropDownBox.Attributes.Add("onchange", script & "document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();")
+                LanguagesDropDownBox.Attributes.Add("onchange", script & "; this.selectedIndex = -1; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();")
             End Sub
             ''' <summary>
             ''' Shows the buttons that we need
@@ -226,6 +226,8 @@ Namespace CompuMaster.camm.SmartWebEditor
                 End If
 
                 Me.pnlEditorToolbar.Visible = Me.editorMain.Visible
+
+
             End Sub
 
         End Class

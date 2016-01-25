@@ -54,8 +54,7 @@ Namespace CompuMaster.camm.WebManager
         End Sub
 
         Private Sub LoadSettings()
-            Dim cmd As New SqlClient.SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT PropertyName, ValueInt FROM System_GlobalProperties WHERE PropertyName IN ( '" & PropertyName_AnonymizeIPs & "', '" & PropertyName_DeleteUsersAfterDays & "', '" & PropertyName_DeleteMailsAfterDays & "'  )")
+            Dim cmd As New SqlClient.SqlCommand("SELECT PropertyName, ValueInt FROM System_GlobalProperties WHERE PropertyName IN ( '" & PropertyName_AnonymizeIPs & "', '" & PropertyName_DeleteUsersAfterDays & "', '" & PropertyName_DeleteMailsAfterDays & "'  )")
             cmd.Connection = New SqlClient.SqlConnection(Me.ConnectionString)
             Dim resultHashTable As Hashtable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstTwoColumnsIntoHashtable(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
 
@@ -95,8 +94,7 @@ Namespace CompuMaster.camm.WebManager
         'TODO: replace DISTINCT by GROUP BY construct
         Public Function GetLogTypes() As ArrayList
             Dim connection As New SqlClient.SqlConnection(Me.ConnectionString)
-            Dim commandText As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT DISTINCT Type, COALESCE((SELECT 1 FROM [dbo].System_GlobalProperties WHERE ValueNVarChar=dbo.Log_users.Type And ValueBoolean = 1 AND PropertyName='" & PropertyName_LogTypeDeletion & "'), 0) FROM dbo.Log_users"
+            Dim commandText As String = "SELECT DISTINCT Type, COALESCE((SELECT 1 FROM [dbo].System_GlobalProperties WHERE ValueNVarChar=dbo.Log_users.Type And ValueBoolean = 1 AND PropertyName='" & PropertyName_LogTypeDeletion & "'), 0) FROM dbo.Log_users"
             Dim cmd As New SqlClient.SqlCommand(commandText, connection)
 
             Dim reader As IDataReader = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReader(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)

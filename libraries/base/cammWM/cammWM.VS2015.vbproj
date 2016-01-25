@@ -234,6 +234,14 @@
     <Compile Include="PasswordSecurity.vb" />
     <Compile Include="PasswordConverter.vb" />
     <Compile Include="ProductRegistration.vb" />
+    <Compile Include="Security\BaseGroupAuthorizationItemsByRule.vb" />
+    <Compile Include="Security\GroupAuthorizationItemsByRuleForSecurityObjects.vb" />
+    <Compile Include="Security\MemberItemsByRule.vb" />
+    <Compile Include="Security\MemberIDsByRule.vb" />
+    <Compile Include="Security\MembershipItemsByRule.vb" />
+    <Compile Include="Security\NavigationInformation.vb" />
+    <Compile Include="Security\UserAuthorizationItemsByRule.vb" />
+    <Compile Include="Security\GroupAuthorizationItemsByRuleForGroups.vb" />
     <Compile Include="Settings.vb" />
     <Compile Include="Setup.vb" />
     <Compile Include="Statistics.vb" />

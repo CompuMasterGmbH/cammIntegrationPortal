@@ -287,7 +287,9 @@ Namespace CompuMaster.camm.WebManager
             If plainText = Nothing Then
                 Throw New ArgumentNullException("plainText")
             End If
-            If htmlText = Nothing Then
+            If htmlText = Nothing AndAlso plainText <> Nothing Then
+                htmlText = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(plainText))
+            ElseIf htmlText = Nothing Then
                 Throw New ArgumentNullException("htmlText")
             End If
 
@@ -1529,8 +1531,12 @@ Namespace CompuMaster.camm.WebManager
                                 'Increase the inmemory value
                                 RowsInLogTable += 1
                                 'Shorten log table if required
-                                If Me.WrittenLogsSinceCwmInstanceStart Mod 100 = 0 Then 'every 100 log-writes starting with the very first one (value = 0)
-                                    CleanUpLogTable()
+                                If Me.WrittenLogsSinceCwmInstanceStart > 0 AndAlso Me.WrittenLogsSinceCwmInstanceStart Mod 100 = 0 AndAlso Now.Subtract(DataLayer.Current.QueryLastServiceExecutionDate(_WebManager, Nothing)).TotalDays > 15 Then 'every 100 log-writes starting with the very first one (value = 0)
+                                    Try
+                                        CleanUpLogTable()
+                                    Catch
+                                        'Ignore any errors regarding cleanup, here
+                                    End Try
                                 End If
 
                                 'Create connection
@@ -1635,7 +1641,8 @@ Namespace CompuMaster.camm.WebManager
                     End If
                     WrittenLogsSinceCwmInstanceStart += 1
                 End If
-            Catch
+            Catch ex As Exception
+                'Console.WriteLine(ex.ToString)
             End Try
         End Sub
 #End Region
@@ -1779,6 +1786,11 @@ Namespace CompuMaster.camm.WebManager
         End Property
 
 
+        ''' <summary>
+        ''' Returns an item from the cache
+        ''' </summary>
+        ''' <param name="key"></param>
+        ''' <returns></returns>
         Private Function GetCacheItem(ByVal key As String) As Object
             If Not HttpContext.Current Is Nothing Then
                 Return HttpContext.Current.Cache(key)
@@ -1786,6 +1798,11 @@ Namespace CompuMaster.camm.WebManager
             Return Nothing
         End Function
 
+        ''' <summary>
+        ''' Adds or updates a cache entry
+        ''' </summary>
+        ''' <param name="key"></param>
+        ''' <param name="value"></param>
         Private Sub SetCacheItem(ByVal key As String, ByVal value As Object)
             If Not HttpContext.Current Is Nothing Then
                 HttpContext.Current.Cache.Remove(key)
@@ -1793,6 +1810,11 @@ Namespace CompuMaster.camm.WebManager
             End If
         End Sub
 
+        ''' <summary>
+        ''' Saves an integer into the  [System]_[GlobalProperties] table or updates it
+        ''' </summary>
+        ''' <param name="key"></param>
+        ''' <param name="value"></param>
         Private Sub SetIntegerConfigEntry(ByVal key As String, ByVal value As Integer)
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand()
@@ -1816,11 +1838,13 @@ Namespace CompuMaster.camm.WebManager
             CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Sub
 
-
+        ''' <summary>
+        ''' Returns a hashtable containing the lifetime of a conflict type in days
+        ''' </summary>
+        ''' <returns></returns>
         Private Function GetConflictTypeLifetimes() As Hashtable
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-            Dim cmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT ValueInt, ValueDecimal FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = N'camm WebManager' AND PropertyName= @propertyname")
+            Dim cmd As New SqlCommand("SELECT ValueInt, ValueDecimal FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = N'camm WebManager' AND PropertyName= @propertyname")
             cmd.Parameters.Add("@propertyname", SqlDbType.VarChar).Value = SqlPropertyNameConflictTypesLifeTimes
             cmd.Connection = MyConn
 
@@ -1837,7 +1861,10 @@ Namespace CompuMaster.camm.WebManager
             Return result
         End Function
 
-
+        ''' <summary>
+        ''' Stores a hashtable containing the lifetime of a conflict type in days
+        ''' </summary>
+        ''' <param name="hashTable"></param>
         Public Sub SetConflictTypesLifetime(ByVal hashTable As Hashtable)
             Dim MyCmd As SqlCommand = Nothing
             Dim MyConn As SqlConnection = Nothing
@@ -1879,8 +1906,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks></remarks>
         Private Function GetIntegerConfigEntry(ByVal key As String) As Integer
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-            Dim MyCmd As SqlCommand = New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT [ValueInt] FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = N'camm WebManager' AND PropertyName = @key", MyConn)
+            Dim MyCmd As SqlCommand = New SqlCommand("SELECT [ValueInt] FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = N'camm WebManager' AND PropertyName = @key", MyConn)
             MyCmd.Parameters.Add("@key", SqlDbType.VarChar).Value = key
             MyCmd.Connection = MyConn
             Dim Result As Object = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
@@ -1936,37 +1962,48 @@ Namespace CompuMaster.camm.WebManager
             End Try
         End Sub
 
-
-
         ''' <summary>
         ''' Enforces that we don't have more rows than allowed
         ''' </summary>
+        ''' <return>Number of deleted rows from log table</return>
         ''' <remarks></remarks>
-        Private Sub ShrinkTableToMaxRows(maxNumberOfDeletedRows As Integer)
+        Private Function ShrinkTableToMaxRows(maxNumberOfDeletedRows As Integer) As Integer
             If Me.RowsInLogTable > Me.MaxRowsInLogTable Then
                 Dim RowsToRemove As Long = System.Math.Max(0, System.Math.Min(maxNumberOfDeletedRows, Me.RefreshedRowsInLogTable - Me.MaxRowsInLogTable - 100)) 'never use a negative value in case that cache-RowsInTable differs from refreshed-RowsInTable + because we immediately add a new log for truncation info, provide a buffer of 100 (so that not every time the truncation must happen and prevent looping this code) 
                 If RowsToRemove > 0 Then
                     Dim connection As New SqlConnection(_WebManager.ConnectionString)
-                    Dim cmd As New SqlCommand("DELETE FROM dbo.Log WHERE ID IN (SELECT TOP " & RowsToRemove & " ID FROM [dbo].[Log] ORDER BY ID ASC)", connection)
+                    Dim cmd As New SqlCommand("DELETE FROM dbo.Log WHERE ID IN (SELECT TOP " & RowsToRemove & " ID FROM [dbo].[Log] ORDER BY ID ASC); SELECT @@ROWCOUNT", connection)
                     cmd.CommandType = CommandType.Text
-                    CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-                    LogCleanupAction("Log truncated to keep compliant with the limit of " & MaxRowsInLogTable & " rows; currently present approx. " & Me.RowsInLogTable & " rows")
+                    Dim Result As Integer = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), 0)
+                    LogCleanupAction("Log truncated by " & Result & " rows to keep compliant with the limit of " & MaxRowsInLogTable & " rows; currently present approx. " & Me.RowsInLogTable & " rows")
+                    Return Result
                 End If
             End If
-        End Sub
+            Return 0
+        End Function
 
         ''' <summary>
         ''' Removes expired log entries
         ''' </summary>
         ''' <remarks></remarks>
-        Private Sub DeleteExpiredEntries(maxNumberOfDeletedRows As Integer)
+        Private Function DeleteExpiredEntries(maxNumberOfDeletedRows As Integer) As Integer
             Dim connection As New SqlConnection(_WebManager.ConnectionString)
-            Dim cmd As New SqlCommand("DELETE FROM [dbo].[Log] WHERE ID IN (SELECT TOP " & maxNumberOfDeletedRows & " ID FROM dbo.Log WHERE LoginDate < DateAdd(dd, -COALESCE( (SELECT ValueDecimal FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge' AND ValueInt = dbo.Log.ConflictType), @DefaultRetentionDays), GETDATE()))", connection)
+            Dim Sql As String = "DELETE FROM [dbo].[Log] WHERE ID IN " & vbNewLine & _
+                "    (" & vbNewLine & _
+                "        SELECT TOP " & maxNumberOfDeletedRows & " ID " & vbNewLine & _
+                "        FROM dbo.Log" & vbNewLine & _
+                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine & _
+                "                ON Log.ConflictType = RetentionConfig.ConflictTypeID" & vbNewLine & _
+                "        WHERE LoginDate < DateAdd(dd, -COALESCE(RetentionDays, @DefaultRetentionDays), GETDATE())" & vbNewLine & _
+                "    )" & vbNewLine & _
+                "SELECT @@ROWCOUNT"
+            Dim cmd As New SqlCommand(Sql, connection)
             cmd.CommandType = CommandType.Text
             cmd.Parameters.Add("@DefaultRetentionDays", SqlDbType.Int).Value = Me.MaxRetentionDays
-            CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-            LogCleanupAction("Removed expired log entries (delete max. " & maxNumberOfDeletedRows & " rows; max. retention days: " & Me.MaxRetentionDays & "; max. total rows in log table: " & Me.MaxRowsInLogTable & ")")
-        End Sub
+            Dim Result As Integer = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), 0)
+            LogCleanupAction("Removed " & Result & " expired log entries (delete max. " & maxNumberOfDeletedRows & " rows; max. retention days: " & Me.MaxRetentionDays & "; max. total rows in log table: " & Me.MaxRowsInLogTable & ")")
+            Return Result
+        End Function
 
         Private Shared locker As Object = New Object()
         Private Shared IsCleanUpLogTableRunning As Boolean
@@ -1975,23 +2012,35 @@ Namespace CompuMaster.camm.WebManager
         '''     Remove old lines from the log to save memory in database
         ''' </summary>
         Public Sub CleanUpLogTable()
+            CleanUpLogTableInternal()
+        End Sub
+
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Remove old lines from the log to save memory in database
+        ''' </summary>
+        ''' <return>Number of deleted rows from log table</return>
+        Friend Function CleanUpLogTableInternal() As Integer
             'web access
             SyncLock locker
                 If IsCleanUpLogTableRunning Then
-                    Return
+                    Return 0
                 End If
                 IsCleanUpLogTableRunning = True
             End SyncLock
 
+            Dim DeletedRecords As Integer = 0
             Try
-                DeleteExpiredEntries(500)
-                ShrinkTableToMaxRows(500)
+                DeletedRecords = DeleteExpiredEntries(500)
+                If DeletedRecords < 500 Then 'lesser than 500 rows deleted, yet - so it was pretty fast - still more time to delete a few more rows
+                    DeletedRecords = DeletedRecords + ShrinkTableToMaxRows(500)
+                End If
                 RowsInLogTable = Nothing
             Finally
                 IsCleanUpLogTableRunning = False
             End Try
-
-        End Sub
+            Return DeletedRecords
+        End Function
 #End Region
 
         ''' <summary>

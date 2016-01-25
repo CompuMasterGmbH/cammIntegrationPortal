@@ -1,6 +1,5 @@
 /applications
 /documentation
-/setup and distribution
 /tools
 /services
 /libraries/components
@@ -100,3 +99,21 @@
 /libraries/base/cammWM/cammWM.snk
 /libraries/adminarea/CammWM.Admin/*.user
 /libraries/smarteditor/cammWMEditor4 - Idee mit Sourcen - PageAddRemove.lnk
+/setup and distribution/AutoStart-DemoShield
+/setup and distribution/DbUpdateTool/*.user
+/setup and distribution/DbUpdateTool/bin
+/setup and distribution/tools_compileandpublish
+/setup and distribution/DistributionFiles_Overrides
+/setup and distribution/MSAzurePlatformReadyTest
+/setup and distribution/DBUpdateWizard
+/setup and distribution/DbUpdateManagers.sln
+/setup and distribution/DbUpdateTool/obj
+/setup and distribution/packages
+/setup and distribution/DbUpdateTool/libs/cammWM.pdb
+/setup and distribution/DbUpdateTool/libs/cammWM.xml
+/setup and distribution/DbUpdateTool/libs/ICSharpCode.SharpZipLib.dll
+/setup and distribution/DbUpdateTool/libs/cammWM.dll
+/setup and distribution/DbUpdateTool/devsql-azure.SENSITIVEDATAWARNING.cmd
+/setup and distribution/DbUpdateTool/devsql-2005-up-till-azure.SENSITIVEDATAWARNING.cmd
+/setup and distribution/DbUpdateTool/devsql-2014-up-till-azure.SENSITIVEDATAWARNING.cmd
+/setup and distribution/resourcewriter/libs/ICSharpCode.SharpZipLib.dll

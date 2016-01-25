@@ -102,8 +102,7 @@ Namespace CompuMaster.camm.WebManager
         Public Function CountConvertable() As Integer
             Dim MyCmd As New SqlClient.SqlCommand
             MyCmd.Connection = New SqlClient.SqlConnection(Me.CammWebManager.ConnectionString)
-            MyCmd.CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT COUNT(ID) FROM [dbo].Benutzer WHERE LoginPWAlgorithm IN " + GetDecryptableAlgosSQLString()
+            MyCmd.CommandText = "SELECT COUNT(ID) FROM [dbo].Benutzer WHERE LoginPWAlgorithm IN " + GetDecryptableAlgosSQLString()
             MyCmd.CommandType = CommandType.Text
 
             Return CType(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)

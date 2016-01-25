@@ -157,7 +157,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
             Try
                 'Validate that the loginname is not already in use
                 If WebManager.PerformanceMethods.IsUserExisting(Me.cammWebManager, userInfo.LoginName) = True Then
-                    Throw New Exception("User already exists")
+                    Throw New Exception("User already exists: " & userInfo.LoginName)
                 End If
                 'Validate if the update is allowed to be made
                 If CType(userInfo, WMSystem.UserInformation).IsSystemUser Then
@@ -1473,8 +1473,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         Private Function UserIDExists(ByVal id As Long) As Boolean
             Dim MyCmd As New SqlClient.SqlCommand
             MyCmd.Connection = New SqlClient.SqlConnection(Me.cammWebManager.ConnectionString)
-            MyCmd.CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT 1 FROM [dbo].Benutzer WHERE ID = @id"
+            MyCmd.CommandText = "SELECT 1 FROM [dbo].Benutzer WHERE ID = @id"
             MyCmd.CommandType = CommandType.Text
             MyCmd.Parameters.Add("@id", SqlDbType.Int).Value = id
             Return CType(CompuMaster.camm.WebManager.Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), False), Boolean)

@@ -146,10 +146,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
         Private Sub FillGroupList()
             Me.ddlCwmGroupnames.Items.Add(New ListItem(Nothing, Nothing))
             For Each gi As CompuMaster.camm.WebManager.WMSystem.GroupInformation In Me.cammWebManager.System_GetGroupInfos()
-                If Not (gi.Name.ToLower = "anonymous" Or gi.Name.ToLower.IndexOf("public") >= 0) Then
+                If Not (gi.Name.ToLower = "anonymous" OrElse gi.Name.ToLower.IndexOf("public") >= 0) Then
                     Dim LI As New ListItem
                     LI.Value = gi.Name
-                    LI.Text = gi.Name & " (" & gi.Members.Length & ")"
+                    LI.Text = gi.Name & " (" & gi.MembersByRule.AllowRule.Length & ")"
                     If gi.Description <> Nothing Then LI.Attributes.Add("title", gi.Description)
                     Me.ddlCwmGroupnames.Items.Add(LI)
                 End If
@@ -420,7 +420,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
                     If Me.ddlCwmApps.SelectedValue <> Nothing Then
                         Me.Session("CWM.Admin.BatchUserFlagEditor") = Me.GetUsersBySecurityObjectID(CInt(Me.ddlCwmApps.SelectedValue))
                     ElseIf Me.ddlCwmGroupnames.SelectedValue <> Nothing Then
-                        Me.Session("CWM.Admin.BatchUserFlagEditor") = Me.cammWebManager.System_GetGroupInfo(Me.ddlCwmGroupnames.SelectedValue).Members
+                        Me.Session("CWM.Admin.BatchUserFlagEditor") = Me.cammWebManager.System_GetGroupInfo(Me.ddlCwmGroupnames.SelectedValue).MembersByRule.AllowRule
                     Else
                         Me.Session("CWM.Admin.BatchUserFlagEditor") = Me.cammWebManager.System_GetUserInfos(Me.cammWebManager.System_GetUserIDs())
                     End If

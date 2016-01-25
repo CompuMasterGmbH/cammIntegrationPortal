@@ -140,6 +140,31 @@ Namespace CompuMaster.camm.WebManager
             Me.BaseWebManager.ExecuteLogout()
         End Sub
 
+        ''' <summary>
+        ''' camm Web-Manager database version
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function VersionDatabase() As Version Implements IWebManager.VersionDatabase
+            Return Me.BaseWebManager.System_DBVersion_Ex
+        End Function
+
+        ''' <summary>
+        ''' camm Web-Manager database version
+        ''' </summary>
+        ''' <param name="allowCaching">True to allow reading from cache</param>
+        ''' <returns></returns>
+        Public Function VersionDatabase(allowCaching As Boolean) As Version Implements IWebManager.VersionDatabase
+            Return Me.BaseWebManager.System_DBVersion_Ex(allowCaching)
+        End Function
+
+        ''' <summary>
+        ''' camm Web-Manager assembly/library version
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function VersionAssembly() As Version Implements IWebManager.VersionAssembly
+            Return Me.BaseWebManager.System_Version_Ex
+        End Function
+
         ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     User interface related properties and methods
@@ -213,6 +238,7 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 #End If
+
 
     End Class
 

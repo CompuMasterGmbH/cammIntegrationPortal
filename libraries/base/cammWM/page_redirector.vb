@@ -99,8 +99,7 @@ Namespace CompuMaster.camm.WebManager.Modules.Redirector.Pages
                 MyCmd.Parameters.Add("@IDRedirector", SqlDbType.Int).Value = RedirectID
             Else
                 'Crawler/machine agent - shall not be logged as really executed user redirection
-                MyCmd.CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT RedirectTo FROM dbo.Redirects_ToAddr WHERE ID = @IDRedirector"
+                MyCmd.CommandText = "SELECT RedirectTo FROM dbo.Redirects_ToAddr WHERE ID = @IDRedirector"
                 MyCmd.CommandType = CommandType.Text
                 MyCmd.Parameters.Add("@IDRedirector", SqlDbType.Int).Value = RedirectID
             End If
@@ -141,7 +140,7 @@ Namespace CompuMaster.camm.WebManager.Modules.Redirector.Pages
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Public Shared Function NumberOfRedirections(ByVal id As Integer, ByVal webmanager As CompuMaster.camm.WebManager.IWebManager) As Integer
-            Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(webmanager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(webmanager.ConnectionString), _
                                     "Select numberofredirections from Redirects_ToAddr where id = " & id.ToString, CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), 0)
         End Function
 
