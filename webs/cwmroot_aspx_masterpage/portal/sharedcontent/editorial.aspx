@@ -1,7 +1,9 @@
 ﻿<%@ Page MasterPageFile="~/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Page"%>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<camm:WebManager id="cammwebmanager" runat="server" />
+<asp:content id="Content1" contentplaceholderid="head" runat="server">
+<camm:WebManager id="cammWebManager" runat="server" />
+</asp:content>
 <%@ Register TagPrefix="cammWebEdit" Namespace="CompuMaster.camm.WebManager.Modules.WebEdit.Controls" Assembly="cammWM" %>
 <script lang="vb" runat="server">
     Sub page_load(sender As Object, e As eventargs)

@@ -3,7 +3,9 @@
 <%@ Import Namespace="CompuMaster.camm.WebManager.WMSystem" %>
 <%@ Import Namespace="CompuMaster.camm.WebManager" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<camm:WebManager ID="cammWebManager" runat="server" />
+<asp:content id="Content1" contentplaceholderid="head" runat="server">
+<camm:WebManager id="cammWebManager" runat="server" />
+</asp:content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolderMain" runat="server">
     <table cellspacing="10" cellpadding="0" bgcolor="#ffffff" border="0">

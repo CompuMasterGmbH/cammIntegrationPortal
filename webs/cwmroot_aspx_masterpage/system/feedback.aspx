@@ -1,5 +1,11 @@
 ﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Page" Title="Feedback" %>
 
+<%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
+
+<asp:content id="Content1" contentplaceholderid="head" runat="server">
+<camm:WebManager id="cammWebManager" runat="server" />
+</asp:content>
+
 <script runat="server">
 
     Dim MyLangID As Integer
@@ -80,12 +86,12 @@
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/name.gif" width="20" height="20" /></td>
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">Name:</font></td>
-				  <td width="300" height="16" valign="top"><% If cammWebManager.CurrentUserLoginName = "" Then %><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="Name" /><% Else %><input type="hidden" value="<%= SessionUser_Name %>" name="Name"><%= SessionUser_Name %><% End If %></td>
+				  <td width="300" height="16" valign="top"><% If cammWebManager.CurrentUserLoginName = "" Then %><input type="text" width="300" style="width: 300px; position: relative; height: 23px" value="" name="Name" /><% Else %><input type="hidden" value="<%= SessionUser_Name %>" name="Name"><%= SessionUser_Name %><% End If %></td>
 				</tr>
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/email.gif" width="20" height="20" /></td>
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">e-mail:</font></td>
-				  <td width="300" height="16" valign="top"><% If cammWebManager.CurrentUserLoginName = "" Then %><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="EMail" /><% Else %><input type="hidden" value="<%= SessionUser_email %>" name="EMail"><%= SessionUser_email %><% End If %></td>
+				  <td width="300" height="16" valign="top"><% If cammWebManager.CurrentUserLoginName = "" Then %><input type="text" width="300" style="width: 300px; position: relative; height: 23px" value="" name="EMail" /><% Else %><input type="hidden" value="<%= SessionUser_email %>" name="EMail"><%= SessionUser_email %><% End If %></td>
 				</tr>
 				<input type="hidden" name="UserID" value="<%= SessionUserID %>" />
 				<input type="hidden" name="Addresses" value="<%= SessionUser_Addresses %>" />
@@ -107,9 +113,9 @@
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/thema.gif" width="20" height="20" /></td>
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">Thema:</font></td>
-				  <td width="300" height="16"><select style="width: 300; position: relative; height: 23" size="1" name="Theme" tabindex="0">
+				  <td width="300" height="16"><select style="width: 300px; position: relative; height: 23px" size="1" name="Theme" tabindex="0">
 					<% If Request.QueryString("topicdescription") <> "" Then %>
-					        <option selected><%= Server.HtmlEncode(Request.QueryString("topicdescription")) %></option>
+					        <option selected="selected"><%= Server.HtmlEncode(Request.QueryString("topicdescription")) %></option>
 					<% Else %>
 					        <option <% If Request.QueryString("topic") = "myprofile" Then Response.Write(" selected") %>>Mein Benutzerprofil</option>
 					        <option <% If Request.QueryString("topic") = "security" Then Response.Write(" selected") %>>Sicherheit</option>
@@ -202,12 +208,12 @@
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/name.gif" width="20" height="20" /></td>
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">Name:</font></td>
-				  <td width="300" height="16" valign="top"><% If cammWebManager.CurrentUserLoginName = "" Then %><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="Name" /><% Else %><input type="hidden" value="<%= SessionUser_Name %>" name="Name"><%= SessionUser_Name %><% End If %></td>
+				  <td width="300" height="16" valign="top"><% If cammWebManager.CurrentUserLoginName = "" Then %><input type="text" width="300" style="width: 300px; position: relative; height: 23px" value="" name="Name" /><% Else %><input type="hidden" value="<%= SessionUser_Name %>" name="Name" /><%= SessionUser_Name %><% End If %></td>
 				</tr>
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/email.gif" width="20" height="20" /></td>
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">e-mail:</font></td>
-				  <td width="300" height="16" valign="top"><% If cammWebManager.CurrentUserLoginName = "" Then %><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="EMail" /><% Else %><input type="hidden" value="<%= SessionUser_email %>" name="EMail"><%= SessionUser_email %><% End If %></td>
+				  <td width="300" height="16" valign="top"><% If cammWebManager.CurrentUserLoginName = "" Then %><input type="text" width="300" style="width: 300px; position: relative; height: 23px" value="" name="EMail" /><% Else %><input type="hidden" value="<%= SessionUser_email %>" name="EMail" /><%= SessionUser_email %><% End If %></td>
 				</tr>
 				<input type="hidden" name="UserID" value="<%= SessionUserID %>" />
 				<input type="hidden" name="Addresses" value="<%= SessionUser_Addresses %>" />
@@ -231,7 +237,7 @@
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">Subject:</font></td>
 				  <td width="300" height="16"><select style="width: 300; position: relative; height: 23" size="1" name="Theme" tabindex="0">
 					<% If Request.QueryString("topicdescription") <> "" Then %>
-					        <option selected><%= Server.HtmlEncode(Request.QueryString("topicdescription")) %></option>
+					        <option selected="selected"><%= Server.HtmlEncode(Request.QueryString("topicdescription")) %></option>
 					<% Else %>
 				        	<option <% If Request.QueryString("topic") = "myprofile" Then Response.Write(" selected") %>>My user profile</option>
 					        <option <% If Request.QueryString("topic") = "security" Then Response.Write(" selected") %>>Security</option>

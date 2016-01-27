@@ -1,6 +1,9 @@
 ﻿<%@ Page Title="Access error" MasterPageFile="~/portal/MasterPage.master" validateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.Specialized.ErrorPage" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
+<asp:content id="Content1" contentplaceholderid="head" runat="server">
 <camm:WebManager id="cammWebManager" runat="server" />
+</asp:content>
+>
 <asp:content id="Content2" contentplaceholderid="ContentPlaceHolderMain" runat="server">
 <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
 <TBODY>

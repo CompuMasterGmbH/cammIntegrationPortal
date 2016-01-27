@@ -1,4 +1,4 @@
-<%@ Control Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Controls.Control" %>
+<%@ Control Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Controls.UserControl" %>
 <script lang="vb" runat="server">
     Public LanguageID As Integer
 </script>

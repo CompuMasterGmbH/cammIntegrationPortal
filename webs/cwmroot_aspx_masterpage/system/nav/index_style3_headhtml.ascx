@@ -1,5 +1,4 @@
-<%@ Control Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Controls.Control" %>
-<base target="frame_main" />
+<%@ Control Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Controls.UserControl" %>
 <style type="text/css">
     A:active {
         FONT-WEIGHT: normal;
