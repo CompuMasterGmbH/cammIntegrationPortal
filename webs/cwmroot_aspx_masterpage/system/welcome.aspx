@@ -8,7 +8,7 @@
 	end sub
 
 </script>
-
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolderMain" runat="server">
       <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
         <TBODY>
         <TR>
@@ -18,4 +18,4 @@
           <%= IIf(cammWebManager.Internationalization.HighlightTextExtro <> "", "<p>", "") & cammWebManager.Internationalization.HighlightTextExtro & IIf(cammWebManager.Internationalization.HighlightTextExtro <> "", "</p>", "") %>
           <%= "<p>" & CompuMaster.camm.WebManager.Utils.sprintf(cammWebManager.Internationalization.WelcomeTextFeedbackToContact, cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString(), "AreaContentManagementContactEMail"), cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString(), "AreaContentManagementContactTitle")) & "</p>" %>
             </font></TD></TR></TBODY></TABLE>
-
+</asp:content>

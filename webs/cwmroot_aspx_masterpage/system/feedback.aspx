@@ -10,7 +10,7 @@
 
     Sub Page_Load(sender As Object, e As EventArgs)
 
-        If Session("System_Username") <> "" Then
+        If cammWebManager.CurrentUserLoginName <> "" Then
             SessionUserID = cammWebManager.CurrentUserID(CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous)
             SessionUser_Addresses = cammWebManager.CurrentUserInfo.SalutationMrOrMs
             SessionUser_Name = cammWebManager.CurrentUserInfo.FullName
@@ -32,9 +32,6 @@
     End Sub
 
 </script>
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <link rel="stylesheet" type="text/css" href="<%= cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css" />
-</asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolderMain" runat="server">
     <%
 
@@ -67,10 +64,10 @@
         <tr>
             <td align="center" valign="middle">
                 <div align="center">
-				      <table border="0" cellspacing="0" cellpadding="0">
-				        <tr>
-				          <td width="100%" valign="top">
-				<no-more-form method="POST" action="feedback_gotit.aspx" onsubmit="return Check(this)" id=form2 name=form2><table border="0" cellspacing="10" cellpadding="0">
+                    <table border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="100%" valign="top">
+                                <no-more-form method="POST" action="feedback_gotit.aspx" onsubmit="return Check(this)" id="form2" name="form2"><table border="0" cellspacing="10" cellpadding="0">
 
 				<tr><td><table border="0" cellspacing="0" cellpadding="0">
 
@@ -83,12 +80,12 @@
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/name.gif" width="20" height="20" /></td>
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">Name:</font></td>
-				  <td width="300" height="16" valign="top"><% If Session("System_Username") = "" Then %><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="Name" /><% Else %><input type="hidden" value="<%= SessionUser_Name %>" name="Name"><%= SessionUser_Name %><% End If %></td>
+				  <td width="300" height="16" valign="top"><% If cammWebManager.CurrentUserLoginName = "" Then %><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="Name" /><% Else %><input type="hidden" value="<%= SessionUser_Name %>" name="Name"><%= SessionUser_Name %><% End If %></td>
 				</tr>
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/email.gif" width="20" height="20" /></td>
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">e-mail:</font></td>
-				  <td width="300" height="16" valign="top"><% If Session("System_Username") = "" Then %><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="EMail" /><% Else %><input type="hidden" value="<%= SessionUser_email %>" name="EMail"><%= SessionUser_email %><% End If %></td>
+				  <td width="300" height="16" valign="top"><% If cammWebManager.CurrentUserLoginName = "" Then %><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="EMail" /><% Else %><input type="hidden" value="<%= SessionUser_email %>" name="EMail"><%= SessionUser_email %><% End If %></td>
 				</tr>
 				<input type="hidden" name="UserID" value="<%= SessionUserID %>" />
 				<input type="hidden" name="Addresses" value="<%= SessionUser_Addresses %>" />
@@ -144,10 +141,10 @@
 
 				</table></no-more-form>
 
-				<p align="right"><font size="1">V<%= cammWebManager.System_Version %></font></p>
-				          </td>
-				        </tr>
-				      </table>
+                                <p align="right"><font size="1">V<%= cammWebManager.System_Version %></font></p>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </td>
         </tr>
@@ -188,10 +185,10 @@
         <tr>
             <td align="center" valign="middle">
                 <div align="center">
-				      <table border="0" cellspacing="0" cellpadding="0">
-				        <tr>
-				          <td width="100%" valign="top">
-				<no-more-form method="POST" action="feedback_gotit.aspx" onsubmit="return Check(this)" id=form1 name=form1><table border="0" cellspacing="10" cellpadding="0">
+                    <table border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="100%" valign="top">
+                                <no-more-form method="POST" action="feedback_gotit.aspx" onsubmit="return Check(this)" id="form1" name="form1"><table border="0" cellspacing="10" cellpadding="0">
 
 				<tr><td><table border="0" cellspacing="0" cellpadding="0">
 
@@ -205,12 +202,12 @@
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/name.gif" width="20" height="20" /></td>
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">Name:</font></td>
-				  <td width="300" height="16" valign="top"><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="Name" /></td>
+				  <td width="300" height="16" valign="top"><% If cammWebManager.CurrentUserLoginName = "" Then %><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="Name" /><% Else %><input type="hidden" value="<%= SessionUser_Name %>" name="Name"><%= SessionUser_Name %><% End If %></td>
 				</tr>
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/email.gif" width="20" height="20" /></td>
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">e-mail:</font></td>
-				  <td width="300" height="16" valign="top"><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="EMail" /></td>
+				  <td width="300" height="16" valign="top"><% If cammWebManager.CurrentUserLoginName = "" Then %><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="EMail" /><% Else %><input type="hidden" value="<%= SessionUser_email %>" name="EMail"><%= SessionUser_email %><% End If %></td>
 				</tr>
 				<input type="hidden" name="UserID" value="<%= SessionUserID %>" />
 				<input type="hidden" name="Addresses" value="<%= SessionUser_Addresses %>" />
@@ -245,7 +242,6 @@
 					<% End If %>
 				      </select></td>
 					<% If Request.QueryString("email") <> "" Then %><input type="hidden" name="emailto" value="<%= Server.HtmlEncode(Request.QueryString("email")) %>" /><% End If %>
-				      </select></td>
 				</tr>
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/kommentar.gif" width="20" height="20" /></td>
@@ -267,16 +263,16 @@
 
 				</table></no-more-form>
 
-				<p align="right"><font size="1">V<%= cammWebManager.System_Version %></font></p>
-				          </td>
-				        </tr>
-				      </table>
-                    </div>
+                                <p align="right"><font size="1">V<%= cammWebManager.System_Version %></font></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </td>
         </tr>
     </table>
 
-				
+
     <%
         End Select
     %>

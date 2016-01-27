@@ -5,7 +5,7 @@
 <%@ Import Namespace="CompuMaster.camm.WebManager" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" SecurityObject="@@Public" runat="server" />
-
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolderMain" runat="server">
 <%
 
     If Request.Form("loginname") = "" Or Trim(Request.Form("loginpw")) = "" Or ErrMsg <> "" Then
@@ -506,4 +506,4 @@
 
 End If
 %>
-
+</asp:content>

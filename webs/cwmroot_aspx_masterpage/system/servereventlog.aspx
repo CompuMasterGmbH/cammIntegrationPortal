@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPageFile="~/portal/MasterPage.master" Language="VB" %>
+﻿<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Page" %>
 <%@ Import Namespace="System.Diagnostics" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
@@ -101,6 +101,7 @@
 </script>
 <html>
 <head>
+    <title>Event Log</title>
 </head>
 <body bgcolor="#ffffff">
     <form runat="server">

@@ -1,15 +1,16 @@
-<%@ Page language="VB" %>
+<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Page" %>
+
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<camm:WebManager id="cammWebManager" runat="server" />
+<camm:WebManager ID="cammWebManager" runat="server" />
 <%
     Try
         If Request.QueryString("Relogon") = 1 Then
             'Roundtrip to all server/script engine combinations to refresh their session information
-            If Session("System_Username") <> "" Then
+            If cammWebManager.CurrentUserLoginName <> "" Then
                 dim System_RedirectURI
-                System_RedirectURI = cammWebManager.System_GetNextLogonURI(Session("System_Username"))
+                System_RedirectURI = cammWebManager.System_GetNextLogonURI(cammWebManager.CurrentUserLoginName)
                 If System_RedirectURI <> "" Then
-                    CompuMaster.camm.WebManager.Utils.RedirectTemporary(Me.Context, System_RedirectURI & "&redirectto=" & Server.URLEncode (cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData & "frames/frame_sub.aspx"))
+                    CompuMaster.camm.WebManager.Utils.RedirectTemporary(Me.Context, System_RedirectURI & "&redirectto=" & Server.UrlEncode(cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData & "frames/frame_sub.aspx"))
                 End If
             End If
         End If
@@ -20,33 +21,30 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="refresh" content="300; URL=<%= Response.ApplyAppPathModifier(Request.ServerVariables("SCRIPT_NAME")) %>?Relogon=1">
-<title>SessionMaintenance</title>
-<base target="_self">
+    <meta http-equiv="refresh" content="300; URL=<%= Response.ApplyAppPathModifier(Request.ServerVariables("SCRIPT_NAME")) %>?Relogon=1" />
+    <title>SessionMaintenance</title>
+    <base target="_self" />
 </head>
 
 <body>
-<iframe name="iframe_refreshlogin" width=1 height=1 frameborder=0 scrolling=no src="<%= cammWebManager.Internationalization.User_Auth_Config_Paths_Login %>refreshlogin.aspx">
-</iframe>
-<script lang="javascript">
+    <iframe name="iframe_refreshlogin" width="1" height="1" frameborder="0" scrolling="no" src="<%= cammWebManager.Internationalization.User_Auth_Config_Paths_Login %>refreshlogin.aspx"></iframe>
+    <script lang="javascript">
 
-function refreshWindow() {
-	var myiframe; 
-	try  
-	{ 
-		myiframe = iframe_refreshlogin; 
-	} 
-	catch (ex) 
-	{ 
-		myiframe = document.getElementsByName('iframe_refreshlogin')[0]; 
-	}; 
-	myiframe.location = '<%= cammWebManager.Internationalization.User_Auth_Config_Paths_Login %>refreshlogin.aspx';
-	self.setTimeout('refreshWindow()', 250000);
-}
+        function refreshWindow() {
+            var myiframe;
+            try {
+                myiframe = iframe_refreshlogin;
+            }
+            catch (ex) {
+                myiframe = document.getElementsByName('iframe_refreshlogin')[0];
+            };
+            myiframe.location = '<%= cammWebManager.Internationalization.User_Auth_Config_Paths_Login %>refreshlogin.aspx';
+            self.setTimeout('refreshWindow()', 250000);
+        }
 
-self.setTimeout('refreshWindow()', 250000);
+        self.setTimeout('refreshWindow()', 250000);
 
-</script>
+    </script>
 </body>
 
 </html>

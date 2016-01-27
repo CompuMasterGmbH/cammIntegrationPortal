@@ -8,13 +8,13 @@ sub Page_Load (sender as object, e as eventargs)
 end sub
 
 </script>
-
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolderMain" runat="server">
 <%
-	Select case cammWebManager.UILanguage
-		case 2: 'DEU
+    Select Case cammWebManager.UI.LanguageID
+        Case 2 : 'DEU
 			%><!--#include virtual="/system/includes/disclaimer.deu.inc"--><%
 		Case Else: 'ENG
 			%><!--#include virtual="/system/includes/disclaimer.eng.inc"--><%
 	End Select
 %>
-
+</asp:content>

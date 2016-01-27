@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Access error" MasterPage="~/portal/MasterPage.master" validateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.Specialized.ErrorPage" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
-
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolderMain" runat="server">
 <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
 <TBODY>
 	<TR>
@@ -17,3 +17,4 @@
 	<% End If %>
 </TBODY>
 </TABLE>
+</asp:content>

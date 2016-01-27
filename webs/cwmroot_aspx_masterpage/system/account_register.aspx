@@ -31,6 +31,7 @@
 
 
 </script>
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolderMain" runat="server">
 	<h3><font face="Arial" size="3"><%= Server.htmlencode(cammWebManager.Internationalization.OfficialServerGroup_Title) %><br />-&nbsp;<%= cammWebManager.Internationalization.CreateAccount_Descr_PageTitle %>&nbsp;-</font></h3>
 	<TABLE cellSpacing=0 cellPadding=0 bgColor="#ffffff" border=0 bordercolor="#C1C1C1">
 	  <TBODY>
@@ -195,3 +196,4 @@
 					</TR>
 	        </TBODY></TABLE></TD></TR>
       </TBODY></TABLE>
+</asp:content>

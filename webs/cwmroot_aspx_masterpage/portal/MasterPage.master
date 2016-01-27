@@ -71,7 +71,7 @@
             <td bgcolor="#FFFF66" valign="middle" height="17"><a href="<%= Response.ApplyAppPathModifier("/portal/feedback.aspx") %>"><font size="2" face="Arial"><b><%= cammWebManager.Internationalization.Banner_Feedback %></b></font></a></td>
             <td bgcolor="#FFFF66" valign="middle" height="17"></td>
             <td bgcolor="#FFFF66" align="right" valign="middle" height="17">
-                <a <% If Session("System_Username") <> "" Then Response.Write(" target=""_top""") %> href="<% If Session("System_Username") <> "" Then Response.Write(cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL & "?Action=Logout") Else Response.Write(cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL) %>"><font size="2" face="Arial"><b><% If Session("System_Username") = "" Then Response.Write(cammWebManager.Internationalization.NavLinkNameLogin) Else Response.Write(cammWebManager.Internationalization.NavLinkNameLogout) %></b></font>
+                <a <% If cammWebManager.CurrentUserLoginName <> "" Then Response.Write(" target=""_top""") %> href="<% If cammWebManager.CurrentUserLoginName <> "" Then Response.Write(cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL & "?Action=Logout") Else Response.Write(cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL) %>"><font size="2" face="Arial"><b><% If cammWebManager.CurrentUserLoginName = "" Then Response.Write(cammWebManager.Internationalization.NavLinkNameLogin) Else Response.Write(cammWebManager.Internationalization.NavLinkNameLogout) %></b></font>
                 </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         </tr>
     </table>
@@ -94,10 +94,10 @@
                                                                                                        End If %> <a href="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteURL") %>" target="_blank"><%= server.HtmlEncode(cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyFormerTitle")) %></a><br /><%= cammWebManager.Internationalization.StatusLineCopyright_AllRightsReserved %></font></td>
             <td bgcolor="#FFFF66" height="30" valign="top"><% 
 
-                                                               If Session("System_Username") <> "" Then
+                                                               If cammWebManager.CurrentUserLoginName <> "" Then
             %><table border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td valign="top" align="center"><font size="1" face="Arial"><%= cammWebManager.Internationalization.StatusLineLoggedInAs %><br /><a href="<%= Response.ApplyAppPathModifier("/portal/account_updateprofile.aspx") %>?ID=<%= cammWebManager.System_GetUserID(Session("System_Username")) %>" target="frame_main"><%= cammWebManager.System_GetUserDetail(cammWebManager.System_GetUserID(Session("System_Username")), "CompleteName") & " (" & Session("System_Username") & ")" %></a></font></td>
+                    <td valign="top" align="center"><font size="1" face="Arial"><%= cammWebManager.Internationalization.StatusLineLoggedInAs %><br /><a href="<%= Response.ApplyAppPathModifier("/portal/account_updateprofile.aspx") %>?ID=<%= cammWebManager.CurrentUserID(CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous) %>" target="frame_main"><%= cammWebManager.System_GetUserDetail(cammWebManager.CurrentUserID(CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous), "CompleteName") & " (" & cammWebManager.CurrentUserLoginName & ")" %></a></font></td>
                     <td>&nbsp; &nbsp; </td>
                     <td valign="top" align="left">
                         <img src="/portal/images/space.gif" border="0" width="39" height="6" /><br />

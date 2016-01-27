@@ -62,9 +62,9 @@
     Dim Level6IsUpdated As Boolean
     Dim AppDisabled As Boolean
     Dim JSElementLevels As String
-    
+
     Dim IsHtmlEnCoded As Boolean
-    Dim Title As String
+    Shadows Title As String
 
     Dim ErrMsg As String
     Dim MoveNextDone As Boolean
@@ -131,11 +131,11 @@
             Level4TitleOld = Level4Title
             Level5TitleOld = Level5Title
             Level6TitleOld = Level6Title
-            
+
             Title = CompuMaster.camm.WebManager.Utils.Nz(MyRow("Title"))
-                                                         
+
             IsHtmlEnCoded = CompuMaster.camm.WebManager.Utils.Nz(MyRow("IsHtmlEncoded"))
-                                   
+
             If IsHtmlEnCoded = False Then
                 If Title.IndexOf("\") >= 0 Then
                     Level1Title = Server.HtmlEncode(Title.Substring(0, Title.IndexOf("\")))
@@ -149,13 +149,13 @@
                     Level1Title = Title
                 End If
             End If
-            
+
             If Title.IndexOf("\") >= 0 Then
                 Title = Title.Remove(0, Title.IndexOf("\") + 1)
             Else
                 Title = ""
             End If
-            
+
             If IsHtmlEnCoded = False Then
                 If Title.IndexOf("\") >= 0 Then
                     Level2Title = Server.HtmlEncode(Title.Substring(0, Title.IndexOf("\")))
@@ -169,13 +169,13 @@
                     Level2Title = Title
                 End If
             End If
-            
+
             If Title.IndexOf("\") >= 0 Then
                 Title = Title.Remove(0, Title.IndexOf("\") + 1)
             Else
                 Title = ""
             End If
-            
+
             If IsHtmlEnCoded = False Then
                 If Title.IndexOf("\") >= 0 Then
                     Level3Title = Server.HtmlEncode(Title.Substring(0, Title.IndexOf("\")))
@@ -189,13 +189,13 @@
                     Level3Title = Title
                 End If
             End If
-            
+
             If Title.IndexOf("\") >= 0 Then
                 Title = Title.Remove(0, Title.IndexOf("\") + 1)
             Else
                 Title = ""
             End If
-            
+
             If IsHtmlEnCoded = False Then
                 If Title.IndexOf("\") >= 0 Then
                     Level4Title = Server.HtmlEncode(Title.Substring(0, Title.IndexOf("\")))
@@ -209,13 +209,13 @@
                     Level4Title = Title
                 End If
             End If
-            
+
             If Title.IndexOf("\") >= 0 Then
                 Title = Title.Remove(0, Title.IndexOf("\") + 1)
             Else
                 Title = ""
             End If
-            
+
             If IsHtmlEnCoded = False Then
                 If Title.IndexOf("\") >= 0 Then
                     Level5Title = Server.HtmlEncode(Title.Substring(0, Title.IndexOf("\")))
@@ -229,13 +229,13 @@
                     Level5Title = Title
                 End If
             End If
-            
+
             If Title.IndexOf("\") >= 0 Then
                 Title = Title.Remove(0, Title.IndexOf("\") + 1)
             Else
                 Title = ""
             End If
-            
+
             If IsHtmlEnCoded = False Then
                 If Title.IndexOf("\") >= 0 Then
                     Level6Title = Server.HtmlEncode(Title.Substring(0, Title.IndexOf("\")))
@@ -249,7 +249,7 @@
                     Level6Title = Title
                 End If
             End If
-            
+
             If Not Level6Title = "" Then
                 ResetLevelLinkData()
                 Level6HRef = MyRow("URLAutoCompleted")
@@ -744,7 +744,7 @@
 
         If AdditionalFeaturesEnabled = False Then 'only in standard mode
             Try
-                CurUserID = CInt(cammWebManager.System_GetUserID(HttpContext.Current.Session("System_Username"))) 'raises error when is null
+                CurUserID = CInt(cammWebManager.System_GetUserID(HttpContext.Current.cammWebManager.CurrentUserLoginName)) 'raises error when is null
             Catch
                 CurUserID = CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous
             End Try
@@ -755,7 +755,7 @@
         Else
             MyDataTable = cammWebManager.System_GetUserNavigationElements(CurUserID, Nothing, strServerIP)
         End If
-        
+
         'Get additional navigation information
         '=====================================
 

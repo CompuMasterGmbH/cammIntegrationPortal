@@ -3,6 +3,7 @@
 <%@ Register TagPrefix="camm" Namespace="CompuMaster.camm.WebManager.Controls" Assembly="cammWM" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <%@ Register TagPrefix="cammWebEdit" Namespace="CompuMaster.camm.WebManager.Modules.WebEdit.Controls" Assembly="cammWM" %>
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolderMain" runat="server">
 <cammWebEdit:SmartWcms MarketLookupMode="0" runat="server" ID="mainEditor"
     SecurityObjectEditMode="@@Supervisor"
     Docs="docs"
@@ -13,3 +14,4 @@
     ImagesReadOnly="images,~/images,/images">
     {Insert content here...}
 </cammWebEdit:SmartWcms>
+</asp:content>

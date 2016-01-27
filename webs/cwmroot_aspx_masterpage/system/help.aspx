@@ -25,6 +25,7 @@
     end sub
 
 </script>
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolderMain" runat="server">
 <%
 	Select Case MyLangID
 		case 2: 'DEU
@@ -65,3 +66,4 @@
 <%
 	End Select
 %>
+</asp:content>
