@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Register account" MasterPage="~/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.CreateUserProfile" language="VB" %>
+﻿<%@ Page Title="Register account" MasterPageFile="~/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.CreateUserProfile" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
 

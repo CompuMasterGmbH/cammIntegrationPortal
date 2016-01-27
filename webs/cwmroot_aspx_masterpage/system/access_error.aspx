@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Access error" MasterPage="~/portal/MasterPage.master" validateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.Specialized.ErrorPage" language="VB" %>
+﻿<%@ Page Title="Access error" MasterPageFile="~/portal/MasterPage.master" validateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.Specialized.ErrorPage" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
 <asp:content id="Content2" contentplaceholderid="ContentPlaceHolderMain" runat="server">

@@ -2,7 +2,7 @@
 
 <%@ Import Namespace="System.Data" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<camm:WebManager PageTitle="Navigation" id="cammWebManager" runat="server" />
+<camm:WebManager PageTitle="Navigation" ID="cammWebManager" runat="server" />
 
 <script lang="VB" runat="server">
 
@@ -791,9 +791,8 @@
 <html>
 <head>
     <title>
-        <%= Server.htmlencode(NavTitle) %>
-        - Navigation</title>
-    <%@ register tagprefix="Custom" tagname="HeadHTML" src="index_style3_headhtml.ascx" %>
+        <%= Server.htmlencode(NavTitle) %> - Navigation</title>
+    <%@ Register TagPrefix="Custom" TagName="HeadHTML" Src="index_style3_headhtml.ascx" %>
     <Custom:HeadHTML id="CustomHeadHTML" runat="server" />
 </head>
 <body marginheight="0" marginwidth="0" leftmargin="0" bgcolor="#FFFF66" topmargin="0">
@@ -829,10 +828,10 @@
                             MoveNextDone = False
                             If Level3Present Then
                                 If Not NextLevel1 Then%><!-- Level2Init --><tr>
-                    <td colspan="2" bgcolor="#FFFF66">
-                      <img src="images/space.gif" width="100" height="5" border="0" />
-                    </td>
-                </tr>
+                                    <td colspan="2" bgcolor="#FFFF66">
+                                        <img src="images/space.gif" width="100" height="5" border="0" />
+                                    </td>
+                                </tr>
             <%  End If
                 Level2Init()
                 Do 'Level3
@@ -850,94 +849,94 @@
                                         Do 'Level6
                                             MoveNextDone = False
             %><!-- Level6Begin --><%
-                                      Level6NoSubs()
+                                            Level6NoSubs()
             %><!-- Level6End --><%
-                                Loop Until NextLevel5 'Level6
-                                Level5Close()
+                                            Loop Until NextLevel5 'Level6
+                                            Level5Close()
             %><!-- Level5Close --><%
-                                  Else
+                                            Else
             %><!-- Level5Begin --><%
-                                      Level5NoSubs()
+                                            Level5NoSubs()
             %><!-- Level5End --><%
-                                End If
-                            Loop Until NextLevel4 'Level5
-                            Level4Close()
+                                                End If
+                                            Loop Until NextLevel4 'Level5
+                                            Level4Close()
             %><!-- Level4Close --><%
-                                  Else
+                                            Else
             %><!-- Level4Begin --><%
-                                      Level4NoSubs()
+                                            Level4NoSubs()
             %><!-- Level4End --><%
-                                End If
-                            Loop Until NextLevel3 'Level4
-                            Level3Close()
+                                                End If
+                                            Loop Until NextLevel3 'Level4
+                                            Level3Close()
             %><!-- Level3Close --><%
-                                  Else
+                                            Else
             %><!-- Level3Begin --><%
-                                      Level3NoSubs()
+                                            Level3NoSubs()
             %><!-- Level3End --><%
-                                End If
-                            Loop Until NextLevel2 'Level3
-                            Level2Close()
-                            If Not Level3Present Then%><tr>
-                    <td colspan="2" bgcolor="#FFFF66">
-                        <img src="images/space.gif" width="100" height="5" border="0">
-                    </td>
-                </tr>
+                                                End If
+                                            Loop Until NextLevel2 'Level3
+                                            Level2Close()
+                                            If Not Level3Present Then%><tr>
+                                <td colspan="2" bgcolor="#FFFF66">
+                                    <img src="images/space.gif" width="100" height="5" border="0">
+                                </td>
+                            </tr>
             <%  End If
             %><!-- Level2Close --><%
-                                  Else
+                                            Else
             %><!-- Level2Begin --><%
-                                      Level2NoSubs()
+                                            Level2NoSubs()
             %><!-- Level2End --><%
-                                End If
-                            Loop Until NextLevel1 'Level2
-                            Level1Close()
+                                                End If
+                                            Loop Until NextLevel1 'Level2
+                                            Level1Close()
             %><!-- Level1Close --><%
-                                  Else
+                                            Else
             %><!-- Level1Begin --><%
-                                      Level1NoSubs()
+                                            Level1NoSubs()
             %><!-- Level1End --><%
-                                End If
-                                If MoveNextDone = False Then
-                                    MoveNextAndReadRecordData()
-                                    MoveNextDone = True
-                                End If
-                            End While 'Level1
-                            Level1Counter = Level1Counter + 1
-                            JSElementLevels = JSElementLevels & ", 0"
+                                                End If
+                                                If MoveNextDone = False Then
+                                                    MoveNextAndReadRecordData()
+                                                    MoveNextDone = True
+                                                End If
+                                            End While 'Level1
+                                            Level1Counter = Level1Counter + 1
+                                            JSElementLevels = JSElementLevels & ", 0"
             %>
         </tbody>
     </table>
 
-    <script type="text/javascript" language="JavaScript">
+    <script type="text/javascript" lang="javascript">
 <!--
-	var sectionCount = <%= Level1Counter %>;
-	var menuClientId = "NavMenu_Menu";
-	var menuId = "Menu";
-	var arrowDown = new Image();
-	arrowDown.src = "images/button_arrow_up_bgyellow_13x13.gif";
-	var arrowDown2 = new Image();
-	arrowDown2.src = "images/button_arrow_down_lev2_9x12.gif";
-	var arrowDown_Updated = new Image();
-	arrowDown_Updated.src = "images/button_arrow_up_bgyellow_13x13.gif";
-	var arrowDown2_Updated = new Image();
-	arrowDown2_Updated.src = "images/button_arrow_down_lev2_9x12.gif";
-	var arrowRight = new Image();
-	arrowRight.src = "images/button_arrow_right_bgyellow_13x13.gif";
-	var arrowRight2 = new Image();
-	arrowRight2.src = "images/button_arrow_right_lev2_9x12.gif";
-	var arrowRight_Updated = new Image();
-	arrowRight_Updated.src = "images_style_3/button_red_arrow_right_bgyellow_13x13.gif";
-	var arrowRight2_Updated = new Image();
-	arrowRight2_Updated.src = "images_style_3/button_red_arrow_right_lev2_9x12.gif";
-	var arrowDownArray = [	arrowDown, arrowDown2	] ;
-	var arrowRightArray = [	arrowRight, arrowRight2	] ;
-	var arrowDownUpdatedArray = [	arrowDown_Updated, arrowDown2_Updated	] ;
-	var arrowRightUpdatedArray = [	arrowRight_Updated, arrowRight2_Updated	] ;
-	var ElementLevels = [<%= Mid(JSElementLevels,3) %>];
+    var sectionCount = <%= Level1Counter %>;
+        var menuClientId = "NavMenu_Menu";
+        var menuId = "Menu";
+        var arrowDown = new Image();
+        arrowDown.src = "images/button_arrow_up_bgyellow_13x13.gif";
+        var arrowDown2 = new Image();
+        arrowDown2.src = "images/button_arrow_down_lev2_9x12.gif";
+        var arrowDown_Updated = new Image();
+        arrowDown_Updated.src = "images/button_arrow_up_bgyellow_13x13.gif";
+        var arrowDown2_Updated = new Image();
+        arrowDown2_Updated.src = "images/button_arrow_down_lev2_9x12.gif";
+        var arrowRight = new Image();
+        arrowRight.src = "images/button_arrow_right_bgyellow_13x13.gif";
+        var arrowRight2 = new Image();
+        arrowRight2.src = "images/button_arrow_right_lev2_9x12.gif";
+        var arrowRight_Updated = new Image();
+        arrowRight_Updated.src = "images_style_3/button_red_arrow_right_bgyellow_13x13.gif";
+        var arrowRight2_Updated = new Image();
+        arrowRight2_Updated.src = "images_style_3/button_red_arrow_right_lev2_9x12.gif";
+        var arrowDownArray = [	arrowDown, arrowDown2	] ;
+        var arrowRightArray = [	arrowRight, arrowRight2	] ;
+        var arrowDownUpdatedArray = [	arrowDown_Updated, arrowDown2_Updated	] ;
+        var arrowRightUpdatedArray = [	arrowRight_Updated, arrowRight2_Updated	] ;
+        var ElementLevels = [<%= Mid(JSElementLevels,3) %>];
 --></script>
 
-    <%@ register tagprefix="Custom" tagname="NavMainJScript" src="index_style3_jscript.ascx" %>
+    <%@ Register TagPrefix="Custom" TagName="NavMainJScript" Src="index_style3_jscript.ascx" %>
     <Custom:NavMainJScript id="CustomNavMainJScript" runat="server" />
 </body>
 </html>

@@ -19,8 +19,8 @@
                         <tbody>
                             <tr>
                                 <td valign="top">
-                                    <form method="POST" action="<%= Response.ApplyAppPathModifier(Request.ServerVariables("SCRIPT_NAME")) %>" id="form1" name="form1">
-                                        <input type="hidden" name="loginname" value="<%= cammWebManager.CurrentUserLoginName %>">
+                                    <no-more-form method="POST" action="EX-SCRIPT" id="form1" name="form1">EX-SCRIPT=%%%= Response.ApplyAppPathModifier(Request.ServerVariables("SCRIPT_NAME")) %%%
+                                        <input type="hidden" name="loginname" value="<%= cammWebManager.CurrentUserLoginName %>" />
                                         <table cellspacing="0" cellpadding="3" width="100%" border="0" bordercolor="#FFFFFF">
                                             <tbody>
                                                 <tr>
@@ -33,7 +33,7 @@
                                                         <p><font face="Arial" size="2"><%= cammWebManager.Internationalization.UpdatePW_Descr_CurrentPW %> <font color="#C1C1C1"> *</font> </font></p>
                                                     </td>
                                                     <td valign="Top" width="240">
-                                                        <p><font face="Arial" size="2"><input style="width: 200px" type="password" name="oldpassword" value=""></font></p>
+                                                        <p><font face="Arial" size="2"><input style="width: 200px" type="password" name="oldpassword" value="" /></font></p>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -41,7 +41,7 @@
                                                         <p><font face="Arial" size="2"><%= cammWebManager.Internationalization.UpdatePW_Descr_NewPW %> <font color="#C1C1C1"> *</font> </font></p>
                                                     </td>
                                                     <td valign="Top" width="240">
-                                                        <p><font face="Arial" size="2"><input style="width: 200px" type="password" name="newpassword1" value=""></font></p>
+                                                        <p><font face="Arial" size="2"><input style="width: 200px" type="password" name="newpassword1" value="" /></font></p>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -49,12 +49,12 @@
                                                         <p><font face="Arial" size="2"><%= cammWebManager.Internationalization.UpdatePW_Descr_NewPWConfirm %> <font color="#C1C1C1"> *</font> </font></p>
                                                     </td>
                                                     <td valign="Top" width="240">
-                                                        <p><font face="Arial" size="2"><input style="width: 200px" type="password" name="newpassword2" value=""></font></p>
+                                                        <p><font face="Arial" size="2"><input style="width: 200px" type="password" name="newpassword2" value="" /></font></p>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td valign="Top" width="160">
-                                                        <p><font face="Arial" size="2"><input type="submit" name="submit" value="<%= Server.HtmlEncode(cammWebManager.Internationalization.UpdatePW_Descr_Submit) %>"></font></p>
+                                                        <p><font face="Arial" size="2"><input type="submit" name="submit" value="<%= Server.HtmlEncode(cammWebManager.Internationalization.UpdatePW_Descr_Submit) %>" /></font></p>
                                                     </td>
                                                     <td valign="Middle" align="Right" width="240">
                                                         <p><font face="Arial" size="2" color="#C1C1C1"><%= cammWebManager.Internationalization.UpdatePW_Descr_RequiredFields %></font></p>
@@ -62,7 +62,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                    </form>
+                                    </no-more-form>
                                 </td>
                             </tr>
                         </tbody>
