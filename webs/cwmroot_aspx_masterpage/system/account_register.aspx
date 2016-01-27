@@ -1,7 +1,7 @@
-﻿<%@ Page Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.CreateUserProfile" language="VB" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.CreateUserProfile" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <script runat="server">
 
 	Private Sub CustomValidatorComesFrom_ServerValidate(ByVal source As Object, ByVal args As System.Web.UI.WebControls.ServerValidateEventArgs)
@@ -195,4 +195,3 @@
 					</TR>
 	        </TBODY></TABLE></TD></TR>
       </TBODY></TABLE>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->

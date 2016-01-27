@@ -1,7 +1,7 @@
-﻿<%@ Page Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.CopyWebsiteAreaID" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.CopyWebsiteAreaID" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebmanager" runat="server" SecurityObject="System - TextModules" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <table cellpadding="3" cellspacing="0" width="100%">
     <tr>
         <td>
@@ -64,4 +64,4 @@
         </td>
     </tr>
 </table>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

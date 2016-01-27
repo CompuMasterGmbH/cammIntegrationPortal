@@ -1,8 +1,8 @@
-﻿<%@ Page ValidateRequest="False" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.AppCheckUsersForMissingFlags" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" ValidateRequest="False" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.AppCheckUsersForMissingFlags" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify application" id="cammWebManager" SecurityObject="System - User Administration - Applications" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <h3>
 	Users with missing required flags for application <a href="apps_update.aspx?ID=<%=request.querystring("ID")%>">
 		<%=New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(CInt(Trim(request.querystring("ID"))), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem)).DisplayName %></a></h3>
@@ -26,4 +26,4 @@
 </p>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="apps.aspx" ID="cammWebManagerAdminMenu" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

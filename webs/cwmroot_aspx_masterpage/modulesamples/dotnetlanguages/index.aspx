@@ -1,10 +1,11 @@
-﻿<%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" %>
+<%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
 	<title>.NET Languages Demo</title>
-	<link href="/sysdata/style_standard.css" type="text/css" rel="stylesheet">
+	<link href="/portal/style_standard.css" type="text/css" rel="stylesheet">
 </head>
 <body>
 <font face="Arial" size="2">

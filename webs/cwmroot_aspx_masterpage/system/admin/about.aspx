@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.About" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.About" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify user account" id="cammWebManager"
@@ -11,7 +11,7 @@
 	
 </script>
 
-<!--#include virtual="/sysdata/includes/standardtemplate_top_wo_form.aspx"-->
+<!--#include virtual="/portal/includes/standardtemplate_top_wo_form.aspx"-->
 <h3>
     <font face="Arial">Administration - About WebManager</font></h3>
 <p>
@@ -374,4 +374,4 @@
 </table>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="users.aspx" id="cammWebManagerAdminMenu" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_wo_form.aspx"-->
+<!--#include virtual="/portal/includes/standardtemplate_bottom_wo_form.aspx"-->

@@ -1,11 +1,11 @@
-﻿<%@ Page Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ChangeUserProfile"
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ChangeUserProfile"
     Language="VB" %>
 
 <%@ Import Namespace="CompuMaster.camm.WebManager.WMSystem" %>
 <%@ Import Namespace="CompuMaster.camm.WebManager" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" SecurityObject="@@Public" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <%
 
     If Request.Form("loginname") = "" Or Trim(Request.Form("loginpw")) = "" Or ErrMsg <> "" Then
@@ -506,4 +506,4 @@
 
 End If
 %>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

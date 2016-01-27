@@ -3,7 +3,7 @@
 public cammWebManager as CompuMaster.camm.WebManager.WMSystem
 </script>
 <base target="frame_main">
-<!--#include virtual="/sysdata/includes/metalink.aspx"-->
+<!--#include virtual="/portal/includes/metalink.aspx"-->
 <STYLE type="text/css">A:active {
 	FONT-WEIGHT: normal; COLOR: #0000ff; FONT-FAMILY: Arial; TEXT-DECORATION: none
 }

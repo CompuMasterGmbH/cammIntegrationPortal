@@ -1,11 +1,11 @@
-﻿<%@ Page ValidateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ChangeUserPassword" language="VB" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" ValidateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ChangeUserPassword" language="VB" %>
 <%@ Import NameSpace="System.Data" %>
 <%@ Import NameSpace="System.Data.SqlClient" %>
 <%@ Import NameSpace="CompuMaster.camm.WebManager.WMSystem" %>
 <%@ Import NameSpace="CompuMaster.camm.WebManager" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" SecurityObject="@@Public" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top.aspx"-->
+
 <%
 If HideForm = False Then
 %>
@@ -51,4 +51,3 @@ Else
 <%
 End If
 %>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom.aspx"-->

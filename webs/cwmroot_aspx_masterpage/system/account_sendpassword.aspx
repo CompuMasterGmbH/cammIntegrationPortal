@@ -1,7 +1,7 @@
-﻿<%@ Page Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.SendUserPassword" language="VB" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.SendUserPassword" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top.aspx"-->
+
 <% If Request.Form ("loginname") = "" and Request.Form ("email") = "" then %>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr><td><table border="0" cellspacing="40" cellpadding="0"><tr><td>
@@ -65,4 +65,3 @@
 End If %>
 </td></tr>
 </table>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom.aspx"-->

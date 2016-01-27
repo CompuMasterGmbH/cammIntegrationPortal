@@ -18,7 +18,7 @@ End Sub
 
 <html>
 <head>
-<!--#include virtual="/sysdata/includes/metalink.aspx"-->
+<!--#include virtual="/portal/includes/metalink.aspx"-->
 <link rel="stylesheet" type="text/css" href="/system/modules/explorer/explorer.css" />
 </head>
 <body >

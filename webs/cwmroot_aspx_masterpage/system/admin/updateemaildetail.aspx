@@ -4,7 +4,7 @@
 <html>	
 	<head>
 	<title>Update mail detail</title>
-	<link rel="stylesheet" type="text/css" href="/sysdata/style_standard.css">
+	<link rel="stylesheet" type="text/css" href="/portal/style_standard.css">
 	<script language="javascript">
 	    function ValidateEmailId(ToEmail,CCEmail,BccEmail)
 	    {

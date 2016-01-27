@@ -8,7 +8,7 @@
 	end sub
 
 </script>
-<!--#include virtual="/sysdata/includes/standardtemplate_top.aspx"-->
+
       <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
         <TBODY>
         <TR>
@@ -19,4 +19,4 @@
           <%= IIf(cammWebManager.Internationalization.HighlightTextExtro<>"","<p>","") & cammWebManager.Internationalization.HighlightTextExtro & IIf(cammWebManager.Internationalization.HighlightTextExtro<>"","</p>","") %>
           <%= "<p>" & cammWebManager.sprintf(cammWebManager.Internationalization.WelcomeTextFeedbackToContact, cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString(), "AreaContentManagementContactEMail"), cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString(), "AreaContentManagementContactTitle")) & "</p>" %>
             </font></TD></TR></TBODY></TABLE>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom.aspx"-->
+

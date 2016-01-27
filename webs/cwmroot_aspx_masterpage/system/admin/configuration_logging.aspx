@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationLogging" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationLogging" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify user account" id="cammWebManager"
@@ -11,7 +11,7 @@
 	
 </script>
 
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <h3>
     <font face="Arial">Administration - Logging configuration</font></h3>
 <asp:label runat="server" id="lblMsg" forecolor="green" />
@@ -38,4 +38,4 @@ Delete old logs now!&nbsp;<asp:button runat="server" id="btnDeleteOldLogsNow" te
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="configuration.aspx" id="cammWebManagerAdminMenu"
     runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

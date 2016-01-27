@@ -1,7 +1,7 @@
-﻿<%@ Page validateRequest=false Inherits="CompuMaster.camm.WebManager.Pages.Login.LoginForm" language="VB" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" validateRequest=false Inherits="CompuMaster.camm.WebManager.Pages.Login.LoginForm" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top.aspx"-->
+
 <table border="0" cellspacing="0" cellpadding="0"><tr><td>
 <%
 If ErrorMessageForUser <> "" Then Response.Write (ErrorMessageForUser)
@@ -32,4 +32,3 @@ document.formlogin.Username.focus()
 //-->
 </script>
 </td></tr><tr><td><%= cammWebManager.Internationalization.Logon_BodyExplanation %></td></tr></table>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom.aspx"-->

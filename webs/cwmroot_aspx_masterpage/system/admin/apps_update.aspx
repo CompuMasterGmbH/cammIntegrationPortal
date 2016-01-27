@@ -1,4 +1,4 @@
-﻿<%@ Page ValidateRequest="False" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ApplicationUpdate" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" ValidateRequest="False" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ApplicationUpdate" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify application" id="cammWebManager"
@@ -6,7 +6,7 @@
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockContentLine" Src="adminblockcontentline.ascx" %>
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <h3>
     <font face="Arial">Administration - Modify application</font></h3>
     <font face="Arial" size="2" color="red">
@@ -455,4 +455,4 @@
 </table>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="apps.aspx" id="cammWebManagerAdminMenu" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

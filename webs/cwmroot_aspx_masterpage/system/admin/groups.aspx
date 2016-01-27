@@ -1,10 +1,10 @@
-﻿<%@ Page language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.GroupList" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.GroupList" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - User groups" id="cammWebManager" SecurityObject="System - User Administration - Groups" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockContentLine" Src="adminblockcontentline.ascx" %>
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 
 <h3><font face="Arial">Administration - User groups</font></h3>
 <TABLE cellSpacing=0 cellPadding=0 bgColor=#ffffff border=0>
@@ -66,4 +66,3 @@
 </TABLE>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu  id="cammWebManagerAdminMenu" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->

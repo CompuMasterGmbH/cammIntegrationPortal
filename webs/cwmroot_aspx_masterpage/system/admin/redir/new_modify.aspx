@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="vb" Inherits="CompuMaster.camm.WebManager.Modules.Redirector.Pages.Administration.EditRedirection" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:webmanager PageTitle="Redirections - Modify Item" id="cammWebManager" runat="server"></camm:webmanager>
-<!--#include virtual="/sysdata/includes/standardtemplate_top_wo_form.aspx"-->
+<!--#include virtual="/portal/includes/standardtemplate_top_wo_form.aspx"-->
 		<asp:panel runat="server" id="ActivateJScript">
 		<SCRIPT language="JavaScript">
 			//close popup window and refresh main window
@@ -38,4 +38,4 @@
 			</P>
 			<asp:button id="button_send" OnClick="button_send_Click" runat="server" Text="Send" /> <asp:button id="button_reset" onclick="button_reset_Click" runat="server" Text="Reset" />
 		</form>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_wo_form.aspx"-->
+<!--#include virtual="/portal/includes/standardtemplate_bottom_wo_form.aspx"-->

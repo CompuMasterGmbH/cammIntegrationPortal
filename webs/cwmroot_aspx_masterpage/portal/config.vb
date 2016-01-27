@@ -8,7 +8,7 @@
 '==== 3. editorial.asp/aspx/etc.             ====
 '==== 4. help.asp/aspx/etc.                  ====
 '==== 5. your logos and images in            ====
-'====    /sysdata/images/*                   ====
+'====    /portal/images/*                   ====
 '==== 6. server configuration (admin scripts)====
 '================================================
 '====                                        ====

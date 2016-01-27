@@ -1,13 +1,13 @@
-﻿<%@ Page language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.Users_Navbar_Preview" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.Users_Navbar_Preview" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" PageTitle="Administration - Navigation preview of special users" SecurityObject="System - User Administration - NavPreview" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <Script language="JavaScript">
 <!--
 function OpenNavDemo(LangID, ServerGroupID, UserID, GroupID)
 {
-	//window.open('/sysdata/nav/index.aspx?Mode=Preview&ID=' + UserID + '&PreviewLang=' + LangID + '&Server=' + ServerGroupID + '&Group=' + GroupID,'navPreview','width=200, resizable, scrollbars', 'navPreview');
-	var url = '/sysdata/nav/index.aspx?Mode=Preview&ID=' + UserID + '&PreviewLang=' + LangID + '&GroupID=' + GroupID + '&Server=' + ServerGroupID;
+	//window.open('/portal/nav/index.aspx?Mode=Preview&ID=' + UserID + '&PreviewLang=' + LangID + '&Server=' + ServerGroupID + '&Group=' + GroupID,'navPreview','width=200, resizable, scrollbars', 'navPreview');
+	var url = '/portal/nav/index.aspx?Mode=Preview&ID=' + UserID + '&PreviewLang=' + LangID + '&GroupID=' + GroupID + '&Server=' + ServerGroupID;
 	window.open(url,'navPreview','width=200, resizable, scrollbars', 'navPreview');
 	return false;
 }
@@ -34,4 +34,3 @@ function OpenNavDemo(LangID, ServerGroupID, UserID, GroupID)
 </TBODY></TABLE>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu id="cammWebManagerAdminMenu" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->

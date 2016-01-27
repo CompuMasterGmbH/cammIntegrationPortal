@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationOverview" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationOverview" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify user account" id="cammWebManager"
@@ -11,7 +11,7 @@
 	
 </script>
 
-<!--#include virtual="/sysdata/includes/standardtemplate_top_wo_form.aspx"-->
+<!--#include virtual="/portal/includes/standardtemplate_top_wo_form.aspx"-->
 <h3>
     <font face="Arial">Administration - Advanced configuration</font></h3>
     <%'TODO: Strukturierte und benutzerfreundliche Auflistung der versch. Konfigurationsmöglichkeiten erstellen %>
@@ -22,4 +22,4 @@
 
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="about.aspx" id="cammWebManagerAdminMenu" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_wo_form.aspx"-->
+<!--#include virtual="/portal/includes/standardtemplate_bottom_wo_form.aspx"-->

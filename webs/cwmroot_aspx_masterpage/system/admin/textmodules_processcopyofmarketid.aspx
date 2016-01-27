@@ -1,8 +1,8 @@
-﻿<%@ Page Language="vb" AutoEventWireup="false" ValidateRequest="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.ProcessCopyOfMarketID" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" ValidateRequest="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.ProcessCopyOfMarketID" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebmanager" runat="server" SecurityObject="System - TextModules" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <a name="Top"></a>
 <table cellpadding="3" cellspacing="0" width="100%">
     <tr>
@@ -366,4 +366,4 @@
         </td>
     </tr>
 </table>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

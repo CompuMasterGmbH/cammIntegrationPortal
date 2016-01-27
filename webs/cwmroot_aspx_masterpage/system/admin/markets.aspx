@@ -1,7 +1,7 @@
-﻿<%@ Page language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.MarketActivations" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.MarketActivations" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" PageTitle="Administration - Markets and languages" SecurityObject="System - Administration - Markets" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_wo_form.aspx"-->
+<!--#include virtual="/portal/includes/standardtemplate_top_wo_form.aspx"-->
 	<h3><font face="Arial">Administration - Markets and languages</font></h3>
  	<TABLE cellSpacing=0 cellPadding=0 bgColor=#ffffff border=0 bordercolor="#C1C1C1">
 	  <TBODY>
@@ -27,4 +27,4 @@
       </TBODY></TABLE>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu id="cammWebManagerAdminMenu" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_wo_form.aspx"-->
+<!--#include virtual="/portal/includes/standardtemplate_bottom_wo_form.aspx"-->

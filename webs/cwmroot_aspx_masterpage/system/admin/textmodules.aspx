@@ -1,11 +1,11 @@
-﻿<%@ Page Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.TextModules"%>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.TextModules"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <%@ Register TagPrefix="TextModule" TagName="TextBlock" Src="textmodules_textblock.ascx" %>
 <%@ Register TagPrefix="TextModule" TagName="Variable" Src="textmodules_variable.ascx" %>
 <%@ Register TagPrefix="TextModule" TagName="Template" Src="textmodules_template.ascx" %>
 <%@ Register TagPrefix="componentart" Namespace="ComponentArt.Web.UI" Assembly="ComponentArt.Web.UI" %>
 <camm:WebManager id="cammWebmanager" runat="server" SecurityObject="System - TextModules" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <script language="javascript" type="text/javascript">
 function ValidateAddVariable() {
 	return Validate(document.forms[0].CtrlVariable_TextBoxNewVariableName);
@@ -186,4 +186,3 @@ function ToggleVisibility(panel) {
 					</td>
 				</tr>
 			</table>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->

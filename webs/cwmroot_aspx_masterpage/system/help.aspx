@@ -1,7 +1,7 @@
-﻿<%@ Page language="VB" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top.aspx"-->
+
 <script runat="server">
 
 Dim MyLangID as integer
@@ -65,4 +65,3 @@ end sub
 <%
 	End Select
 %>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom.aspx"-->

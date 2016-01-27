@@ -1,8 +1,8 @@
-﻿<%@ Page Language="vb" ValidateRequest="False" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.TextModules_Edit"%>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="vb" ValidateRequest="False" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.TextModules_Edit"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <%@ Register TagPrefix="cammWebEdit" Namespace="CompuMaster.camm.WebManager.Modules.WebEdit.Controls" Assembly="cammWM" %>
 <camm:WebManager id="cammWebmanager" runat="server" SecurityObject="System - TextModules" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 		<script language="javascript" type="text/javascript">
 
 function ToggleTextBlockVisibility() {
@@ -107,7 +107,7 @@ function ToggleVisibility(panel) {
 										<asp:TextBox id="TextboxEditValue" Runat="server" TextMode="MultiLine" Columns="70" Rows="12"></asp:TextBox>
 									</asp:Panel>
 									<asp:Panel ID="PanelEditorHtml" Runat="server">
-										<cammWebEdit:RadEditor id="EditorHtml" style="FONT-SIZE: smaller" Runat="server" hasPermission="True" ToolsFile="/sysdata/admin/TextModule_ToolsFile.xml"
+										<cammWebEdit:RadEditor id="EditorHtml" style="FONT-SIZE: smaller" Runat="server" hasPermission="True" ToolsFile="/portal/admin/TextModule_ToolsFile.xml"
 											Editable="True" width="580px" height="200px" ToolsWidth="580px" ToolsHeight="70px" SaveInFile="False"
 											ImagesPaths="" UploadImagesPaths="" DeleteImagesPaths="" ToolsOnPage="True" MaxDocumentSize="1512000"
 											Scheme="Custom"></cammWebEdit:RadEditor>
@@ -134,4 +134,3 @@ function ToggleVisibility(panel) {
 					</td>
 				</tr>
 			</table>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->

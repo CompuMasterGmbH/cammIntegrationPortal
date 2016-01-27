@@ -1,16 +1,16 @@
-﻿<%@ Page language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.User_Hotline_Support"%>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.User_Hotline_Support"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - User hotline support" id="cammWebManager" SecurityObject="System - User Administration - Users" runat="server" />
-<%@ Register TagPrefix="camm" TagName="WebManagerAdminUserInfoDetails" Src="../../sysdata/admin/users_additionalinformation.ascx" %>
+<%@ Register TagPrefix="camm" TagName="WebManagerAdminUserInfoDetails" Src="../../portal/admin/users_additionalinformation.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockContentLine" Src="adminblockcontentline.ascx" %>
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <Script language="JavaScript">
 <!--
 function OpenNavDemo(LangID, ServerGroupID, UserID)
 {
-	window.open('/sysdata/nav/index.aspx?Mode=Preview&ID=' + UserID + '&Lang=' + LangID + '&Server=' + ServerGroupID,'navPreview','width=200, resizable, scrollbars', 'navPreview');
+	window.open('/portal/nav/index.aspx?Mode=Preview&ID=' + UserID + '&Lang=' + LangID + '&Server=' + ServerGroupID,'navPreview','width=200, resizable, scrollbars', 'navPreview');
 	return false;
 }
 //-->
@@ -262,4 +262,4 @@ function OpenNavDemo(LangID, ServerGroupID, UserID)
 		</TBODY></TABLE>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu id="cammWebManagerAdminMenu" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

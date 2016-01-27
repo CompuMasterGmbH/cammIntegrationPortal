@@ -1,4 +1,4 @@
-﻿<%@ Page Language="vb" trace="false" TraceMode="SortByTime" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Page"%>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammwebmanager" runat="server" />
@@ -17,7 +17,7 @@ end sub
 </script>
 <html>
 <head>
-<!--#include virtual="/sysdata/includes/metalink.aspx"-->
+<!--#include virtual="/portal/includes/metalink.aspx"-->
 <link rel="stylesheet" type="text/css" href="<%= cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css">
 <title><%= cammWebManager.PageTitle %></title>
 </head>

@@ -5,7 +5,7 @@
 <HTML>
 	<HEAD>
 		<title>Mail Queue</title>
-		<link rel="stylesheet" type="text/css" href="/sysdata/style_standard.css">
+		<link rel="stylesheet" type="text/css" href="/portal/style_standard.css">
 	</HEAD>
 	<body marginleft="0">
 		<form id="Form1" method="post" runat="server">

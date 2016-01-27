@@ -1,7 +1,7 @@
-﻿<%@ Page validateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.Specialized.ErrorPage" language="VB" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" validateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.Specialized.ErrorPage" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top.aspx"-->
+
 <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
 <TBODY>
 	<TR>
@@ -17,4 +17,3 @@
 	<% End If %>
 </TBODY>
 </TABLE>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom.aspx"-->

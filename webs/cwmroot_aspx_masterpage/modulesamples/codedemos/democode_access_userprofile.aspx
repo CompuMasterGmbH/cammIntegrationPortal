@@ -1,5 +1,5 @@
-﻿<%@ Page Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ChangeUserProfile" %>
-<!--#include virtual="/sysdata/includes/standardtemplate_top.aspx"-->
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ChangeUserProfile" %>
+
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" SecurityObject="@@Public" runat="server" />
 <script runat="server">
@@ -22,4 +22,3 @@
 <p>Has he been authorized for application "System - User Administration - Users": <asp:Label runat="server" id="AuthorizedForAdmin" /></p>
 <p>Last previous access to this demo page: <asp:Label runat="server" id="LastAccess" /></p>
 <p>Current server date/time: <asp:Label runat="server" id="CurrentDatetime" /></p>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom.aspx"-->

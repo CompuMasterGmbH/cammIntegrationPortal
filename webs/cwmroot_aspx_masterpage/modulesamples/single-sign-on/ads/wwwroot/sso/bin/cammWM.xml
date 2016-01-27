@@ -2111,7 +2111,7 @@
  </history></member>
     <member name="M:CompuMaster.camm.WebManager.Controls.cammWebManager.LoadConfiguration">
       <summary>
-     Load the configuration, mostly in /sysdata/config.vb 
+     Load the configuration, mostly in /portal/config.vb 
  </summary>
  <remarks>
  </remarks>
@@ -2343,7 +2343,7 @@
  The internationalization class contains all common strings and functions for proper internationalization 
  </summary>
  <value />
- <remarks>You are able to update the values or to extend the values in the file ~/sysdata/custom_internationalization.vb</remarks></member>
+ <remarks>You are able to update the values or to extend the values in the file ~/portal/custom_internationalization.vb</remarks></member>
     <member name="P:CompuMaster.camm.WebManager.WMSystem.Statistics">
       <summary>
  The statistics class provides methods to identify common figures 
@@ -2967,7 +2967,7 @@
      Get the URL of the administration server of the requested server 
  </summary>
  <param name="ServerIP">The server identification string to get the administration server URL from</param>
- <returns>A URL like https://www.yourcompany.com/sysdata/admin/ with a trailing slash</returns>
+ <returns>A URL like https://www.yourcompany.com/portal/admin/ with a trailing slash</returns>
  <remarks>
      The returned URL also contains the session ID in cookie-less environments 
  </remarks>
@@ -5130,7 +5130,7 @@
  </summary>
  <value />
  <remarks>
-     Typically, this is either an IP address or a host header name. This value can hold any ID, you only have to ensure that the server tries to login with that server identification string again. This can be set up in the web.config file or in /sysdata/config.* 
+     Typically, this is either an IP address or a host header name. This value can hold any ID, you only have to ensure that the server tries to login with that server identification string again. This can be set up in the web.config file or in /portal/config.* 
  </remarks>
  <history>
  	[adminsupport]	18.02.2005	Created 
@@ -8160,7 +8160,7 @@
  </summary>
  <value />
  <remarks>
-     Typically, this is either an IP address or a host header name. This value can hold any ID, you only have to ensure that the server tries to login with that server identification string again. This can be set up in the web.config file or in /sysdata/config.* 
+     Typically, this is either an IP address or a host header name. This value can hold any ID, you only have to ensure that the server tries to login with that server identification string again. This can be set up in the web.config file or in /portal/config.* 
  </remarks>
  <history>
  	[adminsupport]	18.02.2005	Created 

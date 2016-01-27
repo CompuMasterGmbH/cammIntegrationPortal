@@ -1,4 +1,5 @@
-﻿<%@ Register TagPrefix="camm" TagName="WebManager" Src="/system/cammWebManager.ascx" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" %>
+<%@ Register TagPrefix="camm" TagName="WebManager" Src="/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" SecurityObject="@@Public" runat="server" />
 <html>
 <body style="font-family: Arial">

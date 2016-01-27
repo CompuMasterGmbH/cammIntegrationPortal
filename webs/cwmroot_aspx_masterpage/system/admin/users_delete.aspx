@@ -1,11 +1,11 @@
-﻿<%@ Page language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.User_Delete" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.User_Delete" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" PageTitle="Erase existing user" SecurityObject="System - User Administration - Users" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
-<%@ Register TagPrefix="camm" TagName="WebManagerAdminUserInfoDetails" Src="../../sysdata/admin/users_additionalinformation.ascx" %>
+<%@ Register TagPrefix="camm" TagName="WebManagerAdminUserInfoDetails" Src="../../portal/admin/users_additionalinformation.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockContentLine" Src="adminblockcontentline.ascx" %>
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <h3><font face="Arial">Erase existing user</font></h3>
 <p><font face="Arial" size="2" color="red"><asp:Label id="lblMsg" runat="server" /></font></p>
 	<TABLE cellSpacing="0" cellPadding="0" bgColor=#ffffff border="0" bordercolor="#C1C1C1">
@@ -160,4 +160,4 @@
 	  </TABLE>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="users.aspx" id="cammWebManagerAdminMenu" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

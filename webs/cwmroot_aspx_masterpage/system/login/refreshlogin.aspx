@@ -24,7 +24,7 @@ window.top.location = '<%= cammWebManager.Internationalization.User_Auth_Validat
 <% End If %>
 <!--<%= Now %>-->
 <head>
-<!--#include virtual="/sysdata/includes/metalink.aspx"-->
+<!--#include virtual="/portal/includes/metalink.aspx"-->
 <meta http-equiv="refresh" content="200; URL=<%= Response.ApplyAppPathModifier(Request.ServerVariables("SCRIPT_NAME")) %>?Relogon=1">
 <link rel="stylesheet" type="text/css" href="<%= cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css">
 <title>RefreshLogin</title>

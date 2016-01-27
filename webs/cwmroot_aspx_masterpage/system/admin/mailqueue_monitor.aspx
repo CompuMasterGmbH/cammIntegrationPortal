@@ -1,7 +1,7 @@
-﻿<%@ Page Language="vb" AutoEventWireup="false" Codebehind="mailqueuemonitor.aspx.vb" Inherits="CompuMaster.camm.WebManager.Pages.Administration.MailQueueMonitor"%>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" Codebehind="mailqueuemonitor.aspx.vb" Inherits="CompuMaster.camm.WebManager.Pages.Administration.MailQueueMonitor"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" SecurityObject="System - Mail Queue Monitor" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <script runat="server">
 	'Sub PageOnLoad (sender as object, e as eventargs) Handles MyBase.Load
 	'	HyperLinkCalendarTo.Attributes("onClick")="window.open('mailqueue_monitor_datepicker.aspx?tbn=TextboxTo&FormName=" & Server.UrlEncode(ServerFormClientID) & "', 'mainqueue_monitor_datepicker_to', 'alwaysRaised=yes, left=200, top=200, screenX=200, screenY= 200, width=200, height=195, resizable=no scrollbars=no').focus(); return (false);"
@@ -171,4 +171,3 @@ function toggleHideDisplay(hideDisplayArea, toggleButton)
 					</td>
 				</tr>
 			</table>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->

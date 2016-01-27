@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" %>
 <%@ Import Namespace="System.Diagnostics" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />

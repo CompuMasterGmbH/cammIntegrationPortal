@@ -1,2 +1,0 @@
-<%@ Register TagPrefix="camm" TagName="PageEnd" Src="~/sysdata/includes/standardtemplate_bottom_frameset_wo_form.ascx" %>
-<camm:PageEnd id="PageEnd" cammWebManager=<%# cammWebManager %> runat="server" />

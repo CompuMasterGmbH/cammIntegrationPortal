@@ -1,7 +1,7 @@
-﻿<%@ Page language="VB" EnableViewState="False" Inherits="CompuMaster.camm.WebManager.Pages.Administration.UserList" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" EnableViewState="False" Inherits="CompuMaster.camm.WebManager.Pages.Administration.UserList" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" PageTitle="Administration - User accounts" SecurityObject="System - User Administration - Users" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 
 <script language="javascript">
 </script>
@@ -66,4 +66,4 @@
 	
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu id="cammWebManagerAdminMenu" runat="server"></camm:WebManagerAdminMenu>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

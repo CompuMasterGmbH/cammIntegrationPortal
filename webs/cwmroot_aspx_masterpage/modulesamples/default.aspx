@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" %>
 <html>
 <head>
 </head>

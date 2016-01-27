@@ -1,4 +1,4 @@
-﻿<%@ Page language="VB" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
 <script runat="server">
@@ -35,7 +35,7 @@ end sub
 </script>
 				<html>
 				<head>
-				<!--#include virtual="/sysdata/includes/metalink.aspx"-->
+				<!--#include virtual="/portal/includes/metalink.aspx"-->
 <%
 
 	Select Case MyLangID

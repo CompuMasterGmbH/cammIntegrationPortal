@@ -1,11 +1,11 @@
-﻿<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags.Editor" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags.Editor" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify user flags" id="cammWebManager" SecurityObject="System - User Administration - Users" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockContentLine" Src="adminblockcontentline.ascx" %>
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <h3>
 	<font face="Arial">Administration - Batch User Flags Editor</font></h3>
 <hr />
@@ -61,4 +61,4 @@ in the current flag values.
 <asp:table runat="server" enableviewstate="true" id="tblUsers" />
 <asp:button runat="server" id="btnSaveAllBottom" text="Save all" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

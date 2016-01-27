@@ -1,10 +1,10 @@
-﻿<%@ Page language="VB" EnableViewState="False" Inherits="CompuMaster.camm.WebManager.Pages.Administration.AppRightsList" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" EnableViewState="False" Inherits="CompuMaster.camm.WebManager.Pages.Administration.AppRightsList" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Authorizations" id="cammWebManager" SecurityObject="System - User Administration - Authorizations" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockContentLine" Src="adminblockcontentline.ascx" %>
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 
 <html>
 <head>
@@ -111,6 +111,6 @@
 	
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu  id="cammWebManagerAdminMenu" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+
 </body>
 </html>

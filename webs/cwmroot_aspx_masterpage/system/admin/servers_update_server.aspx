@@ -1,10 +1,10 @@
-﻿<%@ Page language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.UpdateServer"%>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.UpdateServer"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify server" id="cammWebManager" SecurityObject="System - User Administration - Applications" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockContentLine" Src="adminblockcontentline.ascx" %>
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 
 <script language="Javascript">
 <!--
@@ -40,7 +40,7 @@ function MyCheckURL()
 										<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2">IP / Host Header</FONT><br><FONT face="Arial" size=1><em>Edit the config files on the server to <strong>switch between IP and Host Header mode</strong>.</em></FONT></P></TD>
 										<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2">
 											<asp:Textbox runat="server" id="txtHostHeader" />
-											</FONT><br><FONT face="Arial" size=1><em>The config files are located in the folder /sysdata/ of your webserver.</em>
+											</FONT><br><FONT face="Arial" size=1><em>The config files are located in the folder /portal/ of your webserver.</em>
 											</font></P>
 										</TD>
 									</TR>
@@ -142,7 +142,7 @@ function MyCheckURL()
 									<TD VAlign="Top" width="400" colspan="2"><FONT face="Arial" size="2"><p>To ensure that the server is running without problems, a test connection to the given URL will be created. If the server is behind a firewall you might not get a connection.<p>If you get a positive response or if you are sure that the server will be accessible, you may update the server settings.</FONT></TD>
 									</TR>
 									<TR>
-										<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2"><input style="width: 155px" type="text" id="ServerTestURL" value="/sysdata/servercheck.aspx"></FONT></P></TD>
+										<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2"><input style="width: 155px" type="text" id="ServerTestURL" value="/portal/servercheck.aspx"></FONT></P></TD>
 										<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2">
 											<input type="button" name="servercheck" value="Create test connection" onClick="MyCheckURL();">
 										</FONT></P></TD>
@@ -182,4 +182,4 @@ function MyCheckURL()
 		</TABLE>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="servers.aspx" id="cammWebManagerAdminMenu" runat="server" /> 
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

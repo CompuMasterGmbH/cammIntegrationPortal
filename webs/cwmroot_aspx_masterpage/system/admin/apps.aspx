@@ -1,10 +1,10 @@
-﻿<%@ Page language="VB" EnableViewState="True" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ApplicationList" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" EnableViewState="True" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ApplicationList" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Applications" id="cammWebManager" SecurityObject="System - User Administration - Applications" EnableViewState="False" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockContentLine" Src="adminblockcontentline.ascx" %>
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 
 	<h3><font face="Arial">Administration - Applications</font></h3>
 	<TABLE cellSpacing="0" cellPadding="0" bgColor="#ffffff" border="0" bordercolor="#C1C1C1">
@@ -83,4 +83,4 @@
       </TBODY></TABLE>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu  id="cammWebManagerAdminMenu" runat="server" EnableViewState="False" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

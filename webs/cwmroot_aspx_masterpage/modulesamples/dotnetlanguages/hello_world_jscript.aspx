@@ -1,4 +1,4 @@
-﻿<%@ Page Language="JScript" %>
+﻿<%@ Page Page MasterPage="/portal/MasterPage.master" Language="JScript" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" SecurityObject="@@Public" runat="server"></camm:WebManager>
 <html>

@@ -4,7 +4,7 @@
 <html>	
 	<head>
 	<title>Mail Queue</title>
-	<link rel="stylesheet" type="text/css" href="/sysdata/style_standard.css">
+	<link rel="stylesheet" type="text/css" href="/portal/style_standard.css">
 	</head>
 	<body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" onload="javascript:ReturnDate();">
 		<form id="Form1" method="post" runat="server">			

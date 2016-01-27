@@ -1,7 +1,7 @@
-﻿<%@ Page language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ImportUsersProcessing" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ImportUsersProcessing" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" PageTitle="Administration - User accounts" SecurityObject="System - User Administration - Users" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_wo_form.aspx"-->
+<!--#include virtual="/portal/includes/standardtemplate_top_wo_form.aspx"-->
 <script language="javascript" type="text/javascript">
 <!--
 <%
@@ -37,4 +37,4 @@ End If
 -->
 </script>
 <asp:Label runat="server" id="LiteralStep4ProcessingMessageLog" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_wo_form.aspx"-->
+<!--#include virtual="/portal/includes/standardtemplate_bottom_wo_form.aspx"-->

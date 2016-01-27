@@ -1,4 +1,4 @@
-<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.PasswordConvert" %>
+<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.PasswordConvert" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify user account" id="cammWebManager"
@@ -7,7 +7,7 @@
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockContentLine" Src="adminblockcontentline.ascx" %>
 
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <h3>
 <font face="Arial">Administration - Password conversion</font></h3>
 <asp:label runat="server" id="lblMsg" forecolor="green" />
@@ -170,4 +170,4 @@ $("#pauseconversion").hide();
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="configuration.aspx" id="cammWebManagerAdminMenu"
     runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

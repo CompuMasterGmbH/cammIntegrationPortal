@@ -1,4 +1,4 @@
-﻿<%@ Page ValidateRequest="False" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.SystemCheckup" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" ValidateRequest="False" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.SystemCheckup" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - System checkup" id="cammWebManager"
@@ -25,11 +25,11 @@
     <h3>
         System checkup</h3>
         
-    <a href="/sysdata/admin/check_flags_not_required.aspx">List additional flags not required by any security object</a>
+    <a href="/portal/admin/check_flags_not_required.aspx">List additional flags not required by any security object</a>
     <br />    
-    <a href="/sysdata/admin/check_file_consistency.aspx">Check file consistency</a>
+    <a href="/portal/admin/check_file_consistency.aspx">Check file consistency</a>
             
             
     <%@ register tagprefix="camm" tagname="WebManagerAdminMenu" src="adminmenu.ascx" %>
     <camm:WebManagerAdminMenu HRef="apps.aspx" ID="cammWebManagerAdminMenu" runat="server" />
-    <!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+    

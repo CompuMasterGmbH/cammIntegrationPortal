@@ -1,4 +1,4 @@
-﻿<%@ Page Language="vb" autoeventwireup="false" Src="DHTest0.aspx.vb" Inherits=".DHTest0" %>
+﻿<%@ Page Page MasterPage="/portal/MasterPage.master" Language="vb" autoeventwireup="false" Src="DHTest0.aspx.vb" Inherits=".DHTest0" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server"></camm:WebManager>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">

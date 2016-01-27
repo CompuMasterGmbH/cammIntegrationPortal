@@ -1,8 +1,8 @@
-﻿<%@ Page Language="VB" EnableViewState="true" Inherits="CompuMaster.camm.WebManager.Pages.Administration.AdjustDelegates" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" EnableViewState="true" Inherits="CompuMaster.camm.WebManager.Pages.Administration.AdjustDelegates" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" SecurityObject="System - User Administration - Users" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 
 <script language="JavaScript">
     function ValidateForm() {
@@ -144,4 +144,4 @@
 </table>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu ID="cammWebManagerAdminMenu" runat="server"></camm:WebManagerAdminMenu>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

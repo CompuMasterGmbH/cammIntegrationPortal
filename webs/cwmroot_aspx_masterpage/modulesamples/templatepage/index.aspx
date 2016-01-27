@@ -1,4 +1,4 @@
-﻿<%@ Page Language="vb" AutoEventWireup="false" Src="basepages.vb" Inherits="Customized.Pages.Page" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" Src="basepages.vb" Inherits="Customized.Pages.Page" %>
 
 <%@ Assembly Src="navigation_controlfilling.vb" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
@@ -9,7 +9,7 @@
 <html>
 <head>
     <title>sWcms template page demo</title>
-    <link href="/sysdata/style_standard.css" type="text/css" rel="stylesheet">
+    <link href="/portal/style_standard.css" type="text/css" rel="stylesheet">
     <link href="navigationstyle.css" type="text/css" rel="stylesheet">
 </head>
 <body>

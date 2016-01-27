@@ -1,4 +1,4 @@
-﻿<%@ Page language="VB" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" SecurityObject="@@Public" />
 <%
@@ -7,7 +7,7 @@
 
 	cammWebManager.PageTitle = Server.htmlencode(cammWebManager.Internationalization.UserJustCreated_Descr_Title)
 %>
-<!--#include virtual="/sysdata/includes/standardtemplate_top.aspx"-->
+
       <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
         <TBODY><tr>
 	    <TD vAlign=top>
@@ -16,4 +16,4 @@
 		<p><font face="Arial" size="3"><%= cammWebManager.Internationalization.UserJustCreated_Descr_PleaseNote %></font></p>
 		</TD></TR>
 	  </TBODY></TABLE>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom.aspx"-->
+

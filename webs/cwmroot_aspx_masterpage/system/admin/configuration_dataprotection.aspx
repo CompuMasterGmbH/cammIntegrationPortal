@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationDataProtection" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationDataProtection" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify data protection rules" id="cammWebManager"
@@ -10,7 +10,7 @@
 <script runat="server">
 	
 </script>
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 <h3>
 <font face="Arial">Administration - Data protection rules</font></h3>
 <asp:label runat="server" id="lblMsg" forecolor="green" />
@@ -37,4 +37,4 @@ Anonymize IP addresses after<br>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="configuration.aspx" id="cammWebManagerAdminMenu"
     runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

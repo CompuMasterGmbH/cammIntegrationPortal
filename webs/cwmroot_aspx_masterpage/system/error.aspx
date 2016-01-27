@@ -4,7 +4,7 @@
 	<HEAD>
 		<title runat="server" id="PageTitle" />
 		<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5">
-		<link href="/sysdata/style_standard.css" type="text/css" rel="stylesheet" />
+		<link href="/portal/style_standard.css" type="text/css" rel="stylesheet" />
 	</HEAD>
 	<body style="FONT-SIZE: 10px; FONT-FAMILY: Arial, Verdana" leftmargin="20" topmargin="20" marginheight="20" marginwidth="20">
 		<table cellspacing="0" cellpadding="0" width="100%" border="0">

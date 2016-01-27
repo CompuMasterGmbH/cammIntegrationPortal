@@ -1,10 +1,10 @@
-﻿<%@ Page language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.UsersUpdate" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.UsersUpdate" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify user account" id="cammWebManager" SecurityObject="System - User Administration - Users" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockContentLine" Src="adminblockcontentline.ascx" %>
-<!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
+
 	<h3><font face="Arial">Administration - Modify user account</font></h3>
 	<TABLE cellSpacing="0" cellPadding="0" bgColor="#ffffff" border="0" bordercolor="#C1C1C1">
 	  <TBODY>
@@ -155,9 +155,9 @@ cammWebManagerAdminUserInfoDetails.MyUserInfo = UserInfo
 cammWebManagerAdminUserInfoFlags.cammWebManager = cammWebManager
 cammWebManagerAdminUserInfoFlags.MyUserInfo = UserInfo
 %>
-<%@ Register TagPrefix="camm" TagName="WebManagerAdminUserInfoFlags" Src="../../sysdata/admin/users_additionalflags.ascx" %>
+<%@ Register TagPrefix="camm" TagName="WebManagerAdminUserInfoFlags" Src="../../portal/admin/users_additionalflags.ascx" %>
 <camm:WebManagerAdminUserInfoFlags id="cammWebManagerAdminUserInfoFlags" runat="server" />
-<%@ Register TagPrefix="camm" TagName="WebManagerAdminUserInfoDetails" Src="../../sysdata/admin/users_additionalinformation.ascx" %>
+<%@ Register TagPrefix="camm" TagName="WebManagerAdminUserInfoDetails" Src="../../portal/admin/users_additionalinformation.ascx" %>
 <camm:WebManagerAdminUserInfoDetails id="cammWebManagerAdminUserInfoDetails" runat="server" />
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2"> &nbsp;</FONT></P></TD>
@@ -174,4 +174,4 @@ cammWebManagerAdminUserInfoFlags.MyUserInfo = UserInfo
       </TBODY></TABLE>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="users.aspx" id="cammWebManagerAdminMenu" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_serverform.aspx"-->
+

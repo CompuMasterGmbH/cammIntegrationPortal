@@ -1,9 +1,9 @@
-﻿<%@ Page ValidateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ResetUserPassword" language="VB" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" ValidateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ResetUserPassword" language="VB" %>
 <%@ Import NameSpace="CompuMaster.camm.WebManager.WMSystem" %>
 <%@ Import NameSpace="CompuMaster.camm.WebManager" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
-<!--#include virtual="/sysdata/includes/standardtemplate_top.aspx"-->
+
 
 <TABLE cellSpacing=10 cellPadding=0 bgColor="#ffffff" border=0>
 	  <TBODY>
@@ -42,4 +42,3 @@ If Not HideForm Then
 <%
 End If
 %>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom.aspx"-->

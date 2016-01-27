@@ -1,0 +1,159 @@
+﻿<%@ Master Language="VB" CodeFile="MasterPage.master.vb" Inherits="sysdata_MasterPage" %>
+
+<%@ Register TagPrefix="camm" Namespace="CompuMaster.camm.WebManager.Controls" Assembly="cammWM" %>
+<%@ Register TagPrefix="camm" TagName="LoginArea" Src="~/portal/includes/loginarea.ascx" %>
+<%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
+<camm:WebManager id="cammWebManager" runat="server" />
+    
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="<%# cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css">
+    <title><%= cammWebManager.PageTitle %></title>
+    <camm:META ID="META" runat="server" />
+    <%= cammWebManager.PageAdditionalHeaders %>
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body <%= compumaster.camm.webmanager.Utils.JoinNameValueCollectionToString(cammWebManager.PageAdditionalBodyAttributes, " ", "=""", """") %>>
+    <script runat="server">
+        Sub BindData(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
+            If Not Page.IsPostBack Then
+                Dim ActiveMarkets As CompuMaster.camm.WebManager.WMSystem.LanguageInformation()
+                ActiveMarkets = cammWebManager.System_GetLanguagesInfo(New Integer() {}, False, True)
+                Dim SList As New System.Collections.SortedList(ActiveMarkets.Length)
+                For MyCounter As Integer = 0 To ActiveMarkets.Length - 1
+                    SList.Add(ActiveMarkets(MyCounter).LanguageName_English, ActiveMarkets(MyCounter).ID)
+                Next
+                DropDownListAvailableMarkets.DataSource = SList
+
+                'Load/Bind data
+                DropDownListAvailableMarkets.DataBind()
+
+                'Select current control values
+                For MyCounter As Integer = 0 To DropDownListAvailableMarkets.Items.Count - 1
+                    If DropDownListAvailableMarkets.Items(MyCounter).Value = cammWebManager.UI.MarketID.ToString Then
+                        DropDownListAvailableMarkets.SelectedIndex = MyCounter
+                    End If
+                Next
+            End If
+        End Sub
+
+        Sub DropDownListAvailableMarkets_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs)
+            Response.Redirect(cammWebManager.Internationalization.User_Auth_Validation_NoRefererURL & "?Lang=" & Me.DropDownListAvailableMarkets.SelectedValue)
+        End Sub
+
+    </script>
+    <table border="0" width="100%" background="/portal/images/banner/bg_stripe_extranet.gif" cellspacing="0" cellpadding="0" height="55">
+        <tr>
+            <td colspan="4" height="38" valign="top"><a href="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteURL") %>" target="_blank">
+                <img alt="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteTitle") %>" src="/portal/images/banner/logo_extranet.gif" border="0" width="175" height="38"></a></td>
+            <form id="Form1" runat="server">
+                <td colspan="3" height="38" valign="top" align="right">
+
+                    <asp:DropDownList ID="DropDownListAvailableMarkets" runat="server" OnSelectedIndexChanged="DropDownListAvailableMarkets_SelectedIndexChanged" DataValueField="Value" DataTextField="Key" AutoPostBack="true">
+                    </asp:DropDownList>
+
+                    <p align="right">
+                        <map name="EarthTabsMap">
+                            <area alt="English language" shape="rect" target="_top" coords="61, 22, 95, 38" href="<%= cammWebManager.Internationalization.User_Auth_Validation_NoRefererURL %>?Lang=1">
+                            <area alt="Deutsche Sprache" shape="rect" target="_top" coords="20, 22, 56, 37" href="<%= cammWebManager.Internationalization.User_Auth_Validation_NoRefererURL %>?Lang=2">
+                            <area alt="French language" shape="rect" target="_top" coords="100, 22, 131, 37" href="<%= cammWebManager.Internationalization.User_Auth_Validation_NoRefererURL %>?Lang=3">
+                        </map>
+                        <img usemap="#EarthTabsMap" border="0" src="/portal/images/banner/flags_on_earth.gif" width="134" height="38">
+                    </p>
+                </td>
+            </form>
+        </tr>
+        <tr>
+            <td bgcolor="#FFFF66" valign="middle" height="17"><font size="2" face="Arial"><b><nobr>&nbsp;&nbsp;
+      <%= cammWebManager.Internationalization.GetCurLongDate(cammWebManager.UIMarket) %></nobr></b></font></td>
+            <td bgcolor="#FFFF66" valign="middle" height="17">&nbsp;</td>
+            <td bgcolor="#FFFF66" colspan="2" valign="middle" height="17"><a href="<%= Response.ApplyAppPathModifier("/portal/help.aspx") %>"><font size="2" face="Arial"><b><%= cammWebManager.Internationalization.Banner_Help %></b></font></a></td>
+            <td bgcolor="#FFFF66" valign="middle" height="17"><a href="<%= Response.ApplyAppPathModifier("/portal/feedback.aspx") %>"><font size="2" face="Arial"><b><%= cammWebManager.Internationalization.Banner_Feedback %></b></font></a></td>
+            <td bgcolor="#FFFF66" valign="middle" height="17"></td>
+            <td bgcolor="#FFFF66" align="right" valign="middle" height="17">
+                <a<% If Session("System_Username") <> "" Then Response.Write(" target=""_top""") %> href="<% If Session("System_Username") <> "" Then Response.Write(cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL & "?Action=Logout") Else Response.Write(cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL) %>"><font size="2" face="Arial"><b><% If Session("System_Username") = "" Then Response.Write(cammWebManager.Internationalization.NavLinkNameLogin) Else Response.Write(cammWebManager.Internationalization.NavLinkNameLogout) %></b></font>
+                </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        </tr>
+    </table>
+    <camm:LoginArea id="LoginArea" runat="server" />
+    <form id="formMain" runat="server">
+        <div>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolderMain" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+    <table bgcolor="#FFFF66" cellspacing="0" cellpadding="2" border="0" height="30" width="100%">
+        <tr>
+            <td bgcolor="#FFFF66" width="33%" height="30" valign="top"><font size="1" face="Arial"><% 
+                                                                                                       dim CopyRightSinceYear
+                                                                                                       CopyRightSinceYear = cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCopyRightSinceYear")
+                                                                                                       If CopyRightSinceYear = Year(Now) Then
+                                                                                                           Response.Write(Server.HtmlEncode("© " & Year(Now)))
+                                                                                                       Else
+                                                                                                           Response.Write(Server.HtmlEncode("© " & CopyRightSinceYear & "-" & Year(Now)))
+                                                                                                       End If %> <a href="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteURL") %>" target="_blank"><%= server.HtmlEncode(cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyFormerTitle")) %></a><br><%= cammWebManager.Internationalization.StatusLineCopyright_AllRightsReserved %></font></td>
+            <td bgcolor="#FFFF66" height="30" valign="top"><% 
+
+                                                               If Session("System_Username") <> "" Then
+            %><table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td valign="top" align="center"><font size="1" face="Arial"><%= cammWebManager.Internationalization.StatusLineLoggedInAs %><br><a href="<%= Response.ApplyAppPathModifier("/portal/account_updateprofile.aspx") %>?ID=<%= cammWebManager.System_GetUserID(Session("System_Username")) %>" target="frame_main"><%= cammWebManager.System_GetUserDetail(cammWebManager.System_GetUserID(Session("System_Username")), "CompleteName") & " (" & Session("System_Username") & ")" %></a></font></td>
+                    <td>&nbsp; &nbsp; </td>
+                    <td valign="top" align="left">
+                        <img src="/portal/images/space.gif" border="0" width="39" height="6"><br>
+                        <a href="/portal/logon.aspx?Action=Logout" target="frame_main">
+                            <img src="/portal/images/basestyle/but_logout.gif" border="0" width="39" height="14"></a></td>
+                    <tr>
+            </table>
+                <% 
+                    Else
+                %><table cellspacing="2" cellpadding="0" align="left" border="0">
+                    <form target="frame_main" name="formlogin" method="post" action="<%= cammWebManager.Internationalization.User_Auth_Validation_CheckLoginURL %>">
+                        <tr>
+                            <td width="100">
+                                <nobr><FONT face=Arial size="1"><%= cammWebManager.Internationalization.StatusLineUsername %>:&nbsp;</font><INPUT name="Username" size="11">
+		<FONT face=Arial size="1"><%= cammWebManager.Internationalization.StatusLinePassword %>:&nbsp;</font><INPUT type="password" size="11" name="Passcode">
+		<INPUT type="submit" value="<%= Server.HtmlEncode(cammWebManager.Internationalization.StatusLineSubmit) %>" name="submit"></nobr>
+                            </td>
+                        </tr>
+                    </form>
+                </table>
+                <%
+                    End If
+
+                %></td>
+            <td bgcolor="#FFFF66" width="33%" height="30" valign="top">
+                <p align="right">
+                    <font size="1" face="Arial"><b><a href="<%= Response.ApplyAppPathModifier("/portal/editorial.aspx") %>" target="frame_main"><%= server.HtmlEncode(cammWebManager.Internationalization.StatusLineEditorial) %></a>
+      |&nbsp;<a href="<%= Response.ApplyAppPathModifier("/portal/disclaimer.aspx") %>" target="frame_main"><%= server.htmlencode(cammWebManager.Internationalization.StatusLineLegalNote) %></a></b><br>Powered by <a href="http://www.compumaster.de/" target="_blank">CompuMaster
+      GmbH</a></font>
+            </td>
+        </tr>
+    </table>
+
+    <script runat="server">
+
+        Function CopyRightYears as string
+            dim CopyRightSinceYear as string
+            CopyRightSinceYear = cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCopyRightSinceYear")
+            If CopyRightSinceYear = Year(Now).ToString Or Convert.ToString(CopyRightSinceYear) = "" Then
+                return (server.htmlencode("© " & Year(Now)))
+            Else
+                return (server.htmlencode("© " & CopyRightSinceYear & "-" & Year(Now)))
+            End If
+        end function
+    </script>
+
+    <table border="0" cellpadding="1" cellspacing="0" width="100%" height="25">
+        <tr>
+            <td width="100%">
+                <div align="center"><font face="Verdana" size="1"><%= CopyRightYears %> <a title="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteTitle") %>" href="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteURL") %>" target="_blank"><%= server.htmlencode(cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyFormerTitle")) %></a> - <%= cammWebManager.Internationalization.StatusLineCopyright_AllRightsReserved %></font></div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

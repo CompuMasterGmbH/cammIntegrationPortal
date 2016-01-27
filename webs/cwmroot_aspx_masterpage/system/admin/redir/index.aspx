@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="vb" Inherits="CompuMaster.camm.WebManager.Modules.Redirector.Pages.Administration.Overview" %>
 <%@ OutputCache Duration="1" VaryByParam="none" Location="None" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<!--#include virtual="/sysdata/includes/standardtemplate_top_wo_form.aspx"-->
+<!--#include virtual="/portal/includes/standardtemplate_top_wo_form.aspx"-->
 <camm:webmanager id="cammWebManager" runat="server"></camm:webmanager>
 		<SCRIPT language="JavaScript">
 		<!--
@@ -64,4 +64,4 @@
 			<P align="center">
 			<asp:Button id="refresh" runat="server" Text="Refresh"></asp:Button></P>
 		</form>
-<!--#include virtual="/sysdata/includes/standardtemplate_bottom_wo_form.aspx"-->
+<!--#include virtual="/portal/includes/standardtemplate_bottom_wo_form.aspx"-->

@@ -1,5 +1,4 @@
-﻿<html>
-<body style="font-family: Arial">
+﻿<%@ Page MasterPage="/portal/MasterPage.master" %>
 
 <h1>Chart demos</h1>
 <p><A href="/modulesamples/sourcecodeviewer/srcview.aspx?path=/modulesamples/charts/index.src">View source code of the page</A></p>
@@ -30,6 +29,3 @@ border="0" alt="Sample 6"></p>
 <h2>Sample 7</h2>
 <p>Large pie chart, no unit for y-values but formatted numbers, no calculation of the totals, 12 months<br><img src="/system/modules/charts/chartgenerator.aspx?xValues=January|February|March|April|May|June|July|August|September|October|November|December&yValues=0.11548|0.091239|.05417|0.07068|0.0847|0.12151|0.0754|0.08145|0.06719|0.0477|0.0948|0.09567&ChartType=pie&bgcolor=FFFDFE&width=700&height=400&numberformat=<%= Server.URLEncode("0.00 %") %>&drawtotal=false" width="700" height="400"
 border="0" alt="Sample 7"></p>
-
-</body>
-</html>
