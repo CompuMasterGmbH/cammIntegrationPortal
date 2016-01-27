@@ -1,7 +1,4 @@
 ﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Page" Title="Feedback" %>
-
-<%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<camm:WebManager id="cammWebManager" runat="server" />
 <script runat="server">
 
     Dim MyLangID As Integer
@@ -13,7 +10,7 @@
     Sub Page_Load(sender As Object, e As EventArgs)
 
         If Session("System_Username") <> "" Then
-            SessionUserID = cammWebManager.CurrentUserID
+            SessionUserID = cammWebManager.CurrentUserID(CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous)
             SessionUser_Addresses = cammWebManager.CurrentUserInfo.SalutationMrOrMs
             SessionUser_Name = cammWebManager.CurrentUserInfo.FullName
             SessionUser_Company = cammWebManager.CurrentUserInfo.Company
@@ -24,7 +21,7 @@
             SessionUser_Motivation = cammWebManager.CurrentUserInfo.AdditionalFlags("Motivation")
         End If
 
-        MyLangID = cammWebManager.UIMarket
+        MyLangID = cammWebManager.UI.MarketID
         Select Case MyLangID
             Case 3, 2, 1 : 'DoNothing - Supported languages
             Case Else

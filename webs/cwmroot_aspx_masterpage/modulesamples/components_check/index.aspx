@@ -1,8 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" %>
-<%@ Register TagPrefix="camm" TagName="WebManager" Src="/system/cammWebManager.ascx" %>
-<camm:WebManager id="cammWebManager" SecurityObject="@@Public" runat="server" />
-<html>
-<body style="font-family: Arial">
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.Page" %>
     <h1>
         Components check</h1>
     <p>
@@ -11,5 +7,3 @@
     <h2>
         Test result</h2>
     <%= cammWebManager.IsSupported.RequiredComponentsDetailedCheckHtmlResult() %>
-</body>
-</html>

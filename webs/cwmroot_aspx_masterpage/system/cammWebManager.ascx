@@ -1,14 +1,11 @@
-﻿<%@ Control debug="false" Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Controls.cammWebManager" %>
+﻿<%@ Control debug="false" CodeFile="/portal/config.vb" Language="vb" AutoEventWireup="false" Inherits="Instance" %>
+<%@ Assembly Src="/portal/custom_internationalization.vb" %>
 <%@ Register TagPrefix="WebManager" Namespace="CompuMaster.camm" Assembly="cammWM" %>
-<!--#include virtual="/portal/config.vb"-->
-<!--#include virtual="/portal/custom_internationalization.vb"-->
 <script lang="vb" runat="server"> 
 
-        Protected Overrides Sub LoadConfiguration()
-            SetupAdditionalConfiguration()
-        End Sub
-        Public Overrides Sub LoadLanguageData(LanguageID As Integer)
-            LoadCustomizedLanguageStrings(LanguageID)
-        End Sub
+    Protected Overrides Sub LoadConfiguration()
+        Me.Internationalization = New CustomSettingsAndData
+        SetupAdditionalConfiguration()
+    End Sub
 
 </script>
