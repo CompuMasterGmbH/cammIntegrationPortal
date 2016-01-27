@@ -1,5 +1,6 @@
 ﻿
 Partial Class sysdata_MasterPage
-    Inherits System.Web.UI.MasterPage
+    Inherits CompuMaster.camm.WebManager.Pages.MasterPage
+
 End Class
 

@@ -1,4 +1,5 @@
 ﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Page" Title="Feedback" %>
+
 <script runat="server">
 
     Dim MyLangID As Integer
@@ -31,10 +32,10 @@
     End Sub
 
 </script>
-<asp:content id="Content1" contentplaceholderid="head" runat="Server">
-				<link rel="stylesheet" type="text/css" href="<%= cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css">
-    </asp:content>
-<asp:content id="Content2" contentplaceholderid="ContentPlaceHolderMain" runat="Server">
+<asp:content id="Content1" contentplaceholderid="head" runat="server">
+	<link rel="stylesheet" type="text/css" href="<%= cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css">
+</asp:content>
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolderMain" runat="server">
 <%
 
     Select Case MyLangID

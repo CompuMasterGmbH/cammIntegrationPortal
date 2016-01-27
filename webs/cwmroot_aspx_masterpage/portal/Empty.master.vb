@@ -1,5 +1,5 @@
 ﻿
 Partial Class portal_Empty
-    Inherits System.Web.UI.MasterPage
+    Inherits CompuMaster.camm.WebManager.Pages.MasterPage
 End Class
 

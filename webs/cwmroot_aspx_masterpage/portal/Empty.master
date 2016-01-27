@@ -2,14 +2,12 @@
 
 <%@ Register TagPrefix="camm" Namespace="CompuMaster.camm.WebManager.Controls" Assembly="cammWM" %>
 <%@ Register TagPrefix="camm" TagName="LoginArea" Src="~/portal/includes/loginarea.ascx" %>
-<%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<camm:WebManager id="cammWebManager" runat="server" />
     
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="<%# cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css">
+    <link rel="stylesheet" type="text/css" href="<%= cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css" />
     <title><%= cammWebManager.PageTitle %></title>
     <camm:META ID="META" runat="server" />
     <%= cammWebManager.PageAdditionalHeaders %>

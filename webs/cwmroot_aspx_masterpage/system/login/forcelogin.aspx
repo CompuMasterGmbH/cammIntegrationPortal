@@ -10,7 +10,6 @@ End If
 %>
 <html>
 <head>
-<!--#include virtual="/portal/includes/metalink.aspx"-->
 <title><%= Server.HtmlEncode(cammWebManager.Internationalization.Logon_HeadTitle) %></title>
 <link rel="stylesheet" type="text/css" href="<%= cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css">
 </head>

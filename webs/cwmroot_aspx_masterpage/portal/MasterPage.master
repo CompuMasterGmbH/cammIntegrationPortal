@@ -2,14 +2,12 @@
 
 <%@ Register TagPrefix="camm" Namespace="CompuMaster.camm.WebManager.Controls" Assembly="cammWM" %>
 <%@ Register TagPrefix="camm" TagName="LoginArea" Src="~/portal/includes/loginarea.ascx" %>
-<%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<camm:WebManager id="cammWebManager" runat="server" />
     
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="<%# cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css">
+    <link rel="stylesheet" type="text/css" href="<%# cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css" />
     <title><%= cammWebManager.PageTitle %></title>
     <camm:META ID="META" runat="server" />
     <%= cammWebManager.PageAdditionalHeaders %>
@@ -46,7 +44,7 @@
         End Sub
 
     </script>
-    <table border="0" width="100%" background="/portal/images/banner/bg_stripe_extranet.gif" cellspacing="0" cellpadding="0" height="55">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0" height="55">
         <tr>
             <td colspan="4" height="38" valign="top"><a href="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteURL") %>" target="_blank">
                 <img alt="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteTitle") %>" src="/portal/images/banner/logo_extranet.gif" border="0" width="175" height="38"></a></td>
@@ -69,7 +67,7 @@
         </tr>
         <tr>
             <td bgcolor="#FFFF66" valign="middle" height="17"><font size="2" face="Arial"><b><nobr>&nbsp;&nbsp;
-      <%= cammWebManager.Internationalization.GetCurLongDate(cammWebManager.UIMarket) %></nobr></b></font></td>
+      <%= cammWebManager.Internationalization.GetCurLongDate(cammWebManager.UI.MarketID) %></nobr></b></font></td>
             <td bgcolor="#FFFF66" valign="middle" height="17">&nbsp;</td>
             <td bgcolor="#FFFF66" colspan="2" valign="middle" height="17"><a href="<%= Response.ApplyAppPathModifier("/portal/help.aspx") %>"><font size="2" face="Arial"><b><%= cammWebManager.Internationalization.Banner_Help %></b></font></a></td>
             <td bgcolor="#FFFF66" valign="middle" height="17"><a href="<%= Response.ApplyAppPathModifier("/portal/feedback.aspx") %>"><font size="2" face="Arial"><b><%= cammWebManager.Internationalization.Banner_Feedback %></b></font></a></td>
