@@ -1,0 +1,1 @@
+﻿<!--#include virtual="/system/admin/apprights_new_groups.aspx"-->

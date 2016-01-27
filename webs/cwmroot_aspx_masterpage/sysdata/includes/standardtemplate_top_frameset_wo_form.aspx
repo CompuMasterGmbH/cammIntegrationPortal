@@ -1,0 +1,2 @@
+<%@ Register TagPrefix="camm" TagName="PageStart" Src="~/sysdata/includes/standardtemplate_top_frameset_wo_form.ascx" %>
+<camm:PageStart id="PageStart" cammWebManager=<%# cammWebManager %> runat="server" />

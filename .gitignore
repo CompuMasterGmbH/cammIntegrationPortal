@@ -52,6 +52,14 @@
 /webs/cwmroot_aspx/modulesamples/navigation_2_advanced_componentart
 /webs/cwmroot_aspx/sysdebug/radspell
 /webs/cwmroot_aspx/sysdebug
+/webs/cwmroot_aspx_masterpage/system/nav/componentart_webui_client
+/webs/cwmroot_aspx_masterpage/system/nav/aspnetmenu_client
+/webs/cwmroot_aspx_masterpage/RadControls
+/webs/cwmroot_aspx_masterpage/sysdebug/componentart_navigation_samples
+/webs/cwmroot_aspx_masterpage/aspnet_client
+/webs/cwmroot_aspx_masterpage/modulesamples/navigation_2_advanced_componentart
+/webs/cwmroot_aspx_masterpage/sysdebug/radspell
+/webs/cwmroot_aspx_masterpage/sysdebug
 /webs/cwmroot_asp_optional
 /webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/ASPnetMenu.dll
 /webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/ComponentArt.Web.UI.dll
@@ -61,6 +69,14 @@
 /webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/RadChart.dll
 /webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/RadEditor.DLL
 /webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/RadSpell.dll
+/webs/cwmroot_aspx_aspx_masterpage/modulesamples/single-sign-on/ads/wwwroot/sso/bin/ASPnetMenu.dll
+/webs/cwmroot_aspx_aspx_masterpage/modulesamples/single-sign-on/ads/wwwroot/sso/bin/ComponentArt.Web.UI.dll
+/webs/cwmroot_aspx_aspx_masterpage/modulesamples/single-sign-on/ads/wwwroot/sso/bin/ICSharpCode.SharpZipLib.dll
+/webs/cwmroot_aspx_aspx_masterpage/modulesamples/single-sign-on/ads/wwwroot/sso/bin/Microsoft.Office.Interop.Word.dll
+/webs/cwmroot_aspx_aspx_masterpage/modulesamples/single-sign-on/ads/wwwroot/sso/bin/Microsoft.Vbe.Interop.dll
+/webs/cwmroot_aspx_aspx_masterpage/modulesamples/single-sign-on/ads/wwwroot/sso/bin/RadChart.dll
+/webs/cwmroot_aspx_aspx_masterpage/modulesamples/single-sign-on/ads/wwwroot/sso/bin/RadEditor.DLL
+/webs/cwmroot_aspx_aspx_masterpage/modulesamples/single-sign-on/ads/wwwroot/sso/bin/RadSpell.dll
 /database/howto-use ApprightsCummulatedFastEdition as table
 /database/Important HowTo
 /database/ToDo-AppsVsSecurityObjects
@@ -68,6 +84,7 @@
 /database/ToDo-ipV6-Support
 /sensitive code parts.txt
 /webs/cwmroot_aspx/modulesamples/single-sign-on/ads/wwwroot/sso/bin/ComponentArt.Web.UI.xml
+/webs/cwmroot_aspx/bin
 /webs/cwmroot_aspx/bin/cammWebExplorer.Base.dll.VisualState.xml
 /webs/cwmroot_aspx/bin/cammWebExplorer.Base.pdb
 /webs/cwmroot_aspx/bin/cammWebExplorer.Base.xml
@@ -91,6 +108,31 @@
 /webs/cwmroot_aspx/bin/stdole.dll
 /webs/cwmroot_aspx/bin/Microsoft.Office.Interop.Word.DLL
 /webs/cwmroot_aspx/bin/Microsoft.Vbe.Interop.DLL
+/webs/cwmroot_aspx_masterpage/modulesamples/single-sign-on/ads/wwwroot/sso/bin/ComponentArt.Web.UI.xml
+/webs/cwmroot_aspx_masterpage/bin
+/webs/cwmroot_aspx_masterpage/bin/cammWebExplorer.Base.dll.VisualState.xml
+/webs/cwmroot_aspx_masterpage/bin/cammWebExplorer.Base.pdb
+/webs/cwmroot_aspx_masterpage/bin/cammWebExplorer.Base.xml
+/webs/cwmroot_aspx_masterpage/bin/ASPnetMenu.dll
+/webs/cwmroot_aspx_masterpage/bin/camm.WebControls.dll
+/webs/cwmroot_aspx_masterpage/bin/cammWebExplorer.Base.dll
+/webs/cwmroot_aspx_masterpage/bin/ICSharpCode.SharpZipLib.dll
+/webs/cwmroot_aspx_masterpage/bin/ComponentArt.Web.UI.dll
+/webs/cwmroot_aspx_masterpage/bin/ComponentArt.Web.UI.dll.VisualState.xml
+/webs/cwmroot_aspx_masterpage/bin/ComponentArt.Web.UI.pdb
+/webs/cwmroot_aspx_masterpage/bin/ComponentArt.Web.UI.xml
+/webs/cwmroot_aspx_masterpage/bin/CompuMaster.Imaging.dll
+/webs/cwmroot_aspx_masterpage/bin/CompuMaster.Imaging.pdb
+/webs/cwmroot_aspx_masterpage/bin/CompuMaster.Imaging.xml
+/webs/cwmroot_aspx_masterpage/bin/Office.dll
+/webs/cwmroot_aspx_masterpage/bin/RadChart.dll
+/webs/cwmroot_aspx_masterpage/bin/RadEditor.dll
+/webs/cwmroot_aspx_masterpage/bin/RadSpell.dll
+/webs/cwmroot_aspx_masterpage/bin/SMTP.Net.dll
+/webs/cwmroot_aspx_masterpage/bin/SMTP.Net.xml
+/webs/cwmroot_aspx_masterpage/bin/stdole.dll
+/webs/cwmroot_aspx_masterpage/bin/Microsoft.Office.Interop.Word.DLL
+/webs/cwmroot_aspx_masterpage/bin/Microsoft.Vbe.Interop.DLL
 /libraries/smarteditor/.vs
 .vs
 /Partially published sources on GitHub.url

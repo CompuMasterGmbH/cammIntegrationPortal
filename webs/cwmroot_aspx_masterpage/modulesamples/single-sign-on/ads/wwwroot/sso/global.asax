@@ -1,0 +1,1 @@
+<%@ Application Inherits="CompuMaster.camm.WebManager.Application.SingleSignOnViaWindowsAuthentification" %>

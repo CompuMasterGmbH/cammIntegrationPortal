@@ -1,0 +1,203 @@
+﻿A.IconLink:active
+{
+	background-color:Transparent;
+	border-style:none;
+	color: #000000;
+	text-decoration:none;
+}
+A.IconLink:visited
+{
+	background-color:Transparent;
+	border-style:none;
+	color: #000000;
+	text-decoration:none;
+}
+A.IconLink:hover
+{
+	background-color:Transparent;
+	border-style:none;
+	color: #000000;
+	text-decoration:none;
+}
+
+A.IconLink:link
+{
+	background-color:Transparent;
+	border-style:none;
+	color: #000000;
+	text-decoration:none;
+}
+
+
+
+A.navlink:link
+{
+    COLOR: #000000;
+    BACKGROUND-COLOR: transparent;
+    TEXT-DECORATION: none
+}
+
+A.navlink:visited
+{
+    COLOR: #0000ee;
+    BACKGROUND-COLOR: transparent;
+    TEXT-DECORATION: none
+
+}
+A.navlink:hover
+{
+    COLOR: #ee0000;
+    BACKGROUND-COLOR: Transparent;
+    TEXT-DECORATION: none
+}
+.TitleBlue
+{
+    font-family :Arial ;
+	font-size : 12px;
+	font-style : normal ;
+	font-variant : normal ;
+	font-weight : bold ;
+	
+    COLOR: White;
+    text-decoration:none;
+}
+.SubTitleBlue
+{
+	
+	font-family :Arial ;
+	font-size : 11px;
+	font-style : normal ;
+	font-variant : normal ;
+	font-weight : bold ;
+	
+    COLOR: white;
+    text-decoration:none;
+
+}
+.cssTableBody
+{	
+	font-family :Arial ;
+	font-size : 11px;
+	font-style : normal ;
+	font-variant : normal ;
+	font-weight : normal ;
+    COLOR: black;
+    text-decoration:none;
+}
+.FileList
+{
+    FONT: 14px Arial;
+    COLOR: black;
+    BACKGROUND-COLOR: beige;
+    text-decoration:none;
+}
+.HeaderRow
+{
+    FONT: 14px Arial;
+    COLOR: black;
+    BACKGROUND-COLOR: #e1e1e1;
+    text-decoration:none;
+}
+.ErrorMessage
+{
+    FONT-SIZE: 14px;
+    COLOR: red;
+    FONT-FAMILY: Arial;
+    text-decoration:none;
+}
+
+A.NameLink:active
+{
+	background-color:Transparent;
+	color:Blue;
+	text-decoration:none;
+		
+}
+A.NameLink:visited
+{
+	background-color:Transparent;
+	color:Blue;
+	text-decoration:none;
+}
+A.NameLink:hover
+{
+	background-color:Transparent;
+	color:Blue;
+	text-decoration:none;
+}
+
+A.NameLink:link
+{
+	
+	background-color:Transparent;
+	border-bottom-style : none;
+	color : Aqua ;
+	font-family : Arial ;
+	font-size : 10px ;
+	font-style : normal ;
+	font-variant : normal ;
+	font-weight : normal ;
+	text-decoration : none ;
+		
+}
+
+A.GridStyle:active
+{
+	background-color:Transparent;
+	border-bottom-style : none;
+	color : Black;
+	font-family : Arial ;
+	font-size : 10px ;
+	font-style : normal ;
+	font-variant : normal ;
+	font-weight : normal ;
+	text-decoration : none ;
+	
+		
+}
+A.GridStyle:visited
+{
+	background-color:Transparent;
+	border-bottom-style : none;
+	color : Black ;
+	font-family : Arial ;
+	font-size : 10px ;
+	font-style : normal ;
+	font-variant : normal ;
+	font-weight : normal ;
+	
+	text-decoration : none ;
+}
+A.GridStyle:hover
+{
+	background-color:Transparent;
+	border-bottom-style : none;
+	color : Black ;
+	font-family : Arial ;
+	font-size : 10px ;
+	font-style : normal ;
+	font-variant : normal ;
+	font-weight : normal ;
+	text-decoration : none ;
+}
+
+A.GridStyle:link
+{
+	background-color:Transparent;
+	border-bottom-style : none;
+	color : Black ;
+	font-family : Arial ;
+	font-size : 10px ;
+	font-style : normal ;
+	font-variant : normal ;
+	font-weight : normal ;
+	text-decoration : none ;
+}
+BODY
+{
+	font-family : Arial ;
+	font-size : 10px ;
+	text-decoration : none;
+}
+
+

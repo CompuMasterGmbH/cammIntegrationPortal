@@ -1,0 +1,243 @@
+
+a:hover
+{
+  color:#DD3409;
+  text-decoration:underline; 
+}
+
+.MainText
+{
+  font-size:11px; 
+  height:100%;
+}
+
+.SmallText
+{
+  font-size:10px; 
+}
+
+.hint
+{
+  color:Red;
+}
+.DemoContainer
+{
+  border:1px silver solid; 
+  background-color:#F6F6F6;
+  height:570px;
+  width:100%;
+}
+.DemoArea
+{
+  background-color:#F6F6F6;
+}
+
+.AboutBox
+{
+  background-color:#FFFFFF; 
+  color: #666666; 
+}
+
+.SidePanelFooter
+{
+  height:100%;
+  background-image:url(images/sidepanel_bg.gif);
+  background-repeat: repeat-y; 
+}
+
+.SidePanel
+{ 
+  background-color:#F3F3F3;
+  font-size:10px;
+  color:#666666;
+  border: 1px solid #aaaaaa;
+} 
+.DottedLine
+{
+  background-image:url(images/dot_even.gif);
+  background-repeat: repeat-x; 
+}
+
+.DemoName
+{
+  color:#666666;
+  font-family: verdana; 
+  font-weight:bolder;
+  font-size:11px;
+}
+
+.OtherDemos
+{
+  background-color:#FFFFFF;
+  padding:10px;
+  padding-top:8px;
+  padding-right:5px;
+  padding-bottom:0px;
+  font-family: tahoma, verdana; 
+  border-right: 1px solid #DDDDDD; 
+  font-size: 10px; 
+  font-weight: bold;
+  font-size:11px; 
+  color:#666666;
+}
+
+.OtherDemosIcons
+{
+  background-color:#FFFFFF;
+  font-family: verdana; 
+  font-weight: normal;
+  font-size: 11px; 
+  color:#DD3409;
+  padding-bottom:5px;
+}
+
+.DemoBottomGradient
+{
+  color:#666666;
+  background-image:url(images/demo_bottom_bg.gif);
+  background-repeat: repeat-x; 	
+  font-family: verdana; 
+  font-weight:bold;
+  font-size:10px; 
+  padding-left:15px;
+}
+
+.DemoGradient
+{
+  color:#999999;
+  background-image:url(images/demo_bg.gif);
+  background-repeat: repeat-x; 	
+  font-family: verdana; 
+  font-weight:bold;
+  font-size:11px; 
+  padding-left:15px;
+}
+.SideNotes
+{ 
+  border-right: 1px solid #DDDDDD;
+  border-bottom: 1px solid #DDDDDD;
+} 
+
+.DemosNav
+{
+  background-color:#F3F3F3;
+  cursor: default; 
+  height:330px;
+  width:208px;
+  padding:0px;
+} 
+
+.NavTopItem
+{
+  cursor: pointer;
+  color:#666666;
+  background-image: url(images/nav_bg.gif);
+  font-family: verdana; 
+  font-size: 11px; 
+  font-weight: bold;
+  cursor:hand;
+  padding:0px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.NavTopItemHover
+{
+  cursor: pointer;
+  color:#666666;
+  text-decoration: underline;
+  background-image: url(images/nav_bg.gif);
+  font-family: verdana; 
+  font-size: 11px; 
+  font-weight: bold;
+  cursor:hand;
+  padding:0px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.NavTopItemActive
+{
+  cursor: pointer;
+  color:#666666;
+  background-image: url(images/nav_bg.gif);
+  font-family: verdana; 
+  font-size: 11px; 
+  font-weight: bold;
+  padding: 0px; 
+  cursor:hand;
+  padding:0px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.NavLevel2Item
+{
+  cursor: pointer;
+  font-family: verdana; 
+  font-size: 10px; 
+  color:#666666;
+  height:15px;
+  background-color: #EEEEEE;
+  cursor:hand;
+  padding-top:2px;
+  padding-bottom:2px;
+  margin-left:1px;
+}
+
+.NavLevel2ItemSelected
+{
+  cursor: pointer;
+  background-color:#F7F7F7;
+  color: #DD3409;
+  font-family: verdana; 
+  font-size: 10px; 
+  cursor:hand;
+  padding-top:1px;
+  padding-bottom:1px;
+  margin-left:0px;
+  border-left:1px solid #DDDDDD;
+  border-top:1px solid #DDDDDD;
+  border-bottom:1px solid white;
+  border-right:1px solid white;
+}
+
+.NavLevel2ItemHover
+{
+  cursor: pointer;
+  background-color:#F7F7F7;
+  color: #666666;
+  font-family: verdana; 
+  font-size: 10px; 
+  cursor:hand;
+  padding-top:1px;
+  padding-bottom:1px;
+  margin-left:0px;
+  border-right:1px solid #DDDDDD;
+  border-bottom:1px solid #DDDDDD;
+  border-top:1px solid white;
+  border-left:1px solid white;
+}
+
+.NavLevel2Group
+{
+  cursor: default;
+  background-color:#EEEEEE;
+  border-bottom: 1px solid #dddddd;
+  padding-left:3px;
+  padding-right:3px;
+  padding-top:3px;
+}
+
+.Empty
+{
+}
+
+input
+{
+  font-family: verdana; 
+  font-size: 11px; 
+}  
+
+select
+{
+  font-family: Verdana; 
+  font-size:11px;
+}
