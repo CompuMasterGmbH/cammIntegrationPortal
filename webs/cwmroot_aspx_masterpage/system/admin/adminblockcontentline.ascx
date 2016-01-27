@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="vb" AutoEventWireup="false" %>
-<script language="Vb" runat="server">
+<script lang="Vb" runat="server">
 public PropertyName as string
 public PropertyValue as string
 </script>

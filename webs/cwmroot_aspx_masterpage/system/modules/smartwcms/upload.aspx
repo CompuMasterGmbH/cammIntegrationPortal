@@ -6,7 +6,7 @@
 <HTML>
 	<HEAD>
 		<title>Bilddaten - Management</title>
-		<script language="javascript" >
+		<script lang="javascript" >
 	function checkImageValidity(thisForm)
 	{
 

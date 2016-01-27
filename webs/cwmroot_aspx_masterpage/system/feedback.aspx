@@ -1,75 +1,69 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" %>
+﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Page" Title="Feedback" %>
+
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
 <script runat="server">
 
-Dim MyLangID as integer
+    Dim MyLangID As Integer
 
-	dim SessionUserID as string, SessionUser_Addresses as string, SessionUser_Name as string, SessionUser_Company as string
-	dim SessionUser_email as string, SessionUser_1stLang as string, SessionUser_2ndLang as string, SessionUser_3rdLang as string
-	dim SessionUser_Motivation as string
+    Dim SessionUserID As String, SessionUser_Addresses As String, SessionUser_Name As String, SessionUser_Company As String
+    Dim SessionUser_email As String, SessionUser_1stLang As String, SessionUser_2ndLang As String, SessionUser_3rdLang As String
+    Dim SessionUser_Motivation As String
 
-sub Page_Load (sender as object, e as eventargs)
+    Sub Page_Load(sender As Object, e As EventArgs)
 
-	If Session("System_Username") <> "" Then
-		SessionUserID = cammWebManager.CurrentUserID
-		SessionUser_Addresses = cammWebManager.CurrentUserInfo.SalutationMrOrMs
-		SessionUser_Name = cammWebManager.CurrentUserInfo.FullName
-		SessionUser_Company = cammWebManager.CurrentUserInfo.Company
-		SessionUser_email = cammWebManager.CurrentUserInfo.EMailAddress
-		SessionUser_1stLang = cammWebManager.CurrentUserInfo.PreferredLanguage1.ID
-		SessionUser_2ndLang = cammWebManager.CurrentUserInfo.PreferredLanguage2.ID
-		SessionUser_3rdLang = cammWebManager.CurrentUserInfo.PreferredLanguage3.ID
-		SessionUser_Motivation = cammWebManager.CurrentUserInfo.AdditionalFlags("Motivation")
-	End If
+        If Session("System_Username") <> "" Then
+            SessionUserID = cammWebManager.CurrentUserID
+            SessionUser_Addresses = cammWebManager.CurrentUserInfo.SalutationMrOrMs
+            SessionUser_Name = cammWebManager.CurrentUserInfo.FullName
+            SessionUser_Company = cammWebManager.CurrentUserInfo.Company
+            SessionUser_email = cammWebManager.CurrentUserInfo.EMailAddress
+            SessionUser_1stLang = cammWebManager.CurrentUserInfo.PreferredLanguage1.ID
+            SessionUser_2ndLang = cammWebManager.CurrentUserInfo.PreferredLanguage2.ID
+            SessionUser_3rdLang = cammWebManager.CurrentUserInfo.PreferredLanguage3.ID
+            SessionUser_Motivation = cammWebManager.CurrentUserInfo.AdditionalFlags("Motivation")
+        End If
 
-	MyLangID = cammWebManager.UIMarket
-	Select Case MyLangID
-		Case 3,2,1: 'DoNothing - Supported languages
-		Case Else
-			MyLangID = cammWebManager.Internationalization.GetAlternativelySupportedLanguageID (MyLangID)
-	End Select
+        MyLangID = cammWebManager.UIMarket
+        Select Case MyLangID
+            Case 3, 2, 1 : 'DoNothing - Supported languages
+            Case Else
+                MyLangID = cammWebManager.Internationalization.GetAlternativelySupportedLanguageID(MyLangID)
+        End Select
 
-end sub
+    End Sub
 
 </script>
-				<html>
-				<head>
-				<!--#include virtual="/portal/includes/metalink.aspx"-->
+<asp:content id="Content1" contentplaceholderid="head" runat="Server">
+				<link rel="stylesheet" type="text/css" href="<%= cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css">
+    </asp:content>
+<asp:content id="Content2" contentplaceholderid="ContentPlaceHolderMain" runat="Server">
 <%
 
-	Select Case MyLangID
-		case 2: 'DEU
+    Select Case MyLangID
+        Case 2 : 'DEU
 %>
-				<link rel="stylesheet" type="text/css" href="<%= cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css">
-				<title>Feedback</title>
-				<script language="JavaScript">
+				<script lang="JavaScript">
 				<!--
-				function Check(theForm)
-				{
+    function Check(theForm) {
 
-				  if (theForm.EMail.value == "")
-				  {
-				  alert("Ihr Profil enthält keine e-mail-Adresse. Bitte ergänzen Sie zuerst dieses und versuchen es anschließend erneut.");
-				  theForm.EMail.focus();
-				  return (false);
-				  }
+        if (theForm.EMail.value == "") {
+            alert("Ihr Profil enthält keine e-mail-Adresse. Bitte ergänzen Sie zuerst dieses und versuchen es anschließend erneut.");
+            theForm.EMail.focus();
+            return (false);
+        }
 
-				  if (theForm.Comment.value == "")
-				  {
-				  alert("Bitte geben Sie einen Wert in das Feld \"Kommentar\" ein.");
-				  theForm.Comment.focus();
-				  return (false);
-				  }
+        if (theForm.Comment.value == "") {
+            alert("Bitte geben Sie einen Wert in das Feld \"Kommentar\" ein.");
+            theForm.Comment.focus();
+            return (false);
+        }
 
-				  return (true);
+        return (true);
 
-				}
-				//-->
+    }
+    //-->
 				</script>
-				</head>
-
-				<body leftmargin="20" topmargin="20" merginwidth="20" marginheight="20" background="images/feedback/background_question.gif" bgcolor="#FFFFFF">
 
 				<table border="0" width="100%" height="100%" cellspacing="0" cellpadding="0">
 				  <tr>
@@ -79,7 +73,7 @@ end sub
 				      <table border="0" cellspacing="0" cellpadding="0">
 				        <tr>
 				          <td width="100%" valign="top">
-				<form method="POST" action="feedback_gotit.aspx" onsubmit="return Check(this)" id=form2 name=form2><table border="0" cellspacing="10" cellpadding="0">
+				<no-more-form method="POST" action="feedback_gotit.aspx" onsubmit="return Check(this)" id=form2 name=form2><table border="0" cellspacing="10" cellpadding="0">
 
 				<tr><td><table border="0" cellspacing="0" cellpadding="0">
 
@@ -121,17 +115,17 @@ end sub
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">Thema:</font></td>
 				  <td width="300" height="16"><select style="width: 300; position: relative; height: 23" size="1" name="Theme" tabindex="0">
 					<% If Request.QueryString("topicdescription") <> "" Then %>
-					        <option selected><%= Server.HTMLEncode(Request.QueryString("topicdescription")) %></option>
+					        <option selected><%= Server.HtmlEncode(Request.QueryString("topicdescription")) %></option>
 					<% Else %>
-					        <option<% If Request.QueryString("topic") = "myprofile" Then Response.Write (" selected") %>>Mein Benutzerprofil</option>
-					        <option<% If Request.QueryString("topic") = "security" Then Response.Write (" selected") %>>Sicherheit</option>
-					        <option<% If Request.QueryString("topic") = "newfeatures" Then Response.Write (" selected") %>>Erweiterung der Webseite</option>
-					        <option<% If Request.QueryString("topic") = "content" Then Response.Write (" selected") %>>Inhalt</option>
-					        <option<% If Request.QueryString("topic") = "design" Then Response.Write (" selected") %>>Layouts/Grafik</option>
-				        	<option<% If Request.QueryString("topic") = "other" Then Response.Write (" selected") %>>Sonstiges</option>
+					        <option<% If Request.QueryString("topic") = "myprofile" Then Response.Write(" selected") %>>Mein Benutzerprofil</option>
+					        <option<% If Request.QueryString("topic") = "security" Then Response.Write(" selected") %>>Sicherheit</option>
+					        <option<% If Request.QueryString("topic") = "newfeatures" Then Response.Write(" selected") %>>Erweiterung der Webseite</option>
+					        <option<% If Request.QueryString("topic") = "content" Then Response.Write(" selected") %>>Inhalt</option>
+					        <option<% If Request.QueryString("topic") = "design" Then Response.Write(" selected") %>>Layouts/Grafik</option>
+				        	<option<% If Request.QueryString("topic") = "other" Then Response.Write(" selected") %>>Sonstiges</option>
 					<% End If %>
 				      </select></td>
-					<% If Request.QueryString("email") <> "" Then %><input type="hidden" name="emailto" value="<%= Server.HTMLEncode(Request.QueryString("email")) %>"><% End If %>
+					<% If Request.QueryString("email") <> "" Then %><input type="hidden" name="emailto" value="<%= Server.HtmlEncode(Request.QueryString("email")) %>"><% End If %>
 				</tr>
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/kommentar.gif" width="20" height="20"></td>
@@ -151,7 +145,7 @@ end sub
 
 				</table></td></tr>
 
-				</table></form>
+				</table></no-more-form>
 
 				<p align="right"><font size="1">V<%= cammWebManager.System_Version %></font></p>
 				          </td>
@@ -163,49 +157,36 @@ end sub
 				  </tr>
 				</table>
 
-				</body>
-
-				</html>
 <%
-		case else: 'ENG
+    case else : 'ENG
 %>
-				<link rel="stylesheet" type="text/css" href="<%= cammWebManager.Internationalization.User_Auth_Config_UserAuthMasterServer & cammWebManager.Internationalization.User_Auth_Config_Paths_SystemData %>style_standard.css">
-				<title>Feedback</title>
-
-				<script language="JavaScript">
+				<script lang="JavaScript">
 				<!--
-				function Check(theForm)
-				{
+    function Check(theForm) {
 
-				  if (theForm.Name.value == "")
-				  {
-				  alert("Your profile is incomplete. Please update it with your name and try again.");
-				  theForm.Name.focus();
-				  return (false);
-				  }
+        if (theForm.Name.value == "") {
+            alert("Your profile is incomplete. Please update it with your name and try again.");
+            theForm.Name.focus();
+            return (false);
+        }
 
-				  if (theForm.EMail.value == "")
-				  {
-				  alert("Your profile is incomplete. Please update it with your e-mail address and try again.");
-				  theForm.EMail.focus();
-				  return (false);
-				  }
+        if (theForm.EMail.value == "") {
+            alert("Your profile is incomplete. Please update it with your e-mail address and try again.");
+            theForm.EMail.focus();
+            return (false);
+        }
 
-				  if (theForm.Comment.value == "")
-				  {
-				  alert("Please insert a value into the field \"Comment\".");
-				  theForm.Comment.focus();
-				  return (false);
-				  }
+        if (theForm.Comment.value == "") {
+            alert("Please insert a value into the field \"Comment\".");
+            theForm.Comment.focus();
+            return (false);
+        }
 
-				  return (true);
+        return (true);
 
-				}
-				//-->
+    }
+    //-->
 				</script>
-				</head>
-
-				<body leftmargin="20" topmargin="20" merginwidth="20" marginheight="20" background="images/feedback/background_question.gif" bgcolor="#FFFFFF">
 
 				<table border="0" width="100%" height="100%" cellspacing="0" cellpadding="0">
 				  <tr>
@@ -215,7 +196,7 @@ end sub
 				      <table border="0" cellspacing="0" cellpadding="0">
 				        <tr>
 				          <td width="100%" valign="top">
-				<form method="POST" action="feedback_gotit.aspx" onsubmit="return Check(this)" id=form1 name=form1><table border="0" cellspacing="10" cellpadding="0">
+				<no-more-form method="POST" action="feedback_gotit.aspx" onsubmit="return Check(this)" id=form1 name=form1><table border="0" cellspacing="10" cellpadding="0">
 
 				<tr><td><table border="0" cellspacing="0" cellpadding="0">
 
@@ -258,17 +239,17 @@ end sub
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">Subject:</font></td>
 				  <td width="300" height="16"><select style="width: 300; position: relative; height: 23" size="1" name="Theme" tabindex="0">
 					<% If Request.QueryString("topicdescription") <> "" Then %>
-					        <option selected><%= Server.HTMLEncode(Request.QueryString("topicdescription")) %></option>
+					        <option selected><%= Server.HtmlEncode(Request.QueryString("topicdescription")) %></option>
 					<% Else %>
-				        	<option<% If Request.QueryString("topic") = "myprofile" Then Response.Write (" selected") %>>My user profile</option>
-					        <option<% If Request.QueryString("topic") = "security" Then Response.Write (" selected") %>>Security</option>
-					        <option<% If Request.QueryString("topic") = "newfeatures" Then Response.Write (" selected") %>>Improve the website</option>
-					        <option<% If Request.QueryString("topic") = "content" Then Response.Write (" selected") %>>Content</option>
-					        <option<% If Request.QueryString("topic") = "design" Then Response.Write (" selected") %>>Layout/Graphics</option>
-					        <option<% If Request.QueryString("topic") = "other" Then Response.Write (" selected") %>>Other</option>
+				        	<option<% If Request.QueryString("topic") = "myprofile" Then Response.Write(" selected") %>>My user profile</option>
+					        <option<% If Request.QueryString("topic") = "security" Then Response.Write(" selected") %>>Security</option>
+					        <option<% If Request.QueryString("topic") = "newfeatures" Then Response.Write(" selected") %>>Improve the website</option>
+					        <option<% If Request.QueryString("topic") = "content" Then Response.Write(" selected") %>>Content</option>
+					        <option<% If Request.QueryString("topic") = "design" Then Response.Write(" selected") %>>Layout/Graphics</option>
+					        <option<% If Request.QueryString("topic") = "other" Then Response.Write(" selected") %>>Other</option>
 					<% End If %>
 				      </select></td>
-					<% If Request.QueryString("email") <> "" Then %><input type="hidden" name="emailto" value="<%= Server.HTMLEncode(Request.QueryString("email")) %>"><% End If %>
+					<% If Request.QueryString("email") <> "" Then %><input type="hidden" name="emailto" value="<%= Server.HtmlEncode(Request.QueryString("email")) %>"><% End If %>
 				      </select></td>
 				</tr>
 				<tr>
@@ -301,9 +282,8 @@ end sub
 				  </tr>
 				</table>
 
-				</body>
-
-				</html>
+				
 <%
-	End Select
+    End Select
 %>
+        </asp:content>

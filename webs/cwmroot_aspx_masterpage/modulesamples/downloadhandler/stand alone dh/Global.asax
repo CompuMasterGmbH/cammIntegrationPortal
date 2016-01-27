@@ -1,5 +1,5 @@
 <%@ Application  %>
-<script language=vb runat=server>
+<script lang=vb runat=server>
 
     Dim cammWebManager As New CompuMaster.camm.WebManager.WMSystem
 

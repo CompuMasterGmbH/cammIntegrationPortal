@@ -3,7 +3,7 @@
 <camm:webmanager PageTitle="Redirections - Modify Item" id="cammWebManager" runat="server"></camm:webmanager>
 <!--#include virtual="/portal/includes/standardtemplate_top_wo_form.aspx"-->
 		<asp:panel runat="server" id="ActivateJScript">
-		<SCRIPT language="JavaScript">
+		<script lang="JavaScript">
 			//close popup window and refresh main window
 			function cl_window(){
 				window.close();

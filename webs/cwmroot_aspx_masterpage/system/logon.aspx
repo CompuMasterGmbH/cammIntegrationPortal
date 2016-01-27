@@ -26,7 +26,7 @@ If ErrorMessageForUser <> "" Then Response.Write (ErrorMessageForUser)
   </TR>
 </TABLE>
 </form>
-<script language="JavaScript">
+<script lang="JavaScript">
 <!--
 document.formlogin.Username.focus()
 //-->

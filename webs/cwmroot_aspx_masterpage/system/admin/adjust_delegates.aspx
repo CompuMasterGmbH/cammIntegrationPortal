@@ -4,7 +4,7 @@
 <camm:WebManager id="cammWebManager" SecurityObject="System - User Administration - Users" runat="server" />
 
 
-<script language="JavaScript">
+<script lang="JavaScript">
     function ValidateForm() {
         var objAuthType = document.getElementById("cmbAuthorizationType");
         var objUser = document.getElementById("cmbUser");

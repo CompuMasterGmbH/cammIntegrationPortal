@@ -6,7 +6,7 @@
 <%@ Register TagPrefix="componentart" Namespace="ComponentArt.Web.UI" Assembly="ComponentArt.Web.UI" %>
 <camm:WebManager id="cammWebmanager" runat="server" SecurityObject="System - TextModules" />
 
-<script language="javascript" type="text/javascript">
+<script lang="javascript" type="text/javascript">
 function ValidateAddVariable() {
 	return Validate(document.forms[0].CtrlVariable_TextBoxNewVariableName);
 }

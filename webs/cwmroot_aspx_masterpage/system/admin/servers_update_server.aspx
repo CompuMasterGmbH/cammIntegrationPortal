@@ -6,7 +6,7 @@
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockContentLine" Src="adminblockcontentline.ascx" %>
 
 
-<script language="Javascript">
+<script lang="Javascript">
 <!--
 function MyCheckURL()
 {

@@ -2,7 +2,7 @@
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" PageTitle="Administration - Navigation preview of special users" SecurityObject="System - User Administration - NavPreview" runat="server" />
 
-<Script language="JavaScript">
+<script lang="JavaScript">
 <!--
 function OpenNavDemo(LangID, ServerGroupID, UserID, GroupID)
 {

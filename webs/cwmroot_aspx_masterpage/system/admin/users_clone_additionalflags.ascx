@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="vb" AutoEventWireup="false" %>
-<script language="Vb" runat="server">
+<script lang="Vb" runat="server">
 public MyUserInfo as CompuMaster.camm.WebManager.WMSystem.UserInformation
 public cammWebManager as CompuMaster.camm.WebManager.WMSystem
 </script>

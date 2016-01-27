@@ -4,7 +4,7 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <script language="C#" runat="server">
+    <script lang="C#" runat="server">
 
       public void Page_Load (Object sender, EventArgs e)
       {

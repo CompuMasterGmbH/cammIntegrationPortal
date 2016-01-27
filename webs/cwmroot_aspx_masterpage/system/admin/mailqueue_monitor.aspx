@@ -13,7 +13,7 @@
 			display:none;
 		}
 		</style>
-		<script language="javascript">
+		<script lang="javascript">
 function checkFilterNowValidity() {
 	if ( ((document.<%= ServerFormClientID %>.TextBoxID.value) != '') ) 
 	{

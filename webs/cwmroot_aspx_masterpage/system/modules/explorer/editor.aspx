@@ -3,7 +3,7 @@
 <%@ Import Namespace="System.Web.UI" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
-<script language="vb" runat="server">
+<script lang="vb" runat="server">
 
 Sub Page_Init(obj as Object, e as eventargs)
         mybase.cammWebManager = cammwebmanager

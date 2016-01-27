@@ -1,7 +1,7 @@
 ﻿<%@ Page language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" SecurityObject="@@Public" />
-<script language="vb" runat="server">
+<script lang="vb" runat="server">
 
 	sub Page_Init (sender as object, e as eventargs)
 		cammWebManager.PageTitle = cammWebManager.Internationalization.WelcomeTextWelcomeMessage

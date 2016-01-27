@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <script language="C#" runat="server">
+    <script lang="C#" runat="server">
 
       public bool showtitle = true;
       public bool listonly = false;

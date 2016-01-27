@@ -1,5 +1,5 @@
 <%@ Control Language="vb" AutoEventWireup="false" %>
-<script language="vb" runat="server">
+<script lang="vb" runat="server">
 public LanguageID as integer
 </script>
 <SCRIPT type="text/javascript" language=javascript>

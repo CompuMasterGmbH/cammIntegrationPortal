@@ -2,7 +2,7 @@
 <%@ Register TagPrefix="WebManager" Namespace="CompuMaster.camm" Assembly="cammWM" %>
 <!--#include virtual="/portal/config.vb"-->
 <!--#include virtual="/portal/custom_internationalization.vb"-->
-<script language="vb" runat="server"> 
+<script lang="vb" runat="server"> 
 
         Protected Overrides Sub LoadConfiguration()
             SetupAdditionalConfiguration()

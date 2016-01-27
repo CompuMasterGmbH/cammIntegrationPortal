@@ -2,7 +2,7 @@
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" PageTitle="Administration - User accounts" SecurityObject="System - User Administration - Users" runat="server" />
 <!--#include virtual="/portal/includes/standardtemplate_top_wo_form.aspx"-->
-<script language="javascript" type="text/javascript">
+<script lang="javascript" type="text/javascript">
 <!--
 <%
 If Me.ProgressState = Me.TotalRecords Then

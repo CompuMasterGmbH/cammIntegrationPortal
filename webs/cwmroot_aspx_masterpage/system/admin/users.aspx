@@ -3,7 +3,7 @@
 <camm:WebManager id="cammWebManager" PageTitle="Administration - User accounts" SecurityObject="System - User Administration - Users" runat="server" />
 
 
-<script language="javascript">
+<script lang="javascript">
 </script>
 
 	<h3><font face="Arial">Administration - User accounts</font></h3>

@@ -3,7 +3,7 @@
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <!--#include virtual="/portal/includes/standardtemplate_top_wo_form.aspx"-->
 <camm:webmanager id="cammWebManager" runat="server"></camm:webmanager>
-		<SCRIPT language="JavaScript">
+		<script lang="JavaScript">
 		<!--
 		//pop-up window with the information on event
 		function popup(url){

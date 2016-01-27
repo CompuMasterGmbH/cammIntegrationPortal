@@ -6,7 +6,7 @@
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockContentLine" Src="adminblockcontentline.ascx" %>
 
-<Script language="JavaScript">
+<script lang="JavaScript">
 <!--
 function OpenNavDemo(LangID, ServerGroupID, UserID)
 {

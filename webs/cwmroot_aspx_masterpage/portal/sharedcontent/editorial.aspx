@@ -3,7 +3,7 @@
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammwebmanager" runat="server" />
 <%@ Register TagPrefix="cammWebEdit" Namespace="CompuMaster.camm.WebManager.Modules.WebEdit.Controls" Assembly="cammWM" %>
-<script language="vb" runat="server">
+<script lang="vb" runat="server">
 sub page_load (sender as object, e as eventargs)
 	
 	Select case cammWebManager.UILanguage

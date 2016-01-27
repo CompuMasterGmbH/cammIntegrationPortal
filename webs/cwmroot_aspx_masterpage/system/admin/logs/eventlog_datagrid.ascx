@@ -8,7 +8,7 @@
 <meta content="True" name="vs_showGrid">
 
 
-<SCRIPT language="JavaScript">
+<script lang="JavaScript">
 //pop-up window with the information on event
 function popup(url){
 <!--

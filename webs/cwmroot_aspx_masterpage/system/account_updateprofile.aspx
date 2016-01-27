@@ -23,7 +23,7 @@
                 <table cellspacing="0" cellpadding="0" bgcolor="#ffffff" border="0" bordercolor="#C1C1C1">
                     <tbody>
 
-                        <script language="javascript">
+                        <script lang="javascript">
 			function checkMustFields()
 			{
 				if (document.UpdateProfile.company.value == '')

@@ -17,7 +17,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <% If TestSessionTermination = True Then %>
-<script language=javascript>
+<script lang=javascript>
 confirm ('<%= cammWebManager.Internationalization.ErrorTimoutOrLoginFromAnotherStation %> (' + new Date + ')');
 window.top.location = '<%= cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL & "?Action=logout" %>';
 </script>

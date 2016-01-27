@@ -28,7 +28,7 @@
 <body>
 <iframe name="iframe_refreshlogin" width=1 height=1 frameborder=0 scrolling=no src="<%= cammWebManager.Internationalization.User_Auth_Config_Paths_Login %>refreshlogin.aspx">
 </iframe>
-<script language="javascript">
+<script lang="javascript">
 
 function refreshWindow() {
 	var myiframe; 

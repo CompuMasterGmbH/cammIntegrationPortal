@@ -1,4 +1,4 @@
-﻿<script language="vb" runat="server">
+﻿<script lang = "vb" runat="server">
 	
 	
 Class CustomSettingsAndData

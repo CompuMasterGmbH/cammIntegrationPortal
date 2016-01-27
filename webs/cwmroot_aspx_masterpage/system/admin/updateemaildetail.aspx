@@ -5,7 +5,7 @@
 	<head>
 	<title>Update mail detail</title>
 	<link rel="stylesheet" type="text/css" href="/portal/style_standard.css">
-	<script language="javascript">
+	<script lang="javascript">
 	    function ValidateEmailId(ToEmail,CCEmail,BccEmail)
 	    {
 	        var myArr = new Array();

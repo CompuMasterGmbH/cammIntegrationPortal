@@ -4,7 +4,7 @@
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Navigation" id="cammWebManager" runat="server" />
 
-<script language="VB" runat="server">
+<script lang="VB" runat="server">
 
     Dim AdditionalFeaturesEnabled As Boolean
     Dim RedirectionParams As String
