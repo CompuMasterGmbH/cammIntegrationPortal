@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" validateRequest=false Inherits="CompuMaster.camm.WebManager.Pages.Login.LoginForm" language="VB" %>
+﻿<%@ Page MasterPageFile="~/portal/MasterPage.master" validateRequest="False" Inherits="CompuMaster.camm.WebManager.Pages.Login.LoginForm" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
 
@@ -8,7 +8,7 @@ If ErrorMessageForUser <> "" Then Response.Write (ErrorMessageForUser)
 %>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
-    <td><FONT face=Arial size=4><%= cammWebManager.Internationalization.Logon_BodyTitle %></FONT><BR>&nbsp;
+    <td><FONT face=Arial size=4><%= cammWebManager.Internationalization.Logon_BodyTitle %></FONT><br />&nbsp;
 <HR><FONT face=Arial size=2><%= cammWebManager.Internationalization.Logon_BodyPrompt2User %></FONT><HR></td>
     <td width="140" valign="bottom"><img border="0" src="<%= cammWebManager.System_GetServerGroupImageSmallAddr(cammWebManager.CurrentServerIdentString) %>" align="right" width="100" height="94"></td>
   </tr>

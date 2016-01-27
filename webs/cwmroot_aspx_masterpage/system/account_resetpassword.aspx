@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" ValidateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ResetUserPassword" language="VB" %>
+﻿<%@ Page MasterPageFile="~/portal/MasterPage.master" ValidateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ResetUserPassword" language="VB" %>
 <%@ Import NameSpace="CompuMaster.camm.WebManager.WMSystem" %>
 <%@ Import NameSpace="CompuMaster.camm.WebManager" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>

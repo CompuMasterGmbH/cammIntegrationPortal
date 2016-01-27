@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB"  Inherits="CompuMaster.camm.WebManager.Pages.Administration.Add_ServersAccesslevelrelation" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" language="VB"  Inherits="CompuMaster.camm.WebManager.Pages.Administration.Add_ServersAccesslevelrelation" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Add access level" id="cammWebManager" SecurityObject="System - User Administration - ServerSetup" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>

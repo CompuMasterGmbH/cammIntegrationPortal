@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" Codebehind="mailqueuemonitor.aspx.vb" Inherits="CompuMaster.camm.WebManager.Pages.Administration.MailQueueMonitor"%>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" Codebehind="mailqueuemonitor.aspx.vb" Inherits="CompuMaster.camm.WebManager.Pages.Administration.MailQueueMonitor"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" SecurityObject="System - Mail Queue Monitor" />
 

@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ChangeUserProfile"
+﻿<%@ Page Title="Update profile" MasterPageFile="~/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ChangeUserProfile"
     Language="VB" %>
 
 <%@ Import Namespace="CompuMaster.camm.WebManager.WMSystem" %>
@@ -18,7 +18,7 @@
                 <p>
                     <font face="Arial" size="3"><b>
                         <%= cammWebManager.Internationalization.UpdateProfile_Descr_Title %>:
-                        <%= MyUserInfo.LOGINNAME %></b></font></p>
+                        <%= MyUserInfo.LoginName %></b></font></p>
                 <% If ErrMsg <> "" Then Response.Write("<p><font face=""Arial"" size=""2"" color=""red"">" & ErrMsg & "</font></p>")%>
                 <table cellspacing="0" cellpadding="0" bgcolor="#ffffff" border="0" bordercolor="#C1C1C1">
                     <tbody>

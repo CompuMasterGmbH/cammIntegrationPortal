@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.SelectWebsiteAreaToEdit" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.SelectWebsiteAreaToEdit" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebmanager" runat="server" SecurityObject="System - TextModules" />

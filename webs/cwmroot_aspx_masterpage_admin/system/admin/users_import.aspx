@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ImportUsers" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ImportUsers" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" PageTitle="Administration - User accounts" SecurityObject="System - User Administration - Users" runat="server" />
 <!--#include virtual="/portal/includes/standardtemplate_top_wo_form.aspx"-->

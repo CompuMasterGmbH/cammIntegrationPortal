@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Page" debug="false" trace="false" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Page" debug="false" trace="false" %>
 <%@ Register TagPrefix="camm" Assembly="camm.WebControls" Namespace="CompuMaster.camm.Controls.WebControls" %>
 <%@ Register TagPrefix="StyleTemplates" Assembly="camm.WebControls" Namespace="CompuMaster.camm.Controls.WebControls.StyleTemplates" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>

@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ChangeUserProfile" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ChangeUserProfile" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" SecurityObject="@@Public" runat="server" />

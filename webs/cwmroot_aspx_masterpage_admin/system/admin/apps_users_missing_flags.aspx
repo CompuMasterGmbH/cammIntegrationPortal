@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" ValidateRequest="False" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.AppCheckUsersForMissingFlags" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" ValidateRequest="False" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.AppCheckUsersForMissingFlags" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify application" id="cammWebManager" SecurityObject="System - User Administration - Applications" runat="server" />

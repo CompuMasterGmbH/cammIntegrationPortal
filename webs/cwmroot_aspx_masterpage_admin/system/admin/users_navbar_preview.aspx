@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.Users_Navbar_Preview" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.Users_Navbar_Preview" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" PageTitle="Administration - Navigation preview of special users" SecurityObject="System - User Administration - NavPreview" runat="server" />
 

@@ -26,7 +26,7 @@
                 UpdateProfile_ErrMsg_MistypedPW = "Неверный пароль. Соблюдайте написание заглавных и строчных букв!"
                 UpdateProfile_ErrMsg_Undefined = "Неожиданное возвращённое значение! - Обратитесь к нашему Веб-мастеру!"
                 UpdateProfile_ErrMsg_Success = "Ваш профиль пользователя успешно изменён!"
-                UpdateProfile_ErrMsg_LogonTooOften = "Процесс регистрации слишком часто заканчивался неудачей; учётная запись пользователя временно деактивирована.<br>Повторите попытку через некоторое время!"
+                UpdateProfile_ErrMsg_LogonTooOften = "Процесс регистрации слишком часто заканчивался неудачей; учётная запись пользователя временно деактивирована.<br />Повторите попытку через некоторое время!"
                 UpdateProfile_ErrMsg_NotAllowed = "У вас недостаточные права доступа для выполнения этого действия!"
                 UpdateProfile_ErrMsg_PWRequired = "Введите также пароль, чтобы обновить профиль!"
                 UpdateProfile_Descr_Address = "Адрес"
@@ -149,27 +149,27 @@
                 Logon_SSO_ADS_LabelTakeAnAction = "Что вы хотите сделать?"
                 Logon_SSO_ADS_IdentifiedUserName = "Вы идентифицированы как пользователь <strong>{0}</strong>."
                 Logon_SSO_ADS_PageTitle = "Создание автоматического входа в систему"
-                Logon_BodyPrompt2User = "Введите своё имя пользователя и соответствующий пароль, чтобы войти в " & OfficialServerGroup_Title & ".<br><em>Помните также, что имя пользователя и пароль могут отличаться от других данных доступа, полученных вами для других разделов.</em>"
+                Logon_BodyPrompt2User = "Введите своё имя пользователя и соответствующий пароль, чтобы войти в " & OfficialServerGroup_Title & ".<br /><em>Помните также, что имя пользователя и пароль могут отличаться от других данных доступа, полученных вами для других разделов.</em>"
                 Logon_BodyFormUserName = "Имя пользователя"
                 Logon_BodyFormUserPassword = "Пароль"
                 Logon_BodyFormSubmit = "Логин"
                 Logon_BodyFormCreateNewAccount = "Создать учётную запись"
-                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Вы ещё не стали членом? Создайте свою собственную учётную запись для раздела " & OfficialServerGroup_Title & "!</STRONG><BR>" & _
+                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Вы ещё не стали членом? Создайте свою собственную учётную запись для раздела " & OfficialServerGroup_Title & "!</STRONG><br />" & _
                                     "Если у Вас ещё нет данных доступа, Вы можете создать прямо сейчас </FONT><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><FONT face=Arial size=2>" & _
                                     "</FONT></A><FONT face=Arial size=2>. " & _
                                     "Не создавайте других&nbsp;данных доступа, " & _
                                     "если Вы уже делали это в прошлом. При возникновении трудностей при регистрации обратитесь в наш <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>Support Service Center</FONT></A> " & _
-                                    ". <BR> &nbsp;</FONT></P></TD></TR>" & _
+                                    ". <br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/passwort.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><B>Забыли пароль? Мы отправим Вам пароль " & _
-                                    "</B><BR>Вы уже получили рабочие данные доступа, не потеряли пароль?" & _
+                                    "</B><br />Вы уже получили рабочие данные доступа, не потеряли пароль?" & _
                                     "</FONT> <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><FONT " & _
                                     "face=Arial size=2>Здесь Вы получите свой пароль по электронной почте </FONT></A><FONT " & _
                                     "face=Arial size=2>. Помните, что сообщение отправляется только по адресу, первоначально указанному Вами" & _
-                                    ".<br> &nbsp;</FONT></P></TD></TR>" & _
+                                    ".<br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A " & _
-                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Вы не получили ответа на свой вопрос?</strong><br>Если Вам требуется дополнительная поддержка, обратитесь к нам в </FONT><A " & _
+                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Вы не получили ответа на свой вопрос?</strong><br />Если Вам требуется дополнительная поддержка, обратитесь к нам в </FONT><A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2></FONT></A><FONT " & _
                                     "size=2>.</FONT></P></TD></TR></TABLE>"
                 Logon_Connecting_InProgress = "Выполняется соединение с сервером…"
@@ -187,7 +187,7 @@
                 SendPassword_Descr_RequiredFields = "обязательные поля"
                 SendPassword_Descr_BackToLogin = "Назад в окно регистрации"
                 SendPassword_Descr_PasswordSentTo = "Пароль был отправлен по адресу {0}."
-                SendPassword_Descr_FurtherCommentWithContactAddress = "Ваш пароль Secured Area отправляется на ваш сохранённый адрес электронной почты.<BR>Если Вы не получите этого электронного сообщения в ближайшие 24 часа, обратитесь по адресу <a href=""mailto:{0}"">{1}</a>."
+                SendPassword_Descr_FurtherCommentWithContactAddress = "Ваш пароль Secured Area отправляется на ваш сохранённый адрес электронной почты.<br />Если Вы не получите этого электронного сообщения в ближайшие 24 часа, обратитесь по адресу <a href=""mailto:{0}"">{1}</a>."
                 META_CurrentContentLanguage = "RU"
                 StatusLineUsername = "Пользователь"
                 StatusLinePassword = "Пароль"
@@ -212,16 +212,16 @@
                 ErrorUserOrPasswordWrong = "Имя пользователя или пароль неверны или неверно введены, либо в доступе отказано!<p>Проверьте <ul><li>написание имени пользователя и пароля (заглавные и строчные буквы в пароле различаются!),</li><li>чтобы использовать правильную комбинацию имени пользователя и пароля. (Возможно, Вы уже получили от нас другие имена пользователя/пароли, которые недействительны для данного раздела.)</li></ul>"
                 ErrorServerConfigurationError = "Этот сервер неверно установлен. Проконсультируйтесь со своим администратором."
                 ErrorNoAuthorization = "У вас нет права доступа к данному разделу."
-                ErrorAlreadyLoggedOn = "Вы уже зарегистрированы! Сначала отмените свою регистрацию на другом своём рабочем месте!<br><font color=""red"">Если Вы уверены, что Вы нигде более не зарегистрированы, отправьте нам короткое сообщение по адресу <a href=""mailto:[n:0]"">[n:1]</a> и назовите свою учётную запись.</font>"
-                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Ваша регистрация на этом рабочем месте отменена, так как Вы зарегистрировались на другой станции.<br>"
-                ErrorLogonFailedTooOften = "Процесс регистрации слишком часто заканчивался неудачей, Ваша учётная запись временно деактивирована.<br>Повторите попытку немного позже!"
-                ErrorEmptyPassword = "Не забудьте указать ещё один пароль!<br>Если Вы забыли свой пароль, Вы можете снова запросить его по электронной почте. Для этого отправьте дополнительные подробности ниже в тексте."
+                ErrorAlreadyLoggedOn = "Вы уже зарегистрированы! Сначала отмените свою регистрацию на другом своём рабочем месте!<br /><font color=""red"">Если Вы уверены, что Вы нигде более не зарегистрированы, отправьте нам короткое сообщение по адресу <a href=""mailto:[n:0]"">[n:1]</a> и назовите свою учётную запись.</font>"
+                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Ваша регистрация на этом рабочем месте отменена, так как Вы зарегистрировались на другой станции.<br />"
+                ErrorLogonFailedTooOften = "Процесс регистрации слишком часто заканчивался неудачей, Ваша учётная запись временно деактивирована.<br />Повторите попытку немного позже!"
+                ErrorEmptyPassword = "Не забудьте указать ещё один пароль!<br />Если Вы забыли свой пароль, Вы можете снова запросить его по электронной почте. Для этого отправьте дополнительные подробности ниже в тексте."
                 ErrorUnknown = "Неожиданная ошибка! - Обратитесь в наш <a href=""mailto:support@camm.biz"">Trouble Center</a>!"
                 ErrorEmptyField = "Введите значения во все поля, помеченные звёздочкой <em>(*)</em>!"
                 ErrorWrongNetwork = "У вас нет прав на регистрацию по текущему сетевому соединению."
                 ErrorUserAlreadyExists = "Учётная запись уже существует. Выберите другое имя!"
                 ErrorLoginCreatedSuccessfully = "Профиль пользователя успешно создан!"
-                ErrorSendPWWrongLoginOrEmailAddress = "Неверное имя пользователя или неверный адрес электронной почты.<br>Введите правильные значения, внесённые ранее в Ваш профиль пользователя."
+                ErrorSendPWWrongLoginOrEmailAddress = "Неверное имя пользователя или неверный адрес электронной почты.<br />Введите правильные значения, внесённые ранее в Ваш профиль пользователя."
                 ErrorCookiesMustNotBeDisabled = "Ваш браузер не поддерживает Cookies, либо Cookies были деактивированы в настройках безопасности Вашего браузера."
                 ErrorTimoutOrLoginFromAnotherStation = "Ваша регистрация была отменена, так как была достигнута максимальная продолжительность сеанса, либо была выполнена регистрация с другой рабочей станции."
                 ErrorApplicationConfigurationIsEmpty = "Это приложение не содержит действительных имён приложений. Обратитесь к производителю."
@@ -309,11 +309,11 @@
                 "[n:2]"
                 UserManagement_NewUser_HTMLWelcome = "<p>Добро пожаловать в Secured Area! Здесь Вы найдёте ежедневную местную информацию.</p>" & _
                 "<p>От нашего администратора для Вас создана учётная запись для раздела Secured Area. Этот сервис, разумеется, является для Вас бесплатным.</p>" & _
-                "<p><strong>Ваше регистрационное имя для Secured Area: <font color=""red"">[n:0]</font><br>" & _
+                "<p><strong>Ваше регистрационное имя для Secured Area: <font color=""red"">[n:0]</font><br />" & _
                 "Ваш пароль для Secured Area: <font color=""red"">[n:1]</font></strong></p>" & _
                 "<p>Не откладывая, сохраните пароль в надёжном месте. Это необходимо, чтобы никто другой (например, хакер) не имел Вашего пароля и не мог им воспользоваться!</p>" & _
                 "<p>Воспользуйтесь преимуществами комплексной поддержки! Вас ожидает многое. Просто познакомьтесь с этим!" & _
-                "<p>Ваша учётная запись открывает Вам доступ к различным защищённым приложениям. Процесс регистрации при входе в Secured Area уже завершён. Однако Ваши права доступа в полном объёме будут действовать лишь через 3 - 4 рабочих дня. Войти в Secured Area Вы можете по следующему URL:<br>" & _
+                "<p>Ваша учётная запись открывает Вам доступ к различным защищённым приложениям. Процесс регистрации при входе в Secured Area уже завершён. Однако Ваши права доступа в полном объёме будут действовать лишь через 3 - 4 рабочих дня. Войти в Secured Area Вы можете по следующему URL:<br />" & _
                 "<ul><strong>[n:2]</strong></ul></p>"
                 UserManagement_NewUser_MsgEMail4Admin = "Следующий пользователь создан Вами или одним из Ваших коллег в разделе Secured Area." & ChrW(13) & ChrW(10) & _
                 "Предоставьте необходимые права доступа!" & ChrW(13) & ChrW(10) & _
@@ -403,11 +403,11 @@
                 "[n:2]"
                 UserManagement_NewUser_HTMLWelcome = "<p>Bem-vindo à nossa Área Protegida! O lugar a visitar todos os dias!</p>" & _
                 "<p>Voçê foi adicionado gratuitamente à Área Protegida pela nossa administração.</p>" & _
-                "<p><strong>A sua nome do utilizador é: <font color=""red"">[n:0]</font><br>" & _
+                "<p><strong>A sua nome do utilizador é: <font color=""red"">[n:0]</font><br />" & _
                 "A sua senha para a Área Protegida é: <font color=""red"">[n:1]</font></strong></p>" & _
                 "<p>Por favor, não se esqueça de alterar a senha, o quanto antes, para evitar o acesso e utilização por parte de terceiros!</p>" & _
                 "<p>Aproveite das vantagens de um suporte extensivo.Há muito informação na Extranet. Esteja à vontade para surfar neste site e para o explorar na totalidade.</p>" & _
-                "<p>A sua conta permite o acesso a diversos programas protegidos. Por agora, deverá já ter concluído o processo de associação da nossa Área Protegida. Autorizações adicionais e filiações serão definidas nos próximos 3 - 4 dias De seguida, por favor, revisite a URL:<br>" & _
+                "<p>A sua conta permite o acesso a diversos programas protegidos. Por agora, deverá já ter concluído o processo de associação da nossa Área Protegida. Autorizações adicionais e filiações serão definidas nos próximos 3 - 4 dias De seguida, por favor, revisite a URL:<br />" & _
                 "<ul><strong>[n:2]</strong></ul></p>"
                 ResetPW_Descr_PleaseSpecifyNewPW = "Please specifiy your new password here:"
                 SendPasswordResetLink_EMailMessage = "You can reset your password using the following link: [n:0]"
@@ -420,7 +420,7 @@
                 UpdateProfile_ErrMsg_MistypedPW = "Nome do utilizador ou da senha mal dactilografado ou mal soletrado ou acesso negado!"
                 UpdateProfile_ErrMsg_Undefined = "Valor de retorno inesperado! - Por favor, contacte o webmaster!"
                 UpdateProfile_ErrMsg_Success = "O seu perfil foi actualizado com sucesso!"
-                UpdateProfile_ErrMsg_LogonTooOften = "O processo de início de sessão falhou demasiadas vezes, a conta foi desactivada.<br>Por favor, tente de novo mais tarde!"
+                UpdateProfile_ErrMsg_LogonTooOften = "O processo de início de sessão falhou demasiadas vezes, a conta foi desactivada.<br />Por favor, tente de novo mais tarde!"
                 UpdateProfile_ErrMsg_NotAllowed = "Voçê não tem autorização para aceder a este documento!"
                 UpdateProfile_ErrMsg_PWRequired = "Por favor, introduza a sua senha para alterar o seu perfil!"
                 UpdateProfile_Descr_Address = "Endereço"
@@ -551,25 +551,25 @@
                 Logon_SSO_ADS_LabelTakeAnAction = "O que é que queria saber?"
                 Logon_SSO_ADS_IdentifiedUserName = "Foi identificado como utilizador <strong>{0}</strong>."
                 Logon_SSO_ADS_PageTitle = "Se a identificação estiver errada ou se pretender continuar sem inicar sessão, agora"
-                Logon_BodyPrompt2User = "Introduza por favor seu username e senha para aceder à " & OfficialServerGroup_Title & ".<br><em>Por favor, observe que esta nome do utilizador e senha online estão separadas e podem ser diferentes das que já criou para outras das nossas áreas.</em>"
+                Logon_BodyPrompt2User = "Introduza por favor seu username e senha para aceder à " & OfficialServerGroup_Title & ".<br /><em>Por favor, observe que esta nome do utilizador e senha online estão separadas e podem ser diferentes das que já criou para outras das nossas áreas.</em>"
                 Logon_BodyFormUserName = "Nome do utilizador"
                 Logon_BodyFormUserPassword = "Senha"
                 Logon_BodyFormSubmit = "Início da sessão"
                 Logon_BodyFormCreateNewAccount = "Criar uma nova conta"
-                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Você ainda não é membro? Críe a sua conta agora para  entrar na " & OfficialServerGroup_Title & "</STRONG><BR>" & _
+                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Você ainda não é membro? Críe a sua conta agora para  entrar na " & OfficialServerGroup_Title & "</STRONG><br />" & _
  "Clique aqui para </FONT><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><FONT face=Arial size=2>criar uma conta agora</FONT></A><FONT face=Arial size=2>. " & _
  "Atenção, se você já criou uma, não crie outra. Se tiver problemas ao iniciar a sessão, contacte a nossa " & _
  " <A " & _
  "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>central de atendimento</FONT></A>" & _
- ". <BR> &nbsp;</FONT></P></TD></TR>" & _
+ ". <br /> &nbsp;</FONT></P></TD></TR>" & _
  "<TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/passwort.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><B>Esqueçeu a sua senha? " & _
- "</B><BR>Você digitou uma conta válida mas esqueceu-se da senha? " & _
+ "</B><br />Você digitou uma conta válida mas esqueceu-se da senha? " & _
  "</FONT> <A " & _
  "href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><FONT " & _
  "face=Arial size=2>Clique aqui e a sua senha lhe será enviada por email.</FONT></A><FONT " & _
- "face=Arial size=2> Atenção, a senha lhe será enviada ao e-mail indicado inicialmente.<br> &nbsp;</FONT></P></TD></TR>" & _
+ "face=Arial size=2> Atenção, a senha lhe será enviada ao e-mail indicado inicialmente.<br /> &nbsp;</FONT></P></TD></TR>" & _
  "<TR><TD VALIGN=""TOP""><A " & _
- "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Ainda está com problemas de acesso?</strong><br>Se precisar de mais assistência, </FONT><A " & _
+ "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Ainda está com problemas de acesso?</strong><br />Se precisar de mais assistência, </FONT><A " & _
  "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>contate a gente</FONT></A><FONT " & _
  "size=2>.</FONT></P></TD></TR></TABLE>"
                 AccessError_Descr_FollowingError = "Ocorreu a seguinte falha:"
@@ -584,7 +584,7 @@
                 SendPassword_Descr_RequiredFields = "campos obrigatórios"
                 SendPassword_Descr_BackToLogin = "Voltar ao início da sessão"
                 SendPassword_Descr_PasswordSentTo = "A sua senha foi enviada a {0}."
-                SendPassword_Descr_FurtherCommentWithContactAddress = "A sua senha da Área Protegida será enviada apenas para o seu endereço de correio electrónico registrado.<BR>Se não receber a mensagem de correio electrónico no prazo de vinte e quatro (24) horas, por favor entre em contacto connosco <a href=""mailto:{0}"">{1}</a>."
+                SendPassword_Descr_FurtherCommentWithContactAddress = "A sua senha da Área Protegida será enviada apenas para o seu endereço de correio electrónico registrado.<br />Se não receber a mensagem de correio electrónico no prazo de vinte e quatro (24) horas, por favor entre em contacto connosco <a href=""mailto:{0}"">{1}</a>."
                 META_CurrentContentLanguage = "PT"
                 StatusLineUsername = "Utilizador"
                 StatusLinePassword = "Senha"
@@ -609,17 +609,17 @@
                 ErrorUserOrPasswordWrong = "Nome do utilizador ou da senha mal dactilografado ou mal soletrado ou acesso negado!<p>Por favor, verifique que <ul><li>a ortografia do nome do utilizador e da senha (a própria senha varia entre grande e pequena!)</li><li>é o nome correcto do utilizador/da senha (talvez tenha recibido senha para os outros empregados que não trabalham aqui)</li></ul>"
                 ErrorServerConfigurationError = "Este servidor ainda não foi configurado correctamente. Consulte o seu administrador."
                 ErrorNoAuthorization = "Voçê não é autorizado para entrar nesta área."
-                ErrorAlreadyLoggedOn = "Já iniciou sessão! Por favor, termine primeiro a sessão no outro terminal!<br><font color=""red"">Se estiver certo que não tem iniciada a sessão díga-nos através do <a href=""mailto:[n:0]"">[n:1]</a>!</font>"
-                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "A sua sessão foi terminada por ter iniciado sessão noutro terminal.<br>"
-                ErrorLogonFailedTooOften = "O processo de início de sessão falhou demasiadas vezes, a conta foi desactivada.<br>Por favor, tente de novo mais tarde!"
-                ErrorEmptyPassword = "Não se esqueça de introduzir a senha!<br>Se não sober a sua senha, tente mais uma vez consegui-lo por e-mail. Considere os detalhes na parte inferior de este documento."
+                ErrorAlreadyLoggedOn = "Já iniciou sessão! Por favor, termine primeiro a sessão no outro terminal!<br /><font color=""red"">Se estiver certo que não tem iniciada a sessão díga-nos através do <a href=""mailto:[n:0]"">[n:1]</a>!</font>"
+                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "A sua sessão foi terminada por ter iniciado sessão noutro terminal.<br />"
+                ErrorLogonFailedTooOften = "O processo de início de sessão falhou demasiadas vezes, a conta foi desactivada.<br />Por favor, tente de novo mais tarde!"
+                ErrorEmptyPassword = "Não se esqueça de introduzir a senha!<br />Se não sober a sua senha, tente mais uma vez consegui-lo por e-mail. Considere os detalhes na parte inferior de este documento."
                 ErrorRequiredField = "Campo obrigatório"
                 ErrorUnknown = "Erro imprevisto! - Contacte <a href=""mailto:support@camm.biz"">Trouble Center</a>!"
                 ErrorEmptyField = "Por favor, introduza valores em todos os campos obrigatórios marcados com asterixo <em>(*)</em>!"
                 ErrorWrongNetwork = "Você não tem autorização para ligar através da rede actual."
                 ErrorUserAlreadyExists = "Já existe um início de sessão com este nome. Seleccione um outro nome para iniciar a sessão!"
                 ErrorLoginCreatedSuccessfully = "A conta para o início da sessão foi criada com éxito!"
-                ErrorSendPWWrongLoginOrEmailAddress = "InÍcio da sessão errado ou endereço E-Mail errado.<br>Introduza os valores correctos para iniciar o processo com a sua senha."
+                ErrorSendPWWrongLoginOrEmailAddress = "InÍcio da sessão errado ou endereço E-Mail errado.<br />Introduza os valores correctos para iniciar o processo com a sua senha."
                 ErrorCookiesMustNotBeDisabled = "O seu browser não suporta cookies ou os cookies estão desactivados por causa das políticas de segurança do seu browser."
                 ErrorTimoutOrLoginFromAnotherStation = "Limite de tempo de sessão excedido ou iniciou sessão a partir de outro terminal."
                 ErrorApplicationConfigurationIsEmpty = "Esta aplicação ainda não foi configurada. Contacte o fabricante desta aplicação."
@@ -724,7 +724,7 @@
                 UpdateProfile_ErrMsg_MistypedPW = "Nieprawidłowe hasło. Zwróć uwagę na pisownię dużymi i małymi literami!"
                 UpdateProfile_ErrMsg_Undefined = "Nieoczekiwana wartość odpowiedzi! - Skontaktuj się z naszym webmasterem!"
                 UpdateProfile_ErrMsg_Success = "Twój profil użytkownika został pomyślnie zmieniony!"
-                UpdateProfile_ErrMsg_LogonTooOften = "Proces logowania nie powiódł się zbyt wiele razy, dlatego konto użytkownika zostało dezaktywowane.<br>Spróbuj jeszcze raz później!"
+                UpdateProfile_ErrMsg_LogonTooOften = "Proces logowania nie powiódł się zbyt wiele razy, dlatego konto użytkownika zostało dezaktywowane.<br />Spróbuj jeszcze raz później!"
                 UpdateProfile_ErrMsg_NotAllowed = "Nie masz wystarczającego uprawnienia do wykonania tej akcji!"
                 UpdateProfile_ErrMsg_PWRequired = "Wprowadź także hasło, aby zaktualizować profil!"
                 UpdateProfile_Descr_Address = "Adres"
@@ -847,27 +847,27 @@
                 Logon_SSO_ADS_RadioDoNothing = "Jeżeli identyfikacja jest nieprawidłowa lub jeśli nie chcesz się logować, kontynuuj jako anonimowy użytkownik (ten dialog pojawi się później ponownie)."
                 Logon_SSO_ADS_RadioRegisterExisting = "Zaloguj się do <strong>już istniejącego</strong> konta użytkownika"
                 Logon_SSO_ADS_RadioRegisterNew = "Zarejestruj się z <strong>nowym</strong> kontem użytkownika"
-                Logon_BodyPrompt2User = "Wpisz nazwę użytkownika i przynależne hasło, aby uzyskać dostęp do " & OfficialServerGroup_Title & ".<br><em>Należy także pamiętać, że nazwa użytkownika i hasło mogą różnić się od innych danych, otrzymanych do innych obszarów.</em>"
+                Logon_BodyPrompt2User = "Wpisz nazwę użytkownika i przynależne hasło, aby uzyskać dostęp do " & OfficialServerGroup_Title & ".<br /><em>Należy także pamiętać, że nazwa użytkownika i hasło mogą różnić się od innych danych, otrzymanych do innych obszarów.</em>"
                 Logon_BodyFormUserName = "Nazwa użytkownika"
                 Logon_BodyFormUserPassword = "Hasło"
                 Logon_BodyFormSubmit = "Login"
                 Logon_BodyFormCreateNewAccount = "Załóż konto użytkownika"
-                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Jeszcze nie jesteś członkiem? Załóż własne konto dostępowe do obszaru " & OfficialServerGroup_Title & "!</STRONG><BR>" & _
+                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Jeszcze nie jesteś członkiem? Załóż własne konto dostępowe do obszaru " & OfficialServerGroup_Title & "!</STRONG><br />" & _
                                     "Jeżeli nie masz jeszcze danych dostępowych, możesz założyć teraz </FONT><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><FONT face=Arial size=2>" & _
                                     "</FONT></A><FONT face=Arial size=2>. " & _
                                     "Nie zakładaj innych danych dostępowych," & _
                                     "jeżeli założyłeś już konto w przeszłości. W razie problemów z logowaniem proszę skontaktować się z naszym <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>Support Service Center</FONT></A> " & _
-                                    ". <BR> &nbsp;</FONT></P></TD></TR>" & _
+                                    ". <br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/passwort.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><B>Zapomniałeś hasła? Wyślemy Ci hasło " & _
-                                    "</B><BR>Dostałeś już dane logowania, ale zapomniałeś hasła?" & _
+                                    "</B><br />Dostałeś już dane logowania, ale zapomniałeś hasła?" & _
                                     "</FONT> <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><FONT " & _
                                     "face=Arial size=2>Tu dostaniesz hasło mailem</FONT></A><FONT " & _
                                     "face=Arial size=2>. Należy pamiętać, że mail zostanie wysłany tylko na ten adres e-mail, który został pierwotnie wpisany przy zakładaniu konta" & _
-                                    ".<br> &nbsp;</FONT></P></TD></TR>" & _
+                                    ".<br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A " & _
-                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Nie uzyskałeś tu odpowiedzi na pytanie?</strong><br>Jeżeli potrzebujesz dodatkowej pomocy, napisz do nas </FONT><A " & _
+                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Nie uzyskałeś tu odpowiedzi na pytanie?</strong><br />Jeżeli potrzebujesz dodatkowej pomocy, napisz do nas </FONT><A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2></FONT></A><FONT " & _
                                     "size=2>.</FONT></P></TD></TR></TABLE>"
                 Logon_Connecting_InProgress = "Zostaniesz połączony z serwerem…"
@@ -885,7 +885,7 @@
                 SendPassword_Descr_RequiredFields = "wymagane pola"
                 SendPassword_Descr_BackToLogin = "Powrót do logowania"
                 SendPassword_Descr_PasswordSentTo = "Hasło zostało wysłane do {0}."
-                SendPassword_Descr_FurtherCommentWithContactAddress = "Twoje hasło do Secured Area zostało wysłane na podany adres e-mail.<BR>Jeżeli mail nie dotrze w przeciągu następnych 24 godzin, prosimy o kontakt na adres <a href=""mailto:{0}"">{1}</a>."
+                SendPassword_Descr_FurtherCommentWithContactAddress = "Twoje hasło do Secured Area zostało wysłane na podany adres e-mail.<br />Jeżeli mail nie dotrze w przeciągu następnych 24 godzin, prosimy o kontakt na adres <a href=""mailto:{0}"">{1}</a>."
                 META_CurrentContentLanguage = "PL"
                 StatusLineUsername = "Użytkownik"
                 StatusLinePassword = "Hasło"
@@ -910,16 +910,16 @@
                 ErrorUserOrPasswordWrong = "Nazwa użytkownika bądź hasło nie są prawidłowe lub zostały źle wpisane albo dostęp został odrzucony!<p>Sprawdź <ul><li>pisownię hasła i nazwy użytkownika (hasło rozróżnia pomiędzy dużymi i małymi literami!)</li><li>aby używana była prawidłowa kombinacja nazwy użytkownika i hasła. (Ewentualnie otrzymałeś już od nas inne nazwy użytkownika i hasła, które nie obowiązują jednak dla tego obszaru.)</li></ul>"
                 ErrorServerConfigurationError = "Serwer nie został jeszcze prawidłowo skonfigurowany. Skonsultuj się z administratorem."
                 ErrorNoAuthorization = "Nie masz uprawnień do dostępu do tego obszaru."
-                ErrorAlreadyLoggedOn = "Jesteś już zalogowany! Najpierw wyloguj się na innym stanowisku pracy!<br><font color=""red"">Jeżeli jesteś pewien, że nie jesteś nigdzie zalogowany, wyślij krótką informację na adres <a href=""mailto:[n:0]"">[n:1]</a> i podaj swoją nazwę użytkownika.</font>"
-                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Zostałeś wylogowany na tym satnowisku pracy, gdyż zalogowałeś się na innej stacji roboczej.<br>"
-                ErrorLogonFailedTooOften = "Proces logowania nie powiódł się zbyt wiele razy, dlatego konto użytkownika zostało tymczasowo dezaktywowane.<br>Spróbuj ponownie później!"
-                ErrorEmptyPassword = "Nie zapomnij wpisać jeszcze jednego hasła!<br>Jeżeli zapomniałeś hasła, możesz zażądać jego przesłanie mailem. Patrz szczegółowe informacje dalej w tekście."
+                ErrorAlreadyLoggedOn = "Jesteś już zalogowany! Najpierw wyloguj się na innym stanowisku pracy!<br /><font color=""red"">Jeżeli jesteś pewien, że nie jesteś nigdzie zalogowany, wyślij krótką informację na adres <a href=""mailto:[n:0]"">[n:1]</a> i podaj swoją nazwę użytkownika.</font>"
+                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Zostałeś wylogowany na tym satnowisku pracy, gdyż zalogowałeś się na innej stacji roboczej.<br />"
+                ErrorLogonFailedTooOften = "Proces logowania nie powiódł się zbyt wiele razy, dlatego konto użytkownika zostało tymczasowo dezaktywowane.<br />Spróbuj ponownie później!"
+                ErrorEmptyPassword = "Nie zapomnij wpisać jeszcze jednego hasła!<br />Jeżeli zapomniałeś hasła, możesz zażądać jego przesłanie mailem. Patrz szczegółowe informacje dalej w tekście."
                 ErrorUnknown = "Nieoczekiwany błąd! - Skontaktuj się z naszym <a href=""mailto:support@camm.biz"">Trouble Center</a>!"
                 ErrorEmptyField = "Wpisz wartości do wszystkich pól, zaznaczonych gwiazdką <em>(*)</em>!"
                 ErrorWrongNetwork = "Nie masz uprawnień do zalogowania się przez aktualne połączenie sieciowe."
                 ErrorUserAlreadyExists = "To konto użytkownika już istnieje. Wybierz inną nazwę użytkownika!"
                 ErrorLoginCreatedSuccessfully = "Profil użytkownika został pomyślnie utworzony!"
-                ErrorSendPWWrongLoginOrEmailAddress = "Nieprawidłowa nazwa użytkownika lub nieprawidłowy adres e-mail.<br>Wprowadź prawidłowe wartości, odpowiadające wartościom zapisanym w Twoim profilu użytkownika."
+                ErrorSendPWWrongLoginOrEmailAddress = "Nieprawidłowa nazwa użytkownika lub nieprawidłowy adres e-mail.<br />Wprowadź prawidłowe wartości, odpowiadające wartościom zapisanym w Twoim profilu użytkownika."
                 ErrorCookiesMustNotBeDisabled = "Twoja przeglądarka nie obsługuje zapisywania plików cookie lub funkcja ta została zdezaktywowana przez ustawienia bezpieczeństwa przeglądarki."
                 ErrorTimoutOrLoginFromAnotherStation = "Zostałeś wylogowany, gdyż osiągnięty został maksymalny czas sesji albo zostało dokonane logowanie z innej stacji roboczej."
                 ErrorApplicationConfigurationIsEmpty = "Ta aplikacja nie otrzymała prawidłowej nazwy aplikacji. Proszę skontaktować się z producentem."
@@ -1007,11 +1007,11 @@
                 "[n:2]"
                 UserManagement_NewUser_HTMLWelcome = "<p>Witamy w Secured Area! Tu znajdziesz codzienne, globalne informacje.</p>" & _
                 "<p>Twoje konto w obszarze Secured Area zostało skonfigurowane przez naszego administratora. Ten serwis jest oczywiście bezpłatny.</p>" & _
-                "<p><strong>Twój login do Secured Area: <font color=""red"">[n:0]</font><br>" & _
+                "<p><strong>Twój login do Secured Area: <font color=""red"">[n:0]</font><br />" & _
                 "Twoje hasło do Secured Area: <font color=""red"">[n:1]</font></strong></p>" & _
                 "<p>Pamiętaj, aby jak najszybciej zmienić to hasło. Jest to konieczne, aby nikt inny (np. haker) nie posiadał i nie nadużywał Twojego hasła!</p>" & _
                 "<p>Skorzystaj z zalet szerokiej pomocy! Już teraz dużo na Ciebie czeka. Schauen Sie doch einfach mal vorbei!" & _
-                "<p>Twoje konto użytkownika zapewnia dostęp do różnych chronionych aplikacji. Proces rejestracji do Secured Area został już zakończony. Pełne uprawnienia będą jednak ważne dopiero po 3 - 4 dniach roboczych. Przez następujący adres URL masz jednak możliwość dostępu do Secured Area:<br>" & _
+                "<p>Twoje konto użytkownika zapewnia dostęp do różnych chronionych aplikacji. Proces rejestracji do Secured Area został już zakończony. Pełne uprawnienia będą jednak ważne dopiero po 3 - 4 dniach roboczych. Przez następujący adres URL masz jednak możliwość dostępu do Secured Area:<br />" & _
                 "<ul><strong>[n:2]</strong></ul></p>"
                 UserManagement_NewUser_MsgEMail4Admin = "Ten użytkownik został założony przez Ciebie lub kolegę w obszarze Secured Area." & ChrW(13) & ChrW(10) & _
                 "Przypisz mu wymagane prawa dostępu!" & ChrW(13) & ChrW(10) & _
@@ -1103,11 +1103,11 @@
                 "[n:2]"
                 UserManagement_NewUser_HTMLWelcome = "<p>Secured Areaへようこそ! ここでは毎日最新情報をお届けしています!</p>" & _
                 "<p>Secured Area用ユーザーアカウントが設定されました。このサービスは無料です。</p>" & _
-                "<p><strong>お客様のログイン名: <font color=""red"">[n:0]</font><br>" & _
+                "<p><strong>お客様のログイン名: <font color=""red"">[n:0]</font><br />" & _
                 "お客様のSecured Area用パスワード: <font color=""red"">[n:1]</font></strong></p>" & _
                 "<p>できるだけ早くパスワードを変更してください。このパスワードを誰かに教えたり使用させたりしないでください。!</p>" & _
                 "<p>広範囲におよぶサポートのメリットを是非ご利用ください! 当社のエクストラネットでは多数の情報をご提供しています。ご自由にこのサイト上の情報をご覧になり、ご探索ください。</p>" & _
-                "<p>お客様のアカウントは様々な保護プログラムへのアクセスを可能としています。Secured Areaの登録プロセスは完了しています。完全な登録承認は3～4日以内に完了します。その後、以下のURLを改めてご利用ください:<br>" & _
+                "<p>お客様のアカウントは様々な保護プログラムへのアクセスを可能としています。Secured Areaの登録プロセスは完了しています。完全な登録承認は3～4日以内に完了します。その後、以下のURLを改めてご利用ください:<br />" & _
                 "<ul><strong>[n:2]</strong></ul></p>"
                 ResetPW_Descr_PleaseSpecifyNewPW = "Please specifiy your new password here:"
                 SendPasswordResetLink_EMailMessage = "You can reset your password using the following link: [n:0]"
@@ -1120,7 +1120,7 @@
                 UpdateProfile_ErrMsg_MistypedPW = "パスワードが間違っています!"
                 UpdateProfile_ErrMsg_Undefined = "値が不適切です! - webmasterにご連絡ください!"
                 UpdateProfile_ErrMsg_Success = "プロフィールの更新が完了しました!"
-                UpdateProfile_ErrMsg_LogonTooOften = "ログオンプロセスに何度も失敗しました。現在このアカウントは使用不可能となっています。<br>後ほど再試行してください!"
+                UpdateProfile_ErrMsg_LogonTooOften = "ログオンプロセスに何度も失敗しました。現在このアカウントは使用不可能となっています。<br />後ほど再試行してください!"
                 UpdateProfile_ErrMsg_NotAllowed = "このドキュメントへのアクセスは禁止されています!"
                 UpdateProfile_ErrMsg_PWRequired = "パスワードを入力し、プロフィールを修正してください!"
                 UpdateProfile_Descr_Address = "所在地"
@@ -1251,29 +1251,29 @@
                 Logon_SSO_ADS_LabelRegisterNewPassword2 = "ユーザーパスワードの再入力:"
                 Logon_SSO_ADS_LabelRegisterNewEMail = "メールアドレス:"
                 Logon_SSO_ADS_IdentifiedUserNameWithAdsUserInfo = "<strong>{0} ({1})</strong>ユーザーとして識別されました。"
-                Logon_BodyPrompt2User = "ユーザーログイン名を入力し、" & OfficialServerGroup_Title & "にアクセスしてください。<br><em>このログイン名およびパスワードは独立したものであり、当社の他のエリア用にお知らせしたログイン名およびパスワードとは異なることがあります。</em>"
+                Logon_BodyPrompt2User = "ユーザーログイン名を入力し、" & OfficialServerGroup_Title & "にアクセスしてください。<br /><em>このログイン名およびパスワードは独立したものであり、当社の他のエリア用にお知らせしたログイン名およびパスワードとは異なることがあります。</em>"
                 Logon_BodyFormUserName = "ログイン名"
                 Logon_BodyFormUserPassword = "パスワード"
                 Logon_BodyFormSubmit = "ログイン"
                 Logon_BodyFormCreateNewAccount = "新アカウントの作成"
-                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>会員登録はまだですか? " & OfficialServerGroup_Title & "へのアクセスを可能とする新アカウントを作成してください</STRONG><BR>" & _
+                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>会員登録はまだですか? " & OfficialServerGroup_Title & "へのアクセスを可能とする新アカウントを作成してください</STRONG><br />" & _
                                     "まだアカウントをお持ちでなければ、</FONT><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><FONT face=Arial size=2>create " & _
                                     "ここで作成することができます</FONT></A><FONT face=Arial size=2>。 " & _
                                     "もし過去に既にアカウントを作成された場合、 ここでは他の&nbsp;" & _
                                     "アカウントを作成しないでください ログインの際に問題が生じた際には、 " & _
                                     "お客様担当の <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>サポートサービスセンター</FONT></A>" & _
-                                    "までご連絡ください。 <BR> &nbsp;</FONT></P></TD></TR>" & _
+                                    "までご連絡ください。 <br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/passwort.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><B>パスワードを忘れましたか? お客様のパスワードを " & _
-                                    "メールでご送付ください</B><BR>有効な&nbsp;アカウントをお知らせします。ただし、パスワードをお忘れになった場合はこの機能は " & _
+                                    "メールでご送付ください</B><br />有効な&nbsp;アカウントをお知らせします。ただし、パスワードをお忘れになった場合はこの機能は " & _
                                     "ご使用いただけません。</FONT> <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><FONT " & _
                                     "face=Arial size=2>ここでパスワードのメール照会を受け付けています</FONT></A><FONT " & _
                                     "face=Arial size=2>。 お客様のパスワードは " & _
                                     "この&nbsp;アカウントの作成時に " & _
-                                    "ご登録になったメールアドレスに送付されます。 <br> &nbsp;</FONT></P></TD></TR>" & _
+                                    "ご登録になったメールアドレスに送付されます。 <br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A " & _
-                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>問題はまだ解決されていませんか?</strong><br>さらにサポートをご希望の方は、 </FONT><A " & _
+                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>問題はまだ解決されていませんか?</strong><br />さらにサポートをご希望の方は、 </FONT><A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>何なりとご連絡ください</FONT></A><FONT " & _
                                     "size=2>。</FONT></P></TD></TR></TABLE>"
                 AccessError_Descr_FollowingError = "以下のエラーが発生しています:"
@@ -1288,7 +1288,7 @@
                 SendPassword_Descr_RequiredFields = "記入必要項目"
                 SendPassword_Descr_BackToLogin = "ログインに戻る"
                 SendPassword_Descr_PasswordSentTo = "お客様のパスワードは{0}に送付されました。"
-                SendPassword_Descr_FurtherCommentWithContactAddress = "お客様のSecured Areaパスワードはご登録中のメールアドレスにのみ送付されます。<BR>24時間以内にメールが届かない場合には、<a href=""mailto:{0}"">{1}</a>までご連絡ください。"
+                SendPassword_Descr_FurtherCommentWithContactAddress = "お客様のSecured Areaパスワードはご登録中のメールアドレスにのみ送付されます。<br />24時間以内にメールが届かない場合には、<a href=""mailto:{0}"">{1}</a>までご連絡ください。"
                 META_CurrentContentLanguage = "JP"
                 StatusLineUsername = "ユーザー"
                 StatusLinePassword = "パスワード"
@@ -1313,17 +1313,17 @@
                 ErrorUserOrPasswordWrong = "ユーザー名、パスワードまたはアクセスが拒否されました!<p> <ul><li>ご入力になったユーザー名とパスワードが正しいか（パスワード上の大文字および小文字を区別する必要があります!)、および</li><li>、ユーザー名とパスワードの組み合わせが正しいか（他の場所でご使用中のパスワードをここで入力された可能性があります）を確認してください</li></ul>"
                 ErrorServerConfigurationError = "このサーバーは正しく設定されていません。サーバー管理者までご連絡ください。"
                 ErrorNoAuthorization = "このエリアへのアクセスは禁止されています。"
-                ErrorAlreadyLoggedOn = "ログオンは既に完了しています! 他のステーションをまずログアウトしてください!<br><font color=""red"">ログオンしたかどうか不明な場合には、 当社<a href=""mailto:[n:0]"">[n:1]</a>までご連絡ください!</font>"
-                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "他のステーションへのログオンが行なわれたため、このセッションを終了します。<br>"
-                ErrorLogonFailedTooOften = "ログオンプロセスに何度も失敗しました。現在このアカウントは使用不可能となっています。<br>後ほど再試行してください!"
-                ErrorEmptyPassword = "パスワードの入力を忘れないでください!<br>パスワードをお忘れになった場合には、 メールで照会してください。詳細情報は本ドキュメントの下に記載されています。"
+                ErrorAlreadyLoggedOn = "ログオンは既に完了しています! 他のステーションをまずログアウトしてください!<br /><font color=""red"">ログオンしたかどうか不明な場合には、 当社<a href=""mailto:[n:0]"">[n:1]</a>までご連絡ください!</font>"
+                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "他のステーションへのログオンが行なわれたため、このセッションを終了します。<br />"
+                ErrorLogonFailedTooOften = "ログオンプロセスに何度も失敗しました。現在このアカウントは使用不可能となっています。<br />後ほど再試行してください!"
+                ErrorEmptyPassword = "パスワードの入力を忘れないでください!<br />パスワードをお忘れになった場合には、 メールで照会してください。詳細情報は本ドキュメントの下に記載されています。"
                 ErrorRequiredField = "このフィールドは必須です"
                 ErrorUnknown = "予期せぬエラーが発生しました! - <a href=""mailto:support@camm.biz"">トラブルセンターまでご連絡ください</a>!"
                 ErrorEmptyField = "星印のついた項目には全て記入してください <em>(*)</em>!"
                 ErrorWrongNetwork = "現在ご使用中のネットワークによる接続は禁止されています。"
                 ErrorUserAlreadyExists = "このログイン名は既に存在します。他のログイン名を選択してください!"
                 ErrorLoginCreatedSuccessfully = "ログインアカウントの作成が完了しました!"
-                ErrorSendPWWrongLoginOrEmailAddress = "ログインまたはメールアドレスが間違っています。<br>正しい値を入力し、パスワード送付プロセスを開始してください。"
+                ErrorSendPWWrongLoginOrEmailAddress = "ログインまたはメールアドレスが間違っています。<br />正しい値を入力し、パスワード送付プロセスを開始してください。"
                 ErrorCookiesMustNotBeDisabled = "現在ご使用中のブラウザではcookieをサポートしていないか、ブラウザのセキュリティポリシーではcookieの使用が不可能となっています。"
                 ErrorTimoutOrLoginFromAnotherStation = "セッションが時間切れとなりました。または他のステーションからのログインがありました。"
                 ErrorApplicationConfigurationIsEmpty = "このアプリケーションは正しく設定されていません。アプリケーションメーカーにご連絡ください。"
@@ -1428,7 +1428,7 @@ ChrW(13) & ChrW(10) & _
                 UpdateProfile_ErrMsg_MistypedPW = "Password errata. La preghiamo di controllare anche le maiuscole e le minuscole!"
                 UpdateProfile_ErrMsg_Undefined = "Risposta imprevista! - La preghiamo di contattare il nostro WebMaster!"
                 UpdateProfile_ErrMsg_Success = "Il Suo profilo utente è stato modificato con successo!"
-                UpdateProfile_ErrMsg_LogonTooOften = "Il processo di connessione non è riuscito troppe volte; il conto è stato disabilitato.<br>La preghiamo di riprovare più tardi!"
+                UpdateProfile_ErrMsg_LogonTooOften = "Il processo di connessione non è riuscito troppe volte; il conto è stato disabilitato.<br />La preghiamo di riprovare più tardi!"
                 UpdateProfile_ErrMsg_NotAllowed = "Lei non è autorizzato a svolgere questa azione!"
                 UpdateProfile_ErrMsg_PWRequired = "La preghiamo di introdurre la Sua password per aggiornare il profilo!"
                 UpdateProfile_Descr_Address = "Indirizzo"
@@ -1551,27 +1551,27 @@ ChrW(13) & ChrW(10) & _
                 Logon_SSO_ADS_LabelRegisterNewPassword2 = "Ridigitare la password:"
                 Logon_SSO_ADS_LabelRegisterNewEMail = "indirizzo e-mail:"
                 Logon_SSO_ADS_IdentifiedUserNameWithAdsUserInfo = "Lei è stato identificato come utente <strong>{0} ({1})</strong>."
-                Logon_BodyPrompt2User = "Per favore inserisca il Suo nome utente e la relativa password, per accedere all'" & OfficialServerGroup_Title & ".<br><em>Osservi che il nome utente e la password possono essere diversi da altri dati di accesso da Lei ricevuti per altri settori.</em>"
+                Logon_BodyPrompt2User = "Per favore inserisca il Suo nome utente e la relativa password, per accedere all'" & OfficialServerGroup_Title & ".<br /><em>Osservi che il nome utente e la password possono essere diversi da altri dati di accesso da Lei ricevuti per altri settori.</em>"
                 Logon_BodyFormUserName = "Nome utente"
                 Logon_BodyFormUserPassword = "Password"
                 Logon_BodyFormSubmit = "Login"
                 Logon_BodyFormCreateNewAccount = "Creare un nuovo conto"
-                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Non è ancora un membro? Crei comunque il Suo conto per il settore " & OfficialServerGroup_Title & "!</STRONG><BR>" & _
+                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Non è ancora un membro? Crei comunque il Suo conto per il settore " & OfficialServerGroup_Title & "!</STRONG><br />" & _
                                     "Se non possiede ancora i dati di accesso, può crearlo adesso </FONT><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><FONT face=Arial size=2>" & _
                                     "</FONT></A><FONT face=Arial size=2>. " & _
                                     "La preghiamo di non creare altri dati di accesso, " & _
                                     "se ne ha già creati in passato. Se dovesse incontrare difficoltà nella connessione, ci contatti tramite il nostro <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>Support Service Center</FONT></A> " & _
-                                    ". <BR> &nbsp;</FONT></P></TD></TR>" & _
+                                    ". <br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/passwort.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><B>Ha dimenticato la password? Gliela inviamo " & _
-                                    "</B><BR>Lei ha già ricevuto dati di accesso validi, tuttavia non ha più la password?" & _
+                                    "</B><br />Lei ha già ricevuto dati di accesso validi, tuttavia non ha più la password?" & _
                                     "</FONT> <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><FONT " & _
                                     "face=Arial size=2Qui riceve la Sua password via e-mail</FONT></A><FONT " & _
                                     "face=Arial size=2>. La preghiamo di osservare che l'e-mail viene inviata all'indirizzo e-mail da Lei originariamente indicato" & _
-                                    ".<br> &nbsp;</FONT></P></TD></TR>" & _
+                                    ".<br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A " & _
-                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Non ha ottenuto una risposta?</strong><br>Se avesse necessità di un ulteriore supporto, può contattarci </FONT><A " & _
+                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Non ha ottenuto una risposta?</strong><br />Se avesse necessità di un ulteriore supporto, può contattarci </FONT><A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2></FONT></A><FONT " & _
                                     "size=2>.</FONT></P></TD></TR></TABLE>"
                 Logon_Connecting_InProgress = "Lei sarà collegato al server…"
@@ -1589,7 +1589,7 @@ ChrW(13) & ChrW(10) & _
                 SendPassword_Descr_RequiredFields = "Campi obbligatori"
                 SendPassword_Descr_BackToLogin = "Ritorno alla connessione"
                 SendPassword_Descr_PasswordSentTo = "La password è stata inviata a {0}."
-                SendPassword_Descr_FurtherCommentWithContactAddress = "La Sua password Secured Area verrà ora inviata all'indirizzo e-mail registrato.<BR>Se non dovesse ricevere questa e-mail entro le prossime 24 ore, contatti <a href=""mailto:{0}"">{1}</a>."
+                SendPassword_Descr_FurtherCommentWithContactAddress = "La Sua password Secured Area verrà ora inviata all'indirizzo e-mail registrato.<br />Se non dovesse ricevere questa e-mail entro le prossime 24 ore, contatti <a href=""mailto:{0}"">{1}</a>."
                 META_CurrentContentLanguage = "IT"
                 StatusLineUsername = "Utente"
                 StatusLinePassword = "Password"
@@ -1614,16 +1614,16 @@ ChrW(13) & ChrW(10) & _
                 ErrorUserOrPasswordWrong = "Il nome utente o la password non sono corretti o sono scritti in maniera errata o l'accesso è stato negato!<p>La preghiamo di controllare <ul><li>l'ortografia del nome utente e della password (controllare le lettere maiuscole e quelle minuscole!)</li><li>verificare che nome utente e password siano corretti. (Forse ha già ricevuto da noi un altro nome utente/un'altra password che tuttavia non sono validi per questo campo.)</li></ul>"
                 ErrorServerConfigurationError = "Questo server non è impostato correttamente. La preghiamo di consultare il Suo amministratore."
                 ErrorNoAuthorization = "Lei non è autorizzato ad accedere a questo settore."
-                ErrorAlreadyLoggedOn = "Lei è già collegato! Chiuda prima la sessione nell'altra postazione!<br><font color=""red"">Se è sicuro di non avere alcuna connessione aperta, ci invii una breve e-mail <a href=""mailto:[n:0]"">[n:1]</a> menzionando i suoi nomi per il login.</font>"
-                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "La Sua sessione di lavoro è stata chiusa perché si è collegato da un'altra postazione.<br>"
-                ErrorLogonFailedTooOften = "Il processo di connessione non è riuscito troppe volte, il Suo conto è stato disattivato.<br>Riprovi più tardi!"
-                ErrorEmptyPassword = "Non dimentichi di inserire una password!<br>Se non la ricorda, può richiedercela via mail. La preghiamo di consultare il testo nella parte bassa della pagina per ulteriori informazioni."
+                ErrorAlreadyLoggedOn = "Lei è già collegato! Chiuda prima la sessione nell'altra postazione!<br /><font color=""red"">Se è sicuro di non avere alcuna connessione aperta, ci invii una breve e-mail <a href=""mailto:[n:0]"">[n:1]</a> menzionando i suoi nomi per il login.</font>"
+                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "La Sua sessione di lavoro è stata chiusa perché si è collegato da un'altra postazione.<br />"
+                ErrorLogonFailedTooOften = "Il processo di connessione non è riuscito troppe volte, il Suo conto è stato disattivato.<br />Riprovi più tardi!"
+                ErrorEmptyPassword = "Non dimentichi di inserire una password!<br />Se non la ricorda, può richiedercela via mail. La preghiamo di consultare il testo nella parte bassa della pagina per ulteriori informazioni."
                 ErrorUnknown = "Errore imprevisto! - La preghiamo di contattare il nostro <a href=""mailto:support@camm.biz"">Trouble Center</a>!"
                 ErrorEmptyField = "Inserisca i valori in tutti i campi contrassegnati da un asterisco <em>(*)</em>!"
                 ErrorWrongNetwork = "Lei non è autorizzato a collegarsi tramite l'attuale rete di collegamento."
                 ErrorUserAlreadyExists = "Il conto utente esiste già. Selezioni un altro nome per il login!"
                 ErrorLoginCreatedSuccessfully = "Il profilo utente è stato creato con successo!"
-                ErrorSendPWWrongLoginOrEmailAddress = "Nome utente errato o indirizzo e-mail errato.<br>La preghiamo di indicare dati corretti, come sono indicati nel Suo profilo utente."
+                ErrorSendPWWrongLoginOrEmailAddress = "Nome utente errato o indirizzo e-mail errato.<br />La preghiamo di indicare dati corretti, come sono indicati nel Suo profilo utente."
                 ErrorCookiesMustNotBeDisabled = "Il Suo browser non supporta i cookies o i cookies sono stati disattivati a causa delle impostazioni di sicurezza del Suo Browser."
                 ErrorTimoutOrLoginFromAnotherStation = "Sessione scaduta o connessione di un'altra postazione."
                 ErrorApplicationConfigurationIsEmpty = "Questa applicazione non è stata ancora configurata. La preghiamo di contattare il fabbricante."
@@ -1711,11 +1711,11 @@ ChrW(13) & ChrW(10) & _
                 "[n:2]"
                 UserManagement_NewUser_HTMLWelcome = "<p>Benvenuto nella Secured Area! Qui Lei trova informazioni quotidiane e locali.</p>" & _
                 "<p>Le è stato allestito un conto per il settore Secured Area da parte della nostra amministrazione. Questo servizio per Lei è naturalmente gratuito.</p>" & _
-                "<p><strong>Il Suo ID per la Secured Area: <font color=""red"">[n:0]</font><br>" & _
+                "<p><strong>Il Suo ID per la Secured Area: <font color=""red"">[n:0]</font><br />" & _
                 "La Sua password per la Secured Area è: <font color=""red"">[n:1]</font></strong></p>" & _
                 "<p>Non dimentichi di modificare la password al più presto possibile. Questo è necessario per garantire che nessun altro (ad es. un hacker) si impossessi della Sua password e la possa utilizzare!</p>" & _
                 "<p>Richieda i vantaggi di un supporto ampio! La aspettano già tante informazioni. Guardi!" & _
-                "<p>Il Suo conto Le offre l'accesso alle diverse applicazioni protette. Il processo di collegamento per la Secured Area è già concluso. Tutte le sue autorizzazioni diventeranno tuttavia valide solo in ca. 3 - 4 giorni lavorativi. Può accedere con il seguente URL alla Secured Area:<br>" & _
+                "<p>Il Suo conto Le offre l'accesso alle diverse applicazioni protette. Il processo di collegamento per la Secured Area è già concluso. Tutte le sue autorizzazioni diventeranno tuttavia valide solo in ca. 3 - 4 giorni lavorativi. Può accedere con il seguente URL alla Secured Area:<br />" & _
                 "<ul><strong>[n:2]</strong></ul></p>"
                 UserManagement_NewUser_MsgEMail4Admin = "Il seguente utente è stato registrato da Lei o da un Suo collega nel settore Secured Area." & ChrW(13) & ChrW(10) & _
                 "La preghiamo di assegnare i diritti d'accesso necessari!" & ChrW(13) & ChrW(10) & _
@@ -1779,7 +1779,7 @@ ChrW(13) & ChrW(10) & _
                 UpdateProfile_ErrMsg_MistypedPW = "Hibás jelszó ügyeljen a kis- és nagybetűkre!"
                 UpdateProfile_ErrMsg_Undefined = "Nem várt visszaadott érték - lépjen kapcsolatba honlap szerkesztőnkkel!"
                 UpdateProfile_ErrMsg_Success = "Felhasználói profilját sikeresen megváltoztattukt!"
-                UpdateProfile_ErrMsg_LogonTooOften = "A bejelentkezési folyamat gyakran hibás. A felhasználói kontó átmenetileg deaktiválva.<br> Próbálja később!"
+                UpdateProfile_ErrMsg_LogonTooOften = "A bejelentkezési folyamat gyakran hibás. A felhasználói kontó átmenetileg deaktiválva.<br /> Próbálja később!"
                 UpdateProfile_ErrMsg_NotAllowed = "Önnek nincs elég jogosultsága ezt az akciót keresztülvinni!"
                 UpdateProfile_ErrMsg_PWRequired = "Adja meg jelszavát is a profil aktualizálásához!"
                 UpdateProfile_Descr_Address = "Cím"
@@ -1902,27 +1902,27 @@ ChrW(13) & ChrW(10) & _
                 Logon_SSO_ADS_RadioDoNothing = "Ha az azonosítás nem korrekt vagy login nélkül akar tovább menni, lépjen be anoním felhasználóként (Ezt a párbeszédet később megmutatjuk Önnek)"
                 Logon_SSO_ADS_RadioRegisterExisting = "Regisztrálja magát <strong>már egy létező</strong> felhasználói kontóra!"
                 Logon_SSO_ADS_RadioRegisterNew = "Regisztrálja magát egy <strong>új</strong> felhasználói kontóra!"
-                Logon_BodyPrompt2User = "Adja meg felhasználói nevét és az ehhez tertozó jelszót, hogy beléphessen a következőbe: " & OfficialServerGroup_Title & " .<br><em>Ügyeljen rá, hogy a felhasználói nevet és a jelszót meg lehessen különböztetni az egyéb hozzáférési adatoktól, melyeket másik tartományokra kapott.</em>"
+                Logon_BodyPrompt2User = "Adja meg felhasználói nevét és az ehhez tertozó jelszót, hogy beléphessen a következőbe: " & OfficialServerGroup_Title & " .<br /><em>Ügyeljen rá, hogy a felhasználói nevet és a jelszót meg lehessen különböztetni az egyéb hozzáférési adatoktól, melyeket másik tartományokra kapott.</em>"
                 Logon_BodyFormUserName = "Felhasználói név"
                 Logon_BodyFormUserPassword = "Jelszó"
                 Logon_BodyFormSubmit = "Login"
                 Logon_BodyFormCreateNewAccount = "Felhasználói kontót előállítani"
-                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Még nem tag?Állítsa elő saját hozzáférési kontóját a következőhöz: " & OfficialServerGroup_Title & "!</STRONG><BR>" & _
+                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Még nem tag?Állítsa elő saját hozzáférési kontóját a következőhöz: " & OfficialServerGroup_Title & "!</STRONG><br />" & _
 "Ha nincsenek hozzáférési adatai, most előállíthatja azokat: </FONT><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><FONT face=Arial size=2>jetzt " & _
 "</FONT></A><FONT face=Arial size=2>. " & _
 "Ne állítson elő másik hozzáférési adatokat " & _
 "ha a múltban valamit előállított. Ha nehézségei vannak a bejelentkezéskor lépjen velünk kapcsolatbar <A " & _
 "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>Support Service Center</FONT></A> " & _
-". <BR> &nbsp;</FONT></P></TD></TR>" & _
+". <br /> &nbsp;</FONT></P></TD></TR>" & _
 "<TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/passwort.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><B>Elfelejtette jelszavát? Küldjük jelszavát " & _
-"</B><BR>Már megkapta érvényes hozzáférési adatait, mégse tudja jelszavát?" & _
+"</B><br />Már megkapta érvényes hozzáférési adatait, mégse tudja jelszavát?" & _
 "</FONT> <A " & _
 "href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><FONT " & _
 "face=Arial size=2>Jelszavát E-mailen keresztül kapja meg</FONT></A><FONT " & _
 "face=Arial size=2>Ügyeljen rá, hogy e mailek csak arra a címre menjenek, melyet Ön eredetileg megadott.  " & _
-".<br> &nbsp;</FONT></P></TD></TR>" & _
+".<br /> &nbsp;</FONT></P></TD></TR>" & _
 "<TR><TD VALIGN=""TOP""><A " & _
-"href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Nem kapott itt kérdésére választ?</strong><br>Ha kiegészitő segítségre van szüksége, </FONT><A " & _
+"href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Nem kapott itt kérdésére választ?</strong><br />Ha kiegészitő segítségre van szüksége, </FONT><A " & _
 "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>lépjen velünk kapcsolatba</FONT></A><FONT " & _
 "size=2>.</FONT></P></TD></TR></TABLE>"
                 Logon_Connecting_InProgress = "Ön össze van kötve a szerverrel…"
@@ -1940,7 +1940,7 @@ ChrW(13) & ChrW(10) & _
                 SendPassword_Descr_RequiredFields = "szükséges mezők"
                 SendPassword_Descr_BackToLogin = "Vissza a bejelentkezéshez"
                 SendPassword_Descr_PasswordSentTo = "Jelszó elküldve {0}."
-                SendPassword_Descr_FurtherCommentWithContactAddress = "Biztonsági területi jelszavát csak az Ön által megadott e-mail címre küldjük.<BR>Ha 24 órán belül nem kapja meg ezt az e-mail üzenetet, keresse <a href=""mailto:{0}"">{1}</a>-t."
+                SendPassword_Descr_FurtherCommentWithContactAddress = "Biztonsági területi jelszavát csak az Ön által megadott e-mail címre küldjük.<br />Ha 24 órán belül nem kapja meg ezt az e-mail üzenetet, keresse <a href=""mailto:{0}"">{1}</a>-t."
                 META_CurrentContentLanguage = "HU"
                 StatusLineUsername = "Felhasználó"
                 StatusLinePassword = "Jelszó"
@@ -1965,16 +1965,16 @@ ChrW(13) & ChrW(10) & _
                 ErrorUserOrPasswordWrong = "A felhasználó név vagy a jeszó nem korrekt vagy elirták vagy a hozzáférést elutasították!<p>Ellenőrizze a felhasználó név és a jelszó írását. <ul><li> (a jelszó maga megkülönbözteti a nagy és a kis betűket) </li><li>hogy Ö egy érvényes felhasználó nevet vagy jelszót használt.(Vagy tőlünk kapott felhasználó nevet és jelszót, melyek ebben a tartományban még nem érvényesek) </li></ul>"
                 ErrorServerConfigurationError = "Ez a szerver nincs korrekten berendezve. Konzultáljon az adminisztrátorával."
                 ErrorNoAuthorization = "Nincs hozzáférési joga ehhez a területhez."
-                ErrorAlreadyLoggedOn = "Ön már bejelentkezett. Jelentkezzen le a másik munkahelyről!S<br><font color=""red"">Ha biztos benne, hogy soha többé nem jelentkezik, küldjön egy rövid e-mailt    <a href=""mailto:[n:0]"">[n:1]</a> és nevezze meg loginnevét.</font>"
-                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Lejelentkezett erről a munkahelyről, mert egymásik állomásra már bejelentkezett.<br>"
-                ErrorLogonFailedTooOften = "A bejelentkezési folyamat túl gyakran hibás, ezért az Ön kontóját átmenetileg deaktiválták .<br>Később próbálja meg még egyszer!"
-                ErrorEmptyPassword = "Kérjük ne felejtsen el még egy jelszót megadni!<br>Ha nem tudja a jelszavát, e-mailben kérheti. További részleteket a későbbiekben talál."
+                ErrorAlreadyLoggedOn = "Ön már bejelentkezett. Jelentkezzen le a másik munkahelyről!S<br /><font color=""red"">Ha biztos benne, hogy soha többé nem jelentkezik, küldjön egy rövid e-mailt    <a href=""mailto:[n:0]"">[n:1]</a> és nevezze meg loginnevét.</font>"
+                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Lejelentkezett erről a munkahelyről, mert egymásik állomásra már bejelentkezett.<br />"
+                ErrorLogonFailedTooOften = "A bejelentkezési folyamat túl gyakran hibás, ezért az Ön kontóját átmenetileg deaktiválták .<br />Később próbálja meg még egyszer!"
+                ErrorEmptyPassword = "Kérjük ne felejtsen el még egy jelszót megadni!<br />Ha nem tudja a jelszavát, e-mailben kérheti. További részleteket a későbbiekben talál."
                 ErrorUnknown = "Nem várt hiba! Lépjen kapcsolatba a következővel: <a href=""mailto:support@camm.biz"">Trouble Center</a>!"
                 ErrorEmptyField = "Adjon meg értékeket minden olyan mezőbe, melyek csillaggal vannak ellátva <em>(*)</em>!"
                 ErrorWrongNetwork = "Ön nem jogosult az aktuális hálózati kapcsolaton bejelentkezni."
                 ErrorUserAlreadyExists = "Már létezik a felhasználói kontója. Válasszon egy másik bejelentkező nevet!"
                 ErrorLoginCreatedSuccessfully = "A felhasználó profilját sikeresen előállította!"
-                ErrorSendPWWrongLoginOrEmailAddress = "Hibás felhasználói név vagy e-mail cím.<br>Adjon meg korrekt értékeket, ahogy az a felhasználó profiljában van."
+                ErrorSendPWWrongLoginOrEmailAddress = "Hibás felhasználói név vagy e-mail cím.<br />Adjon meg korrekt értékeket, ahogy az a felhasználó profiljában van."
                 ErrorCookiesMustNotBeDisabled = "Az Ön böngészője nem támogatja a cookie-ket vagy a cookie-ket biztonsági okokból deaktiválták az Ön böngészőjén."
                 ErrorTimoutOrLoginFromAnotherStation = "Lejelentkezett, mert eléte a maximális időtartamot vagy egy login a másik munkaállomásról lejelentette."
                 ErrorApplicationConfigurationIsEmpty = "Ez az alkalmazás nem tartalmaz érvényes alkalmazói nevet. Lépjen kapcsolatba a gyártóval."
@@ -2062,11 +2062,11 @@ ChrW(13) & ChrW(10) & _
 "[n:2]"
                 UserManagement_NewUser_HTMLWelcome = "<p>Üdvözöljük a biztonsági területen! Itt napi és helyhez kötött információkat talál.</p>" & _
 "Irodánktól egy berendezett felhasználói kontót kapott a biztonsági területre. Ez a szolgáltatás Önnek természetesen ingyenes.</p>" & _
-"<p>Az Ön bejelentkezési neve a biztonsági területre: Area: <font color=""red"">[n:0]</font><br>" & _
+"<p>Az Ön bejelentkezési neve a biztonsági területre: Area: <font color=""red"">[n:0]</font><br />" & _
 "<p>Az Ön jelszava a biztonsági területre: <font color=""red"">[n:1]</font></strong></p>" & _
 "<p>Ne felejtse el jelszavát amilyen gyorsan csak lehet megváltoztatni. Ez azért szükséges, hogy jelszavát seni (pl. Hacker) ne birtokolhassa és használhassa</p>" & _
 "Vegye igénybe átfogó támogatásunk előnyeit! Néhány dolog már most vár Önre. Egyszerűen nézzen körüli!" & _
-"<p>Az Ön felhasználói kontója hozzáférédt kínál a különböző védett alkalmazásokhoz. A bejelentkezési folyamat a biztonsági területre már lezárva. Az Ön teljes jogosultsága csak 3-4 munkanap múlva lesz érvényes. A következő URL-el tud belépni a biztonsági területre:<br>" & _
+"<p>Az Ön felhasználói kontója hozzáférédt kínál a különböző védett alkalmazásokhoz. A bejelentkezési folyamat a biztonsági területre már lezárva. Az Ön teljes jogosultsága csak 3-4 munkanap múlva lesz érvényes. A következő URL-el tud belépni a biztonsági területre:<br />" & _
 "<ul><strong>[n:2]</strong></ul></p>"
                 UserManagement_NewUser_MsgEMail4Admin = "A következő felhasználó az Ön vagy valamelyik kollégája részéről jelentkezett be a biztonsági területre." & ChrW(13) & ChrW(10) & _
 "Adja meg a szükséges hozzáférési jogokat" & ChrW(13) & ChrW(10) & _
@@ -2158,11 +2158,11 @@ ChrW(13) & ChrW(10) & _
                 "[n:2]"
                 UserManagement_NewUser_HTMLWelcome = "<p>欢迎来到安全区域！这是每天都应该来的地方！</p>" & _
                 "<p>我们的管理员已经将您免费地添加到了安全区域。</p>" & _
-                "<p><strong>您的登录名称是：<font color=""red"">[n:0]</font><br>" & _
+                "<p><strong>您的登录名称是：<font color=""red"">[n:0]</font><br />" & _
                 "您的安全区域密码是：<font color=""red"">[n:1]</font></strong></p>" & _
                 "<p>为了防止他人得到并使用密码，请您不要忘记更改您的密码！</p>" & _
                 "<p>您在这里可获得到广泛的支持而获益！在我们的外联网中您可以找到大量的有用信息。您可以在此自由冲浪，检索信息。</p>" & _
-                "<p>您的帐号容许您访问多个不同的安全项目。至此为止，您已经完成了登录安全区域的必要步骤。在此后的3至4天内，您将可以使用您的整个权限。届时请访问网址：<br>" & _
+                "<p>您的帐号容许您访问多个不同的安全项目。至此为止，您已经完成了登录安全区域的必要步骤。在此后的3至4天内，您将可以使用您的整个权限。届时请访问网址：<br />" & _
                 "<ul><strong>[n:2]</strong></ul></p>"
                 ResetPW_Descr_PleaseSpecifyNewPW = "Please specifiy your new password here:"
                 SendPasswordResetLink_EMailMessage = "You can reset your password using the following link: [n:0]"
@@ -2175,7 +2175,7 @@ ChrW(13) & ChrW(10) & _
                 UpdateProfile_ErrMsg_MistypedPW = "您的密码输入有误！"
                 UpdateProfile_ErrMsg_Undefined = "意外返回值！请和网站管理员联系！"
                 UpdateProfile_ErrMsg_Success = "您的特征已经成功更新！"
-                UpdateProfile_ErrMsg_LogonTooOften = "登录过程失败次数过多，帐号被停用。<br>请稍候再试！"
+                UpdateProfile_ErrMsg_LogonTooOften = "登录过程失败次数过多，帐号被停用。<br />请稍候再试！"
                 UpdateProfile_ErrMsg_NotAllowed = "您无权访问本文件！"
                 UpdateProfile_ErrMsg_PWRequired = "请提交您的密码以便可以更改您的特征！"
                 UpdateProfile_Descr_Address = "地址"
@@ -2306,29 +2306,29 @@ ChrW(13) & ChrW(10) & _
                 Logon_SSO_ADS_LabelTakeAnAction = "现在您想做什么？"
                 Logon_SSO_ADS_IdentifiedUserName = "您被识别为用户<strong>{0}</strong>。"
                 Logon_SSO_ADS_PageTitle = "设置自动登录"
-                Logon_BodyPrompt2User = "输入您的登录名称和密码访问" & OfficialServerGroup_Title & "。<br><em>请注意，此登录名称和密码是专有的，可能和您已经从我们这里获得的用于其他区域的登录名称以及密码不一样。</em>"
+                Logon_BodyPrompt2User = "输入您的登录名称和密码访问" & OfficialServerGroup_Title & "。<br /><em>请注意，此登录名称和密码是专有的，可能和您已经从我们这里获得的用于其他区域的登录名称以及密码不一样。</em>"
                 Logon_BodyFormUserName = "登录名称"
                 Logon_BodyFormUserPassword = "密码"
                 Logon_BodyFormSubmit = "登录"
                 Logon_BodyFormCreateNewAccount = "创建新帐号"
-                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>您还不是会员？创建一个新的帐号即可访问" & OfficialServerGroup_Title & "！</STRONG><BR>" & _
+                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>您还不是会员？创建一个新的帐号即可访问" & OfficialServerGroup_Title & "！</STRONG><br />" & _
                                     "如果您还没有帐号，您现在可以</FONT><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><FONT face=Arial size=2>create " & _
                                     "一个</FONT></A><FONT face=Arial size=2>。" & _
                                     "如果您以前已经创建了一个帐号，则请不要创建另一个&nbsp;" & _
                                     "帐号。如果您登录" & _
                                     "有困难，请和您的<A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>支持服务中心</FONT></A>" & _
-                                    "联系。<BR> &nbsp;</FONT></P></TD></TR>" & _
+                                    "联系。<br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/passwort.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><B>您忘记了密码？将您的密码发送到" & _
-                                    "您的电子信箱</B><BR>可能您提供了有效的帐号，但是您忘记了" & _
+                                    "您的电子信箱</B><br />可能您提供了有效的帐号，但是您忘记了" & _
                                     "您的密码。</FONT> <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><FONT " & _
                                     "face=Arial size=2>在此您可以请求将您的密码发送到您的电子信箱</FONT></A><FONT " & _
                                     "face=Arial size=2>。请注意，您的密码" & _
                                     "将通过电子邮件发送到您在创建本帐号时所指定的" & _
-                                    "电子信箱。<br> &nbsp;</FONT></P></TD></TR>" & _
+                                    "电子信箱。<br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A " & _
-                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>您还有其他问题？</strong><br>如果您需要其他支持，欢迎您</FONT><A " & _
+                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>您还有其他问题？</strong><br />如果您需要其他支持，欢迎您</FONT><A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>和我们联系</FONT></A><FONT " & _
                                     "size=2>。</FONT></P></TD></TR></TABLE>"
                 AccessError_Descr_FollowingError = "发生以下错误："
@@ -2343,7 +2343,7 @@ ChrW(13) & ChrW(10) & _
                 SendPassword_Descr_RequiredFields = "必填项"
                 SendPassword_Descr_BackToLogin = "返回到登录页面"
                 SendPassword_Descr_PasswordSentTo = "您的密码已经发送到{0}。"
-                SendPassword_Descr_FurtherCommentWithContactAddress = "您的安全区域密码将只发送到已经记录的您的电子信箱。<BR>如果您在二十四（24）小时内没有收到电子邮件，请和<a href=""mailto:{0}"">{1}</a>联系。"
+                SendPassword_Descr_FurtherCommentWithContactAddress = "您的安全区域密码将只发送到已经记录的您的电子信箱。<br />如果您在二十四（24）小时内没有收到电子邮件，请和<a href=""mailto:{0}"">{1}</a>联系。"
                 META_CurrentContentLanguage = "ZH"
                 StatusLineUsername = "用户"
                 StatusLinePassword = "密码"
@@ -2368,17 +2368,17 @@ ChrW(13) & ChrW(10) & _
                 ErrorUserOrPasswordWrong = "用户名称或密码输入有误，或访问被拒绝！<p>请您确保<ul><li>正确地输入用户名称和密码（密码是分大小下的！）</li><li>使用了正确的用户名称和密码组合（或许您已经有了访问其他资源的密码，但这些密码在这里无效）</li></ul>"
                 ErrorServerConfigurationError = "本服务器还没有正确配置。请向您的系统管理员咨询。"
                 ErrorNoAuthorization = "您没有访问本区域的权限。"
-                ErrorAlreadyLoggedOn = "您已经登录！请先在其他工作站注销！<br><font color=""red"">如果您确实没有登录，请通过<a href=""mailto:[n:0]"">[n:1]</a>通知我们！</font>"
-                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "您的会话已经终止，因为您已经在其他工作站登录。<br>"
-                ErrorLogonFailedTooOften = "登录过程失败次数过多，帐号被停用。<br>请稍候再试！"
-                ErrorEmptyPassword = "请别忘了输入密码！<br>如果您忘记了密码，可以尝试通过电子邮件重新获得密码。详情请参阅本文档的末尾。"
+                ErrorAlreadyLoggedOn = "您已经登录！请先在其他工作站注销！<br /><font color=""red"">如果您确实没有登录，请通过<a href=""mailto:[n:0]"">[n:1]</a>通知我们！</font>"
+                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "您的会话已经终止，因为您已经在其他工作站登录。<br />"
+                ErrorLogonFailedTooOften = "登录过程失败次数过多，帐号被停用。<br />请稍候再试！"
+                ErrorEmptyPassword = "请别忘了输入密码！<br />如果您忘记了密码，可以尝试通过电子邮件重新获得密码。详情请参阅本文档的末尾。"
                 ErrorRequiredField = "所需場"
                 ErrorUnknown = "意外错误！请和<a href=""mailto:support@camm.biz"">故障处理中心</a>联系！"
                 ErrorEmptyField = "请完整填写所有带有星号<em>(*)</em>的各项！"
                 ErrorWrongNetwork = "不允许通过您当前所在的网络进行连接。"
                 ErrorUserAlreadyExists = "此登录名称已经存在。请另外选择一个登录名称！"
                 ErrorLoginCreatedSuccessfully = "登录帐号已经成功创建！"
-                ErrorSendPWWrongLoginOrEmailAddress = "登录名称或电子信箱有误。<br>请输入正确的值，以便启动发送密码的过程。"
+                ErrorSendPWWrongLoginOrEmailAddress = "登录名称或电子信箱有误。<br />请输入正确的值，以便启动发送密码的过程。"
                 ErrorCookiesMustNotBeDisabled = "您的浏览器不支持cookies或者由于安全策略已经停用。"
                 ErrorTimoutOrLoginFromAnotherStation = "会话超时或从另一工作站登录。"
                 ErrorApplicationConfigurationIsEmpty = "本应用还未配置。请和本应用的制造商联系。"
@@ -2511,11 +2511,11 @@ ChrW(13) & ChrW(10) & _
 "[n:2]"
                 UserManagement_NewUser_HTMLWelcome = "<p>Bienvenido al Área Segura. Un lugar donde ir todos los días.</p>" & _
                 "<p>Nuestra administración le ha admitido en el Área Segura de forma gratuita.</p>" & _
-                "<p><strong>Su ID en línea es: <font color=""red"">[n:0]</font><br>" & _
+                "<p><strong>Su ID en línea es: <font color=""red"">[n:0]</font><br />" & _
                 "Su contraseña para el Área segura es: <font color=""red"">[n:1]</font></strong></p>" & _
                 "<p>Por favor no olvide cambiar la contraseña por una propia lo antes posible, para asegurarse de que nadie más la tenga y pueda usarla.</p>" & _
                 "<p>Obtenga todas las ventajas de una extensa asistencia. Tiene una gran cantidad de información esperándole en nuestra red externa. Navegue por esta página cuanto quiera para explorarla de principio a fin.</p>" & _
-                "<p>Su cuenta le permite acceder a varios programas de seguridad. Llegado este punto debe haber completado el proceso de integración en el Área segura. La plena habilitación de las autorizaciones entrará en vigor en los próximos 3 - 4 días. Visite de nuevo la página:<br>" & _
+                "<p>Su cuenta le permite acceder a varios programas de seguridad. Llegado este punto debe haber completado el proceso de integración en el Área segura. La plena habilitación de las autorizaciones entrará en vigor en los próximos 3 - 4 días. Visite de nuevo la página:<br />" & _
                 "<ul><strong>[n:2]</strong></ul></p>"
                 SendPasswordResetLink_EMailMessage = "You can reset your password using the following link: [n:0]"
                 ResetPW_Descr_PleaseSpecifyNewPW = "Please specifiy your new password here:"
@@ -2528,7 +2528,7 @@ ChrW(13) & ChrW(10) & _
                 UpdateProfile_ErrMsg_MistypedPW = "Contraseña con erratas o escrita de modo erróneo. Tenga en cuenta la diferenciación entre mayúsculas y minúsculas."
                 UpdateProfile_ErrMsg_Undefined = "Valor inesperado de respuesta. Póngase en contacto con el administrador del sitio web."
                 UpdateProfile_ErrMsg_Success = "Su perfil ha sido actualizado."
-                UpdateProfile_ErrMsg_LogonTooOften = "El proceso de registro ha fallado demasiadas veces. La cuenta ha sido deshabilitada.<br>Por favor, inténtelo más tarde."
+                UpdateProfile_ErrMsg_LogonTooOften = "El proceso de registro ha fallado demasiadas veces. La cuenta ha sido deshabilitada.<br />Por favor, inténtelo más tarde."
                 UpdateProfile_ErrMsg_NotAllowed = "No tiene autorización a acceder a este documento."
                 UpdateProfile_ErrMsg_PWRequired = "Para modificar su perfil necesita introducir su contraseña."
                 UpdateProfile_Descr_Address = "Dirección"
@@ -2659,29 +2659,29 @@ ChrW(13) & ChrW(10) & _
                 Logon_SSO_ADS_LabelRegisterNewEMail = "Correo electrónico:"
                 Logon_SSO_ADS_ContactUs = "Si tiene alguna duda, <a href=""mailto:{0}"">consúltenos</a>."
                 Logon_SSO_ADS_LabelRegisterNewPassword2 = "Vuelva a introducir la contraseña:"
-                Logon_BodyPrompt2User = "Introduzca su nombre de registro y su contraseña para acceder al " & OfficialServerGroup_Title & ".<br><em> Tenga en cuenta que el ID en línea y la contraseña van por separado y pueden ser diferentes de los que ya tenga para otras áreas nuestras.</em>"
+                Logon_BodyPrompt2User = "Introduzca su nombre de registro y su contraseña para acceder al " & OfficialServerGroup_Title & ".<br /><em> Tenga en cuenta que el ID en línea y la contraseña van por separado y pueden ser diferentes de los que ya tenga para otras áreas nuestras.</em>"
                 Logon_BodyFormUserName = "ID en línea"
                 Logon_BodyFormUserPassword = "Contraseña"
                 Logon_BodyFormSubmit = "Login"
                 Logon_BodyFormCreateNewAccount = "Crear una nueva cuenta"
-                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>¿No es miembro aún? Cree una cuenta nueva para acceder al " & OfficialServerGroup_Title & "</STRONG><BR>" & _
+                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>¿No es miembro aún? Cree una cuenta nueva para acceder al " & OfficialServerGroup_Title & "</STRONG><br />" & _
                                     "Si no tiene cuenta, puede </FONT><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><FONT face=Arial size=2>crear " & _
                                     "una ahora</FONT></A><FONT face=Arial size=2>. " & _
                                     "Por favor no cree otra&nbsp;" & _
                                     "cuenta si ha creado una antes. Si tiene " & _
                                     "dificultadas para registrarse, póngase en contacto con su <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>centro de servicio y asistencia</FONT></A>" & _
-                                    ". <BR> &nbsp;</FONT></P></TD></TR>" & _
+                                    ". <br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/passwort.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><B>¿Ha olvidado su contraseña? Envie su contraseña a " & _
-                                    "a su propio buzón por e-mail</B><BR>Puede que haya indicado una cuenta&nbsp;válida pero ha olvidado " & _
+                                    "a su propio buzón por e-mail</B><br />Puede que haya indicado una cuenta&nbsp;válida pero ha olvidado " & _
                                     "la contraseña.</FONT> <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><FONT " & _
                                     "face=Arial size=2>Aquí puede hacerse enviar su contraseña por e-mail</FONT></A><FONT " & _
                                     "face=Arial size=2>. Tenga en cuenta que su " & _
                                     "contraseña se enviará por e-mail a la dirección que proporcionó en el momento de " & _
-                                    "crear esta&nbsp; cuenta.<br> &nbsp;</FONT></P></TD></TR>" & _
+                                    "crear esta&nbsp; cuenta.<br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A " & _
-                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>¿Tiene todavía algún problema?</strong><br>Si requiere ayuda adicional, consulte a </FONT><A " & _
+                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>¿Tiene todavía algún problema?</strong><br />Si requiere ayuda adicional, consulte a </FONT><A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>consúltenos</FONT></A><FONT " & _
                                     "size=2>.</FONT></P></TD></TR></TABLE>"
                 AccessError_Descr_FollowingError = "Ha ocurrido el siguiente error:"
@@ -2696,7 +2696,7 @@ ChrW(13) & ChrW(10) & _
                 SendPassword_Descr_RequiredFields = "Campos obligatorios"
                 SendPassword_Descr_BackToLogin = "Volver a login"
                 SendPassword_Descr_PasswordSentTo = "Su contraseña le ha sido enviada {0}."
-                SendPassword_Descr_FurtherCommentWithContactAddress = "El sistema le enviará su contraseña de Área Segura a la dirección de e-mail que tenemos almacenada.<BR>Si no recibe el mensaje por correo electrónico en un plazo de veinticuatro (24) horas, póngase por favor en contacto con nosotros <a href=""mailto:{0}"">{1}</a>."
+                SendPassword_Descr_FurtherCommentWithContactAddress = "El sistema le enviará su contraseña de Área Segura a la dirección de e-mail que tenemos almacenada.<br />Si no recibe el mensaje por correo electrónico en un plazo de veinticuatro (24) horas, póngase por favor en contacto con nosotros <a href=""mailto:{0}"">{1}</a>."
                 META_CurrentContentLanguage = "ES"
                 StatusLineUsername = "Usuario"
                 StatusLinePassword = "Contraseña"
@@ -2721,9 +2721,9 @@ ChrW(13) & ChrW(10) & _
                 ErrorUserOrPasswordWrong = "Se han cometido errores al introducir el nombre de usuario o contraseña o se ha denegado el acceso.<p>Verifique por favor<ul><li>la ortografía del nombre de usuario y la contraseña (la contraseña distingue entre las letras mayúsculas y minúsculas)</li><li>y asegúrese de que está usando el nombre de usuario/ contraseña correctos (puede que tenga contraseñas para otros recursos nuestros, pero aquí no le van a funcionar)</li></ul>"
                 ErrorServerConfigurationError = "Este servidor no ha sido aún configurado correctamente. Consulte a su administrador."
                 ErrorNoAuthorization = "No tiene autorización para acceder a este área."
-                ErrorAlreadyLoggedOn = "Ya tiene una sesión abierta. Cierre por favor antes la sesión en la otra estación!<br><font color=""red"">Si está seguro de que no tiene ninguna otra sesión abierta, avísenos a través de <a href=""mailto:[n:0]"">[n:1]</a>!</font>"
-                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Su sesión ha terminado porque tenía abierta sesión en otra estación.<br>"
-                ErrorLogonFailedTooOften = "El proceso de registro ha fallado demasiadas veces. La cuenta ha sido deshabilitada.<br>Por favor, inténtelo más tarde."
+                ErrorAlreadyLoggedOn = "Ya tiene una sesión abierta. Cierre por favor antes la sesión en la otra estación!<br /><font color=""red"">Si está seguro de que no tiene ninguna otra sesión abierta, avísenos a través de <a href=""mailto:[n:0]"">[n:1]</a>!</font>"
+                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Su sesión ha terminado porque tenía abierta sesión en otra estación.<br />"
+                ErrorLogonFailedTooOften = "El proceso de registro ha fallado demasiadas veces. La cuenta ha sido deshabilitada.<br />Por favor, inténtelo más tarde."
                 ErrorEmptyPassword = "No se olvide de introducir una contraseña. Si no recuerda su contraseña, intente solicitarla por e-mail. Si desea más detalles, consulte el final de este documento."
                 ErrorRequiredField = "Campo obligatorio"
                 ErrorUnknown = "¡Error inesperado! - Establezca por favor contacto con el <a href=""mailto:support@camm.biz"">Trouble Center</a>!"
@@ -2731,7 +2731,7 @@ ChrW(13) & ChrW(10) & _
                 ErrorWrongNetwork = "No tiene autorización a conectarse a través de su conexión de red actual."
                 ErrorUserAlreadyExists = "Ya hay un registro de usuario con ese nombre. Elija por favor otro nombre de login."
                 ErrorLoginCreatedSuccessfully = "La cuenta de registro ha sido creada."
-                ErrorSendPWWrongLoginOrEmailAddress = "Login o dirección de e-mail incorrectos.<br>Introduzca datos correctos para que pueda iniciarse el proceso de envío de la contraseña."
+                ErrorSendPWWrongLoginOrEmailAddress = "Login o dirección de e-mail incorrectos.<br />Introduzca datos correctos para que pueda iniciarse el proceso de envío de la contraseña."
                 ErrorCookiesMustNotBeDisabled = "Su navegador no admite cookies o las cookies están deshabilitadas por la estrategia de seguridad del navegador."
                 ErrorTimoutOrLoginFromAnotherStation = "Excedido tiempo de espera de esta sesión o registro en otra estación."
                 ErrorApplicationConfigurationIsEmpty = "Esta aplicación aún no ha sido configurada. Contacte con el autor de esta aplicación."
@@ -2864,11 +2864,11 @@ ChrW(13) & ChrW(10) & _
                 "[n:2]"
                 UserManagement_NewUser_HTMLWelcome = "<p>Bienvenue dans le domaine sécurisé! Vous trouverez ci-joint des informations journalières et libres.</p>" & _
                 "<p>Nous vous avons attribué un compte utilisateur pour le domaine sécurisé, et ce service est gratuit pour vous.</p>" & _
-                "<p><strong>Votre nom de connexion au domaine sécurisé: <font color=""red"">[n:0]</font><br>" & _
+                "<p><strong>Votre nom de connexion au domaine sécurisé: <font color=""red"">[n:0]</font><br />" & _
                 "Votre mot de passe pour le domaine sécurisé est: <font color=""red"">[n:1]</font></strong></p>" & _
                 "<p>Veuillez ne pas oublier de changer votre mot de passe le plus rapidement possible. Ceci est impératif pour s'assurer qu'aucune autre personne (par ex un hacker) ne possède et n'utilise votre mot de passe!</p>" & _
                 "<p>Bénéficiez des avantages d'un soutien solide! Aujourd'hui, tout dépend de vous!" & _
-                "<p>Votre compte utilisateur vous offre l'accès aux diverses applications protégées. La procédure d'annonce pouyr le domaine sécurisé est déjà terminée. Vos droits complets ne seront cependant validés que dans 3 - 4 jours. Vous pouvez entrer dans le domaine sécurisé avec l'URL suivant:<br>" & _
+                "<p>Votre compte utilisateur vous offre l'accès aux diverses applications protégées. La procédure d'annonce pouyr le domaine sécurisé est déjà terminée. Vos droits complets ne seront cependant validés que dans 3 - 4 jours. Vous pouvez entrer dans le domaine sécurisé avec l'URL suivant:<br />" & _
                 "<ul><strong>[n:2]</strong></ul></p>"
                 SendPasswordResetLink_EMailMessage = "You can reset your password using the following link: [n:0]"
                 ResetPW_Descr_PleaseSpecifyNewPW = "Please specifiy your new password here:"
@@ -2881,7 +2881,7 @@ ChrW(13) & ChrW(10) & _
                 UpdateProfile_ErrMsg_MistypedPW = "Mot de passe incorrect. Veuillez respecter l'écriture majuscule et minuscule!"
                 UpdateProfile_ErrMsg_Undefined = "Valeur de retour inattendue! – Veuillez contacter l'administrateur!"
                 UpdateProfile_ErrMsg_Success = "Votre profil utilisateur a été modifié avec succès!"
-                UpdateProfile_ErrMsg_LogonTooOften = "Le processus de connexion a trop souvent échoué ; le compte a été désactivé.<br>Veuillez réessayer plus tard!"
+                UpdateProfile_ErrMsg_LogonTooOften = "Le processus de connexion a trop souvent échoué ; le compte a été désactivé.<br />Veuillez réessayer plus tard!"
                 UpdateProfile_ErrMsg_NotAllowed = "Nous n'avez pas de permission pour accéder à ce document!"
                 UpdateProfile_ErrMsg_PWRequired = "Veuillez également envoyer votre mot de passe pou modifier votre profil utilisateur!"
                 UpdateProfile_Descr_Address = "Adresse"
@@ -3012,29 +3012,29 @@ ChrW(13) & ChrW(10) & _
                 Logon_SSO_ADS_LabelRegisterNewPassword2 = "Retaper le mot de passe:"
                 Logon_SSO_ADS_LabelRegisterNewEMail = "Adresse email:"
                 Logon_SSO_ADS_IdentifiedUserNameWithAdsUserInfo = "Vous avez été identifié comme utilisateur <strong>{0} ({1})</strong>."
-                Logon_BodyPrompt2User = "Entrez votre nom d'utilisateur et votre mot de passe pour accéder au " & OfficialServerGroup_Title & ".<br><em>Remarque: votre identificateur en ligne et votre mot de passe peuvent différer d'autres données d'accès que vous avez obtenus pour d'autres zones.</em>"
+                Logon_BodyPrompt2User = "Entrez votre nom d'utilisateur et votre mot de passe pour accéder au " & OfficialServerGroup_Title & ".<br /><em>Remarque: votre identificateur en ligne et votre mot de passe peuvent différer d'autres données d'accès que vous avez obtenus pour d'autres zones.</em>"
                 Logon_BodyFormUserName = "Identificateur en ligne"
                 Logon_BodyFormUserPassword = "Mot de passe"
                 Logon_BodyFormSubmit = "Connexion"
                 Logon_BodyFormCreateNewAccount = "Créer un nouveau compte utilisateur"
-                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Pas encore inscrit? Créez votre propre compte pour accéder à " & OfficialServerGroup_Title & "</STRONG><BR>" & _
+                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Pas encore inscrit? Créez votre propre compte pour accéder à " & OfficialServerGroup_Title & "</STRONG><br />" & _
                                     "Si vous n'avez pas encore de compte, vous pouvez </FONT><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><FONT face=Arial size=2>maintenant le créer " & _
                                     "</FONT></A><FONT face=Arial size=2>. " & _
                                     "Veuillez ne pas créer d'autres&nbsp;" & _
                                     "comptes, si vous en avez déjà créer dans le passé. En cas de " & _
                                     "problèmes de connexion, veuillez contacter votre <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>support service center</FONT></A>" & _
-                                    ". <BR> &nbsp;</FONT></P></TD></TR>" & _
+                                    ". <br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/passwort.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><B>Mot de passe oublié? Nous vous enverrons votre mot de passe " & _
-                                    "par e-mail</B><BR>Vous avez déjà un compte valide&nbsp;et oublié " & _
+                                    "par e-mail</B><br />Vous avez déjà un compte valide&nbsp;et oublié " & _
                                     "votre mot de passe.</FONT> <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><FONT " & _
                                     "face=Arial size=2>Ici, vous pouvez obtenir votre mot de passe par e-mail</FONT></A><FONT " & _
                                     "face=Arial size=2>. Remarque: " & _
                                     "votre mot de passe vous sera envoyée à l'adresse e-mail d'origine " & _
-                                    "Créer ce&nbsp; compte.<br> &nbsp;</FONT></P></TD></TR>" & _
+                                    "Créer ce&nbsp; compte.<br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A " & _
-                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Problèmes pas encore résolus?</strong><br>Si vous nécessitez une assistance supplémentaire, n'hésitez pas à </FONT><A " & _
+                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Problèmes pas encore résolus?</strong><br />Si vous nécessitez une assistance supplémentaire, n'hésitez pas à </FONT><A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>nous contacter</FONT></A><FONT " & _
                                     "size=2>.</FONT></P></TD></TR></TABLE>"
                 AccessError_Descr_FollowingError = "L'erreur suivante s'est produite:"
@@ -3049,7 +3049,7 @@ ChrW(13) & ChrW(10) & _
                 SendPassword_Descr_RequiredFields = "Champs requis"
                 SendPassword_Descr_BackToLogin = "Retour à la connexion"
                 SendPassword_Descr_PasswordSentTo = "Votre mot de passe a été envoyé à {0}."
-                SendPassword_Descr_FurtherCommentWithContactAddress = "Votre mot de passe pour l'espace sécurité ne vous sera envoyée qu'à l'adresse e-mail enregistrée.<BR>Veuillez nous contacter, si vous n'avez pas reçu cet e-mail dans les prochaines 24 heures <a href=""mailto:{0}"">{1}</a>."
+                SendPassword_Descr_FurtherCommentWithContactAddress = "Votre mot de passe pour l'espace sécurité ne vous sera envoyée qu'à l'adresse e-mail enregistrée.<br />Veuillez nous contacter, si vous n'avez pas reçu cet e-mail dans les prochaines 24 heures <a href=""mailto:{0}"">{1}</a>."
                 META_CurrentContentLanguage = "FR"
                 StatusLineUsername = "Utilisateur"
                 StatusLinePassword = "Mot de passe"
@@ -3074,17 +3074,17 @@ ChrW(13) & ChrW(10) & _
                 ErrorUserOrPasswordWrong = "Nom d'utilisateur ou mot de passe incorrect ou accès refusé!<p>Veuillez vérifier <ul><li>l'écriture du nom et du mot de passe (veillez aux lettres majuscules et minuscules du mot de passe!)</li><li>que vous avez utilisé la constellation correcte du nom et du mot de passe (vous avez éventuellement déjà reçu d'autres noms/mots de passe qui ne sont pas valables pour cette zone)</li></ul>"
                 ErrorServerConfigurationError = "Ce serveur n'est pas encore correctement configuré. Veuillez contacter votre administrateur."
                 ErrorNoAuthorization = "Vous n'avez pas de droits d'accès à cette zone."
-                ErrorAlreadyLoggedOn = "Vous être déjà connecté! Veuillez vous déconnecter auparavant de votre autre poste de travail!<br><font color=""red"">Si vous n'êtes pas sûr de vous avoir déconnecté de tous vos postes, envoyez-nous une court e-mail à <a href=""mailto:[n:0]"">[n:1]</a>!</font>"
-                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Votre session de travail a été terminée parce que vous vous avez connecté à une autre station.<br>"
-                ErrorLogonFailedTooOften = "Le processus de connexion a trop souvent échoué ; le compte a été désactivé.<br>Veuillez réessayer plus tard!"
-                ErrorEmptyPassword = "N'oubliez pas d'entrer un mot de passe!<br>Si vous avez oublié votre mot de passe, nous vous pouvons le demander par e-mail. Consultez le texte en bas de page pour plus de détails."
+                ErrorAlreadyLoggedOn = "Vous être déjà connecté! Veuillez vous déconnecter auparavant de votre autre poste de travail!<br /><font color=""red"">Si vous n'êtes pas sûr de vous avoir déconnecté de tous vos postes, envoyez-nous une court e-mail à <a href=""mailto:[n:0]"">[n:1]</a>!</font>"
+                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Votre session de travail a été terminée parce que vous vous avez connecté à une autre station.<br />"
+                ErrorLogonFailedTooOften = "Le processus de connexion a trop souvent échoué ; le compte a été désactivé.<br />Veuillez réessayer plus tard!"
+                ErrorEmptyPassword = "N'oubliez pas d'entrer un mot de passe!<br />Si vous avez oublié votre mot de passe, nous vous pouvons le demander par e-mail. Consultez le texte en bas de page pour plus de détails."
                 ErrorRequiredField = "Champ obligatoire"
                 ErrorUnknown = "Erreur inattendue! - Veuillez contacter le <a href=""mailto:support@camm.biz"">Service en ligne</a>!"
                 ErrorEmptyField = "Veuillez renseigner tous les champs avec un astérisque <em>(*)</em>!"
                 ErrorWrongNetwork = "Vous n'avez pas de droit pour vous connecter sur l'actuel réseau de connexion."
                 ErrorUserAlreadyExists = "Ce compte utilisateur existe déjà. Veuillez choisir un autre nom d'utilisateur!"
                 ErrorLoginCreatedSuccessfully = "Le compte de connexion a été créé avec succès!"
-                ErrorSendPWWrongLoginOrEmailAddress = "Adresse e-mail incorrecte.<br>Veuillez entrer les données correctement telles qu'elles ont été enregistrées dans votre profil utilisateur."
+                ErrorSendPWWrongLoginOrEmailAddress = "Adresse e-mail incorrecte.<br />Veuillez entrer les données correctement telles qu'elles ont été enregistrées dans votre profil utilisateur."
                 ErrorCookiesMustNotBeDisabled = "Votre moteur de recherche ne prend pas les cookies en charge ou elles ont été désactivées en raison du niveau de sécurité."
                 ErrorTimoutOrLoginFromAnotherStation = "Session expirée ou connexion d'une autre station."
                 ErrorApplicationConfigurationIsEmpty = "Cette application n'est pas encore configurée. Veuillez contacter le fabricant de l'application."
@@ -3188,7 +3188,7 @@ ChrW(13) & ChrW(10) & _
                 UpdateProfile_ErrMsg_MistypedPW = "Falsches Passwort. Bitte beachten Sie auch die Groß- und Kleinschreibung!"
                 UpdateProfile_ErrMsg_Undefined = "Unerwarteter Rückgabewert! - Bitte kontaktieren Sie unseren WebMaster!"
                 UpdateProfile_ErrMsg_Success = "Ihr Benutzerprofil wurde erfolgreich abgeändert!"
-                UpdateProfile_ErrMsg_LogonTooOften = "Anmeldeprozess schlug zu oft fehl; das Benutzerkonto wurde vorrübergehend deaktiviert.<br>Bitte versuchen Sie es etwas später wieder!"
+                UpdateProfile_ErrMsg_LogonTooOften = "Anmeldeprozess schlug zu oft fehl; das Benutzerkonto wurde vorrübergehend deaktiviert.<br />Bitte versuchen Sie es etwas später wieder!"
                 UpdateProfile_ErrMsg_NotAllowed = "Sie haben nicht ausreichende Berechtigungen zum Durchführen dieser Aktion!"
                 UpdateProfile_ErrMsg_PWRequired = "Bitte geben Sie auch Ihr Passwort mit an um das Profil zu aktualisieren!"
                 UpdateProfile_Descr_Address = "Adresse"
@@ -3311,27 +3311,27 @@ ChrW(13) & ChrW(10) & _
                 Logon_SSO_ADS_LabelRegisterNewPassword2 = "Passwort (Wiederholung):"
                 Logon_SSO_ADS_LabelRegisterNewEMail = "e-mail Adresse:"
                 Logon_SSO_ADS_IdentifiedUserNameWithAdsUserInfo = "Sie wurden als Benutzer <strong>{0} ({1})</strong> identifiziert."
-                Logon_BodyPrompt2User = "Bitte geben Sie Ihren Benutzernamen und das dazugehörige Passwort ein, um die " & OfficialServerGroup_Title & " zu betreten.<br><em>Beachten Sie bitte auch, dass Benutzername und Passwort sich von anderen Zugangsdaten unterscheiden können, welche Sie für andere Bereiche erhalten haben.</em>"
+                Logon_BodyPrompt2User = "Bitte geben Sie Ihren Benutzernamen und das dazugehörige Passwort ein, um die " & OfficialServerGroup_Title & " zu betreten.<br /><em>Beachten Sie bitte auch, dass Benutzername und Passwort sich von anderen Zugangsdaten unterscheiden können, welche Sie für andere Bereiche erhalten haben.</em>"
                 Logon_BodyFormUserName = "Benutzername"
                 Logon_BodyFormUserPassword = "Passwort"
                 Logon_BodyFormSubmit = "Login"
                 Logon_BodyFormCreateNewAccount = "Benutzerkonto erstellen"
-                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Noch kein Mitglied? Erstellen Sie sich doch Ihr eigenes Zugangskonto für den Bereich " & OfficialServerGroup_Title & "!</STRONG><BR>" & _
+                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Noch kein Mitglied? Erstellen Sie sich doch Ihr eigenes Zugangskonto für den Bereich " & OfficialServerGroup_Title & "!</STRONG><br />" & _
                                     "Falls Sie noch keine Zugangsdaten besitzen, können Sie sie </FONT><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><FONT face=Arial size=2>jetzt erstellen" & _
                                     "</FONT></A><FONT face=Arial size=2>. " & _
                                     "Bitte erstellen Sie keine anderen&nbsp;Zugangsdaten, " & _
                                     "wenn Sie bereits in der Vergangenheit welche erstellt hatten. Sollten Sie Schwierigkeiten bei der Anmeldung haben, kontaktieren Sie bitte unser <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>Support Service Center</FONT></A> " & _
-                                    ". <BR> &nbsp;</FONT></P></TD></TR>" & _
+                                    ". <br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/passwort.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><B>Passwort vergessen? Wir senden Ihnen Ihr Passwort " & _
-                                    "</B><BR>Sie haben bereits gültige Zugangsdaten zugeteilt bekommen, haben jedoch das Passwort nicht mehr?" & _
+                                    "</B><br />Sie haben bereits gültige Zugangsdaten zugeteilt bekommen, haben jedoch das Passwort nicht mehr?" & _
                                     "</FONT> <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><FONT " & _
                                     "face=Arial size=2>Hier erhalten Sie Ihr Passwort per e-mail</FONT></A><FONT " & _
                                     "face=Arial size=2>. Bitte beachten Sie, dass das e-mail nur an die e-mail-Adresse geschickt wird, welche von Ihnen ursprünglich angegeben wurde" & _
-                                    ".<br> &nbsp;</FONT></P></TD></TR>" & _
+                                    ".<br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A " & _
-                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Wurde Ihre Frage hier nicht beantwortet?</strong><br>Sollten Sie zusätzliche Unterstützung benötigen, können Sie uns gerne </FONT><A " & _
+                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Wurde Ihre Frage hier nicht beantwortet?</strong><br />Sollten Sie zusätzliche Unterstützung benötigen, können Sie uns gerne </FONT><A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>kontaktieren</FONT></A><FONT " & _
                                     "size=2>.</FONT></P></TD></TR></TABLE>"
                 Logon_Connecting_InProgress = "Sie werden mit dem Server verbunden…"
@@ -3349,7 +3349,7 @@ ChrW(13) & ChrW(10) & _
                 SendPassword_Descr_RequiredFields = "benötigte Felder"
                 SendPassword_Descr_BackToLogin = "Zurück zur Anmeldung"
                 SendPassword_Descr_PasswordSentTo = "Das Passwort wurde verschickt nach {0}."
-                SendPassword_Descr_FurtherCommentWithContactAddress = "Ihr Secured Area Passwort wird nur an Ihre hinterlegte e-mail Adresse gesendet.<BR>Sollten Sie diese e-mail Nachricht nicht innerhalb der nächsten 24 Stunden erhalten, so kontaktieren Sie bitte <a href=""mailto:{0}"">{1}</a>."
+                SendPassword_Descr_FurtherCommentWithContactAddress = "Ihr Secured Area Passwort wird nur an Ihre hinterlegte e-mail Adresse gesendet.<br />Sollten Sie diese e-mail Nachricht nicht innerhalb der nächsten 24 Stunden erhalten, so kontaktieren Sie bitte <a href=""mailto:{0}"">{1}</a>."
                 META_CurrentContentLanguage = "DE"
                 StatusLineUsername = "Benutzer"
                 StatusLinePassword = "Passwort"
@@ -3374,16 +3374,16 @@ ChrW(13) & ChrW(10) & _
                 ErrorUserOrPasswordWrong = "Der Benutzername oder das Passwort ist nicht korrekt oder wurde falsch geschrieben oder der Zugriff wurde verweigert!<p>Bitte überprüfen Sie <ul><li>die Schreibweise vom Benutzernamen und dem Passwort (das Passwort selbst unterscheidet zwischen großen und kleinen Buchstaben!)</li><li>dass Sie eine gültige Konstellation von Benutzernamen und Passwort verwenden. (Eventuell haben Sie bereits andere Benutzernamen/Passwörter von uns erhalten, welche jedoch nicht für diesen Bereich gültig sind.)</li></ul>"
                 ErrorServerConfigurationError = "Dieser Server ist noch nicht korrekt eingerichtet. Bitte konsultieren Sie Ihren Administrator."
                 ErrorNoAuthorization = "Sie haben keine Berechtigung, auf diesen Bereich zuzugreifen."
-                ErrorAlreadyLoggedOn = "Sie sind bereits angemeldet! Bitte melden Sie sich zuerst an Ihrem anderen Arbeitsplatz ab!<br><font color=""red"">Wenn Sie sicher sind, dass Sie nirgends mehr angemeldet sind, senden Sie uns bitte eine kurze e-mail an <a href=""mailto:[n:0]"">[n:1]</a> und nennen Sie uns Ihren Loginnamen.</font>"
-                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Sie wurden an diesem Arbeitsplatz abgemeldet, da Sie sich an einer anderen Station angemeldet haben.<br>"
-                ErrorLogonFailedTooOften = "Der Anmeldeprozess ist zu oft fehlgeschlagen, Ihr Konto wurde vorrübergehend deaktiviert.<br>Bitte versuchen Sie es später noch ein mal!"
-                ErrorEmptyPassword = "Bitte vergessen Sie nicht noch ein Passwort anzugeben!<br>Wenn Sie Ihr Passwort nicht mehr wissen, können Sie es über e-mail neu anfordern. Bitte sehen Sie hierzu weitere Details weiter unten im Text."
+                ErrorAlreadyLoggedOn = "Sie sind bereits angemeldet! Bitte melden Sie sich zuerst an Ihrem anderen Arbeitsplatz ab!<br /><font color=""red"">Wenn Sie sicher sind, dass Sie nirgends mehr angemeldet sind, senden Sie uns bitte eine kurze e-mail an <a href=""mailto:[n:0]"">[n:1]</a> und nennen Sie uns Ihren Loginnamen.</font>"
+                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Sie wurden an diesem Arbeitsplatz abgemeldet, da Sie sich an einer anderen Station angemeldet haben.<br />"
+                ErrorLogonFailedTooOften = "Der Anmeldeprozess ist zu oft fehlgeschlagen, Ihr Konto wurde vorrübergehend deaktiviert.<br />Bitte versuchen Sie es später noch ein mal!"
+                ErrorEmptyPassword = "Bitte vergessen Sie nicht noch ein Passwort anzugeben!<br />Wenn Sie Ihr Passwort nicht mehr wissen, können Sie es über e-mail neu anfordern. Bitte sehen Sie hierzu weitere Details weiter unten im Text."
                 ErrorUnknown = "Unerwarteter Fehler! - Bitte kontaktieren Sie unser <a href=""mailto:support@camm.biz"">Trouble Center</a>!"
                 ErrorEmptyField = "Bitte geben Sie Werte in alle Felder ein, welche mit einem Sternchen <em>(*)</em> versehen sind!"
                 ErrorWrongNetwork = "Sie haben keine Berechtigung, sich über Ihre aktuelle Netzwerkverbindung anzumelden."
                 ErrorUserAlreadyExists = "Das Benutzerkonto existiert bereits. Bitte wählen Sie einen anderen Anmeldenamen!"
                 ErrorLoginCreatedSuccessfully = "Das Benutzerprofil wurde erfolgreich erstellt!"
-                ErrorSendPWWrongLoginOrEmailAddress = "Falscher Benutzername oder falsche e-mail Adresse.<br>Bitte geben Sie die korrekten Werte an, so wie sie in Ihrem Benutzerprofil hinterlegt sind."
+                ErrorSendPWWrongLoginOrEmailAddress = "Falscher Benutzername oder falsche e-mail Adresse.<br />Bitte geben Sie die korrekten Werte an, so wie sie in Ihrem Benutzerprofil hinterlegt sind."
                 ErrorCookiesMustNotBeDisabled = "Ihr Browser unterstützt keine Cookies oder Cookies wurden aufgrund von Sicherheitseinstellungen in Ihrem Browser deaktiviert."
                 ErrorTimoutOrLoginFromAnotherStation = "Sie wurden abgemeldet, da die maximale Sitzungsdauer erreicht wurde oder ein Login von einer anderen Arbeitsstation vorgenommen wurde."
                 ErrorApplicationConfigurationIsEmpty = "Diese Anwendung enthielt keinen gültigen Anwendungsnamen. Bitte setzen Sie sich mit dem Hersteller in Verbindung."
@@ -3471,11 +3471,11 @@ ChrW(13) & ChrW(10) & _
                 "[n:2]"
                 UserManagement_NewUser_HTMLWelcome = "<p>Willkommen bei der Secured Area! Hier finden Sie tägliche und ortsungebundene Informationen.</p>" & _
                 "<p>Sie haben ein Benutzerkonto für den Bereich Secured Area von unserer Verwaltung eingerichtet bekommen. Dieser Service ist für Sie natürlich kostenlos.</p>" & _
-                "<p><strong>Ihr Anmeldename für die Secured Area: <font color=""red"">[n:0]</font><br>" & _
+                "<p><strong>Ihr Anmeldename für die Secured Area: <font color=""red"">[n:0]</font><br />" & _
                 "Ihr Passwort für die Secured Area lautet: <font color=""red"">[n:1]</font></strong></p>" & _
                 "<p>Bitte vergessen Sie nicht, das Passwort sobald wie möglich abzuändern. Dies ist nötig um sicherzustellen, dass niemand anderes (z. B. Hacker) Ihr Passwort besitzt und benutzen kann!</p>" & _
                 "<p>Nehmen Sie die Vorteile einer umfangreichen Unterstützung Anspruch! Es wartet bereits jetzt einiges auf Sie. Schauen Sie doch einfach mal vorbei!" & _
-                "<p>Ihr Benutzerkonto bietet Ihnen Zugang zu den diversen geschützten Anwendungen. Der Anmeldeprozess für die Secured Area ist bereits abgeschlossen. Ihre vollen Berechtigungen werden jedoch erst in ca. 3 - 4 Werktagen gültig sein. Sie können mit folgender URL in die Secured Area einsteigen:<br>" & _
+                "<p>Ihr Benutzerkonto bietet Ihnen Zugang zu den diversen geschützten Anwendungen. Der Anmeldeprozess für die Secured Area ist bereits abgeschlossen. Ihre vollen Berechtigungen werden jedoch erst in ca. 3 - 4 Werktagen gültig sein. Sie können mit folgender URL in die Secured Area einsteigen:<br />" & _
                 "<ul><strong>[n:2]</strong></ul></p>"
                 UserManagement_NewUser_MsgEMail4Admin = "Der folgende Benutzer wurde von Ihnen oder einem Ihrer Kollegen im Secured Area-Bereich angelegt." & ChrW(13) & ChrW(10) & _
                 "Bitte vergeben Sie die benötigten Zugriffsrechte!" & ChrW(13) & ChrW(10) & _
@@ -3567,11 +3567,11 @@ ChrW(13) & ChrW(10) & _
                 "[n:2]"
                 UserManagement_NewUser_HTMLWelcome = "<p>Welcome to Secured Area! The place to go on every day!</p>" & _
                 "<p>You have been added to the Secured Area by our administration free of charge.</p>" & _
-                "<p><strong>Your login name is: <font color=""red"">[n:0]</font><br>" & _
+                "<p><strong>Your login name is: <font color=""red"">[n:0]</font><br />" & _
                 "Your Secured Area password is: <font color=""red"">[n:1]</font></strong></p>" & _
                 "<p>Please don't forget to amend the password yourself as soon as possible to ensure nobody else has got it and can use it!</p>" & _
                 "<p>Get the advantages of extensive support! There is a lot of information waiting for you in our Extranet. Please feel free to surf through this site and explore it all.</p>" & _
-                "<p>Your account provides access to various secured programs. By now, you should have completed the association process of Secured Area. Your full authorizations will be applicable in the next 3 - 4 days. Then please revisit the URL:<br>" & _
+                "<p>Your account provides access to various secured programs. By now, you should have completed the association process of Secured Area. Your full authorizations will be applicable in the next 3 - 4 days. Then please revisit the URL:<br />" & _
                 "<ul><strong>[n:2]</strong></ul></p>"
                 SendPasswordResetLink_EMailMessage = "You can reset your password using the following link: [n:0]"
                 ResetPW_Descr_PleaseSpecifyNewPW = "Please specifiy your new password here:"
@@ -3584,7 +3584,7 @@ ChrW(13) & ChrW(10) & _
                 UpdateProfile_ErrMsg_MistypedPW = "Mistyped or misspelled password!"
                 UpdateProfile_ErrMsg_Undefined = "Unexpected return value! - Please contact the webmaster!"
                 UpdateProfile_ErrMsg_Success = "Your profile has been updated successfully!"
-                UpdateProfile_ErrMsg_LogonTooOften = "Logon process has failed too often, account has been disabled.<br>Please try again later!"
+                UpdateProfile_ErrMsg_LogonTooOften = "Logon process has failed too often, account has been disabled.<br />Please try again later!"
                 UpdateProfile_ErrMsg_NotAllowed = "You are not allowed to access this document!"
                 UpdateProfile_ErrMsg_PWRequired = "Please submit your password to modify your profile!"
                 UpdateProfile_Descr_Address = "Address"
@@ -3715,29 +3715,29 @@ ChrW(13) & ChrW(10) & _
                 Logon_SSO_ADS_LabelRegisterNewPassword2 = "Retype password:"
                 Logon_SSO_ADS_LabelRegisterNewEMail = "e-mail address:"
                 Logon_SSO_ADS_IdentifiedUserNameWithAdsUserInfo = "You've been identified as user <strong>{0} ({1})</strong>."
-                Logon_BodyPrompt2User = "Enter your login name and password to access the " & OfficialServerGroup_Title & ".<br><em>Please note that this login name and password are separate and may differ from those you've already got for our other areas.</em>"
+                Logon_BodyPrompt2User = "Enter your login name and password to access the " & OfficialServerGroup_Title & ".<br /><em>Please note that this login name and password are separate and may differ from those you've already got for our other areas.</em>"
                 Logon_BodyFormUserName = "Login name"
                 Logon_BodyFormUserPassword = "Password"
                 Logon_BodyFormSubmit = "Login"
                 Logon_BodyFormCreateNewAccount = "Create new account"
-                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Not a member? Create a new account to gain access to the " & OfficialServerGroup_Title & "!</STRONG><BR>" & _
+                Logon_BodyExplanation = "<TABLE BORDER=""0"" CELLPADDING=""3"" CELLSPACING=""0""><TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/handshake.gif"" border=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><STRONG>Not a member? Create a new account to gain access to the " & OfficialServerGroup_Title & "!</STRONG><br />" & _
                                     "If you haven't got an account, you can </FONT><A href=""" & User_Auth_Config_Paths_SystemData & "account_register.aspx""><FONT face=Arial size=2>create " & _
                                     "one now</FONT></A><FONT face=Arial size=2>. " & _
                                     "Please do not create another&nbsp;" & _
                                     "account if you have already created one in the past. If you have got " & _
                                     "difficulties logging on then please contact your <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>support service center</FONT></A>" & _
-                                    ". <BR> &nbsp;</FONT></P></TD></TR>" & _
+                                    ". <br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/passwort.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><B>Forgotten the password? Send your Password to " & _
-                                    "you via e-mail</B><BR>You may have supplied a valid&nbsp;account but have forgotten " & _
+                                    "you via e-mail</B><br />You may have supplied a valid&nbsp;account but have forgotten " & _
                                     "your password.</FONT> <A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "account_sendpassword.aspx""><FONT " & _
                                     "face=Arial size=2>Here you can get your password e-mailed to you now</FONT></A><FONT " & _
                                     "face=Arial size=2>. Note that your " & _
                                     "password will be e-mailed to the address you supplied when you originally " & _
-                                    "created this&nbsp; account.<br> &nbsp;</FONT></P></TD></TR>" & _
+                                    "created this&nbsp; account.<br /> &nbsp;</FONT></P></TD></TR>" & _
                                     "<TR><TD VALIGN=""TOP""><A " & _
-                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Still having trouble?</strong><br>If you require additional support, please don't hesitate to </FONT><A " & _
+                                    "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><IMG WIDTH=""40"" HEIGHT=""40"" SRC=""" & User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_StandardIncludes & "images/help.gif"" BORDER=""0""></A></TD><TD VALIGN=""TOP""><P><FONT face=Arial size=2><strong>Still having trouble?</strong><br />If you require additional support, please don't hesitate to </FONT><A " & _
                                     "href=""" & User_Auth_Config_Paths_SystemData & "feedback.aspx""><FONT face=Arial size=2>contact us</FONT></A><FONT " & _
                                     "size=2>.</FONT></P></TD></TR></TABLE>"
                 AccessError_Descr_FollowingError = "The following error has occured:"
@@ -3752,7 +3752,7 @@ ChrW(13) & ChrW(10) & _
                 SendPassword_Descr_RequiredFields = "required fields"
                 SendPassword_Descr_BackToLogin = "Back to login"
                 SendPassword_Descr_PasswordSentTo = "Your password has been sent to {0}."
-                SendPassword_Descr_FurtherCommentWithContactAddress = "Your Secured Area password will be sent only to your e-mail address on record.<BR>If you do not receive the e-mail message within twenty-four (24) hours, please contact <a href=""mailto:{0}"">{1}</a>."
+                SendPassword_Descr_FurtherCommentWithContactAddress = "Your Secured Area password will be sent only to your e-mail address on record.<br />If you do not receive the e-mail message within twenty-four (24) hours, please contact <a href=""mailto:{0}"">{1}</a>."
                 META_CurrentContentLanguage = "EN"
                 StatusLineUsername = "User"
                 StatusLinePassword = "Password"
@@ -3777,17 +3777,17 @@ ChrW(13) & ChrW(10) & _
                 ErrorUserOrPasswordWrong = "Mistyped or misspelled user name or password or access denied!<p>Please verify <ul><li>the spelling of user name and password (the password itself differs between big and small letters!)</li><li>that you are using the correct user name/password constellation (maybe you've alread got passwords for our other resources, but they won't work here)</li></ul>"
                 ErrorServerConfigurationError = "This server has not been correctly configured yet. Please consult your administrator."
                 ErrorNoAuthorization = "You don't have any authorization to access this area."
-                ErrorAlreadyLoggedOn = "Already logged on! Please logout first on the other station!<br><font color=""red"">If you are sure that you aren't logged on please tell us via <a href=""mailto:[n:0]"">[n:1]</a>!</font>"
-                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Your session has been terminated because you've logged on at another station.<br>"
-                ErrorLogonFailedTooOften = "Logon process has failed too often, account has been disabled.<br>Please try again later!"
-                ErrorEmptyPassword = "Please don't forget to input a password!<br>If you don't know your password any more try to gain it via e-mail. Please take a look at the bottom of this document for further details."
+                ErrorAlreadyLoggedOn = "Already logged on! Please logout first on the other station!<br /><font color=""red"">If you are sure that you aren't logged on please tell us via <a href=""mailto:[n:0]"">[n:1]</a>!</font>"
+                ErrorLoggedOutBecauseLoggedOnAtAnotherMachine = "Your session has been terminated because you've logged on at another station.<br />"
+                ErrorLogonFailedTooOften = "Logon process has failed too often, account has been disabled.<br />Please try again later!"
+                ErrorEmptyPassword = "Please don't forget to input a password!<br />If you don't know your password any more try to gain it via e-mail. Please take a look at the bottom of this document for further details."
                 ErrorRequiredField = "Required field"
                 ErrorUnknown = "Unexpected error! - Please contact the <a href=""mailto:support@camm.biz"">Trouble Center</a>!"
                 ErrorEmptyField = "Please input values into all fields marked with an asterisk <em>(*)</em>!"
                 ErrorWrongNetwork = "You are not allowed to connect via your current network connection."
                 ErrorUserAlreadyExists = "A login with this name already exists. Please choose another login name!"
                 ErrorLoginCreatedSuccessfully = "The login account has been created successfully!"
-                ErrorSendPWWrongLoginOrEmailAddress = "Wrong login or e-mail address.<br>Please input the correct values to start the process sending your password."
+                ErrorSendPWWrongLoginOrEmailAddress = "Wrong login or e-mail address.<br />Please input the correct values to start the process sending your password."
                 ErrorCookiesMustNotBeDisabled = "Your browser doesn't support cookies or cookies are disabled because of your browser's security policies."
                 ErrorTimoutOrLoginFromAnotherStation = "Session timed out or login from another station."
                 ErrorApplicationConfigurationIsEmpty = "This application hasn't been configured yet. Please contact the manufacturer of this application."

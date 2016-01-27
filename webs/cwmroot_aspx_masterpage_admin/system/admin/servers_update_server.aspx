@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.UpdateServer"%>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.UpdateServer"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify server" id="cammWebManager" SecurityObject="System - User Administration - Applications" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>

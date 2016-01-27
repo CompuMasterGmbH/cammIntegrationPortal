@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.Page" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.Page" %>
     <h1>
         Components check</h1>
     <p>

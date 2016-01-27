@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ApplicationClone" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ApplicationClone" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Clone application" id="cammWebManager" SecurityObject="System - User Administration - Applications" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>

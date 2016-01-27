@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" ValidateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ChangeUserPassword" language="VB" %>
+﻿<%@ Page MasterPageFile="~/portal/MasterPage.master" ValidateRequest="false" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.ChangeUserPassword" language="VB" %>
 <%@ Import NameSpace="System.Data" %>
 <%@ Import NameSpace="System.Data.SqlClient" %>
 <%@ Import NameSpace="CompuMaster.camm.WebManager.WMSystem" %>

@@ -76,7 +76,7 @@
     Sub ShowItemStatus(ByVal StyleDef As Integer)
         Dim Spacer As String
         If StyleDef = 1 Then
-            Spacer = "<br>"
+            Spacer = "<br />"
         Else
             Spacer = "<span style=""FONT-SIZE: 10px;""> </SPAN>"
         End If
@@ -518,7 +518,7 @@
             Response.Write("src=""images/space.gif""")
         End If
         Response.Write("" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & _
-                 "            width=13 border=0></TD>" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "          <TD valign=""top""><img src=""images/space.gif"" border=0 width=100 height=1><br><A class=NavHeader3")
+                 "            width=13 border=0></TD>" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "          <TD valign=""top""><img src=""images/space.gif"" border=0 width=100 height=1><br /><A class=NavHeader3")
         Response.Write(Level2Target & Level2Tooltip)
         Response.Write("" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "            href=""")
         Response.Write(Level2HRef)
@@ -526,12 +526,12 @@
         Response.Write(Level2Title)
         Response.Write("</A>")
         ShowItemStatus(0)
-        Response.Write("<br><img src=""images/space.gif"" border=0 width=100 height=3>")
+        Response.Write("<br /><img src=""images/space.gif"" border=0 width=100 height=3>")
 
         If MoveNextDone = False Then
             MoveNextAndReadRecordData()
             If Not NextLevel1 And Not Level3Present Then
-                Response.Write("<br><img src=""images/navline_separator.gif"" width=112 height=2 border=0><br><img src=""images/space.gif"" border=0 width=100 height=1>")
+                Response.Write("<br /><img src=""images/navline_separator.gif"" width=112 height=2 border=0><br /><img src=""images/space.gif"" border=0 width=100 height=1>")
             End If
             MoveNextDone = True
         End If
@@ -553,7 +553,7 @@
 
     Sub Level3NoSubs()
         Response.Write("" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & _
-             "        <TR>" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "          <TD valign=""top"" width=13><img src=""images/space.gif"" width=""1"" height=""4"" border=""0""><br><IMG height=10 ")
+             "        <TR>" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "          <TD valign=""top"" width=13><img src=""images/space.gif"" width=""1"" height=""4"" border=""0""><br /><IMG height=10 ")
         If AppDisabled Then
             Response.Write("src=""images/button_disabled_or_underconstruction_13x10.gif"" alt=""")
             Response.Write(cammWebManager.Internationalization.NavPointTemporaryHiddenHint)
@@ -562,7 +562,7 @@
             Response.Write("src=""images/space.gif""")
         End If
         Response.Write("" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & _
-                 "            width=13 border=0></TD>" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "          <TD valign=""top""><table border=0 cellpadding=0 cellspacing=0><tr><td><img src=""images/space.gif"" border=0 width=100 height=1><br><A" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "            class=NavHeader3")
+                 "            width=13 border=0></TD>" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "          <TD valign=""top""><table border=0 cellpadding=0 cellspacing=0><tr><td><img src=""images/space.gif"" border=0 width=100 height=1><br /><A" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "            class=NavHeader3")
         Response.Write(Level3Target & Level3Tooltip)
         Response.Write("" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "            href=""")
         Response.Write(Level3HRef)
@@ -570,12 +570,12 @@
         Response.Write(Level3Title)
         Response.Write("</A>")
         ShowItemStatus(0)
-        Response.Write("<br><img src=""images/space.gif"" border=0 width=100 height=1>")
+        Response.Write("<br /><img src=""images/space.gif"" border=0 width=100 height=1>")
 
         If MoveNextDone = False Then
             MoveNextAndReadRecordData()
             If Not NextLevel2 Then
-                Response.Write("<br><img src=""images/navline_separator.gif"" width=100 height=2 border=0><br><img src=""images/space.gif"" border=0 width=100 height=1>")
+                Response.Write("<br /><img src=""images/navline_separator.gif"" width=100 height=2 border=0><br /><img src=""images/space.gif"" border=0 width=100 height=1>")
             End If
             MoveNextDone = True
         End If
@@ -601,7 +601,7 @@
     Sub Level4NoSubs()
         Response.Write("" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & _
              "        <TR>" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "          <TD valign=""top"" width=3><img src=""images/space.gif" & _
-            """ width=""1"" height=""4"" border=""0""><br><IMG height=10" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "            ")
+            """ width=""1"" height=""4"" border=""0""><br /><IMG height=10" & Microsoft.VisualBasic.ChrW(13) & Microsoft.VisualBasic.ChrW(10) & Microsoft.VisualBasic.ChrW(9) & Microsoft.VisualBasic.ChrW(9) & "            ")
         If AppDisabled Then
             Response.Write("src=""images/button_disabled_or_underconstruction_13x10.gif"" alt=""")
             Response.Write(cammWebManager.Internationalization.NavPointTemporaryHiddenHint)

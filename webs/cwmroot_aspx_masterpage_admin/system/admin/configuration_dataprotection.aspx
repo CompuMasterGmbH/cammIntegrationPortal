@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationDataProtection" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationDataProtection" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify data protection rules" id="cammWebManager"

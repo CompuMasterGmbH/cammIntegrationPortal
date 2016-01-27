@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.CreateUserProfile" language="VB" %>
+﻿<%@ Page Title="Register account" MasterPage="~/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.CreateUserProfile" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
 
@@ -31,7 +31,7 @@
 
 
 </script>
-	<h3><font face="Arial" size="3"><%= Server.htmlencode(cammWebManager.Internationalization.OfficialServerGroup_Title) %><br>-&nbsp;<%= cammWebManager.Internationalization.CreateAccount_Descr_PageTitle %>&nbsp;-</font></h3>
+	<h3><font face="Arial" size="3"><%= Server.htmlencode(cammWebManager.Internationalization.OfficialServerGroup_Title) %><br />-&nbsp;<%= cammWebManager.Internationalization.CreateAccount_Descr_PageTitle %>&nbsp;-</font></h3>
 	<TABLE cellSpacing=0 cellPadding=0 bgColor="#ffffff" border=0 bordercolor="#C1C1C1">
 	  <TBODY>
 	  <TR>
@@ -191,7 +191,7 @@
 						<TD VAlign="top"> &nbsp;</TD>
 					</TR>
 					<TR>
-						<TD VAlign="top"><P><FONT face="Arial" size=2><br><a href="<%= cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL %>"><%= cammWebManager.Internationalization.CreateAccount_Descr_BackToLogin %></a><br> &nbsp;</FONT></P></TD>
+						<TD VAlign="top"><P><FONT face="Arial" size=2><br /><a href="<%= cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL %>"><%= cammWebManager.Internationalization.CreateAccount_Descr_BackToLogin %></a><br /> &nbsp;</FONT></P></TD>
 					</TR>
 	        </TBODY></TABLE></TD></TR>
       </TBODY></TABLE>

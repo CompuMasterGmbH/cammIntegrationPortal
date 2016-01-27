@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="vb" ValidateRequest="False" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.TextModules_Edit"%>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Language="vb" ValidateRequest="False" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.TextModules_Edit"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <%@ Register TagPrefix="cammWebEdit" Namespace="CompuMaster.camm.WebManager.Modules.WebEdit.Controls" Assembly="cammWM" %>
 <camm:WebManager id="cammWebmanager" runat="server" SecurityObject="System - TextModules" />

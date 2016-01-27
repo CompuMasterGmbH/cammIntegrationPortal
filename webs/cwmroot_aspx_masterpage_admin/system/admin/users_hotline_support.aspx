@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.User_Hotline_Support"%>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.User_Hotline_Support"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - User hotline support" id="cammWebManager" SecurityObject="System - User Administration - Users" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminUserInfoDetails" Src="../../portal/admin/users_additionalinformation.ascx" %>

@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags.Editor" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags.Editor" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify user flags" id="cammWebManager" SecurityObject="System - User Administration - Users" runat="server" />

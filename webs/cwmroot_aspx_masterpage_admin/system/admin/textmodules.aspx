@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.TextModules"%>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.TextModules"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <%@ Register TagPrefix="TextModule" TagName="TextBlock" Src="textmodules_textblock.ascx" %>
 <%@ Register TagPrefix="TextModule" TagName="Variable" Src="textmodules_variable.ascx" %>

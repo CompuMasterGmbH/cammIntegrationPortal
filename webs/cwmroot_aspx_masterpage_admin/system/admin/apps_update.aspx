@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" ValidateRequest="False" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ApplicationUpdate" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" ValidateRequest="False" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ApplicationUpdate" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify application" id="cammWebManager"

@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.SendUserPassword" language="VB" %>
+﻿<%@ Page MasterPageFile="~/portal/MasterPage.master" Inherits="CompuMaster.camm.WebManager.Pages.UserAccount.SendUserPassword" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
 
@@ -25,7 +25,7 @@
 						<TD VAlign="Middle" Align="Right" Width="240"><P><font face="Arial" size="2" color="#C1C1C1">* <%= cammWebManager.Internationalization.SendPassword_Descr_RequiredFields %></font></P></TD>
 					</TR>
 					<TR>
-						<TD VAlign="top"><P><FONT face="Arial" size=2><br><a href="<%= cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL %>"><%= cammWebManager.Internationalization.SendPassword_Descr_BackToLogin %></a><br> &nbsp;</FONT></P></TD>
+						<TD VAlign="top"><P><FONT face="Arial" size=2><br /><a href="<%= cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL %>"><%= cammWebManager.Internationalization.SendPassword_Descr_BackToLogin %></a><br /> &nbsp;</FONT></P></TD>
 					</TR>
 		        </TBODY></TABLE></FORM></TD></TR>
 	      </TBODY></TABLE></TD></TR></TABLE>
@@ -50,13 +50,13 @@
 		      <TABLE cellSpacing=0 cellPadding=3 width="100%" border="0" bordercolor="#ffffff">
 		        <TBODY>
 					<TR>
-						<TD VAlign="top"><P><FONT face="Arial" size=2><%= SuccessMessage %><br> &nbsp;</FONT></P></TD>
+						<TD VAlign="top"><P><FONT face="Arial" size=2><%= SuccessMessage %><br /> &nbsp;</FONT></P></TD>
 					</TR>
 					<TR>
 						<TD VAlign="top"><P><FONT face="Arial" size=2><%= String.Format(cammWebManager.Internationalization.SendPassword_Descr_FurtherCommentWithContactAddress, cammWebManager.StandardEMailAccountAddress, cammWebManager.StandardEMailAccountAddress) %></FONT></P></TD>
 					</TR>
 					<TR>
-						<TD VAlign="top"><P><FONT face="Arial" size=2><br><a href="<%= cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL %>"><%= cammWebManager.Internationalization.SendPassword_Descr_BackToLogin %></a><br> &nbsp;</FONT></P></TD>
+						<TD VAlign="top"><P><FONT face="Arial" size=2><br /><a href="<%= cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL %>"><%= cammWebManager.Internationalization.SendPassword_Descr_BackToLogin %></a><br /> &nbsp;</FONT></P></TD>
 					</TR>
 		        </TBODY></TABLE></TD></TR>
 	      </TBODY></TABLE></TD></TR>

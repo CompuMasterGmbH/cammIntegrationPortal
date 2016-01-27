@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationLogging" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationLogging" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify user account" id="cammWebManager"

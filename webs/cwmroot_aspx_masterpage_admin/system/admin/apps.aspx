@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" EnableViewState="True" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ApplicationList" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" language="VB" EnableViewState="True" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ApplicationList" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Applications" id="cammWebManager" SecurityObject="System - User Administration - Applications" EnableViewState="False" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>

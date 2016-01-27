@@ -47,8 +47,7 @@
     <table border="0" width="100%" cellspacing="0" cellpadding="0" height="55">
         <tr>
             <td colspan="4" height="38" valign="top"><a href="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteURL") %>" target="_blank">
-                <img alt="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteTitle") %>" src="/portal/images/banner/logo_extranet.gif" border="0" width="175" height="38"></a></td>
-            <form id="Form1" runat="server">
+                <img alt="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteTitle") %>" src="/portal/images/banner/logo_extranet.gif" border="0" width="175" height="38" /></a></td>
                 <td colspan="3" height="38" valign="top" align="right">
 
                     <asp:DropDownList ID="DropDownListAvailableMarkets" runat="server" OnSelectedIndexChanged="DropDownListAvailableMarkets_SelectedIndexChanged" DataValueField="Value" DataTextField="Key" AutoPostBack="true">
@@ -60,10 +59,9 @@
                             <area alt="Deutsche Sprache" shape="rect" target="_top" coords="20, 22, 56, 37" href="<%= cammWebManager.Internationalization.User_Auth_Validation_NoRefererURL %>?Lang=2">
                             <area alt="French language" shape="rect" target="_top" coords="100, 22, 131, 37" href="<%= cammWebManager.Internationalization.User_Auth_Validation_NoRefererURL %>?Lang=3">
                         </map>
-                        <img usemap="#EarthTabsMap" border="0" src="/portal/images/banner/flags_on_earth.gif" width="134" height="38">
+                        <img usemap="#EarthTabsMap" border="0" src="/portal/images/banner/flags_on_earth.gif" width="134" height="38" />
                     </p>
                 </td>
-            </form>
         </tr>
         <tr>
             <td bgcolor="#FFFF66" valign="middle" height="17"><font size="2" face="Arial"><b><nobr>&nbsp;&nbsp;
@@ -73,7 +71,7 @@
             <td bgcolor="#FFFF66" valign="middle" height="17"><a href="<%= Response.ApplyAppPathModifier("/portal/feedback.aspx") %>"><font size="2" face="Arial"><b><%= cammWebManager.Internationalization.Banner_Feedback %></b></font></a></td>
             <td bgcolor="#FFFF66" valign="middle" height="17"></td>
             <td bgcolor="#FFFF66" align="right" valign="middle" height="17">
-                <a<% If Session("System_Username") <> "" Then Response.Write(" target=""_top""") %> href="<% If Session("System_Username") <> "" Then Response.Write(cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL & "?Action=Logout") Else Response.Write(cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL) %>"><font size="2" face="Arial"><b><% If Session("System_Username") = "" Then Response.Write(cammWebManager.Internationalization.NavLinkNameLogin) Else Response.Write(cammWebManager.Internationalization.NavLinkNameLogout) %></b></font>
+                <a <% If Session("System_Username") <> "" Then Response.Write(" target=""_top""") %> href="<% If Session("System_Username") <> "" Then Response.Write(cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL & "?Action=Logout") Else Response.Write(cammWebManager.Internationalization.User_Auth_Validation_LogonScriptURL) %>"><font size="2" face="Arial"><b><% If Session("System_Username") = "" Then Response.Write(cammWebManager.Internationalization.NavLinkNameLogin) Else Response.Write(cammWebManager.Internationalization.NavLinkNameLogout) %></b></font>
                 </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         </tr>
     </table>
@@ -93,18 +91,18 @@
                                                                                                            Response.Write(Server.HtmlEncode("© " & Year(Now)))
                                                                                                        Else
                                                                                                            Response.Write(Server.HtmlEncode("© " & CopyRightSinceYear & "-" & Year(Now)))
-                                                                                                       End If %> <a href="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteURL") %>" target="_blank"><%= server.HtmlEncode(cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyFormerTitle")) %></a><br><%= cammWebManager.Internationalization.StatusLineCopyright_AllRightsReserved %></font></td>
+                                                                                                       End If %> <a href="<%= cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyWebSiteURL") %>" target="_blank"><%= server.HtmlEncode(cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "AreaCompanyFormerTitle")) %></a><br /><%= cammWebManager.Internationalization.StatusLineCopyright_AllRightsReserved %></font></td>
             <td bgcolor="#FFFF66" height="30" valign="top"><% 
 
                                                                If Session("System_Username") <> "" Then
             %><table border="0" cellpadding="0" cellspacing="0">
                 <tr>
-                    <td valign="top" align="center"><font size="1" face="Arial"><%= cammWebManager.Internationalization.StatusLineLoggedInAs %><br><a href="<%= Response.ApplyAppPathModifier("/portal/account_updateprofile.aspx") %>?ID=<%= cammWebManager.System_GetUserID(Session("System_Username")) %>" target="frame_main"><%= cammWebManager.System_GetUserDetail(cammWebManager.System_GetUserID(Session("System_Username")), "CompleteName") & " (" & Session("System_Username") & ")" %></a></font></td>
+                    <td valign="top" align="center"><font size="1" face="Arial"><%= cammWebManager.Internationalization.StatusLineLoggedInAs %><br /><a href="<%= Response.ApplyAppPathModifier("/portal/account_updateprofile.aspx") %>?ID=<%= cammWebManager.System_GetUserID(Session("System_Username")) %>" target="frame_main"><%= cammWebManager.System_GetUserDetail(cammWebManager.System_GetUserID(Session("System_Username")), "CompleteName") & " (" & Session("System_Username") & ")" %></a></font></td>
                     <td>&nbsp; &nbsp; </td>
                     <td valign="top" align="left">
-                        <img src="/portal/images/space.gif" border="0" width="39" height="6"><br>
+                        <img src="/portal/images/space.gif" border="0" width="39" height="6" /><br />
                         <a href="/portal/logon.aspx?Action=Logout" target="frame_main">
-                            <img src="/portal/images/basestyle/but_logout.gif" border="0" width="39" height="14"></a></td>
+                            <img src="/portal/images/basestyle/but_logout.gif" border="0" width="39" height="14" /></a></td>
                     <tr>
             </table>
                 <% 
@@ -127,7 +125,7 @@
             <td bgcolor="#FFFF66" width="33%" height="30" valign="top">
                 <p align="right">
                     <font size="1" face="Arial"><b><a href="<%= Response.ApplyAppPathModifier("/portal/editorial.aspx") %>" target="frame_main"><%= server.HtmlEncode(cammWebManager.Internationalization.StatusLineEditorial) %></a>
-      |&nbsp;<a href="<%= Response.ApplyAppPathModifier("/portal/disclaimer.aspx") %>" target="frame_main"><%= server.htmlencode(cammWebManager.Internationalization.StatusLineLegalNote) %></a></b><br>Powered by <a href="http://www.compumaster.de/" target="_blank">CompuMaster
+      |&nbsp;<a href="<%= Response.ApplyAppPathModifier("/portal/disclaimer.aspx") %>" target="frame_main"><%= server.htmlencode(cammWebManager.Internationalization.StatusLineLegalNote) %></a></b><br />Powered by <a href="http://www.compumaster.de/" target="_blank">CompuMaster
       GmbH</a></font>
             </td>
         </tr>

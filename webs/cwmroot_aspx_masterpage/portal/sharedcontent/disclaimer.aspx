@@ -1,4 +1,4 @@
-<%@ Page MasterPage="/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Page"%>
+<%@ Page MasterPageFile="~/portal/MasterPage.master" language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Page"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
 <script runat="server">

@@ -1,4 +1,4 @@
-﻿<%@ Page Page MasterPage="/portal/MasterPage.master" Language="VB" %>
+﻿<%@ Page Page MasterPageFile="/portal/MasterPage.master" Language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" SecurityObject="@@Public" runat="server"></camm:WebManager>
 <html>

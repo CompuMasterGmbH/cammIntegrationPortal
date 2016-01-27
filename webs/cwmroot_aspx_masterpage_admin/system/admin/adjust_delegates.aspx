@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" EnableViewState="true" Inherits="CompuMaster.camm.WebManager.Pages.Administration.AdjustDelegates" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Language="VB" EnableViewState="true" Inherits="CompuMaster.camm.WebManager.Pages.Administration.AdjustDelegates" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" SecurityObject="System - User Administration - Users" runat="server" />

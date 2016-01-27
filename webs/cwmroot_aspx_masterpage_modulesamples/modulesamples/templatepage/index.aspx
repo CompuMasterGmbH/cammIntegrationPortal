@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" Src="basepages.vb" Inherits="Customized.Pages.Page" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" Src="basepages.vb" Inherits="Customized.Pages.Page" %>
 
 <%@ Assembly Src="navigation_controlfilling.vb" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>

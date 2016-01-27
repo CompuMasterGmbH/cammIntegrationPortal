@@ -1,4 +1,4 @@
-﻿<%@ Page Page MasterPage="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Modules.Feedback.Pages.FeedbackForm" %>
+﻿<%@ Page Page MasterPageFile="/portal/MasterPage.master" Language="VB" Inherits="CompuMaster.camm.WebManager.Modules.Feedback.Pages.FeedbackForm" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <script runat="server">
    

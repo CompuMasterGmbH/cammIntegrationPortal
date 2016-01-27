@@ -1,28 +1,28 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" %>
+﻿<%@ Page MasterPageFile="~/portal/MasterPage.master" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
 
 <script runat="server">
 
-Dim MyLangID as integer
+    Dim MyLangID as integer
 
-sub Page_Load (sender as object, e as eventargs)
+    sub Page_Load (sender as object, e as eventargs)
 
-	MyLangID = cammWebManager.UIMarket
-	Select Case MyLangID
-		Case 3,2,1: 'DoNothing - Supported languages
-		Case Else
-			MyLangID = cammWebManager.Internationalization.GetAlternativelySupportedLanguageID (MyLangID)
-	End Select
+        MyLangID = cammWebManager.UI.MarketID
+        Select Case MyLangID
+            Case 3,2,1 : 'DoNothing - Supported languages
+            Case Else
+                MyLangID = cammWebManager.Internationalization.GetAlternativelySupportedLanguageID (MyLangID)
+        End Select
 
-	Select Case MyLangID
-		case 2: 'DEU
-			cammWebManager.PageTitle = "Hilfe"
-		Case Else: 'ENG
-			cammWebManager.PageTitle = "Help"
-	End Select
+        Select Case MyLangID
+            case 2 : 'DEU
+                cammWebManager.PageTitle = "Hilfe"
+            Case Else : 'ENG
+                cammWebManager.PageTitle = "Help"
+        End Select
 
-end sub
+    end sub
 
 </script>
 <%

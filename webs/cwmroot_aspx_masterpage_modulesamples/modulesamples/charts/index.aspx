@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master"  %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master"  %>
 
 <h1>Chart demos</h1>
 <p><A href="/modulesamples/sourcecodeviewer/srcview.aspx?path=/modulesamples/charts/index.src">View source code of the page</A></p>

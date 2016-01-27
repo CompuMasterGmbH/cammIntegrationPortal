@@ -29,7 +29,7 @@ End If
 										<TD colspan=5 class="titlebar"><%= cammWebManager.Internationalization.Logon_BodyTitle %></TD>
 								</TR>
 						    <TR>
-										<TD width=10% colspan=2 align=center valign=middle><BR><IMG src="<%= cammWebManager.System_GetServerGroupImageSmallAddr(cammWebManager.CurrentServerIdentString) %>"></TD>
+										<TD width=10% colspan=2 align=center valign=middle><br /><IMG src="<%= cammWebManager.System_GetServerGroupImageSmallAddr(cammWebManager.CurrentServerIdentString) %>"></TD>
 						        <TD class="normal"><P><%= cammWebManager.Internationalization.Logon_AskForForcingLogon %></P>
 						        </TD>
 						        <TD width="3%">&nbsp;</TD>

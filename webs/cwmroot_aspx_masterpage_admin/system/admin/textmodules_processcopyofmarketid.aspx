@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" ValidateRequest="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.ProcessCopyOfMarketID" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" Language="vb" AutoEventWireup="false" ValidateRequest="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.ProcessCopyOfMarketID" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebmanager" runat="server" SecurityObject="System - TextModules" />

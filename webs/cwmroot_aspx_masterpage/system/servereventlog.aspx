@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" Language="VB" %>
+﻿<%@ Page MasterPageFile="~/portal/MasterPage.master" Language="VB" %>
 <%@ Import Namespace="System.Diagnostics" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" />
@@ -72,7 +72,7 @@
                 MyRow(4) = NotNothingOrDBNull(MyLog.TimeGenerated)
                 MyRow(5) = NotNothingOrDBNull(MyLog.TimeWritten)
                 MyRow(6) = NotNothingOrDBNull(MyLog.UserName)
-                MyRow(7) = NotNothingOrDBNull(MyLog.EventID)
+                MyRow(7) = NotNothingOrDBNull(MyLog.InstanceId)
                 'MyRow(8) = NotNothingOrDBNull(MyLog.Data)
                 MyRow(9) = NotNothingOrDBNull(MyLog.CategoryNumber)
                 MyRow(10) = NotNothingOrDBNull(MyLog.Category)

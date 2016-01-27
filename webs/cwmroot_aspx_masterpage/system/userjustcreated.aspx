@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" %>
+﻿<%@ Page MasterPageFile="~/portal/MasterPage.master" language="VB" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager id="cammWebManager" runat="server" SecurityObject="@@Public" />
 <%
@@ -12,7 +12,7 @@
         <TBODY><tr>
 	    <TD vAlign=top>
 		<h2><IMG src="<%= AreaImage %>" align=right border=0><%= cammWebManager.Internationalization.UserJustCreated_Descr_AccountCreated %></h2>
-		<em><font face="Arial" size="3"><%= cammWebManager.Internationalization.UserJustCreated_Descr_LookAroundNow %></font></em><br></p>
+		<em><font face="Arial" size="3"><%= cammWebManager.Internationalization.UserJustCreated_Descr_LookAroundNow %></font></em><br /></p>
 		<p><font face="Arial" size="3"><%= cammWebManager.Internationalization.UserJustCreated_Descr_PleaseNote %></font></p>
 		</TD></TR>
 	  </TBODY></TABLE>

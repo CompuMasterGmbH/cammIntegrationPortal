@@ -1,4 +1,4 @@
-﻿<%@ Page Page MasterPage="/portal/MasterPage.master" Language="C#" Inherits="CompuMaster.camm.WebManager.Pages.Page" %>
+﻿<%@ Page Page MasterPageFile="/portal/MasterPage.master" Language="C#" Inherits="CompuMaster.camm.WebManager.Pages.Page" %>
 <html>
 <body>
 <%

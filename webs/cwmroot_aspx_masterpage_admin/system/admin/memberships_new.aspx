@@ -1,4 +1,4 @@
-﻿<%@ Page MasterPage="/portal/MasterPage.master" language="VB" ValidateRequest="False" Inherits="CompuMaster.camm.WebManager.Pages.Administration.MembershipsNew" %>
+﻿<%@ Page MasterPageFile="/portal/MasterPage.master" language="VB" ValidateRequest="False" Inherits="CompuMaster.camm.WebManager.Pages.Administration.MembershipsNew" %>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Create new membership" id="cammWebManager" SecurityObject="System - User Administration - Memberships" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
