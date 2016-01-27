@@ -17592,21 +17592,23 @@ Namespace CompuMaster.camm.WebManager
             End If
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The gender of a user
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
+        ''' <remarks>Additional enumeration items like m, f, male, female are available just for improved value lookup on user import from text files</remarks>
         Public Enum Sex As Integer
             Undefined = 0
             Masculin = 1
             Feminin = 2
             MissingNameOrGroupOfPersons = 3
+            <Obsolete("Use value Undefined instead", True), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> u = 0
+            <Obsolete("Use value Masculin instead", True), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> m = 1
+            <Obsolete("Use value Feminin instead", True), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> f = 2
+            <Obsolete("Use value MissingNameOrGroupOfPersons instead", True), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> g = 3
+            <Obsolete("Use value Undefined instead", True), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Unknown = 0
+            <Obsolete("Use value Masculin instead", True), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Male = 1
+            <Obsolete("Use value Feminin instead", True), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Female = 2
+            <Obsolete("Use value MissingNameOrGroupOfPersons instead", True), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Group = 3
         End Enum
 
         ''' -----------------------------------------------------------------------------

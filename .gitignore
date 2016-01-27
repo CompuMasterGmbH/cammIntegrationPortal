@@ -117,3 +117,15 @@
 /setup and distribution/DbUpdateTool/devsql-2005-up-till-azure.SENSITIVEDATAWARNING.cmd
 /setup and distribution/DbUpdateTool/devsql-2014-up-till-azure.SENSITIVEDATAWARNING.cmd
 /setup and distribution/resourcewriter/libs/ICSharpCode.SharpZipLib.dll
+/libraries/adminarea/CammWM.Admin/bin/Microsoft.Office.Interop.Word.dll
+/libraries/adminarea/CammWM.Admin/bin/Microsoft.Vbe.Interop.dll
+/libraries/adminarea/CammWM.Admin/bin/Office.dll
+/libraries/adminarea/CammWM.Admin/bin/RadEditor.dll
+/libraries/adminarea/CammWM.Admin/bin/RadSpell.dll
+/libraries/adminarea/CammWM.Admin/bin/stdole.dll
+/libraries/adminarea/CammWM.Admin/bin/SMTP.Net.dll
+/libraries/adminarea/CammWM.Admin/bin/SMTP.Net.xml
+/libraries/adminarea/CammWM.Admin/bin/CompuMaster.Imaging.dll
+/libraries/adminarea/CammWM.Admin/bin/CompuMaster.Imaging.pdb
+/libraries/adminarea/CammWM.Admin/bin/CompuMaster.Imaging.xml
+/libraries/adminarea/CammWM.Admin/bin
