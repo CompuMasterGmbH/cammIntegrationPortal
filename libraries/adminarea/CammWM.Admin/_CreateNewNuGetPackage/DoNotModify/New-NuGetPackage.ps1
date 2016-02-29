@@ -297,8 +297,8 @@ $TF_EXE_NO_PENDING_CHANGES_MESSAGE = 'There are no pending changes.'
 $TF_EXE_KEYWORD_IN_PENDING_CHANGES_MESSAGE = 'change\(s\)'	# Escape regular expression characters.
 
 # NuGet.exe output strings.
-$NUGET_EXE_SUCCESSFULLY_CREATED_PACKAGE_MESSAGE_REGEX = [regex] "(?i)(Successfully created package '(?<FilePath>.*?)'.)"
-$NUGET_EXE_SUCCESSFULLY_PUSHED_PACKAGE_MESSAGE = 'Your package was pushed.'
+$NUGET_EXE_SUCCESSFULLY_CREATED_PACKAGE_MESSAGE_REGEX = [regex] "(?i)(Das Paket ""(?<FilePath>.*?)"" wurde erfolgreich erstellt\.)"
+$NUGET_EXE_SUCCESSFULLY_PUSHED_PACKAGE_MESSAGE = 'bertragen.' #complete string is '{{product xy}} wird mittels Push an der NuGet-Katalog (https://www.nuget.org) übertragen... Ihr Paket wurde mittels Push übertragen.'  but contains German Umlaut character 'ü' not returned as is from NUGET call
 $NUGET_EXE_SUCCESSFULLY_SAVED_API_KEY_MESSAGE = "The API Key '{0}' was saved for '{1}'."
 $NUGET_EXE_SUCCESSFULLY_UPDATED_TO_NEW_VERSION = 'Update successful.'
 
