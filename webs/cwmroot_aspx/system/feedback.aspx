@@ -229,12 +229,12 @@ end sub
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/name.gif" width="20" height="20"></td>
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">Name:</font></td>
-				  <td width="300" height="16" valign="top"><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="Name"></td>
+				  <td width="300" height="16" valign="top"><% If Session("System_Username") = "" Then %><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="Name"><% Else %><input type="hidden" value="<%= SessionUser_Name %>" name="Name"><%= SessionUser_Name %><% End If %></td>
 				</tr>
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/email.gif" width="20" height="20"></td>
 				  <td width="120" height="16" valign="top" align="left"><font face="Arial" color="#000000" size="3">e-mail:</font></td>
-				  <td width="300" height="16" valign="top"><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="EMail"></td>
+				  <td width="300" height="16" valign="top"><% If Session("System_Username") = "" Then %><input type="text" width="300" style="width: 300; position: relative; height: 23" value="" name="EMail"><% Else %><input type="hidden" value="<%= SessionUser_email %>" name="EMail"><%= SessionUser_email %><% End If %></td>
 				</tr>
 				<input type="hidden" name="UserID" value="<%= SessionUserID %>">
 				<input type="hidden" name="Addresses" value="<%= SessionUser_Addresses %>">
@@ -269,7 +269,6 @@ end sub
 					<% End If %>
 				      </select></td>
 					<% If Request.QueryString("email") <> "" Then %><input type="hidden" name="emailto" value="<%= Server.HTMLEncode(Request.QueryString("email")) %>"><% End If %>
-				      </select></td>
 				</tr>
 				<tr>
 				  <td width="20" height="16" valign="top"><img border="0" src="images/feedback/kommentar.gif" width="20" height="20"></td>

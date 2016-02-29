@@ -1,1 +1,0 @@
-<!--#include virtual="/system/admin/logs/control_application_history.ascx"-->

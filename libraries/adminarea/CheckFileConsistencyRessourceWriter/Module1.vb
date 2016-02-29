@@ -17,89 +17,95 @@ Module Module1
 
     Sub Main(ByVal args() As String)
 
-        Console.WriteLine(System.IO.Path.GetFileNameWithoutExtension(System.Environment.GetCommandLineArgs(0)) & " V" & System.Reflection.Assembly.GetEntryAssembly.GetName().Version.ToString)
+        Try
 
-        Console.WriteLine("Initialize commandline arguments")
+            Console.WriteLine(System.IO.Path.GetFileNameWithoutExtension(System.Environment.GetCommandLineArgs(0)) & " V" & System.Reflection.Assembly.GetEntryAssembly.GetName().Version.ToString)
 
-        Dim source As String = "-s:"
-        Dim destination As String = "-d:"
-        For Each argument As String In args
-            If argument.ToLower = "-v:2" Then
-                VerboseLevel = VerboseLevels.FullDetails
-            ElseIf argument.ToLower = "-v:1" Then
-                VerboseLevel = VerboseLevels.MostImportantInfoOnly
-            ElseIf argument.ToLower = "-v:0" Then
-                VerboseLevel = VerboseLevels.Quiet
-            Else
-                If argument.ToLower.StartsWith("-s:") Then
-                    source = argument.Remove(0, source.Length)
+            Console.WriteLine("Initialize commandline arguments")
+
+            Dim source As String = "-s:"
+            Dim destination As String = "-d:"
+            For Each argument As String In args
+                If argument.ToLower = "-v:2" Then
+                    VerboseLevel = VerboseLevels.FullDetails
+                ElseIf argument.ToLower = "-v:1" Then
+                    VerboseLevel = VerboseLevels.MostImportantInfoOnly
+                ElseIf argument.ToLower = "-v:0" Then
+                    VerboseLevel = VerboseLevels.Quiet
+                Else
+                    If argument.ToLower.StartsWith("-s:") Then
+                        source = argument.Remove(0, source.Length)
+                    End If
+                    If argument.ToLower.StartsWith("-d:") Then
+                        destination = argument.Remove(0, destination.Length)
+                    End If
                 End If
-                If argument.ToLower.StartsWith("-d:") Then
-                    destination = argument.Remove(0, destination.Length)
-                End If
+            Next
+
+            If source = "-s:" Then
+                source = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)
             End If
-        Next
-
-        If source = "-s:" Then
-            source = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)
-        End If
-        If Not Directory.Exists(source) Then
-            Dim Ex As New Exception("Source directory " & source & " does not exist")
-            Dim sw As New StreamWriter(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location) & "\FileConsitencyRessourceWriter.log")
-            sw.WriteLine(Ex.ToString)
-            sw.Close()
-            Throw Ex
-        End If
-        Console.WriteLine("Source directory is " & source)
-        If destination = "-d:" Then
-            destination = System.Environment.CurrentDirectory
-        End If
-        If Not Directory.Exists(destination) Then
-            Dim Ex As New Exception("Source directory " & destination & " does not exist")
-            Dim sw2 As New StreamWriter(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location) & "\FileConsitencyRessourceWriter.log")
-            sw2.WriteLine(Ex.ToString)
-            sw2.Close()
-            Throw Ex
-        End If
-
-        Console.WriteLine("Destination directory is " & destination)
-
-        If VerboseLevel = VerboseLevels.FullDetails Then Console.WriteLine(vbNewLine)
-        Console.WriteLine("Get files ...")
-        If VerboseLevel = VerboseLevels.FullDetails Then Console.WriteLine(vbNewLine)
-
-        Dim dt As New DataTable("filesList")
-        dt.Columns.Add("relativeFilePath", GetType(String))
-        Dim ds As New DataSet("filesListDataSet")
-        dirSearch(source)
-        For Each fileName As String In fl.ToArray
-            If VerboseLevel = VerboseLevels.FullDetails Then Console.WriteLine(fileName)
-            Dim row As DataRow = dt.NewRow
-            If fileName.IndexOf(".svn") = -1 Then
-                If fileName.IndexOf("\sysdata\") > 0 Then
-                    row("relativeFilePath") = fileName.Remove(0, fileName.IndexOf("\sysdata\")).Replace("\", "/")
-                ElseIf fileName.IndexOf("\system\") > 0 Then
-                    row("relativeFilePath") = fileName.Remove(0, fileName.IndexOf("\system\")).Replace("\", "/")
-                End If
-                If Not row("relativeFilePath") Is DBNull.Value Then
-                    dt.Rows.Add(row)
-                End If
+            If Not Directory.Exists(source) Then
+                Dim Ex As New Exception("Source directory " & source & " does not exist")
+                Dim sw As New StreamWriter(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location) & "\FileConsitencyRessourceWriter.log")
+                sw.WriteLine(Ex.ToString)
+                sw.Close()
+                Throw Ex
             End If
-        Next
-        ds.Tables.Add(dt)
-        Console.WriteLine(dt.Rows.Count & " files have been found")
+            Console.WriteLine("Source directory is " & source)
+            If destination = "-d:" Then
+                destination = System.Environment.CurrentDirectory
+            End If
+            If Not Directory.Exists(destination) Then
+                Dim Ex As New Exception("Source directory " & destination & " does not exist")
+                Dim sw2 As New StreamWriter(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location) & "\FileConsitencyRessourceWriter.log")
+                sw2.WriteLine(Ex.ToString)
+                sw2.Close()
+                Throw Ex
+            End If
 
-        Console.WriteLine("Write XML file ...")
-        Dim sw3 As New StreamWriter(destination & "\fileList.xml")
-        sw3.Write(CompuMaster.Data.DataTables.ConvertDatasetToXml(ds))
-        sw3.Close()
+            Console.WriteLine("Destination directory is " & destination)
 
-        BuildRessourceFile(destination)
+            If VerboseLevel = VerboseLevels.FullDetails Then Console.WriteLine(vbNewLine)
+            Console.WriteLine("Get files ...")
+            If VerboseLevel = VerboseLevels.FullDetails Then Console.WriteLine(vbNewLine)
 
-        Console.WriteLine("Cleanup of temporary XML file ...")
-        System.IO.File.Delete(destination & "\fileList.xml")
+            Dim dt As New DataTable("filesList")
+            dt.Columns.Add("relativeFilePath", GetType(String))
+            Dim ds As New DataSet("filesListDataSet")
+            dirSearch(source)
+            For Each fileName As String In fl.ToArray
+                If VerboseLevel = VerboseLevels.FullDetails Then Console.WriteLine(fileName)
+                Dim row As DataRow = dt.NewRow
+                If fileName.IndexOf(".svn") = -1 Then
+                    If fileName.IndexOf("\sysdata\") > 0 Then
+                        row("relativeFilePath") = fileName.Remove(0, fileName.IndexOf("\sysdata\")).Replace("\", "/")
+                    ElseIf fileName.IndexOf("\system\") > 0 Then
+                        row("relativeFilePath") = fileName.Remove(0, fileName.IndexOf("\system\")).Replace("\", "/")
+                    End If
+                    If Not row("relativeFilePath") Is DBNull.Value Then
+                        dt.Rows.Add(row)
+                    End If
+                End If
+            Next
+            ds.Tables.Add(dt)
+            Console.WriteLine(dt.Rows.Count & " files have been found")
 
-        Console.WriteLine("Process finished successfully!")
+            Console.WriteLine("Write XML file ...")
+            Dim sw3 As New StreamWriter(destination & "\fileList.xml")
+            sw3.Write(CompuMaster.Data.DataTables.ConvertDatasetToXml(ds))
+            sw3.Close()
+
+            BuildRessourceFile(destination)
+
+            Console.WriteLine("Cleanup of temporary XML file ...")
+            System.IO.File.Delete(destination & "\fileList.xml")
+
+            Console.WriteLine("Process finished successfully!")
+
+        Catch ex As Exception
+            Console.WriteLine("CRITICAL ERROR: " & ex.ToString)
+        End Try
 
     End Sub
 

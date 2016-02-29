@@ -25,6 +25,16 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Return
             End Sub
 
+
+            Protected Overrides Function IsEditableWhenBrowsingVersions() As Boolean
+                Return False
+            End Function
+
+            Protected Overrides Function CanEditCurrentVersion() As Boolean
+                Dim releasedVersion As Integer = Me.Database.ReleasedVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
+                Return Me.CurrentVersion > releasedVersion
+            End Function
+
             Private editorMain As IEditor
 
             Protected Overrides ReadOnly Property MainEditor As IEditor
@@ -73,39 +83,58 @@ Namespace CompuMaster.camm.SmartWebEditor
             Public Sub New()
                 editorMain = New PlainTextEditor
                 editorMain.EnableViewState = False
+
+
             End Sub
             Protected Overrides Sub CreateChildControls()
                 MyBase.CreateChildControls()
 
                 Controls.Add(editorMain)
+                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "IsDirty", "function isDirty() {  var editor = document.getElementById('" & editorMain.ClientID & "'); if(editor &&  editor.defaultValue != editor.value) return true; else return false;  }", True)
+                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "UnbindCloseCheck", "function unbindCloseCheck() { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); } var documentForm = document.forms['" & Me.LookupParentServerForm.ClientID & "']; if(documentForm.addEventListener) documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });", True)
+                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "confirmPageClose", "function confirmPageClose() {var result = false; if(isDirty()) result =  confirm('Do you want to leave? All your changes will be lost'); else { result = true } if(result) unbindCloseCheck(); return result; }" & System.Environment.NewLine, True)
+                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ResetSelectBox", "function resetSelectBox(box){ for(var i = 0; i < box.options.length; i++) {	if(box.options[i].defaultSelected) {box.options[i].selected = true; return;	} }}" & System.Environment.NewLine, True)
+                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CloseCheck", "function closeCheck(e) { if(!isDirty())  return; var confirmationMessage = 'Do you want to close this site without saving your changes?';  e.returnValue = confirmationMessage; return confirmationMessage;} " & vbNewLine & " if(window.addEventListener) window.addEventListener(""beforeunload"", closeCheck);", True)
+
+
             End Sub
 
-            Private SaveButton As System.Web.UI.WebControls.Button = Nothing
-            Private ActivateButton As System.Web.UI.WebControls.Button = Nothing
-            Private PreviewButton As System.Web.UI.WebControls.Button = Nothing
-            Private NewVersionButton As System.Web.UI.WebControls.Button = Nothing
-            Private DeleteLanguageButton As System.Web.UI.WebControls.Button = Nothing
+            Protected SaveButton As System.Web.UI.WebControls.Button = Nothing
+            Protected ActivateButton As System.Web.UI.WebControls.Button = Nothing
+            Protected PreviewButton As System.Web.UI.WebControls.Button = Nothing
+            Protected NewVersionButton As System.Web.UI.WebControls.Button = Nothing
+            Protected DeleteLanguageButton As System.Web.UI.WebControls.Button = Nothing
 
-            Private VersionDropDownBox As New System.Web.UI.WebControls.DropDownList
-            Private LanguagesDropDownBox As System.Web.UI.WebControls.DropDownList
+
+            Protected VersionDifferenceLabel As System.Web.UI.WebControls.Label = Nothing
+
+
+            Protected VersionDropDownBox As New System.Web.UI.WebControls.DropDownList
+            Protected LanguagesDropDownBox As System.Web.UI.WebControls.DropDownList
 
             Private Sub CreateToolBarButtons()
                 Me.SaveButton = New System.Web.UI.WebControls.Button()
-                Me.SaveButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'update'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                Me.SaveButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'update'; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
                 Me.SaveButton.Text = "Save"
 
 
                 Me.ActivateButton = New System.Web.UI.WebControls.Button
-                Me.ActivateButton.OnClientClick = "document.getElementById('" & Me.txtActivate.ClientID & "').value = 'activate'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
-                Me.ActivateButton.Text = "Activate"
+                Me.ActivateButton.OnClientClick = "document.getElementById('" & Me.txtActivate.ClientID & "').value = 'activate'; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                Me.ActivateButton.Text = "Save & Activate"
+                Me.ActivateButton.ToolTip = "Save & Activate all languages/markets of this version"
 
                 Me.PreviewButton = New System.Web.UI.WebControls.Button()
-                Me.PreviewButton.OnClientClick = "document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'false'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                Me.PreviewButton.OnClientClick = "document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'false'; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
                 Me.PreviewButton.Text = "Preview"
 
                 Me.NewVersionButton = New System.Web.UI.WebControls.Button()
-                Me.NewVersionButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'newversion'; document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'true';  document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                Me.NewVersionButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'newversion'; document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'true';  unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
                 Me.NewVersionButton.Text = "New Version"
+
+                Me.VersionDifferenceLabel = New System.Web.UI.WebControls.Label()
+                Me.VersionDifferenceLabel.EnableViewState = False
+
+
             End Sub
 
             ''' <summary>
@@ -116,6 +145,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Dim myDataTable As DataTable = Database.ReadAllData(Me.ContentOfServerID, DocumentID, Me.EditorID)
                 Dim counter As Integer = 1
                 Dim versionRows As DataRow() = myDataTable.Select("LanguageID = " & Me.LanguageToShow.ToString(), "Version DESC")
+                Dim currentVersionExists As Boolean = False
                 For Each row As DataRow In versionRows
                     If counter = 7 Then
                         Exit For
@@ -129,17 +159,27 @@ Namespace CompuMaster.camm.SmartWebEditor
                         ReleaseDate = myDate.ToShortDateString()
                     End If
                     Dim listItem As New System.Web.UI.WebControls.ListItem
-                    listItem.Text = "v" & version & " " & ReleaseDate
+                    listItem.Text = "v" & version.ToString() & " " & ReleaseDate
                     listItem.Value = version.ToString() & ";" & Me.LanguageToShow.ToString()
                     Me.VersionDropDownBox.Items.Insert(0, listItem)
                     counter += 1
 
+                    If version = CurrentVersion Then
+                        currentVersionExists = True
+                    End If
                 Next
-                'TODO: maybe register it as a client script or move it to a file
-                Dim dropDownScript As String = "if(this.options[this.selectedIndex].innerHTML.indexOf('no release') > -1 ) document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'true'; else document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'false'; document.getElementById('" & txtBrowseToMarketVersion.ClientID & "').value = this.value;"
-                Me.VersionDropDownBox.Attributes.Add("onchange", dropDownScript & "this.selectedIndex = -1; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();  ")
+                Dim dropDownScript As String = "document.getElementById('" & txtBrowseToMarketVersion.ClientID & "').value = this.value; "
+                Me.VersionDropDownBox.Attributes.Add("onchange", "if(confirmPageClose()){ " & dropDownScript & " this.selectedIndex = -1; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();  } else resetSelectBox(this); ")
 
-                Me.VersionDropDownBox.SelectedValue = Me.CurrentVersion & ";" & LanguageToShow.ToString()
+                Dim selectedValue As String = Me.CurrentVersion & ";" & LanguageToShow.ToString()
+
+                If currentVersionExists Then
+                    Me.VersionDropDownBox.SelectedValue = Me.CurrentVersion & ";" & LanguageToShow.ToString()
+                Else
+                    Me.VersionDropDownBox.Items.Add("(new)")
+                    Me.VersionDropDownBox.SelectedValue = "(new)"
+                End If
+
             End Sub
 
             ''' <summary>
@@ -170,7 +210,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 End If
 
                 Dim script As String = "document.getElementById('" & txtBrowseToMarketVersion.ClientID & "').value = this.value;"
-                LanguagesDropDownBox.Attributes.Add("onchange", script & "; this.selectedIndex = -1; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();")
+                LanguagesDropDownBox.Attributes.Add("onchange", "if(confirmPageClose()){" & script & "; this.selectedIndex = -1; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit(); } else resetSelectBox(this); ")
             End Sub
             ''' <summary>
             ''' Shows the buttons that we need
@@ -181,25 +221,53 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.pnlEditorToolbar.Controls.Add(SaveButton)
                     Me.pnlEditorToolbar.Controls.Add(ActivateButton)
                     Me.pnlEditorToolbar.Controls.Add(PreviewButton)
+                    If Me.MarketLookupMode <> MarketLookupModes.SingleMarket Then
+                        InitializeLanguageDropDownList()
+                        Me.pnlEditorToolbar.Controls.Add(Me.LanguagesDropDownBox)
+                    End If
+
                     Me.pnlEditorToolbar.Controls.Add(VersionDropDownBox)
                 ElseIf toolbartype = ToolbarSettings.EditNoneEditableVersions Then
                     Me.pnlEditorToolbar.Controls.Add(NewVersionButton)
                     Me.pnlEditorToolbar.Controls.Add(PreviewButton)
+
+
+                    If Me.MarketLookupMode <> MarketLookupModes.SingleMarket Then
+                        InitializeLanguageDropDownList()
+                        Me.pnlEditorToolbar.Controls.Add(Me.LanguagesDropDownBox)
+                    End If
+
                     Me.pnlEditorToolbar.Controls.Add(VersionDropDownBox)
+
+
                 ElseIf toolbartype = ToolbarSettings.EditWithValidEditVersion Then
                     Me.pnlEditorToolbar.Controls.Add(PreviewButton)
+                    If Me.MarketLookupMode <> MarketLookupModes.SingleMarket Then
+                        InitializeLanguageDropDownList()
+                        Me.pnlEditorToolbar.Controls.Add(Me.LanguagesDropDownBox)
+                    End If
+
                     Me.pnlEditorToolbar.Controls.Add(VersionDropDownBox)
+
+
                 End If
                 If Me.MarketLookupMode <> MarketLookupModes.SingleMarket Then
                     Me.DeleteLanguageButton = New UI.WebControls.Button()
-                    Me.DeleteLanguageButton.Text = "Delete unsaved data for this market"
-                    Me.DeleteLanguageButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'dropcurrentmarket'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
-                    InitializeLanguageDropDownList()
-                    Me.pnlEditorToolbar.Controls.Add(Me.LanguagesDropDownBox)
-                    If Me.CountAvailableEditVersions() > 1 AndAlso Me.pnlEditorToolbar.Controls.Contains(SaveButton) Then
+                    Me.DeleteLanguageButton.Text = "Delete/Deactivate this market"
+                    Me.DeleteLanguageButton.OnClientClick = "if(confirmPageClose()) { document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'dropcurrentmarket'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit(); } return false; "
+
+
+                    If Me.LanguageToShow <> 0 AndAlso Me.CountAvailableEditVersions() > 1 AndAlso Me.pnlEditorToolbar.Controls.Contains(SaveButton) Then
                         Me.pnlEditorToolbar.Controls.Add(Me.DeleteLanguageButton)
                     End If
+
                 End If
+
+                If toolbartype = ToolbarSettings.EditWithValidEditVersion OrElse toolbartype = ToolbarSettings.EditNoneEditableVersions Then
+                    Me.pnlEditorToolbar.Controls.Add(VersionDifferenceLabel)
+                End If
+
+
             End Sub
             Private Sub SetToolbar(ByVal toolbar As ToolbarSettings)
                 CreateToolBarButtons()
@@ -212,20 +280,54 @@ Namespace CompuMaster.camm.SmartWebEditor
 
             End Sub
 
+            Private Sub SetVersionDifferenceLabelText()
+                Dim currentVersion As Integer = Me.CurrentVersion
+                Dim currentMarket As Integer = Me.LanguageToShow
+
+
+                If currentVersion > 1 Then
+                    Dim differentVersion As Integer = Database.GetFirstPreviousVersionThatDiffers(Me.ContentOfServerID, DocumentID, Me.EditorID, currentMarket, currentVersion)
+
+                    'No version differs, so all are the same since the beginning
+                    If differentVersion = 0 Then
+                        If Me.Database.IsMarketAvailable(Me.ContentOfServerID, DocumentID, Me.EditorID, currentMarket, 1) Then
+                            Me.VersionDifferenceLabel.Text = "Without changes since version v1"
+                        End If
+
+                    ElseIf differentVersion = currentVersion - 1 Then
+                            Me.VersionDifferenceLabel.Text = "With changes"
+                        Else
+                            Dim firstSameVersion As Integer = differentVersion + 1
+                        'It's possible the market was deactivated before and the version doesn't actually exist
+                        If Me.Database.IsMarketAvailable(Me.ContentOfServerID, DocumentID, Me.EditorID, currentMarket, firstSameVersion) Then
+                            Me.VersionDifferenceLabel.Text = "Without changes since version v" & (differentVersion + 1).ToString()
+                        Else
+                            Me.VersionDifferenceLabel.Text = "With changes"
+                        End If
+
+                    End If
+                End If
+
+
+            End Sub
+
+
             Protected Overrides Sub PagePreRender_InitializeToolbar()
                 Dim label As System.Web.UI.WebControls.Label = New System.Web.UI.WebControls.Label()
 
                 If Me.editorMain.Visible Then
                     SetToolbar(Me.ToolbarSetting)
+                    SetVersionDifferenceLabelText()
                 End If
 
 
                 If Me.ToolbarSetting = ToolbarSettings.NoVersionAvailable Then
-                    label.Text = "Non versions available"
+                    label.Text = "No versions available"
                     Me.pnlEditorToolbar.Controls.Add(label)
                 End If
 
                 Me.pnlEditorToolbar.Visible = Me.editorMain.Visible
+
 
 
             End Sub

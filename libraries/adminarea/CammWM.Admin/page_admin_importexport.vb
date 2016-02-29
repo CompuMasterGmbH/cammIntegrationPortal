@@ -566,31 +566,35 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 'Suppress notification mails?
                 Me.SuppressNotificationMails = Me.CheckboxStep3SuppressAllNotificationMails.Checked
                 'Check column by column for existance as well as correct type of content
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_LoginName", GetType(String), True, True, True, False, False)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_EMailAddress", GetType(String), False, True, False, False, False)
+                'Note on critical chars: 
+                '- ChrW(160) = Alt + 0160 = WhiteSpace For Numerics -> won't be trimmed by standard TRIM methods -> handle with cause! = usually not used (but already seen in import files from FarEast/Asia)
+                '- ChrW(65533) = Alt + 0160 saved/loaded in wrongly encoded ANSI/UTF-8 files might result in char no. 65533!
+                '- ChrW(164) = leading character in front of unicode chars in UTF-8 files -> indicates a wrong encoding setup
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_LoginName", GetType(String), True, True, True, False, False, Nothing, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_EMailAddress", GetType(String), False, True, False, False, False, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Password", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Gender", GetType(CompuMaster.camm.WebManager.WMSystem.Sex), False, True, False, False, False)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_AcademicTitle", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_FirstName", GetType(String), False, True, False, False, False)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_LastName", GetType(String), False, True, False, False, False)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_NameAddition", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Company", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Position", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Street", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_ZipCode", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Location", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_State", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Country", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_PhoneNumber", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_MobileNumber", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_FaxNumber", GetType(String), False, False, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Gender", GetType(CompuMaster.camm.WebManager.WMSystem.Sex), False, True, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_AcademicTitle", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_FirstName", GetType(String), False, True, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_LastName", GetType(String), False, True, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_NameAddition", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Company", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Position", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Street", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_ZipCode", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Location", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_State", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Country", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_PhoneNumber", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_MobileNumber", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_FaxNumber", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_PreferredLanguage1", GetType(Integer), False, True, False, False, False)
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_PreferredLanguage2", GetType(Integer), False, False, False, True, True)
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_PreferredLanguage3", GetType(Integer), False, False, False, True, True)
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_LoginDisabled", GetType(Boolean), False, False, False, False, False)
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_LoginDeleted", GetType(Boolean), False, False, False, False, False)
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_LoginLockedTemporary", GetType(Boolean), False, False, False, False, False)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_ExternalAccount", GetType(String), False, False, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_ExternalAccount", GetType(String), False, False, False, True, True, New Char() {ChrW(65533), ChrW(164), ChrW(160)})
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_AccessLevel", GetType(Integer), False, True, False, False, False)
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_AccountAuthorizationsAlreadySet", GetType(Boolean), False, False, False, False, False)
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_AccountProfileValidatedByEMailTest", GetType(Boolean), False, False, False, False, False)
@@ -639,56 +643,104 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Return Result
         End Function
 
+        ''' <summary>
+        ''' Add a test result record to both the testResults collection and also to the checkTable table
+        ''' </summary>
+        ''' <param name="testResultsWithErrors"></param>
+        ''' <param name="testResultsWithWarnings"></param>
+        ''' <param name="isError">True for error records, false for warning items</param>
+        ''' <param name="checkTable"></param>
+        ''' <param name="columnName"></param>
+        ''' <param name="destinationType"></param>
+        ''' <param name="testResultHtml"></param>
+        ''' <return>True on exceeding limit, False while below limit</return>
+        Private Function AddTestResultRowToTable(testResultsWithErrors As Generic.List(Of DataRow), testResultsWithWarnings As Generic.List(Of DataRow), isError As Boolean, checkTable As DataTable, columnName As String, destinationType As Type, testResultHtml As String) As Boolean
+            Const RecordLimitPerColumn As Integer = 5
+            If testResultsWithErrors.Count + testResultsWithWarnings.Count < RecordLimitPerColumn Then
+                'Add provided data
+                Dim MyRow As DataRow = checkTable.NewRow
+                MyRow(0) = columnName
+                MyRow(1) = destinationType.Name
+                MyRow(2) = testResultHtml
+                checkTable.Rows.Add(MyRow)
+                If isError Then
+                    testResultsWithErrors.Add(MyRow)
+                Else
+                    testResultsWithWarnings.Add(MyRow)
+                End If
+                Return False
+            ElseIf testResultsWithErrors.Count + testResultsWithWarnings.Count = RecordLimitPerColumn Then
+                'Number of test result records exceeds limit per column - add a warning that test records won't be shown any more
+                Dim MyRow As DataRow = checkTable.NewRow
+                MyRow(0) = columnName
+                MyRow(1) = destinationType.Name
+                If isError Then
+                    MyRow(2) = "<font color=""red""><em>Additional errors found - number of errors exceeds limit of " & RecordLimitPerColumn & " warnings per column</em></font>"
+                Else
+                    MyRow(2) = "<font color=""orange""><em>Additional errors found - number of errors exceeds limit of " & RecordLimitPerColumn & " warnings per column</em></font>"
+                End If
+                checkTable.Rows.Add(MyRow)
+                If isError Then
+                    testResultsWithErrors.Add(MyRow)
+                Else
+                    testResultsWithWarnings.Add(MyRow)
+                End If
+                Return True
+            Else 'If testresults.Count > RecordLimitPerColumn Then
+                'don't add records any more!
+                Return True
+            End If
+        End Function
         ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Verify the existance and the datatype of a column with its requirements
         ''' </summary>
-        ''' <param name="checkTable"></param>
-        ''' <param name="importTable"></param>
-        ''' <param name="columnName"></param>
-        ''' <param name="destinationType"></param>
+        ''' <param name="checkTable">Table with columns "Required column", "Data type", "Errors" containing check results</param>
+        ''' <param name="importTable">Import data</param>
+        ''' <param name="columnName">Column name</param>
+        ''' <param name="destinationType">Data type of column</param>
         ''' <param name="requiredColumnForUpdate"></param>
         ''' <param name="requiredColumnForInsert"></param>
         ''' <param name="requiredColumnForRemove"></param>
-        ''' <param name="allowDBNull"></param>
-        ''' <param name="allowEmptyString"></param>
-        ''' <returns></returns>
+        ''' <param name="allowDBNull">True if DbNull values are allowed, False if a value must be available</param>
+        ''' <param name="allowEmptyString">True if empty string values are allowed, False if the string must contain at least 1 character</param>
+        ''' <param name="forbiddenChars">An optional list of forbidden chars</param>
+        ''' <param name="warningChars">An optional list of chars causing warnings</param>
+        ''' <returns>True on validation success, False on errors</returns>
         ''' <remarks>
         ''' </remarks>
         ''' <history>
         ''' 	[AdminSupport]	29.08.2005	Created
         ''' </history>
         ''' -----------------------------------------------------------------------------
-        Private Function PrepareStep4ValidateImportColumn(ByVal checkTable As DataTable, ByVal importTable As DataTable, ByVal culture As System.Globalization.CultureInfo, ByVal columnName As String, ByVal destinationType As Type, ByVal requiredColumnForUpdate As Boolean, ByVal requiredColumnForInsert As Boolean, ByVal requiredColumnForRemove As Boolean, ByVal allowDBNull As Boolean, ByVal allowEmptyString As Boolean) As Boolean
+        Private Function PrepareStep4ValidateImportColumn(ByVal checkTable As DataTable, ByVal importTable As DataTable, ByVal culture As System.Globalization.CultureInfo, ByVal columnName As String, ByVal destinationType As Type, ByVal requiredColumnForUpdate As Boolean, ByVal requiredColumnForInsert As Boolean, ByVal requiredColumnForRemove As Boolean, ByVal allowDBNull As Boolean, ByVal allowEmptyString As Boolean, Optional forbiddenChars As Char() = Nothing, Optional warningChars As Char() = Nothing) As Boolean
+            Dim TestResultsWithErrors As New Generic.List(Of DataRow)
+            Dim TestResultsWithWarnings As New Generic.List(Of DataRow)
             Dim columnIndex As Integer
-            Dim MyRow As DataRow = checkTable.NewRow
-            MyRow(0) = columnName
-            MyRow(1) = destinationType.Name
+            If allowDBNull = True AndAlso allowEmptyString = False Then
+                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">AllowDbNull/Empty mismatch</font>")
+            End If
 
             'Check for existance of the column
             If importTable.Columns.Contains(columnName) = False OrElse importTable.Columns(columnName).Ordinal = -1 Then
                 If Me.ImportAction = ImportBase.ImportActions.InsertOnly And requiredColumnForInsert = True Then
-                    MyRow(2) = "<font color=""red"">Column must exist for selected action type</font>"
+                    AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Column must exist for selected action type</font>")
                 ElseIf Me.ImportAction = ImportBase.ImportActions.UpdateOnly And requiredColumnForUpdate = True Then
-                    MyRow(2) = "<font color=""red"">Column must exist for selected action type</font>"
+                    AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Column must exist for selected action type</font>")
                 ElseIf Me.ImportAction = ImportBase.ImportActions.Remove And requiredColumnForRemove = True Then
-                    MyRow(2) = "<font color=""red"">Column must exist for selected action type</font>"
+                    AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Column must exist for selected action type</font>")
                 ElseIf Me.ImportAction = ImportBase.ImportActions.InsertOrUpdate And (requiredColumnForInsert = True Or requiredColumnForUpdate = True) Then
-                    MyRow(2) = "<font color=""red"">Column must exist for selected action type</font>"
+                    AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Column must exist for selected action type</font>")
                 ElseIf columnName.ToLowerInvariant = "user_password" AndAlso Me.CheckboxStep3SuppressAllNotificationMails.Checked = False Then
-                    MyRow(2) = "<font color=""" & System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.DarkOliveGreen) & """>Column doesn't exist; password will be generated dynamically and user will get a notification e-mail</font>"
-                    checkTable.Rows.Add(MyRow)
+                    AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""" & System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.DarkOliveGreen) & """>Column doesn't exist; password will be generated dynamically and user will get a notification e-mail</font>")
                     Return True
                 ElseIf columnName.ToLowerInvariant = "user_password" AndAlso Me.CheckboxStep3SuppressAllNotificationMails.Checked = True Then
-                    MyRow(2) = "<font color=""" & System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.DarkOrange) & """>Column doesn't exist; new accounts can't be created</font>"
-                    checkTable.Rows.Add(MyRow)
+                    AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""" & System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.DarkOrange) & """>Column doesn't exist; new accounts can't be created</font>")
                     Return True
                 Else
-                    MyRow(2) = "<font color=""" & System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.DarkOliveGreen) & """>Column doesn't exist; no data will be imported/updated for this field</font>"
-                    checkTable.Rows.Add(MyRow)
+                    AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""" & System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.DarkOliveGreen) & """>Column doesn't exist; no data will be imported/updated for this field</font>")
                     Return True
                 End If
-                checkTable.Rows.Add(MyRow)
                 Return False
             End If
             columnIndex = importTable.Columns(columnName).Ordinal
@@ -696,45 +748,44 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             'Check datatype and content row by row
             For MyCounter As Integer = 0 To importTable.Rows.Count - 1
                 Dim cellValue As Object = importTable.Rows(MyCounter)(columnIndex)
-                'allowDBNull
                 If allowDBNull = False AndAlso IsDBNull(cellValue) Then
-                    MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Column contains an invalid DBNull value</font>"
-                    checkTable.Rows.Add(MyRow)
-                    Return False
-                End If
-                'allowEmptyString
-                If allowEmptyString = False AndAlso cellValue Is Nothing Then
-                    MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Column contains an invalid empty value</font>"
-                    checkTable.Rows.Add(MyRow)
-                    Return False
+                    'allowDBNull
+                    If AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Column contains an invalid NULL (DBNull) value</font>") Then
+                        Return False
+                    End If
+                ElseIf allowEmptyString = False AndAlso (cellValue Is Nothing OrElse Utils.Nz(cellValue, "") = "") Then
+                    'allowEmptyString
+                    If AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Column contains an invalid empty value</font>") Then
+                        Return False
+                    End If
                 End If
                 'Data type
                 If Not IsDBNull(cellValue) Then
                     'Make empty string convertable by redefining it as Null/Nothing
-                    If Utils.Nz(cellValue, String.Empty) = "" Then cellValue = Nothing
+                    If Utils.Nz(cellValue, "") = "" Then cellValue = Nothing
                     If destinationType Is GetType(Long) Then
                         Try
                             Long.Parse(CType(cellValue, String), culture)
                         Catch ex As Exception
+                            Dim ColumnWarningsLimitExceeded As Boolean = False
                             If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.ToString.Replace(vbNewLine, "<br>") & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br>") & "</font>")
                             Else
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.Message & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.Message) & "</font>")
                             End If
-                            checkTable.Rows.Add(MyRow)
-                            Return False
+                            If ColumnWarningsLimitExceeded Then Return False
                         End Try
                     ElseIf destinationType Is GetType(Integer) Then
                         Try
                             Integer.Parse(CType(cellValue, String), culture)
                         Catch ex As Exception
+                            Dim ColumnWarningsLimitExceeded As Boolean = False
                             If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.ToString.Replace(vbNewLine, "<br>") & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br>") & "</font>")
                             Else
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.Message & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.Message) & "</font>")
                             End If
-                            checkTable.Rows.Add(MyRow)
-                            Return False
+                            If ColumnWarningsLimitExceeded Then Return False
                         End Try
                     ElseIf destinationType Is GetType(Integer()) Then
                         Try
@@ -743,99 +794,128 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 Integer.Parse(values(MyConversionTestCounter), culture)
                             Next
                         Catch ex As Exception
+                            Dim ColumnWarningsLimitExceeded As Boolean = False
                             If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.ToString.Replace(vbNewLine, "<br>") & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br>") & "</font>")
                             Else
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.Message & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.Message) & "</font>")
                             End If
-                            checkTable.Rows.Add(MyRow)
-                            Return False
+                            If ColumnWarningsLimitExceeded Then Return False
                         End Try
                     ElseIf destinationType Is GetType(Byte) Then
                         Try
                             Byte.Parse(CType(cellValue, String), culture)
                         Catch ex As Exception
+                            Dim ColumnWarningsLimitExceeded As Boolean = False
                             If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.ToString.Replace(vbNewLine, "<br>") & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br>") & "</font>")
                             Else
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.Message & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.Message) & "</font>")
                             End If
-                            checkTable.Rows.Add(MyRow)
-                            Return False
+                            If ColumnWarningsLimitExceeded Then Return False
                         End Try
                     ElseIf destinationType Is GetType(Decimal) Then
                         Try
                             Decimal.Parse(CType(cellValue, String), culture)
                         Catch ex As Exception
+                            Dim ColumnWarningsLimitExceeded As Boolean = False
                             If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.ToString.Replace(vbNewLine, "<br>") & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br>") & "</font>")
                             Else
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.Message & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.Message) & "</font>")
                             End If
-                            checkTable.Rows.Add(MyRow)
-                            Return False
+                            If ColumnWarningsLimitExceeded Then Return False
                         End Try
-                    ElseIf destinationType Is GetType(Decimal) Then
+                    ElseIf destinationType Is GetType(Double) Then
                         Try
                             Double.Parse(CType(cellValue, String), culture)
                         Catch ex As Exception
+                            Dim ColumnWarningsLimitExceeded As Boolean = False
                             If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.ToString.Replace(vbNewLine, "<br>") & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br>") & "</font>")
                             Else
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.Message & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.Message) & "</font>")
                             End If
-                            checkTable.Rows.Add(MyRow)
-                            Return False
+                            If ColumnWarningsLimitExceeded Then Return False
                         End Try
                     ElseIf destinationType Is GetType(Date) Then
                         Try
                             Date.Parse(CType(cellValue, String), culture)
                         Catch ex As Exception
+                            Dim ColumnWarningsLimitExceeded As Boolean = False
                             If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.ToString.Replace(vbNewLine, "<br>") & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br>") & "</font>")
                             Else
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.Message & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.Message) & "</font>")
                             End If
-                            checkTable.Rows.Add(MyRow)
-                            Return False
+                            If ColumnWarningsLimitExceeded Then Return False
                         End Try
                     ElseIf destinationType Is GetType(Boolean) Then
                         Try
                             Boolean.Parse(CType(cellValue, String))
                         Catch ex As Exception
+                            Dim ColumnWarningsLimitExceeded As Boolean = False
                             If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.ToString.Replace(vbNewLine, "<br>") & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br>") & "</font>")
                             Else
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.Message & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.Message) & "</font>")
                             End If
-                            checkTable.Rows.Add(MyRow)
-                            Return False
+                            If ColumnWarningsLimitExceeded Then Return False
                         End Try
                     ElseIf destinationType Is GetType(WMSystem.Sex) Then
                         Try
                             WMSystem.Sex.Parse(GetType(WMSystem.Sex), CType(cellValue, String))
                         Catch ex As Exception
+                            Dim ColumnWarningsLimitExceeded As Boolean = False
                             If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.ToString.Replace(vbNewLine, "<br>") & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br>") & "</font>")
                             Else
-                                MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & ex.Message & "</font>"
+                                AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Conversion error: " & Server.HtmlEncode(ex.Message) & "</font>")
                             End If
-                            checkTable.Rows.Add(MyRow)
-                            Return False
+                            If ColumnWarningsLimitExceeded Then Return False
                         End Try
                     ElseIf destinationType Is GetType(String) Then
                         'Is already a string
+                        If Not forbiddenChars Is Nothing Then
+                            For Each Ch As Char In forbiddenChars
+                                If Utils.Nz(cellValue, "").Contains(Ch) Then
+                                    If AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Invalid char found: """ & Server.HtmlEncode(Ch) & """ (char no. " & AscW(Ch) & ")</font>") Then
+                                        Return False
+                                    End If
+                                End If
+                            Next
+                        End If
+                        If Not warningChars Is Nothing Then
+                            For Each Ch As Char In warningChars
+                                If Utils.Nz(cellValue, "").Contains(Ch) Then
+                                    AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, False, checkTable, columnName, destinationType, "<font color=""orange"">Row " & MyCounter + 1 & ": special char found: """ & Server.HtmlEncode(Ch) & """ (char no. " & AscW(Ch) & ")</font>")
+                                End If
+                            Next
+                        End If
+                        If allowEmptyString = False AndAlso CType(cellValue, String) = Nothing Then
+                            If AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Column contains an invalid empty value</font>") Then
+                                Return False
+                            End If
+                        End If
                     Else
-                        MyRow(2) = "<font color=""red"">Row " & MyCounter + 1 & ": Column shall be of type " & destinationType.Name & ", but this type hasn't been implemented yet</font>"
-                        checkTable.Rows.Add(MyRow)
+                        AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Column shall be of type " & destinationType.Name & ", but this type hasn't been implemented yet</font>")
                         Return False
                     End If
                 End If
             Next
 
             'Return success
-            checkTable.Rows.Add(MyRow)
-            Return True
+            If TestResultsWithErrors.Count = 0 Then
+                'at least we've to add a no-error-record to the resulting checkTable
+                If columnName.ToLowerInvariant = "user_password" Then
+                    AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""orange"">Please note: Update actions will never update a user's password.</font>")
+                Else
+                    AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "")
+                End If
+                Return True
+            Else
+                Return False
+            End If
 
         End Function
 
@@ -1084,7 +1164,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Dim MyUser As CompuMaster.camm.WebManager.WMSystem.UserInformation
                     If userIDToUpdate = -1 And (Me.ImportAction = ImportBase.ImportActions.InsertOnly Or Me.ImportAction = ImportBase.ImportActions.InsertOrUpdate) Then
                         'User account not found and one of the insert actions selected
-                        MyUser = New WMSystem.UserInformation(Nothing, userLoginName, "", False, "", WMSystem.Sex.Masculin, "", "", "", "", "", "", "", "", "", 1, 0, 0, False, False, False, 0, cammWebManager, "", Nothing)
+                        MyUser = New WMSystem.UserInformation(Nothing, userLoginName, "", False, "", WMSystem.Sex.Undefined, "", "", "", "", "", "", "", "", "", 1, 0, 0, False, False, False, 0, cammWebManager, "", Nothing)
                     ElseIf userIDToUpdate = -1 And Me.ImportAction = ImportBase.ImportActions.UpdateOnly Then
                         'Import action is UpdateOnly, but user account doesn't exist
                         Throw New Exception("User account doesn't exist: " & userLoginName)
@@ -1207,52 +1287,56 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             'User account data
             If userData.Table.Columns.Contains("User_EMailAddress") Then
-                user.EMailAddress = Utils.Nz(userData("User_EMailAddress"), "")
+                user.EMailAddress = Trim(Utils.Nz(userData("User_EMailAddress"), ""))
             End If
             If userData.Table.Columns.Contains("User_Gender") Then
-                user.Gender = CType(System.Enum.Parse(GetType(CompuMaster.camm.WebManager.WMSystem.Sex), Utils.Nz(userData("User_Gender"), "")), WMSystem.Sex)
+                If Utils.Nz(userData("User_Gender"), "") = "" Then
+                    user.Gender = WMSystem.Sex.Undefined
+                Else
+                    user.Gender = CType(System.Enum.Parse(GetType(CompuMaster.camm.WebManager.WMSystem.Sex), Utils.Nz(userData("User_Gender"), "")), WMSystem.Sex)
+                End If
             End If
             If userData.Table.Columns.Contains("User_AcademicTitle") Then
-                user.AcademicTitle = Utils.Nz(userData("User_AcademicTitle"), "")
+                user.AcademicTitle = Trim(Utils.Nz(userData("User_AcademicTitle"), ""))
             End If
             If userData.Table.Columns.Contains("User_FirstName") Then
-                user.FirstName = Utils.Nz(userData("User_FirstName"), "")
+                user.FirstName = Trim(Utils.Nz(userData("User_FirstName"), ""))
             End If
             If userData.Table.Columns.Contains("User_LastName") Then
-                user.LastName = Utils.Nz(userData("User_LastName"), "")
+                user.LastName = Trim(Utils.Nz(userData("User_LastName"), ""))
             End If
             If userData.Table.Columns.Contains("User_NameAddition") Then
-                user.NameAddition = Utils.Nz(userData("User_NameAddition"), "")
+                user.NameAddition = Trim(Utils.Nz(userData("User_NameAddition"), ""))
             End If
             If userData.Table.Columns.Contains("User_Company") Then
-                user.Company = Utils.Nz(userData("User_Company"), "")
+                user.Company = Trim(Utils.Nz(userData("User_Company"), ""))
             End If
             If userData.Table.Columns.Contains("User_Position") Then
-                user.Position = Utils.Nz(userData("User_Position"), "")
+                user.Position = Trim(Utils.Nz(userData("User_Position"), ""))
             End If
             If userData.Table.Columns.Contains("User_Street") Then
-                user.Street = Utils.Nz(userData("User_Street"), "")
+                user.Street = Trim(Utils.Nz(userData("User_Street"), ""))
             End If
             If userData.Table.Columns.Contains("User_ZipCode") Then
-                user.ZipCode = Utils.Nz(userData("User_ZipCode"), "")
+                user.ZipCode = Trim(Utils.Nz(userData("User_ZipCode"), ""))
             End If
             If userData.Table.Columns.Contains("User_Location") Then
-                user.Location = Utils.Nz(userData("User_Location"), "")
+                user.Location = Trim(Utils.Nz(userData("User_Location"), ""))
             End If
             If userData.Table.Columns.Contains("User_State") Then
-                user.State = Utils.Nz(userData("User_State"), "")
+                user.State = Trim(Utils.Nz(userData("User_State"), ""))
             End If
             If userData.Table.Columns.Contains("User_Country") Then
-                user.Country = Utils.Nz(userData("User_Country"), "")
+                user.Country = Trim(Utils.Nz(userData("User_Country"), ""))
             End If
             If userData.Table.Columns.Contains("User_PhoneNumber") Then
-                user.PhoneNumber = Utils.Nz(userData("User_PhoneNumber"), "")
+                user.PhoneNumber = Trim(Utils.Nz(userData("User_PhoneNumber"), ""))
             End If
             If userData.Table.Columns.Contains("User_MobileNumber") Then
-                user.MobileNumber = Utils.Nz(userData("User_MobileNumber"), "")
+                user.MobileNumber = Trim(Utils.Nz(userData("User_MobileNumber"), ""))
             End If
             If userData.Table.Columns.Contains("User_FaxNumber") Then
-                user.FaxNumber = Utils.Nz(userData("User_FaxNumber"), "")
+                user.FaxNumber = Trim(Utils.Nz(userData("User_FaxNumber"), ""))
             End If
             If userData.Table.Columns.Contains("User_PreferredLanguage1") Then
                 user.PreferredLanguage1 = New WMSystem.LanguageInformation(CType(userData("User_PreferredLanguage1"), Integer), cammWebManager)
@@ -1278,7 +1362,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 user.LoginLockedTemporary = value
             End If
             If userData.Table.Columns.Contains("User_ExternalAccount") Then
-                user.ExternalAccount = Utils.Nz(userData("User_ExternalAccount"), "")
+                user.ExternalAccount = Trim(Utils.Nz(userData("User_ExternalAccount"), ""))
             End If
             If userData.Table.Columns.Contains("User_AccessLevel") Then
                 Dim value As Integer = Integer.Parse(Utils.StringNotEmptyOrNothing(Utils.Nz(userData("User_AccessLevel"), "")), culture)

@@ -100,30 +100,6 @@ Namespace CompuMaster.camm.WebManager
             Return System.Reflection.Assembly.GetAssembly(GetType(ICSharpCode.SharpZipLib.Zip.FastZip)).GetName.Version.ToString()
         End Function
 
-        Private Sub RequiredComponentsDetailedCheckForQuiksoftSmtp()
-            Dim MyComponent As New Quiksoft.EasyMail.SMTP.SMTP
-        End Sub
-
-        Private Function RequiredComponentsDetailedCheckVersionOfQuiksoftSmtp() As String
-            Return System.Reflection.Assembly.GetAssembly(GetType(Quiksoft.EasyMail.SMTP.SMTP)).GetName.Version.ToString
-        End Function
-
-        Private Sub RequiredComponentsDetailedCheckForTelerikRadEditor()
-            Dim MyComponent As New Telerik.WebControls.RadEditor
-        End Sub
-
-        Private Function RequiredComponentsDetailedCheckVersionOfTelerikRadEditor() As String
-            Return System.Reflection.Assembly.GetAssembly(GetType(Telerik.WebControls.RadEditor)).GetName.Version.ToString
-        End Function
-
-        Private Sub RequiredComponentsDetailedCheckForCompuMasterImaging()
-            Dim MyComponent As New CompuMaster.Drawing.Imaging.ImageScaling
-        End Sub
-
-        Private Function RequiredComponentsDetailedCheckVersionOfCompuMasterImaging() As String
-            Return System.Reflection.Assembly.GetAssembly(GetType(CompuMaster.Drawing.Imaging.ImageScaling)).GetName.Version.ToString
-        End Function
-
         Public Function RequiredComponentsDetailedCheck() As DataTable
             Dim Result As New DataTable("root")
             Result.Columns.Add("ComponentName", GetType(String))
@@ -145,60 +121,6 @@ Namespace CompuMaster.camm.WebManager
             End Try
             Try
                 newRow("Version") = RequiredComponentsDetailedCheckVersionOfICSharpCodeSharpZipLib()
-            Catch
-                newRow("Version") = Nothing
-            End Try
-            Result.Rows.Add(newRow)
-
-            'Check SMTP component
-            newRow = Result.NewRow
-            newRow("ComponentName") = "SMTP.Net"
-            newRow("ErrorDetails") = Nothing
-            Try
-                RequiredComponentsDetailedCheckForQuiksoftSmtp()
-                newRow("Status") = "Working"
-            Catch ex As Exception
-                newRow("Status") = "Missing or failing"
-                newRow("ErrorDetails") = ex.ToString
-            End Try
-            Try
-                newRow("Version") = RequiredComponentsDetailedCheckVersionOfQuiksoftSmtp()
-            Catch
-                newRow("Version") = Nothing
-            End Try
-            Result.Rows.Add(newRow)
-
-            'Check RadEditor component
-            newRow = Result.NewRow
-            newRow("ComponentName") = "RadEditor"
-            newRow("ErrorDetails") = Nothing
-            Try
-                RequiredComponentsDetailedCheckForTelerikRadEditor()
-                newRow("Status") = "Working"
-            Catch ex As Exception
-                newRow("Status") = "Missing or failing"
-                newRow("ErrorDetails") = ex.ToString
-            End Try
-            Try
-                newRow("Version") = RequiredComponentsDetailedCheckVersionOfTelerikRadEditor()
-            Catch
-                newRow("Version") = Nothing
-            End Try
-            Result.Rows.Add(newRow)
-
-            'Check CompuMaster.Imaging component
-            newRow = Result.NewRow
-            newRow("ComponentName") = "CompuMaster.Imaging"
-            newRow("ErrorDetails") = Nothing
-            Try
-                RequiredComponentsDetailedCheckForCompuMasterImaging()
-                newRow("Status") = "Working"
-            Catch ex As Exception
-                newRow("Status") = "Missing or failing"
-                newRow("ErrorDetails") = ex.ToString
-            End Try
-            Try
-                newRow("Version") = RequiredComponentsDetailedCheckVersionOfCompuMasterImaging()
             Catch
                 newRow("Version") = Nothing
             End Try

@@ -549,14 +549,11 @@ Namespace CompuMaster.camm.SmartWebEditor
             If CType(ViewState("WebEditorXXL.CurrentEditorInEditMode"), String) = "" OrElse CType(ViewState("WebEditorXXL.CurrentEditorInEditMode"), String) = Me.EditorID Then
                 ViewState("WebEditorXXL.CurrentEditorInEditMode") = Me.EditorID
                 editorMain.Visible = True
-
                 Me.ibtnSwitchToEditMode.Visible = False
                 EditModeAsDefinedInViewstate = TriState.True
                 'Switch version to edit version!
                 Me.CurrentVersion = Me.Database.MaxVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
-                Dim releasedVersion As Integer = Me.Database.ReleasedVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
-                editorMain.Editable = Me.CurrentVersion <> releasedVersion
-
+                editorMain.Editable = CanEditCurrentVersion()
             End If
         End Sub
 
@@ -584,7 +581,7 @@ Namespace CompuMaster.camm.SmartWebEditor
             ibtnSwitchToEditMode.ToolTip = "Edit"
             Controls.Add(ibtnSwitchToEditMode)
 
-            lblViewOnlyContent = New System.Web.UI.WebControls.Label
+            lblViewOnlyContent = New System.Web.UI.HtmlControls.HtmlGenericControl("div")
             lblViewOnlyContent.Visible = False
             lblViewOnlyContent.EnableViewState = False
             Controls.Add(lblViewOnlyContent)
@@ -809,6 +806,22 @@ Namespace CompuMaster.camm.SmartWebEditor
             End If
         End Sub
 
+
+        Private _AlternativeDataMarkets As Integer() = New Integer() {1, 10000}
+        ''' <summary>
+        ''' Alternative markets which might contain data if the typical market doesn't contain any released data
+        ''' </summary>
+        ''' <returns></returns>
+        <System.ComponentModel.TypeConverter(GetType(IntegerArrayConverter))> Public Property AlternativeDataMarkets As Integer()
+            Get
+                Return _AlternativeDataMarkets
+            End Get
+            Set(value As Integer())
+                _AlternativeDataMarkets = value
+            End Set
+        End Property
+
+
         ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Detect the LanguageToShow for view-only requests
@@ -841,23 +854,17 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Next
                 End If
                 If Not IsLangExisting Then
-                    For Each myLang As Integer In myLangs
-                        If myLang = 1 Then
-                            IsLangExisting = True
-                            LanguageToShow = 1
-                        End If
+                    For Each myLang As Integer In Me.AlternativeDataMarkets
+                        For Each alternativeLang As Integer In AlternativeDataMarkets
+                            If myLang = alternativeLang Then
+                                IsLangExisting = True
+                                LanguageToShow = myLang
+                            End If
+                        Next
                     Next
                 End If
                 If Not IsLangExisting Then
-                    For Each myLang As Integer In myLangs
-                        If myLang = 10000 Then
-                            IsLangExisting = True
-                            LanguageToShow = 10000
-                        End If
-                    Next
-                End If
-                If Not IsLangExisting Then
-                    For Each myLang As Integer In myLangs
+                    For Each myLang As Integer In Me.AlternativeDataMarkets
                         If myLang = 0 Then
                             IsLangExisting = True
                             LanguageToShow = 0
@@ -1174,7 +1181,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         Protected txtCurrentlyLoadedVersion As System.Web.UI.HtmlControls.HtmlInputHidden
         Protected txtEditModeRequested As System.Web.UI.HtmlControls.HtmlInputHidden
         Protected lblCurrentEditInformation As System.Web.UI.WebControls.Label
-        Protected lblViewOnlyContent As System.Web.UI.WebControls.Label
+        Protected lblViewOnlyContent As System.Web.UI.HtmlControls.HtmlGenericControl
         Protected pnlEditorToolbar As System.Web.UI.WebControls.Panel
         Protected WithEvents ibtnSwitchToEditMode As System.Web.UI.WebControls.ImageButton
 
@@ -1223,8 +1230,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 AlreadyRun = True
             End If
 
-            'Initialize this value negative to avoid multilingual support in case of none passed value
-            LanguageToShow = -1
+            LanguageToShow = 0
 
             'Initialze the editors id for internal usage right now
             If Me.ID = "" Then
@@ -1318,7 +1324,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                         LookupMatchingMarketDataForReleasedContent(Not ShowWithEditRights)
                     Catch ex As UseInnerHtmlException
                         'Use inner html 
-                        lblViewOnlyContent.Text = Me.InnerHtml
+                        lblViewOnlyContent.InnerHtml = Me.InnerHtml
                         If ShowWithEditRights Then
                             Me.editorMain.Html = Me.InnerHtml
                         End If
@@ -1330,7 +1336,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                     End If
                 ElseIf Not Me.IsEmptyInnerHtml Then
                     'Use inner html 
-                    lblViewOnlyContent.Text = Me.InnerHtml
+                    lblViewOnlyContent.InnerHtml = Me.InnerHtml
                     If ShowWithEditRights Then
                         Me.editorMain.Html = Me.InnerHtml
                     End If
@@ -1362,7 +1368,7 @@ Namespace CompuMaster.camm.SmartWebEditor
             'First, reset visibilities after viewstate-loading
             Me.lblViewOnlyContent.Visible = False
             Me.editorMain.Visible = False
-            Me.editorMain.Editable = False
+
             'CurrentVersion must be initialized before the JavaScriptRegistration method gets fired
             If Me.ShowWithEditRights Then
 
@@ -1373,7 +1379,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                         Me.editorMain.Visible = False
                         Me.lblCurrentEditInformation.Visible = False
                         Me.lblViewOnlyContent.Visible = True
-                        Me.lblViewOnlyContent.Text = "<br>" & Me.editorMain.Html
+                        Me.lblViewOnlyContent.InnerHtml = "<br>" & Me.editorMain.Html
                         EditModeAsDefinedInViewstate = TriState.False
                         Me.RequestedEditMode = TriState.False
                     End If
@@ -1382,7 +1388,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                         Me.ibtnSwitchToEditMode.Visible = True
                         Me.lblCurrentEditInformation.Visible = False
                         Me.lblViewOnlyContent.Visible = True
-                        Me.lblViewOnlyContent.Text = "<br>" & Me.editorMain.Html
+                        Me.lblViewOnlyContent.InnerHtml = "<br>" & Me.editorMain.Html
                         Me.RequestedEditMode = TriState.True
                     End If
                 Else 'Me.Page.IsPostBack Then
@@ -1426,12 +1432,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                         'If Me.CurrentVersion > Me.Database.ReleasedVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID) AndAlso PreviouslyShownContent <> Me.Database.ReadContent(Me.ContentOfServerID, Me.DocumentID, Me.EditorID, Me.LanguageToShow, Me.CurrentVersion) Then
                         '    Me.Database.SaveEditorContent(Me.ContentOfServerID, Me.DocumentID, Me.EditorID, Me.LanguageToShow, PreviouslyShownContent, Me.cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))
                         'End If
-                        If Not Me.Database.IsMarketAvailable(Me.ContentOfServerID, Me.DocumentID, Me.EditorID, RequestedMarket, RequestedVersion) Then
-                            'The market hasn't existed yet - create it now on the fly
-                            Me.SaveEditorContent(Me.ContentOfServerID, Me.DocumentID, Me.EditorID, RequestedMarket, PreviouslyShownContent, Me.cammWebManager.CurrentUserID(CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous))
-                        End If
+                        editorMain.Editable = True
                     Else
-                        editorMain.Editable = False
+                        editorMain.Editable = IsEditableWhenBrowsingVersions()
                     End If
                     CurrentVersion = RequestedVersion
                     If Not LanguageToShow = RequestedMarket Then
@@ -1489,7 +1492,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                         'The cache data has to be refreshed
                         ClearCache()
 
-                        Me.editorMain.Editable = False
+                        Me.editorMain.Editable = CanEditCurrentVersion()
                         'This redirect is necessary because of the javascript for versionbrowsing used by the RadEditor
                     ElseIf RequestMode = RequestModes.Update Then
                         'Do update or create document in new language action will be triggered here
@@ -1547,7 +1550,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.editorMain.Visible = False
                     Me.ibtnSwitchToEditMode.Visible = False
                     Me.lblViewOnlyContent.Visible = True
-                    Me.lblViewOnlyContent.Text = "<br>" & Me.editorMain.Html
+                    Me.lblViewOnlyContent.InnerHtml = "<br>" & Me.editorMain.Html
                     Me.lblCurrentEditInformation.Visible = False
                 ElseIf Me.editorMain.Visible = True Then
                     Me.ibtnSwitchToEditMode.Visible = False
@@ -1555,7 +1558,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.ibtnSwitchToEditMode.Visible = True
                     Me.lblCurrentEditInformation.Visible = False
                     Me.lblViewOnlyContent.Visible = True
-                    Me.lblViewOnlyContent.Text = "<br>" & editorMain.Html
+                    Me.lblViewOnlyContent.InnerHtml = "<br>" & editorMain.Html
                 End If
 
                 'Shows which version and language is currently opened
@@ -1590,6 +1593,12 @@ Namespace CompuMaster.camm.SmartWebEditor
 
         Protected MustOverride Sub PagePreRender_JavaScriptRegistration()
         Protected MustOverride Sub PagePreRender_InitializeToolbar()
+
+        Protected MustOverride Function IsEditableWhenBrowsingVersions() As Boolean
+
+        Protected MustOverride Function CanEditCurrentVersion() As Boolean
+
+
 
 #End Region
 
@@ -1818,7 +1827,6 @@ Namespace CompuMaster.camm.SmartWebEditor
                 If Me.ShowWithEditRights Then
                     'Load edit mode
                     'Ensure that LanguageToShow contains a valid value also when this page runs with edit rights
-                    Me.LookupMatchingMarketDataBasedOnExistingContent()
                     'Define some needed vars
                     Dim myCurrentLanguage As Integer = 0
                     Dim myCurrentVersion As Integer = 0
@@ -1855,7 +1863,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                     editorMain.Visible = False
                     ibtnSwitchToEditMode.Visible = False
                     If Me.EnableCache AndAlso Not CachedItemContent Is Nothing Then
-                        lblViewOnlyContent.Text = CachedItemContent
+                        lblViewOnlyContent.InnerHtml = CachedItemContent
 #If DebugMode Then
                             WriteDebugOutputDirectly("cached ")
 #End If
@@ -1864,29 +1872,29 @@ Namespace CompuMaster.camm.SmartWebEditor
                         Try
                             Dim HighestAvailableVersion As Integer = Me.Database.MaxVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
                             If HighestAvailableVersion = 0 OrElse (HighestAvailableVersion = 1 AndAlso Not Me.Database.ReleasedVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID) = 1) Then
-                                lblViewOnlyContent.Text = Me.InnerHtml
+                                lblViewOnlyContent.InnerHtml = Me.InnerHtml
                             Else
                                 If Me.MarketLookupMode = MarketLookupModes.SingleMarket Then
-                                    lblViewOnlyContent.Text = Database.ReadReleasedContent(Me.ContentOfServerID, DocumentID, Me.EditorID, 0)
+                                    lblViewOnlyContent.InnerHtml = Database.ReadReleasedContent(Me.ContentOfServerID, DocumentID, Me.EditorID, 0)
                                 Else
                                     Try
                                         LookupMatchingMarketDataForReleasedContent(True)
                                     Catch ex As UseInnerHtmlException
                                         'Use inner html 
-                                        lblViewOnlyContent.Text = Me.InnerHtml
+                                        lblViewOnlyContent.InnerHtml = Me.InnerHtml
                                     Catch
                                         Throw
                                     End Try
-                                    lblViewOnlyContent.Text = Database.ReadReleasedContent(Me.ContentOfServerID, DocumentID, Me.EditorID, Me.LanguageToShow)
+                                    lblViewOnlyContent.InnerHtml = Database.ReadReleasedContent(Me.ContentOfServerID, DocumentID, Me.EditorID, Me.LanguageToShow)
                                 End If
                             End If
                         Catch ex As UseInnerHtmlException
 #If DebugMode Then
                                 WriteDebugOutputDirectly("with inner html ")
 #End If
-                            lblViewOnlyContent.Text = Me.InnerHtml
+                            lblViewOnlyContent.InnerHtml = Me.InnerHtml
                         End Try
-                        CachedItemContent = lblViewOnlyContent.Text
+                        CachedItemContent = lblViewOnlyContent.InnerHtml
 #If DebugMode Then
                             WriteDebugOutputDirectly("queried ")
 #End If
@@ -1950,6 +1958,10 @@ Namespace CompuMaster.camm.SmartWebEditor
                     HttpContext.Current.Cache.Remove(Key)
                 End If
             Next
+        End Sub
+
+        Private Sub SmartWcmsEditorCommonBase_BeforeSecurityCheck() Handles Me.BeforeSecurityCheck
+
         End Sub
 
         ''' -----------------------------------------------------------------------------

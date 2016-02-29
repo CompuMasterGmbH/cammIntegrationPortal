@@ -159,13 +159,18 @@
 /setup and distribution/DbUpdateTool/devsql-2005-up-till-azure.SENSITIVEDATAWARNING.cmd
 /setup and distribution/DbUpdateTool/devsql-2014-up-till-azure.SENSITIVEDATAWARNING.cmd
 /setup and distribution/resourcewriter/libs/ICSharpCode.SharpZipLib.dll
-/webs/cwmroot_aspx_masterpage/bin/cammWM.Admin.dll
-/webs/cwmroot_aspx_masterpage/bin/cammWM.Admin.pdb
-/webs/cwmroot_aspx_masterpage/bin/cammWM.Admin.xml
-/webs/cwmroot_aspx_masterpage/bin/cammWM.TextModules.dll
-/webs/cwmroot_aspx_masterpage/bin/cammWM.TextModules.pdb
-/webs/cwmroot_aspx_masterpage/bin/cammWM.TextModules.xml
-/webs/cwmroot_aspx_masterpage/bin/cammWM.dll
-/webs/cwmroot_aspx_masterpage/bin/cammWM.dll.config
-/webs/cwmroot_aspx_masterpage/bin/cammWM.pdb
-/webs/cwmroot_aspx_masterpage/bin/cammWM.xml
+/libraries/adminarea/CammWM.Admin/bin/Microsoft.Office.Interop.Word.dll
+/libraries/adminarea/CammWM.Admin/bin/Microsoft.Vbe.Interop.dll
+/libraries/adminarea/CammWM.Admin/bin/Office.dll
+/libraries/adminarea/CammWM.Admin/bin/RadEditor.dll
+/libraries/adminarea/CammWM.Admin/bin/RadSpell.dll
+/libraries/adminarea/CammWM.Admin/bin/stdole.dll
+/libraries/adminarea/CammWM.Admin/bin/SMTP.Net.dll
+/libraries/adminarea/CammWM.Admin/bin/SMTP.Net.xml
+/libraries/adminarea/CammWM.Admin/bin/CompuMaster.Imaging.dll
+/libraries/adminarea/CammWM.Admin/bin/CompuMaster.Imaging.pdb
+/libraries/adminarea/CammWM.Admin/bin/CompuMaster.Imaging.xml
+/libraries/adminarea/CammWM.Admin/bin
+/libraries/smarteditor/CommonMarkEditor/bin
+/libraries/smarteditor/CommonMarkEditor/obj
+/libraries/smarteditor/CommonMarkEditor/*.user

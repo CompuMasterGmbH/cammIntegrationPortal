@@ -10,9 +10,6 @@ Namespace CompuMaster.camm.SmartWebEditor
     ''' </summary>
     ''' <remarks>
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	18.02.2006	Created
-    ''' </history>
     Public MustInherit Class SmartWcmsEditorBase
         Inherits CompuMaster.camm.WebManager.Controls.Control
         Implements UI.INamingContainer, ISmartWcmsEditor
@@ -158,7 +155,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <summary>
         '''     Contains informations about how to handle the viewonly mode in different market, langs
         ''' </summary>
-        ''' <remarks>2
+        ''' <remarks>
         ''' </remarks>
         ''' <history>
         ''' 	[Swiercz]	31.10.2005	Created
