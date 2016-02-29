@@ -423,11 +423,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "page_chartgenerator.vb"
-                    SubType = "ASPXCodeBehind"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "page_check.vb"
                     SubType = "ASPXCodeBehind"
                     BuildAction = "Compile"

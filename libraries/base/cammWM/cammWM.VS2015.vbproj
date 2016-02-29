@@ -194,7 +194,6 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="pages_feedbackform.vb" />
-    <Compile Include="page_chartgenerator.vb" />
     <Compile Include="page_check.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
