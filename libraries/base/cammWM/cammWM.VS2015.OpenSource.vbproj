@@ -64,7 +64,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>cammWM.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.83.1.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
@@ -95,7 +96,6 @@
     <Compile Include="AssemblyInfo.OpenSource.vb" />
     <Compile Include="AssemblyVersion.vb" />
     <Compile Include="Capabilities.vb" />
-    <Compile Include="charting.vb" />
     <Compile Include="CompuMaster.camm.WebManager.Tools.Data.Ldap.vb" />
     <Compile Include="CompuMaster.camm.WebManager.Tools.Data.vb" />
     <Compile Include="CompuMaster.camm.WebManager.Tools.IO.Junctions.vb" />
@@ -198,7 +198,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="cammWM.snk" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
