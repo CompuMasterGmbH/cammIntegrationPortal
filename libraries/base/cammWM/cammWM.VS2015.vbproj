@@ -165,7 +165,6 @@
     <Compile Include="dataprotection.vb" />
     <Compile Include="definitions.vb" />
     <Compile Include="DownloadHandler.vb" />
-    <Compile Include="explorer.vb" />
     <Compile Include="Global.asax.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>

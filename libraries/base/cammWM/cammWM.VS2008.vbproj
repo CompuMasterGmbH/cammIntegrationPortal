@@ -139,9 +139,6 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="DownloadHandler.vb" />
-    <Compile Include="explorer.vb">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Global.asax.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>

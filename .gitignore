@@ -129,3 +129,6 @@
 /libraries/adminarea/CammWM.Admin/bin/CompuMaster.Imaging.pdb
 /libraries/adminarea/CammWM.Admin/bin/CompuMaster.Imaging.xml
 /libraries/adminarea/CammWM.Admin/bin
+/libraries/smarteditor/CommonMarkEditor/bin
+/libraries/smarteditor/CommonMarkEditor/obj
+/libraries/smarteditor/CommonMarkEditor/*.user

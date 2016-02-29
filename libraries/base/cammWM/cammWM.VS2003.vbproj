@@ -370,11 +370,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "explorer.vb"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Global.asax.vb"
                     SubType = "ASPXCodeBehind"
                     BuildAction = "Compile"
