@@ -1804,20 +1804,9 @@ Namespace CompuMaster.camm.SmartWebEditor
     End Class
 
 #Region "StringArray conversion"
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.StringArrayConverter
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Allow a string array property to be filled by a comma separated string
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	30.11.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Friend Class StringArrayConverter
         Inherits System.ComponentModel.CollectionConverter
 
@@ -1859,6 +1848,70 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Return New System.ComponentModel.Design.Serialization.InstanceDescriptor(info1, objArray1)
                 End If
                 If (destinationType Is GetType(String)) Then
+                    Return text1
+                End If
+            End If
+Label_007B:
+            Return MyBase.ConvertTo(context, culture, destinationObj, destinationType)
+        End Function
+    End Class
+
+    ''' <summary>
+    '''     Allow an integer array property to be filled by a comma separated string
+    ''' </summary>
+    Friend Class IntegerArrayConverter
+        Inherits System.ComponentModel.CollectionConverter
+
+        Public Sub New()
+        End Sub
+
+        Public Overloads Overrides Function CanConvertFrom(ByVal context As System.ComponentModel.ITypeDescriptorContext, ByVal sourceType As Type) As Boolean
+            If (sourceType Is GetType(String)) Then
+                Return True
+            End If
+            Return MyBase.CanConvertFrom(context, sourceType)
+        End Function
+
+        Public Overloads Overrides Function CanConvertTo(ByVal context As System.ComponentModel.ITypeDescriptorContext, ByVal destinationType As Type) As Boolean
+            If (destinationType Is GetType(Integer())) Then
+                Return True
+            End If
+            Return MyBase.CanConvertTo(context, destinationType)
+        End Function
+
+        Public Overloads Overrides Function ConvertFrom(ByVal context As System.ComponentModel.ITypeDescriptorContext, ByVal culture As System.Globalization.CultureInfo, ByVal sourceObj As Object) As Object
+            If TypeOf sourceObj Is String Then
+                Dim chArray1 As Char() = New Char() {","c}
+                Return ConvertStringArrayToIntegerArray(CType(sourceObj, String).Split(chArray1))
+            End If
+            Return MyBase.ConvertFrom(context, culture, sourceObj)
+        End Function
+
+        Private Function ConvertStringArrayToIntegerArray(values As String()) As Integer()
+            Dim Result As New ArrayList
+            For Each value As String In values
+                If value = "" Then
+                    Result.Add(0)
+                Else
+                    Result.Add(Integer.Parse(value))
+                End If
+            Next
+            Return CType(Result.ToArray(GetType(Integer)), Integer())
+        End Function
+
+        Public Overloads Overrides Function ConvertTo(ByVal context As System.ComponentModel.ITypeDescriptorContext, ByVal culture As System.Globalization.CultureInfo, ByVal destinationObj As Object, ByVal destinationType As Type) As Object
+            If TypeOf destinationObj Is Integer() Then
+                Dim text1 As String = String.Join(",", CType(destinationObj, String()))
+                If (destinationType Is GetType(System.ComponentModel.Design.Serialization.InstanceDescriptor)) Then
+                    Dim typeArray1 As Type() = New Type() {GetType(Integer)}
+                    Dim info1 As System.Reflection.ConstructorInfo = GetType(Integer).GetConstructor(typeArray1)
+                    If (info1 Is Nothing) Then
+                        GoTo Label_007B
+                    End If
+                    Dim objArray1 As Object() = New Object() {text1}
+                    Return New System.ComponentModel.Design.Serialization.InstanceDescriptor(info1, objArray1)
+                End If
+                If (destinationType Is GetType(Integer)) Then
                     Return text1
                 End If
             End If

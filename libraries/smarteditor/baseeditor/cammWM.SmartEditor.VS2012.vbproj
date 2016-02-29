@@ -130,6 +130,9 @@
     </Compile>
     <Compile Include="SmartWcmsDatabaseAccessLayer.vb" />
     <Compile Include="SmartWcmsEditorCommonBase.vb" />
+    <Compile Include="UploadForm.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Utils.vb" />
     <Compile Include="SmartWcmsEditorBase.vb" />
     <Compile Include="PlainTextEditor.vb" />

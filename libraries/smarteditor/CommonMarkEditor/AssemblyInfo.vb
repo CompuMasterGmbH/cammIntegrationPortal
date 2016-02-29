@@ -1,4 +1,4 @@
-Option Explicit On 
+﻿Option Explicit On
 Option Strict On
 
 Imports System
@@ -16,10 +16,10 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyTrademark("camm")>
 <Assembly: CLSCompliant(True)>
 <Assembly: ComVisible(False)>
-<Assembly: System.Security.AllowPartiallyTrustedCallers()>
+'<Assembly: System.Security.AllowPartiallyTrustedCallers()>
 
-'Die folgende GUID ist f�r die ID der Typbibliothek, wenn dieses Projekt in COM angezeigt wird
-<Assembly: Guid("3924AF70-E56D-4BA2-BF3B-D7A98979B368")>
+'Die folgende GUID ist für die ID der Typbibliothek, wenn dieses Projekt in COM angezeigt wird
+<Assembly: Guid("7748f679-7402-4b91-a29a-0f88b48869e7")>
 
 <Assembly: AssemblyDelaySign(False)>
 #If SIGNASSEMBLY Then

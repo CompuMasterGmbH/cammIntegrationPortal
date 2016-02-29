@@ -284,29 +284,9 @@
                     HintPath = "E:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\system.drawing.dll"
                 />
                 <Reference
-                    Name = "RadSpell"
-                    AssemblyName = "RadSpell"
-                    HintPath = "libs\RadSpell.dll"
-                />
-                <Reference
-                    Name = "RadEditor"
-                    AssemblyName = "RadEditor"
-                    HintPath = "libs\RadEditor.dll"
-                />
-                <Reference
-                    Name = "CompuMaster.Imaging"
-                    AssemblyName = "CompuMaster.Imaging"
-                    HintPath = "libs_1_1\CompuMaster.Imaging.dll"
-                />
-                <Reference
                     Name = "ICSharpCode.SharpZipLib"
                     AssemblyName = "ICSharpCode.SharpZipLib"
                     HintPath = "libs_1_1\ICSharpCode.SharpZipLib.dll"
-                />
-                <Reference
-                    Name = "SMTP.Net"
-                    AssemblyName = "SMTP.Net"
-                    HintPath = "libs_1_1\SMTP.Net.dll"
                 />
             </References>
             <Imports>

@@ -1424,7 +1424,7 @@ Namespace CompuMaster.camm.WebManager
         ''' 	[adminwezel]	06.07.2004	Created
         ''' </history>
         ''' -----------------------------------------------------------------------------
-        Public Property SecurityObject() As String
+        <System.ComponentModel.DefaultValue("")> Public Property SecurityObject() As String
             Get
                 Return _SecurityObject
             End Get
@@ -8410,8 +8410,9 @@ Namespace CompuMaster.camm.WebManager
             <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> ChilkatActiveX = 0
             <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> ChilkatNet = 1
             Queue = 2
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> NetFramework1 = -3
             NetFramework = 3
-            EasyMail = 4
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> EasyMail = 4
         End Enum
 
         ''' -----------------------------------------------------------------------------
@@ -14991,12 +14992,18 @@ Namespace CompuMaster.camm.WebManager
                         Else
                             MyIsDenyRule = Nothing
                         End If
+                        Dim MyIsDev As Boolean
+                        If MyReader.GetSchemaTable.Columns.Contains("DevelopmentTeamMember") Then
+                            MyIsDev = Utils.Nz(MyReader("DevelopmentTeamMember"), False)
+                        Else
+                            MyIsDev = False
+                        End If
                         _AuthorizedGroups.Add(New GroupAuthorizationInformation(_WebManager, _
                             CType(MyReader("ID"), Integer), _
                             CType(MyReader("ID_Application"), Integer), _
                             CType(MyReader("ID_GroupOrPerson"), Integer), _
                             MyServerGroup, _
-                            Utils.Nz(MyReader("DevelopmentTeamMember"), False), _
+                            MyIsDev, _
                             CType(MyReader("ReleasedOn"), DateTime), _
                             CType(MyReader("ReleasedBy"), Long), _
                             MyIsDenyRule))
@@ -15887,7 +15894,7 @@ Namespace CompuMaster.camm.WebManager
             ''' 	[adminsupport]	18.02.2005	Created
             ''' </history>
             ''' -----------------------------------------------------------------------------
-            Public Property InheritFrom_SecurityObjectID() As Integer
+            <Obsolete("Use InheritFrom_SecurityObjectIDs instead - property is subject to be dropped in future")> Public Property InheritFrom_SecurityObjectID() As Integer
                 Get
                     Return _InheritFrom_SecurityObjectID
                 End Get
@@ -15896,6 +15903,31 @@ Namespace CompuMaster.camm.WebManager
                     _InheritFrom_SecurityObjectInfo = Nothing
                 End Set
             End Property
+            ''' <summary>
+            ''' Authorizations are inherited by other security objects
+            ''' </summary>
+            ''' <returns></returns>
+            Public Property InheritFrom_SecurityObjectIDs() As Integer()
+                Get
+                    If _InheritFrom_SecurityObjectID = Nothing Then
+                        Return New Integer() {}
+                    Else
+                        Return New Integer() {_InheritFrom_SecurityObjectID}
+                    End If
+                End Get
+                Set(ByVal Value As Integer())
+                    If Value Is Nothing OrElse Value.Length = 0 Then
+                        _InheritFrom_SecurityObjectID = Nothing
+                    ElseIf Value.Length <> 1 Then
+                        _InheritFrom_SecurityObjectID = Value(0)
+                    Else
+                        'Not yet done: support multiple security objects to inherit from
+                        Throw New NotSupportedException("This version only supports 0 or 1 items")
+                    End If
+                    _InheritFrom_SecurityObjectInfo = Nothing
+                End Set
+            End Property
+
             ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Authorizations are inherited by another security object
@@ -15907,10 +15939,10 @@ Namespace CompuMaster.camm.WebManager
             ''' 	[adminsupport]	18.02.2005	Created
             ''' </history>
             ''' -----------------------------------------------------------------------------
-            Public Property InheritFrom_SecurityObjectInfo() As SecurityObjectInformation
+            <Obsolete("Use InheritFrom_SecurityObjectInfos instead - property is subject to be dropped in future")> Public Property InheritFrom_SecurityObjectInfo() As SecurityObjectInformation
                 Get
-                    If _InheritFrom_SecurityObjectInfo Is Nothing Then
-                        _InheritFrom_SecurityObjectInfo = New SecurityObjectInformation(_ID, _WebManager)
+                    If _InheritFrom_SecurityObjectInfo Is Nothing AndAlso _InheritFrom_SecurityObjectID <> Nothing Then
+                        _InheritFrom_SecurityObjectInfo = New SecurityObjectInformation(_InheritFrom_SecurityObjectID, _WebManager)
                     End If
                     Return _InheritFrom_SecurityObjectInfo
                 End Get
@@ -15919,6 +15951,35 @@ Namespace CompuMaster.camm.WebManager
                     _InheritFrom_SecurityObjectID = _InheritFrom_SecurityObjectInfo.ID
                 End Set
             End Property
+            ''' <summary>
+            ''' Authorizations are inherited by other security objects
+            ''' </summary>
+            ''' <returns></returns>
+            Public Property InheritFrom_SecurityObjectInfos() As SecurityObjectInformation()
+                Get
+                    If _InheritFrom_SecurityObjectInfo Is Nothing AndAlso _InheritFrom_SecurityObjectID <> Nothing Then
+                        _InheritFrom_SecurityObjectInfo = New SecurityObjectInformation(_InheritFrom_SecurityObjectID, _WebManager)
+                    End If
+                    If _InheritFrom_SecurityObjectInfo Is Nothing Then
+                        Return New SecurityObjectInformation() {}
+                    Else
+                        Return New SecurityObjectInformation() {_InheritFrom_SecurityObjectInfo}
+                    End If
+                End Get
+                Set(ByVal Value As SecurityObjectInformation())
+                    If Value Is Nothing OrElse Value.Length = 0 Then
+                        _InheritFrom_SecurityObjectInfo = Nothing
+                        _InheritFrom_SecurityObjectID = Nothing
+                    ElseIf Value.Length <> 1 Then
+                        _InheritFrom_SecurityObjectInfo = Value(0)
+                        _InheritFrom_SecurityObjectID = _InheritFrom_SecurityObjectInfo.ID
+                    Else
+                        'Not yet done: support multiple security objects to inherit from
+                        Throw New NotSupportedException("This version only supports 0 or 1 items")
+                    End If
+                End Set
+            End Property
+
             'ToDo: change to Long
             ''' -----------------------------------------------------------------------------
             ''' <summary>
@@ -16181,7 +16242,7 @@ Namespace CompuMaster.camm.WebManager
             ''' <value></value>
             ''' <remarks>
             ''' </remarks>
-            <Obsolete("Use AuthorizationsForUsersByRule instead")> Public ReadOnly Property AuthorizationsForUsers() As SecurityObjectAuthorizationForUser()
+                                         <Obsolete("Use AuthorizationsForUsersByRule instead")> Public ReadOnly Property AuthorizationsForUsers() As SecurityObjectAuthorizationForUser()
                 Get
                     Return AuthorizationsForUsersByRule.EffectiveStandard()
                 End Get
@@ -16193,7 +16254,7 @@ Namespace CompuMaster.camm.WebManager
             ''' <value></value>
             ''' <remarks>
             ''' </remarks>
-            <Obsolete("Use AuthorizationsForGroupsByRule instead")> Public ReadOnly Property AuthorizationsForGroups() As SecurityObjectAuthorizationForGroup()
+                                             <Obsolete("Use AuthorizationsForGroupsByRule instead")> Public ReadOnly Property AuthorizationsForGroups() As SecurityObjectAuthorizationForGroup()
                 Get
                     Return AuthorizationsForGroupsByRule.EffectiveStandard()
                 End Get
@@ -16544,9 +16605,9 @@ Namespace CompuMaster.camm.WebManager
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand
 
-            If AccessLevelID < 0 Then
+            If AccessLevelID <0 Then
                 'return all server groups
-                MyCmd = New SqlCommand("select system_servergroups.* from system_servergroups", MyConn)
+                        MyCmd = New SqlCommand("select system_servergroups.* from system_servergroups", MyConn)
             Else
                 'only search for server groups allowed for the current user
                 MyCmd = New SqlCommand("select system_servergroups.* from system_servergroups inner join [System_ServerGroupsAndTheirUserAccessLevels] on system_servergroups.id = [System_ServerGroupsAndTheirUserAccessLevels].[ID_ServerGroup] Where [ID_AccessLevel] = @ID", MyConn)

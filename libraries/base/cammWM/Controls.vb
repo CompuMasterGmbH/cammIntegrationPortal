@@ -9,7 +9,7 @@ Imports System.Web
 Namespace CompuMaster.camm.WebManager.Controls
 
 #If NetFramework <> "1_1" Then
-    <System.Runtime.InteropServices.ComVisible(False), ToolboxData("<{0}:WebManager ID=""cammWebManager"" runat=""server"" SecurityObjet=""""></{0}:WebManager>"), System.Web.UI.NonVisualControl()> Public MustInherit Class cammWebManager
+    <System.Runtime.InteropServices.ComVisible(False), ToolboxData("<{0}:WebManager ID=""cammWebManager"" runat=""server"" SecurityObjet=""""></{0}:WebManager>"), System.Web.UI.NonVisualControl(), System.Web.UI.Themeable(False), System.Web.UI.PersistChildren(False), System.Web.UI.ParseChildren(False)> Public MustInherit Class cammWebManager
 #Else
     <System.Runtime.InteropServices.ComVisible(False), ToolboxData("<{0}:WebManager ID=""cammWebManager"" runat=""server"" SecurityObjet=""""></{0}:WebManager>")> Public MustInherit Class cammWebManager
 #End If

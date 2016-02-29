@@ -580,6 +580,33 @@ Namespace CompuMaster.camm.SmartWebEditor
             Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, String))
         End Function
 
+        ''' <summary>
+        ''' Returns the first version that differs and that is lower (came before)
+        ''' </summary>
+        ''' <param name="serverID"></param>
+        ''' <param name="url"></param>
+        ''' <param name="editorID"></param>
+        ''' <param name="marketID"></param>
+        ''' <param name="version"></param>
+        ''' <returns></returns>
+        Public Function GetFirstPreviousVersionThatDiffers(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As Integer
+            Dim command As New SqlClient.SqlCommand("SELECT TOP 1 version FROM dbo.WebManager_WebEditor " & vbNewLine &
+"WHERE content NOT LIKE ( SELECT  content FROM dbo.WebManager_WebEditor a " & vbNewLine &
+"WHERE a.URL = @URL  " & vbNewLine &
+"AND a.LanguageID = @LanguageID AND a.version = @VERSION AND a.ServerId = @ServerID AND a.EditorID = @EditorID) " & vbNewLine &
+" AND LanguageID =  @LanguageID AND URL = @URL AND ServerId = @ServerID AND EditorID = @EditorID AND version < @VERSION ORDER BY VERSION DESC ", New SqlClient.SqlConnection(Me.ConnectionString))
+
+            command.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
+            command.Parameters.Add("@LanguageID", SqlDbType.Int).Value = marketID
+            command.Parameters.Add("@URL", SqlDbType.NVarChar).Value = url.ToLower
+            command.Parameters.Add("@EditorID", SqlDbType.NVarChar).Value = editorID
+            command.Parameters.Add("@VERSION", SqlDbType.Int).Value = version
+
+
+            Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(command, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, Integer))
+
+        End Function
+
         ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read the HTML in a requested version for the requested document from the database

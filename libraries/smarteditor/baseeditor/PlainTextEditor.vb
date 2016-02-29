@@ -40,6 +40,11 @@ Namespace CompuMaster.camm.SmartWebEditor
             Public Sub New()
                 MyBase.New()
                 Me.TextMode = TextBoxMode.MultiLine
+                Me.CssWidth = "100%"
+                Me.CssHeight = "280px"
+            End Sub
+
+            Private Sub PlainTextEditor_Init(sender As Object, e As EventArgs) Handles Me.Init
             End Sub
 
             Public Property CssWidth As String Implements IEditor.CssWidth

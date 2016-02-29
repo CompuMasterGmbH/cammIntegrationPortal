@@ -74,7 +74,11 @@ Namespace CompuMaster.camm.WebManager.Registration
         Public RequestTime As DateTime
         Public ValidationHash As Byte()
         Public WebAppInstanceID As String
-
+        Public UsersVerifiedCount As Long
+        Public ProcessedAuthentificationsBy1FactorCount As Long
+        Public ProcessedAuthentificationsBy2FactorsCount As Long
+        Public ProcessedAuthentificationsByExternalAccountCount As Long
+		
         ''' <summary>
         ''' Sign the transaction data and validate its completeness
         ''' </summary>

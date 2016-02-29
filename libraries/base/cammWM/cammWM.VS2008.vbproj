@@ -82,25 +82,9 @@
     <DefineConstants>LicenceGenerator=True,NET="2_0"</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CompuMaster.Imaging, Version=1.0.2205.23725, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs_2_0\CompuMaster.Imaging.dll</HintPath>
-    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.83.1.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs_2_0\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="RadEditor, Version=3.1.0.0, Culture=neutral, PublicKeyToken=3427f733bae69f1b">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\RadEditor.dll</HintPath>
-    </Reference>
-    <Reference Include="RadSpell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b5dad7bf2bf594c2">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\RadSpell.dll</HintPath>
-    </Reference>
-    <Reference Include="SMTP.Net, Version=3.0.1.8, Culture=neutral, PublicKeyToken=986a9aa31056680b">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs_2_0\SMTP.Net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
