@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+		<id>$id$</id>
+		<version>$version$</version>
+		<title>$title$</title>
+		<authors>$author$</authors>
+		<owners>$author$</owners>
+		<licenseUrl>https://github.com/CompuMasterGmbH/cammIntegrationPortal/master/LICENSE</licenseUrl>
+		<projectUrl>https://github.com/CompuMasterGmbH/cammIntegrationPortal</projectUrl>
+		<iconUrl>https://github.com/CompuMasterGmbH/cammIntegrationPortal/master/logo_64x64.png</iconUrl>
+		<requireLicenseAcceptance>true</requireLicenseAcceptance>
+		<description>camm Integration Portal (based on camm Web-Manager) for Web Applications</description>
+		<releaseNotes/>
+		<copyright>2005-2016 CompuMaster GmbH</copyright>
+		<tags>CompuMaster camm Integration Portal Web-Manager Web Manager</tags>
+		<!--
+    <dependencies>
+      <dependency id="CompuMaster.OtherReferencedLib" version="[$version$]" />
+    </dependencies>
+    -->
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Web" />	
+		</frameworkAssemblies>
+		<contentFiles>
+			<!-- Embed image resources -->
+			<files include="any/any/images/dnf.png" buildAction="EmbeddedResource" />
+			<files include="any/any/images/ui.png" buildAction="EmbeddedResource" />
+			<!-- Embed all image resources under contentFiles/cs/ using a wild card -->
+			<files include="cs/**/*.png" buildAction="EmbeddedResource" />
+			<!-- Copy config.xml to the root of the output folder -->
+			<files include="cs/uap10.0/config/config.xml" buildAction="None" copyToOutput="true" flatten="true" />
+			<!-- Copy run.cmd to the output folder and keep the directory structure -->
+			<!-- Include everything in the scripts folder except exe files -->
+			<files include="cs/uap10.0/scripts/*" exclude="**/*.exe"  buildAction="None" copyToOutput="true" />
+			<!-- All other files in shared are compiled and use the default options -->
+		</contentFiles>
+	</metadata>
+	<files>
+		<file src="bin\Release\**\ICSharpCode.SharpZipLib.dll" target="lib\net20"/>
+	</files>
+</package>
