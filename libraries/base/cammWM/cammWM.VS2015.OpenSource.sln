@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cammWM.VS2015", "cammWM.VS2015.vbproj", "{2113697D-CA74-48D7-A638-8B56EC072AED}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cammWM.VS2015", "cammWM.VS2015.OpenSource.vbproj", "{2113697D-CA74-48D7-A638-8B56EC072AED}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cammWM.Admin.VS2015", "..\..\adminarea\CammWM.Admin\cammWM.Admin.VS2015.vbproj", "{6C2216A0-A7BD-4A9B-AA98-8B1E02DE32FA}"
-EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cammWM.VS2015.Test", "..\Tests\cammWM.Test\cammWM.VS2015.Test.vbproj", "{52E83A75-9866-404A-9D9E-52105FE8E6FE}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
