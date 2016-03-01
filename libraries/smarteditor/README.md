@@ -19,7 +19,7 @@ There are several editor components available. Please use the one which is appro
 </html>
 ```
 
-### SmartPlainHtmlEditor
+### CommonMarkEditor
 ``` asp
 <%@ Page ValidateRequest="false" EnableEventValidation="false" %>
 <%@ Register TagPrefix="cammWebEdit" Namespace="CompuMaster.camm.SmartWebEditor.Controls" 
