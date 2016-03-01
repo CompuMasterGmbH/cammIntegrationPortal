@@ -111,9 +111,9 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             Public Function AvailableMarketsInData(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal Version As Integer) As Integer()
                 Dim myConnection As SqlClient.SqlConnection
                 Dim myCommand As SqlClient.SqlCommand
-                Dim myQuery As String =
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                    "select LanguageID from webmanager_webeditor where Url = @Url " & vbNewLine &
+                Dim myQuery As String = _
+                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                    "select LanguageID from webmanager_webeditor where Url = @Url " & vbNewLine & _
                     "and EditorID = @EditorID and version = @Version AND ServerID = @ServerID group by LanguageID"
                 myConnection = New SqlClient.SqlConnection(ConnectionString)
                 myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -142,36 +142,36 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' -----------------------------------------------------------------------------
             Public Sub SaveEditorContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal content As String, ByVal modifiedBy As Long)
                 'Prepare query:
-                Dim myQuery As String =
-                    "DECLARE @Version int" & vbNewLine &
-                    "DECLARE @ReplaceExistingValue bit" & vbNewLine &
-                    "DECLARE @ModifiedOn datetime" & vbNewLine &
-                    "-- Retrieve editable version" & vbNewLine &
-                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "-- Insert or update data?" & vbNewLine &
-                    "SELECT @ReplaceExistingValue = CASE WHEN COUNT(*) = 0 THEN 0 ELSE 1 END" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE Version = @Version AND LanguageID = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "-- Insert new or update existing data" & vbNewLine &
-                    "SELECT @ModifiedOn = GETDATE()" & vbNewLine &
-                    "IF @ReplaceExistingValue = 1" & vbNewLine &
-                    "   UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "   SET [ServerID]=@ServerID, [LanguageID]=@LanguageID, [IsActive]=0," & vbNewLine &
-                    "       [URL]=@URL, [EditorID]=@EditorID, [Content]=@Content, [ModifiedOn]=@ModifiedOn," & vbNewLine &
-                    "       [ModifiedByUser]=@ModifiedByUser, [ReleasedOn]=NULL, " & vbNewLine &
-                    "       [ReleasedByUser]=NULL, [Version]=@Version" & vbNewLine &
-                    "   WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "ELSE" & vbNewLine &
-                    "   INSERT INTO [dbo].[WebManager_WebEditor](" & vbNewLine &
-                    "       [ServerID], [LanguageID], [IsActive], [URL], [EditorID], [Content], [ModifiedOn], " & vbNewLine &
-                    "       [ModifiedByUser], [ReleasedOn], [ReleasedByUser], [Version]" & vbNewLine &
-                    "       )" & vbNewLine &
-                    "   VALUES(" & vbNewLine &
-                    "       @ServerID, @LanguageID, 0, " & vbNewLine &
-                    "       @URL, @EditorID, @Content, @ModifiedOn, " & vbNewLine &
-                    "       @ModifiedByUser, NULL, NULL, " & vbNewLine &
+                Dim myQuery As String = _
+                    "DECLARE @Version int" & vbNewLine & _
+                    "DECLARE @ReplaceExistingValue bit" & vbNewLine & _
+                    "DECLARE @ModifiedOn datetime" & vbNewLine & _
+                    "-- Retrieve editable version" & vbNewLine & _
+                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "-- Insert or update data?" & vbNewLine & _
+                    "SELECT @ReplaceExistingValue = CASE WHEN COUNT(*) = 0 THEN 0 ELSE 1 END" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE Version = @Version AND LanguageID = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "-- Insert new or update existing data" & vbNewLine & _
+                    "SELECT @ModifiedOn = GETDATE()" & vbNewLine & _
+                    "IF @ReplaceExistingValue = 1" & vbNewLine & _
+                    "   UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "   SET [ServerID]=@ServerID, [LanguageID]=@LanguageID, [IsActive]=0," & vbNewLine & _
+                    "       [URL]=@URL, [EditorID]=@EditorID, [Content]=@Content, [ModifiedOn]=@ModifiedOn," & vbNewLine & _
+                    "       [ModifiedByUser]=@ModifiedByUser, [ReleasedOn]=NULL, " & vbNewLine & _
+                    "       [ReleasedByUser]=NULL, [Version]=@Version" & vbNewLine & _
+                    "   WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "ELSE" & vbNewLine & _
+                    "   INSERT INTO [dbo].[WebManager_WebEditor](" & vbNewLine & _
+                    "       [ServerID], [LanguageID], [IsActive], [URL], [EditorID], [Content], [ModifiedOn], " & vbNewLine & _
+                    "       [ModifiedByUser], [ReleasedOn], [ReleasedByUser], [Version]" & vbNewLine & _
+                    "       )" & vbNewLine & _
+                    "   VALUES(" & vbNewLine & _
+                    "       @ServerID, @LanguageID, 0, " & vbNewLine & _
+                    "       @URL, @EditorID, @Content, @ModifiedOn, " & vbNewLine & _
+                    "       @ModifiedByUser, NULL, NULL, " & vbNewLine & _
                     "       @Version)"
 
                 'Establish connection
@@ -231,15 +231,15 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' -----------------------------------------------------------------------------
             Public Sub RemoveMarketFromEditVersion(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer)
                 'Prepare query:
-                Dim myQuery As String =
-                    "DECLARE @Version int" & vbNewLine &
-                    "-- Retrieve editable version" & vbNewLine &
-                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "-- Remove rows regarding the defined market" & vbNewLine &
-                    "DELETE" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
+                Dim myQuery As String = _
+                    "DECLARE @Version int" & vbNewLine & _
+                    "-- Retrieve editable version" & vbNewLine & _
+                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "-- Remove rows regarding the defined market" & vbNewLine & _
+                    "DELETE" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
                     "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID AND Version = @Version AND LanguageID = @LanguageID"
 
                 'Establish connection
@@ -272,18 +272,18 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Function ReleaseLatestVersion(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal releasedByUser As Long) As Boolean
-                Dim myQuery As String =
-                    "DECLARE @Version int" & vbNewLine &
-                    "-- Retrieve latest version" & vbNewLine &
-                    "SELECT @Version = IsNull(MAX(Version), 0)" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "-- Release latest version" & vbNewLine &
-                    "UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "SET [IsActive] = 0" & vbNewLine &
-                    "WHERE [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "SET [IsActive] = 1, [ReleasedByUser] = @ReleasedByUser, ReleasedOn = GETDATE()" & vbNewLine &
+                Dim myQuery As String = _
+                    "DECLARE @Version int" & vbNewLine & _
+                    "-- Retrieve latest version" & vbNewLine & _
+                    "SELECT @Version = IsNull(MAX(Version), 0)" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "-- Release latest version" & vbNewLine & _
+                    "UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "SET [IsActive] = 0" & vbNewLine & _
+                    "WHERE [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "SET [IsActive] = 1, [ReleasedByUser] = @ReleasedByUser, ReleasedOn = GETDATE()" & vbNewLine & _
                     "WHERE [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID AND [Version] = @Version"
 
                 Dim myConnection As SqlClient.SqlConnection
@@ -398,12 +398,12 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                     'No, then perform a special query to just lookup the requested two important version numbers
                     Dim myConnection As SqlClient.SqlConnection
                     Dim myCommand As SqlClient.SqlCommand
-                    Dim myQuery As String =
-                        "DECLARE @MaxVersion int, @ReleasedVersion int" & vbNewLine &
-                        "select @MaxVersion = Max([Version]) from [dbo].[WebManager_WebEditor]" & vbNewLine &
-                        "where [URL] = @URL AND [EditorID] = @EditorID and ServerID = @ServerID" & vbNewLine &
-                        "select @ReleasedVersion = Max([Version]) from [dbo].[WebManager_WebEditor]" & vbNewLine &
-                        "where IsActive = 1 AND [URL] = @URL AND [EditorID] = @EditorID and ServerID = @ServerID" & vbNewLine &
+                    Dim myQuery As String = _
+                        "DECLARE @MaxVersion int, @ReleasedVersion int" & vbNewLine & _
+                        "select @MaxVersion = Max([Version]) from [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                        "where [URL] = @URL AND [EditorID] = @EditorID and ServerID = @ServerID" & vbNewLine & _
+                        "select @ReleasedVersion = Max([Version]) from [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                        "where IsActive = 1 AND [URL] = @URL AND [EditorID] = @EditorID and ServerID = @ServerID" & vbNewLine & _
                         "select @MaxVersion, @ReleasedVersion"
                     myConnection = New SqlClient.SqlConnection(ConnectionString)
                     myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -450,11 +450,11 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 If serverID <> Me._CachedCompleteData_ServerID OrElse url <> Me._CachedCompleteData_Url OrElse editorID = Me._CachedCompleteData_EditorID OrElse Me._CachedCompleteData_Result Is Nothing Then
                     Dim myConnection As SqlClient.SqlConnection
                     Dim myCommand As SqlClient.SqlCommand
-                    Dim myQuery As String =
-                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                        "select [ServerID],[LanguageID],[IsActive],[URL],[EditorID],[ModifiedOn],[ModifiedByUser],[ReleasedOn],[ReleasedByUser],[Version]" & vbNewLine &
-                        "from [dbo].[WebManager_WebEditor]" & vbNewLine &
-                        "where [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine &
+                    Dim myQuery As String = _
+                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                        "select [ServerID],[LanguageID],[IsActive],[URL],[EditorID],[ModifiedOn],[ModifiedByUser],[ReleasedOn],[ReleasedByUser],[Version]" & vbNewLine & _
+                        "from [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                        "where [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine & _
                         "order by [ID]"
                     myConnection = New SqlClient.SqlConnection(ConnectionString)
                     myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -489,23 +489,23 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 End If
 
                 'Prepare query:
-                Dim myQuery As String =
-                    "DECLARE @Version int" & vbNewLine &
-                    "-- Retrieve editable version" & vbNewLine &
-                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "-- Remove any pre-existing data (but regulary, there should be nothing, but sure is sure)" & vbNewLine &
-                    "DELETE" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID AND Version = @Version" & vbNewLine &
-                    "-- Copy data rows" & vbNewLine &
-                    "INSERT INTO [dbo].[WebManager_WebEditor](" & vbNewLine &
-                    "   [ServerID], [LanguageID], [IsActive], [URL], [EditorID], [Content], [ModifiedOn], " & vbNewLine &
-                    "   [ModifiedByUser], [ReleasedOn], [ReleasedByUser], [Version]" & vbNewLine &
-                    "   )" & vbNewLine &
-                    "SELECT ServerID, LanguageID, 0, [URL], EditorID, Content, ModifiedOn, ModifiedByUser, NULL, NULL, @Version" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
+                Dim myQuery As String = _
+                    "DECLARE @Version int" & vbNewLine & _
+                    "-- Retrieve editable version" & vbNewLine & _
+                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "-- Remove any pre-existing data (but regulary, there should be nothing, but sure is sure)" & vbNewLine & _
+                    "DELETE" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID AND Version = @Version" & vbNewLine & _
+                    "-- Copy data rows" & vbNewLine & _
+                    "INSERT INTO [dbo].[WebManager_WebEditor](" & vbNewLine & _
+                    "   [ServerID], [LanguageID], [IsActive], [URL], [EditorID], [Content], [ModifiedOn], " & vbNewLine & _
+                    "   [ModifiedByUser], [ReleasedOn], [ReleasedByUser], [Version]" & vbNewLine & _
+                    "   )" & vbNewLine & _
+                    "SELECT ServerID, LanguageID, 0, [URL], EditorID, Content, ModifiedOn, ModifiedByUser, NULL, NULL, @Version" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
                     "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID AND Version = @SourceVersion"
 
                 'Establish connection
@@ -537,8 +537,8 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 If HttpContext.Current.Application("WebManager.sWcms.ActiveLanguages") Is Nothing Then
                     Dim myConnection As SqlClient.SqlConnection
                     Dim myCommand As SqlClient.SqlCommand
-                    Dim myQuery As String =
-                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                    Dim myQuery As String = _
+                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                         "select ID, Description_English, AlternativeLanguage from system_languages where [IsActive] = 1"
                     myConnection = New SqlClient.SqlConnection(ConnectionString)
                     myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -592,11 +592,11 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Function ReadReleasedContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer) As String
-                Dim MyCmd As New SqlClient.SqlCommand(
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                    "SELECT [Content] " & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE IsActive = 1 AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine,
+                Dim MyCmd As New SqlClient.SqlCommand( _
+                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                    "SELECT [Content] " & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE IsActive = 1 AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine, _
                     New SqlClient.SqlConnection(Me.ConnectionString))
                 MyCmd.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
                 MyCmd.Parameters.Add("@LanguageID", SqlDbType.Int).Value = marketID
@@ -615,10 +615,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="version"></param>
             ''' <returns></returns>
             Public Function GetFirstPreviousVersionThatDiffers(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As Integer
-                Dim command As New SqlClient.SqlCommand("SELECT TOP 1 version FROM dbo.WebManager_WebEditor " & vbNewLine &
-"WHERE content NOT LIKE ( SELECT  content FROM dbo.WebManager_WebEditor a " & vbNewLine &
-"WHERE a.URL = @URL  " & vbNewLine &
-"AND a.LanguageID = @LanguageID AND a.version = @VERSION AND a.ServerId = @ServerID AND a.EditorID = @EditorID) " & vbNewLine &
+                Dim command As New SqlClient.SqlCommand("SELECT TOP 1 version FROM dbo.WebManager_WebEditor " & vbNewLine & _
+"WHERE content NOT LIKE ( SELECT  content FROM dbo.WebManager_WebEditor a " & vbNewLine & _
+"WHERE a.URL = @URL  " & vbNewLine & _
+"AND a.LanguageID = @LanguageID AND a.version = @VERSION AND a.ServerId = @ServerID AND a.EditorID = @EditorID) " & vbNewLine & _
 " AND LanguageID =  @LanguageID AND URL = @URL AND ServerId = @ServerID AND EditorID = @EditorID AND version < @VERSION ORDER BY VERSION DESC ", New SqlClient.SqlConnection(Me.ConnectionString))
 
                 command.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
@@ -649,11 +649,11 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Function ReadContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As String
-                Dim MyCmd As New SqlClient.SqlCommand(
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                    "SELECT [Content] " & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine,
+                Dim MyCmd As New SqlClient.SqlCommand( _
+                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                    "SELECT [Content] " & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine, _
                     New SqlClient.SqlConnection(Me.ConnectionString))
                 MyCmd.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
                 MyCmd.Parameters.Add("@LanguageID", SqlDbType.Int).Value = marketID
@@ -2005,7 +2005,7 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' </history>
             Private Function FindSWcmsControlsInEditModeOnThisPage() As Boolean
                 Dim Result As Boolean
-                Dim EditorControls As New List(Of System.Web.UI.Control)
+                Dim EditorControls As New ArrayList
                 FindSWcmsControlsOnThisPage(EditorControls, Me.Page.Controls)
                 For MyCounter As Integer = 0 To EditorControls.Count - 1
                     If EditorControls(MyCounter) Is Me Then
@@ -2029,7 +2029,7 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' 	[adminsupport]	23.12.2005	Created
             ''' </history>
             ''' -----------------------------------------------------------------------------
-            Private Sub FindSWcmsControlsOnThisPage(ByVal results As List(Of System.Web.UI.Control), ByVal controlsCollection As System.Web.UI.ControlCollection)
+            Private Sub FindSWcmsControlsOnThisPage(ByVal results As ArrayList, ByVal controlsCollection As System.Web.UI.ControlCollection)
                 For MyCounter As Integer = 0 To controlsCollection.Count - 1
                     If Me.GetType.IsInstanceOfType(controlsCollection(MyCounter)) Then
                         results.Add(controlsCollection(MyCounter))
@@ -2228,19 +2228,19 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 Dim ForeignControls As New ArrayList
                 For MyCounter As Integer = 0 To Me.Controls.Count - 1
                     Dim compareControl As UI.Control = Me.Controls(MyCounter)
-                    If compareControl Is editorMain OrElse
-                                    compareControl Is txtHiddenActiveVersion OrElse
-                                    compareControl Is txtHiddenLastVersion OrElse
-                                    compareControl Is txtRequestedAction OrElse
-                                    compareControl Is txtCurrentURL OrElse
-                                    compareControl Is txtActivate OrElse
-                                    compareControl Is txtBrowseToMarketVersion OrElse
-                                    compareControl Is txtLastVersion OrElse
-                                    compareControl Is txtCurrentlyLoadedVersion OrElse
-                                    compareControl Is txtEditModeRequested OrElse
-                                    compareControl Is lblCurrentEditInformation OrElse
-                                    compareControl Is lblViewOnlyContent OrElse
-                                    compareControl Is ibtnSwitchToEditMode OrElse
+                    If compareControl Is editorMain OrElse _
+                                    compareControl Is txtHiddenActiveVersion OrElse _
+                                    compareControl Is txtHiddenLastVersion OrElse _
+                                    compareControl Is txtRequestedAction OrElse _
+                                    compareControl Is txtCurrentURL OrElse _
+                                    compareControl Is txtActivate OrElse _
+                                    compareControl Is txtBrowseToMarketVersion OrElse _
+                                    compareControl Is txtLastVersion OrElse _
+                                    compareControl Is txtCurrentlyLoadedVersion OrElse _
+                                    compareControl Is txtEditModeRequested OrElse _
+                                    compareControl Is lblCurrentEditInformation OrElse _
+                                    compareControl Is lblViewOnlyContent OrElse _
+                                    compareControl Is ibtnSwitchToEditMode OrElse _
                                     compareControl Is pnlEditorToolbar Then
 
                         'All is fine - this is an internally managed control
@@ -2913,10 +2913,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                         HttpContext.Current.Cache.Remove(Key)
                     End If
                 Next
-            End Sub
-
-            Private Sub SmartWcmsEditorCommonBase_BeforeSecurityCheck() Handles Me.BeforeSecurityCheck
-
             End Sub
 
             ''' -----------------------------------------------------------------------------

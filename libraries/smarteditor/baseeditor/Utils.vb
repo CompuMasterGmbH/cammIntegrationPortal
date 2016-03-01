@@ -9,7 +9,7 @@ Imports System.IO
 
 Namespace CompuMaster.camm.SmartWebEditor
 
-    Public Class Utils
+    Friend Class Utils
 
 #Region "Nz"
         ''' -----------------------------------------------------------------------------

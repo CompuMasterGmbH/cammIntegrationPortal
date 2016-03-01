@@ -29,7 +29,7 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
 
         End Class
 
-        <DefaultProperty("Html"), ToolboxData("<{0}:PlainTextEditor1 runat=server></{0}:PlainTextEditor1>")>
+        <DefaultProperty("Html"), ToolboxData("<{0}:PlainTextEditor1 runat=server></{0}:PlainTextEditor1>")> _
         Friend Class PlainTextEditor
             Inherits System.Web.UI.WebControls.TextBox
             Implements IEditor
@@ -226,12 +226,19 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 MyBase.CreateChildControls()
 
                 Controls.Add(editorMain)
+#If NetFrameWork = "1_1" Then
+                Me.Page.RegisterClientScriptBlock("IsDirty", "function isDirty() {  var editor = document.getElementById('" & editorMain.ClientID & "'); if(editor &&  editor.defaultValue != editor.value) return true; else return false;  }")
+                Me.Page.RegisterClientScriptBlock("UnbindCloseCheck", "function unbindCloseCheck() { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); } var documentForm = document.forms['" & Me.LookupParentServerForm.ClientID & "']; if(documentForm.addEventListener) documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });")
+                Me.Page.RegisterClientScriptBlock("confirmPageClose", "function confirmPageClose() {var result = false; if(isDirty()) result =  confirm('Do you want to leave? All your changes will be lost'); else { result = true } if(result) unbindCloseCheck(); return result; }" & System.Environment.NewLine)
+                Me.Page.RegisterClientScriptBlock("ResetSelectBox", "function resetSelectBox(box){ for(var i = 0; i < box.options.length; i++) {	if(box.options[i].defaultSelected) {box.options[i].selected = true; return;	} }}" & System.Environment.NewLine)
+                Me.Page.RegisterClientScriptBlock("CloseCheck", "function closeCheck(e) { if(!isDirty())  return; var confirmationMessage = 'Do you want to close this site without saving your changes?';  e.returnValue = confirmationMessage; return confirmationMessage;} " & vbNewLine & " if(window.addEventListener) window.addEventListener(""beforeunload"", closeCheck);")
+#Else
                 Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "IsDirty", "function isDirty() {  var editor = document.getElementById('" & editorMain.ClientID & "'); if(editor &&  editor.defaultValue != editor.value) return true; else return false;  }", True)
                 Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "UnbindCloseCheck", "function unbindCloseCheck() { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); } var documentForm = document.forms['" & Me.LookupParentServerForm.ClientID & "']; if(documentForm.addEventListener) documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });", True)
                 Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "confirmPageClose", "function confirmPageClose() {var result = false; if(isDirty()) result =  confirm('Do you want to leave? All your changes will be lost'); else { result = true } if(result) unbindCloseCheck(); return result; }" & System.Environment.NewLine, True)
                 Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ResetSelectBox", "function resetSelectBox(box){ for(var i = 0; i < box.options.length; i++) {	if(box.options[i].defaultSelected) {box.options[i].selected = true; return;	} }}" & System.Environment.NewLine, True)
                 Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CloseCheck", "function closeCheck(e) { if(!isDirty())  return; var confirmationMessage = 'Do you want to close this site without saving your changes?';  e.returnValue = confirmationMessage; return confirmationMessage;} " & vbNewLine & " if(window.addEventListener) window.addEventListener(""beforeunload"", closeCheck);", True)
-
+#End If
 
             End Sub
 
@@ -249,22 +256,37 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             Protected LanguagesDropDownBox As System.Web.UI.WebControls.DropDownList
 
             Private Sub CreateToolBarButtons()
-                Me.SaveButton = New System.Web.UI.WebControls.Button()
+                Me.SaveButton = New System.Web.UI.WebControls.Button
+#If NetFrameWork = "1_1" Then
+                Me.SaveButton.Attributes("onclick") = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'update'; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+#Else
                 Me.SaveButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'update'; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+#End If
                 Me.SaveButton.Text = "Save"
 
-
                 Me.ActivateButton = New System.Web.UI.WebControls.Button
+#If NetFrameWork = "1_1" Then
+                Me.ActivateButton.Attributes("onclick") = "document.getElementById('" & Me.txtActivate.ClientID & "').value = 'activate'; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+#Else
                 Me.ActivateButton.OnClientClick = "document.getElementById('" & Me.txtActivate.ClientID & "').value = 'activate'; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+#End If
                 Me.ActivateButton.Text = "Save & Activate"
                 Me.ActivateButton.ToolTip = "Save & Activate all languages/markets of this version"
 
                 Me.PreviewButton = New System.Web.UI.WebControls.Button()
+#If NetFrameWork = "1_1" Then
+                Me.PreviewButton.Attributes("onclick") = "document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'false'; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+#Else
                 Me.PreviewButton.OnClientClick = "document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'false'; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+#End If
                 Me.PreviewButton.Text = "Preview"
 
                 Me.NewVersionButton = New System.Web.UI.WebControls.Button()
+#If NetFrameWork = "1_1" Then
+                Me.NewVersionButton.Attributes("onclick") = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'newversion'; document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'true';  unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+#Else
                 Me.NewVersionButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'newversion'; document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'true';  unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+#End If
                 Me.NewVersionButton.Text = "New Version"
 
                 Me.VersionDifferenceLabel = New System.Web.UI.WebControls.Label()
@@ -390,8 +412,11 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 If Me.MarketLookupMode <> MarketLookupModes.SingleMarket Then
                     Me.DeleteLanguageButton = New UI.WebControls.Button()
                     Me.DeleteLanguageButton.Text = "Delete/Deactivate this market"
+#If NetFrameWork = "1_1" Then
+                    Me.DeleteLanguageButton.Attributes("onclick") = "if(confirmPageClose()) { document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'dropcurrentmarket'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit(); } return false; "
+#Else
                     Me.DeleteLanguageButton.OnClientClick = "if(confirmPageClose()) { document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'dropcurrentmarket'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit(); } return false; "
-
+#End If
 
                     If Me.LanguageToShow <> 0 AndAlso Me.CountAvailableEditVersions() > 1 AndAlso Me.pnlEditorToolbar.Controls.Contains(SaveButton) Then
                         Me.pnlEditorToolbar.Controls.Add(Me.DeleteLanguageButton)
@@ -504,7 +529,7 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 End Set
             End Property
 
-            Private Sub SendWarningMail() Handles Me.Load
+            Private Sub SendWarningMail(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
                 If CachedData_WarningAlreadySent = False Then
                     CachedData_WarningAlreadySent = True
                     Dim PlainTextBody As String = "Please replace control SmartWcms3 and SmartWcms (both obsolete, both provided by cammWM.dll) by another SmartEditor control (see e.g. cammWM.SmartEditor.dll)"

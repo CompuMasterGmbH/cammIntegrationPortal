@@ -358,8 +358,8 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Dim _MaxVersion As Integer = 0
                 Dim _ReleasedVersion As Integer = 0
                 For Each myDataRow As DataRow In myDataTable.Rows
-                    If CType(CompuMaster.camm.WebManager.Utils.Nz(myDataRow("IsActive")), Boolean) = True Then
-                        _ReleasedVersion = CompuMaster.camm.WebManager.Utils.Nz(myDataRow("Version"), 0)
+                    If CType(CompuMaster.camm.SmartWebEditor.Utils.Nz(myDataRow("IsActive")), Boolean) = True Then
+                        _ReleasedVersion = CompuMaster.camm.SmartWebEditor.Utils.Nz(myDataRow("Version"), 0)
                         Exit For
                     End If
                 Next

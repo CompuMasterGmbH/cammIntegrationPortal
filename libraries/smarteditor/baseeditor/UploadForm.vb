@@ -9,6 +9,7 @@ Imports System.Web
 Imports System.Web.UI
 Imports System.Web.UI.WebControls
 
+#If False Then
 Namespace CompuMaster.camm.SmartWebEditor
 
     Namespace Pages
@@ -91,9 +92,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If _ImageUploadFolder Is Nothing AndAlso Request.QueryString("imageupload") <> Nothing Then
                         Dim folder As String = Me.DecryptUrlParameters(Request.QueryString("imageupload"))
                         If folder.StartsWith("/") OrElse folder.StartsWith("~/") Then
-                            _ImageUploadFolder = CompuMaster.camm.WebManager.Utils.FullyInterpretedVirtualPath(folder)
+                            _ImageUploadFolder = CompuMaster.camm.SmartWebEditor.Utils.FullyInterpretedVirtualPath(folder)
                         Else
-                            _ImageUploadFolder = CompuMaster.camm.WebManager.Utils.CombineUnixPaths(GetReferencePath, folder)
+                            _ImageUploadFolder = CompuMaster.camm.SmartWebEditor.Utils.CombineUnixPaths(GetReferencePath, folder)
                         End If
                     End If
                     Return _ImageUploadFolder
@@ -117,9 +118,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If _DocumentUploadFolder Is Nothing AndAlso Request.QueryString("docupload") <> Nothing Then
                         Dim folder As String = Me.DecryptUrlParameters(Request.QueryString("docupload"))
                         If folder.StartsWith("/") OrElse folder.StartsWith("~/") Then
-                            _DocumentUploadFolder = CompuMaster.camm.WebManager.Utils.FullyInterpretedVirtualPath(folder)
+                            _DocumentUploadFolder = CompuMaster.camm.SmartWebEditor.Utils.FullyInterpretedVirtualPath(folder)
                         Else
-                            _DocumentUploadFolder = CompuMaster.camm.WebManager.Utils.CombineUnixPaths(GetReferencePath, folder)
+                            _DocumentUploadFolder = CompuMaster.camm.SmartWebEditor.Utils.CombineUnixPaths(GetReferencePath, folder)
                         End If
                     End If
                     Return _DocumentUploadFolder
@@ -143,9 +144,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If _MediaUploadFolder Is Nothing AndAlso Request.QueryString("mediaupload") <> Nothing Then
                         Dim folder As String = Me.DecryptUrlParameters(Request.QueryString("mediaupload"))
                         If folder.StartsWith("/") OrElse folder.StartsWith("~/") Then
-                            _MediaUploadFolder = CompuMaster.camm.WebManager.Utils.FullyInterpretedVirtualPath(folder)
+                            _MediaUploadFolder = CompuMaster.camm.SmartWebEditor.Utils.FullyInterpretedVirtualPath(folder)
                         Else
-                            _MediaUploadFolder = CompuMaster.camm.WebManager.Utils.CombineUnixPaths(GetReferencePath, folder)
+                            _MediaUploadFolder = CompuMaster.camm.SmartWebEditor.Utils.CombineUnixPaths(GetReferencePath, folder)
                         End If
                     End If
                     Return _MediaUploadFolder
@@ -563,7 +564,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                         Try
                             resizer.Save(fPath, System.Drawing.Imaging.ImageFormat.Jpeg)
                         Catch ex As Exception
-                            If Me.cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                            If Me.cammWebManager.DebugLevel >= CompuMaster.camm.WebManager.WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
                                 Throw New Exception("Image """ & fPath & """ can not be saved, missing write permission?", ex)
                             Else
                                 Throw New Exception("Image can not be saved, missing write permission?", ex)
@@ -692,3 +693,4 @@ Namespace CompuMaster.camm.SmartWebEditor
     End Namespace
 
 End Namespace
+#End If
