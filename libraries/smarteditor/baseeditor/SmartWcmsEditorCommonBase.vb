@@ -1357,17 +1357,12 @@ Namespace CompuMaster.camm.SmartWebEditor
             End If
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This event will happen while Page_Init and allows application developers to define the security object name just-in-time
         ''' </summary>
         ''' <remarks>
         '''     This early execution of the security check is required to decide about required viewstate of this control's data controls. (After Page_Init, the viewstate wouldn't be loaded any more.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	31.01.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Event BeforeSecurityCheck()
 
         Private Sub PageOnLoad(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
