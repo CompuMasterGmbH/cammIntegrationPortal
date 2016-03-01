@@ -96,3 +96,16 @@ So, for a single text for every UI language/market, you might want to use:
       securityobjecteditmode="{Security Object for Editors}" />
 ```
 
+## Additional samples
+### Sizing of edit textbox using style attributes
+``` asp
+<cammWebEdit:CommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
+      securityobjecteditmode="{Security Object for Editors}" 
+      CssWidth="100%" CssHeight="280px" />
+```
+### Sizing of edit textbox using HTML textbox columns/rows attributes
+``` asp
+<cammWebEdit:CommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
+      securityobjecteditmode="{Security Object for Editors}" 
+      Columns=80 Rows=25 />
+```
