@@ -1,4 +1,16 @@
-Option Explicit On 
+'Copyright 2005-2016 CompuMaster GmbH, http://www.compumaster.de
+'---------------------------------------------------------------
+'This file is part of camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'
+'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
+'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
+'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+
+Option Explicit On
 Option Strict On
 
 Imports CompuMaster.camm.WebManager.WMSystem
@@ -7,20 +19,11 @@ Imports System.Data.SqlClient
 
 Namespace CompuMaster.camm.WebManager
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMSystem.WMLog
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Event log methods of camm Web-Manager
     ''' </summary>
     ''' <remarks>
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	05.02.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class Log
         Private _WebManager As WMSystem
         Sub New(ByVal webManager As WMSystem)
@@ -64,7 +67,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Collect and write error data into the error log file on webserver disk (see app_data directory)
         ''' </summary>
-        <Obsolete("The preferred log mechanism should be to database or e-mail")> _
+        <Obsolete("The preferred log mechanism should be to database or e-mail")>
         Friend Shared Sub LogToFileError(exception As Exception)
             Dim filePath As String = System.Web.HttpContext.Current.Server.MapPath("~/app_data/error.log")
             Dim basePath As String = System.IO.Path.GetDirectoryName(filePath)
@@ -95,7 +98,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Collect and write warning data into the warning log file on webserver disk (see app_data directory)
         ''' </summary>
-        <Obsolete("The preferred log mechanism should be to database or e-mail")> _
+        <Obsolete("The preferred log mechanism should be to database or e-mail")>
         Friend Shared Sub LogToFileWarning(exception As Exception)
             Dim filePath As String = System.Web.HttpContext.Current.Server.MapPath("~/app_data/warning.log")
             Dim basePath As String = System.IO.Path.GetDirectoryName(filePath)
@@ -126,7 +129,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Collect and write debug data into the debug log file on webserver disk (see app_data directory)
         ''' </summary>
-        <Obsolete("The preferred log mechanism should be to database or e-mail")> _
+        <Obsolete("The preferred log mechanism should be to database or e-mail")>
         Friend Shared Sub LogToFileDebugInfo(logData As String)
             Dim filePath As String = System.Web.HttpContext.Current.Server.MapPath("~/app_data/debug.log")
             Dim basePath As String = System.IO.Path.GetDirectoryName(filePath)
@@ -1545,7 +1548,7 @@ Namespace CompuMaster.camm.WebManager
 
                                 'Get parameter value and append parameter
                                 With MyCmd
-                                    .CommandText = "INSERT INTO [dbo].[Log] ([UserID], [LoginDate], [RemoteIP], [ServerIP], [ApplicationID], [URL], [ConflictType], [ConflictDescription]) " & _
+                                    .CommandText = "INSERT INTO [dbo].[Log] ([UserID], [LoginDate], [RemoteIP], [ServerIP], [ApplicationID], [URL], [ConflictType], [ConflictDescription]) " &
                                         "VALUES (@UserID, GetDate(), @RemoteIP, @ServerIP, @ApplicationID, @URL, @ConflictType, @ConflictDescription)"
                                     .CommandType = CommandType.Text
 
@@ -1819,19 +1822,19 @@ Namespace CompuMaster.camm.WebManager
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand()
             MyCmd.Connection = MyConn
-            MyCmd.CommandText = "DECLARE @RowNumber int" & vbNewLine & _
-                        "SELECT @RowNumber = COUNT(*)" & vbNewLine & _
-                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = @key" & vbNewLine & _
-                        "SELECT @RowNumber" & vbNewLine & _
-                        vbNewLine & _
-                        "IF @RowNumber = 0 " & vbNewLine & _
-                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "		(ValueNVarChar, PropertyName, ValueInt)" & vbNewLine & _
-                        "	VALUES (N'camm WebManager', @key, @ValueInt)" & vbNewLine & _
-                        "ELSE" & vbNewLine & _
-                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "	SET ValueInt = @ValueInt" & vbNewLine & _
+            MyCmd.CommandText = "DECLARE @RowNumber int" & vbNewLine &
+                        "SELECT @RowNumber = COUNT(*)" & vbNewLine &
+                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = @key" & vbNewLine &
+                        "SELECT @RowNumber" & vbNewLine &
+                        vbNewLine &
+                        "IF @RowNumber = 0 " & vbNewLine &
+                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "		(ValueNVarChar, PropertyName, ValueInt)" & vbNewLine &
+                        "	VALUES (N'camm WebManager', @key, @ValueInt)" & vbNewLine &
+                        "ELSE" & vbNewLine &
+                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "	SET ValueInt = @ValueInt" & vbNewLine &
                         "	WHERE ValueNVarChar = N'camm WebManager' AND PropertyName = @key" & vbNewLine
             MyCmd.Parameters.Add(New SqlParameter("@key", SqlDbType.VarChar)).Value = key
             MyCmd.Parameters.Add(New SqlParameter("@ValueInt", SqlDbType.Int)).Value = value
@@ -1868,8 +1871,8 @@ Namespace CompuMaster.camm.WebManager
         Public Sub SetConflictTypesLifetime(ByVal hashTable As Hashtable)
             Dim MyCmd As SqlCommand = Nothing
             Dim MyConn As SqlConnection = Nothing
-            Dim message As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDecimal = @value WHERE ValueNVarChar = N'camm WebManager' AND PropertyName= @propertyname AND ValueInt = @key " & _
-                "IF @@ROWCOUNT = 0 " & _
+            Dim message As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDecimal = @value WHERE ValueNVarChar = N'camm WebManager' AND PropertyName= @propertyname AND ValueInt = @key " &
+                "IF @@ROWCOUNT = 0 " &
                 "INSERT INTO [dbo].[System_GlobalProperties] (ValueNVarChar, PropertyName, ValueInt, ValueDecimal) VALUES ('camm WebManager', @propertyname, @key, @value)"
             Try
                 MyCmd = New SqlCommand(message)
@@ -1936,7 +1939,7 @@ Namespace CompuMaster.camm.WebManager
             Dim connection As SqlConnection = Nothing
             Try
                 connection = New SqlConnection(_WebManager.ConnectionString)
-                cmd = New SqlCommand("INSERT INTO [dbo].[Log] ([UserID], [LoginDate], [RemoteIP], [ServerIP], [ApplicationID], [URL], [ConflictType], [ConflictDescription]) " & _
+                cmd = New SqlCommand("INSERT INTO [dbo].[Log] ([UserID], [LoginDate], [RemoteIP], [ServerIP], [ApplicationID], [URL], [ConflictType], [ConflictDescription]) " &
                         "VALUES (@UserID, GetDate(), @RemoteIP, @ServerIP, @ApplicationID, @URL, @ConflictType, @ConflictDescription)", connection)
 
                 With cmd
@@ -1988,14 +1991,14 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks></remarks>
         Private Function DeleteExpiredEntries(maxNumberOfDeletedRows As Integer) As Integer
             Dim connection As New SqlConnection(_WebManager.ConnectionString)
-            Dim Sql As String = "DELETE FROM [dbo].[Log] WHERE ID IN " & vbNewLine & _
-                "    (" & vbNewLine & _
-                "        SELECT TOP " & maxNumberOfDeletedRows & " ID " & vbNewLine & _
-                "        FROM dbo.Log" & vbNewLine & _
-                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine & _
-                "                ON Log.ConflictType = RetentionConfig.ConflictTypeID" & vbNewLine & _
-                "        WHERE LoginDate < DateAdd(dd, -COALESCE(RetentionDays, @DefaultRetentionDays), GETDATE())" & vbNewLine & _
-                "    )" & vbNewLine & _
+            Dim Sql As String = "DELETE FROM [dbo].[Log] WHERE ID IN " & vbNewLine &
+                "    (" & vbNewLine &
+                "        SELECT TOP " & maxNumberOfDeletedRows & " ID " & vbNewLine &
+                "        FROM dbo.Log" & vbNewLine &
+                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine &
+                "                ON Log.ConflictType = RetentionConfig.ConflictTypeID" & vbNewLine &
+                "        WHERE LoginDate < DateAdd(dd, -COALESCE(RetentionDays, @DefaultRetentionDays), GETDATE())" & vbNewLine &
+                "    )" & vbNewLine &
                 "SELECT @@ROWCOUNT"
             Dim cmd As New SqlCommand(Sql, connection)
             cmd.CommandType = CommandType.Text

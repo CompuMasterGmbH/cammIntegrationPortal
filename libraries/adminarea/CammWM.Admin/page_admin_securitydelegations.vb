@@ -1,3 +1,15 @@
+'Copyright 2005-2016 CompuMaster GmbH, http://www.compumaster.de
+'---------------------------------------------------------------
+'This file is part of camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'
+'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
+'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
+'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+
 Option Strict On
 Option Explicit On 
 
@@ -11,21 +23,11 @@ Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIData
 
 Namespace CompuMaster.camm.WebManager.Pages.Administration
 
-
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.AdjustDelegates
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Adjustments of delegations of security adminisration tasks
     ''' </summary>
     ''' <remarks>
     ''' </remarks>
-    ''' <history>
-    ''' 	[AdminSupport]	06.05.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class AdjustDelegates
         Inherits Page
 
@@ -250,7 +252,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim MyDt As New DataTable
 
             Try
-                Dim sqlParams As SqlParameter() = {New SqlParameter("@PrimID", CLng(Request.QueryString("ID"))), _
+                Dim sqlParams As SqlParameter() = {New SqlParameter("@PrimID", CLng(Request.QueryString("ID"))),
                     New SqlParameter("@TableName", lblTableName.Text)}
                 Dim sqlQuery As String = Nothing
                 If Me.cammWebManager.System_DBVersion_Ex.Build >= 173 Then
@@ -306,7 +308,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Try
                 Dim sqlParams As SqlParameter() = {New SqlParameter("@TableName", "Groups")}
-                Dim sqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                Dim sqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT System_SubSecurityAdjustments.*, dbo.Gruppen.[Name] AS SecuredObject FROM System_SubSecurityAdjustments LEFT JOIN dbo.Gruppen ON System_SubSecurityAdjustments.TablePrimaryIDValue = dbo.Gruppen.ID WHERE TableName = @TableName  AND (TablePrimaryIDValue = 0 OR TablePrimaryIDValue IN (SELECT ID FROM dbo.Gruppen)) ORDER BY AuthorizationType"
                 MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), sqlQuery, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             Catch
@@ -324,7 +326,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim MyDt As New DataTable
 
             Try
-                Dim sqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                Dim sqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT ID_User From Memberships WHERE ID_Group IN (6, 7, -7) group by ID_User"
                 MyDt = FillDataTable(New SqlCommand(sqlQuery, New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             Catch

@@ -1,3 +1,15 @@
+'Copyright 2004-2016 CompuMaster GmbH, http://www.compumaster.de
+'---------------------------------------------------------------
+'This file is part of camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'
+'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
+'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
+'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+
 Option Explicit On
 Option Strict On
 
@@ -9,11 +21,6 @@ Imports ICSharpCode.SharpZipLib.Zip
 
 Namespace CompuMaster.camm.WebManager
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.DownloadHandler
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The download handler provides mechanisms for creating temporary files with automatic removal after they're not required any more.
     '''     If collection contains only single file, then download handler creates hard link for that file in the download location. In case there is error
@@ -40,10 +47,6 @@ Namespace CompuMaster.camm.WebManager
     '''         IISWebRoot/SystemDownloadFolderForTemporaryFiles/{ResolveSubFolderFromDownloadLocation}/pathInDownloadLocation/folderInVirtualDownloadLocation/FileName.Extension
     '''         IISWebRoot/SystemDownloadFolderForTemporaryFiles/{ResolveSubFolderFromDownloadLocation}/pathInDownloadLocation/zipFile.zip[/folderInVirtualDownloadLocation/FileName.Extension]
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	20.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class DownloadHandler
         Inherits System.Collections.CollectionBase
 
@@ -160,7 +163,7 @@ Namespace CompuMaster.camm.WebManager
             End If
 
             'Some performance counters
-#If False And Debug Then
+#If False And DEBUG Then
         If HttpContext.Current Is Nothing Then
             System.Diagnostics.Trace.Write("IsFullyFeatured Lookup Begin")
         Else
@@ -208,7 +211,7 @@ Namespace CompuMaster.camm.WebManager
             End Try
 
             'Some performance counters
-#If False And Debug Then
+#If False And DEBUG Then
         If HttpContext.Current Is Nothing Then
             System.Diagnostics.Trace.Write("IsFullyFeatured Lookup End")
         Else
@@ -826,7 +829,7 @@ Namespace CompuMaster.camm.WebManager
         ''' 	[wezel]	25.06.2008	Created
         ''' </history>
         ''' -----------------------------------------------------------------------------
-        <Obsolete("Never implemented", True), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Never implemented", True), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function GetTempFileVirtualPath(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal fileName As String) As String
             'TODO: implementation of DownloadHandler.GetTempFileName
             Throw New NotImplementedException
@@ -1672,7 +1675,7 @@ Namespace CompuMaster.camm.WebManager
                         End If
                     End Try
                 End If
-                
+
                 'define zipfullPath variables to get return path
                 Dim targetZipfileFullPath As String = downloadFullPath & "/" & System.Guid.NewGuid.ToString("n") & ".zip"
                 If Not zipArchiveName = "" Then
@@ -3123,7 +3126,7 @@ Namespace CompuMaster.camm.WebManager
         ''' 	[patil]	31.01.2005	Created
         ''' </history>
         ''' -----------------------------------------------------------------------------
-        <Obsolete("the file shall continue with its timeout even if the file has been reused")> _
+        <Obsolete("the file shall continue with its timeout even if the file has been reused")>
         Private Sub UpdateDownloadFileRecord(ByVal virtualDownloadLocation As String, ByVal timeOfRemoval As TimeSpan)
             Dim hour As Integer = timeOfRemoval.Hours
             Dim day As Integer = timeOfRemoval.Days

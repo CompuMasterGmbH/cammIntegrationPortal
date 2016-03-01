@@ -1,4 +1,16 @@
-Option Explicit On 
+'Copyright 2004-2008,2015,2016 CompuMaster GmbH, http://www.compumaster.de
+'---------------------------------------------------------------
+'This file is part of camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'
+'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
+'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
+'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+
+Option Explicit On
 Option Strict On
 
 'Entkoppelt von Ursprungs-Version durch geänderten Namespace
@@ -9,19 +21,13 @@ Imports System.Collections
 
 Namespace CompuMaster.camm.WebManager.Tools.Data
 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     CompuMaster common tools and utilities
     ''' </summary>
     ''' <remarks>
     '''		Changes on this file only after discussion with Jochen Wezel!!
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	04/10/2004	Created
-    ''' 	[adminwezel]	2006-02-10  Latest patch
-    ''' </history>
     ''' <copyright>CompuMaster GmbH</copyright>
-    ''' -----------------------------------------------------------------------------
     Friend Class NamespaceDoc
         'UPDATE FOLLOWING LINE FOR EVERY CHANGE TO TRACK THE VERSION NUMBER INSIDE THIS DOCUMENT
         'Last change on V3.10 - 2007-02-08 JW
@@ -29,21 +35,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
     Namespace DataQuery
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : cammMM
-        ''' Class	 : Tools.Data.SqlClient.DataQuery
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Common routines to query data from a sql server database
         ''' </summary>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use AnyIDataProvider instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use AnyIDataProvider instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Friend Class SqlClient
 
             ''' -----------------------------------------------------------------------------
