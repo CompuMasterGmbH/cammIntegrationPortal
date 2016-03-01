@@ -80,8 +80,8 @@ There are several editor components available. Please use the one which is appro
             '''     <list>
             '''         <item>Current market, in ex. ID 559 / French/France</item>
             '''         <item>Current language of market, in ex. ID 3 / French</item>
-            '''         <item>English universal, ID 1</item>
-            '''         <item>Worldwide market, ID 10000</item>
+            '''         <item>Until customized by propert AlternativeDataMarkets: English universal, ID 1</item>
+            '''         <item>Until customized by propert AlternativeDataMarkets: Worldwide market, ID 10000</item>
             '''         <item>International, ID 0</item>
             '''     </list>
             '''     If the lookup process fails, an HTTP error 404 will be returned to the browser.
