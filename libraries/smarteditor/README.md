@@ -109,3 +109,29 @@ So, for a single text for every UI language/market, you might want to use:
       securityobjecteditmode="{Security Object for Editors}" 
       Columns=80 Rows=25 />
 ```
+
+### Accessing the content from a specified server ID
+By default, the address (e. g.) "/content.aspx" provides different content on different servers. So, the intranet and the extranet are able to show independent content.
+In some cases, you might want to override this behaviour and you want to show on the same URL the same content in the extranet as well as in the intranet. In this case, you would setup this property on the extranet server's scripts to show the content of the intranet server.
+``` asp
+<cammWebEdit:CommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
+      securityobjecteditmode="{Security Object for Editors}" 
+      ContentOfServerID="2" />
+```
+
+Alternatively, you can assign the ContentOfServerID value by web.config settings for whole directories
+``` xml
+<configuration>
+	<appSettings>
+		<add key="WebManager.WebManager.WebEditor.ContentOfServerID" value="2" />
+	</appSettings>
+</configuration>
+```
+
+### Accessing the content for a specified server DocumentID
+An identifier of the current document, by default its URL
+``` asp
+<cammWebEdit:CommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
+      securityobjecteditmode="{Security Object for Editors}" 
+      DocumentID="HttpServerError404DefaultMessage" />
+```
