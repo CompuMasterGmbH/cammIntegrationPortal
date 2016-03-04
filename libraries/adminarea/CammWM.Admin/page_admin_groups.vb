@@ -48,15 +48,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Try
                 Dim sqlParams1 As SqlParameter() = {New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))}
-                dtAuth = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                dtAuth = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "select TablePrimaryIDValue, AuthorizationType from System_SubSecurityAdjustments where userid=@UserID and TableName='Groups'", CommandType.Text, sqlParams1, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
                 If Not dtAuth Is Nothing AndAlso dtAuth.Rows.Count > 0 AndAlso dtAuth.Select("AuthorizationType='SecurityMaster'").Length > 0 Then CurUserIsSecurityMasterGrp = True
                 If Not dtAuth Is Nothing AndAlso dtAuth.Rows.Count > 0 AndAlso dtAuth.Select("AuthorizationType='ViewAllItems'").Length > 0 Then CurUserIsGrantedViewAll = True
 
                 Dim sqlParams As SqlParameter() = {New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))}
-                MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT view_Groups.* , Isnull((select tableprimaryidvalue from System_SubSecurityAdjustments where view_Groups.id = System_SubSecurityAdjustments.TablePrimaryIDValue and userid = @UserID AND TableName = 'Groups' AND AuthorizationType = 'UpdateRelations' group by tableprimaryidvalue),-1) as AuthTypeID FROM [view_Groups] WHERE (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Groups", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR 0 in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Groups' AND AuthorizationType In ('SecurityMaster','ViewAllItems')) OR id in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Groups' AND AuthorizationType In ('Update','Owner','View','UpdateRelations','ViewRelations','Delete'))) ORDER BY Name", CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
-                dtPublic = FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                dtPublic = FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "select id_group_public,id_group_anonymous from dbo.System_ServerGroups", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                 If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then
                     rptGroupList.DataSource = MyDt

@@ -185,7 +185,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 'Query the database
                 Dim MyCmd As New SqlCommand
                 With MyCmd
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT ID FROM [dbo].[System_SubSecurityAdjustments] WHERE TableName = @TableName AND AuthorizationType = @AuthorizationType AND UserID = @UserID AND TablePrimaryIDValue = @TablePrimaryIDValue"
                     .CommandType = CommandType.Text
                     .Connection = New SqlConnection(cammWebManager.ConnectionString)
@@ -224,7 +224,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 'Query the database
                 Dim MyCmd As New SqlCommand
                 With MyCmd
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT ID FROM [dbo].[System_SubSecurityAdjustments] WHERE TableName = @TableName AND AuthorizationType = @AuthorizationType AND UserID = @UserID AND TablePrimaryIDValue = 0"
                     .CommandType = CommandType.Text
                     .Connection = New SqlConnection(cammWebManager.ConnectionString)
