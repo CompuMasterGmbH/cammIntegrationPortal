@@ -829,7 +829,7 @@ Namespace CompuMaster.camm.WebManager
         ''' 	[wezel]	25.06.2008	Created
         ''' </history>
         ''' -----------------------------------------------------------------------------
-        <Obsolete("Never implemented", True), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Never implemented", True), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function GetTempFileVirtualPath(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal fileName As String) As String
             'TODO: implementation of DownloadHandler.GetTempFileName
             Throw New NotImplementedException
@@ -3126,7 +3126,7 @@ Namespace CompuMaster.camm.WebManager
         ''' 	[patil]	31.01.2005	Created
         ''' </history>
         ''' -----------------------------------------------------------------------------
-        <Obsolete("the file shall continue with its timeout even if the file has been reused")>
+        <Obsolete("the file shall continue with its timeout even if the file has been reused")> _
         Private Sub UpdateDownloadFileRecord(ByVal virtualDownloadLocation As String, ByVal timeOfRemoval As TimeSpan)
             Dim hour As Integer = timeOfRemoval.Hours
             Dim day As Integer = timeOfRemoval.Days

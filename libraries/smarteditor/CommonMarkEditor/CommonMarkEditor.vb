@@ -1,7 +1,7 @@
 ﻿'Copyright 2016 CompuMaster GmbH, http://www.compumaster.de
 
 Option Explicit On
-Option Strict Off
+Option Strict On
 
 Imports System.ComponentModel
 Imports System.Web.UI

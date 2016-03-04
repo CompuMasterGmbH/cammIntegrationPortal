@@ -11,7 +11,7 @@
 'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 
 Option Explicit On
-Option Strict Off
+Option Strict On
 
 Imports System
 Imports System.Collections.Generic
@@ -56,7 +56,42 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Me.CssHeight = "280px"
             End Sub
 
-            Private Sub PlainTextEditor_Init(sender As Object, e As EventArgs) Handles Me.Init
+            ''' <summary>
+            ''' Always provide client scripts (only in Edit mode) to encode raw text editor data (e.g. HTML code) so that RequestValidation doesn't throw an exception because of potentially dangerous data
+            ''' </summary>
+            ''' <seealso cref="EscapeRecognitionSequence"/>
+            Private Sub PlainTextEditor_PreRender_EncodeRawData(sender As Object, e As EventArgs) Handles MyBase.PreRender
+                If Me.Editable Then
+#If NetFrameWork = "1_1" Then
+                    Me.Page.RegisterClientScriptBlock("EncodeRawData|Base", "function EncodeRawDataIfNotEncoded (item) " & vbNewLine &
+                                                                   "{ " & vbNewLine &
+                                                                   "if ((item.value != null) && (item.value.length >= 5) && (item.value.substring(0, 5) != String.fromCharCode(27) + 'ESC' + String.fromCharCode(27))) " & vbNewLine &
+                                                                   "    { " & vbNewLine &
+                                                                   "    item.value = EncodeRawData(item); " & vbNewLine &
+                                                                   "    } " & vbNewLine &
+                                                                   "}" & vbNewLine &
+                                                                   "function EncodeRawData (item) " & vbNewLine &
+                                                                   "{ " & vbNewLine &
+                                                                   "    return String.fromCharCode(27) + 'ESC' + String.fromCharCode(27) + item.value.replace(/%/g,escape('%')).replace(/</g,escape('<')).replace(/>/g,escape('>')); " & vbNewLine &
+                                                                   "}" & vbNewLine &
+                                                                   "")
+                    Me.Page.RegisterOnSubmitStatement("EncodeRawData_" & Me.ClientID, String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}'));", Me.ClientID))
+#Else
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType, "EncodeRawData|Base", "function EncodeRawDataIfNotEncoded (item) " & vbNewLine &
+                                                                   "{ " & vbNewLine &
+                                                                   "if ((item.value != null) && (item.value.length >= 5) && (item.value.substring(0, 5) != String.fromCharCode(27) + 'ESC' + String.fromCharCode(27))) " & vbNewLine &
+                                                                   "    { " & vbNewLine &
+                                                                   "    item.value = EncodeRawData(item); " & vbNewLine &
+                                                                   "    } " & vbNewLine &
+                                                                   "}" & vbNewLine &
+                                                                   "function EncodeRawData (item) " & vbNewLine &
+                                                                   "{ " & vbNewLine &
+                                                                   "    return String.fromCharCode(27) + 'ESC' + String.fromCharCode(27) + item.value.replace(/%/g,escape('%')).replace(/</g,escape('<')).replace(/>/g,escape('>')); " & vbNewLine &
+                                                                   "}" & vbNewLine &
+                                                                   "", True)
+                    Me.Page.ClientScript.RegisterOnSubmitStatement(Me.GetType, "EncodeRawData_" & Me.ClientID, String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}'));", Me.ClientID))
+#End If
+                End If
             End Sub
 
             Public Property CssWidth As String Implements IEditor.CssWidth
@@ -107,8 +142,16 @@ Namespace CompuMaster.camm.SmartWebEditor
                 End Set
             End Property
 
+            ''' <summary>
+            ''' Escape sequence at the start of the editors text data that proclaims the text being encoded
+            ''' </summary>
+            Private Const EscapeRecognitionSequence As String = ChrW(27) & "ESC" & ChrW(27)
+
             Private Property IEditor_Html As String Implements IEditor.Html
                 Get
+                    If Me.Text <> Nothing AndAlso Me.Text.StartsWith(EscapeRecognitionSequence) Then
+                        Me.Text = System.Web.HttpUtility.UrlDecode(Me.Text.Substring(EscapeRecognitionSequence.Length))
+                    End If
                     Return Me.Text
                 End Get
                 Set(value As String)

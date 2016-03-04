@@ -14,6 +14,7 @@ Option Explicit On
 Option Strict On
 
 Imports System.Web
+Imports CompuMaster.camm.WebManager
 
 Namespace CompuMaster.camm.SmartWebEditor
 
@@ -35,24 +36,25 @@ Namespace CompuMaster.camm.SmartWebEditor
         End Property
 
         ''' <summary>
-        ''' The editor control to display or edit the content
+        '''     The interface implementation required for the database access layer
         ''' </summary>
-        ''' <returns></returns>
-        Protected MustOverride ReadOnly Property MainEditor As IEditor
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        Private ReadOnly Property _cammWebManager() As CompuMaster.camm.WebManager.IWebManager Implements ISmartWcmsEditor.cammWebManager
+            Get
+                Return Me.cammWebManager
+            End Get
+        End Property
 
 #Region " Database methods "
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Database access layer
         ''' </summary>
         ''' <value></value>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected ReadOnly Property Database() As SmartWcmsDatabaseAccessLayer
             Get
                 Static _Database As SmartWcmsDatabaseAccessLayer
@@ -65,50 +67,15 @@ Namespace CompuMaster.camm.SmartWebEditor
 
 #End Region
 
-        ''' -----------------------------------------------------------------------------
-        ''' <summary>
-        '''     The interface implementation required for the database access layer
-        ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        Private ReadOnly Property _cammWebManager() As CompuMaster.camm.WebManager.IWebManager Implements ISmartWcmsEditor.cammWebManager
-            Get
-                Return Me.cammWebManager
-            End Get
-        End Property
-
-        ''' -----------------------------------------------------------------------------
-        ''' <summary>
-        '''     Is this editor in edit mode?
-        ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[swiercz]	23.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        Public MustOverride ReadOnly Property EditModeActive() As Boolean
-
 #Region "Properties"
 
         Private _DocumentID As String
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An identifier of the current document, by default its URL
         ''' </summary>
         ''' <value></value>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	23.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property DocumentID() As String
             Get
                 If _DocumentID Is Nothing Then
@@ -135,7 +102,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         End Property
 
         Private _ServerID As Integer
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Regulary, content is always related to the current server, only. In some special cases, you might want to override this to show content from another server.
         ''' </summary>
@@ -144,10 +110,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         '''     By default, the address (e. g.) "/content.aspx" provides different content on different servers. So, the intranet and the extranet are able to show independent content.
         '''     In some cases, you might want to override this behaviour and you want to show on the same URL the same content in the extranet as well as in the intranet. In this case, you would setup this property on the extranet server's scripts to show the content of the intranet server.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	07.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ContentOfServerID() As Integer
             Get
                 If _ServerID = Nothing Then
@@ -216,17 +178,12 @@ Namespace CompuMaster.camm.SmartWebEditor
         End Enum
 
         Private _MarketLookupMode As MarketLookupModes
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Represents the current MarketLookupMode, passed as parameter by the ctrl
         ''' </summary>
         ''' <value></value>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[Swiercz]	31.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property MarketLookupMode() As MarketLookupModes
             Get
                 Return _MarketLookupMode
@@ -237,17 +194,12 @@ Namespace CompuMaster.camm.SmartWebEditor
         End Property 'MarketLookupMode()
 
         Private _SecurityObjectEditMode As String
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Indicates which application is needed to edit the formular
         ''' </summary>
         ''' <value></value>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[Swiercz]	31.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property SecurityObjectEditMode() As String
             Get
                 Return _SecurityObjectEditMode
@@ -258,6 +210,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         End Property 'SecurityObjectEditMode()
 
 #End Region
+
     End Class
 
 End Namespace

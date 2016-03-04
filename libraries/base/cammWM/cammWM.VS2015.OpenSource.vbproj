@@ -179,7 +179,6 @@
     <Compile Include="UI.vb" />
     <Compile Include="Utils.vb" />
     <Compile Include="WebEdit.vb" />
-    <Compile Include="WebEdit_sWcms3.vb" />
     <Compile Include="WebServices.vb">
       <SubType>Component</SubType>
     </Compile>

@@ -11,7 +11,7 @@
 'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 
 Option Explicit On
-Option Strict Off
+Option Strict On
 
 Imports System.Web
 
@@ -27,9 +27,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         '''     The content may be different for languages or markets. In all cases, there will be a version history.
         '''     When there is no content for an URL in the database - or it hasn't been released - the page request will lead to an HTTP 404 error code.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	29.11.2005	Created
-        ''' </history>
         Public Class SmartPlainHtmlEditor
             Inherits SmartWcmsEditorCommonBase
 
@@ -91,24 +88,14 @@ Namespace CompuMaster.camm.SmartWebEditor
                 End Set
             End Property
 
-
             Public Sub New()
                 editorMain = New PlainTextEditor
                 editorMain.EnableViewState = False
-
-
             End Sub
+
             Protected Overrides Sub CreateChildControls()
                 MyBase.CreateChildControls()
-
-                Controls.Add(editorMain)
-                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "IsDirty", "function isDirty() {  var editor = document.getElementById('" & editorMain.ClientID & "'); if(editor &&  editor.defaultValue != editor.value) return true; else return false;  }", True)
-                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "UnbindCloseCheck", "function unbindCloseCheck() { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); } var documentForm = document.forms['" & Me.LookupParentServerForm.ClientID & "']; if(documentForm.addEventListener) documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });", True)
-                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "confirmPageClose", "function confirmPageClose() {var result = false; if(isDirty()) result =  confirm('Do you want to leave? All your changes will be lost'); else { result = true } if(result) unbindCloseCheck(); return result; }" & System.Environment.NewLine, True)
-                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ResetSelectBox", "function resetSelectBox(box){ for(var i = 0; i < box.options.length; i++) {	if(box.options[i].defaultSelected) {box.options[i].selected = true; return;	} }}" & System.Environment.NewLine, True)
-                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CloseCheck", "function closeCheck(e) { if(!isDirty())  return; var confirmationMessage = 'Do you want to close this site without saving your changes?';  e.returnValue = confirmationMessage; return confirmationMessage;} " & vbNewLine & " if(window.addEventListener) window.addEventListener(""beforeunload"", closeCheck);", True)
-
-
+                Controls.Add(CType(editorMain, System.Web.UI.Control))
             End Sub
 
             Protected SaveButton As System.Web.UI.WebControls.Button = Nothing
@@ -117,36 +104,47 @@ Namespace CompuMaster.camm.SmartWebEditor
             Protected NewVersionButton As System.Web.UI.WebControls.Button = Nothing
             Protected DeleteLanguageButton As System.Web.UI.WebControls.Button = Nothing
 
-
             Protected VersionDifferenceLabel As System.Web.UI.WebControls.Label = Nothing
-
 
             Protected VersionDropDownBox As New System.Web.UI.WebControls.DropDownList
             Protected LanguagesDropDownBox As System.Web.UI.WebControls.DropDownList
 
             Private Sub CreateToolBarButtons()
+                ''WARNING following isDirty check must check for all editors (and not just editor with name of Me.ClientID)
+                'Dim EncodeRawDataJScriptSnippet As String = Nothing
+                'Dim AllEditorControls As New List(Of System.Web.UI.Control)
+                'Me.FindSWcmsControlsOnThisPage(AllEditorControls, Me.Page.Controls)
+                'For Each Editor As System.Web.UI.Control In AllEditorControls
+                '    'EncodeRawDataJScriptSnippet &= String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}')); ", CType(Editor, SmartWcmsEditorCommonBase).EditorClientID)
+                'Next
+
                 Me.SaveButton = New System.Web.UI.WebControls.Button()
-                Me.SaveButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'update'; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                AssignOnClientClickAttribute(Me.SaveButton, "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'update'; unbindCloseCheck(); ExecPostBack('SaveButton', 'Click', true);") ' " & EncodeRawDataJScriptSnippet & "; document.forms['" & LookupParentServerFormName() & "'].submit(); return false;")
                 Me.SaveButton.Text = "Save"
 
-
                 Me.ActivateButton = New System.Web.UI.WebControls.Button
-                Me.ActivateButton.OnClientClick = "document.getElementById('" & Me.txtActivate.ClientID & "').value = 'activate'; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                AssignOnClientClickAttribute(Me.ActivateButton, "document.getElementById('" & Me.txtActivate.ClientID & "').value = 'activate'; unbindCloseCheck(); ExecPostBack('ActivateButton', 'Click', true);") '" & EncodeRawDataJScriptSnippet & "; document.forms['" & LookupParentServerFormName() & "'].submit(); return false;")
                 Me.ActivateButton.Text = "Save & Activate"
                 Me.ActivateButton.ToolTip = "Save & Activate all languages/markets of this version"
 
                 Me.PreviewButton = New System.Web.UI.WebControls.Button()
-                Me.PreviewButton.OnClientClick = "document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'false'; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                AssignOnClientClickAttribute(Me.PreviewButton, "document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'false'; unbindCloseCheck(); ExecPostBack('PreviewButton', 'Click', true);") '" & EncodeRawDataJScriptSnippet & "; document.forms['" & LookupParentServerFormName() & "'].submit(); return false;")
                 Me.PreviewButton.Text = "Preview"
 
                 Me.NewVersionButton = New System.Web.UI.WebControls.Button()
-                Me.NewVersionButton.OnClientClick = "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'newversion'; document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'true';  unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();"
+                AssignOnClientClickAttribute(Me.NewVersionButton, "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'newversion'; document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'true';  unbindCloseCheck(); ExecPostBack('NewVersionButton', 'Click', true);") '" & EncodeRawDataJScriptSnippet & "; document.forms['" & LookupParentServerFormName() & "'].submit(); return false;")
                 Me.NewVersionButton.Text = "New Version"
 
                 Me.VersionDifferenceLabel = New System.Web.UI.WebControls.Label()
                 Me.VersionDifferenceLabel.EnableViewState = False
+            End Sub
 
-
+            Private Sub AssignOnClientClickAttribute(control As System.Web.UI.WebControls.Button, script As String)
+#If NetFrameWork = "1_1" Then
+                control.Attributes("onclick") = script
+#Else
+                control.OnClientClick = script
+#End If
             End Sub
 
             ''' <summary>
@@ -181,7 +179,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                     End If
                 Next
                 Dim dropDownScript As String = "document.getElementById('" & txtBrowseToMarketVersion.ClientID & "').value = this.value; "
-                Me.VersionDropDownBox.Attributes.Add("onchange", "if(confirmPageClose()){ " & dropDownScript & " this.selectedIndex = -1; unbindCloseCheck(); document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit();  } else resetSelectBox(this); ")
+                Me.VersionDropDownBox.Attributes.Add("onchange", "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = ''; if(confirmPageClose()){ " & dropDownScript & " this.selectedIndex = -1; unbindCloseCheck(); ExecPostBack('VersionDropDownBox', 'Change', true);  } else resetSelectBox(this); ") 'document.forms['" & LookupParentServerFormName() & "'].submit();  } else resetSelectBox(this); ")
 
                 Dim selectedValue As String = Me.CurrentVersion & ";" & LanguageToShow.ToString()
 
@@ -222,7 +220,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 End If
 
                 Dim script As String = "document.getElementById('" & txtBrowseToMarketVersion.ClientID & "').value = this.value;"
-                LanguagesDropDownBox.Attributes.Add("onchange", "if(confirmPageClose()){" & script & "; this.selectedIndex = -1; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit(); } else resetSelectBox(this); ")
+                LanguagesDropDownBox.Attributes.Add("onchange", "if(confirmPageClose()){" & script & "; this.selectedIndex = -1; document.forms['" & LookupParentServerFormName() & "'].submit(); } else resetSelectBox(this); ")
             End Sub
             ''' <summary>
             ''' Shows the buttons that we need
@@ -243,15 +241,12 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.pnlEditorToolbar.Controls.Add(NewVersionButton)
                     Me.pnlEditorToolbar.Controls.Add(PreviewButton)
 
-
                     If Me.MarketLookupMode <> MarketLookupModes.SingleMarket Then
                         InitializeLanguageDropDownList()
                         Me.pnlEditorToolbar.Controls.Add(Me.LanguagesDropDownBox)
                     End If
 
                     Me.pnlEditorToolbar.Controls.Add(VersionDropDownBox)
-
-
                 ElseIf toolbartype = ToolbarSettings.EditWithValidEditVersion Then
                     Me.pnlEditorToolbar.Controls.Add(PreviewButton)
                     If Me.MarketLookupMode <> MarketLookupModes.SingleMarket Then
@@ -260,14 +255,12 @@ Namespace CompuMaster.camm.SmartWebEditor
                     End If
 
                     Me.pnlEditorToolbar.Controls.Add(VersionDropDownBox)
-
-
                 End If
+
                 If Me.MarketLookupMode <> MarketLookupModes.SingleMarket Then
                     Me.DeleteLanguageButton = New UI.WebControls.Button()
                     Me.DeleteLanguageButton.Text = "Delete/Deactivate this market"
-                    Me.DeleteLanguageButton.OnClientClick = "if(confirmPageClose()) { document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'dropcurrentmarket'; document.forms['" & Me.LookupParentServerForm.ClientID & "'].submit(); } return false; "
-
+                    AssignOnClientClickAttribute(Me.DeleteLanguageButton, "if(confirmPageClose()) { document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'dropcurrentmarket'; ExecPostBack('DropCurrentMarketButton', 'Click', true); } return false; ") 'document.forms['" & LookupParentServerFormName() & "'].submit(); } return false; ")
 
                     If Me.LanguageToShow <> 0 AndAlso Me.CountAvailableEditVersions() > 1 AndAlso Me.pnlEditorToolbar.Controls.Contains(SaveButton) Then
                         Me.pnlEditorToolbar.Controls.Add(Me.DeleteLanguageButton)
@@ -278,18 +271,12 @@ Namespace CompuMaster.camm.SmartWebEditor
                 If toolbartype = ToolbarSettings.EditWithValidEditVersion OrElse toolbartype = ToolbarSettings.EditNoneEditableVersions Then
                     Me.pnlEditorToolbar.Controls.Add(VersionDifferenceLabel)
                 End If
-
-
             End Sub
             Private Sub SetToolbar(ByVal toolbar As ToolbarSettings)
                 CreateToolBarButtons()
                 InitializeVersionDropDownBox()
 
                 AssembleToolbar(toolbar)
-
-
-
-
             End Sub
 
             Private Sub SetVersionDifferenceLabelText()
@@ -307,9 +294,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                         End If
 
                     ElseIf differentVersion = currentVersion - 1 Then
-                            Me.VersionDifferenceLabel.Text = "With changes"
-                        Else
-                            Dim firstSameVersion As Integer = differentVersion + 1
+                        Me.VersionDifferenceLabel.Text = "With changes"
+                    Else
+                        Dim firstSameVersion As Integer = differentVersion + 1
                         'It's possible the market was deactivated before and the version doesn't actually exist
                         If Me.Database.IsMarketAvailable(Me.ContentOfServerID, DocumentID, Me.EditorID, currentMarket, firstSameVersion) Then
                             Me.VersionDifferenceLabel.Text = "Without changes since version v" & (differentVersion + 1).ToString()
@@ -323,7 +310,6 @@ Namespace CompuMaster.camm.SmartWebEditor
 
             End Sub
 
-
             Protected Overrides Sub PagePreRender_InitializeToolbar()
                 Dim label As System.Web.UI.WebControls.Label = New System.Web.UI.WebControls.Label()
 
@@ -332,7 +318,6 @@ Namespace CompuMaster.camm.SmartWebEditor
                     SetVersionDifferenceLabelText()
                 End If
 
-
                 If Me.ToolbarSetting = ToolbarSettings.NoVersionAvailable Then
                     label.Text = "No versions available"
                     Me.pnlEditorToolbar.Controls.Add(label)
@@ -340,10 +325,122 @@ Namespace CompuMaster.camm.SmartWebEditor
 
                 Me.pnlEditorToolbar.Visible = Me.editorMain.Visible
 
-
-
             End Sub
 
+            ''' <summary>
+            ''' Always provide client scripts (only in Edit mode) for IsDirty detection
+            ''' </summary>
+            Private Sub SmartPlainHtmlEditor_PreRender(sender As Object, e As EventArgs) Handles MyBase.PreRender
+                If Me.EditModeActive Then
+                    'following isDirty check must check for all editors (and not just editor with name of EditorMain.ClientID)
+#If NetFrameWork = "1_1" Then
+                    Dim AllEditorControls As New ArrayList
+#Else
+                    Dim AllEditorControls As New List(Of System.Web.UI.Control)
+#End If
+                    Me.FindSWcmsControlsOnThisPage(AllEditorControls, Me.Page.Controls)
+                    Dim IsDirtyChecksJScriptSnippet As String = Nothing
+                    For Each Editor As System.Web.UI.Control In AllEditorControls
+                        Dim EditorInstanceIsDirtyScript As String = "function isDirty_" & Editor.ClientID & "() " & vbNewLine &
+                                                                   "{  " & vbNewLine &
+                                                                   "var editor = document.getElementById('" & CType(Editor, SmartWcmsEditorCommonBase).EditorClientID & "'); " & vbNewLine &
+                                                                   "if(editor && (editor.defaultValue != editor.value) && (editor.defaultValue != EncodeRawData(editor)))" & vbNewLine &
+                                                                   "    return true; " & vbNewLine &
+                                                                   "else " & vbNewLine &
+                                                                   "    return false;  " & vbNewLine &
+                                                                   "}" & vbNewLine
+#If NetFrameWork = "1_1" Then
+                        Me.Page.RegisterClientScriptBlock("IsDirty_" & Editor.ClientID, EditorInstanceIsDirtyScript)
+#Else
+                        Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "IsDirty_" & Editor.ClientID, EditorInstanceIsDirtyScript, True)
+#End If
+                        If IsDirtyChecksJScriptSnippet <> "" Then IsDirtyChecksJScriptSnippet &= " && "
+                        IsDirtyChecksJScriptSnippet &= "(isDirty_" & Editor.ClientID & "())"
+                    Next
+                    Dim IsDirtySnippet As String = "function isDirty() " & vbNewLine &
+                                                                   "{  " & vbNewLine &
+                                                                   "    return (" & IsDirtyChecksJScriptSnippet & ");  " & vbNewLine &
+                                                                   "}" & vbNewLine &
+                                                                   ""
+#If NetFrameWork = "1_1" Then
+                    Me.Page.RegisterClientScriptBlock("IsDirty", IsDirtySnippet)
+#Else
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "IsDirty", IsDirtySnippet, True)
+#End If
+
+                    'Single script instances
+                    Const ExecPostBackSnippet As String = "function ExecPostBack(caller, event, ensureUnbindedCloseCheck) " & vbNewLine &
+                                                                   "{ " & vbNewLine &
+                                                                   "    if(ensureUnbindedCloseCheck) unbindCloseCheck(); " & vbNewLine &
+                                                                   "    __doPostBack (caller, event);" & vbNewLine &
+                                                                   "} " & vbNewLine &
+                                                                   ""
+                    Dim UnbindCloseCheckSnippet As String = "function unbindCloseCheck() " & vbNewLine &
+                                                                   "{ " & vbNewLine &
+                                                                   "    if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); " & vbNewLine &
+                                                                   "} " & vbNewLine &
+                                                                   "var documentForm = document.forms['" & LookupParentServerFormName() & "']; " & vbNewLine &
+                                                                   "if(documentForm.addEventListener) " & vbNewLine &
+                                                                   "    documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });" & vbNewLine &
+                                                                   ""
+                    Const ConfirmPageCloseSnippet As String = "function confirmPageClose() " & vbNewLine &
+                                                                   "{" & vbNewLine &
+                                                                   "var result = false; " & vbNewLine &
+                                                                   "if(isDirty()) " & vbNewLine &
+                                                                   "    result = confirm('Do you want to leave? All your changes will be lost'); " & vbNewLine &
+                                                                   "else " & vbNewLine &
+                                                                   "    { " & vbNewLine &
+                                                                   "    result = true " & vbNewLine &
+                                                                   "    } " & vbNewLine &
+                                                                   "if(result) " & vbNewLine &
+                                                                   "    unbindCloseCheck(); " & vbNewLine &
+                                                                   "return result; " & vbNewLine &
+                                                                   "}" & vbNewLine
+                    Const ResetSelectBoxSnippet As String = "function resetSelectBox(box)" & vbNewLine &
+                                                                   "{ " & vbNewLine &
+                                                                   "for(var i = 0; i < box.options.length; i++) " & vbNewLine &
+                                                                   "    {	" & vbNewLine &
+                                                                   "    if(box.options[i].defaultSelected) " & vbNewLine &
+                                                                   "        {" & vbNewLine &
+                                                                   "        box.options[i].selected = true; " & vbNewLine &
+                                                                   "        return;	" & vbNewLine &
+                                                                   "        } " & vbNewLine &
+                                                                   "    }" & vbNewLine &
+                                                                   "}" & vbNewLine
+                    Const CloseCheckSnippet As String = "function closeCheck(e) " & vbNewLine &
+                                                                       "{ " & vbNewLine &
+                                                                       "if(!isDirty())  " & vbNewLine &
+                                                                       "    return; " & vbNewLine &
+                                                                       "var confirmationMessage = 'Do you want to close this site without saving your changes?';  " & vbNewLine &
+                                                                       "e.returnValue = confirmationMessage; " & vbNewLine &
+                                                                       "return confirmationMessage;" & vbNewLine &
+                                                                       "} " & vbNewLine &
+                                                                       "if(window.addEventListener) " & vbNewLine &
+                                                                       "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine &
+                                                                       ""
+#If NetFrameWork = "1_1" Then
+                    Me.Page.RegisterClientScriptBlock("ExecPostBack", ExecPostBackSnippet)
+                    Me.Page.RegisterClientScriptBlock("UnbindCloseCheck", UnbindCloseCheckSnippet)
+                    Me.Page.RegisterClientScriptBlock("confirmPageClose", ConfirmPageCloseSnippet)
+                    Me.Page.RegisterClientScriptBlock("ResetSelectBox", ResetSelectBoxSnippet)
+                    Me.Page.RegisterClientScriptBlock("CloseCheck", CloseCheckSnippet)
+#Else
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ExecPostBack", ExecPostBackSnippet, True)
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "UnbindCloseCheck", UnbindCloseCheckSnippet, True)
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "confirmPageClose", ConfirmPageCloseSnippet, True)
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ResetSelectBox", ResetSelectBoxSnippet, True)
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CloseCheck", CloseCheckSnippet, True)
+#End If
+
+                    'Enforce __doPostBack javascript function being existent
+#If NetFrameWork = "1_1" Then
+                    Me.Page.GetPostBackEventReference(Me, "")
+#Else
+                    Me.Page.ClientScript.GetPostBackEventReference(Me, String.Empty)
+#End If
+
+                End If
+            End Sub
         End Class
 
     End Namespace

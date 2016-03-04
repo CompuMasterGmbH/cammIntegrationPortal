@@ -6,7 +6,7 @@ Imports System.Reflection
 Imports System.Runtime.InteropServices
 
 ' Default Tag-Prefix for the designer when dragging&dropping controls into a page
-<Assembly: System.Web.UI.TagPrefix("CompuMaster.camm.WebManager.Controls", "cammWM")>
+<Assembly: System.Web.UI.TagPrefix("CompuMaster.camm.SmartWebEditor.Controls", "cammWebEdit")>
 
 <Assembly: AssemblyTitle("camm Web-Manager SmartEditor with PlainTextEditor")>
 <Assembly: AssemblyDescription("")>

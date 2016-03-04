@@ -1,4 +1,4 @@
-﻿'Copyright 2005-2016 CompuMaster GmbH, http://www.compumaster.de
+﻿'Copyright 2006-2016 CompuMaster GmbH, http://www.compumaster.de
 '---------------------------------------------------------------
 'This file is part of camm Integration Portal (camm Web-Manager).
 'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -15,27 +15,11 @@ Option Strict On
 
 Namespace CompuMaster.camm.SmartWebEditor
 
-    ''' <summary>
-    '''     Configuration settings read from web.config/app.config/Azure config
-    ''' </summary>
-    Public Class Configuration
+    Public Class ProtectedPage
+        Inherits CompuMaster.camm.WebManager.Pages.ProtectedPage
 
-        Friend Sub New()
-            'Creatable only assembly-internally
-        End Sub
-
-        Public ReadOnly Property ContentOfServerID() As Integer
-            Get
-                Return ConfigurationWebManager.WebEditorContentOfServerID
-            End Get
-        End Property
-
-        Public Shared Function WebManagerSettings(settingName As String) As String
-            If settingName.StartsWith("WebManager.Wcms.") Then
-                Return ConfigurationWebManager.WebManagerSettings(settingName)
-            Else
-                Throw New ArgumentException("Not a SmartEditor setting")
-            End If
+        Protected Function ConfigurationSettings(settingName As String) As String
+            Return Configuration.WebManagerSettings(settingName)
         End Function
 
     End Class

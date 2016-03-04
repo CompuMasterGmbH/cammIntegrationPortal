@@ -365,13 +365,13 @@ Namespace CompuMaster.camm.WebManager.Application
             End If
 
             'Identifies a flag that the cammWebManager has a running instance in the Application
-            Dim FirstInitRun As Boolean = False 'Attention: the Init method may be called multiple times - why ever
+            Dim RunningFirstInit As Boolean = False 'Attention: the Init method may be called multiple times - why ever
             If HttpContext.Current.Application("WebManager.Application.InitiatedByCwmHttpApplication") Is Nothing Then
                 Application("WebManager.Application.InitiatedByCwmHttpApplication") = True
-                FirstInitRun = True
+                RunningFirstInit = True
             End If
 
-            If FirstInitRun Then
+            If RunningFirstInit Then
                 Try
                     'Log the application version for live-tracking
                     If Not Me.cammWebManager Is Nothing Then

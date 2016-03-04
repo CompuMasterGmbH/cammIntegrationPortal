@@ -11,7 +11,7 @@
 'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 
 Option Explicit On
-Option Strict Off
+Option Strict On
 
 Imports System
 Imports System.Collections.Generic

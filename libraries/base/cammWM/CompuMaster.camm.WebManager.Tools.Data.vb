@@ -46,7 +46,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' </summary>
         ''' <remarks>
         ''' </remarks>
-        <Obsolete("Use AnyIDataProvider instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use AnyIDataProvider instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Friend Class SqlClient
 
             ''' <summary>

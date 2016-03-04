@@ -13,30 +13,27 @@
 Option Explicit On
 Option Strict On
 
+Imports System.Web
+Imports CompuMaster.camm.WebManager
+
 Namespace CompuMaster.camm.SmartWebEditor
 
-    ''' <summary>
-    '''     Configuration settings read from web.config/app.config/Azure config
-    ''' </summary>
-    Public Class Configuration
+    Public MustInherit Class SmartWcmsEditorBaseLevel2
+        Inherits SmartWcmsEditorBase
 
-        Friend Sub New()
-            'Creatable only assembly-internally
-        End Sub
+        ''' <summary>
+        ''' The editor control to display or edit the content
+        ''' </summary>
+        ''' <returns></returns>
+        Protected MustOverride ReadOnly Property MainEditor As IEditor
 
-        Public ReadOnly Property ContentOfServerID() As Integer
-            Get
-                Return ConfigurationWebManager.WebEditorContentOfServerID
-            End Get
-        End Property
-
-        Public Shared Function WebManagerSettings(settingName As String) As String
-            If settingName.StartsWith("WebManager.Wcms.") Then
-                Return ConfigurationWebManager.WebManagerSettings(settingName)
-            Else
-                Throw New ArgumentException("Not a SmartEditor setting")
-            End If
-        End Function
+        ''' <summary>
+        '''     Is this editor in edit mode?
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        Public MustOverride ReadOnly Property EditModeActive() As Boolean
 
     End Class
 

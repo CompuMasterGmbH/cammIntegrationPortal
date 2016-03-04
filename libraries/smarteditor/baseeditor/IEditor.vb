@@ -19,6 +19,10 @@ Namespace CompuMaster.camm.SmartWebEditor
 
     Public Interface IEditor
 
+        ''' <summary>
+        ''' The raw content of the textbox (e.g. HTML, CommonMark, etc.)
+        ''' </summary>
+        ''' <returns></returns>
         Property Html As String
 
         Property Editable As Boolean

@@ -140,9 +140,9 @@ Namespace CompuMaster.camm.WebManager.Tools.IO
                                 If Win32ErrorMessage Is Nothing Then
                                     Throw New Exception(DeletionWarning & "Creation of hard file link failed; source and destination files must reside on the same NTFS volume")
                                 Else
-                                    Throw New Exception(DeletionWarning &
-                                        "Win32 Fehlermeldung: '" & Win32ErrorMessage.ToString & "'" & vbNewLine &
-                                        "Hardlink-Sourcefile: '" & ExistingFileSystemObject & "'" & vbNewLine &
+                                    Throw New Exception(DeletionWarning & _
+                                        "Win32 Fehlermeldung: '" & Win32ErrorMessage.ToString & "'" & vbNewLine & _
+                                        "Hardlink-Sourcefile: '" & ExistingFileSystemObject & "'" & vbNewLine & _
                                         "Hardlink-Targetfile: '" & NewLinkingFileSystemObject & "'")
                                 End If
                             ElseIf System.IO.File.Exists(ExistingTargetLocation) = False Then
@@ -343,11 +343,11 @@ Namespace CompuMaster.camm.WebManager.Tools.IO
         'CreateDirectoryExW
         'CreateHardLinkA
         'CreateHardLinkW
-        <DllImport("kernel32.dll", CallingConvention:=CallingConvention.Winapi, EntryPoint:="CreateHardLinkW", CharSet:=CharSet.Unicode, SetLastError:=True)>
+        <DllImport("kernel32.dll", CallingConvention:=CallingConvention.Winapi, EntryPoint:="CreateHardLinkW", CharSet:=CharSet.Unicode, SetLastError:=True)> _
         Private Shared Function _CreateNTFSHardLinkWin(ByVal NewFileName As String, ByVal ExistingFileName As String, ByVal lpSecurityAttributes As System.UInt16) As Boolean
         End Function
 
-        <DllImport("kernel32.dll", CallingConvention:=CallingConvention.Winapi, EntryPoint:="CreateHardLinkA", CharSet:=CharSet.Ansi, SetLastError:=False)>
+        <DllImport("kernel32.dll", CallingConvention:=CallingConvention.Winapi, EntryPoint:="CreateHardLinkA", CharSet:=CharSet.Ansi, SetLastError:=False)> _
         Private Shared Function _CreateNTFSHardLinkWinANSI(ByVal NewFileName As String, ByVal ExistingFileName As String, ByVal lpSecurityAttributes As System.UInt16) As Boolean
         End Function
 
