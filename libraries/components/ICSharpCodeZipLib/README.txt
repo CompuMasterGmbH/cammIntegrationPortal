@@ -1,0 +1,2 @@
+﻿This library is identical to the origin #ZipLib library except for the following reason:
+- removed strong naming (to allow replacment of depending assemblies without trouble/conflicts on non-matching versions of this #ZipLib assembly)

@@ -1,5 +1,17 @@
-﻿Option Explicit On
-Option Strict Off
+﻿'Copyright 2005-2016 CompuMaster GmbH, http://www.compumaster.de
+'---------------------------------------------------------------
+'This file is part of camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'
+'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
+'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
+'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+
+Option Explicit On
+Option Strict On
 
 Imports System
 Imports System.Collections.Generic
@@ -9,6 +21,7 @@ Imports System.Web
 Imports System.Web.UI
 Imports System.Web.UI.WebControls
 
+#If False Then
 Namespace CompuMaster.camm.SmartWebEditor
 
     Namespace Pages
@@ -91,9 +104,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If _ImageUploadFolder Is Nothing AndAlso Request.QueryString("imageupload") <> Nothing Then
                         Dim folder As String = Me.DecryptUrlParameters(Request.QueryString("imageupload"))
                         If folder.StartsWith("/") OrElse folder.StartsWith("~/") Then
-                            _ImageUploadFolder = CompuMaster.camm.WebManager.Utils.FullyInterpretedVirtualPath(folder)
+                            _ImageUploadFolder = CompuMaster.camm.SmartWebEditor.Utils.FullyInterpretedVirtualPath(folder)
                         Else
-                            _ImageUploadFolder = CompuMaster.camm.WebManager.Utils.CombineUnixPaths(GetReferencePath, folder)
+                            _ImageUploadFolder = CompuMaster.camm.SmartWebEditor.Utils.CombineUnixPaths(GetReferencePath, folder)
                         End If
                     End If
                     Return _ImageUploadFolder
@@ -117,9 +130,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If _DocumentUploadFolder Is Nothing AndAlso Request.QueryString("docupload") <> Nothing Then
                         Dim folder As String = Me.DecryptUrlParameters(Request.QueryString("docupload"))
                         If folder.StartsWith("/") OrElse folder.StartsWith("~/") Then
-                            _DocumentUploadFolder = CompuMaster.camm.WebManager.Utils.FullyInterpretedVirtualPath(folder)
+                            _DocumentUploadFolder = CompuMaster.camm.SmartWebEditor.Utils.FullyInterpretedVirtualPath(folder)
                         Else
-                            _DocumentUploadFolder = CompuMaster.camm.WebManager.Utils.CombineUnixPaths(GetReferencePath, folder)
+                            _DocumentUploadFolder = CompuMaster.camm.SmartWebEditor.Utils.CombineUnixPaths(GetReferencePath, folder)
                         End If
                     End If
                     Return _DocumentUploadFolder
@@ -143,9 +156,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If _MediaUploadFolder Is Nothing AndAlso Request.QueryString("mediaupload") <> Nothing Then
                         Dim folder As String = Me.DecryptUrlParameters(Request.QueryString("mediaupload"))
                         If folder.StartsWith("/") OrElse folder.StartsWith("~/") Then
-                            _MediaUploadFolder = CompuMaster.camm.WebManager.Utils.FullyInterpretedVirtualPath(folder)
+                            _MediaUploadFolder = CompuMaster.camm.SmartWebEditor.Utils.FullyInterpretedVirtualPath(folder)
                         Else
-                            _MediaUploadFolder = CompuMaster.camm.WebManager.Utils.CombineUnixPaths(GetReferencePath, folder)
+                            _MediaUploadFolder = CompuMaster.camm.SmartWebEditor.Utils.CombineUnixPaths(GetReferencePath, folder)
                         End If
                     End If
                     Return _MediaUploadFolder
@@ -563,7 +576,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                         Try
                             resizer.Save(fPath, System.Drawing.Imaging.ImageFormat.Jpeg)
                         Catch ex As Exception
-                            If Me.cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                            If Me.cammWebManager.DebugLevel >= CompuMaster.camm.WebManager.WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
                                 Throw New Exception("Image """ & fPath & """ can not be saved, missing write permission?", ex)
                             Else
                                 Throw New Exception("Image can not be saved, missing write permission?", ex)
@@ -692,3 +705,4 @@ Namespace CompuMaster.camm.SmartWebEditor
     End Namespace
 
 End Namespace
+#End If

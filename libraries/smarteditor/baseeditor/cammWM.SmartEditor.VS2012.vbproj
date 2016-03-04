@@ -59,35 +59,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <DefineConstants>LicenceGenerator=True,NET="2_0"</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %40 www.camm.biz|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Debug %40 www.camm.biz\</OutputPath>
-    <DefineConstants>LicenceGenerator=True,NET="2_0"</DefineConstants>
-    <DocumentationFile>cammWM.SmartEditor.xml</DocumentationFile>
-    <WarningLevel>1</WarningLevel>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %40 wks26|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <OutputPath>C:\inetpub\camm2014\bin\</OutputPath>
-    <DefineConstants>LicenceGenerator=True,NET="2_0"</DefineConstants>
-    <DocumentationFile>cammWM.SmartEditor.xml</DocumentationFile>
-    <WarningLevel>1</WarningLevel>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="cammWM">
       <HintPath>libs\cammWM.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -108,11 +83,15 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.vb" />
     <Compile Include="AssemblyVersion.vb" />
+    <Compile Include="SmartWcmsEditorBaseLevel2.vb" />
+    <Compile Include="ProtectedPage.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="IEditor.vb" />
     <Compile Include="SmartPlainHtmlEditor.vb" />
-    <Compile Include="CompuMaster.camm.WebManager.Tools.Data.vb" />
+    <Compile Include="DataQueryAndTables.vb" />
     <Compile Include="Configuration.vb" />
-    <Compile Include="configuration_wm.vb" />
+    <Compile Include="ConfigurationWebManager.vb" />
     <Compile Include="ISmartWcmsEditor.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -130,9 +109,7 @@
     </Compile>
     <Compile Include="SmartWcmsDatabaseAccessLayer.vb" />
     <Compile Include="SmartWcmsEditorCommonBase.vb" />
-    <Compile Include="UploadForm.vb">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
+    <Compile Include="UploadForm.vb" />
     <Compile Include="Utils.vb" />
     <Compile Include="SmartWcmsEditorBase.vb" />
     <Compile Include="PlainTextEditor.vb" />

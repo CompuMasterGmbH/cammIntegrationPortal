@@ -1,4 +1,16 @@
-﻿Option Explicit On
+﻿'Copyright 2006,2016 CompuMaster GmbH, http://www.compumaster.de
+'---------------------------------------------------------------
+'This file is part of camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'
+'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
+'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
+'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+
+Option Explicit On
 Option Strict On
 
 Imports System.Web
@@ -10,50 +22,26 @@ Namespace CompuMaster.camm.SmartWebEditor
     ''' </summary>
     ''' <remarks>
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	17.02.2006	Created
-    ''' </history>
     Public Class SmartWcmsDatabaseAccessLayer
 
-#Region "Constructor"
         Private _swcms As ISmartWcmsEditor
         Friend Sub New(ByVal swcms As ISmartWcmsEditor)
             _swcms = swcms
         End Sub
-#End Region
 
-#Region "Property redirects"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The connection string
         ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[swiercz]	11.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private ReadOnly Property ConnectionString() As String
             Get
                 Return Me._swcms.cammWebManager.ConnectionString
             End Get
         End Property
 
-#End Region
-
-#Region "Cache reset"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Clear all cached variables which contain database values
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	02.01.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        Private Sub ClearCachedDbValues()
+        Friend Sub ClearCachedDbValues()
             _CachedMaxVersion_EditorID = Nothing
             _CachedMaxVersion_Result = Integer.MinValue
             _CachedMaxVersion_ServerID = Integer.MinValue
@@ -68,22 +56,11 @@ Namespace CompuMaster.camm.SmartWebEditor
             _CachedCompleteData_Url = Nothing
         End Sub
 
-#End Region
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An array of available languages within an editor controls version
         ''' </summary>
-        ''' <param name="Url"></param>
-        ''' <param name="Version"></param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[swiercz]	23.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        Public Function AvailableMarketsInData(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal Version As Integer) As Integer()
+        Public Function AvailableMarketsInData(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal version As Integer) As Integer()
             Dim myConnection As SqlClient.SqlConnection
             Dim myCommand As SqlClient.SqlCommand
             Dim myQuery As String =
@@ -95,11 +72,10 @@ Namespace CompuMaster.camm.SmartWebEditor
             myCommand.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
             myCommand.Parameters.Add("@URL", SqlDbType.NVarChar).Value = url.ToLower
             myCommand.Parameters.Add("@EditorID", SqlDbType.NVarChar).Value = editorID
-            myCommand.Parameters.Add("@Version", SqlDbType.Int).Value = Version
-            Return CType(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoArrayList(myCommand, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection).ToArray(GetType(Integer)), Integer())
+            myCommand.Parameters.Add("@Version", SqlDbType.Int).Value = version
+            Return CType(Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoArrayList(myCommand, Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection).ToArray(GetType(Integer)), Integer())
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Save the content of the editor control into the database
         ''' </summary>
@@ -111,10 +87,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <param name="modifiedBy"></param>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[swiercz]	23.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub SaveEditorContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal content As String, ByVal modifiedBy As Long)
             'Prepare query:
             Dim myQuery As String =
@@ -160,12 +132,11 @@ Namespace CompuMaster.camm.SmartWebEditor
             myCommand.Parameters.Add("@Content", SqlDbType.NText).Value = content
             myCommand.Parameters.Add("@ModifiedByUser", SqlDbType.Int).Value = modifiedBy
             'Execute the insert statement
-            CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(myCommand, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+            Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(myCommand, Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             'Reset cached values
             Me.ClearCachedDbValues()
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Identify if a given market exists in the defined, versioned document
         ''' </summary>
@@ -175,12 +146,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <param name="marketID"></param>
         ''' <param name="version"></param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function IsMarketAvailable(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As Boolean
             Dim Data As DataRow() = Me.ReadAllData(serverID, url, editorID).Select("LanguageID = " & marketID & " AND Version = " & version)
             If Data.Length = 0 Then
@@ -190,7 +155,6 @@ Namespace CompuMaster.camm.SmartWebEditor
             End If
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Remove a given market from the editable version
         ''' </summary>
@@ -198,12 +162,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <param name="url"></param>
         ''' <param name="editorID"></param>
         ''' <param name="marketID"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub RemoveMarketFromEditVersion(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer)
             'Prepare query:
             Dim myQuery As String =
@@ -226,12 +184,11 @@ Namespace CompuMaster.camm.SmartWebEditor
             myCommand.Parameters.Add("@URL", SqlDbType.NVarChar).Value = url.ToLower
             myCommand.Parameters.Add("@EditorID", SqlDbType.NVarChar).Value = editorID
             'Execute the insert statement
-            CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(myCommand, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+            Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(myCommand, Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             'Reset cached values
             Me.ClearCachedDbValues()
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Release the latest version
         ''' </summary>
@@ -240,12 +197,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <param name="editorID"></param>
         ''' <param name="releasedByUser"></param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ReleaseLatestVersion(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal releasedByUser As Long) As Boolean
             Dim myQuery As String =
                     "DECLARE @Version int" & vbNewLine &
@@ -272,7 +223,7 @@ Namespace CompuMaster.camm.SmartWebEditor
             myCommand.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
             myCommand.Parameters.Add("@ReleasedByUser", SqlDbType.Int).Value = releasedByUser
             'Execute the insert statement
-            CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(myCommand, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+            Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(myCommand, Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             'Reset cached values
             Me.ClearCachedDbValues()
         End Function
@@ -281,7 +232,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         Private _CachedMaxVersion_Url As String = Nothing
         Private _CachedMaxVersion_EditorID As String = Nothing
         Private _CachedMaxVersion_Result As Integer = Integer.MinValue
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     The highest version available, this is either the released version number or the version number of the current edit version
         ''' </summary>
@@ -289,12 +240,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <param name="url"></param>
         ''' <param name="editorID"></param>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property MaxVersion(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String) As Integer
             Get
                 If serverID = Me._CachedMaxVersion_ServerID AndAlso url = Me._CachedMaxVersion_Url AndAlso editorID = Me._CachedMaxVersion_EditorID AndAlso Me._CachedMaxVersion_Result <> Integer.MinValue Then
@@ -310,7 +255,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         Private _CachedReleasedVersion_Url As String = Nothing
         Private _CachedReleasedVersion_EditorID As String = Nothing
         Private _CachedReleasedVersion_Result As Integer = Integer.MinValue
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     The number of the released version
         ''' </summary>
@@ -318,12 +263,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <param name="url"></param>
         ''' <param name="editorID"></param>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property ReleasedVersion(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String) As Integer
             Get
                 If serverID = Me._CachedReleasedVersion_ServerID AndAlso url = Me._CachedReleasedVersion_Url AndAlso editorID = Me._CachedReleasedVersion_EditorID AndAlso Me._CachedReleasedVersion_Result <> Integer.MinValue Then
@@ -335,7 +274,6 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read max. version and released version number from database
         ''' </summary>
@@ -345,10 +283,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <remarks>
         '''     If a version number can't be looked up because there is no data available, the read version number will be 0 (zero).
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub ReadRelatedVersionInfo(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String)
 
             'Try to lookup the important version numbers from already queried data when it is there
@@ -358,8 +292,8 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Dim _MaxVersion As Integer = 0
                 Dim _ReleasedVersion As Integer = 0
                 For Each myDataRow As DataRow In myDataTable.Rows
-                    If CType(CompuMaster.camm.WebManager.Utils.Nz(myDataRow("IsActive")), Boolean) = True Then
-                        _ReleasedVersion = CompuMaster.camm.WebManager.Utils.Nz(myDataRow("Version"), 0)
+                    If CType(Utils.Nz(myDataRow("IsActive")), Boolean) = True Then
+                        _ReleasedVersion = Utils.Nz(myDataRow("Version"), 0)
                         Exit For
                     End If
                 Next
@@ -388,7 +322,7 @@ Namespace CompuMaster.camm.SmartWebEditor
 
                 'Execute command
                 Dim results As DictionaryEntry
-                results = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(myCommand, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)(0)
+                results = Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(myCommand, Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)(0)
                 'Take results
                 _CachedMaxVersion_Result = Utils.Nz(results.Key, 0)
                 _CachedReleasedVersion_Result = Utils.Nz(results.Value, 0)
@@ -407,7 +341,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         Private _CachedCompleteData_ServerID As Integer = Integer.MinValue
         Private _CachedCompleteData_Url As String = Nothing
         Private _CachedCompleteData_EditorID As String = Nothing
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Read all data from database regarding a defined document
         ''' </summary>
@@ -417,10 +351,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <returns></returns>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ReadAllData(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String) As DataTable
             If serverID <> Me._CachedCompleteData_ServerID OrElse url <> Me._CachedCompleteData_Url OrElse editorID = Me._CachedCompleteData_EditorID OrElse Me._CachedCompleteData_Result Is Nothing Then
                 Dim myConnection As SqlClient.SqlConnection
@@ -437,7 +367,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 myCommand.Parameters.Add("@EditorID", SqlDbType.NVarChar).Value = editorID
                 myCommand.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
                 'Execute command
-                _CachedCompleteData_Result = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(myCommand, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "result")
+                _CachedCompleteData_Result = Data.DataQuery.AnyIDataProvider.FillDataTable(myCommand, Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "result")
                 'Update caching environment for cached values
                 _CachedCompleteData_ServerID = serverID
                 _CachedCompleteData_Url = url
@@ -446,18 +376,11 @@ Namespace CompuMaster.camm.SmartWebEditor
             Return _CachedCompleteData_Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Copys a editor controls version to a new higher one.
         ''' </summary>
         ''' <param name="sourceVersion">The version you want to copy</param>
         ''' <param name="serverID">The WebManagers serverID where the new version shall appear (might be usefull for later feature requests)</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[swiercz]	23.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub CopyEditorVersion(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal sourceVersion As Integer)
             If sourceVersion = Nothing Then
                 Throw New ArgumentNullException("sourceVersion")
@@ -492,22 +415,17 @@ Namespace CompuMaster.camm.SmartWebEditor
             myCommand.Parameters.Add("@EditorID", SqlDbType.NVarChar).Value = editorID
             myCommand.Parameters.Add("@SourceVersion", SqlDbType.Int).Value = sourceVersion
             'Execute the insert statement
-            CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(myCommand, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+            Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(myCommand, Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             'Reset cached values
             Me.ClearCachedDbValues()
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     List the activated markets as defined in camm Web-Manager
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[Swiercz]	23.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ActiveMarketsInWebManager() As DataTable
             If HttpContext.Current.Application("WebManager.sWcms.ActiveLanguages") Is Nothing Then
                 Dim myConnection As SqlClient.SqlConnection
@@ -517,7 +435,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                         "select ID, Description_English, AlternativeLanguage from system_languages where [IsActive] = 1"
                 myConnection = New SqlClient.SqlConnection(ConnectionString)
                 myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
-                Dim Result As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(myCommand, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "result")
+                Dim Result As DataTable = Data.DataQuery.AnyIDataProvider.FillDataTable(myCommand, Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "result")
 
                 'Also store the active language informations into the application
                 'object to avoid roundtrips to the database
@@ -529,17 +447,10 @@ Namespace CompuMaster.camm.SmartWebEditor
             End If
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     List the activated markets as defined in camm Web-Manager
         ''' </summary>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ActiveMarketIDsInWebManager() As Integer()
             Dim Data As DataTable = Me.ActiveMarketsInWebManager
             Dim Result As New ArrayList
@@ -551,7 +462,6 @@ Namespace CompuMaster.camm.SmartWebEditor
             Return CType(Result.ToArray(GetType(Integer)), Integer())
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read the released HTML for the requested document from the database
         ''' </summary>
@@ -560,12 +470,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <param name="editorID"></param>
         ''' <param name="marketID"></param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ReadReleasedContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer) As String
             Dim MyCmd As New SqlClient.SqlCommand(
                     "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
@@ -577,7 +481,7 @@ Namespace CompuMaster.camm.SmartWebEditor
             MyCmd.Parameters.Add("@LanguageID", SqlDbType.Int).Value = marketID
             MyCmd.Parameters.Add("@URL", SqlDbType.NVarChar).Value = url.ToLower
             MyCmd.Parameters.Add("@EditorID", SqlDbType.NVarChar).Value = editorID
-            Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, String))
+            Return Utils.Nz(Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, String))
         End Function
 
         ''' <summary>
@@ -603,11 +507,10 @@ Namespace CompuMaster.camm.SmartWebEditor
             command.Parameters.Add("@VERSION", SqlDbType.Int).Value = version
 
 
-            Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(command, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, Integer))
+            Return Utils.Nz(Data.DataQuery.AnyIDataProvider.ExecuteScalar(command, Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, Integer))
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read the HTML in a requested version for the requested document from the database
         ''' </summary>
@@ -617,12 +520,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <param name="editorID"></param>
         ''' <param name="version"></param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ReadContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As String
             Dim MyCmd As New SqlClient.SqlCommand(
                     "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
@@ -635,7 +532,7 @@ Namespace CompuMaster.camm.SmartWebEditor
             MyCmd.Parameters.Add("@URL", SqlDbType.NVarChar).Value = url.ToLower
             MyCmd.Parameters.Add("@EditorID", SqlDbType.NVarChar).Value = editorID
             MyCmd.Parameters.Add("@Version", SqlDbType.Int).Value = version
-            Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, String))
+            Return Utils.Nz(Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, String))
         End Function
 
     End Class
