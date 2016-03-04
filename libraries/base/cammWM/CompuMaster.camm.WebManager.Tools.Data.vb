@@ -1,4 +1,16 @@
-Option Explicit On 
+'Copyright 2004-2008,2015,2016 CompuMaster GmbH, http://www.compumaster.de
+'---------------------------------------------------------------
+'This file is part of camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'
+'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
+'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
+'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+
+Option Explicit On
 Option Strict On
 
 'Entkoppelt von Ursprungs-Version durch geänderten Namespace
@@ -29,24 +41,14 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
     Namespace DataQuery
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : cammMM
-        ''' Class	 : Tools.Data.SqlClient.DataQuery
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Common routines to query data from a sql server database
         ''' </summary>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete("Use AnyIDataProvider instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Friend Class SqlClient
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command scalar and returns the value
             ''' </summary>
@@ -56,16 +58,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <remarks>
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Sub ExecuteNonQuery(ByVal ConnectionString As String, ByVal CommandText As String, ByVal CommandType As System.Data.CommandType, ByVal sqlParameters As System.Data.SqlClient.SqlParameter())
                 Dim MyConn As New System.Data.SqlClient.SqlConnection(ConnectionString)
                 Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyConn, CommandText, CommandType, sqlParameters)
             End Sub
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command scalar and returns the value
             ''' </summary>
@@ -76,10 +73,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <returns></returns>
             ''' <remarks>
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteScalar(ByVal ConnectionString As String, ByVal CommandText As String, ByVal CommandType As System.Data.CommandType, ByVal sqlParameters As System.Data.SqlClient.SqlParameter()) As Object
                 Dim MyConn As New System.Data.SqlClient.SqlConnection(ConnectionString)
                 Return Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyConn, CommandText, CommandType, sqlParameters)
@@ -128,23 +121,13 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : cammMM
-        ''' Class	 : Tools.Data.SqlClient.DataQuery
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Common routines to query data from any data provider
         ''' </summary>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Class AnyIDataProvider
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Create a new database connection by reflection of a type name
             ''' </summary>
@@ -154,10 +137,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <remarks>
             '''     Errors will be thrown in case of unresolvable parameter values or if the created type can't be casted into an IDbConnection.
             ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	14.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Shared Function CreateConnection(ByVal assemblyName As String, ByVal connectionTypeName As String) As IDbConnection
                 Dim connectionType As Type = Nothing
                 Dim runningAssembly As System.Reflection.Assembly = System.Reflection.Assembly.GetExecutingAssembly
@@ -248,7 +227,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 End If
                 Dim Result As Object
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If MyConn.State <> ConnectionState.Open Then
                             MyConn.Open()
                         End If
@@ -260,7 +239,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                     If Not MyCmd Is Nothing Then
                         MyCmd.Dispose()
                     End If
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoCloseAndDisposeConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
                         If Not MyConn Is Nothing Then
                             If MyConn.State <> ConnectionState.Closed Then
                                 MyConn.Close()
@@ -288,7 +267,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Dim MyConn As IDbConnection = MyCmd.Connection
                 Dim Result As Integer
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If MyCmd.Connection.State <> ConnectionState.Open Then
                             MyConn.Open()
                         End If
@@ -297,7 +276,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Catch ex As Exception
                     Throw New DataException(MyCmd, ex)
                 Finally
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoCloseAndDisposeConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
                         If Not MyConn Is Nothing Then
                             If MyConn.State <> ConnectionState.Closed Then
                                 MyConn.Close()
@@ -373,7 +352,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 End If
                 Dim Result As Object
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If MyConn.State <> ConnectionState.Open Then
                             MyConn.Open()
                         End If
@@ -385,7 +364,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                     If Not MyCmd Is Nothing Then
                         MyCmd.Dispose()
                     End If
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoCloseAndDisposeConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
                         If Not MyConn Is Nothing Then
                             If MyConn.State <> ConnectionState.Closed Then
                                 MyConn.Close()
@@ -414,7 +393,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Dim MyConn As IDbConnection = MyCmd.Connection
                 Dim Result As Object
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If MyCmd.Connection.State <> ConnectionState.Open Then
                             MyConn.Open()
                         End If
@@ -423,7 +402,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Catch ex As Exception
                     Throw New DataException(MyCmd, ex)
                 Finally
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoCloseAndDisposeConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
                         If Not MyConn Is Nothing Then
                             If MyConn.State <> ConnectionState.Closed Then
                                 MyConn.Close()
@@ -590,7 +569,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Dim MyReader As IDataReader = Nothing
                 Dim Result As New ArrayList
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If MyConn.State <> ConnectionState.Open Then
                             MyConn.Open()
                         End If
@@ -605,7 +584,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                     If Not MyReader Is Nothing AndAlso Not MyReader.IsClosed Then
                         MyReader.Close()
                     End If
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoCloseAndDisposeConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
                         If Not MyConn Is Nothing Then
                             If MyConn.State <> ConnectionState.Closed Then
                                 MyConn.Close()
@@ -655,7 +634,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Dim MyCmd As IDbCommand = dbCommand
                 Dim MyReader As IDataReader = Nothing
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If MyCmd.Connection.State <> ConnectionState.Open Then
                             MyCmd.Connection.Open()
                         End If
@@ -670,7 +649,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                     If Not MyReader Is Nothing AndAlso Not MyReader.IsClosed Then
                         MyReader.Close()
                     End If
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoCloseAndDisposeConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
                         If Not MyCmd.Connection Is Nothing Then
                             If MyCmd.Connection.State <> ConnectionState.Closed Then
                                 MyCmd.Connection.Close()
@@ -712,7 +691,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Dim MyReader As IDataReader = Nothing
                 Dim Result As New Hashtable
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If MyConn.State <> ConnectionState.Open Then
                             MyConn.Open()
                         End If
@@ -730,7 +709,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                     If Not MyCmd Is Nothing Then
                         MyCmd.Dispose()
                     End If
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoCloseAndDisposeConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
                         If Not MyConn Is Nothing Then
                             If MyConn.State <> ConnectionState.Closed Then
                                 MyConn.Close()
@@ -760,7 +739,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Dim MyCmd As IDbCommand = dbCommand
                 Dim MyReader As IDataReader = Nothing
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If MyCmd.Connection.State <> ConnectionState.Open Then
                             MyCmd.Connection.Open()
                         End If
@@ -775,7 +754,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                     If Not MyReader Is Nothing AndAlso Not MyReader.IsClosed Then
                         MyReader.Close()
                     End If
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoCloseAndDisposeConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
                         If Not MyCmd.Connection Is Nothing Then
                             If MyCmd.Connection.State <> ConnectionState.Closed Then
                                 MyCmd.Connection.Close()
@@ -816,7 +795,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 End If
                 Dim MyReader As IDataReader = Nothing
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If MyConn.State <> ConnectionState.Open Then
                             MyConn.Open()
                         End If
@@ -834,7 +813,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                     If Not MyCmd Is Nothing Then
                         MyCmd.Dispose()
                     End If
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoCloseAndDisposeConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
                         If Not MyConn Is Nothing Then
                             If MyConn.State <> ConnectionState.Closed Then
                                 MyConn.Close()
@@ -885,7 +864,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReader(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations, ByVal commandTimeout As Integer) As IDataReader
-                If automations = automations.AutoCloseAndDisposeConnection OrElse automations = automations.AutoOpenAndCloseAndDisposeConnection Then
+                If automations = Automations.AutoCloseAndDisposeConnection OrElse automations = Automations.AutoOpenAndCloseAndDisposeConnection Then
                     Throw New Exception("Can't close a data reader automatically since data has to be read first")
                 End If
 
@@ -903,7 +882,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 End If
                 Dim Result As IDataReader
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If MyConn.State <> ConnectionState.Open Then
                             MyConn.Open()
                         End If
@@ -947,12 +926,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 End If
                 Dim Result As IDataReader
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If MyConn.State <> ConnectionState.Open Then
                             MyConn.Open()
                         End If
                     End If
-                    If automations = automations.AutoCloseAndDisposeConnection OrElse automations = automations.AutoOpenAndCloseAndDisposeConnection Then
+                    If automations = Automations.AutoCloseAndDisposeConnection OrElse automations = Automations.AutoOpenAndCloseAndDisposeConnection Then
                         Result = MyCmd.ExecuteReader(CommandBehavior.CloseConnection)
                     Else
                         Result = MyCmd.ExecuteReader()
@@ -984,12 +963,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Dim MyConn As IDbConnection = MyCmd.Connection
                 Dim Result As IDataReader
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If MyCmd.Connection.State <> ConnectionState.Open Then
                             MyConn.Open()
                         End If
                     End If
-                    If automations = automations.AutoCloseAndDisposeConnection OrElse automations = automations.AutoOpenAndCloseAndDisposeConnection Then
+                    If automations = Automations.AutoCloseAndDisposeConnection OrElse automations = Automations.AutoOpenAndCloseAndDisposeConnection Then
                         Result = MyCmd.ExecuteReader(CommandBehavior.CloseConnection)
                     Else
                         Result = MyCmd.ExecuteReader()
@@ -1020,17 +999,17 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Dim Result As New System.Data.DataTable
                 Dim dbConnection As IDbConnection = dbCommand.Connection
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If dbConnection.State <> ConnectionState.Open Then
                             dbConnection.Open()
                         End If
                     End If
                     'Attention: ExecuteReader doesn't allow auto-close of the connection
-                    Dim Automation As automations
-                    If automations = automations.AutoCloseAndDisposeConnection Then
-                        Automation = automations.None
-                    ElseIf automations = automations.AutoOpenAndCloseAndDisposeConnection Then
-                        Automation = automations.AutoOpenConnection
+                    Dim Automation As Automations
+                    If automations = Automations.AutoCloseAndDisposeConnection Then
+                        Automation = Automations.None
+                    ElseIf automations = Automations.AutoOpenAndCloseAndDisposeConnection Then
+                        Automation = Automations.AutoOpenConnection
                     End If
                     'Execute the reader
                     MyReader = Tools.Data.DataQuery.AnyIDataProvider.ExecuteReader(dbCommand, Automation)
@@ -1042,7 +1021,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                     If Not MyReader Is Nothing AndAlso MyReader.IsClosed = False Then
                         MyReader.Close()
                     End If
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoCloseAndDisposeConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
                         CloseAndDisposeConnection(dbConnection)
                     End If
                 End Try
@@ -1141,17 +1120,17 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Dim Results As New ArrayList
                 Dim dbConnection As IDbConnection = dbCommand.Connection
                 Try
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoOpenConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
                         If dbConnection.State <> ConnectionState.Open Then
                             dbConnection.Open()
                         End If
                     End If
                     'Attention: ExecuteReader doesn't allow auto-close of the connection
-                    Dim Automation As automations
-                    If automations = automations.AutoCloseAndDisposeConnection Then
-                        Automation = automations.None
-                    ElseIf automations = automations.AutoOpenAndCloseAndDisposeConnection Then
-                        Automation = automations.AutoOpenConnection
+                    Dim Automation As Automations
+                    If automations = Automations.AutoCloseAndDisposeConnection Then
+                        Automation = Automations.None
+                    ElseIf automations = Automations.AutoOpenAndCloseAndDisposeConnection Then
+                        Automation = Automations.AutoOpenConnection
                     End If
                     'Execute the reader
                     MyReader = Tools.Data.DataQuery.AnyIDataProvider.ExecuteReader(dbCommand, Automation)
@@ -1167,7 +1146,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                     If Not MyReader Is Nothing AndAlso MyReader.IsClosed = False Then
                         MyReader.Close()
                     End If
-                    If automations = automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = automations.AutoCloseAndDisposeConnection Then
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
                         CloseAndDisposeConnection(dbConnection)
                     End If
                 End Try

@@ -1,19 +1,22 @@
+'Copyright 2005-2016 CompuMaster GmbH, http://www.compumaster.de
+'---------------------------------------------------------------
+'This file is part of camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'
+'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
+'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
+'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+
 Namespace CompuMaster.camm.WebManager.Administration
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : CompuMaster.camm.WebManager.Administration.Export
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Export of data
     ''' </summary>
     ''' <remarks>
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	16.08.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class Export
 
         Public Shared Sub SendExportFileAsCsv(ByVal webmanager As WMSystem, ByVal data As DataTable)
@@ -297,7 +300,7 @@ Namespace CompuMaster.camm.WebManager.Administration
                 'Add all user groups to the result table
                 For MyCounter As Integer = 0 To gAuths.Length - 1
                     Dim newRow As DataRow = Result.NewRow
-                    AuthorizationsTableAddRow(Result, gAuths(MyCounter).SecurityObjectInfo, gAuths(MyCounter).GroupInfo, Nothing, gAuths(mycounter).ServerGroupInfo, False)
+                    AuthorizationsTableAddRow(Result, gAuths(MyCounter).SecurityObjectInfo, gAuths(MyCounter).GroupInfo, Nothing, gAuths(MyCounter).ServerGroupInfo, False)
                 Next
             End If
             If Not uAuths Is Nothing Then
@@ -308,7 +311,7 @@ Namespace CompuMaster.camm.WebManager.Administration
                 'Add all users to the result table
                 For MyCounter As Integer = 0 To uAuths.Length - 1
                     Dim newRow As DataRow = Result.NewRow
-                    AuthorizationsTableAddRow(Result, uAuths(MyCounter).SecurityObjectInfo, Nothing, uAuths(MyCounter).UserInfo, uAuths(mycounter).ServerGroupInfo, False)
+                    AuthorizationsTableAddRow(Result, uAuths(MyCounter).SecurityObjectInfo, Nothing, uAuths(MyCounter).UserInfo, uAuths(MyCounter).ServerGroupInfo, False)
                 Next
             End If
 
@@ -330,14 +333,14 @@ Namespace CompuMaster.camm.WebManager.Administration
                         'Add all inherited user groups to the result table
                         For MyCounter As Integer = 0 To igAuths.Length - 1
                             Dim newRow As DataRow = Result.NewRow
-                            AuthorizationsTableAddRow(Result, securityObjectInfo, igAuths(MyCounter).GroupInfo, Nothing, igAuths(mycounter).ServerGroupInfo, True)
+                            AuthorizationsTableAddRow(Result, securityObjectInfo, igAuths(MyCounter).GroupInfo, Nothing, igAuths(MyCounter).ServerGroupInfo, True)
                         Next
                     End If
                     If Not iuAuths Is Nothing Then
                         'Add all inherited users to the result table
                         For MyCounter As Integer = 0 To iuAuths.Length - 1
                             Dim newRow As DataRow = Result.NewRow
-                            AuthorizationsTableAddRow(Result, securityObjectInfo, Nothing, iuAuths(MyCounter).UserInfo, iuAuths(mycounter).ServerGroupInfo, True)
+                            AuthorizationsTableAddRow(Result, securityObjectInfo, Nothing, iuAuths(MyCounter).UserInfo, iuAuths(MyCounter).ServerGroupInfo, True)
                         Next
                     End If
                 End If

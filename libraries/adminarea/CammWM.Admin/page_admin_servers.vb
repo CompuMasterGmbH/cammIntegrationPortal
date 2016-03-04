@@ -1,3 +1,15 @@
+'Copyright 2007-2016 CompuMaster GmbH, http://www.compumaster.de
+'---------------------------------------------------------------
+'This file is part of camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'
+'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
+'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
+'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+
 Option Strict On
 Option Explicit On 
 
@@ -11,19 +23,11 @@ Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIData
 
 Namespace CompuMaster.camm.WebManager.Pages.Administration
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.ServerList
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to view the list of servers
     ''' </summary>
     ''' <remarks>
     ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	12.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class ServerList
         Inherits Page
 
@@ -52,7 +56,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Try
                 CurServerGroup = cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "ID_ServerGroup")
                 FirstServerLine = True
-                MyDt = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                MyDt = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT AdminPrivate_ServerRelations.* FROM [AdminPrivate_ServerRelations] ORDER BY ServerGroup, MemberServer_ServerDescription, MemberServer_IP", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                 If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then
@@ -103,7 +107,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                         Try
                             Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CLng(.Item("ID").ToString))}
-                            dt = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                            dt = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT * FROM AdminPrivate_ServerGroupAccessLevels WHERE ID_ServerGroup = @ID ORDER BY AccessLevels_Title", CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                             If Not dt Is Nothing AndAlso dt.Rows.Count > 0 Then

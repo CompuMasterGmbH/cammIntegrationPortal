@@ -1,4 +1,16 @@
-Option Explicit On 
+'Copyright 2006,2016 CompuMaster GmbH, http://www.compumaster.de
+'---------------------------------------------------------------
+'This file is part of camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'
+'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
+'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
+'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
+'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+
+Option Explicit On
 Option Strict On
 
 Namespace CompuMaster.camm.WebManager.Modules.Text
@@ -19,36 +31,32 @@ Namespace CompuMaster.camm.WebManager.Modules.Text
     '''         -   If this value is set, then complete cammWM.TextModule library will work with this constant
     '''             ServerGroupID. Otherwise it will use from method parameter value
     ''' </remarks>
-    ''' <history>
-    ''' 	[patil]	07.06.2006	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class TextModules
 
-		Private _Data As Administration.Data
-		Private ReadOnly Property Data() As Administration.Data
-			Get
-				If _Data Is Nothing Then
+        Private _Data As Administration.Data
+        Private ReadOnly Property Data() As Administration.Data
+            Get
+                If _Data Is Nothing Then
                     _Data = New Administration.Data(Me._webManager)
-				End If
-				Return _Data
-			End Get
-		End Property
+                End If
+                Return _Data
+            End Get
+        End Property
 
-		Private _Business As Administration.Business
-		Private ReadOnly Property Business() As Administration.Business
-			Get
-				If _Business Is Nothing Then
+        Private _Business As Administration.Business
+        Private ReadOnly Property Business() As Administration.Business
+            Get
+                If _Business Is Nothing Then
                     _Business = New Administration.Business(Me._webManager)
-				End If
-				Return _Business
-			End Get
-		End Property
+                End If
+                Return _Business
+            End Get
+        End Property
 
-		Private _webManager As CompuMaster.camm.WebManager.WMSystem
-		Public Sub New(ByVal webManager As CompuMaster.camm.WebManager.WMSystem)
-			_webManager = webManager
-		End Sub
+        Private _webManager As CompuMaster.camm.WebManager.WMSystem
+        Public Sub New(ByVal webManager As CompuMaster.camm.WebManager.WMSystem)
+            _webManager = webManager
+        End Sub
 
         <Serializable()> Public Structure ModuleItem
             ''' -----------------------------------------------------------------------------
@@ -136,609 +144,609 @@ Namespace CompuMaster.camm.WebManager.Modules.Text
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Public Enum TextModuleType As Byte
-			''' -----------------------------------------------------------------------------
-			''' <summary>
-			'''     Plain string
-			''' </summary>
-			''' <remarks>
-			''' </remarks>
-			''' <history>
-			''' 	[wezel]	10.01.2006	Created
-			''' </history>
-			''' -----------------------------------------------------------------------------
-			PlainTextString = 1
-			''' -----------------------------------------------------------------------------
-			''' <summary>
-			'''     Plain text block, can contain sub variables/blocks
-			''' </summary>
-			''' <remarks>
-			''' </remarks>
-			''' <history>
-			''' 	[wezel]	10.01.2006	Created
-			''' </history>
-			''' -----------------------------------------------------------------------------
-			PlainTextBlock = 21
-			''' -----------------------------------------------------------------------------
-			''' <summary>
-			'''     Html text block, can contain sub variables/blocks
-			''' </summary>
-			''' <remarks>
-			''' </remarks>
-			''' <history>
-			''' 	[wezel]	10.01.2006	Created
-			''' </history>
-			''' -----------------------------------------------------------------------------
-			HtmlTextBlock = 22
-			''' -----------------------------------------------------------------------------
-			''' <summary>
-			'''     Template, i.e. collection of one or more or all variable types from 1, 2, 3., can contain sub variables/blocks
-			''' </summary>
-			''' <remarks>
-			''' </remarks>
-			''' <history>
-			''' 	[wezel]	10.01.2006	Created
-			''' </history>
-			''' -----------------------------------------------------------------------------
-			HtmlTemplate = 3
-		End Enum
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Load a text module
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the required value</param>
-		''' <returns>A plain text string or HTML code (defined by the variable type) with the complete value of the text</returns>
-		''' <remarks>
-		'''     By default, the requested websitAreaID is empty.
-		''' </remarks>
-		''' <history>
-		''' 	[wezel]	10.01.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		Public Function Load(ByVal key As String) As String
-			Return Load(key, New String() {""})
-		End Function
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Load a text module
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the required value</param>
-		''' <param name="websiteAreaIDs">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
-		''' <returns>A plain text string or HTML code (defined by the variable type) with the complete value of the text</returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[wezel]	10.01.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		Public Function Load(ByVal key As String, ByVal websiteAreaIDs() As String) As String
+            ''' -----------------------------------------------------------------------------
+            ''' <summary>
+            '''     Plain string
+            ''' </summary>
+            ''' <remarks>
+            ''' </remarks>
+            ''' <history>
+            ''' 	[wezel]	10.01.2006	Created
+            ''' </history>
+            ''' -----------------------------------------------------------------------------
+            PlainTextString = 1
+            ''' -----------------------------------------------------------------------------
+            ''' <summary>
+            '''     Plain text block, can contain sub variables/blocks
+            ''' </summary>
+            ''' <remarks>
+            ''' </remarks>
+            ''' <history>
+            ''' 	[wezel]	10.01.2006	Created
+            ''' </history>
+            ''' -----------------------------------------------------------------------------
+            PlainTextBlock = 21
+            ''' -----------------------------------------------------------------------------
+            ''' <summary>
+            '''     Html text block, can contain sub variables/blocks
+            ''' </summary>
+            ''' <remarks>
+            ''' </remarks>
+            ''' <history>
+            ''' 	[wezel]	10.01.2006	Created
+            ''' </history>
+            ''' -----------------------------------------------------------------------------
+            HtmlTextBlock = 22
+            ''' -----------------------------------------------------------------------------
+            ''' <summary>
+            '''     Template, i.e. collection of one or more or all variable types from 1, 2, 3., can contain sub variables/blocks
+            ''' </summary>
+            ''' <remarks>
+            ''' </remarks>
+            ''' <history>
+            ''' 	[wezel]	10.01.2006	Created
+            ''' </history>
+            ''' -----------------------------------------------------------------------------
+            HtmlTemplate = 3
+        End Enum
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Load a text module
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the required value</param>
+        ''' <returns>A plain text string or HTML code (defined by the variable type) with the complete value of the text</returns>
+        ''' <remarks>
+        '''     By default, the requested websitAreaID is empty.
+        ''' </remarks>
+        ''' <history>
+        ''' 	[wezel]	10.01.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        Public Function Load(ByVal key As String) As String
+            Return Load(key, New String() {""})
+        End Function
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Load a text module
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the required value</param>
+        ''' <param name="websiteAreaIDs">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
+        ''' <returns>A plain text string or HTML code (defined by the variable type) with the complete value of the text</returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[wezel]	10.01.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        Public Function Load(ByVal key As String, ByVal websiteAreaIDs() As String) As String
             Return Load(key, websiteAreaIDs, _webManager.UI.MarketID)
-		End Function
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Load a text module
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the required value</param>
-		''' <param name="websiteAreaIDs">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
-		''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
-		''' <returns>A plain text string or HTML code (defined by the variable type) with the complete value of the text</returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[wezel]	10.01.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		Public Function Load(ByVal key As String, ByVal websiteAreaIDs() As String, ByVal marketID As Integer) As String
-			Dim _serverGroupID As System.Int32
-			If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDDefault = Nothing Then
-				_serverGroupID = Me._webManager.CurrentServerInfo.ParentServerGroupID
-			Else
-				_serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDDefault
-			End If
-			Return Load(key, websiteAreaIDs, marketID, _serverGroupID)
-		End Function
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Load a text module
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the required value</param>
-		''' <param name="websiteAreaIDs">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
-		''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
-		''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
-		''' <returns>A plain text string or HTML code (defined by the variable type) with the complete value of the text</returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[wezel]	10.01.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		<System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function Load(ByVal key As String, ByVal websiteAreaIDs() As String, ByVal marketID As Integer, ByVal serverGroupID As Integer) As String
-			Dim marketIDs As Integer() = New Integer() {marketID, _webManager.Internationalization.GetAlternativelySupportedLanguageID(marketID), 0}
-			Return Me.Load(key, websiteAreaIDs, marketIDs, serverGroupID)
-		End Function
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Load a text module
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the required value</param>
-		''' <param name="websiteAreaIDs">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
-		''' <param name="marketIDs">An array of Integer with unique marketIDs - the order defines the priority</param>
-		''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
-		''' <returns></returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[patil]	02.03.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		<System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function Load(ByVal key As String, ByVal websiteAreaIDs() As String, ByVal marketIDs() As Integer, ByVal serverGroupID As Integer) As String
-			Return Me.Load(key, websiteAreaIDs, marketIDs, serverGroupID, True, True, Nothing)
-		End Function
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Load a text module
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the required value</param>
-		''' <param name="websiteAreaIDs">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
-		''' <param name="marketIDs">The list of one or more markets/languages which are allowed to be returned - the order defines the priority</param>
-		''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
-		''' <param name="version">The requested version of the text module or zero (0) for the currently released version</param>
-		''' <param name="replacePlaceholders">replace place holders with their value or not</param>
-		''' <param name="useCachedData">use cache data or not</param>
-		''' <returns>A plain text string or HTML code (defined by the variable type) with the complete value of the text</returns>
-		''' <remarks>
-		'''     Placeholders = e.g. &lt;%CompanyName%&gt;
-		''' </remarks>
-		''' <history>
-		''' 	[wezel]	10.01.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		Private Function Load(ByVal key As String, ByVal websiteAreaIDs() As String, ByVal marketIDs As Integer(), ByVal serverGroupID As Integer, ByVal replacePlaceholders As Boolean, ByVal useCachedData As Boolean, ByVal version As Integer) As String
-			Dim _serverGroupID As System.Int32
-			If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced = Nothing Then
-				_serverGroupID = serverGroupID
-			Else
-				_serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced
-			End If
+        End Function
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Load a text module
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the required value</param>
+        ''' <param name="websiteAreaIDs">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
+        ''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
+        ''' <returns>A plain text string or HTML code (defined by the variable type) with the complete value of the text</returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[wezel]	10.01.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        Public Function Load(ByVal key As String, ByVal websiteAreaIDs() As String, ByVal marketID As Integer) As String
+            Dim _serverGroupID As System.Int32
+            If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDDefault = Nothing Then
+                _serverGroupID = Me._webManager.CurrentServerInfo.ParentServerGroupID
+            Else
+                _serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDDefault
+            End If
+            Return Load(key, websiteAreaIDs, marketID, _serverGroupID)
+        End Function
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Load a text module
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the required value</param>
+        ''' <param name="websiteAreaIDs">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
+        ''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
+        ''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
+        ''' <returns>A plain text string or HTML code (defined by the variable type) with the complete value of the text</returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[wezel]	10.01.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function Load(ByVal key As String, ByVal websiteAreaIDs() As String, ByVal marketID As Integer, ByVal serverGroupID As Integer) As String
+            Dim marketIDs As Integer() = New Integer() {marketID, _webManager.Internationalization.GetAlternativelySupportedLanguageID(marketID), 0}
+            Return Me.Load(key, websiteAreaIDs, marketIDs, serverGroupID)
+        End Function
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Load a text module
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the required value</param>
+        ''' <param name="websiteAreaIDs">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
+        ''' <param name="marketIDs">An array of Integer with unique marketIDs - the order defines the priority</param>
+        ''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
+        ''' <returns></returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[patil]	02.03.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function Load(ByVal key As String, ByVal websiteAreaIDs() As String, ByVal marketIDs() As Integer, ByVal serverGroupID As Integer) As String
+            Return Me.Load(key, websiteAreaIDs, marketIDs, serverGroupID, True, True, Nothing)
+        End Function
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Load a text module
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the required value</param>
+        ''' <param name="websiteAreaIDs">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
+        ''' <param name="marketIDs">The list of one or more markets/languages which are allowed to be returned - the order defines the priority</param>
+        ''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
+        ''' <param name="version">The requested version of the text module or zero (0) for the currently released version</param>
+        ''' <param name="replacePlaceholders">replace place holders with their value or not</param>
+        ''' <param name="useCachedData">use cache data or not</param>
+        ''' <returns>A plain text string or HTML code (defined by the variable type) with the complete value of the text</returns>
+        ''' <remarks>
+        '''     Placeholders = e.g. &lt;%CompanyName%&gt;
+        ''' </remarks>
+        ''' <history>
+        ''' 	[wezel]	10.01.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        Private Function Load(ByVal key As String, ByVal websiteAreaIDs() As String, ByVal marketIDs As Integer(), ByVal serverGroupID As Integer, ByVal replacePlaceholders As Boolean, ByVal useCachedData As Boolean, ByVal version As Integer) As String
+            Dim _serverGroupID As System.Int32
+            If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced = Nothing Then
+                _serverGroupID = serverGroupID
+            Else
+                _serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced
+            End If
 
-			Dim result As String
+            Dim result As String
 
-			'Drop any duplicates, first
-			Dim marketList As New ArrayList
-			For MyCounter As Integer = 0 To marketIDs.Length - 1
-				'key already exists - drop the duplicate
-				If Not marketList.Contains(marketIDs(MyCounter)) Then
-					'key is fine, use it
-					marketList.Add(marketIDs(MyCounter))
-				End If
-			Next
-			Dim markets As Integer() = CType(marketList.ToArray(GetType(Integer)), Integer())
+            'Drop any duplicates, first
+            Dim marketList As New ArrayList
+            For MyCounter As Integer = 0 To marketIDs.Length - 1
+                'key already exists - drop the duplicate
+                If Not marketList.Contains(marketIDs(MyCounter)) Then
+                    'key is fine, use it
+                    marketList.Add(marketIDs(MyCounter))
+                End If
+            Next
+            Dim markets As Integer() = CType(marketList.ToArray(GetType(Integer)), Integer())
 
-			Dim item As ModuleItem = Nothing
-			'first look for availability by markets and then websiteAreaID
-			For Each marketID As Integer In markets
-				For Each websiteAreaID As String In websiteAreaIDs
-					item = Me.LoadModuleItem(key, websiteAreaID, marketID, _serverGroupID, useCachedData, version)
-					If item.Key <> Nothing Then
-						Exit For
-					End If
-				Next
-				If item.Key <> Nothing Then
-					Exit For
-				End If
-			Next
-			If item.Value <> Nothing Then
-				Dim sb As New System.Text.StringBuilder(item.Value)
+            Dim item As ModuleItem = Nothing
+            'first look for availability by markets and then websiteAreaID
+            For Each marketID As Integer In markets
+                For Each websiteAreaID As String In websiteAreaIDs
+                    item = Me.LoadModuleItem(key, websiteAreaID, marketID, _serverGroupID, useCachedData, version)
+                    If item.Key <> Nothing Then
+                        Exit For
+                    End If
+                Next
+                If item.Key <> Nothing Then
+                    Exit For
+                End If
+            Next
+            If item.Value <> Nothing Then
+                Dim sb As New System.Text.StringBuilder(item.Value)
 
-				If replacePlaceholders Then
-					Dim placeHolders() As String = Administration.Business.AllPlaceHolders(sb.ToString)
-					If Not placeHolders Is Nothing Then
-						If placeHolders.Length > 0 Then
-							For Each placeHolder As String In placeHolders
-								Dim lt As String = "&lt;%"
-								Dim gt As String = "%&gt;"
-								Dim value As String = Me.Load(placeHolder, websiteAreaIDs, marketIDs, _serverGroupID, True, True, Nothing)
-								sb.Replace(lt & placeHolder & gt, value)
-							Next
-						End If
-					End If
-				End If
+                If replacePlaceholders Then
+                    Dim placeHolders() As String = Administration.Business.AllPlaceHolders(sb.ToString)
+                    If Not placeHolders Is Nothing Then
+                        If placeHolders.Length > 0 Then
+                            For Each placeHolder As String In placeHolders
+                                Dim lt As String = "&lt;%"
+                                Dim gt As String = "%&gt;"
+                                Dim value As String = Me.Load(placeHolder, websiteAreaIDs, marketIDs, _serverGroupID, True, True, Nothing)
+                                sb.Replace(lt & placeHolder & gt, value)
+                            Next
+                        End If
+                    End If
+                End If
 
-				If Business.IsHtmlType(item.TypeID) Then
-					result = sb.ToString
-				Else
-					'result = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(sb.ToString))
-					result = sb.ToString
-					If result.IndexOf("&lt;") > -1 Then
-						result = result.Replace("&lt;", "<")
-						result = result.Replace("&gt;", ">")
-					End If
-					If result.IndexOf(vbNewLine) > -1 Then
-						result = result.Replace(vbNewLine, "<br>").Replace(vbNewLine, "<br>")
-					End If
+                If Business.IsHtmlType(item.TypeID) Then
+                    result = sb.ToString
+                Else
+                    'result = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(sb.ToString))
+                    result = sb.ToString
+                    If result.IndexOf("&lt;") > -1 Then
+                        result = result.Replace("&lt;", "<")
+                        result = result.Replace("&gt;", ">")
+                    End If
+                    If result.IndexOf(vbNewLine) > -1 Then
+                        result = result.Replace(vbNewLine, "<br>").Replace(vbNewLine, "<br>")
+                    End If
 
-				End If
-			Else
-				result = item.Value
-			End If
+                End If
+            Else
+                result = item.Value
+            End If
 
-			Return result
-		End Function
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Load a text module
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the required value</param>
-		''' <param name="websiteAreaIDs">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
-		''' <param name="marketIDs">An array of Integer with unique marketIDs - the order defines the priority</param>
-		''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
-		''' <param name="version">Version of TextModule</param>
-		''' <returns></returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[patil]	06.03.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		<System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function Load(ByVal key As String, ByVal websiteAreaIDs() As String, ByVal marketIDs() As Integer, ByVal serverGroupID As Integer, ByVal version As Integer) As String
-			Return Load(key, websiteAreaIDs, marketIDs, serverGroupID, True, False, version)
-		End Function
+            Return result
+        End Function
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Load a text module
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the required value</param>
+        ''' <param name="websiteAreaIDs">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
+        ''' <param name="marketIDs">An array of Integer with unique marketIDs - the order defines the priority</param>
+        ''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
+        ''' <param name="version">Version of TextModule</param>
+        ''' <returns></returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[patil]	06.03.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function Load(ByVal key As String, ByVal websiteAreaIDs() As String, ByVal marketIDs() As Integer, ByVal serverGroupID As Integer, ByVal version As Integer) As String
+            Return Load(key, websiteAreaIDs, marketIDs, serverGroupID, True, False, version)
+        End Function
 
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Load module item
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the required value</param>
-		''' <param name="websiteAreaID">WebsiteAreaID of a Text Module</param>
-		''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
-		''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
-		''' <param name="useCachedData">If True loads data from cached table else from non cached table</param>
-		''' <param name="version">Version of text module</param>
-		''' <returns></returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[patil]	06.03.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		Private Function LoadModuleItem(ByVal key As String, ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer, ByVal useCachedData As Boolean, ByVal version As Integer) As ModuleItem
-			Dim _serverGroupID As System.Int32
-			If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced = Nothing Then
-				_serverGroupID = serverGroupID
-			Else
-				_serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced
-			End If
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Load module item
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the required value</param>
+        ''' <param name="websiteAreaID">WebsiteAreaID of a Text Module</param>
+        ''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
+        ''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
+        ''' <param name="useCachedData">If True loads data from cached table else from non cached table</param>
+        ''' <param name="version">Version of text module</param>
+        ''' <returns></returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[patil]	06.03.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        Private Function LoadModuleItem(ByVal key As String, ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer, ByVal useCachedData As Boolean, ByVal version As Integer) As ModuleItem
+            Dim _serverGroupID As System.Int32
+            If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced = Nothing Then
+                _serverGroupID = serverGroupID
+            Else
+                _serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced
+            End If
 
-			Dim result As ModuleItem = Nothing
-			If version = Nothing Then
-				Dim items() As ModuleItem
-				items = Me.LoadModuleItems(websiteAreaID, marketID, _serverGroupID, useCachedData, key)
-				If Not items Is Nothing Then
-					If items.Length > 0 Then
-						For Each item As ModuleItem In items
-							If item.Key = key Then
-								result = item
-							End If
-						Next
-					End If
-				End If
-			Else
-				Dim textModules As DataTable
-				textModules = Data.Load(websiteAreaID, marketID, _serverGroupID, key, version)
-				If textModules.Rows.Count = 1 Then
-					result = New ModuleItem
-					result.Key = CStr(textModules.Rows(0)("Key"))
-					result.Value = CStr(textModules.Rows(0)("Value"))
-					result.Released = CBool(textModules.Rows(0)("Released"))
-					result.TypeID = CType(textModules.Rows(0)("TypeID"), TextModuleType)
-					If Not IsDBNull(textModules.Rows(0)("PublishedOn")) Then
-						result.PublishedOn = CDate(textModules.Rows(0)("PublishedOn"))
-					Else
-						result.PublishedOn = Nothing
-					End If
-				End If
-			End If
-			Return result
-		End Function
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		''' 
-		''' </summary>
-		''' <param name="websiteAreaID">WebsiteAreaID of a Text Module</param>
-		''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
-		''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
-		''' <param name="useCachedData">If True loads data from cached table else from non cached table</param>
-		''' <param name="key">The name of the key which uniquely identifies the required value</param>
-		''' <returns>An array of text module items</returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[patil]	06.03.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		<System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function LoadModuleItems(ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer, ByVal useCachedData As Boolean, ByVal key As String) As ModuleItem()
-			Return Me.LoadModuleItems(websiteAreaID, marketID, serverGroupID, useCachedData, key, Nothing)
-		End Function
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Load a array of cached text module items
-		''' </summary>
-		''' <param name="websiteAreaID">WebsiteAreaID of a Text Module</param>
-		''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
-		''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
-		''' <param name="useCachedData">If True loads data from cached table else from non cached table</param>
-		''' <param name="typeID">Type of TextModule</param>
-		''' <returns>An array of text module items</returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[patil]	06.03.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		<System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function LoadModuleItems(ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer, ByVal useCachedData As Boolean, ByVal typeID As TextModuleType) As ModuleItem()
-			Return Me.LoadModuleItems(websiteAreaID, marketID, serverGroupID, useCachedData, Nothing, typeID)
-		End Function
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Load a array of cached text module items
-		''' </summary>
-		''' <param name="websiteAreaID">WebsiteAreaID of a Text Module</param>
-		''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
-		''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
-		''' <returns>An array of text module items</returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[patil]	03.03.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		<System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function LoadModuleItems(ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer, ByVal useCachedData As Boolean) As ModuleItem()
-			Return Me.LoadModuleItems(websiteAreaID, marketID, serverGroupID, useCachedData, Nothing, Nothing)
-		End Function
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Load a array of cached text module items
-		''' </summary>
-		''' <param name="websiteAreaID">WebsiteAreaID of a Text Module</param>
-		''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
-		''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
-		''' <param name="useCachedData">If True loads data from cached table else from non cached table</param>
-		''' <param name="key">The name of the key which uniquely identifies the required value</param>
-		''' <param name="typeID">Type of TextModule</param>
-		''' <returns>An array of text module items</returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[patil]	06.03.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		Private Function LoadModuleItems(ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer, ByVal useCachedData As Boolean, ByVal key As String, ByVal typeID As TextModuleType) As ModuleItem()
-			Dim _serverGroupID As System.Int32
-			If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced = Nothing Then
-				_serverGroupID = serverGroupID
-			Else
-				_serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced
-			End If
+            Dim result As ModuleItem = Nothing
+            If version = Nothing Then
+                Dim items() As ModuleItem
+                items = Me.LoadModuleItems(websiteAreaID, marketID, _serverGroupID, useCachedData, key)
+                If Not items Is Nothing Then
+                    If items.Length > 0 Then
+                        For Each item As ModuleItem In items
+                            If item.Key = key Then
+                                result = item
+                            End If
+                        Next
+                    End If
+                End If
+            Else
+                Dim textModules As DataTable
+                textModules = Data.Load(websiteAreaID, marketID, _serverGroupID, key, version)
+                If textModules.Rows.Count = 1 Then
+                    result = New ModuleItem
+                    result.Key = CStr(textModules.Rows(0)("Key"))
+                    result.Value = CStr(textModules.Rows(0)("Value"))
+                    result.Released = CBool(textModules.Rows(0)("Released"))
+                    result.TypeID = CType(textModules.Rows(0)("TypeID"), TextModuleType)
+                    If Not IsDBNull(textModules.Rows(0)("PublishedOn")) Then
+                        result.PublishedOn = CDate(textModules.Rows(0)("PublishedOn"))
+                    Else
+                        result.PublishedOn = Nothing
+                    End If
+                End If
+            End If
+            Return result
+        End Function
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        ''' 
+        ''' </summary>
+        ''' <param name="websiteAreaID">WebsiteAreaID of a Text Module</param>
+        ''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
+        ''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
+        ''' <param name="useCachedData">If True loads data from cached table else from non cached table</param>
+        ''' <param name="key">The name of the key which uniquely identifies the required value</param>
+        ''' <returns>An array of text module items</returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[patil]	06.03.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function LoadModuleItems(ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer, ByVal useCachedData As Boolean, ByVal key As String) As ModuleItem()
+            Return Me.LoadModuleItems(websiteAreaID, marketID, serverGroupID, useCachedData, key, Nothing)
+        End Function
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Load a array of cached text module items
+        ''' </summary>
+        ''' <param name="websiteAreaID">WebsiteAreaID of a Text Module</param>
+        ''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
+        ''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
+        ''' <param name="useCachedData">If True loads data from cached table else from non cached table</param>
+        ''' <param name="typeID">Type of TextModule</param>
+        ''' <returns>An array of text module items</returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[patil]	06.03.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function LoadModuleItems(ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer, ByVal useCachedData As Boolean, ByVal typeID As TextModuleType) As ModuleItem()
+            Return Me.LoadModuleItems(websiteAreaID, marketID, serverGroupID, useCachedData, Nothing, typeID)
+        End Function
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Load a array of cached text module items
+        ''' </summary>
+        ''' <param name="websiteAreaID">WebsiteAreaID of a Text Module</param>
+        ''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
+        ''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
+        ''' <returns>An array of text module items</returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[patil]	03.03.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function LoadModuleItems(ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer, ByVal useCachedData As Boolean) As ModuleItem()
+            Return Me.LoadModuleItems(websiteAreaID, marketID, serverGroupID, useCachedData, Nothing, Nothing)
+        End Function
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Load a array of cached text module items
+        ''' </summary>
+        ''' <param name="websiteAreaID">WebsiteAreaID of a Text Module</param>
+        ''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
+        ''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
+        ''' <param name="useCachedData">If True loads data from cached table else from non cached table</param>
+        ''' <param name="key">The name of the key which uniquely identifies the required value</param>
+        ''' <param name="typeID">Type of TextModule</param>
+        ''' <returns>An array of text module items</returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[patil]	06.03.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        Private Function LoadModuleItems(ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer, ByVal useCachedData As Boolean, ByVal key As String, ByVal typeID As TextModuleType) As ModuleItem()
+            Dim _serverGroupID As System.Int32
+            If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced = Nothing Then
+                _serverGroupID = serverGroupID
+            Else
+                _serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced
+            End If
 
-			Dim textModules As DataTable = Nothing
-			If key = Nothing AndAlso typeID = Nothing Then
-				If useCachedData Then
-					textModules = Business.TextModulesCached(websiteAreaID, marketID, _serverGroupID)
-				Else
-					textModules = Data.Load(websiteAreaID, marketID, _serverGroupID)
-				End If
-			ElseIf key <> Nothing AndAlso typeID = Nothing Then
-				If useCachedData Then
-					textModules = Business.TextModulesCached(websiteAreaID, marketID, _serverGroupID, key)
-				Else
-					textModules = Data.Load(websiteAreaID, marketID, _serverGroupID, key)
-				End If
-			ElseIf key = Nothing AndAlso typeID <> Nothing Then
-				If useCachedData Then
-					textModules = Business.TextModulesCached(websiteAreaID, marketID, _serverGroupID, typeID)
-				Else
-					textModules = Data.Load(websiteAreaID, marketID, _serverGroupID, typeID)
-				End If
-			ElseIf key <> Nothing AndAlso typeID <> Nothing Then
-				If useCachedData Then
-					textModules = Business.TextModulesCached(websiteAreaID, marketID, _serverGroupID, key, typeID)
-				Else
-					textModules = Data.Load(websiteAreaID, marketID, _serverGroupID, key, typeID)
-				End If
-			End If
+            Dim textModules As DataTable = Nothing
+            If key = Nothing AndAlso typeID = Nothing Then
+                If useCachedData Then
+                    textModules = Business.TextModulesCached(websiteAreaID, marketID, _serverGroupID)
+                Else
+                    textModules = Data.Load(websiteAreaID, marketID, _serverGroupID)
+                End If
+            ElseIf key <> Nothing AndAlso typeID = Nothing Then
+                If useCachedData Then
+                    textModules = Business.TextModulesCached(websiteAreaID, marketID, _serverGroupID, key)
+                Else
+                    textModules = Data.Load(websiteAreaID, marketID, _serverGroupID, key)
+                End If
+            ElseIf key = Nothing AndAlso typeID <> Nothing Then
+                If useCachedData Then
+                    textModules = Business.TextModulesCached(websiteAreaID, marketID, _serverGroupID, typeID)
+                Else
+                    textModules = Data.Load(websiteAreaID, marketID, _serverGroupID, typeID)
+                End If
+            ElseIf key <> Nothing AndAlso typeID <> Nothing Then
+                If useCachedData Then
+                    textModules = Business.TextModulesCached(websiteAreaID, marketID, _serverGroupID, key, typeID)
+                Else
+                    textModules = Data.Load(websiteAreaID, marketID, _serverGroupID, key, typeID)
+                End If
+            End If
 
-			Return Me.ConvertResultTableToModuleItemsArray(textModules)
-		End Function
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Converts textmodules datacontent into an array of type ModuleItem
-		''' </summary>
-		''' <param name="textModules">DataTable containing textmodules</param>
-		''' <returns></returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[patil]	06.03.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		Private Function ConvertResultTableToModuleItemsArray(ByVal textModules As DataTable) As ModuleItem()
-			If textModules Is Nothing OrElse textModules.Rows.Count = 0 Then
-				Return Nothing
-			End If
+            Return Me.ConvertResultTableToModuleItemsArray(textModules)
+        End Function
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Converts textmodules datacontent into an array of type ModuleItem
+        ''' </summary>
+        ''' <param name="textModules">DataTable containing textmodules</param>
+        ''' <returns></returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[patil]	06.03.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        Private Function ConvertResultTableToModuleItemsArray(ByVal textModules As DataTable) As ModuleItem()
+            If textModules Is Nothing OrElse textModules.Rows.Count = 0 Then
+                Return Nothing
+            End If
 
-			Dim result(textModules.Rows.Count - 1) As ModuleItem
-			For counter As Integer = 0 To textModules.Rows.Count - 1
-				Dim item As New ModuleItem
-				item.Key = CStr(textModules.Rows(counter)("Key"))
-				item.Value = CStr(textModules.Rows(counter)("Value"))
-				item.TypeID = CType(textModules.Rows(counter)("TypeID"), Text.TextModules.TextModuleType)
-				If textModules.Columns.Contains("Released") Then
-					item.Released = CBool(textModules.Rows(counter)("Released"))
-					item.Version = CInt(textModules.Rows(counter)("Version"))
-					If Not IsDBNull(textModules.Rows(counter)("PublishedOn")) Then
-						item.PublishedOn = CDate(textModules.Rows(counter)("PublishedOn"))
-					Else
-						item.PublishedOn = Nothing
-					End If
-				Else
-					item.Released = True
-					item.Version = Nothing
-					item.PublishedOn = Nothing
-				End If
-				result(counter) = item
-			Next
+            Dim result(textModules.Rows.Count - 1) As ModuleItem
+            For counter As Integer = 0 To textModules.Rows.Count - 1
+                Dim item As New ModuleItem
+                item.Key = CStr(textModules.Rows(counter)("Key"))
+                item.Value = CStr(textModules.Rows(counter)("Value"))
+                item.TypeID = CType(textModules.Rows(counter)("TypeID"), Text.TextModules.TextModuleType)
+                If textModules.Columns.Contains("Released") Then
+                    item.Released = CBool(textModules.Rows(counter)("Released"))
+                    item.Version = CInt(textModules.Rows(counter)("Version"))
+                    If Not IsDBNull(textModules.Rows(counter)("PublishedOn")) Then
+                        item.PublishedOn = CDate(textModules.Rows(counter)("PublishedOn"))
+                    Else
+                        item.PublishedOn = Nothing
+                    End If
+                Else
+                    item.Released = True
+                    item.Version = Nothing
+                    item.PublishedOn = Nothing
+                End If
+                result(counter) = item
+            Next
 
-			Return result
-		End Function
+            Return result
+        End Function
 
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Save value of TextModule defined by key
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the required value</param>
-		''' <param name="value">Value of TextModule to be saved</param>
-		''' <param name="release">Defines Save and Release the TextModule or not</param>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[adminsupport]	24.02.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		Public Sub Save(ByVal key As String, ByVal value As String, ByVal release As Boolean)
-			Me.Save(key, value, release, "")
-		End Sub
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Save value of TextModule defined by key
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the TextModule</param>
-		''' <param name="value">Value of TextModule to be saved</param>
-		''' <param name="release">Defines Save and Release the TextModule or not</param>
-		''' <param name="websiteAreaID">Unique WebsiteAreaID of TextModule</param>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[adminsupport]	24.02.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		Public Sub Save(ByVal key As String, ByVal value As String, ByVal release As Boolean, ByVal websiteAreaID As String)
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Save value of TextModule defined by key
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the required value</param>
+        ''' <param name="value">Value of TextModule to be saved</param>
+        ''' <param name="release">Defines Save and Release the TextModule or not</param>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[adminsupport]	24.02.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        Public Sub Save(ByVal key As String, ByVal value As String, ByVal release As Boolean)
+            Me.Save(key, value, release, "")
+        End Sub
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Save value of TextModule defined by key
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the TextModule</param>
+        ''' <param name="value">Value of TextModule to be saved</param>
+        ''' <param name="release">Defines Save and Release the TextModule or not</param>
+        ''' <param name="websiteAreaID">Unique WebsiteAreaID of TextModule</param>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[adminsupport]	24.02.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        Public Sub Save(ByVal key As String, ByVal value As String, ByVal release As Boolean, ByVal websiteAreaID As String)
             Me.Save(key, value, release, websiteAreaID, Me._webManager.UI.MarketID)
-		End Sub
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Save value of TextModule defined by key
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the TextModule</param>
-		''' <param name="value">Value of TextModule to be saved</param>
-		''' <param name="release">Defines Save and Release the TextModule or not</param>
-		''' <param name="websiteAreaID">Unique WebsiteAreaID of TextModule</param>
-		''' <param name="marketID">MarketID of TextModule</param>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[adminsupport]	24.02.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		Public Sub Save(ByVal key As String, ByVal value As String, ByVal release As Boolean, ByVal websiteAreaID As String, ByVal marketID As Integer)
-			Dim _serverGroupID As System.Int32
-			If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDDefault = Nothing Then
-				_serverGroupID = Me._webManager.CurrentServerInfo.ParentServerGroupID
-			Else
-				_serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDDefault
-			End If
-			Me.Save(key, value, release, websiteAreaID, marketID, _serverGroupID)
-		End Sub
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Save value of TextModule defined by key
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the TextModule</param>
-		''' <param name="value">Value of TextModule to be saved</param>
-		''' <param name="release">Defines Save and Release the TextModule or not</param>
-		''' <param name="websiteAreaID">Unique WebsiteAreaID of TextModule</param>
-		''' <param name="marketID">MarketID of TextModule</param>
-		''' <param name="serverGroupID">ServerGroupID of TextModule</param>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[adminsupport]	24.02.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		<System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub Save(ByVal key As String, ByVal value As String, ByVal release As Boolean, ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer)
-			Me.Save(key, value, release, websiteAreaID, marketID, Me._webManager.CurrentServerInfo.ParentServerGroupID, Nothing)
-		End Sub
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Save value of TextModule defined by key
-		''' </summary>
-		''' <param name="key">The name of the key which uniquely identifies the TextModule</param>
-		''' <param name="value">Value of TextModule to be saved</param>
-		''' <param name="release">Defines Save and Release the TextModule or not</param>
-		''' <param name="websiteAreaID">Unique WebsiteAreaID of TextModule</param>
-		''' <param name="marketID">MarketID of TextModule</param>
-		''' <param name="serverGroupID">ServerGroupID of TextModule</param>
-		''' <param name="typeID">Type of TextModule</param>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[patil]	02.03.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		<System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub Save(ByVal key As String, ByVal value As String, ByVal release As Boolean, ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer, ByVal typeID As TextModuleType)
-			Dim _serverGroupID As System.Int32
-			If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced = Nothing Then
-				_serverGroupID = serverGroupID
-			Else
-				_serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced
-			End If
-			If typeID = TextModules.TextModuleType.PlainTextBlock Or typeID = TextModules.TextModuleType.PlainTextString Then
-				Dim releasedItems() As Text.TextModules.ModuleItem
-				releasedItems = Me.LoadModuleItems(websiteAreaID, marketID, _serverGroupID, True)
-				If Administration.Business.IsPlainTextblockContainsHtmlTextModule(value, releasedItems) Then
-					Throw New Exception("Html type TextModule is found in plain text TextModule!")
-				End If
-			End If
-			Data.Save(key, value, release, websiteAreaID, marketID, _serverGroupID, typeID)
-		End Sub
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Array of all keys
-		''' </summary>
-		''' <param name="websiteAreaID">WebsiteAreaID of a Text Module</param>
-		''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
-		''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
-		''' <returns></returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[patil]	02.03.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		<System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function Keys(ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer) As String()
-			Dim _serverGroupID As System.Int32
-			If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced = Nothing Then
-				_serverGroupID = serverGroupID
-			Else
-				_serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced
-			End If
-			Return Data.Keys(websiteAreaID, marketID, _serverGroupID)
-		End Function
-		''' -----------------------------------------------------------------------------
-		''' <summary>
-		'''     Check validity of key
-		''' </summary>
-		''' <param name="key">Key to be checked</param>
-		''' <returns>True if the key name doesn't contain forbidden characters</returns>
-		''' <remarks>
-		''' </remarks>
-		''' <history>
-		''' 	[patil]	06.03.2006	Created
-		''' </history>
-		''' -----------------------------------------------------------------------------
-		<System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function IsValid(ByVal key As String) As Boolean
-			Return Administration.Business.IsValid(key)
-		End Function
+        End Sub
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Save value of TextModule defined by key
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the TextModule</param>
+        ''' <param name="value">Value of TextModule to be saved</param>
+        ''' <param name="release">Defines Save and Release the TextModule or not</param>
+        ''' <param name="websiteAreaID">Unique WebsiteAreaID of TextModule</param>
+        ''' <param name="marketID">MarketID of TextModule</param>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[adminsupport]	24.02.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        Public Sub Save(ByVal key As String, ByVal value As String, ByVal release As Boolean, ByVal websiteAreaID As String, ByVal marketID As Integer)
+            Dim _serverGroupID As System.Int32
+            If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDDefault = Nothing Then
+                _serverGroupID = Me._webManager.CurrentServerInfo.ParentServerGroupID
+            Else
+                _serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDDefault
+            End If
+            Me.Save(key, value, release, websiteAreaID, marketID, _serverGroupID)
+        End Sub
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Save value of TextModule defined by key
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the TextModule</param>
+        ''' <param name="value">Value of TextModule to be saved</param>
+        ''' <param name="release">Defines Save and Release the TextModule or not</param>
+        ''' <param name="websiteAreaID">Unique WebsiteAreaID of TextModule</param>
+        ''' <param name="marketID">MarketID of TextModule</param>
+        ''' <param name="serverGroupID">ServerGroupID of TextModule</param>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[adminsupport]	24.02.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub Save(ByVal key As String, ByVal value As String, ByVal release As Boolean, ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer)
+            Me.Save(key, value, release, websiteAreaID, marketID, Me._webManager.CurrentServerInfo.ParentServerGroupID, Nothing)
+        End Sub
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Save value of TextModule defined by key
+        ''' </summary>
+        ''' <param name="key">The name of the key which uniquely identifies the TextModule</param>
+        ''' <param name="value">Value of TextModule to be saved</param>
+        ''' <param name="release">Defines Save and Release the TextModule or not</param>
+        ''' <param name="websiteAreaID">Unique WebsiteAreaID of TextModule</param>
+        ''' <param name="marketID">MarketID of TextModule</param>
+        ''' <param name="serverGroupID">ServerGroupID of TextModule</param>
+        ''' <param name="typeID">Type of TextModule</param>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[patil]	02.03.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub Save(ByVal key As String, ByVal value As String, ByVal release As Boolean, ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer, ByVal typeID As TextModuleType)
+            Dim _serverGroupID As System.Int32
+            If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced = Nothing Then
+                _serverGroupID = serverGroupID
+            Else
+                _serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced
+            End If
+            If typeID = TextModules.TextModuleType.PlainTextBlock Or typeID = TextModules.TextModuleType.PlainTextString Then
+                Dim releasedItems() As Text.TextModules.ModuleItem
+                releasedItems = Me.LoadModuleItems(websiteAreaID, marketID, _serverGroupID, True)
+                If Administration.Business.IsPlainTextblockContainsHtmlTextModule(value, releasedItems) Then
+                    Throw New Exception("Html type TextModule is found in plain text TextModule!")
+                End If
+            End If
+            Data.Save(key, value, release, websiteAreaID, marketID, _serverGroupID, typeID)
+        End Sub
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Array of all keys
+        ''' </summary>
+        ''' <param name="websiteAreaID">WebsiteAreaID of a Text Module</param>
+        ''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
+        ''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
+        ''' <returns></returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[patil]	02.03.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function Keys(ByVal websiteAreaID As String, ByVal marketID As Integer, ByVal serverGroupID As Integer) As String()
+            Dim _serverGroupID As System.Int32
+            If CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced = Nothing Then
+                _serverGroupID = serverGroupID
+            Else
+                _serverGroupID = CompuMaster.camm.WebManager.Configuration.TextModulesServerGroupIDForced
+            End If
+            Return Data.Keys(websiteAreaID, marketID, _serverGroupID)
+        End Function
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Check validity of key
+        ''' </summary>
+        ''' <param name="key">Key to be checked</param>
+        ''' <returns>True if the key name doesn't contain forbidden characters</returns>
+        ''' <remarks>
+        ''' </remarks>
+        ''' <history>
+        ''' 	[patil]	06.03.2006	Created
+        ''' </history>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function IsValid(ByVal key As String) As Boolean
+            Return Administration.Business.IsValid(key)
+        End Function
 
-	End Class
+    End Class
 #End Region
 
     Namespace Administration

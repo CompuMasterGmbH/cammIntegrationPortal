@@ -1,5 +1,7 @@
-﻿Option Explicit On
-Option Strict Off
+﻿'Copyright 2016 CompuMaster GmbH, http://www.compumaster.de
+
+Option Explicit On
+Option Strict On
 
 Imports System.ComponentModel
 Imports System.Web.UI
@@ -46,7 +48,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Controls
     Public Class CommonMarkEditor
         Inherits Global.CompuMaster.camm.SmartWebEditor.Controls.SmartPlainHtmlEditor
 
-
         Protected Overrides Sub PagePreRender_InitializeToolbar()
             MyBase.PagePreRender_InitializeToolbar()
 
@@ -66,18 +67,12 @@ Namespace CompuMaster.camm.SmartWebEditor.Controls
                     End If
                     counter += 1
                 Next
-
                 Me.pnlEditorToolbar.Controls.AddAt(addAtIndex, linkButtonToHelp)
-
             End If
         End Sub
 
         Private Sub CommonMarkEditor_PreRender(sender As Object, e As EventArgs) Handles Me.PreRender
-
             Me.lblViewOnlyContent.InnerHtml = CommonMark.CommonMarkConverter.Convert(Me.MainEditor.Html)
-
-
-
         End Sub
 
     End Class
