@@ -65,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyVersion.vb" />
-    <Compile Include="CommonMarkEditor.vb" />
+    <Compile Include="SmartCommonMarkEditor.vb" />
     <Compile Include="AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

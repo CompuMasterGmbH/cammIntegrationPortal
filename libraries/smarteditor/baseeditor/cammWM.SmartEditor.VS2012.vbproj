@@ -44,7 +44,8 @@
     <RegisterForComInterop>false</RegisterForComInterop>
     <WarningLevel>1</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants>LicenceGenerator=True,NET="2_0"</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -57,7 +58,8 @@
     <RegisterForComInterop>false</RegisterForComInterop>
     <WarningLevel>1</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants>LicenceGenerator=True,NET="2_0"</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="cammWM">
@@ -83,7 +85,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.vb" />
     <Compile Include="AssemblyVersion.vb" />
-    <Compile Include="SmartWcmsEditorBaseLevel2.vb" />
+    <Compile Include="SmartWebEditorBaseLevel2.vb" />
     <Compile Include="ProtectedPage.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -92,7 +94,7 @@
     <Compile Include="DataQueryAndTables.vb" />
     <Compile Include="Configuration.vb" />
     <Compile Include="ConfigurationWebManager.vb" />
-    <Compile Include="ISmartWcmsEditor.vb" />
+    <Compile Include="ISmartWebEditor.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
@@ -107,11 +109,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SmartWcmsDatabaseAccessLayer.vb" />
-    <Compile Include="SmartWcmsEditorCommonBase.vb" />
+    <Compile Include="SmartWebEditorDatabaseAccessLayer.vb" />
+    <Compile Include="SmartWebEditorCommonBase.vb" />
     <Compile Include="UploadForm.vb" />
     <Compile Include="Utils.vb" />
-    <Compile Include="SmartWcmsEditorBase.vb" />
+    <Compile Include="SmartWebEditorBase.vb" />
     <Compile Include="PlainTextEditor.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -160,7 +162,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="system\images\editor.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
