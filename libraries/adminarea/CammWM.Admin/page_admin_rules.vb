@@ -1,14 +1,16 @@
-'Copyright 2008-2016 CompuMaster GmbH, http://www.compumaster.de
+'Copyright 2008-2016 CompuMaster GmbH, http://www.compumaster.de and/or its affiliates. All rights reserved.
 '---------------------------------------------------------------
 'This file is part of camm Integration Portal (camm Web-Manager).
 'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
 'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'Alternatively, the camm Integration Portal (or camm Web-Manager) can be licensed for closed-source / commercial projects from CompuMaster GmbH, <http://www.camm.biz/>.
 '
 'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
 'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
 'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
 'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden für Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
 
 Option Strict On
 Option Explicit On 
@@ -75,7 +77,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
         Private Function GetListOfUsersByField(ByVal strSearchValue As String) As DataTable
             Dim sqlParams As SqlParameter() = {New SqlParameter("@FieldName", Trim(dropFieldSelection.SelectedValue)), New SqlParameter("@searchvalue", strSearchValue.Trim)}
-            Dim sqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+            Dim sqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "select lu.id_user from log_users lu inner join benutzer b on b.id=lu.id_user where lu.type=@FieldName and lu.value=@searchvalue"
             Return FillDataTable(New SqlConnection(cammWebManager.ConnectionString), sqlQuery, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
         End Function
@@ -87,13 +89,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim sqlQuery As String = String.Empty
 
             If Trim(dropFieldSelection.SelectedValue) = "title" Then
-                sqlQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                sqlQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "select isnull(titel,'') as value,count(id) counts from benutzer group by isnull(titel,'') order by value"
             ElseIf Trim(dropFieldSelection.SelectedValue) = "country" Then
-                sqlQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                sqlQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "select isnull(land,'') as value,count(id) counts from benutzer group by isnull(land,'') order by value"
             Else
-                sqlQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                sqlQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "select isnull(" & Trim(dropFieldSelection.SelectedValue) & ",'') as value,count(id) counts from benutzer group by isnull(" & Trim(dropFieldSelection.SelectedValue) & ",'') order by value"
                 'sqlQuery = "select isnull(value,'') value,count(lu.id) counts from log_users lu inner join benutzer b on lu.id_user=b.id where type=@fieldid group by isnull(value,'') order by value"
             End If
