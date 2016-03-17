@@ -6,13 +6,13 @@
 		<title>$title$</title>
 		<authors>$author$</authors>
 		<owners>$author$</owners>
-		<licenseUrl>https://github.com/CompuMasterGmbH/cammIntegrationPortal/master/LICENSE</licenseUrl>
+		<licenseUrl>https://raw.githubusercontent.com/CompuMasterGmbH/cammIntegrationPortal/master/LICENSE.md</licenseUrl>
 		<projectUrl>https://github.com/CompuMasterGmbH/cammIntegrationPortal</projectUrl>
 		<iconUrl>https://github.com/CompuMasterGmbH/cammIntegrationPortal/master/logo_64x64.png</iconUrl>
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>camm Integration Portal (based on camm Web-Manager) for Web Applications</description>
 		<releaseNotes/>
-		<copyright>2005-2016 CompuMaster GmbH</copyright>
+		<copyright>2001-2016 CompuMaster GmbH</copyright>
 		<tags>CompuMaster camm Integration Portal Web-Manager Web Manager</tags>
 		<!--
     <dependencies>
