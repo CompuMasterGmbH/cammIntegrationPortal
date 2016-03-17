@@ -14,11 +14,10 @@
 		<releaseNotes/>
 		<copyright>2001-2016 CompuMaster GmbH</copyright>
 		<tags>SmartEditor CommonMark CompuMaster camm Integration Portal Web-Manager Web Manager CIP CWM cammIPortal IPortal</tags>
-		<!--
-    <dependencies>
-      <dependency id="CompuMaster.OtherReferencedLib" version="[$version$]" />
-    </dependencies>
-    -->
+		<dependencies>
+		  <dependency id="cammWM" version="4.10.206" />
+		  <dependency id="cammWM.SmartEditor" version="4.10.206" />
+		</dependencies>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Web" />	
 		</frameworkAssemblies>

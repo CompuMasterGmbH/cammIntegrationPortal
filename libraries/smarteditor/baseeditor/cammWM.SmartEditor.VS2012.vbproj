@@ -86,7 +86,9 @@
     <Compile Include="AssemblyInfo.vb" />
     <Compile Include="AssemblyVersion.vb" />
     <Compile Include="SmartWebEditorBaseLevel2.vb" />
-    <Compile Include="ProtectedPage.vb" />
+    <Compile Include="ProtectedPage.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="IEditor.vb" />
     <Compile Include="SmartPlainHtmlEditor.vb" />
     <Compile Include="DataQueryAndTables.vb" />
