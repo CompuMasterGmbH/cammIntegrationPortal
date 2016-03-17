@@ -1,15 +1,4 @@
-# camm Integration Portal
-based on camm Web-Manager
-
-## Components
-
-* libraries/base         - sources for the main library
-* libraries/adminarea    - administration area library sources
-* libraries/components   - additional required components
-* libraries/smarteditor  - smart web editor component as a trivial editor for web pages and a sample web application project
-* database               - database setup/patching scripts
-* setup and distribution - tools for database update and other topics 
-* webs                   - web script files for running your instance of the software
+# camm Integration Portal (based on camm Web-Manager) Licensing
 
 ## Licensing
 
