@@ -1,14 +1,16 @@
-﻿'Copyright 2006,2016 CompuMaster GmbH, http://www.compumaster.de
+﻿'Copyright 2006,2016 CompuMaster GmbH, http://www.compumaster.de and/or its affiliates. All rights reserved.
 '---------------------------------------------------------------
 'This file is part of camm Integration Portal (camm Web-Manager).
 'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
 'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'Alternatively, the camm Integration Portal (or camm Web-Manager) can be licensed for closed-source / commercial projects from CompuMaster GmbH, <http://www.camm.biz/>.
 '
 'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
 'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
 'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
 'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden für Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
 
 Option Explicit On
 Option Strict On
@@ -22,10 +24,10 @@ Namespace CompuMaster.camm.SmartWebEditor
     ''' </summary>
     ''' <remarks>
     ''' </remarks>
-    Public Class SmartWcmsDatabaseAccessLayer
+    Public Class SmartWebEditorDatabaseAccessLayer
 
-        Private _swcms As ISmartWcmsEditor
-        Friend Sub New(ByVal swcms As ISmartWcmsEditor)
+        Private _swcms As ISmartWebEditor
+        Friend Sub New(ByVal swcms As ISmartWebEditor)
             _swcms = swcms
         End Sub
 
@@ -64,7 +66,6 @@ Namespace CompuMaster.camm.SmartWebEditor
             Dim myConnection As SqlClient.SqlConnection
             Dim myCommand As SqlClient.SqlCommand
             Dim myQuery As String =
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                     "select LanguageID from webmanager_webeditor where Url = @Url " & vbNewLine &
                     "and EditorID = @EditorID and version = @Version AND ServerID = @ServerID group by LanguageID"
             myConnection = New SqlClient.SqlConnection(ConnectionString)
@@ -356,7 +357,6 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Dim myConnection As SqlClient.SqlConnection
                 Dim myCommand As SqlClient.SqlCommand
                 Dim myQuery As String =
-                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                         "select [ServerID],[LanguageID],[IsActive],[URL],[EditorID],[ModifiedOn],[ModifiedByUser],[ReleasedOn],[ReleasedByUser],[Version]" & vbNewLine &
                         "from [dbo].[WebManager_WebEditor]" & vbNewLine &
                         "where [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine &
@@ -431,7 +431,6 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Dim myConnection As SqlClient.SqlConnection
                 Dim myCommand As SqlClient.SqlCommand
                 Dim myQuery As String =
-                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                         "select ID, Description_English, AlternativeLanguage from system_languages where [IsActive] = 1"
                 myConnection = New SqlClient.SqlConnection(ConnectionString)
                 myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -472,7 +471,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <returns></returns>
         Public Function ReadReleasedContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer) As String
             Dim MyCmd As New SqlClient.SqlCommand(
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                     "SELECT [Content] " & vbNewLine &
                     "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
                     "WHERE IsActive = 1 AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine,
@@ -494,21 +492,18 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <param name="version"></param>
         ''' <returns></returns>
         Public Function GetFirstPreviousVersionThatDiffers(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As Integer
-            Dim command As New SqlClient.SqlCommand("SELECT TOP 1 version FROM dbo.WebManager_WebEditor " & vbNewLine &
-"WHERE content NOT LIKE ( SELECT  content FROM dbo.WebManager_WebEditor a " & vbNewLine &
-"WHERE a.URL = @URL  " & vbNewLine &
-"AND a.LanguageID = @LanguageID AND a.version = @VERSION AND a.ServerId = @ServerID AND a.EditorID = @EditorID) " & vbNewLine &
-" AND LanguageID =  @LanguageID AND URL = @URL AND ServerId = @ServerID AND EditorID = @EditorID AND version < @VERSION ORDER BY VERSION DESC ", New SqlClient.SqlConnection(Me.ConnectionString))
-
+            Dim command As New SqlClient.SqlCommand(
+                "SELECT TOP 1 version FROM dbo.WebManager_WebEditor " & vbNewLine &
+                "WHERE content NOT LIKE ( SELECT  content FROM dbo.WebManager_WebEditor a " & vbNewLine &
+                "WHERE a.URL = @URL  " & vbNewLine &
+                "   AND a.LanguageID = @LanguageID AND a.version = @VERSION AND a.ServerId = @ServerID AND a.EditorID = @EditorID) " & vbNewLine &
+                "   AND LanguageID =  @LanguageID AND URL = @URL AND ServerId = @ServerID AND EditorID = @EditorID AND version < @VERSION ORDER BY VERSION DESC ", New SqlClient.SqlConnection(Me.ConnectionString))
             command.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
             command.Parameters.Add("@LanguageID", SqlDbType.Int).Value = marketID
             command.Parameters.Add("@URL", SqlDbType.NVarChar).Value = url.ToLower
             command.Parameters.Add("@EditorID", SqlDbType.NVarChar).Value = editorID
             command.Parameters.Add("@VERSION", SqlDbType.Int).Value = version
-
-
             Return Utils.Nz(Data.DataQuery.AnyIDataProvider.ExecuteScalar(command, Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, Integer))
-
         End Function
 
         ''' <summary>
@@ -522,7 +517,6 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <returns></returns>
         Public Function ReadContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As String
             Dim MyCmd As New SqlClient.SqlCommand(
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                     "SELECT [Content] " & vbNewLine &
                     "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
                     "WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine,

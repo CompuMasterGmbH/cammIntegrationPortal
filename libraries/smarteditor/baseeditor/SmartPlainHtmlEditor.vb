@@ -1,14 +1,16 @@
-﻿'Copyright 2005-2016 CompuMaster GmbH, http://www.compumaster.de
+﻿'Copyright 2005-2016 CompuMaster GmbH, http://www.compumaster.de and/or its affiliates. All rights reserved.
 '---------------------------------------------------------------
 'This file is part of camm Integration Portal (camm Web-Manager).
 'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
 'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'Alternatively, the camm Integration Portal (or camm Web-Manager) can be licensed for closed-source / commercial projects from CompuMaster GmbH, <http://www.camm.biz/>.
 '
 'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
 'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
 'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
 'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden für Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
 
 Option Explicit On
 Option Strict On
@@ -28,7 +30,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         '''     When there is no content for an URL in the database - or it hasn't been released - the page request will lead to an HTTP 404 error code.
         ''' </remarks>
         Public Class SmartPlainHtmlEditor
-            Inherits SmartWcmsEditorCommonBase
+            Inherits SmartWebEditorCommonBase
 
             Protected Overrides Sub PagePreRender_JavaScriptRegistration()
                 Return
@@ -115,7 +117,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 'Dim AllEditorControls As New List(Of System.Web.UI.Control)
                 'Me.FindSWcmsControlsOnThisPage(AllEditorControls, Me.Page.Controls)
                 'For Each Editor As System.Web.UI.Control In AllEditorControls
-                '    'EncodeRawDataJScriptSnippet &= String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}')); ", CType(Editor, SmartWcmsEditorCommonBase).EditorClientID)
+                '    'EncodeRawDataJScriptSnippet &= String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}')); ", CType(Editor, SmartWebEditorCommonBase).EditorClientID)
                 'Next
 
                 Me.SaveButton = New System.Web.UI.WebControls.Button()
@@ -149,7 +151,7 @@ Namespace CompuMaster.camm.SmartWebEditor
 
             ''' <summary>
             ''' Fil the verison dropdown box with the versions available for this document.
-            ''' <remarks>I have for now overall copied the code from the original smartwcms editor. Needs refactoring </remarks>
+            ''' <remarks>For now, overall copied the code from the original SmartWebEditor. Needs refactoring</remarks>
             ''' </summary>
             Private Sub InitializeVersionDropDownBox()
                 Dim myDataTable As DataTable = Database.ReadAllData(Me.ContentOfServerID, DocumentID, Me.EditorID)
@@ -343,7 +345,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                     For Each Editor As System.Web.UI.Control In AllEditorControls
                         Dim EditorInstanceIsDirtyScript As String = "function isDirty_" & Editor.ClientID & "() " & vbNewLine &
                                                                    "{  " & vbNewLine &
-                                                                   "var editor = document.getElementById('" & CType(Editor, SmartWcmsEditorCommonBase).EditorClientID & "'); " & vbNewLine &
+                                                                   "var editor = document.getElementById('" & CType(Editor, SmartWebEditorCommonBase).EditorClientID & "'); " & vbNewLine &
                                                                    "if(editor && (editor.defaultValue != editor.value) && (editor.defaultValue != EncodeRawData(editor)))" & vbNewLine &
                                                                    "    return true; " & vbNewLine &
                                                                    "else " & vbNewLine &

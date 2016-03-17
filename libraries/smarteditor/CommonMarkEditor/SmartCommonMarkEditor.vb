@@ -1,4 +1,4 @@
-﻿'Copyright 2016 CompuMaster GmbH, http://www.compumaster.de
+﻿'Copyright 2016 CompuMaster GmbH, http://www.compumaster.de and/or its affiliates. All rights reserved.
 
 Option Explicit On
 Option Strict On
@@ -45,7 +45,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Controls
     ''' Involves CommonMark.Net from https://github.com/Knagis/CommonMark.NET, see license at https://github.com/Knagis/CommonMark.NET/blob/master/LICENSE.md 
     ''' </remarks>
     <DefaultProperty("Html"), ToolboxData("<{0}:CommonMarkEditor1 runat=server></{0}:CommonMarkEditor1>")>
-    Public Class CommonMarkEditor
+    Public Class SmartCommonMarkEditor
         Inherits Global.CompuMaster.camm.SmartWebEditor.Controls.SmartPlainHtmlEditor
 
         Protected Overrides Sub PagePreRender_InitializeToolbar()
@@ -72,7 +72,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Controls
         End Sub
 
         Private Sub CommonMarkEditor_PreRender(sender As Object, e As EventArgs) Handles Me.PreRender
-            Me.lblViewOnlyContent.InnerHtml = CommonMark.CommonMarkConverter.Convert(Me.MainEditor.Html)
+            Me.lblViewOnlyContent.Text = CommonMark.CommonMarkConverter.Convert(Me.MainEditor.Html)
         End Sub
 
     End Class

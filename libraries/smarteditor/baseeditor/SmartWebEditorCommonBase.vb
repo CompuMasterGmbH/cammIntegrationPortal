@@ -1,24 +1,28 @@
-﻿'Copyright 2005-2016 CompuMaster GmbH, http://www.compumaster.de
+﻿'Copyright 2005-2016 CompuMaster GmbH, http://www.compumaster.de and/or its affiliates. All rights reserved.
 '---------------------------------------------------------------
 'This file is part of camm Integration Portal (camm Web-Manager).
 'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 'camm Integration Portal (camm Web-Manager) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
 'You should have received a copy of the GNU Affero General Public License along with camm Integration Portal (camm Web-Manager). If not, see <http://www.gnu.org/licenses/>.
+'Alternatively, the camm Integration Portal (or camm Web-Manager) can be licensed for closed-source / commercial projects from CompuMaster GmbH, <http://www.camm.biz/>.
 '
 'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
 'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
 'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
 'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
+'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden für Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
 
 Option Explicit On
 Option Strict On
+
+#Const DebugMode = False
 
 Imports System.Web
 
 Namespace CompuMaster.camm.SmartWebEditor
 
-    Public MustInherit Class SmartWcmsEditorCommonBase
-        Inherits SmartWcmsEditorBaseLevel2
+    Public MustInherit Class SmartWebEditorCommonBase
+        Inherits SmartWebEditorBaseLevel2
 
 #Region "Version tracking"
         Dim _LatestData As Integer
@@ -479,11 +483,18 @@ Namespace CompuMaster.camm.SmartWebEditor
             ibtnSwitchToEditMode.Visible = False
             ibtnSwitchToEditMode.EnableViewState = False
             ibtnSwitchToEditMode.AlternateText = "Edit"
-            ibtnSwitchToEditMode.ImageUrl = "/RadControls/Editor/Img/editor.gif"
+            If System.IO.File.Exists(Me.Page.Server.MapPath("~/system/images/editor.gif")) Then
+                ibtnSwitchToEditMode.ImageUrl = "~/system/images/editor.gif"
+            ElseIf System.IO.File.Exists(Me.Page.Server.MapPath("/system/images/editor.gif")) Then
+                ibtnSwitchToEditMode.ImageUrl = "/system/images/editor.gif"
+            Else
+                ibtnSwitchToEditMode.ImageUrl = "~/system/images/editor.gif"
+            End If
             ibtnSwitchToEditMode.ToolTip = "Edit"
             Controls.Add(ibtnSwitchToEditMode)
 
-            lblViewOnlyContent = New System.Web.UI.HtmlControls.HtmlGenericControl("div")
+            lblViewOnlyContent = New System.Web.UI.LiteralControl()
+            lblViewOnlyContent.ID = "lblViewOnlyContent"
             lblViewOnlyContent.Visible = False
             lblViewOnlyContent.EnableViewState = False
             Controls.Add(lblViewOnlyContent)
@@ -534,7 +545,6 @@ Namespace CompuMaster.camm.SmartWebEditor
             pnlEditorToolbar = New UI.WebControls.Panel()
             pnlEditorToolbar.Visible = False
             Controls.Add(pnlEditorToolbar)
-
 
         End Sub    'CreateChildControls()
 
@@ -907,7 +917,7 @@ Namespace CompuMaster.camm.SmartWebEditor
 
 #Region " MultipleEditorPerPage Communications "
         ''' <summary>
-        '''     Is there at least one SmartWcms control in edit mode?
+        '''     Is there at least one SmartWebEditor control in edit mode?
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks>
@@ -931,7 +941,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         End Function
 
         ''' <summary>
-        '''     Walk recursive through all children controls and collect all SmartWcms items
+        '''     Walk recursive through all children controls and collect all SmartWebEditor items
         ''' </summary>
         ''' <param name="results">An arraylist which will contain all positive matches</param>
         ''' <param name="controlsCollection">The control collection which shall be browsed</param>
@@ -1016,8 +1026,6 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Get
         End Property
 
-#Const DebugMode = False
-
         Private ReadOnly Property editorMain As IEditor
             Get
                 Return Me.MainEditor
@@ -1033,7 +1041,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         Protected txtCurrentlyLoadedVersion As System.Web.UI.HtmlControls.HtmlInputHidden
         Protected txtEditModeRequested As System.Web.UI.HtmlControls.HtmlInputHidden
         Protected lblCurrentEditInformation As System.Web.UI.WebControls.Label
-        Protected lblViewOnlyContent As System.Web.UI.HtmlControls.HtmlGenericControl
+        Protected lblViewOnlyContent As System.Web.UI.LiteralControl
         Protected pnlEditorToolbar As System.Web.UI.WebControls.Panel
         Protected WithEvents ibtnSwitchToEditMode As System.Web.UI.WebControls.ImageButton
 
@@ -1171,7 +1179,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                         LookupMatchingMarketDataForReleasedContent(Not ShowWithEditRights)
                     Catch ex As UseInnerHtmlException
                         'Use inner html 
-                        lblViewOnlyContent.InnerHtml = Me.InnerHtml
+                        lblViewOnlyContent.Text = Me.InnerHtml
                         If ShowWithEditRights Then
                             Me.editorMain.Html = Me.InnerHtml
                         End If
@@ -1183,7 +1191,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                     End If
                 ElseIf Not Me.IsEmptyInnerHtml Then
                     'Use inner html 
-                    lblViewOnlyContent.InnerHtml = Me.InnerHtml
+                    lblViewOnlyContent.Text = Me.InnerHtml
                     If ShowWithEditRights Then
                         Me.editorMain.Html = Me.InnerHtml
                     End If
@@ -1221,7 +1229,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                         Me.editorMain.Visible = False
                         Me.lblCurrentEditInformation.Visible = False
                         Me.lblViewOnlyContent.Visible = True
-                        Me.lblViewOnlyContent.InnerHtml = "<br>" & Me.editorMain.Html
+                        Me.lblViewOnlyContent.Text = "<br>" & Me.editorMain.Html
                         EditModeAsDefinedInViewstate = TriState.False
                         Me.RequestedEditMode = TriState.False
                     End If
@@ -1230,7 +1238,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                         Me.ibtnSwitchToEditMode.Visible = True
                         Me.lblCurrentEditInformation.Visible = False
                         Me.lblViewOnlyContent.Visible = True
-                        Me.lblViewOnlyContent.InnerHtml = "<br>" & Me.editorMain.Html
+                        Me.lblViewOnlyContent.Text = "<br>" & Me.editorMain.Html
                         Me.RequestedEditMode = TriState.True
                     End If
                 Else 'Me.Page.IsPostBack Then
@@ -1314,7 +1322,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                     myIsValidVersionRequest = True
                 End If
                 If myIsValidVersionRequest = False Then
-                    Me.cammWebManager.Log.Write("SmartWcms:<br> - WebEditor<br>There was an invalid request blocked by the security.")
+                    Me.cammWebManager.Log.Write("SmartWebEditor<br>There was an invalid request blocked by the security.")
                     Raise404("Invalid data found: the highest document version is lesser than the current version of this file")
                 End If
 
@@ -1382,7 +1390,7 @@ Namespace CompuMaster.camm.SmartWebEditor
             StandardLoading()
 
 #If DebugMode Then
-                CreateDebugOutput("PreRender Start")
+            CreateDebugOutput("PreRender Start")
 #End If
 
             'Make the invalid edit buttons invisible
@@ -1394,15 +1402,16 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.editorMain.Visible = False
                     Me.ibtnSwitchToEditMode.Visible = False
                     Me.lblViewOnlyContent.Visible = True
-                    Me.lblViewOnlyContent.InnerHtml = "<br>" & Me.editorMain.Html
+                    Me.lblViewOnlyContent.Text = "<br>" & Me.editorMain.Html
                     Me.lblCurrentEditInformation.Visible = False
                 ElseIf Me.editorMain.Visible = True Then
                     Me.ibtnSwitchToEditMode.Visible = False
+                    Me.lblViewOnlyContent.Visible = False
                 ElseIf Me.editorMain.Visible = False Then
                     Me.ibtnSwitchToEditMode.Visible = True
                     Me.lblCurrentEditInformation.Visible = False
                     Me.lblViewOnlyContent.Visible = True
-                    Me.lblViewOnlyContent.InnerHtml = "<br>" & editorMain.Html
+                    Me.lblViewOnlyContent.Text = "<br>" & editorMain.Html
                 End If
 
                 'Shows which version and language is currently opened
@@ -1426,11 +1435,20 @@ Namespace CompuMaster.camm.SmartWebEditor
                     PagePreRender_JavaScriptRegistration()
                 End If
 
+            Else
+                Me.editorMain.Html = Me.lblViewOnlyContent.Text 'required - lblViewOnlyContent is not shown for some reason, but EditorMain.Html is visible as textoutput !?!
+#If DebugMode Then
+                CreateDebugOutput("PreRender ViewMode")
+                'Me.lblViewOnlyContent.TagName = "test"
+                'Me.lblViewOnlyContent.ID = "lblViewOnlyContent"
+                'Me.lblViewOnlyContent.Text = "<h1>innertext</h1>"
+
+#End If
             End If
 
 #If DebugMode Then
-                CreateDebugOutput("PreRender End")
-                WriteDebugOutput()
+            CreateDebugOutput("PreRender End")
+            WriteDebugOutput()
 #End If
 
         End Sub
@@ -1448,48 +1466,50 @@ Namespace CompuMaster.camm.SmartWebEditor
 
 #Region "Debug output methods"
 #If DebugMode Then
-            Private _DebugOutput As New System.Text.StringBuilder
-            Private Sub WriteDebugOutput()
-                If Me.cammWebManager.DebugLevel < WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                    Exit Sub
-                End If
-                If _DebugOutput.Length > 0 Then
-                    HttpContext.Current.Response.Write("<p>RawUrl=" & HttpContext.Current.Server.HtmlEncode(HttpContext.Current.Request.RawUrl))
-                    HttpContext.Current.Response.Write("<table><tr>")
-                    HttpContext.Current.Response.Write(_DebugOutput.ToString)
-                    HttpContext.Current.Response.Write("</tr></table>")
-                End If
-            End Sub
+        Private _DebugOutput As New System.Text.StringBuilder
+        Private Sub WriteDebugOutput()
+            If Me.cammWebManager.DebugLevel < CompuMaster.camm.WebManager.WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                Exit Sub
+            End If
+            If _DebugOutput.Length > 0 Then
+                HttpContext.Current.Response.Write("<p>RawUrl=" & HttpContext.Current.Server.HtmlEncode(HttpContext.Current.Request.RawUrl))
+                HttpContext.Current.Response.Write("<table><tr>")
+                HttpContext.Current.Response.Write(_DebugOutput.ToString)
+                HttpContext.Current.Response.Write("</tr></table>")
+            End If
+        End Sub
 
-            Private Sub WriteDebugOutputDirectly(ByVal text As String)
-                If Me.cammWebManager.DebugLevel < WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                    Exit Sub
-                End If
-                HttpContext.Current.Response.Write(text)
-            End Sub
+        Private Sub WriteDebugOutputDirectly(ByVal text As String)
+            If Me.cammWebManager.DebugLevel < CompuMaster.camm.WebManager.WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                Exit Sub
+            End If
+            HttpContext.Current.Response.Write(text)
+        End Sub
 
-            Private Sub CreateDebugOutput(ByVal stepLocation As String)
-                If Me.cammWebManager.DebugLevel < WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                    Exit Sub
-                End If
-                _DebugOutput.Append("<td>")
-                _DebugOutput.Append("<h4>" & stepLocation & "</h4>")
-                _DebugOutput.Append("ShowInEditMode=" & Me.ShowWithEditRights & "<br>")
-                _DebugOutput.Append("editorMain.Visible=" & Me.editorMain.Visible & "<br>")
-                _DebugOutput.Append("txtEditModeRequested.Value=" & Me.txtEditModeRequested.Value & "<br>")
-                _DebugOutput.Append("txtRequestedAction.Value=" & Me.txtRequestedAction.Value & "<br>")
-                _DebugOutput.Append("RequestMode=" & Me.RequestMode.ToString & "<br>")
-                _DebugOutput.Append("EditModeSwitchAvailable=" & Me.EditModeSwitchAvailable & "<br>")
-                _DebugOutput.Append("EditModeActive=" & Me.EditModeActive & "<br>")
-                _DebugOutput.Append("CurrentMarket=" & Me.LanguageToShow & "<br>")
-                _DebugOutput.Append("CurrentVersion=" & Me.CurrentVersion & "<br>")
-                _DebugOutput.Append("txtCurrentlyLoadedVersion=" & Me.txtCurrentlyLoadedVersion.Value & "<br>")
-                _DebugOutput.Append("txtHiddenActiveVersion=" & Me.txtHiddenActiveVersion.Text & "<br>")
-                _DebugOutput.Append("_ToolbarSetting=" & Me._ToolbarSetting & "<br>")
-                _DebugOutput.Append("lblViewOnlyContent.Visible=" & Me.lblViewOnlyContent.Visible & "<br>")
-                _DebugOutput.Append("editorMain.Visible=" & Me.editorMain.Visible & "<br>")
-                _DebugOutput.Append("</td>")
-            End Sub
+        Private Sub CreateDebugOutput(ByVal stepLocation As String)
+            If Me.cammWebManager.DebugLevel < CompuMaster.camm.WebManager.WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                Exit Sub
+            End If
+            _DebugOutput.Append("<td>")
+            _DebugOutput.Append("<h4>" & stepLocation & "</h4>")
+            _DebugOutput.Append("ShowInEditMode=" & Me.ShowWithEditRights & "<br>")
+            _DebugOutput.Append("editorMain.Visible=" & Me.editorMain.Visible & "<br>")
+            _DebugOutput.Append("txtEditModeRequested.Value=" & Me.txtEditModeRequested.Value & "<br>")
+            _DebugOutput.Append("txtRequestedAction.Value=" & Me.txtRequestedAction.Value & "<br>")
+            _DebugOutput.Append("RequestMode=" & Me.RequestMode.ToString & "<br>")
+            _DebugOutput.Append("EditModeSwitchAvailable=" & Me.EditModeSwitchAvailable & "<br>")
+            _DebugOutput.Append("EditModeActive=" & Me.EditModeActive & "<br>")
+            _DebugOutput.Append("CurrentMarket=" & Me.LanguageToShow & "<br>")
+            _DebugOutput.Append("CurrentVersion=" & Me.CurrentVersion & "<br>")
+            _DebugOutput.Append("txtCurrentlyLoadedVersion=" & Me.txtCurrentlyLoadedVersion.Value & "<br>")
+            _DebugOutput.Append("txtHiddenActiveVersion=" & Me.txtHiddenActiveVersion.Text & "<br>")
+            _DebugOutput.Append("_ToolbarSetting=" & Me._ToolbarSetting & "<br>")
+            _DebugOutput.Append("lblViewOnlyContent.Visible=" & Me.lblViewOnlyContent.Visible & "<br>")
+            _DebugOutput.Append("lblViewOnlyContent.InnerHtmlStart=" & System.Web.HttpUtility.HtmlEncode(Mid(Me.lblViewOnlyContent.Text, 1, 20)) & "<br>")
+            _DebugOutput.Append("editorMain.Visible=" & Me.editorMain.Visible & "<br>")
+            _DebugOutput.Append("MarketLookupMode=" & Me.MarketLookupMode.ToString & "<br>")
+            _DebugOutput.Append("</td>")
+        End Sub
 #End If
 #End Region
 
@@ -1593,7 +1613,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Dim myContent As String = Database.ReadContent(serverID, url, editorID, marketID, version)
                 editorMain.Html = myContent
             Catch ex As Exception
-                Me.cammWebManager.Log.Write("SmartWcms:<br> - WebEditor<br>" & ex.ToString)
+                Me.cammWebManager.Log.Write("SmartWebEditor<br>" & ex.ToString)
             End Try
         End Sub 'SetEditorContent(byval ID as integer)
 
@@ -1637,7 +1657,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         Private Sub StandardLoading()
 
 #If DebugMode Then
-                CreateDebugOutput("StandardLoading Start")
+            CreateDebugOutput("StandardLoading Start")
 #End If
             'Contains every data available for this document
             'Dim myDataTable As DataTable = myDataTable = GetAllDataForAGivenEditorControl(DocumentID, False)
@@ -1683,53 +1703,57 @@ Namespace CompuMaster.camm.SmartWebEditor
                     editorMain.Visible = False
                     ibtnSwitchToEditMode.Visible = False
                     If Me.EnableCache AndAlso Not CachedItemContent Is Nothing Then
-                        lblViewOnlyContent.InnerHtml = CachedItemContent
+                        lblViewOnlyContent.Text = CachedItemContent
 #If DebugMode Then
-                            WriteDebugOutputDirectly("cached ")
+                        WriteDebugOutputDirectly("cached-item-content:non-queried ")
 #End If
                     Else
+#If DebugMode Then
+                        WriteDebugOutputDirectly("non-cached-item-content:queried ")
+#End If
                         'ToDo 4 JW: optimize code to just read released content and no version number, innerhtml only when db-content has no released data
                         Try
                             Dim HighestAvailableVersion As Integer = Me.Database.MaxVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
                             If HighestAvailableVersion = 0 OrElse (HighestAvailableVersion = 1 AndAlso Not Me.Database.ReleasedVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID) = 1) Then
-                                lblViewOnlyContent.InnerHtml = Me.InnerHtml
+                                lblViewOnlyContent.Text = Me.InnerHtml
                             Else
                                 If Me.MarketLookupMode = MarketLookupModes.SingleMarket Then
-                                    lblViewOnlyContent.InnerHtml = Database.ReadReleasedContent(Me.ContentOfServerID, DocumentID, Me.EditorID, 0)
+                                    lblViewOnlyContent.Text = Database.ReadReleasedContent(Me.ContentOfServerID, DocumentID, Me.EditorID, 0)
                                 Else
                                     Try
                                         LookupMatchingMarketDataForReleasedContent(True)
                                     Catch ex As UseInnerHtmlException
                                         'Use inner html 
-                                        lblViewOnlyContent.InnerHtml = Me.InnerHtml
+                                        lblViewOnlyContent.Text = Me.InnerHtml
                                     Catch
                                         Throw
                                     End Try
-                                    lblViewOnlyContent.InnerHtml = Database.ReadReleasedContent(Me.ContentOfServerID, DocumentID, Me.EditorID, Me.LanguageToShow)
+                                    lblViewOnlyContent.Text = Database.ReadReleasedContent(Me.ContentOfServerID, DocumentID, Me.EditorID, Me.LanguageToShow)
                                 End If
                             End If
                         Catch ex As UseInnerHtmlException
 #If DebugMode Then
-                                WriteDebugOutputDirectly("with inner html ")
+                            WriteDebugOutputDirectly("with inner html ")
 #End If
-                            lblViewOnlyContent.InnerHtml = Me.InnerHtml
+                            lblViewOnlyContent.Text = Me.InnerHtml
                         End Try
-                        CachedItemContent = lblViewOnlyContent.InnerHtml
+                        CachedItemContent = lblViewOnlyContent.Text
 #If DebugMode Then
-                            WriteDebugOutputDirectly("queried ")
+                        WriteDebugOutputDirectly("queried ")
 #End If
                     End If
                 End If
 #If DebugMode Then
-                    WriteDebugOutputDirectly("innherhtml=" & Me.InnerHtml & "<br>")
-                    WriteDebugOutputDirectly("currentversion=" & Me.CurrentVersion & "<br>")
+                WriteDebugOutputDirectly("innherhtml=" & Me.InnerHtml & "<br>")
+                WriteDebugOutputDirectly("currentversion=" & Me.CurrentVersion & "<br>")
 #End If
             Catch ex As Exception
-                Me.cammWebManager.Log.Write("SmartWcms:<br> - WebEditor<br>" & ex.ToString)
+                Me.cammWebManager.Log.ReportErrorViaEMail(ex, "SmartWebEditor")
+                Me.cammWebManager.Log.Write("SmartWebEditor:<br>" & ex.ToString)
             End Try
 
 #If DebugMode Then
-                CreateDebugOutput("StandardLoading End")
+            CreateDebugOutput("StandardLoading End")
 #End If
 
         End Sub

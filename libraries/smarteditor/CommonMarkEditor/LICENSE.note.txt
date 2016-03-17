@@ -1,0 +1,3 @@
+Copyright 2016 CompuMaster GmbH, http://www.compumaster.de and/or its affiliates. All rights reserved.
+
+This assembly uses 3rd party software, see its licensing statement at LICENSE.CommonMark.Net.txt
