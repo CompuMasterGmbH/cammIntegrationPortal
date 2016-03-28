@@ -1091,7 +1091,7 @@ Namespace CompuMaster.camm.WebManager.Controls
                 MyBase.OnPreRender(e)
                 If Me.cammWebManager Is Nothing Then
                     Throw New NullReferenceException("ConditionalContent control hasn't got a reference to a camm Web-Manager instance, but it is required")
-                ElseIf Trim(Me.SecurityObject) = Nothing AndAlso Trim(Me.SecurityObject) = Nothing Then
+                ElseIf Trim(Me.SecurityObject) = Nothing AndAlso Trim(Me.NotSecurityObject) = Nothing Then
                     'both check values empty --> not allowed situation --> critical exception
                     Throw New NullReferenceException("SecurityObject or NotSecurityObject property must be not empty")
                 Else
