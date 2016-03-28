@@ -23,9 +23,9 @@ Imports System.Web
 Namespace CompuMaster.camm.WebManager.Controls
 
 #If NetFramework <> "1_1" Then
-    <System.Runtime.InteropServices.ComVisible(False), ToolboxData("<{0}:WebManager ID=""cammWebManager"" runat=""server"" SecurityObjet=""""></{0}:WebManager>"), System.Web.UI.NonVisualControl(), System.Web.UI.Themeable(False), System.Web.UI.PersistChildren(False), System.Web.UI.ParseChildren(False)> Public MustInherit Class cammWebManager
+    <System.Runtime.InteropServices.ComVisible(False), ToolboxData("<{0}:WebManager ID=""cammWebManager"" runat=""server"" SecurityObject=""""></{0}:WebManager>"), System.Web.UI.NonVisualControl(), System.Web.UI.Themeable(False), System.Web.UI.PersistChildren(False), System.Web.UI.ParseChildren(False)> Public MustInherit Class cammWebManager
 #Else
-    <System.Runtime.InteropServices.ComVisible(False), ToolboxData("<{0}:WebManager ID=""cammWebManager"" runat=""server"" SecurityObjet=""""></{0}:WebManager>")> Public MustInherit Class cammWebManager
+    <System.Runtime.InteropServices.ComVisible(False), ToolboxData("<{0}:WebManager ID=""cammWebManager"" runat=""server"" SecurityObject=""""></{0}:WebManager>")> Public MustInherit Class cammWebManager
 #End If
         Inherits CompuMaster.camm.WebManager.WMSystem
 
@@ -1070,6 +1070,43 @@ Namespace CompuMaster.camm.WebManager.Controls
                 End If
                 Return Result
             End Function
+
+        End Class
+
+        ''' <summary>
+        ''' Show content based on existing or missing user authorizations
+        ''' </summary>
+#If NetFramework <> "1_1" Then
+        <System.Runtime.InteropServices.ComVisible(False), ToolboxData("<{0}:ConditionalContent ID=""ConditionalContent"" runat=""server"" SecurityObject="""" NotSecurityObject=""""></{0}:WebManager>"), System.Web.UI.Themeable(False)> Public Class ConditionalContent
+#Else
+    <System.Runtime.InteropServices.ComVisible(False), ToolboxData("<{0}:ConditionalContent ID=""ConditionalContent"" runat=""server"" SecurityObject="""" NotSecurityObject=""""></{0}:WebManager>")> Public Class ConditionalContent
+#End If
+
+            Inherits Controls.Control
+
+            Public Property SecurityObject As String
+            Public Property NotSecurityObject As String
+
+            Protected Overrides Sub OnPreRender(e As EventArgs)
+                MyBase.OnPreRender(e)
+                If Me.cammWebManager Is Nothing Then
+                    Throw New NullReferenceException("ConditionalContent control hasn't got a reference to a camm Web-Manager instance, but it is required")
+                ElseIf Trim(Me.SecurityObject) = Nothing AndAlso Trim(Me.SecurityObject) = Nothing Then
+                    'both check values empty --> not allowed situation --> critical exception
+                    Throw New NullReferenceException("SecurityObject or NotSecurityObject property must be not empty")
+                Else
+                    'either positive or negative rule must match - or both in case parameters for both rules are present
+                    Dim ShowContentByPermissionRule As Boolean = False
+                    If Trim(Me.SecurityObject) = Nothing OrElse (Trim(Me.SecurityObject) <> Nothing AndAlso cammWebManager.IsUserAuthorized(Me.SecurityObject)) Then
+                        ShowContentByPermissionRule = True
+                    End If
+                    Dim ShowContentByMissingPermissionRule As Boolean = False
+                    If Trim(Me.NotSecurityObject) = Nothing OrElse (Trim(Me.NotSecurityObject) <> Nothing AndAlso cammWebManager.IsUserAuthorized(Me.NotSecurityObject) = False) Then
+                        ShowContentByMissingPermissionRule = True
+                    End If
+                    Me.Visible = ShowContentByPermissionRule And ShowContentByMissingPermissionRule
+                End If
+            End Sub
 
         End Class
     End Namespace
