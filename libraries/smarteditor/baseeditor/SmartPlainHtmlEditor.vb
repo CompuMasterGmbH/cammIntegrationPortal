@@ -222,7 +222,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 End If
 
                 Dim script As String = "document.getElementById('" & txtBrowseToMarketVersion.ClientID & "').value = this.value;"
-                LanguagesDropDownBox.Attributes.Add("onchange", "if(confirmPageClose()){" & script & "; this.selectedIndex = -1; document.forms['" & LookupParentServerFormName() & "'].submit(); } else resetSelectBox(this); ")
+                LanguagesDropDownBox.Attributes.Add("onchange", "if(confirmPageClose()){" & script & "; this.selectedIndex = -1; ExecPostBack('LanguageDropDownBox', 'Change', true); } else resetSelectBox(this); ") 'document.forms['" & LookupParentServerFormName() & "'].submit(); } else resetSelectBox(this); ")
             End Sub
             ''' <summary>
             ''' Shows the buttons that we need
