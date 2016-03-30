@@ -1084,8 +1084,21 @@ Namespace CompuMaster.camm.WebManager.Controls
 
             Inherits Controls.Control
 
+            ''' <summary>
+            ''' A security object for the positive default rule to switch the content of this control to visible mode if the current user has got access to the specified security object
+            ''' </summary>
+            ''' <returns></returns>
             Public Property SecurityObject As String
+            ''' <summary>
+            ''' A security object for the negative default rule to switch the content of this control to visible mode if the current user has NOT got access to the specified security object
+            ''' </summary>
+            ''' <returns></returns>
             Public Property NotSecurityObject As String
+            ''' <summary>
+            ''' A security object which is allowed to see the content regardless of the default rules (e.g. always visible for website editors)
+            ''' </summary>
+            ''' <returns></returns>
+            Public Property AlwaysVisibleSecurityObject As String
 
             Protected Overrides Sub OnPreRender(e As EventArgs)
                 MyBase.OnPreRender(e)
@@ -1104,7 +1117,11 @@ Namespace CompuMaster.camm.WebManager.Controls
                     If Trim(Me.NotSecurityObject) = Nothing OrElse (Trim(Me.NotSecurityObject) <> Nothing AndAlso cammWebManager.IsUserAuthorized(Me.NotSecurityObject) = False) Then
                         ShowContentByMissingPermissionRule = True
                     End If
-                    Me.Visible = ShowContentByPermissionRule And ShowContentByMissingPermissionRule
+                    Dim ShowContentByAlwaysPermissionRule As Boolean = False
+                    If Trim(Me.AlwaysVisibleSecurityObject) = Nothing OrElse (Trim(Me.AlwaysVisibleSecurityObject) <> Nothing AndAlso cammWebManager.IsUserAuthorized(Me.AlwaysVisibleSecurityObject) = False) Then
+                        ShowContentByAlwaysPermissionRule = True
+                    End If
+                    Me.Visible = ShowContentByAlwaysPermissionRule OrElse (ShowContentByPermissionRule And ShowContentByMissingPermissionRule)
                 End If
             End Sub
 
