@@ -1084,21 +1084,47 @@ Namespace CompuMaster.camm.WebManager.Controls
 
             Inherits Controls.Control
 
+            Private _SecurityObject As String
             ''' <summary>
             ''' A security object for the positive default rule to switch the content of this control to visible mode if the current user has got access to the specified security object
             ''' </summary>
             ''' <returns></returns>
             Public Property SecurityObject As String
+                Get
+                    Return _SecurityObject
+                End Get
+                Set(value As String)
+                    _SecurityObject = value
+                End Set
+            End Property
+
+            Private _NotSecurityObject As String
             ''' <summary>
             ''' A security object for the negative default rule to switch the content of this control to visible mode if the current user has NOT got access to the specified security object
             ''' </summary>
             ''' <returns></returns>
             Public Property NotSecurityObject As String
+                Get
+                    Return _NotSecurityObject
+                End Get
+                Set(value As String)
+                    _NotSecurityObject = value
+                End Set
+            End Property
+
+            Private _AlwaysVisibleSecurityObject As String
             ''' <summary>
             ''' A security object which is allowed to see the content regardless of the default rules (e.g. always visible for website editors)
             ''' </summary>
             ''' <returns></returns>
             Public Property AlwaysVisibleSecurityObject As String
+                Get
+                    Return _AlwaysVisibleSecurityObject
+                End Get
+                Set(value As String)
+                    _AlwaysVisibleSecurityObject = value
+                End Set
+            End Property
 
             Protected Overrides Sub OnPreRender(e As EventArgs)
                 MyBase.OnPreRender(e)
