@@ -97,6 +97,14 @@ So, for a single text for every UI language/market, you might want to use:
 ```
 
 ## Additional samples
+
+### Display a custom note for editors when editing the content
+``` asp
+<cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
+      securityobjecteditmode="{Security Object for Editors}" 
+      NoteForEditor="EDITOR-NOTE: Please always update markets English and Spanish and Russian" />
+```
+
 ### Sizing of edit textbox using style attributes
 ``` asp
 <cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
