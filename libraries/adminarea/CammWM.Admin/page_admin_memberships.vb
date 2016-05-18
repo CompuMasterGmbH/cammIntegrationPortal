@@ -56,19 +56,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.MembershipList
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to view the list of memberships
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	11.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class MembershipList
         Inherits MembershipsOverview
 
@@ -80,7 +70,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected gcDisabled, gcSearchGroupSpace As HtmlGenericControl
         Protected ancShowSysGroups, ancShowAll, ancHideAll, ancGroupIDName, ancGroupID, ancDelete As HtmlAnchor
         Protected ancExportCSV, ancUserName, ancReleasedBy, ancName, ancAddUserShowDetails As HtmlAnchor
-        Protected trDetails As HtmlTableRow 'trAddBlank, trDetails, trHeaderDeatails,trHeaders   'Commented by [I-link] on 29.01.2009 (Unused rows)
+        Protected trDetails As HtmlTableRow
         Protected tdDetails As HtmlTableCell
         Dim MyDt, UserData As DataTable
         Dim flag As Boolean
@@ -132,6 +122,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region "User-Defined Methods"
+        ''' <summary>
+        ''' Bind the data for the group headlines to the control with the list of records (indirectly bind the list of users, too)
+        ''' </summary>
         Protected Sub ListOfRecords()
             Dim WhereClause, TopClause As String
             TopClause = ""
@@ -165,13 +158,47 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             If WhereClause <> String.Empty Then WhereClause &= " and "
 
-            Dim SqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                "select ID_Group,m.[Name],m.Description,g.ReleasedOn,g.ReleasedBy ID_ReleasedBy,(select b.nachname from benutzer b where b.id=g.ReleasedBy) ReleasedByLastName,(select b.vorname from benutzer b where b.id=g.ReleasedBy) ReleasedByFirstName " & _
-                "from [view_Memberships] m " & _
-                "left outer join gruppen g on m.ID_Group=g.id " & _
-                "where " & WhereClause & " g.id in (" & _
-                "SELECT ID_Group FROM [view_Memberships] WHERE  ID_Group not in (Select id_group_public from system_servergroups) and ID_Group not in (Select id_group_anonymous from system_servergroups) and (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Groups", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR 0 in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " AND TableName = 'Groups' AND AuthorizationType In ('SecurityMaster','ViewAllRelations')) OR id_group in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " AND TableName = 'Groups' AND AuthorizationType In ('UpdateRelations','ViewRelations','Owner'))) GROUP BY ID_Group" & _
-                ") group by ID_Group,m.[Name],m.Description,g.ReleasedOn,g.ReleasedBy " & _
+            Dim SqlQuery As String = _
+                "select ID_Group, m.[Name], m.Description, g.ReleasedOn, g.ReleasedBy ID_ReleasedBy," & vbNewLine & _
+                "   (select b.nachname from benutzer b where b.id=g.ReleasedBy) ReleasedByLastName," & vbNewLine & _
+                "   (select b.vorname from benutzer b where b.id=g.ReleasedBy) ReleasedByFirstName " & vbNewLine & _
+                "from [view_Memberships] m " & vbNewLine & _
+                "   left outer join gruppen g on m.ID_Group=g.id " & vbNewLine & _
+                "where " & WhereClause & " g.id in (" & vbNewLine & _
+                "   SELECT ID_Group " & vbNewLine & _
+                "   FROM [view_Memberships] " & vbNewLine & _
+                "   WHERE  ID_Group not in " & vbNewLine & _
+                "       (" & vbNewLine & _
+                "           Select id_group_public " & vbNewLine & _
+                "           from system_servergroups" & vbNewLine & _
+                "       ) " & vbNewLine & _
+                "       and ID_Group not in " & vbNewLine & _
+                "       (" & vbNewLine & _
+                "           Select id_group_anonymous " & vbNewLine & _
+                "           from system_servergroups" & vbNewLine & _
+                "       ) " & vbNewLine & _
+                "       and " & vbNewLine & _
+                "       (" & vbNewLine & _
+                "           0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Groups", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & _
+                "           OR 0 in " & vbNewLine & _
+                "           (" & vbNewLine & _
+                "               select tableprimaryidvalue " & vbNewLine & _
+                "               from System_SubSecurityAdjustments " & vbNewLine & _
+                "               where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & "" & vbNewLine & _
+                "                   AND TableName = 'Groups' " & vbNewLine & _
+                "                   AND AuthorizationType In ('SecurityMaster','ViewAllRelations')" & vbNewLine & _
+                "           ) " & vbNewLine & _
+                "           OR id_group in " & vbNewLine & _
+                "           (" & vbNewLine & _
+                "               select tableprimaryidvalue " & vbNewLine & _
+                "               from System_SubSecurityAdjustments " & vbNewLine & _
+                "               where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & "" & vbNewLine & _
+                "                   AND TableName = 'Groups' " & vbNewLine & _
+                "                   AND AuthorizationType In ('UpdateRelations','ViewRelations','Owner')" & vbNewLine & _
+                "           )" & vbNewLine & _
+                "       ) " & vbNewLine & _
+                "   ) " & vbNewLine & _
+                "group by ID_Group, m.[Name], m.Description, g.ReleasedOn, g.ReleasedBy " & vbNewLine & _
                 "ORDER BY m.[Name], ID_Group, ReleasedByLastName, ReleasedByFirstName"
 
 
@@ -252,13 +279,21 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         UserData = New DataTable
                         InsertHTML = New Text.StringBuilder
 
-                        Dim SqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "select ID_User,LoginDisabled,Nachname,Vorname,LoginName,Company,ID_Membership from [view_Memberships] where ID_Group=" & Utils.Nz(.Item("id_group"), 0) & " and id_user is not null order by Nachname, Vorname"
+                        Dim SqlQuery As String
+                        If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
+                            'Older / without IsDenyRule column
+                            SqlQuery = "select ID_User,LoginDisabled,Nachname,Vorname,LoginName,Company,ID_Membership,0 AS IsDenyRule from [view_Memberships] where ID_Group=" & Utils.Nz(.Item("id_group"), 0) & " and id_user is not null order by Nachname, Vorname"
+                        Else
+                            'Newer / IsDenyRule column available
+                            SqlQuery = "select ID_User,LoginDisabled,Nachname,Vorname,LoginName,Company,ID_Membership,IsDenyRule from [view_Memberships] where ID_Group=" & Utils.Nz(.Item("id_group"), 0) & " and id_user is not null order by Nachname, Vorname"
+                        End If
+
                         UserData = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), SqlQuery, CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                         If Not UserData Is Nothing AndAlso UserData.Rows.Count > 0 Then
                             InsertHTML.Append("<TABLE WIDTH=""100%"" CELLSPACING=""0"" CELLPADDING=""3"" border=""0"">")
                             InsertHTML.Append("<TR height=""20""><TD WIDTH=""30"">&nbsp;</TD><TD class=""boldFontHeader"">User ID</TD>")
+                            InsertHTML.Append("<TD class=""boldFontHeader"">Rule&nbsp;</TD>")
                             InsertHTML.Append("<TD class=""boldFontHeader"">Name&nbsp;</TD><TD class=""boldFontHeader"">Login&nbsp;</TD>")
                             InsertHTML.Append("<TD class=""boldFontHeader"">Company&nbsp;</TD><TD class=""boldFontHeader"">Action</TD></TR>")
 
@@ -267,6 +302,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 InsertHTML.Append("<TD WIDTH=""60""><P class=""normalFont""><span>" & Utils.Nz(UserData.Rows(i).Item("ID_User"), 0).ToString & "</span><span id=""gcDisabled"">")
                                 If Not IsDBNull(UserData.Rows(i).Item("LoginDisabled")) Then If Utils.Nz(UserData.Rows(i).Item("LoginDisabled"), False) = True Then InsertHTML.Append("<nobr title=""Disabled"">(D)</nobr>")
                                 InsertHTML.Append("</span>&nbsp;</P></TD>")
+                                Dim RuleTitle As String
+                                If Utils.Nz(UserData.Rows(i).Item("IsDenyRule"), False) = True Then
+                                    RuleTitle = "DENY"
+                                Else
+                                    RuleTitle = "GRANT"
+                                End If
+                                InsertHTML.Append("<TD WIDTH=""60""><P class=""normalFont"">" & Server.HtmlEncode(RuleTitle) & "&nbsp;</P></TD>")
                                 InsertHTML.Append("<TD WIDTH=""170""><P class=""normalFont""><a id=""ancUserName"" href=""users_update.aspx?ID=" & Utils.Nz(UserData.Rows(i).Item("ID_User"), 0).ToString & """>" & Server.HtmlEncode(CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(UserData.Rows(i).Item("Vorname"), UserData.Rows(i).Item("Nachname"))) & "</a>&nbsp;</P></TD>")
                                 InsertHTML.Append("<TD WIDTH=""150""><P class=""normalFont""><a id=""ancLoginName"" href=""users_update.aspx?ID=" & Utils.Nz(UserData.Rows(i).Item("ID_User"), 0).ToString & """>" & Server.HtmlEncode(Utils.Nz(UserData.Rows(i).Item("LoginName"), String.Empty)) & "</a>&nbsp;</P></TD>")
                                 InsertHTML.Append("<TD WIDTH=""200""><P class=""normalFont""><span id=""lblCompany"">" & Server.HtmlEncode(Utils.Nz(UserData.Rows(i).Item("Company"), String.Empty)) & "</span>&nbsp;</P></TD>")
@@ -443,140 +485,137 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Sub
 
         ''' <summary>
-        ''' Fetch required flags from every application the group has access to
-        ''' </summary>
-        ''' <param name="groupId"></param>
-        ''' <returns></returns>
-        ''' <remarks>Based on TZ's code</remarks>
-        Private Function GetRequiredApplicationFlags(ByVal groupId As Integer) As String()
-            Dim commandText As String = "DECLARE @EmployeeList varchar(4000) SELECT @EmployeeList = COALESCE(@EmployeeList + ', ', '') + RequiredUserProfileFlags From Applications_CurrentAndInactiveOnes Where ID IN (Select ID_Application From ApplicationsRightsByGroup Where ID_GroupOrPerson = @GroupID) Select @EmployeeList"
-            Dim command As New SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
-            command.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupId
-            Return ExecuteScalar(command, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection).ToString().Split(CChar(","))
-        End Function
-
-        ''' <summary>
         ''' Checks whether the given user is already a member of the given group
         ''' </summary>
         ''' <param name="groupID"></param>
         ''' <param name="userId"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Private Function IsAlreadyMember(ByVal groupId As Integer, ByVal userId As Long) As Boolean
-            Dim commandText As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT count([ID]) FROM [dbo].[Memberships] WHERE [ID_Group] = @GroupID AND [ID_User] = @UserID"
-
-            Dim cmd As New SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
-            cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userId
-            cmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupId
-
-            Dim RecordCount As Integer = CType(ExecuteScalar(cmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
-            Return RecordCount > 0
-
+        Private Function IsAlreadyMember(ByVal groupId As Integer, ByVal userId As Long, denyRule As Boolean) As Boolean
+            Dim commandText As String
+            If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                commandText = "SELECT count([ID]) FROM [dbo].[Memberships] WHERE [ID_Group] = @GroupID AND [ID_User] = @UserID AND IsDenyRule = @DenyRule"
+                Dim cmd As New SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
+                cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userId
+                cmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupId
+                cmd.Parameters.Add("@DenyRule", SqlDbType.Bit).Value = denyRule
+                Dim RecordCount As Integer = CType(ExecuteScalar(cmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
+                Return RecordCount > 0
+            Else
+                If denyRule = True Then Return False 'Deny rule not existant yet
+                commandText = "SELECT count([ID]) FROM [dbo].[Memberships] WHERE [ID_Group] = @GroupID AND [ID_User] = @UserID"
+                Dim cmd As New SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
+                cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userId
+                cmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupId
+                Dim RecordCount As Integer = CType(ExecuteScalar(cmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
+                Return RecordCount > 0
+            End If
         End Function
 
         Private Sub btnOKClick(ByVal sender As Object, ByVal args As EventArgs) Handles btnOK.Click
-            Dim createMembership As Boolean
 
             If drp_groups Is Nothing OrElse drp_groups.SelectedItem Is Nothing OrElse Trim(drp_groups.SelectedItem.Text) = Nothing Then
                 'No group available - no membership adding possible
                 lblMsg.Text &= "No group selected"
                 Return
             End If
-            Dim dropGroupText As String = Trim(drp_groups.SelectedItem.Text)
-            Dim dropGroupID As Integer = CInt(drp_groups.SelectedValue)
+            Dim dropDownGroupText As String = Trim(drp_groups.SelectedItem.Text)
+            Dim dropDownGroupID As Integer = CInt(drp_groups.SelectedValue)
+            Dim dropDownGroupInfo As New WebManager.WMSystem.GroupInformation(dropDownGroupID, Me.cammWebManager)
+
 
             Dim MyDBVersion As Version = cammWebManager.System_DBVersion_Ex()
             Dim requiredFlags As String() = Nothing
             If MyDBVersion.Build >= 147 Then
-                requiredFlags = GetRequiredApplicationFlags(dropGroupID)
+                requiredFlags = dropDownGroupInfo.RequiredAdditionalFlags
             End If
 
             For Each MyListItem As UI.Control In rptUserList.Controls
                 For Each MyControl As UI.Control In MyListItem.Controls
                     If MyControl.GetType Is GetType(System.Web.UI.WebControls.CheckBox) AndAlso MyControl.ID = "chk_user" Then
-
-                        Dim chk As CheckBox = CType(MyControl, CheckBox)
-
-                        Dim ErrorMessage As String = String.Empty
-                        Dim SuccessMessage As String = String.Empty
-
-                        If chk.Checked Then
-                            Dim loginName As String = CType(MyListItem.FindControl("lblLoginName"), UI.HtmlControls.HtmlAnchor).InnerText.Trim()
-                            Dim chosenUserId As Integer = CInt(CType(MyListItem.FindControl("lblID"), Label).Text)
-
-                            If IsAlreadyMember(dropGroupID, chosenUserId) Then
-                                ErrorMessage &= "User " + Server.HtmlEncode(loginName) + " is already  member of group " + Server.HtmlEncode(dropGroupText) & "<br />"
-                                createMembership = False
-                            ElseIf Not ((cammWebManager.System_GetSubAuthorizationStatus("Groups", dropGroupID, cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "Owner") OrElse cammWebManager.System_GetSubAuthorizationStatus("Groups", dropGroupID, cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "UpdateRelations"))) Then
-                                Response.Write("No authorization to administrate this group.")
-                                Response.End()
-                            ElseIf loginName <> "" And dropGroupText <> "" Then
-                                Dim userId As Long = CType(chosenUserId, Long)
-                                Dim userInfo As WMSystem.UserInformation = cammWebManager.System_GetUserInfo(userId)
-
-                                'Check for required flags
-                                If MyDBVersion.Build >= 147 Then
-                                    Dim flagsUpdateLinks As String = String.Empty
-                                    If Not userInfo Is Nothing Then
-                                        Dim validationResults As FlagValidation.FlagValidationResult() = FlagValidation.GetFlagValidationResults(userInfo, requiredFlags)
-                                        flagsUpdateLinks &= CompuMaster.camm.WebManager.Administration.Utils.FormatLinksToFlagUpdatePages(validationResults, userInfo)
-                                    End If
-
-                                    If flagsUpdateLinks <> String.Empty Then
-                                        ErrorMessage &= "The following errors occurred while checking the flags for user " & loginName & ":<br>" & flagsUpdateLinks
-                                        createMembership = False
-                                    End If
-                                End If
-
-
-                                'Create Membership
-                                If createMembership Then
-                                    Try
-                                        'Use implemented workflow of camm WebManager to send Authorization-Mail if user is authorized the first time
-                                        'HINT: SapFlag checks will be checked continually, but no information on missing flag name is given here any more
-                                        userInfo.AddMembership(dropGroupID, CType(Nothing, WebManager.Notifications.INotifications))
-                                        SuccessMessage &= loginName + " has been authorized for membership in group " + dropGroupText & "<br />"
-                                    Catch ex As Exception
-                                        ErrorMessage &= "User " & loginName & ": Membership creation failed! (" & ex.Message & ")<br />"
-                                    End Try
-                                End If
-                            Else
-                                ErrorMessage &= "Please specify a group and a user to proceed!<br />"
-                            End If
-
-                        End If
-
-                        If SuccessMessage <> "" Then
-                            lblMsg.Text &= SuccessMessage
-                        End If
-
-                        If ErrorMessage <> "" Then
-                            lblErr.Text &= ErrorMessage
-                        End If
-
+                        AddMembershipRule(MyDBVersion, MyListItem, CType(MyControl, CheckBox), False, dropDownGroupText, dropDownGroupID, dropDownGroupInfo, requiredFlags)
+                    ElseIf MyControl.GetType Is GetType(System.Web.UI.WebControls.CheckBox) AndAlso MyControl.ID = "chk_denyuser" Then
+                        AddMembershipRule(MyDBVersion, MyListItem, CType(MyControl, CheckBox), True, dropDownGroupText, dropDownGroupID, dropDownGroupInfo, requiredFlags)
                     End If
-                    createMembership = True
                 Next
             Next
+        End Sub
+
+        Private Sub AddMembershipRule(MyDBVersion As Version, MyListItem As UI.Control, checkboxControl As System.Web.UI.WebControls.CheckBox, isDenyRule As Boolean, dropDownGroupText As String, dropDownGroupID As Integer, dropDownGroupInfo As WebManager.WMSystem.GroupInformation, requiredFlags As String())
+            Dim ErrorMessage As String = String.Empty
+            Dim SuccessMessage As String = String.Empty
+
+            If checkboxControl.Checked Then
+                Dim createMembership As Boolean = True
+                Dim loginName As String = CType(MyListItem.FindControl("lblLoginName"), UI.HtmlControls.HtmlAnchor).InnerText.Trim()
+                Dim chosenUserId As Integer = CInt(CType(MyListItem.FindControl("lblID"), Label).Text)
+
+                If IsAlreadyMember(dropDownGroupID, chosenUserId, isDenyRule) Then
+                    ErrorMessage &= "User " + Server.HtmlEncode(loginName) + " is already  member of group " + Server.HtmlEncode(dropDownGroupText) & "<br />"
+                    createMembership = False
+                ElseIf Not ((cammWebManager.System_GetSubAuthorizationStatus("Groups", dropDownGroupID, cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "Owner") OrElse cammWebManager.System_GetSubAuthorizationStatus("Groups", dropDownGroupID, cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "UpdateRelations"))) Then
+                    Response.Write("No authorization to administrate this group.")
+                    Response.End()
+                ElseIf loginName <> "" And dropDownGroupText <> "" Then
+                    Dim userId As Long = CType(chosenUserId, Long)
+                    Dim userInfo As WMSystem.UserInformation = cammWebManager.System_GetUserInfo(userId)
+
+                    'Check for required flags
+                    If isDenyRule = False AndAlso MyDBVersion.Build >= 147 Then
+                        Dim flagsUpdateLinks As String = String.Empty
+                        If Not userInfo Is Nothing Then
+                            Dim validationResults As CompuMaster.camm.WebManager.FlagValidation.FlagValidationResult() = CompuMaster.camm.WebManager.FlagValidation.ValidateRequiredFlags(userInfo, requiredFlags, True)
+                            flagsUpdateLinks &= CompuMaster.camm.WebManager.Administration.Utils.FormatLinksToFlagUpdatePages(validationResults, userInfo)
+                        End If
+
+                        If flagsUpdateLinks <> String.Empty Then
+                            ErrorMessage &= "The following errors occurred while checking the flags for user " & loginName & ":<br>" & flagsUpdateLinks
+                            createMembership = False
+                        End If
+                    End If
+
+
+                    'Create Membership
+                    If createMembership Then
+                        Try
+                            'Use implemented workflow of camm WebManager to send Authorization-Mail if user is authorized the first time
+                            'HINT: SapFlag checks will be checked continually, but no information on missing flag name is given here any more
+                            userInfo.AddMembership(dropDownGroupID, isDenyRule, CType(Nothing, WebManager.Notifications.INotifications))
+                            If isDenyRule Then
+                                SuccessMessage &= loginName + " has been denied for membership in group " + dropDownGroupText & "<br />"
+                            Else
+                                SuccessMessage &= loginName + " has been added as member to group " + dropDownGroupText & "<br />"
+                            End If
+                        Catch ex As Exception
+                            If isDenyRule Then
+                                ErrorMessage &= "User " & loginName & ": Membership deny-rule creation failed! (" & ex.Message & ")<br />"
+                            Else
+                                ErrorMessage &= "User " & loginName & ": Membership creation failed! (" & ex.Message & ")<br />"
+                            End If
+                        End Try
+                    End If
+                Else
+                    ErrorMessage &= "Please specify a group and a user to proceed!<br />"
+                End If
+
+            End If
+
+            If SuccessMessage <> "" Then
+                lblMsg.Text &= SuccessMessage
+            End If
+
+            If ErrorMessage <> "" Then
+                lblErr.Text &= ErrorMessage
+            End If
+
         End Sub
 #End Region
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.Membership_Delete
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to delete a membership
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	9.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class Membership_Delete
         Inherits Page
 
@@ -584,9 +623,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Dim Redirect2URL, ErrMsg, Field_Name, Field_Descr, Field_CompleteName As String
         Dim Field_ID, Field_GroupID As Integer
         Dim Field_UserID As Long
-        Dim MyUserInfo As CompuMaster.camm.webmanager.WMSystem.UserInformation
+        Dim Field_IsDenyRule As Boolean
+        Dim MyUserInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation
         Dim dt As New DataTable
-        Protected lblMembershipID, lblGroupName, lblGroupDescription, lblLoginName, lblCompleteName, lblErrMsg As Label
+        Protected lblMembershipID, lblRule, lblGroupName, lblGroupDescription, lblLoginName, lblCompleteName, lblErrMsg As Label
         Protected ancDelete, ancTouch As HtmlAnchor
 #End Region
 
@@ -612,14 +652,18 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
 
             Dim sqlParams As SqlParameter() = {New SqlParameter("@ID_Membership", Request.QueryString("ID"))}
-            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                     "SELECT * FROM dbo.view_Memberships WHERE ID_Membership=@ID_Membership and (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Groups", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR id_group in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " AND TableName = 'Groups' AND AuthorizationType In ('UpdateRelations','Owner')))", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SELECT * FROM dbo.view_Memberships WHERE ID_Membership=@ID_Membership and (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Groups", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR id_group in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " AND TableName = 'Groups' AND AuthorizationType In ('UpdateRelations','Owner')))", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             If dt Is Nothing OrElse dt.Rows.Count = 0 Then
                 Redirect2URL = "memberships.aspx"
             Else
                 With dt.Rows(0)
                     Field_ID = Utils.Nz(.Item("ID_Membership"), 0)
                     Field_GroupID = Utils.Nz(.Item("ID_Group"), 0)
+                    If dt.Columns.Contains("IsDenyRule") Then
+                        Field_IsDenyRule = Utils.Nz(.Item("IsDenyRule"), False)
+                    Else
+                        Field_IsDenyRule = False
+                    End If
                     Field_UserID = Utils.Nz(.Item("ID_User"), 0)
                     Field_Name = Utils.Nz(.Item("Name"), String.Empty)
                     Field_Descr = Utils.Nz(.Item("description"), String.Empty)
@@ -632,12 +676,27 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 lblErrMsg.Text = ErrMsg
             End If
 
-            MyUserInfo = New CompuMaster.camm.webmanager.WMSystem.UserInformation(CLng(Field_UserID), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
+            MyUserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(Field_UserID), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
             lblMembershipID.Text = Server.HtmlEncode(Utils.Nz(Field_ID, 0).ToString)
             lblGroupName.Text = Server.HtmlEncode(Utils.Nz(Field_Name, String.Empty))
             lblGroupDescription.Text = Server.HtmlEncode(Utils.Nz(Field_Descr, String.Empty))
             lblLoginName.Text = Server.HtmlEncode(Utils.Nz(MyUserInfo.LoginName, String.Empty))
             lblCompleteName.Text = Server.HtmlEncode(Utils.Nz(Field_CompleteName, String.Empty))
+            If lblRule Is Nothing Then
+                'compatibility mode: admin pages haven't been updated yet and don't provide the lblRule tag - but since this is a DENY rule, there MUST be a warning!
+                If Field_IsDenyRule = True Then
+                    If lblErrMsg.Text <> Nothing Then
+                        lblErrMsg.Text &= "<br />"
+                    End If
+                    lblErrMsg.Text &= "WARNING: this membership is declared as a DENY rule!"
+                End If
+            Else
+                If Field_IsDenyRule = True Then
+                    lblRule.Text = "DENY"
+                Else
+                    lblRule.Text = "GRANT"
+                End If
+            End If
 
             ancDelete.HRef = "memberships_delete.aspx?ID=" & Request.QueryString("ID") & "&DEL=NOW&GROUPID=" & Field_GroupID & "&token=" & Session.SessionID
             ancTouch.HRef = "memberships.aspx?GROUPID=" & Field_GroupID

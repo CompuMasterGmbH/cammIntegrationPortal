@@ -106,19 +106,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.UserList
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to view a list of users
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-Link]	10.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class UserList
         Inherits UsersOverview
 
@@ -233,19 +223,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.New_Users
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to create a new user
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-Link]	10.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class New_Users
         Inherits ImportBase
 
@@ -283,10 +263,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim temp1 As String
                 If cmbAnrede.Items.Count > 0 Then
                     If cmbAnrede.SelectedItem.Text = "Ms." Then
-                        MyUserInfoSex = CompuMaster.camm.WebManager.WMSystem.Sex.Feminin
+                        MyUserInfoSex = CompuMaster.camm.WebManager.WMSystem.Sex.Feminine
                         temp1 = Utils.Nz(MyUserInfoSex, String.Empty)
                     ElseIf cmbAnrede.SelectedItem.Text = "Mr." Then
-                        MyUserInfoSex = CompuMaster.camm.WebManager.WMSystem.Sex.Masculin
+                        MyUserInfoSex = CompuMaster.camm.WebManager.WMSystem.Sex.Masculine
                         temp1 = Utils.Nz(MyUserInfoSex, String.Empty)
                     End If
                 End If
@@ -332,9 +312,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                cmbAccountAccessability.SelectedItem.Text <> "Please Select!" Then
 
                 If Me.cmbAnrede.SelectedValue = "1" Then
-                    MyUserInfoSex = WMSystem.Sex.Masculin
+                    MyUserInfoSex = WMSystem.Sex.Masculine
                 ElseIf Me.cmbAnrede.SelectedValue = "2" Then
-                    MyUserInfoSex = WMSystem.Sex.Feminin
+                    MyUserInfoSex = WMSystem.Sex.Feminine
                 Else
                     MyUserInfoSex = WMSystem.Sex.Undefined
                 End If
@@ -550,19 +530,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.User_Delete
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to delete a user
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-Link]	10.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class User_Delete
         Inherits ImportBase
 
@@ -750,19 +720,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.UsersClone
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Clone user
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[zeutzheim]	23.07.2009	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class UsersClone
         Inherits Page
 
@@ -979,9 +939,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             lbl_Namenszusatz.Text = Server.HtmlEncode(Utils.Nz(UserInfo.NameAddition.ToString, String.Empty))
             lbl_e_mail.Text = Server.HtmlEncode(Utils.Nz(UserInfo.EMailAddress.ToString, String.Empty))
 
-            If UserInfo.Gender = WMSystem.Sex.Masculin Then
+            If UserInfo.Gender = WMSystem.Sex.Masculine Then
                 lblAnrede.Text = "Mr."
-            ElseIf UserInfo.Gender = WMSystem.Sex.Feminin Then
+            ElseIf UserInfo.Gender = WMSystem.Sex.Feminine Then
                 lblAnrede.Text = "Mrs."
             Else
                 lblAnrede.Text = Nothing
@@ -999,11 +959,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             'bind Gender/Anrede dropdownlist
             cmbAnrede.Items.Clear()
             cmbAnrede.Items.Add(New ListItem(Nothing, Nothing))
-            cmbAnrede.Items.Add(New ListItem("Mr.", CType(WMSystem.Sex.Masculin, String)))
-            cmbAnrede.Items.Add(New ListItem("Ms.", CType(WMSystem.Sex.Feminin, String)))
-            If UserInfo.Gender = WMSystem.Sex.Masculin Then
+            cmbAnrede.Items.Add(New ListItem("Mr.", CType(WMSystem.Sex.Masculine, String)))
+            cmbAnrede.Items.Add(New ListItem("Ms.", CType(WMSystem.Sex.Feminine, String)))
+            If UserInfo.Gender = WMSystem.Sex.Masculine Then
                 cmbAnrede.SelectedIndex = 1
-            ElseIf UserInfo.Gender = WMSystem.Sex.Feminin Then
+            ElseIf UserInfo.Gender = WMSystem.Sex.Feminine Then
                 cmbAnrede.SelectedIndex = 2
             Else
                 cmbAnrede.SelectedIndex = 0
@@ -1121,9 +1081,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Private Sub AssignMembershipsToPnl()
-            Dim MyGroupInfos As CompuMaster.camm.WebManager.WMSystem.GroupInformation() = UserInfo.Memberships
+            Dim MyGroupInfosAllowRule As CompuMaster.camm.WebManager.WMSystem.GroupInformation() = UserInfo.MembershipsByRule.AllowRule
+            Dim MyGroupInfosDenyRule As CompuMaster.camm.WebManager.WMSystem.GroupInformation() = UserInfo.MembershipsByRule.AllowRule
 
-            If Not MyGroupInfos Is Nothing AndAlso MyGroupInfos.Length > 0 Then
+            If (Not MyGroupInfosAllowRule Is Nothing AndAlso MyGroupInfosAllowRule.Length > 0) OrElse (Not MyGroupInfosDenyRule Is Nothing AndAlso MyGroupInfosDenyRule.Length > 0) Then
                 Dim lit As Literal
                 Dim HtmlCode As System.Text.StringBuilder
 
@@ -1134,43 +1095,58 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 lit.Text = HtmlCode.ToString
                 PnlGroupsInformation.Controls.Add(lit)
 
-                For Each MyGroupInfo As CompuMaster.camm.WebManager.WMSystem.GroupInformation In MyGroupInfos
-                    Dim DisplayName As String = Nothing
-                    Dim ID As Integer = Nothing
-                    Try
-                        DisplayName = MyGroupInfo.Description
-                        ID = MyGroupInfo.ID
-                    Catch
-                        DisplayName = "<em>(error)</em>"
-                        ID = Nothing
-                    End Try
-
-                    HtmlCode = New System.Text.StringBuilder
-                    HtmlCode.Append("<tr><td valign=""Top"" width=""200""><font face=""Arial"" size=""2""><a href=""groups_update.aspx?ID=" & ID & """>" & vbNewLine)
-                    HtmlCode.Append(Server.HtmlEncode(MyGroupInfo.Name))
-                    HtmlCode.Append("</a></font></td><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">" & vbNewLine)
-                    HtmlCode.Append(Server.HtmlEncode(DisplayName))
-                    HtmlCode.Append("</font></td><td><font face=""Arial"" size=""2"">" & vbNewLine)
-                    lit = New Literal
-                    lit.Text = HtmlCode.ToString
-                    PnlGroupsInformation.Controls.Add(lit)
-
-                    Dim Chk As New CheckBox
-                    Chk.ID = "ChkMemberships_" & MyGroupInfo.ID
-                    Chk.Text = Server.HtmlEncode(MyGroupInfo.Name)
-                    Chk.Checked = True
-                    PnlGroupsInformation.Controls.Add(Chk)
-
-                    HtmlCode = New System.Text.StringBuilder
-                    HtmlCode.Append("</font></td></tr>" & vbNewLine)
-                    lit = New Literal
-                    lit.Text = HtmlCode.ToString
-                    PnlGroupsInformation.Controls.Add(lit)
-                Next
+                AssignMembershipsToPnl_RuleAdd(MyGroupInfosAllowRule, False)
+                AssignMembershipsToPnl_RuleAdd(MyGroupInfosDenyRule, True)
             End If
         End Sub
 
+        Private Sub AssignMembershipsToPnl_RuleAdd(myGroupInfos As CompuMaster.camm.WebManager.WMSystem.GroupInformation(), isDenyRule As Boolean)
+            Dim lit As Literal
+            Dim HtmlCode As System.Text.StringBuilder
+            For Each MyGroupInfo As CompuMaster.camm.WebManager.WMSystem.GroupInformation In myGroupInfos
+                Dim DisplayName As String = Nothing
+                Dim ID As Integer = Nothing
+                Try
+                    DisplayName = MyGroupInfo.Description
+                    ID = MyGroupInfo.ID
+                Catch
+                    DisplayName = "<em>(error)</em>"
+                    ID = Nothing
+                End Try
 
+                HtmlCode = New System.Text.StringBuilder
+                HtmlCode.Append("<tr><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">")
+                If isDenyRule Then
+                    HtmlCode.Append("DENY: ")
+                Else
+                    HtmlCode.Append("GRANT: ")
+                End If
+                HtmlCode.Append("<a href=""groups_update.aspx?ID=" & ID & """>" & vbNewLine)
+                HtmlCode.Append(Server.HtmlEncode(MyGroupInfo.Name))
+                HtmlCode.Append("</a></font></td><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">" & vbNewLine)
+                HtmlCode.Append(Server.HtmlEncode(DisplayName))
+                HtmlCode.Append("</font></td><td><font face=""Arial"" size=""2"">" & vbNewLine)
+                lit = New Literal
+                lit.Text = HtmlCode.ToString
+                PnlGroupsInformation.Controls.Add(lit)
+
+                Dim Chk As New CheckBox
+                If isDenyRule Then
+                    Chk.ID = "ChkMembershipsDeny_" & MyGroupInfo.ID
+                Else
+                    Chk.ID = "ChkMemberships_" & MyGroupInfo.ID
+                End If
+                Chk.Text = Server.HtmlEncode(MyGroupInfo.Name)
+                Chk.Checked = True
+                PnlGroupsInformation.Controls.Add(Chk)
+
+                HtmlCode = New System.Text.StringBuilder
+                HtmlCode.Append("</font></td></tr>" & vbNewLine)
+                lit = New Literal
+                lit.Text = HtmlCode.ToString
+                PnlGroupsInformation.Controls.Add(lit)
+            Next
+        End Sub
 
 
         ''' -----------------------------------------------------------------------------
@@ -1187,7 +1163,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim Auths As CompuMaster.camm.WebManager.WMSystem.Authorizations
             Auths = New CompuMaster.camm.WebManager.WMSystem.Authorizations(Nothing, cammWebManager, Nothing, Nothing, UserInfo.IDLong)
             Dim MyUserAuths As CompuMaster.camm.WebManager.WMSystem.Authorizations.UserAuthorizationInformation()
-            MyUserAuths = Auths.UserAuthorizationInformations(UserInfo.ID)
+            MyUserAuths = Auths.UserAuthorizationInformations(UserInfo.IDLong)
 
             If Not MyUserAuths Is Nothing AndAlso MyUserAuths.Length > 0 Then
                 Dim lit As Literal
@@ -1209,7 +1185,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         HtmlStr.Append("<tr><td width=""160"" valign=""Top""><font face=""Arial"" size=""2"">ID" & vbNewLine)
                         HtmlStr.Append(SecObjID)
                         HtmlStr.Append("</font></td><td width=""240"" valign=""Top""><font face=""Arial"" size=""2"">" & vbNewLine)
+                        If MyUserAuthInfo.IsDenyRule Then
+                            HtmlStr.Append("DENY: ")
+                        Else
+                            HtmlStr.Append("GRANT: ")
+                        End If
                         HtmlStr.Append(Server.HtmlEncode(SecObjName))
+                        If MyUserAuthInfo.AlsoVisibleIfDisabled Then
+                            HtmlStr.Append(" (Dev)")
+                        End If
                         HtmlStr.Append("</font></td><td valign=""top""><font face=""Arial"" size=""2"">" & vbNewLine)
 
                         lit = New Literal
@@ -1217,7 +1201,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         PnlAuth.Controls.Add(lit)
 
                         Dim Chk As New CheckBox
-                        Chk.ID = "ChkAuth_" & SecObjID
+                        If MyUserAuthInfo.IsDenyRule Then
+                            Chk.ID = "ChkAuthDeny_" & SecObjID
+                        Else
+                            Chk.ID = "ChkAuth_" & SecObjID
+                        End If
                         Chk.Checked = True
 
                         'Check whether authorization has required flags and then give an autopostback event to control required flags in AssignAdditionalFlagsToPnl
@@ -1371,7 +1359,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             For Each control As Web.UI.Control In Page.FindControl("PnlGroupsInformation").Controls
                 If control.GetType.ToString = "System.Web.UI.WebControls.CheckBox" AndAlso control.ID.IndexOf("ChkMemberships_") >= 0 Then
                     If CType(control, CheckBox).Checked Then
-                        NewUser.AddMembership(CType(control.ID.Substring(control.ID.IndexOf("_") + 1), Integer))
+                        NewUser.AddMembership(CType(control.ID.Substring(control.ID.IndexOf("_") + 1), Integer), False)
+                    End If
+                End If
+                If control.GetType.ToString = "System.Web.UI.WebControls.CheckBox" AndAlso control.ID.IndexOf("ChkMembershipsDeny_") >= 0 Then
+                    If CType(control, CheckBox).Checked Then
+                        NewUser.AddMembership(CType(control.ID.Substring(control.ID.IndexOf("_") + 1), Integer), True)
                     End If
                 End If
             Next
@@ -1381,9 +1374,20 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             For Each control As Web.UI.Control In Page.FindControl("PnlAuth").Controls
                 If control.GetType.ToString = "System.Web.UI.WebControls.CheckBox" AndAlso control.ID.IndexOf("ChkAuth_") >= 0 Then
                     If CType(control, CheckBox).Checked Then
+                        Dim ServerGroupID As Integer
+                        Dim IsDev As Boolean
                         'CWM throws exception now, if ServerGroupID is specified - reactivate codeline below if CWM supports the use of ServerGroupID in a future version
                         'NewUser.AddAuthorization(CType(control.ID.Substring(control.ID.IndexOf("_") + 1), Integer), cammWebManager.CurrentServerInfo.ParentServerGroupID)
-                        NewUser.AddAuthorization(CType(control.ID.Substring(control.ID.IndexOf("_") + 1), Integer), CInt(Nothing))
+                        NewUser.AddAuthorization(CType(control.ID.Substring(control.ID.IndexOf("_") + 1), Integer), ServerGroupID, IsDev, False)
+                    End If
+                End If
+                If control.GetType.ToString = "System.Web.UI.WebControls.CheckBox" AndAlso control.ID.IndexOf("ChkAuthDeny_") >= 0 Then
+                    If CType(control, CheckBox).Checked Then
+                        Dim ServerGroupID As Integer
+                        Dim IsDev As Boolean
+                        'CWM throws exception now, if ServerGroupID is specified - reactivate codeline below if CWM supports the use of ServerGroupID in a future version
+                        'NewUser.AddAuthorization(CType(control.ID.Substring(control.ID.IndexOf("_") + 1), Integer), cammWebManager.CurrentServerInfo.ParentServerGroupID)
+                        NewUser.AddAuthorization(CType(control.ID.Substring(control.ID.IndexOf("_") + 1), Integer), ServerGroupID, IsDev, True)
                     End If
                 End If
             Next
@@ -1547,19 +1551,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.UsersUpdate
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Updates user details
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-Link]	16.08.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class UsersUpdate
         Inherits Page
 
@@ -1756,11 +1750,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             'bind Gender/Anrede dropdownlist
             cmbAnrede.Items.Clear()
             cmbAnrede.Items.Add(New ListItem(Nothing, Nothing))
-            cmbAnrede.Items.Add(New ListItem("Mr.", CType(WMSystem.Sex.Masculin, String)))
-            cmbAnrede.Items.Add(New ListItem("Ms.", CType(WMSystem.Sex.Feminin, String)))
-            If UserInfo.Gender = WMSystem.Sex.Masculin Then
+            cmbAnrede.Items.Add(New ListItem("Mr.", CType(WMSystem.Sex.Masculine, String)))
+            cmbAnrede.Items.Add(New ListItem("Ms.", CType(WMSystem.Sex.Feminine, String)))
+            If UserInfo.Gender = WMSystem.Sex.Masculine Then
                 cmbAnrede.SelectedIndex = 1
-            ElseIf UserInfo.Gender = WMSystem.Sex.Feminin Then
+            ElseIf UserInfo.Gender = WMSystem.Sex.Feminine Then
                 cmbAnrede.SelectedIndex = 2
             Else
                 cmbAnrede.SelectedIndex = 0
@@ -1832,20 +1826,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.User_Update_Flage
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to update user flags
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-Link]	10.10.2007	Created
-    '''     [zeutzheim] 09.07.2009  Modified
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class User_Update_Flag
         Inherits Page
 
@@ -1880,7 +1863,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 'Update record
                 Dim value As String = txtValue.Text.Trim()
 
-                Dim validator As New CompuMaster.camm.WebManager.Administration.FlagValidation(type)
+                Dim validator As New CompuMaster.camm.WebManager.FlagValidation(type)
                 If validator.IsCorrectValueForType(value) Then
                     Dim userinfo As New camm.WebManager.WMSystem.UserInformation(CLng(Request.QueryString("ID")), cammWebManager)
                     userinfo.AdditionalFlags.Set(type, value)
@@ -1909,19 +1892,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.User_Resetpw
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to reset user password
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-Link]	10.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class User_Resetpw
         Inherits Page
 
@@ -1979,19 +1952,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Controls.Administration.User_Hotline_Support
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The User_Hotline_Support page allows to enter user login name and if user exists then it shows user's profile and other feature
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[AdminSupport]	15.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class User_Hotline_Support
         Inherits Page
 
@@ -2266,19 +2229,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Controls.Administration.Users_Navbar_Preview
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The Users_Navbar_Preview page 
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[AdminSupport]	16.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class Users_Navbar_Preview
         Inherits Page
 
@@ -2290,8 +2243,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 #Region "Page Events"
         Private Sub Users_Navbar_Preview_PageLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
-            'Added by I-link on 06.08.2008
-            'Added if condtion for showing Navigation Preview for all groups.
+            'Added if condition for showing Navigation Preview for all groups.
             If (Not Request.QueryString("GroupName") Is Nothing) Then 'AndAlso Not Request.QueryString("UserView") Is Nothing) Then
                 lblHeading.Text = "Administration - Navigation preview of " + Request.QueryString("GroupName").ToString
                 gc.InnerHtml += GetNavigationLinksApplication()  ' cammWebManager.System_WriteNavPreviewNav_TR2TR_2Cols(CType(CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous, Int64), "Anonymous")
@@ -2385,8 +2337,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Next
             Return False
         End Function
-        'Added by I-link on 06.08.2008
-        'This function will check accessibility of a servergroup application for a particular language and check the disabled application.
+
+        ''' <summary>
+        ''' Check accessibility of a servergroup application for a particular language and check the disabled application
+        ''' </summary>
+        ''' <param name="LangId"></param>
+        ''' <param name="Mydt"></param>
+        ''' <param name="userid"></param>
+        ''' <returns></returns>
         Private Function IsAccessibleToLang(ByVal LangId As Integer, ByVal Mydt As DataTable, ByVal userid As Long) As Boolean
             For iCount As Integer = 0 To Mydt.Rows.Count - 1
                 If (CInt(Mydt.Rows(iCount)("LanguageId")) = LangId AndAlso Not Mydt.Rows(iCount)("AppDisabled") Is DBNull.Value AndAlso CInt(Mydt.Rows(iCount)("AppDisabled")) = 0) Then
@@ -2426,38 +2384,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 serverGroups = cammWebManager.System_GetServerGroupsInfo(-1)
             End If
 
-            'Commented by [I-link] on 28.01.2009 to apply new logic to show all server groups and markets
-            'If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then
-            '    For i As Integer = 0 To MyDt.Rows.Count - 1
-            '        Dim informationArray As CompuMaster.camm.WebManager.WMSystem.LanguageInformation() = cammWebManager.System_GetLanguagesInfo(False)
-            '        Dim information2 As CompuMaster.camm.WebManager.WMSystem.ServerGroupInformation
-            '        For Each information2 In serverGroups
-            '            If information2.MasterServer.ID = Utils.Nz(MyDt.Rows(i)("LocationId"), 0) Then
-            '                Dim information3 As CompuMaster.camm.WebManager.WMSystem.LanguageInformation
-            '                For Each information3 In informationArray
-            '                    If (CInt(MyDt.Rows(i)("LanguageId")) = information3.ID AndAlso Not MyDt.Rows(i)("AppDisabled") Is DBNull.Value AndAlso CInt(MyDt.Rows(i)("AppDisabled")) = 0) OrElse (Not MyDt.Rows(i)("AppDisabled") Is DBNull.Value AndAlso CInt(MyDt.Rows(i)("AppDisabled")) = 1 AndAlso CLng(MyDt.Rows(i)("ID_User")) = UserID) Then
-            '                        s = String.Concat(New String() {s, "<a href=""#"" onClick=""OpenNavDemo(", information3.ID.ToString, ", '", HttpUtility.UrlEncode(information2.MasterServer.IPAddressOrHostHeader), "', '", UserID.ToString, "'," & Utils.Nz(Request.QueryString("GroupId"), 0) & ");"">", Utils.Nz(information2.Title, String.Empty), ", ", information3.LanguageName_English, "</a><br>"})
-            '                    End If
-            '                Next
-            '            End If
-            '        Next
-            '    Next
-            'End If
-
-            'Dim informationArray As CompuMaster.camm.WebManager.WMSystem.LanguageInformation() = cammWebManager.System_GetLanguagesInfo(False)
-            'Dim information2 As CompuMaster.camm.WebManager.WMSystem.ServerGroupInformation
-            'For Each information2 In serverGroups
-            '    If (IsAccessible(information2.MasterServer.ID, MyDt)) Then
-            '        Dim information3 As CompuMaster.camm.WebManager.WMSystem.LanguageInformation
-            '        For Each information3 In informationArray
-            '            If (IsAccessibleToLang(information3.ID, MyDt, UserID)) Then
-            '                s = String.Concat(New String() {s, "<a href=""#"" onClick=""OpenNavDemo(", information3.ID.ToString, ", '", HttpUtility.UrlEncode(information2.MasterServer.IPAddressOrHostHeader), "', '", UserID.ToString, "'," & );"">", information2.Title, ", ", information3.LanguageName_English, "</a><br>"})
-            '            End If
-            '        Next
-            '    End If
-            'Next
-
-            'Added by [I-link] on 28.01.2009 to apply new logic to show all server groups and markets
+            'Added to apply new logic to show all server groups and markets
             Dim informationArray As CompuMaster.camm.WebManager.WMSystem.LanguageInformation() = cammWebManager.System_GetLanguagesInfo(False)
             Dim information2 As CompuMaster.camm.WebManager.WMSystem.ServerGroupInformation
             For Each information2 In serverGroups

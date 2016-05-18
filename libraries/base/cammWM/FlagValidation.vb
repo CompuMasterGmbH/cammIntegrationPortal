@@ -15,14 +15,55 @@
 Option Explicit On
 Option Strict On
 
-Namespace CompuMaster.camm.WebManager.Administration
+Namespace CompuMaster.camm.WebManager
 
-    Friend Class FlagValidation
+    ''' <summary>
+    ''' Additional flags of users can be strongly typed
+    ''' </summary>
+    ''' <remarks>
+    ''' Following strong typing is available:
+    ''' <list type="">
+    ''' <item>String</item>
+    ''' <list type="">
+    ''' <item>FlagName</item>
+    ''' <item>FlagName{String}</item>
+    ''' <item>FlagName{Text}</item>
+    ''' </list>
+    ''' <item>Integer 32 bit</item>
+    ''' <list type="">
+    ''' <item>FlagName{Integer}</item>
+    ''' <item>FlagName{Int}</item>
+    ''' <item>FlagName{Int32}</item>
+    ''' <item>FlagName{Number}</item>
+    ''' </list>
+    ''' <item>Integer 64 bit</item>
+    ''' <list type="">
+    ''' <item>FlagName</item>
+    ''' <item>FlagName{Long}</item>
+    ''' <item>FlagName{Int64}</item>
+    ''' </list>
+    ''' <item>Boolean (store values are "1" and "0")</item>
+    ''' <list type="">
+    ''' <item>FlagName{Bit}</item>
+    ''' </list>
+    ''' <item>Boolean (store values are "true" and "false")</item>
+    ''' <list type="">
+    ''' <item>FlagName{Bool}</item>
+    ''' <item>FlagName{Boolean}</item>
+    ''' </list>
+    ''' <item>DateTime (String with a date/time in international ISO format, e.g. "yyyy-MM-dd HH:mm:ss")</item>
+    ''' <list type="">
+    ''' <item>FlagName{Date}</item>
+    ''' <item>FlagName{Date/ISO}</item>
+    ''' </list>
+    ''' </list>
+    ''' </remarks>
+    Public Class FlagValidation
 
         ''' <summary>
         ''' The main result of the flag validation
         ''' </summary>
-        Friend Enum FlagValidationResultCode
+        Public Enum FlagValidationResultCode
             Missing = 0
             InvalidValue = 1
             Success = 2
@@ -31,19 +72,30 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' <summary>
         ''' The flag validation result information
         ''' </summary>
-        Friend Structure FlagValidationResult
+        Public Class FlagValidationResult
+            Public Sub New(userID As Long, flag As String, validationResult As FlagValidationResultCode)
+                Me.UserID = userID
+                Me.Flag = flag
+                Me.ValidationResult = validationResult
+            End Sub
+            Public Sub New(userID As Long, validationResult As FlagValidationResultCode)
+                Me.UserID = userID
+                Me.ValidationResult = validationResult
+            End Sub
+
+            Public UserID As Long
             Public Flag As String
-            Public Code As FlagValidationResultCode
-        End Structure
+            Public ValidationResult As FlagValidationResultCode
+        End Class
 
         Private _flagComplete As String
         Private _flagName As String
         Private _flagType As String
         Private _isTypeFlag As Boolean
 
-        Public Sub New(ByVal flag As String)
-            Me._flagComplete = flag
-            _isTypeFlag = flag.IndexOf("{") > -1 AndAlso flag.EndsWith("}")
+        Public Sub New(ByVal completeFlagDefinition As String)
+            Me._flagComplete = completeFlagDefinition
+            _isTypeFlag = completeFlagDefinition.IndexOf("{") > -1 AndAlso completeFlagDefinition.EndsWith("}")
             SetNameAndType()
         End Sub
 
@@ -72,12 +124,12 @@ Namespace CompuMaster.camm.WebManager.Administration
         End Property
 
         ''' <summary>
-        ''' Returns the flag as it was passed here, so for example Birthday{DATE}
+        ''' Returns the flag as it was passed here, so for example "Birthday{DATE}"
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public ReadOnly Property FlagComplete As String
+        Public ReadOnly Property FlagCompleteDefinition As String
             Get
                 Return Me._flagComplete
             End Get
@@ -117,7 +169,7 @@ Namespace CompuMaster.camm.WebManager.Administration
                 Return True
             Else
                 Select Case Me.FlagType
-                    Case "INT", "INTEGER", "NUMBER"
+                    Case "INT", "INT32", "INTEGER", "NUMBER"
                         If IsNumeric(value) Then
 #If NetFramework = "1_1" Then
                         Try
@@ -132,21 +184,26 @@ Namespace CompuMaster.camm.WebManager.Administration
                         Else
                             Return False
                         End If
+                    Case "LONG", "INT64"
+                        If IsNumeric(value) Then
+#If NetFramework = "1_1" Then
+                        Try
+                            Long.Parse(value)
+                            Return True
+                        Catch
+                            Return False
+                        End Try
+#Else
+                            Return Long.TryParse(value, Nothing)
+#End If
+                        Else
+                            Return False
+                        End If
+                    Case "BIT"
+                        Return value = "1" OrElse value = "0"
                     Case "BOOL", "BOOLEAN"
                         Return UCase(value) = "TRUE" OrElse UCase(value) = "FALSE"
-                    Case "DATE"
-#If NetFramework = "1_1" Then
-                    Try
-                        DateTime.Parse(value, System.Globalization.CultureInfo.InvariantCulture)
-                        Return True
-                    Catch
-                        Return False
-                    End Try
-#Else
-                        'Return DateTime.TryParseExact(value,   System.Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.None, Nothing)
-                        Return DateTime.TryParse(value, System.Globalization.CultureInfo.InvariantCulture, Globalization.DateTimeStyles.None, Nothing)
-#End If
-                    Case "DATE/ISO"
+                    Case "DATE", "DATE/ISO"
                         If CompuMaster.camm.WebManager.Utils.CountOfOccurances(value, "-") <> 2 Then
                             'ISO format always has got a date part separated by dashes ("-"): yyyy-MM-dd --> not an ISO format, here
                             Return False
@@ -175,33 +232,31 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' <param name="userinfo"></param>
         ''' <returns></returns>
         Public Function Validate(ByVal userinfo As WMSystem.UserInformation) As FlagValidationResult
-            Dim result As New FlagValidationResult
+            Dim result As New FlagValidationResult(userinfo.IDLong, Me.FlagCompleteDefinition, Nothing)
             Dim userAdditionalFlags As System.Collections.Specialized.NameValueCollection = userinfo.AdditionalFlags
             If Not userAdditionalFlags Is Nothing AndAlso userAdditionalFlags.Keys.Count > 0 Then
-                Dim value As String = userAdditionalFlags.Item(Me.FlagComplete)
-                If value Is Nothing Then
-                    result.code = FlagValidationResultCode.Missing
+                Dim value As String = userAdditionalFlags.Item(Me.FlagCompleteDefinition)
+                If value = Nothing Then
+                    result.ValidationResult = FlagValidationResultCode.Missing
                 ElseIf Not Me.IsCorrectValueForType(value) Then
-                    result.code = FlagValidationResultCode.InvalidValue
+                    result.ValidationResult = FlagValidationResultCode.InvalidValue
                 Else
-                    result.code = FlagValidationResultCode.Success
+                    result.ValidationResult = FlagValidationResultCode.Success
                 End If
             Else
-                result.code = FlagValidationResultCode.Missing
+                result.ValidationResult = FlagValidationResultCode.Missing
             End If
-
-            result.flag = Me.FlagComplete
             Return result
         End Function
 
         ''' <summary>
-        ''' For the supplied user, check whether it has the required flags and whether the flags value are valid for the "type" the flag has
+        ''' For the supplied user, check whether it has the required flags and whether the flags value are valid for the "type" of the flag
         ''' </summary>
         ''' <param name="userinfo"></param>
         ''' <param name="requiredFlags"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetFlagValidationResults(ByVal userinfo As WMSystem.UserInformation, ByVal requiredFlags As String()) As FlagValidationResult()
+        Public Shared Function ValidateRequiredFlags(ByVal userinfo As WMSystem.UserInformation, ByVal requiredFlags As String(), filterForErrorsOnly As Boolean) As FlagValidationResult()
             Dim result As New ArrayList
             If Not userinfo Is Nothing AndAlso Not requiredFlags Is Nothing Then
                 For Each requiredFlag As String In requiredFlags
@@ -212,9 +267,71 @@ Namespace CompuMaster.camm.WebManager.Administration
                     End If
                 Next
             End If
+            If filterForErrorsOnly Then
+                For MyCounter As Integer = result.Count - 1 To 0 Step -1
+                    If CType(result(MyCounter), FlagValidationResult).ValidationResult = FlagValidationResultCode.Success Then
+                        result.RemoveAt(MyCounter)
+                    End If
+                Next
+            End If
             Return CType(result.ToArray(GetType(FlagValidationResult)), FlagValidationResult())
         End Function
 
+        ''' <summary>
+        ''' An exception with details on the failed flag validation results
+        ''' </summary>
+        Public Class RequiredFlagException
+            Inherits Exception
+
+            Public Sub New(validationResult As FlagValidationResult)
+                If validationResult Is Nothing Then
+                    Throw New ArgumentNullException("validationResult")
+                ElseIf validationResult.ValidationResult = FlagValidationResultCode.Success Then
+                    Throw New ArgumentException("Validation result ""Success"" can't lead to an exception")
+                Else
+                    _validationResults = New FlagValidationResult() {validationResult}
+                    _MoreWarningsAvailable = True
+                End If
+            End Sub
+
+            Public Sub New(validationResults As FlagValidationResult())
+                If validationResults Is Nothing Then
+                    Throw New ArgumentNullException("validationResults")
+                Else
+                    For MyCounter As Integer = 0 To validationResults.Length - 1
+                        If validationResults(MyCounter).ValidationResult = FlagValidationResultCode.Success Then
+                            Throw New ArgumentException("Validation result ""Success"" can't lead to an exception (" & MyCounter + 1 & ")")
+                        End If
+                    Next
+                    _validationResults = validationResults
+                End If
+            End Sub
+
+            Private _validationResults As FlagValidationResult()
+            Public ReadOnly Property ValidationResults As FlagValidationResult()
+                Get
+                    Return _validationResults
+                End Get
+            End Property
+
+            Private _MoreWarningsAvailable As Boolean
+            ''' <summary>
+            ''' Only 1st warning filled, more warnings might be available
+            ''' </summary>
+            ''' <returns></returns>
+            Public ReadOnly Property MoreWarningsAvailable As Boolean
+                Get
+                    Return _MoreWarningsAvailable
+                End Get
+            End Property
+
+            Public Overrides ReadOnly Property Message As String
+                Get
+                    Return "Missing or invalid flags, required flags validation failed"
+                End Get
+            End Property
+
+        End Class
     End Class
 
 End Namespace

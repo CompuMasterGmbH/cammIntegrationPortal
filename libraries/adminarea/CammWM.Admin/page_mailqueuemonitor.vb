@@ -260,7 +260,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Dim tbn As String = HttpContext.Current.Request.QueryString("tbn")
             Dim myScript As String = "<script language=""javascript""> function ReturnDate() { window.opener.document.getElementById('" & tbn & "').value = document.getElementById('TextDate').value; } </script> "
+#If VS2015OrHigher = True Then
+#Disable Warning BC40000 ' Der Typ oder Member ist veraltet.
+#End If
             Me.Page.RegisterClientScriptBlock("ReturnDate", myScript)
+#If VS2015OrHigher = True Then
+#Enable Warning BC40000 ' Der Typ oder Member ist veraltet.
+#End If
             ButtonOK.Attributes.Add("onClick", "javascript:window.close();")
         End Sub
         ''' -----------------------------------------------------------------------------
@@ -707,13 +713,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         '''     Default analysis as Data table
         ''' </summary>
         ''' <returns>DataTable</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        '''     I-link  30.07.2008  Update the query of first time loading data.
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function DefaultAnalysisDataTable(ByVal ConnectionString As String) As DataTable
             Dim result As New DataTable
             With result.Columns
@@ -804,108 +803,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Return result
         End Function
-        '-------Commented by I-link on 30.7.2008 to update the query of first time loading data.
-        'Private Function DefaultAnalysisDataTable() As DataTable
-        '    Dim result As New DataTable
 
-        '    With result.Columns
-        '        .Add("AddHiddenArea", GetType(System.Boolean))
-        '        .Add("ToAddressCount", GetType(System.Int32))
-        '        .Add("EmailID", GetType(System.Int32))
-        '        .Add("Subject", GetType(System.String))
-        '        .Add("State", GetType(Messaging.QueueMonitoring.QueueStates))
-        '        .Add("Sender", GetType(System.String))
-        '        .Add("ToAddress", GetType(System.String))
-        '        .Add("SentTime", GetType(System.DateTime))
-        '        .Add("FromAddress", GetType(System.String))
-        '        .Add("Cc", GetType(System.String))
-        '        .Add("Bcc", GetType(System.String))
-        '        .Add("ToType", GetType(MailQueueMonitor.ToType))
-        '        .Add("DRowUserID", GetType(System.Int64))
-        '    End With
-
-        '    Dim logDT As DataTable = Me.data.LoadMailMessages
-        '    If logDT.Rows.Count = 0 Then
-        '        Return result
-        '    End If
-
-        '    Dim myCounter As Integer = 1
-        '    Dim rowCounter As Integer = 1
-        '    For Each dRow As DataRow In logDT.Rows
-        '        Dim queueState As Messaging.QueueMonitoring.QueueStates = CType(dRow("State"), Messaging.QueueMonitoring.QueueStates)
-        '        Select Case queueState
-        '            Case Messaging.QueueMonitoring.QueueStates.FailureAfter1Trial, _
-        '                Messaging.QueueMonitoring.QueueStates.FailureAfter2Trials, _
-        '                Messaging.QueueMonitoring.QueueStates.FailureAfterLastTrial
-
-        '                Dim xmlData As String = CStr(dRow("Data"))
-        '                Dim mail As New Messaging.MailMessage(xmlData, Me.cammWebManager)
-
-        '                If Me.DoesLog_eMailMessageToBeListedForCurrentUser(mail.FromAddress, mail.To, mail.Cc, mail.Bcc) Then
-        '                    Dim addHiddenArea As Boolean = False
-        '                    If mail.Bcc <> "" Then
-        '                        addHiddenArea = True
-        '                    End If
-        '                    If mail.Cc <> "" Then
-        '                        addHiddenArea = True
-        '                    End If
-
-        '                    Dim toAddressCounter As Integer = 0
-        '                    If mail.To.IndexOf(";") > 0 Then
-        '                        For Each toAddrress As String In mail.To.Split(";"c)
-        '                            If Trim(toAddrress) <> "" Then
-        '                                toAddressCounter += 1
-        '                            End If
-        '                        Next
-        '                    End If
-        '                    If toAddressCounter > 1 Then
-        '                        addHiddenArea = True
-        '                    End If
-
-        '                    'Dim sender As String = "<" & Trim(mail.FromName) & "> " & Trim(mail.FromAddress)
-        '                    Dim sender As String = Trim(mail.FromName) & " " & Trim(mail.FromAddress)
-        '                    'sender = Trim(sender)
-
-        '                    Dim row As DataRow = result.NewRow
-        '                    row("AddHiddenArea") = CBool(addHiddenArea)
-        '                    row("ToAddressCount") = CInt(toAddressCounter)
-        '                    row("EmailID") = CInt(dRow("ID"))
-        '                    If mail.Subject Is Nothing Then row("Subject") = String.Empty Else row("Subject") = mail.Subject.ToString.Trim
-        '                    row("State") = CType(queueState, Messaging.QueueMonitoring.QueueStates)
-        '                    row("Sender") = sender.ToString.Trim
-        '                    If mail.To Is Nothing Then row("ToAddress") = String.Empty Else row("ToAddress") = mail.To.ToString.Trim
-        '                    row("SentTime") = CDate(dRow("DateTime"))
-        '                    If mail.FromAddress Is Nothing Then row("FromAddress") = String.Empty Else row("FromAddress") = mail.FromAddress.ToString.Trim
-        '                    If mail.Cc Is Nothing Then row("Cc") = String.Empty Else row("Cc") = mail.Cc.ToString.Trim
-        '                    If mail.Bcc Is Nothing Then row("Bcc") = String.Empty Else row("Bcc") = mail.Bcc.ToString.Trim
-        '                    row("ToType") = ToType.All
-        '                    row("DRowUserID") = CLng(dRow("UserID"))
-
-        '                    result.Rows.Add(row)
-
-        '                    rowCounter += 1
-        '                End If
-        '            Case Else
-
-        '        End Select
-        '        If rowCounter >= 500 Then
-        '            Exit For
-        '        End If
-        '    Next
-
-        '    Return result
-        'End Function
-        '' -----------------------------------------------------------------------------
-        '' <summary>
-        ''     Adds analysis to web page
-        '' </summary>
-        '' <param name="analysis">DataTable holding analysis data</param>
-        '' <remarks>
-        '' </remarks>
-        '' <history>
-        '' 	[adminsupport]	28.11.2005	Created
-        '' </history>
-        '' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Adds analysis to web page
+        ''' </summary>
+        ''' <param name="analysis">DataTable holding analysis data</param>
         Private Sub AddAnalysis(ByVal analysis As DataTable)
             'Remove any old content, first (except of the very first line containing the head line descriptions)
             For MyDelCounter As Integer = Me.TableAnalysis.Rows.Count - 1 To 1 Step -1
@@ -2310,7 +2212,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Get
                     Dim result As String
                     If Me._ConnectionString = Nothing Then
+#If VS2015OrHigher = True Then
+#Disable Warning BC40000 ' Der Typ oder Member ist veraltet.
+#End If
                         Me._ConnectionString = System.Configuration.ConfigurationSettings.AppSettings("WebManager.ConnectionString")
+#If VS2015OrHigher = True Then
+#Enable Warning BC40000 ' Der Typ oder Member ist veraltet.
+#End If
                         result = Me._ConnectionString
                     Else
                         result = Me._ConnectionString
@@ -2616,19 +2524,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region " Public Class UpdateEmailDetail "
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : CompuMaster.camm.WebManager.Pages.Administration.UpdateEmailDetail
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     This page updates email details
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	12.09.2008	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class UpdateEmailDetail
         Inherits CompuMaster.camm.WebManager.Pages.Administration.Page
 
@@ -2679,21 +2577,21 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
         End Sub
         Private Sub UpdateState()
-                Dim emailId As String = Request.QueryString("ID")
+            Dim emailId As String = Request.QueryString("ID")
 
-                If Not ds.Tables("message") Is Nothing AndAlso ds.Tables("message").Rows.Count > 0 Then
-                    ds.Tables("message").Select("key='FromAddress'")(0)("value") = txtFrom.Text.Trim
-                    ds.Tables("message").Select("key='To'")(0)("value") = txtTo.Text.Trim
-                    ds.Tables("message").Select("key='Cc'")(0)("value") = txtCc.Text.Trim
-                    ds.Tables("message").Select("key='Bcc'")(0)("value") = txtBcc.Text.Trim
-                    ds.AcceptChanges()
+            If Not ds.Tables("message") Is Nothing AndAlso ds.Tables("message").Rows.Count > 0 Then
+                ds.Tables("message").Select("key='FromAddress'")(0)("value") = txtFrom.Text.Trim
+                ds.Tables("message").Select("key='To'")(0)("value") = txtTo.Text.Trim
+                ds.Tables("message").Select("key='Cc'")(0)("value") = txtCc.Text.Trim
+                ds.Tables("message").Select("key='Bcc'")(0)("value") = txtBcc.Text.Trim
+                ds.AcceptChanges()
 
-                    Dim MyCmd As New SqlCommand("Update Log_eMailMessages set state=4,data=@Data where ID=@eMailID", New SqlConnection(cammWebManager.ConnectionString))
-                    MyCmd.Parameters.Add("@Data", SqlDbType.NText).Value = CompuMaster.camm.WebManager.Administration.Tools.Data.DataTables.ConvertDatasetToXml(ds)
-                    MyCmd.Parameters.Add("@eMailId", SqlDbType.Int).Value = emailId
+                Dim MyCmd As New SqlCommand("Update Log_eMailMessages set state=4,data=@Data where ID=@eMailID", New SqlConnection(cammWebManager.ConnectionString))
+                MyCmd.Parameters.Add("@Data", SqlDbType.NText).Value = CompuMaster.camm.WebManager.Administration.Tools.Data.DataTables.ConvertDatasetToXml(ds)
+                MyCmd.Parameters.Add("@eMailId", SqlDbType.Int).Value = emailId
 
-                    CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-                End If
+                CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+            End If
         End Sub
 
         Function sendMail() As Boolean

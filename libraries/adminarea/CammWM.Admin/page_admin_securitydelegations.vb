@@ -328,8 +328,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim MyDt As New DataTable
 
             Try
-                Dim sqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT ID_User From Memberships WHERE ID_Group IN (6, 7, -7) group by ID_User"
+                Dim sqlQuery As String
+                If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                    sqlQuery = "SELECT ID_User From view_Memberships_Effective_wo_PublicNAnonymous WHERE ID_Group IN (6, 7, -7) group by ID_User"
+                Else
+                    sqlQuery = "SELECT ID_User From Memberships WHERE ID_Group IN (6, 7, -7) group by ID_User"
+                End If
                 MyDt = FillDataTable(New SqlCommand(sqlQuery, New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             Catch
                 Throw

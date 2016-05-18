@@ -68,9 +68,11 @@ Namespace CompuMaster.camm.WebManager.Administration
             Dim uInfo As New CompuMaster.camm.WebManager.WMSystem.UserInformation(userID, webmanager)
             Dim Result As DataTable = MembershipsTableCreate("memberships")
 
-            For MyCounter As Integer = 0 To uInfo.Memberships.Length - 1
-                Dim newRow As DataRow = Result.NewRow
-                MembershipsTableAddRow(Result, uInfo.Memberships(MyCounter), uInfo)
+            For MyCounter As Integer = 0 To uInfo.MembershipsByRule.AllowRule.Length - 1
+                MembershipsTableAddRow(Result, uInfo.MembershipsByRule.AllowRule(MyCounter), uInfo, False)
+            Next
+            For MyCounter As Integer = 0 To uInfo.MembershipsByRule.DenyRule.Length - 1
+                MembershipsTableAddRow(Result, uInfo.MembershipsByRule.DenyRule(MyCounter), uInfo, True)
             Next
 
             Return Result
@@ -115,12 +117,20 @@ Namespace CompuMaster.camm.WebManager.Administration
             Dim gInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(groupID, webmanager)
             Dim Result As DataTable = MembershipsTableCreate("members")
 
-            For MyCounter As Integer = 0 To gInfo.Members.Length - 1
-                If includeDisabledUsers = False AndAlso gInfo.Members(MyCounter).LoginDisabled Then
+            For MyCounter As Integer = 0 To gInfo.MembersByRule.AllowRule.Length - 1
+                If includeDisabledUsers = False AndAlso gInfo.MembersByRule.AllowRule(MyCounter).LoginDisabled Then
                     'don't add a row with disabled user
                 Else
                     Dim newRow As DataRow = Result.NewRow
-                    MembershipsTableAddRow(Result, gInfo, gInfo.Members(MyCounter))
+                    MembershipsTableAddRow(Result, gInfo, gInfo.MembersByRule.AllowRule(MyCounter), False)
+                End If
+            Next
+            For MyCounter As Integer = 0 To gInfo.MembersByRule.DenyRule.Length - 1
+                If includeDisabledUsers = False AndAlso gInfo.MembersByRule.DenyRule(MyCounter).LoginDisabled Then
+                    'don't add a row with disabled user
+                Else
+                    Dim newRow As DataRow = Result.NewRow
+                    MembershipsTableAddRow(Result, gInfo, gInfo.MembersByRule.DenyRule(MyCounter), True)
                 End If
             Next
 
@@ -141,7 +151,7 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' 	[adminsupport]	16.08.2005	Created
         ''' </history>
         ''' -----------------------------------------------------------------------------
-        Private Shared Sub MembershipsTableAddRow(ByVal memberships As DataTable, ByVal groupInfo As CompuMaster.camm.WebManager.WMSystem.GroupInformation, ByVal userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation)
+        Private Shared Sub MembershipsTableAddRow(ByVal memberships As DataTable, ByVal groupInfo As CompuMaster.camm.WebManager.WMSystem.GroupInformation, ByVal userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation, isDenyRule As Boolean)
 
             'parameter validation
             If userInfo Is Nothing AndAlso groupInfo Is Nothing Then
@@ -195,6 +205,7 @@ Namespace CompuMaster.camm.WebManager.Administration
                 newRow(36) = CompuMaster.camm.WebManager.Utils.JoinNameValueCollectionWithUrlEncodingToString(userInfo.AdditionalFlags)
                 newRow(37) = userInfo.LoginLockedTemporary
             End If
+            newRow(38) = isDenyRule
             memberships.Rows.Add(newRow)
 
         End Sub
@@ -252,6 +263,7 @@ Namespace CompuMaster.camm.WebManager.Administration
             Result.Columns.Add(New DataColumn("User_AutomaticLogonAllowedByMachineToMachineCommunication", GetType(Boolean)))
             Result.Columns.Add(New DataColumn("User_AdditionalFlags", GetType(String)))
             Result.Columns.Add(New DataColumn("User_LoginLockedTemporary", GetType(Boolean)))
+            Result.Columns.Add(New DataColumn("Membership_IsDenyRule", GetType(Boolean)))
             Return Result
         End Function
 #End Region
@@ -384,7 +396,11 @@ Namespace CompuMaster.camm.WebManager.Administration
                 newRow(0) = securityObjectInfo.ID
                 newRow(1) = securityObjectInfo.Name
                 newRow(2) = securityObjectInfo.DisplayName
-                newRow(3) = securityObjectInfo.InheritFrom_SecurityObjectID
+                If securityObjectInfo.InheritFrom_SecurityObjectIDs Is Nothing OrElse securityObjectInfo.InheritFrom_SecurityObjectIDs.Length = 0 Then
+                    newRow(3) = ""
+                Else
+                    newRow(3) = CompuMaster.camm.WebManager.Utils.JoinArrayToString(securityObjectInfo.InheritFrom_SecurityObjectIDs, ",")
+                End If
                 newRow(4) = securityObjectInfo.SystemType
                 newRow(5) = securityObjectInfo.Disabled
                 newRow(6) = securityObjectInfo.Deleted
@@ -454,7 +470,7 @@ Namespace CompuMaster.camm.WebManager.Administration
             Result.Columns.Add(New DataColumn("SecurityObject_ID", GetType(Integer)))
             Result.Columns.Add(New DataColumn("SecurityObject_Name", GetType(String)))
             Result.Columns.Add(New DataColumn("SecurityObject_DisplayName", GetType(String)))
-            Result.Columns.Add(New DataColumn("SecurityObject_InheritFrom_SecurityObjectID", GetType(Integer)))
+            Result.Columns.Add(New DataColumn("SecurityObject_InheritFrom_SecurityObjectIDs", GetType(String)))
             Result.Columns.Add(New DataColumn("SecurityObject_SystemType", GetType(Integer)))
             Result.Columns.Add(New DataColumn("SecurityObject_Disabled", GetType(Boolean)))
             Result.Columns.Add(New DataColumn("SecurityObject_Deleted", GetType(Boolean)))

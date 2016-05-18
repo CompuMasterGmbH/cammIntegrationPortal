@@ -39,8 +39,7 @@
 									<FONT face="Arial" size="2">This user group collects all authorizations for users who aren't logged in.</font></em></P>
 								</TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2">
-									<a runat="server" id="ancGroupInfo"><!-- no modification of the anonymous group possible --></a>
-									<asp:Label runat="server" id="lblGroupInfo" /></FONT></P>
+									<asp:HyperLink id="hypIdGroupAnonymous" runat="server" />
 									<INPUT TYPE="HIDDEN" id="hiddenTxt_GroupAnonymous" runat="server" />
 								</TD>
 							</TR>

@@ -258,12 +258,6 @@ from dbo.Applications
 ) as AppAuths
 group by ID_Application, ID_User
 GO
-if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) 
-UPDATE System_Languages
-SET System_Languages.IsActive = Languages.IsActive
-FROM System_Languages INNER JOIN Languages ON System_Languages.ID = Languages.ID
-
-GO
 
 ----------------------------------------------------
 -- dbo.Languages

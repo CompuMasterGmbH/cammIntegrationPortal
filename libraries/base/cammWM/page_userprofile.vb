@@ -386,7 +386,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
                 Trim(Me.TextboxEMail.Text), _
                 False, _
                 Trim(Me.TextboxCompany.Text), _
-                CType(IIf(Me.DropdownSalutation.SelectedValue = "Ms.", WMSystem.Sex.Feminin, IIf(Me.DropdownSalutation.SelectedValue = "Mr.", WMSystem.Sex.Masculin, WMSystem.Sex.Undefined)), WMSystem.Sex), _
+                CType(IIf(Me.DropdownSalutation.SelectedValue = "Ms.", WMSystem.Sex.Feminine, IIf(Me.DropdownSalutation.SelectedValue = "Mr.", WMSystem.Sex.Masculine, WMSystem.Sex.Undefined)), WMSystem.Sex), _
                 Trim(Me.TextboxNameAffix.Text), _
                 Trim(Me.TextboxFirstName.Text), _
                 Trim(Me.TextboxLastName.Text), _
@@ -1247,7 +1247,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
             Dim MyUserInfo As WMSystem.UserInformation = Me.cammWebManager.CurrentUserInfo
             MyUserInfo.EMailAddress = Trim(Me.TextboxEMail.Text)
             MyUserInfo.Company = Trim(Me.TextboxCompany.Text)
-            MyUserInfo.Gender = CType(IIf(Me.DropdownSalutation.SelectedValue = "Ms.", WMSystem.Sex.Feminin, IIf(Me.DropdownSalutation.SelectedValue = "Mr.", WMSystem.Sex.Masculin, WMSystem.Sex.Undefined)), WMSystem.Sex)
+            MyUserInfo.Gender = CType(IIf(Me.DropdownSalutation.SelectedValue = "Ms.", WMSystem.Sex.Feminine, IIf(Me.DropdownSalutation.SelectedValue = "Mr.", WMSystem.Sex.Masculine, WMSystem.Sex.Undefined)), WMSystem.Sex)
             MyUserInfo.NameAddition = Trim(Me.TextboxNameAffix.Text)
             MyUserInfo.FirstName = Trim(Me.TextboxFirstName.Text)
             MyUserInfo.LastName = Trim(Me.TextboxLastName.Text)

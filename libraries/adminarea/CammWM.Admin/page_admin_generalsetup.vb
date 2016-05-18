@@ -122,19 +122,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     End Class
 
 #Region " Access Levels "
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.AccessLevels
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to view accesslevels
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	04.09.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class AccessLevelsList
         Inherits Page
 
@@ -146,19 +136,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region "Page Events"
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Sub 	 : camm.WebManager.Pages.Administration.AccessLevelsList.PageLoad(sender,e)
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Page Load event - shows the list of access levels
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[I-link]	04.09.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub AccessLevelsList_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.PreRender
             lblErrMsg.Text = ""
 
@@ -197,19 +177,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.AccessLevelsNew
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to create accesslevel
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	05.09.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class AccessLevelsNew
         Inherits Page
 
@@ -251,20 +221,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.AccessLevels_Update
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to update accesslevel
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	05.09.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class AccessLevelsUpdate
         Inherits Page
 
@@ -335,20 +294,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.AccessLevels_Delete
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to delete accesslevel
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	05.09.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class AccessLevelsDelete
         Inherits Page
 
@@ -380,7 +328,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CInt(Request.QueryString("ID")))}
                     MySqlString = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT * FROM dbo.System_AccessLevels WHERE ID=@ID"
-                    dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), MySqlString, CommandType.Text, sqlparams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+                    dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), MySqlString, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                     If dt Is Nothing AndAlso dt.Rows.Count = 0 Then
                         lblErrMsg.Text = "Access level not found!"

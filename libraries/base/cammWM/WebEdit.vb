@@ -84,7 +84,13 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
 
             Friend Shared ReadOnly Property WebManagerSettings() As System.Collections.Specialized.NameValueCollection
                 Get
+#If VS2015OrHigher = True Then
+#Disable Warning BC40000 ' Der Typ oder Member ist veraltet.
+#End If
                     Return System.Configuration.ConfigurationSettings.AppSettings
+#If VS2015OrHigher = True Then
+#Enable Warning BC40000 ' Der Typ oder Member ist veraltet.
+#End If
                 End Get
             End Property
 
@@ -3038,7 +3044,7 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 End If
 
                 Dim script As String = "document.getElementById('" & txtBrowseToMarketVersion.ClientID & "').value = this.value;"
-                LanguagesDropDownBox.Attributes.Add("onchange", "if(confirmPageClose()){" & script & "; this.selectedIndex = -1; document.forms['" & LookupParentServerFormName() & "'].submit(); } else resetSelectBox(this); ")
+                LanguagesDropDownBox.Attributes.Add("onchange", "if(confirmPageClose()){" & script & "; this.selectedIndex = -1; ExecPostBack('LanguageDropDownBox', 'Change', true); } else resetSelectBox(this); ") 'document.forms['" & LookupParentServerFormName() & "'].submit(); } else resetSelectBox(this); ")
             End Sub
             ''' <summary>
             ''' Shows the buttons that we need

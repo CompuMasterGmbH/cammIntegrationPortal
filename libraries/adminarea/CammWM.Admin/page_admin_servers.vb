@@ -36,7 +36,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #Region "Variable Declaration"
         Protected lblGroupID, lblAreaNavTitle, lblMasterServerID, lblMemberServerID2 As Label
         Protected WithEvents rptServerList, rptServerSubList As Repeater
-        Protected ancGroupID, ancServerGroup, ancAdminServer, ancMasterServer, lblGroupPublicName, ancDeleteServerGroup, ancAdd As HtmlAnchor
+        Protected ancGroupID, ancServerGroup, ancAdminServer, ancMasterServer, ancDeleteServerGroup, ancAdd As HtmlAnchor
         Protected ancNew, ancDeleteServer, ancMemberServerDesc As HtmlAnchor
         Protected trShowDetails, trAddBlank, trShowMsg As HtmlTableRow
         Protected gcDisabled As HtmlGenericControl
@@ -95,7 +95,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         CType(e.Item.FindControl("ancAdminServer"), HtmlAnchor).InnerHtml = Server.HtmlEncode(Utils.Nz(.Item("UserAdminServer_ServerDescription"), String.Empty))
                         CType(e.Item.FindControl("ancMasterServer"), HtmlAnchor).HRef = "servers_update_server.aspx?ID=" & .Item("MasterServer_ID").ToString
                         CType(e.Item.FindControl("ancMasterServer"), HtmlAnchor).InnerHtml = Server.HtmlEncode(Utils.Nz(.Item("MasterServer_ServerDescription"), String.Empty))
-                        CType(e.Item.FindControl("lblGroupPublicName"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item("Group_Public_Name"), String.Empty))
+                        If Not e.Item.FindControl("lblGroupPublicName") Is Nothing Then CType(e.Item.FindControl("lblGroupPublicName"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item("Group_Public_Name"), String.Empty))
+                        If Not e.Item.FindControl("hypGroupPublicName") Is Nothing Then
+                            CType(e.Item.FindControl("hypGroupPublicName"), HyperLink).NavigateUrl = "groups_update.aspx?ID=" & (Utils.Nz(.Item("Group_Public_ID"), String.Empty))
+                            CType(e.Item.FindControl("hypGroupPublicName"), HyperLink).Text = Server.HtmlEncode(Utils.Nz(.Item("Group_Public_Name"), String.Empty))
+                        End If
+                        If Not e.Item.FindControl("hypGroupAnonymousName") Is Nothing Then
+                            CType(e.Item.FindControl("hypGroupAnonymousName"), HyperLink).NavigateUrl = "groups_update.aspx?ID=" & (Utils.Nz(.Item("Group_Anonymous_ID"), String.Empty))
+                            CType(e.Item.FindControl("hypGroupAnonymousName"), HyperLink).Text = Server.HtmlEncode(Utils.Nz(.Item("Group_Anonymous_Name"), String.Empty))
+                        End If
                         CType(e.Item.FindControl("ancAdd"), HtmlAnchor).HRef = "servers_new_accesslevelrelation.aspx?ID=" & .Item("ID").ToString
 
                         If CLng(CurServerGroup.ToString) <> CLng(.Item("ID").ToString) Then
@@ -155,19 +163,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.NewServerGroup
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to add a new server group
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	11.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class NewServerGroup
         Inherits Page
 
@@ -191,22 +189,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #Region "Control Events"
         Protected Sub btnSubmitClcik(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
             If txtGroupname.Text.Trim <> "" And txtEmail.Text.Trim <> "" Then
-                Dim sqlParams As SqlParameter() = { _
-                                    New SqlParameter("@GroupName", Mid(Trim(txtGroupname.Text), 1, 255)), _
-                                    New SqlParameter("@email_Developer", Mid(Trim(txtEmail.Text), 1, 255)), _
-                                    New SqlParameter("@UserID_Creator", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)) _
-                                                  }
+                Dim Cmd As New SqlClient.SqlCommand("AdminPrivate_CreateServerGroup", New SqlConnection(cammWebManager.ConnectionString))
+                Cmd.CommandType = CommandType.StoredProcedure
+                Cmd.Parameters.Add("@GroupName", SqlDbType.NVarChar).Value = Mid(Trim(txtGroupname.Text), 1, 255)
+                Cmd.Parameters.Add("@email_Developer", SqlDbType.NVarChar).Value = Mid(Trim(txtEmail.Text), 1, 255)
+                Cmd.Parameters.Add("@UserID_Creator", SqlDbType.Int).Value = CType(cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), Integer) 'TODO: SP input value still int instead of bigint!
 
                 Dim Redirect2URL As String = ""
-
                 Try
-                    Dim obj As Object = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar( _
-                                                        New SqlConnection(cammWebManager.ConnectionString), _
-                                                        "AdminPrivate_CreateServerGroup", _
-                                                        CommandType.StoredProcedure, _
-                                                        sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection _
-                                                      )
-
+                    Dim obj As Object = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(Cmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
                     If obj Is Nothing Then
                         lblErrMsg.Text = "Undefined error detected!"
                     ElseIf CLng(obj) <> 0 Then
@@ -227,19 +218,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.DeleteServerGroup
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to delete a server group
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	10.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class DeleteServerGroup
         Inherits Page
 
@@ -259,7 +240,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     lblErrMsg.Text = "Server group erasing failed! (" & Server.HtmlEncode(ex.Message) & ")"
                 End Try
             Else
-                Dim MyServerGroupInfo As New CompuMaster.camm.webmanager.WMSystem.ServerGroupInformation(CInt(Request.QueryString("ID")), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
+                Dim MyServerGroupInfo As New CompuMaster.camm.WebManager.WMSystem.ServerGroupInformation(CInt(Request.QueryString("ID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
                 lblServerGroupId.Text = Server.HtmlEncode(Request.QueryString("ID"))
                 lblServerGroupName.Text = Server.HtmlEncode(MyServerGroupInfo.Title)
             End If
@@ -268,19 +249,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.UpdateServerGroup
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to Update a server group
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	19.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class UpdateServerGroup
         Inherits Page
 
@@ -297,6 +268,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected cmbUserAdminServer, cmbMasterServer, cmbAccessLevelDefault As DropDownList
         Protected WithEvents btnSubmit As Button
         Protected hypIdGroupPublic As HyperLink
+        Protected hypIdGroupAnonymous As HyperLink
 #End Region
 
 #Region "Page Events"
@@ -317,13 +289,18 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     txtFieldServerGroup.Text = Utils.Nz(dtServerGroup.Rows(0)("ServerGroup"), String.Empty)
                     Field_ID_Group_Public = Utils.Nz(dtServerGroup.Rows(0)("ID_Group_Public"), 0)
                     Field_ID_Group_Anonymous = Utils.Nz(dtServerGroup.Rows(0)("ID_Group_Anonymous"), 0)
-                    Dim MyGroupInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(Field_ID_Group_Anonymous, CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
-                    hiddenTxt_GroupAnonymous.Value = Utils.Nz(MyGroupInfo.ID, 0).ToString
-                    lblGroupInfo.Text = Server.HtmlEncode(MyGroupInfo.Name)
-                    MyGroupInfo = New CompuMaster.camm.WebManager.WMSystem.GroupInformation(Field_ID_Group_Public, CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
-                    hiddenTxt_ID_Group_Public.Value = Utils.Nz(MyGroupInfo.ID, 0).ToString
-                    hypIdGroupPublic.Text = Server.HtmlEncode(MyGroupInfo.Name)
-                    hypIdGroupPublic.NavigateUrl = "groups_update.aspx?ID=" + MyGroupInfo.ID.ToString
+                    Dim MyAnonymousGroupInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(Field_ID_Group_Anonymous, CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
+                    hiddenTxt_GroupAnonymous.Value = Utils.Nz(MyAnonymousGroupInfo.ID, 0).ToString
+                    If Not lblGroupInfo Is Nothing Then lblGroupInfo.Text = Server.HtmlEncode(MyAnonymousGroupInfo.Name)
+                    If Not hypIdGroupAnonymous Is Nothing Then
+                        hypIdGroupAnonymous.Text = Server.HtmlEncode(MyAnonymousGroupInfo.Name)
+                        hypIdGroupAnonymous.NavigateUrl = "groups_update.aspx?ID=" + MyAnonymousGroupInfo.ID.ToString
+                    End If
+
+                    Dim MyPublicGroupInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(Field_ID_Group_Public, CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
+                    hiddenTxt_ID_Group_Public.Value = Utils.Nz(MyPublicGroupInfo.ID, 0).ToString
+                    hypIdGroupPublic.Text = Server.HtmlEncode(MyPublicGroupInfo.Name)
+                    hypIdGroupPublic.NavigateUrl = "groups_update.aspx?ID=" + MyPublicGroupInfo.ID.ToString
 
                     cmbMasterServer.SelectedValue = Utils.Nz(dtServerGroup.Rows(0)("MasterServer"), String.Empty)
                     cmbUserAdminServer.SelectedValue = Utils.Nz(dtServerGroup.Rows(0)("UserAdminServer"), String.Empty)
@@ -355,8 +332,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Sub FillDropDownLists(ByVal Field_ID As Integer)
             Try
                 Dim dtAccess As DataTable
-                dtAccess = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT [dbo].[System_AccessLevels].id, [dbo].[System_AccessLevels].title FROM [dbo].[System_AccessLevels]", New SqlConnection(cammWebManager.ConnectionString)), Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+                dtAccess = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlCommand("SELECT [dbo].[System_AccessLevels].id, [dbo].[System_AccessLevels].title FROM [dbo].[System_AccessLevels]", New SqlConnection(cammWebManager.ConnectionString)), Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                 If Not dtAccess Is Nothing AndAlso dtAccess.Rows.Count > 0 Then
                     For Each dr As DataRow In dtAccess.Rows
@@ -368,8 +344,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                 Dim dtAccessLevel As DataTable
                 Dim sqlParams As SqlParameter() = {New SqlParameter("@ServerGroup", Field_ID)}
-                dtAccessLevel = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                     "SELECT ID,ServerDescription, IP  FROM System_Servers WHERE ServerGroup = @ServerGroup", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data1")
+                dtAccessLevel = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SELECT ID,ServerDescription, IP  FROM System_Servers WHERE ServerGroup = @ServerGroup", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data1")
 
                 If Not dtAccessLevel Is Nothing AndAlso dtAccessLevel.Rows.Count > 0 Then
                     For Each dr As DataRow In dtAccessLevel.Rows
@@ -380,8 +355,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 dtAccessLevel.Dispose()
 
                 Dim dtSystem As DataTable
-                dtSystem = FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT ID,ServerDescription, IP  FROM System_Servers WHERE Enabled <> 0", New SqlConnection(cammWebManager.ConnectionString)), Automations.AutoOpenAndCloseAndDisposeConnection, "data2")
+                dtSystem = FillDataTable(New SqlCommand("SELECT ID,ServerDescription, IP  FROM System_Servers WHERE Enabled <> 0", New SqlConnection(cammWebManager.ConnectionString)), Automations.AutoOpenAndCloseAndDisposeConnection, "data2")
                 dtSystem.Dispose()
 
                 If Not dtSystem Is Nothing AndAlso dtSystem.Rows.Count > 0 Then
@@ -397,27 +371,27 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 #Region "Control Events"
         Private Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
-            If lblFieldID.Text <> Nothing And _
-             txtFieldServerGroup.Text.Trim <> "" And _
-             hiddenTxt_ID_Group_Public.Value.Trim <> "" And _
-             hiddenTxt_GroupAnonymous.Value.Trim <> "" And _
-             cmbMasterServer.SelectedValue <> "" And _
-             cmbUserAdminServer.SelectedValue <> "" And _
-             txtAreaButton.Text.Trim <> "" And _
-             txtAreaImage.Text.Trim <> "" And _
-              txtAreaCompanyFormerTitle.Text.Trim <> "" And _
-             txtAreaCompanyTitle.Text.Trim <> "" And _
-             txtAreaSecurityContactEMail.Text.Trim <> "" And _
-             txtAreaSecurityContactTitle.Text.Trim <> "" And _
-             txtAreaDevelopmentContactEMail.Text.Trim <> "" And _
-             txtAreaDevelopmentContactTitle.Text.Trim <> "" And _
-             txtAreaContentManagementContactEMail.Text.Trim <> "" And _
-             txtAreaContentManagementContactTitle.Text.Trim <> "" And _
-             txtAreaUnspecifiedContactEMail.Text.Trim <> "" And _
-             txtAreaUnspecifiedContactTitle.Text.Trim <> "" And _
-             txtAreaCopyRightSinceYear.Text.Trim <> "" And _
-             txtAreaCompanyWebSiteURL.Text.Trim <> "" And _
-             txtAreaCompanyWebSiteTitle.Text.Trim <> "" And _
+            If lblFieldID.Text <> Nothing AndAlso _
+             txtFieldServerGroup.Text.Trim <> "" AndAlso _
+             hiddenTxt_ID_Group_Public.Value.Trim <> "" AndAlso _
+             hiddenTxt_GroupAnonymous.Value.Trim <> "" AndAlso _
+             cmbMasterServer.SelectedValue <> "" AndAlso _
+             cmbUserAdminServer.SelectedValue <> "" AndAlso _
+             txtAreaButton.Text.Trim <> "" AndAlso _
+             txtAreaImage.Text.Trim <> "" AndAlso _
+              txtAreaCompanyFormerTitle.Text.Trim <> "" AndAlso _
+             txtAreaCompanyTitle.Text.Trim <> "" AndAlso _
+             txtAreaSecurityContactEMail.Text.Trim <> "" AndAlso _
+             txtAreaSecurityContactTitle.Text.Trim <> "" AndAlso _
+             txtAreaDevelopmentContactEMail.Text.Trim <> "" AndAlso _
+             txtAreaDevelopmentContactTitle.Text.Trim <> "" AndAlso _
+             txtAreaContentManagementContactEMail.Text.Trim <> "" AndAlso _
+             txtAreaContentManagementContactTitle.Text.Trim <> "" AndAlso _
+             txtAreaUnspecifiedContactEMail.Text.Trim <> "" AndAlso _
+             txtAreaUnspecifiedContactTitle.Text.Trim <> "" AndAlso _
+             txtAreaCopyRightSinceYear.Text.Trim <> "" AndAlso _
+             txtAreaCompanyWebSiteURL.Text.Trim <> "" AndAlso _
+             txtAreaCompanyWebSiteTitle.Text.Trim <> "" AndAlso _
              cmbAccessLevelDefault.SelectedValue <> "" Then
 
                 Dim sqlParams As SqlParameter() = { _
@@ -444,8 +418,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                                             New SqlParameter("@AreaCompanyWebSiteURL", Mid(Trim(txtAreaCompanyWebSiteURL.Text.Trim), 1, 512)), _
                                                             New SqlParameter("@AreaCompanyWebSiteTitle", Mid(Trim(txtAreaCompanyWebSiteTitle.Text.Trim), 1, 512)), _
                                                             New SqlParameter("@ModifiedBy", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)), _
-                                                            New SqlParameter("@AccessLevel_Default", CInt(cmbAccessLevelDefault.SelectedValue)) _
-                                                        }
+                                                            New SqlParameter("@AccessLevel_Default", CInt(cmbAccessLevelDefault.SelectedValue))}
 
                 Try
                     ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_UpdateServerGroup", CommandType.StoredProcedure, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection)
@@ -461,19 +434,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.Delete_ServersAccesslevelrelation
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to delete a Server Lveel relation.
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	10.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class Delete_ServersAccesslevelrelation
         Inherits Page
 
@@ -521,19 +484,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.Add_ServersAccesslevelrelation
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to create a Server Level relation.
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	15.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class Add_ServersAccesslevelrelation
         Inherits Page
 
@@ -602,19 +555,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.AddNewServer
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to add new server
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	16.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class AddNewServer
         Inherits Page
 
@@ -647,19 +590,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.UpdateServer
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to update a server
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	11.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class UpdateServer
         Inherits Page
 
@@ -832,8 +765,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Dim sqlParam As SqlParameter() = { _
                                                            New SqlParameter("@ScriptEngineID", srtEngineDetail.GetKey(i)), _
                                                            New SqlParameter("@ServerID", Request.QueryString("ID")), _
-                                                           New SqlParameter("@Enabled", srtEngineDetail.GetByIndex(i)) _
-                                                       }
+                                                           New SqlParameter("@Enabled", srtEngineDetail.GetByIndex(i))}
                         ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_SetScriptEngineActivation", CommandType.StoredProcedure, sqlParam, Automations.AutoOpenAndCloseAndDisposeConnection)
                     Next
 
@@ -843,8 +775,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                                    New SqlParameter("@ScriptEngineID", "0"), _
                                                    New SqlParameter("@ServerID", Request.QueryString("ID")), _
                                                    New SqlParameter("@Enabled", False), _
-                                                   New SqlParameter("@CheckMinimalActivations", True) _
-                                                 }
+                                                   New SqlParameter("@CheckMinimalActivations", True)}
 
                     Try
                         ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_SetScriptEngineActivation", CommandType.StoredProcedure, sqlParamsScript, Automations.AutoOpenAndCloseAndDisposeConnection)
@@ -853,7 +784,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         End If
                     Catch ex As Exception
                         If cammWebManager.System_DebugLevel >= 3 Then
-                            lblErrMsg.Text = "Server update failed! (" & ex.message & ex.stacktrace & ")"
+                            lblErrMsg.Text = "Server update failed! (" & ex.Message & ex.StackTrace & ")"
                         Else
                             lblErrMsg.Text = "Server update failed!"
                         End If
@@ -863,7 +794,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         lblErrMsg.Text = "IP / Host Header already exists"
                     End If
                 Catch ex As Exception
-                    lblErrMsg.Text = ex.message
+                    lblErrMsg.Text = ex.Message
                 End Try
             End If
         End Sub
@@ -885,19 +816,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.DeleteServer
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to delete server
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link] 16.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class DeleteServer
         Inherits Page
 
@@ -920,7 +841,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     lblErrMsg.Text = "Removing of server failed! "
                 End Try
             Else
-                Dim MyServerInfo As New CompuMaster.camm.webmanager.WMSystem.ServerInformation(CInt(Request.QueryString("ID")), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
+                Dim MyServerInfo As New CompuMaster.camm.WebManager.WMSystem.ServerInformation(CInt(Request.QueryString("ID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
                 Field_ServerIP = MyServerInfo.IPAddressOrHostHeader
                 Field_ServerDescription = MyServerInfo.Description
                 Field_ServerAddress = MyServerInfo.ServerURL

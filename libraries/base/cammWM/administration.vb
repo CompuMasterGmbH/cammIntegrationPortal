@@ -26,7 +26,7 @@ Namespace CompuMaster.camm.WebManager
         Sub RemoveGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer)
         Sub RemoveGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
         '<Obsolete("STRONGLY RECOMMENDED: Use AddGroupAuthorization with additional parameters")> _
-        Sub AddGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer)
+        '<Obsolete("STRONGLY RECOMMENDED: Use AddGroupAuthorization with additional parameters")> Sub AddGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer)
         Sub AddGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean)
 
         'Still implemented in WMSystem.UserInformation because of some difficult stuff/magic inside
@@ -43,7 +43,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>This action will be done immediately without the need for saving</remarks>
         Sub AddUserAuthorization(webmanager As WMSystem, dbConnection As IDbConnection, ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, userInfo As WMSystem.UserInformation, userID As Long, ByVal developerAuthorization As Boolean, isDenyRule As Boolean, modifyingUserID As Long, Optional ByVal notifications As Notifications.INotifications = Nothing)
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Set a user profile setting
         ''' </summary>
@@ -54,15 +53,8 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="value">The new value of the flag</param>
         ''' <param name="doNotLogSuccess">False will lead to an informational log entry in the database after the value has been saved; in case of True there won't be created a log entry</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	04.04.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Function SetUserDetail(ByVal webManager As IWebManager, ByVal dbConnection As IDbConnection, ByVal userID As Long, ByVal propertyName As String, ByVal value As String, Optional ByVal doNotLogSuccess As Boolean = False) As Boolean
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Reads a single user detail value from the database
         ''' </summary>
@@ -70,15 +62,8 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="userID">The user ID</param>
         ''' <param name="propertyName">The requested property name</param>
         ''' <returns>The resulting value as a String</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	15.08.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Function GetUserDetail(ByVal webManager As IWebManager, ByVal userID As Long, ByVal propertyName As String) As String
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get a string with all logon servers for a user 
         ''' </summary>
@@ -89,10 +74,6 @@ Namespace CompuMaster.camm.WebManager
         '''     If there is only 1 server group available, the returned string contains only the simply URL of the master server of this server group.
         '''     Are there 2 or more server groups available then each URL of the corresponding master server is followed by the server group title in parenthesis.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Function GetUserLogonServers(ByVal webManager As IWebManager, ByVal userID As Long) As String
 
         ''' <summary>
@@ -101,69 +82,36 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="FlagName"></param>
         ''' <param name="webmanager"></param>
         ''' <returns>All userIDs by additional flag</returns>
-        ''' <remarks></remarks>
-        ''' <history>
-        '''     [zeutzheim] 17.08.2009 Created
-        ''' </history>
         Function ListOfUsersByAdditionalFlag(ByVal FlagName As String, ByVal webmanager As IWebManager) As Long()
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Get the list of additional flags which are in use by at least one user profile
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
         ''' <returns>All flag names which are used in the user profiles</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	07.05.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Function ListOfAdditionalFlagsInUseByUserProfiles(ByVal webmanager As IWebManager) As String()
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Get the list of additional flags which are in use by at least one user profile
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
         ''' <returns>A hashlist with the flag name as key and the count of occurances as the value</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	07.05.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Function ListOfAdditionalFlagsInUseByUserProfilesWithCount(ByVal webmanager As IWebManager) As Hashtable
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Get the list of additional flags which are required by the security objects
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	07.05.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Function ListOfAddtionalFlagsRequiredBySecurityObjects(ByVal webmanager As IWebManager) As String()
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Get the list of additional flags which are not required by the security objects
         ''' </summary>
         ''' <param name="webmanager"></param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	09.07.2009	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Function ListOfAdditionalFlagsInUseByUserProfilesNotRequiredBySecurityObjects(ByVal webmanager As IWebManager) As String()
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Copy authorizations from one security object to another one (without creating duplicates if they already exist)
         ''' </summary>
@@ -173,15 +121,10 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Only missing authorizations will be copied to the destination security object.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	27.05.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub CopyAuthorizations(ByVal webmanager As IWebManager, ByVal sourceSecurityObjectID As Integer, ByVal destinationSecurityObjectID As Integer)
 
         Function SaveSecurityObject(webmanager As IWebManager, dbConnection As IDbConnection, securityObject As WMSystem.SecurityObjectInformation, modifyingUserID As Long) As Integer
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create an appropriate log entry for an external, not-yet-assigned user account
         ''' </summary>
@@ -189,55 +132,28 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="externalAccountSystemName">The name of an external account system, e. g. &quot;MS ADS&quot;</param>
         ''' <param name="fullUserLogonName">The full logon name, e. g. &quot;YOUR-COMPANY\billwilson&quot;</param>
         ''' <param name="fullUserName">The complete name of the user, e. g. &quot;Dr. Bill Wilson&quot;</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	12.09.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub AddMissingExternalAccountAssignment(ByVal webmanager As IWebManager, ByVal externalAccountSystemName As String, ByVal fullUserLogonName As String, ByVal fullUserName As String, ByVal emailAddress As String, ByVal errorDetails As String)
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Remove an existing log entry of an external account which is successfully assigned, now
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
         ''' <param name="externalAccountSystemName">The name of an external account system, e. g. &quot;MS ADS&quot;</param>
         ''' <param name="fullUserLogonName">The full logon name, e. g. &quot;YOUR-COMPANY\billwilson&quot;</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	12.09.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub RemoveMissingExternalAccountAssignment(ByVal webmanager As IWebManager, ByVal externalAccountSystemName As String, ByVal fullUserLogonName As String)
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Query a list of existing user IDs
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	23.10.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Function ActiveUsers(ByVal webmanager As IWebManager) As Long()
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Query a list of user IDs from existing plus deleted users
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
         ''' <returns>A hashtable containing the user ID as key field (Int64) and the status &quot;Deleted&quot; as a boolean value in the hashtable's value field (true indicates a deleted user)</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	23.10.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Function ActiveAndDeletedUsers(ByVal webmanager As IWebManager) As Hashtable
 
         Function QueryLastServiceExecutionDate(webmanager As IWebManager, dbConnection As IDbConnection) As Date
@@ -245,35 +161,15 @@ Namespace CompuMaster.camm.WebManager
 
     End Interface
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.DataLayer
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     ''' Provides access to the configured database layer (e. g. for MS SQL Server)
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[wezel]	27.05.2008	Created
-    '''     [wezel]	27.05.2008	Changed access modifier from Friend to Public because several other components (e.g. a webservice implementing interfaces to external systems) need direct access because of high performance requirements
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class DataLayer
 
         Private Shared _DataLayer As IDataLayer
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' The data layer which contains all sql commands which shall run against the required database engine
         ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	27.05.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Property Current() As IDataLayer
             Get
                 If _DataLayer Is Nothing Then
@@ -288,20 +184,9 @@ Namespace CompuMaster.camm.WebManager
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.DataLayerSqlClient
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     ''' A database layer for MS SQL Server
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[wezel]	27.05.2008	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Friend Class DataLayerSqlClient
         Implements IDataLayer
 
@@ -437,9 +322,9 @@ Namespace CompuMaster.camm.WebManager
             Else
                 InitOfAuthorizationsDone = userInfo.AccountAuthorizationsAlreadySet
             End If
-            If initOfAuthorizationsDone = False Then
+            If InitOfAuthorizationsDone = False Then
                 'send e-mail when first authorization has been set up 
-                initOfAuthorizationsDone = True 'save this value locally in this class instance
+                InitOfAuthorizationsDone = True 'save this value locally in this class instance
                 'Check wether InitAuthorizationsDone flag has been set
                 If DataLayer.Current.SetUserDetail(webmanager, Nothing, userID, "InitAuthorizationsDone", "1", True) Then
                     If userInfo Is Nothing Then userInfo = New WMSystem.UserInformation(userID, webmanager, False)
@@ -1081,7 +966,6 @@ Namespace CompuMaster.camm.WebManager
             CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create an appropriate log entry for an external, not-yet-assigned user account
         ''' </summary>
@@ -1089,12 +973,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="externalAccountSystemName">The name of an external account system, e. g. &quot;MS ADS&quot;</param>
         ''' <param name="fullUserLogonName">The full logon name, e. g. &quot;YOUR-COMPANY\billwilson&quot;</param>
         ''' <param name="fullUserName">The complete name of the user, e. g. &quot;Dr. Bill Wilson&quot;</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	12.09.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub AddMissingExternalAccountAssignment(ByVal webmanager As IWebManager, ByVal externalAccountSystemName As String, ByVal fullUserLogonName As String, ByVal fullUserName As String, ByVal emailAddress As String, ByVal errorDetails As String) Implements IDataLayer.AddMissingExternalAccountAssignment
             If Setup.DatabaseUtils.Version(webmanager, True).Build >= 162 Then
                 Dim MyCmd As New SqlClient.SqlCommand("LogMissingExternalUserAssignment", New SqlClient.SqlConnection(webmanager.ConnectionString))
@@ -1109,19 +987,12 @@ Namespace CompuMaster.camm.WebManager
             End If
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Remove an existing log entry of an external account which is successfully assigned, now
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
         ''' <param name="externalAccountSystemName">The name of an external account system, e. g. &quot;MS ADS&quot;</param>
         ''' <param name="fullUserLogonName">The full logon name, e. g. &quot;YOUR-COMPANY\billwilson&quot;</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	12.09.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub RemoveMissingExternalAccountAssignment(ByVal webmanager As IWebManager, ByVal externalAccountSystemName As String, ByVal fullUserLogonName As String) Implements IDataLayer.RemoveMissingExternalAccountAssignment
             If Setup.DatabaseUtils.Version(webmanager, True).Build >= 162 Then
                 Dim MyCmd As New SqlClient.SqlCommand("LogMissingExternalUserAssignment", New SqlClient.SqlConnection(webmanager.ConnectionString))
@@ -1136,19 +1007,11 @@ Namespace CompuMaster.camm.WebManager
             End If
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Query a list of existing user IDs
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	23.10.2008	Created
-        '''     [zeutzheim] 03.07.2009 Modified
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ActiveUsers(ByVal webmanager As IWebManager) As Long() Implements IDataLayer.ActiveUsers
             Const sql As String = "SELECT ID FROM Benutzer"
             Dim cmd As New SqlClient.SqlCommand(sql, New SqlClient.SqlConnection(webmanager.ConnectionString))
@@ -1165,27 +1028,16 @@ Namespace CompuMaster.camm.WebManager
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Query a list of user IDs from existing plus deleted users
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
         ''' <returns>A hashtable containing the user ID as key field (Int64) and the status &quot;Deleted&quot; as a boolean value in the hashtable's value field (true indicates a deleted user)</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	23.10.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ActiveAndDeletedUsers(ByVal webmanager As IWebManager) As Hashtable Implements IDataLayer.ActiveAndDeletedUsers
             Const sql As String = "SELECT IsNull(AllUsers.ID_User, Benutzer.ID) AS ID, CASE WHEN Benutzer.ID IS NULL THEN 1 ELSE 0 END AS Deleted FROM Benutzer full join (SELECT ID_User FROM Log_Users GROUP BY ID_User) as AllUsers on Benutzer.ID = AllUsers.ID_User"
             Dim cmd As New SqlClient.SqlCommand(sql, New SqlClient.SqlConnection(webmanager.ConnectionString))
             Return CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstTwoColumnsIntoHashtable(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
-
-        Public Sub AddGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer) Implements IDataLayer.AddGroupAuthorization
-            AddGroupAuthorization(webmanager, securityObjectID, groupID, serverGroupID, False, False)
-        End Sub
 
         Public Sub AddGroupAuthorization(ByVal webmanager As IWebManager, ByVal securityObjectID As Integer, ByVal groupID As Integer, ByVal serverGroupID As Integer, isDeveloperAuthorization As Boolean, isDenyRule As Boolean) Implements IDataLayer.AddGroupAuthorization
             If groupID = Nothing Then
@@ -1319,21 +1171,9 @@ Namespace CompuMaster.camm.WebManager
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.TestLayer
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Required for NUnit tests only to make requried methods accessable
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	15.08.2006	Created
-    '''     [zeutzheim]     02.07.2009  Modified
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Friend Class TestLayer
         Public Shared Function ActiveAndDeletedUsers(ByVal WebManager As IWebManager) As Hashtable
             Return CompuMaster.camm.WebManager.DataLayer.Current.ActiveAndDeletedUsers(WebManager)

@@ -133,8 +133,8 @@
                             </td>
                             <td valign="Top" width="240">
                                 <p>
-                                    <font face="Arial" size="2"><a target="_blank" href="http://www.camm.biz/redir/?R=31&Lang=<%= cammWebManager.UIMarket %>&G=<%= Server.URLEncode("SN=" & cammWebManager.System_Licence & "&Build=" & cammWebManager.System_Build & "&V=" & cammWebManager.System_Version & "&P=" & cammWebManager.System_ProductName & "&TCE=" & cammWebManager.TechnicalServiceEMailAccountAddress & "&TCN=" & cammWebManager.TechnicalServiceEMailAccountName & "&SCE=" & cammWebManager.StandardEMailAccountAddress) %>">
-                                        camm.biz</a></font></p>
+                                    <font face="Arial" size="2"><a target="_blank" href="https://www.camm.biz/redir/?R=31&PrefLang=<%= cammWebManager.UIMarket %>&SN=<%= Server.URLEncode(cammWebManager.System_Licence) %>&Build=<%= cammWebManager.System_Build %>&V=<%= cammWebManager.System_Version %>">
+                                        camm.biz</a> <asp:Literal runat="server" id="ltrlUpdateHint"/></font></p>
                             </td>
                         </tr>
                         <tr>
@@ -144,7 +144,7 @@
                             </td>
                             <td valign="Top" width="240">
                                 <p>
-                                    <font face="Arial" size="2"><a target="_blank" href="http://www.camm.biz/redir/?R=32&Lang=<%= cammWebManager.UIMarket %>&G=<%= Server.URLEncode("SN=" & cammWebManager.System_Licence & "&Build=" & cammWebManager.System_Build & "&V=" & cammWebManager.System_Version & "&P=" & cammWebManager.System_ProductName & "&TCE=" & cammWebManager.TechnicalServiceEMailAccountAddress & "&TCN=" & cammWebManager.TechnicalServiceEMailAccountName & "&SCE=" & cammWebManager.StandardEMailAccountAddress) %>">
+                                    <font face="Arial" size="2"><a target="_blank" href="https://www.camm.biz/redir/?R=32&PrefLang=<%= cammWebManager.UIMarket %>&SN=<%= Server.URLEncode(cammWebManager.System_Licence) %>&Build=<%= cammWebManager.System_Build %>&V=<%= cammWebManager.System_Version %>">
                                         camm.biz</a></font></p>
                             </td>
                         </tr>
@@ -298,7 +298,7 @@
                             </td>
                             <td valign="Top" width="240">
                                 <p>
-                                    <font face="Arial" size="2"><%= [Enum].GetName(Me.instanceValidationData.LicenceData.Model.GetType(), Me.instanceValidationData.LicenceData.Model) %></font></p>
+                                    <font face="Arial" size="2"><asp:Literal runat="server" id="ltrlLicenceModel"/></font></p>
                             </td>
 						</tr>
 						
@@ -309,13 +309,13 @@
                             </td>
                             <td valign="Top" width="240">
                                 <p>
-                                    <font face="Arial" size="2"><%= [Enum].GetName(Me.instanceValidationData.LicenceData.Type.GetType(), Me.instanceValidationData.LicenceData.Type) %></font></p>
+                                    <font face="Arial" size="2"><asp:Literal runat="server" id="ltrlLicenceType"/></font></p>
                             </td>
 						</tr>
 						<tr>
 							 <td valign="Top" width="160">
                                 <p>
-                                    <font face="Arial" size="2">Licence expiration date</font></p>
+                                    <font face="Arial" size="2">Licence expiration date (UTC)</font></p>
                             </td>
                             <td valign="Top" width="240">
                                 <p>
@@ -327,7 +327,7 @@
 						<tr>
 							 <td valign="Top" width="160">
                                 <p>
-                                    <font face="Arial" size="2">Support and Maintenance contract expiration date</font></p>
+                                    <font face="Arial" size="2">Support and maintenance contract expiration date (UTC)</font></p>
                             </td>
                             <td valign="Top" width="240">
                                 <p>
@@ -338,7 +338,7 @@
 						<tr>
 							 <td valign="Top" width="160">
                                 <p>
-                                    <font face="Arial" size="2">Update Contract Expiration Date</font></p>
+                                    <font face="Arial" size="2">Update contract expiration date (UTC)</font></p>
                             </td>
                             <td valign="Top" width="240">
                                 <p>

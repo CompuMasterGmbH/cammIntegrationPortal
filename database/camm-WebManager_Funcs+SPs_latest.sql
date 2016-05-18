@@ -927,7 +927,6 @@ GO
 IF  EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[AdminPrivate_DeleteMemberships]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[AdminPrivate_DeleteMemberships]
 GO
-
 ----------------------------------------------------
 -- dbo.AdminPrivate_DeleteMemberships
 ----------------------------------------------------
@@ -1101,14 +1100,16 @@ DECLARE @ID_MasterServer int
 DECLARE @ID_Group_Public int
 DECLARE @ID_Group_Anonymous int
 DECLARE @Group_Public_Name nvarchar(255)
+DECLARE @Group_Anonymous_Name nvarchar(255)
 
 SET NOCOUNT ON
 
 SELECT @Group_Public_Name = 'Public ' + SubString(@GroupName, 1, 245)
+SELECT @Group_Anonymous_Name = 'Anonymous ' + SubString(@GroupName, 1, 242)
 SELECT @ID_AdminServer = (SELECT TOP 1 UserAdminServer FROM System_ServerGroups)
 SELECT @ID_ServerGroup = (SELECT ID FROM System_ServerGroups WHERE ServerGroup = @GroupName)
 SELECT @ID_Group_Public = (SELECT ID FROM Gruppen WHERE Name = @Group_Public_Name)
-SELECT @ID_Group_Anonymous = (SELECT ID FROM Gruppen WHERE Name = 'Anonymous')
+SELECT @ID_Group_Anonymous = (SELECT ID FROM Gruppen WHERE Name = @Group_Anonymous_Name)
 SELECT @ID_MasterServer = (SELECT TOP 1 ID FROM System_Servers WHERE IP = 'secured.yourcompany.com')
 
 -- Erstellbarkeit gewährleisten
@@ -1118,14 +1119,13 @@ IF @ID_ServerGroup Is Not Null
 		RETURN	
 	END	
 IF @ID_Group_Public Is Not Null
- 
 	BEGIN
 		RAISERROR ('The server group cannot be created because the public group already exists.', 16, 2)
 		RETURN	
 	END	
-IF @ID_Group_Anonymous Is Null 
+IF @ID_Group_Anonymous Is Not Null
 	BEGIN
-		RAISERROR ('Anonymous user cannot be found. There might be a misconfiguration.', 16, 3)
+		RAISERROR ('The server group cannot be created because the anonymous group already exists.', 16, 2)
 		RETURN	
 	END	
 IF @ID_MasterServer Is Not Null 
@@ -1136,7 +1136,7 @@ IF @ID_MasterServer Is Not Null
 
 BEGIN TRANSACTION
 
-SELECT @ID_Group_Public = Null, @ID_MasterServer = Null, @ID_ServerGroup = Null
+SELECT @ID_Group_Anonymous = Null, @ID_Group_Public = Null, @ID_MasterServer = Null, @ID_ServerGroup = Null
 
 -- Public Group anlegen
 INSERT INTO dbo.Gruppen
@@ -1145,9 +1145,18 @@ SELECT     @Group_Public_Name AS Name, 'System group: all users logged on' AS Se
                       1 AS SystemGroup, GETDATE() AS ModifiedOn, @UserID_Creator AS ModifiedBy
 SELECT @ID_Group_Public = SCOPE_IDENTITY()
 
+-- Anonymous Group anlegen
+INSERT INTO dbo.Gruppen
+                      (Name, Description, ReleasedOn, ReleasedBy, SystemGroup, ModifiedOn, ModifiedBy)
+SELECT     @Group_Anonymous_Name AS Name, 'System group: all anonymous users (without being logged on)' AS ServerDescription, GETDATE() AS ReleasedOn, @UserID_Creator AS ReleasedBy, 
+                      1 AS SystemGroup, GETDATE() AS ModifiedOn, @UserID_Creator AS ModifiedBy
+SELECT @ID_Group_Anonymous = SCOPE_IDENTITY()
+
 -- Public Group Security Adjustments
 INSERT INTO [dbo].[System_SubSecurityAdjustments] (UserID, TableName, TablePrimaryIDValue, AuthorizationType)
 VALUES (@UserID_Creator, 'Groups', @ID_Group_Public, 'Owner')
+INSERT INTO [dbo].[System_SubSecurityAdjustments] (UserID, TableName, TablePrimaryIDValue, AuthorizationType)
+VALUES (@UserID_Creator, 'Groups', @ID_Group_Anonymous, 'Owner')
 
 -- Neuen Server anlegen, welcher als MasterServer fungieren soll
 INSERT INTO dbo.System_Servers
@@ -1175,10 +1184,9 @@ SELECT @ID_ServerGroup = SCOPE_IDENTITY()
 -- Master Server in die ServerGroup aufnehmen
 UPDATE dbo.System_Servers SET ServerGroup = @ID_ServerGroup WHERE ID = @ID_MasterServer
 
-IF @ID_Group_Public Is Null OR @ID_MasterServer Is Null OR @ID_ServerGroup Is Null
+IF @ID_Group_Anonymous Is Null OR @ID_Group_Public Is Null OR @ID_MasterServer Is Null OR @ID_ServerGroup Is Null
 	ROLLBACK TRANSACTION
 ELSE
-
 	COMMIT TRANSACTION
 
 -- Create master server navigation
@@ -1225,18 +1233,21 @@ WITH ENCRYPTION
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
-DECLARE @LocationID int
+DECLARE @ServerGroupID int
+DECLARE @ServerID int
 DECLARE @WebAppID int
 
 ----------------------------------
 -- ServerGroup bestimmen --
 ----------------------------------
-SELECT   @LocationID = dbo.System_ServerGroups.ID FROM         dbo.System_Servers INNER JOIN
-                      dbo.System_ServerGroups ON dbo.System_Servers.ServerGroup = dbo.System_ServerGroups.ID
+SELECT   @ServerGroupID = dbo.System_ServerGroups.ID,
+	@ServerID = dbo.System_Servers.ID
+FROM         dbo.System_Servers 
+	INNER JOIN dbo.System_ServerGroups ON dbo.System_Servers.ServerGroup = dbo.System_ServerGroups.ID
 WHERE     (dbo.System_Servers.IP = @ServerIP)
-IF @LocationID Is Null 
-	SELECT @LocationID = 0
-If @LocationID = 0
+IF @ServerGroupID Is Null 
+	SELECT @ServerGroupID = 0
+If @ServerGroupID = 0
 	-- Nicht authentifizierter Zugang über den aktuell gewählten Server
 	BEGIN
 		-- Rückgabewert setzen
@@ -1249,7 +1260,7 @@ If @LocationID = 0
 ----------------------------------------------------------------
 -- WebAppID ermitteln für ordentliche Protokollierung --
 ----------------------------------------------------------------
-SELECT @WebAppID = (select top 1 ID from Applications where ((Applications.Title = @WebApplication) AND (Applications.LocationID = @LocationID)))
+SELECT @WebAppID = (select top 1 ID from Applications where ((Applications.Title = @WebApplication) AND (Applications.LocationID = @ServerID)))
 
 
 -- Wertzuweisungen Benutzereigenschaften --> lokale Variablen
@@ -1360,13 +1371,27 @@ AS
 
 -- The corresponding public user group will be DELETED. And its items in the security admjustments table, too.
 DELETE [dbo].[System_SubSecurityAdjustments]
-FROM System_ServerGroups INNER JOIN [dbo].[System_SubSecurityAdjustments]
-	ON System_ServerGroups.ID_Group_Public = [dbo].[System_SubSecurityAdjustments].TablePrimaryIDValue
-		AND [dbo].[System_SubSecurityAdjustments].TableName='Groups'
+FROM System_ServerGroups 
+	INNER JOIN [dbo].[System_SubSecurityAdjustments]
+		ON System_ServerGroups.ID_Group_Public = [dbo].[System_SubSecurityAdjustments].TablePrimaryIDValue
+			AND [dbo].[System_SubSecurityAdjustments].TableName='Groups'
 WHERE System_ServerGroups.ID = @ID_ServerGroup
 DELETE Gruppen 
-FROM System_ServerGroups INNER JOIN Gruppen ON System_ServerGroups.ID_Group_Public = Gruppen.ID 
+FROM System_ServerGroups 
+	INNER JOIN Gruppen ON System_ServerGroups.ID_Group_Public = Gruppen.ID 
 WHERE System_ServerGroups.ID = @ID_ServerGroup
+
+-- The corresponding public user group will be DELETED. And its items in the security admjustments table, too.
+DELETE [dbo].[System_SubSecurityAdjustments]
+FROM System_ServerGroups 
+	INNER JOIN [dbo].[System_SubSecurityAdjustments]
+		ON System_ServerGroups.ID_Group_Anonymous = [dbo].[System_SubSecurityAdjustments].TablePrimaryIDValue
+			AND [dbo].[System_SubSecurityAdjustments].TableName='Groups'
+WHERE System_ServerGroups.ID = @ID_ServerGroup AND System_ServerGroups.ID_Group_Anonymous <> 58 -- never remove the ID 58 group, here, because it might still be used by another server group)
+DELETE Gruppen 
+FROM System_ServerGroups 
+	INNER JOIN Gruppen ON System_ServerGroups.ID_Group_Anonymous = Gruppen.ID 
+WHERE System_ServerGroups.ID = @ID_ServerGroup AND Gruppen.ID <> 58 -- never remove the ID 58 group, here, because it might still be used by another server group)
 
 -- Relations between access levels and the server group will be DELETED. 
 DELETE 
@@ -1375,37 +1400,72 @@ WHERE ID_ServerGroup = @ID_ServerGroup
 
 -- Script engines of connected servers will be UNREGISTERED. 
 DELETE System_WebAreaScriptEnginesAuthorization
-FROM (System_ServerGroups INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup) INNER JOIN System_WebAreaScriptEnginesAuthorization ON System_Servers.ID = System_WebAreaScriptEnginesAuthorization.Server
+FROM System_ServerGroups 
+	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup 
+	INNER JOIN System_WebAreaScriptEnginesAuthorization ON System_Servers.ID = System_WebAreaScriptEnginesAuthorization.Server
 WHERE System_ServerGroups.ID = @ID_ServerGroup
 
 -- Related logs will be DELETED permanently. 
 DELETE Log
-FROM (System_ServerGroups INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup) INNER JOIN Log ON System_Servers.IP = Log.ServerIP
+FROM System_ServerGroups 
+	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup 
+	INNER JOIN Log ON System_Servers.IP = Log.ServerIP
 WHERE System_ServerGroups.ID = @ID_ServerGroup
 DELETE System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes
-FROM (System_ServerGroups INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup) INNER JOIN System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes ON System_Servers.ID = System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes.Server
+FROM System_ServerGroups 
+	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup 
+	INNER JOIN System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes ON System_Servers.ID = System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes.Server
 WHERE System_ServerGroups.ID = @ID_ServerGroup
 
 -- Related applications and their authorizations will be DELETED permanently.
+-- new relation structure: all auths related to this server group (apps remain untouched)
 DELETE ApplicationsRightsByGroup
-FROM ((System_ServerGroups INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup) INNER JOIN Applications_CurrentAndInactiveOnes ON System_Servers.
-ID = Applications_CurrentAndInactiveOnes.LocationID) INNER JOIN ApplicationsRightsByGroup ON Applications_CurrentAndInactiveOnes.ID = ApplicationsRightsByGroup.ID_Application
+WHERE ID_GroupOrPerson IN 
+	(
+		SELECT ID_Group_Public 
+		FROM System_ServerGroups 
+		WHERE System_ServerGroups.ID = @ID_ServerGroup
+	)
+DELETE ApplicationsRightsByGroup
+WHERE ID_GroupOrPerson IN 
+	(
+		SELECT ID_Group_Anonymous 
+		FROM System_ServerGroups 
+		WHERE System_ServerGroups.ID = @ID_ServerGroup 
+			AND ID_Group_Anonymous <> 58 -- never remove the ID 58 group, here, because it might still be used by another server group)
+	) 
+DELETE ApplicationsRightsByGroup
+WHERE ID_ServerGroup = @ID_ServerGroup
+-- old relation structure (apps+their auths)
+DELETE ApplicationsRightsByGroup
+FROM System_ServerGroups 
+	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup
+	INNER JOIN Applications_CurrentAndInactiveOnes ON System_Servers.ID = Applications_CurrentAndInactiveOnes.LocationID
+	INNER JOIN ApplicationsRightsByGroup ON Applications_CurrentAndInactiveOnes.ID = ApplicationsRightsByGroup.ID_Application
 WHERE System_ServerGroups.ID = @ID_ServerGroup
 DELETE ApplicationsRightsByUser
-FROM ((System_ServerGroups INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup) INNER JOIN Applications_CurrentAndInactiveOnes ON System_Servers.ID = Applications_CurrentAndInactiveOnes.LocationID) INNER JOIN ApplicationsRightsByUser ON Applications_CurrentAndInactiveOnes.ID = ApplicationsRightsByUser.ID_Application
+FROM System_ServerGroups 
+	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup
+	INNER JOIN Applications_CurrentAndInactiveOnes ON System_Servers.ID = Applications_CurrentAndInactiveOnes.LocationID
+	INNER JOIN ApplicationsRightsByUser ON Applications_CurrentAndInactiveOnes.ID = ApplicationsRightsByUser.ID_Application
 WHERE System_ServerGroups.ID = @ID_ServerGroup
 DELETE Applications_CurrentAndInactiveOnes
-FROM (System_ServerGroups INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup) INNER JOIN Applications_CurrentAndInactiveOnes ON System_Servers.ID = Applications_CurrentAndInactiveOnes.LocationID
+FROM System_ServerGroups 
+	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup 
+	INNER JOIN Applications_CurrentAndInactiveOnes ON System_Servers.ID = Applications_CurrentAndInactiveOnes.LocationID
 WHERE System_ServerGroups.ID = @ID_ServerGroup
 
 -- All currently connected servers will be DELETED permanently. 
 DELETE System_Servers
-FROM System_ServerGroups INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup
+FROM System_ServerGroups 
+	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup
 WHERE System_ServerGroups.ID = @ID_ServerGroup
 
 -- Script engine relations must be erased as well
 DELETE System_WebAreaScriptEnginesAuthorization
-FROM (System_ServerGroups INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup) INNER JOIN System_WebAreaScriptEnginesAuthorization ON System_Servers.ID = System_WebAreaScriptEnginesAuthorization.Server
+FROM System_ServerGroups 
+	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup 
+	INNER JOIN System_WebAreaScriptEnginesAuthorization ON System_Servers.ID = System_WebAreaScriptEnginesAuthorization.Server
 WHERE System_ServerGroups.ID = @ID_ServerGroup
 
 -- WebEditor/WCMS content must be purged
@@ -2007,7 +2067,7 @@ If @GroupID Is Not Null
 		-- log indirect changes on users
 		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription, ServerGroupID) 
 		select id_user, GetDate(), '0.0.0.0', '0.0.0.0', @AppID, -7, Null, NULL
-		from view_Memberships_CummulatedWithAnonymous
+		from [dbo].[view_Memberships_Effective_wo_PublicNAnonymous] -- no logging of users being member of groups public or anonymous (would be too much data to write to log and is typically not required for audits)
 		where id_group = @GroupID
 		-- log group auth change
 		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription, ServerGroupID) 
@@ -2093,14 +2153,49 @@ from System_SubSecurityAdjustments
 where 
 	(
 		(
-			(UserID=@AdminUserID and TableName='Applications' and AuthorizationType='Owner' and TablePrimaryIDValue = @SecurityObjectID)
-			OR (UserID=@AdminUserID and TableName='Applications' and AuthorizationType=@AuthorizationType and TablePrimaryIDValue = @SecurityObjectID)
-			OR (UserID=@AdminUserID and TableName='Applications' and AuthorizationType='SecurityMaster' and TablePrimaryIDValue = 0)
+			(
+                    UserID=@AdminUserID 
+                    and TableName='Applications' 
+                    and AuthorizationType='Owner' 
+                    and TablePrimaryIDValue = @SecurityObjectID
+            )
+			OR 
+			(
+			        UserID=@AdminUserID 
+			        and TableName='Applications' 
+			        and AuthorizationType=@AuthorizationType 
+			        and TablePrimaryIDValue = @SecurityObjectID
+			)
+			OR 
+			(
+			        UserID=@AdminUserID 
+			        and TableName='Applications' 
+			        and AuthorizationType='SecurityMaster' 
+			        and TablePrimaryIDValue = 0
+			)
 		)
-		AND @AdminUserID IN (SELECT ID FROM Benutzer WHERE ID = @AdminUserID AND LoginDisabled = 0) -- user must still be valid
-		AND @AdminUserID IN (SELECT ID_User FROM Memberships WHERE ID_Group = 7 AND ID_User = @AdminUserID) -- user must still be security admin
+		AND @AdminUserID IN 
+		(
+		        SELECT ID 
+		        FROM Benutzer 
+		        WHERE ID = @AdminUserID 
+		            AND LoginDisabled = 0
+		) -- user must still be valid
+		AND @AdminUserID IN 
+		(
+		        SELECT ID_User 
+		        FROM view_Memberships_Effective_wo_PublicNAnonymous 
+		        WHERE ID_Group = 7 
+		            AND ID_User = @AdminUserID
+		) -- user must still be security admin
 	)
-	OR @AdminUserID IN (SELECT ID_User FROM Memberships WHERE ID_Group = 6 AND ID_User = @AdminUserID) -- ALTERNATIVELY user must be a supervisor
+	OR @AdminUserID IN 
+        (
+            SELECT ID_User 
+            FROM view_Memberships_Effective_wo_PublicNAnonymous 
+            WHERE ID_Group = 6 
+                AND ID_User = @AdminUserID
+        ) -- ALTERNATIVELY user must be a supervisor
 IF @Result IS NULL 
 	RETURN 0
 ELSE
@@ -2132,9 +2227,9 @@ where
 			OR (UserID=@AdminUserID and TableName='Groups' and AuthorizationType='SecurityMaster' and TablePrimaryIDValue = 0)
 		)
 		AND @AdminUserID IN (SELECT ID FROM Benutzer WHERE ID = @AdminUserID AND LoginDisabled = 0) -- user must still be valid
-		AND @AdminUserID IN (SELECT ID_User FROM Memberships WHERE ID_Group = 7 AND ID_User = @AdminUserID) -- user must still be security admin
+		AND @AdminUserID IN (SELECT ID_User FROM view_Memberships_Effective_wo_PublicNAnonymous WHERE ID_Group = 7 AND ID_User = @AdminUserID) -- user must still be security admin
 	)
-	OR @AdminUserID IN (SELECT ID_User FROM Memberships WHERE ID_Group = 6 AND ID_User = @AdminUserID) -- ALTERNATIVELY user must be a supervisor
+	OR @AdminUserID IN (SELECT ID_User FROM view_Memberships_Effective_wo_PublicNAnonymous WHERE ID_Group = 6 AND ID_User = @AdminUserID) -- ALTERNATIVELY user must be a supervisor
 IF @Result IS NULL 
 	RETURN 0
 ELSE
@@ -2237,7 +2332,7 @@ WITH ENCRYPTION
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
-DECLARE @LocationID int
+DECLARE @ServerGroupID int
 DECLARE @CurUserStatus_InternalSessionID int
 
 -- Wertzuweisungen Benutzereigenschaften --> lokale Variablen
@@ -2246,12 +2341,12 @@ SET @CurUserID = (select ID from dbo.Benutzer where LoginName = @Username)
 ----------------------------------
 -- ServerGroup bestimmen --
 ----------------------------------
-SELECT   @LocationID = dbo.System_Servers.ServerGroup
+SELECT   @ServerGroupID = dbo.System_Servers.ServerGroup
 FROM         dbo.System_Servers
 WHERE     (dbo.System_Servers.IP = @ServerIP)
-IF @LocationID Is Null 
-	SELECT @LocationID = 0
-If @LocationID = 0
+IF @ServerGroupID Is Null 
+	SELECT @ServerGroupID = 0
+If @ServerGroupID = 0
 
 	-- Nicht authentifizierter Zugang über den aktuell gewählten Server
 	BEGIN
@@ -2283,7 +2378,7 @@ If @CurUserID Is Null
 		                      dbo.System_WebAreaScriptEnginesAuthorization.ScriptEngine, @CurUserStatus_InternalSessionID AS InternalSessionID, cast(rand() * 1000000000 as int) AS RandomGUID
 		FROM         dbo.System_Servers INNER JOIN
 		                      dbo.System_WebAreaScriptEnginesAuthorization ON dbo.System_Servers.ID = dbo.System_WebAreaScriptEnginesAuthorization.Server
-		WHERE     (dbo.System_Servers.Enabled <> 0) AND (dbo.System_Servers.ServerGroup = @LocationID)
+		WHERE     (dbo.System_Servers.Enabled <> 0) AND (dbo.System_Servers.ServerGroup = @ServerGroupID)
 		SET NOCOUNT OFF
 		-- Logging
 		SET NOCOUNT ON
@@ -2337,17 +2432,17 @@ AS
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
-DECLARE @LocationID int
+DECLARE @ServerGroupID int
 ----------------------------------
 -- ServerGroup bestimmen --
 ----------------------------------
-SELECT   @LocationID = dbo.System_Servers.ServerGroup
+SELECT   @ServerGroupID = dbo.System_Servers.ServerGroup
 
 FROM         dbo.System_Servers
 WHERE     (dbo.System_Servers.IP = @ServerIP)
-IF @LocationID Is Null 
-	SELECT @LocationID = 0
-If @LocationID = 0
+IF @ServerGroupID Is Null 
+	SELECT @ServerGroupID = 0
+If @ServerGroupID = 0
 	-- Nicht authentifizierter Zugang über den aktuell gewählten Server
 	BEGIN
 		-- Abbruch
@@ -2364,7 +2459,7 @@ SELECT     NULL AS ID, NULL AS SessionID, System_Servers.IP, System_Servers.Serv
 FROM         System_Servers INNER JOIN
                       System_WebAreaScriptEnginesAuthorization ON System_Servers.ID = System_WebAreaScriptEnginesAuthorization.Server INNER JOIN
                       System_ScriptEngines ON System_WebAreaScriptEnginesAuthorization.ScriptEngine = System_ScriptEngines.ID
-WHERE     (System_Servers.Enabled <> 0) AND (System_Servers.ServerGroup = @LocationID) AND (System_Servers.ID > 0)
+WHERE     (System_Servers.Enabled <> 0) AND (System_Servers.ServerGroup = @ServerGroupID) AND (System_Servers.ID > 0)
 ORDER BY System_WebAreaScriptEnginesAuthorization.ID, System_Servers.ID, System_ScriptEngines.ID
 GO
 
@@ -2373,14 +2468,16 @@ GO
 ----------------------------------------------------
 ALTER Procedure dbo.Public_GetEMailAddressesOfAllSecurityAdmins
 WITH ENCRYPTION
-As
--- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
-SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+AS
 
-	SELECT Benutzer.[E-MAIL], Benutzer.ID FROM dbo.Memberships LEFT OUTER JOIN dbo.Benutzer ON dbo.Memberships.ID_User = dbo.Benutzer.ID WHERE (dbo.Memberships.ID_Group = 7)
-	return 
+SELECT Benutzer.[E-MAIL], Benutzer.ID 
+FROM dbo.view_Memberships_Effective_with_PublicNAnonymous 
+	LEFT OUTER JOIN dbo.Benutzer 
+		ON dbo.view_Memberships_Effective_with_PublicNAnonymous.ID_User = dbo.Benutzer.ID
+WHERE dbo.view_Memberships_Effective_with_PublicNAnonymous.ID_Group = 7
+GROUP BY Benutzer.[E-MAIL], Benutzer.ID
 
-
+return 
 
 GO
 
@@ -2446,24 +2543,12 @@ As
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
-DECLARE @IsSecurityAdmin bit
-DECLARE @AllowedLocation int
-DECLARE @buffer int
+DECLARE @ServerGroupID int
+DECLARE @AlternativeLanguage int
 DECLARE @PublicGroupID int
 DECLARE @AnonymousGroupID int
-DECLARE @AlternativeLanguage int
 
 SET NoCount ON
-
--- for example: LanguageID = 512 --> also search for the alternative language with ID 2
-If @SearchForAlternativeLanguages = 1
-	SELECT @AlternativeLanguage = AlternativeLanguage
-	FROM System_Languages
-	WHERE ID = @LanguageID
-Else
-	SELECT @AlternativeLanguage = @LanguageID
-If @AlternativeLanguage IS NULL
-	SELECT @AlternativeLanguage = @LanguageID
 
 -- Überprüfung auf Vollständigkeit übergebener Parameter, die sonst nicht mehr weiter geprüft werden
 If (IsNull(@ServerIP,'') = '')
@@ -2472,68 +2557,175 @@ If (IsNull(@ServerIP,'') = '')
 		Return
 	END
 
--- Application des Internet-Server
-SELECT   @AllowedLocation = dbo.System_Servers.ServerGroup, @PublicGroupID = dbo.System_ServerGroups.ID_Group_Public, @AnonymousGroupID = dbo.System_ServerGroups.ID_Group_Anonymous
-FROM         dbo.System_Servers INNER JOIN
-                      dbo.System_ServerGroups ON dbo.System_Servers.ServerGroup = dbo.System_ServerGroups.ID
-WHERE     (dbo.System_Servers.IP = @ServerIP)
-IF @AllowedLocation Is Null 
+-- for example: LanguageID = 512 --> also search for the alternative language with ID 2
+If @SearchForAlternativeLanguages = 1
+	SELECT @AlternativeLanguage = AlternativeLanguage
+		FROM System_Languages WITH (NOLOCK)
+		WHERE ID = @LanguageID
+Else
+	SELECT @AlternativeLanguage = @LanguageID
+If @AlternativeLanguage IS NULL
+	SELECT @AlternativeLanguage = @LanguageID
+
+-- Lookup ServerGroupID of given serverIP
+SELECT @ServerGroupID = dbo.System_Servers.ServerGroup, 
+	@PublicGroupID = dbo.System_ServerGroups.ID_Group_Public,
+	@AnonymousGroupID = dbo.System_ServerGroups.ID_Group_Anonymous
+FROM dbo.System_Servers WITH (NOLOCK) 
+	INNER JOIN dbo.System_ServerGroups WITH (NOLOCK) 
+		ON dbo.System_Servers.ServerGroup = dbo.System_ServerGroups.ID
+WHERE dbo.System_Servers.IP = @ServerIP
+IF @ServerGroupID Is Null 
 	Return
 
+IF @AnonymousAccess <> 0
+	SELECT @GroupID = NULL, @PublicGroupID = NULL; 
+
 --ResetIsNewUpdatedStatusOn
-UPDATE dbo.Applications_CurrentAndInactiveOnes SET IsNew = 0, IsUpdated = 0, ResetIsNewUpdatedStatusOn = Null WHERE (ResetIsNewUpdatedStatusOn < GETDATE())
+UPDATE dbo.Applications_CurrentAndInactiveOnes 
+SET IsNew = 0, IsUpdated = 0, ResetIsNewUpdatedStatusOn = Null 
+WHERE ResetIsNewUpdatedStatusOn < GETDATE()
 
 -- Recordset zurückgeben	
+		-- All NavItem Titles where the group is authorized for AND where it is marked as IsUpdated/IsNew
 		CREATE TABLE #NavUpdatedItems_Filtered (Level1Title nvarchar(255), Level2Title nvarchar(255), Level3Title nvarchar(255), Level4Title nvarchar(255), Level5Title nvarchar(255), Level6Title nvarchar(255));
 		INSERT INTO #NavUpdatedItems_Filtered (Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title)
-		SELECT distinct Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title
-			FROM dbo.view_ApplicationRights LEFT OUTER JOIN dbo.Memberships ON dbo.view_ApplicationRights.ID_Group = dbo.Memberships.ID_Group LEFT JOIN dbo.System_Servers ON dbo.view_ApplicationRights.LocationID = dbo.System_Servers.ID
-			WHERE (dbo.System_Servers.ServerGroup = @AllowedLocation And ((dbo.view_ApplicationRights.ID_Group = @GroupID) OR (dbo.Memberships.ID_Group = @GroupID) OR (dbo.view_ApplicationRights.ID_Group = @PublicGroupID) OR (dbo.view_ApplicationRights.ID_Group = @AnonymousGroupID)))  And dbo.view_ApplicationRights.LanguageID in (@LanguageID, @AlternativeLanguage) And (dbo.view_ApplicationRights.AppDisabled = 0 Or dbo.view_ApplicationRights.DevelopmentTeamMember = 1) 
-				AND dbo.view_ApplicationRights.Title <> 'System - Login'
-				AND (IsUpdated <> 0 OR IsNew <> 0)
+		SELECT Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title
+		FROM dbo.Applications 
+			INNER JOIN dbo.System_Servers 
+				ON dbo.Applications.LocationID = dbo.System_Servers.ID
+		WHERE 
+			dbo.Applications.ID IN 
+				(
+					SELECT ID_SecurityObject
+					FROM dbo.ApplicationsRightsByGroup_EffectiveCumulative
+					WHERE ID_ServerGroup = @ServerGroupID 
+						AND ID_Group IN (@GroupID, @PublicGroupID, @AnonymousGroupID) 
+				)	
+			AND dbo.System_Servers.ServerGroup = @ServerGroupID
+			AND LanguageID in (@LanguageID, @AlternativeLanguage)  
+			AND (IsUpdated <> 0 OR IsNew <> 0)
+		GROUP BY Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title
 
 		SET NoCount OFF
 
-		IF @AnonymousAccess = 0
-			SELECT DISTINCT dbo.view_ApplicationRights.Level1Title, dbo.view_ApplicationRights.Level2Title, dbo.view_ApplicationRights.Level3Title, dbo.view_ApplicationRights.Level4Title, dbo.view_ApplicationRights.Level5Title, dbo.view_ApplicationRights.Level6Title, 
-				dbo.view_ApplicationRights.Level1TitleIsHTMLCoded, dbo.view_ApplicationRights.Level2TitleIsHTMLCoded, dbo.view_ApplicationRights.Level3TitleIsHTMLCoded, dbo.view_ApplicationRights.Level4TitleIsHTMLCoded, dbo.view_ApplicationRights.Level5TitleIsHTMLCoded, dbo.view_ApplicationRights.Level6TitleIsHTMLCoded, 
-				dbo.view_ApplicationRights.NavURL, dbo.view_ApplicationRights.NavFrame, dbo.view_ApplicationRights.IsNew, dbo.view_ApplicationRights.IsUpdated, dbo.view_ApplicationRights.NavToolTipText, dbo.view_ApplicationRights.Sort, 
-				dbo.view_ApplicationRights.AppDisabled, dbo.view_ApplicationRights.OnMouseOver, dbo.view_ApplicationRights.OnMouseOut, dbo.view_ApplicationRights.OnClick, dbo.view_ApplicationRights.AddLanguageID2URL
-				, Case When dbo.view_ApplicationRights.Level1Title Is Null Then 0 Else 1 End As Level1TitleIsPresent, Case When dbo.view_ApplicationRights.Level2Title Is Null Then 0 Else 1 End As Level2TitleIsPresent, Case When dbo.view_ApplicationRights.Level3Title Is Null Then 0 Else 1 End As Level3TitleIsPresent, Case When dbo.view_ApplicationRights.Level4Title Is Null Then 0 Else 1 End As Level4TitleIsPresent, Case When dbo.view_ApplicationRights.Level5Title Is Null Then 0 Else 1 End As Level5TitleIsPresent, Case When dbo.view_ApplicationRights.Level6Title Is Null Then 0 Else 1 End As Level6TitleIsPresent
-, case when (select top 1 Level1Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level1Title = dbo.view_applicationrights.Level1Title) is null then 0 else 1 end as Level1IsUpdated
-, case when (select top 1 Level2Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level2Title = dbo.view_applicationrights.Level2Title) is null then 0 else 1 end as Level2IsUpdated
-, case when (select top 1 Level3Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level3Title = dbo.view_applicationrights.Level3Title) is null then 0 else 1 end as Level3IsUpdated
-, case when (select top 1 Level4Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level4Title = dbo.view_applicationrights.Level4Title) is null then 0 else 1 end as Level4IsUpdated
-, case when (select top 1 Level5Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level5Title = dbo.view_applicationrights.Level5Title) is null then 0 else 1 end as Level5IsUpdated
-, case when (select top 1 Level6Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level6Title = dbo.view_applicationrights.Level6Title) is null then 0 else 1 end as Level6IsUpdated,
-Case When Substring(NavURL,1,1) = '/' Then ServerProtocol + '://' + ServerName + Case When ServerPort Is Not Null Then ':' +Cast(ServerPort as Varchar(6)) Else '' End + NavURL Else NavURL End As NavURLAutocompleted
-			FROM dbo.view_ApplicationRights LEFT OUTER JOIN dbo.Memberships ON dbo.view_ApplicationRights.ID_Group = dbo.Memberships.ID_Group  LEFT JOIN dbo.System_Servers ON dbo.view_ApplicationRights.LocationID = dbo.System_Servers.ID
-			WHERE (dbo.System_Servers.ServerGroup = @AllowedLocation And ((dbo.view_ApplicationRights.ID_Group = @GroupID) OR (dbo.Memberships.ID_Group = @GroupID) OR (dbo.view_ApplicationRights.ID_Group = @PublicGroupID) OR (dbo.view_ApplicationRights.ID_Group = @AnonymousGroupID)))  And dbo.view_ApplicationRights.LanguageID in (@LanguageID, @AlternativeLanguage)  And (dbo.view_ApplicationRights.AppDisabled = 0 Or dbo.view_ApplicationRights.DevelopmentTeamMember = 1) 
-				AND dbo.view_ApplicationRights.Title <> 'System - Login'
-			ORDER BY dbo.view_ApplicationRights.Sort, Case When dbo.view_ApplicationRights.Level2Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level1Title, Case When dbo.view_ApplicationRights.Level3Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level2Title, Case When dbo.view_ApplicationRights.Level4Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level3Title, Case When dbo.view_ApplicationRights.Level5Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level4Title, Case When dbo.view_ApplicationRights.Level6Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level5Title, dbo.view_ApplicationRights.Level6Title
-		Else
-			SELECT DISTINCT dbo.view_ApplicationRights.Level1Title, dbo.view_ApplicationRights.Level2Title, dbo.view_ApplicationRights.Level3Title, dbo.view_ApplicationRights.Level4Title, dbo.view_ApplicationRights.Level5Title, dbo.view_ApplicationRights.Level6Title, 
-				dbo.view_ApplicationRights.Level1TitleIsHTMLCoded, dbo.view_ApplicationRights.Level2TitleIsHTMLCoded, dbo.view_ApplicationRights.Level3TitleIsHTMLCoded, dbo.view_ApplicationRights.Level4TitleIsHTMLCoded, dbo.view_ApplicationRights.Level5TitleIsHTMLCoded, dbo.view_ApplicationRights.Level6TitleIsHTMLCoded, 
-				dbo.view_ApplicationRights.NavURL, dbo.view_ApplicationRights.NavFrame, dbo.view_ApplicationRights.IsNew, dbo.view_ApplicationRights.IsUpdated, dbo.view_ApplicationRights.NavToolTipText, dbo.view_ApplicationRights.Sort, 
-				dbo.view_ApplicationRights.AppDisabled, dbo.view_ApplicationRights.OnMouseOver, dbo.view_ApplicationRights.OnMouseOut, dbo.view_ApplicationRights.OnClick, dbo.view_ApplicationRights.AddLanguageID2URL
-				, Case When dbo.view_ApplicationRights.Level1Title Is Null Then 0 Else 1 End As Level1TitleIsPresent, Case When dbo.view_ApplicationRights.Level2Title Is Null Then 0 Else 1 End As Level2TitleIsPresent, Case When dbo.view_ApplicationRights.Level3Title Is Null Then 0 Else 1 End As Level3TitleIsPresent, Case When dbo.view_ApplicationRights.Level4Title Is Null Then 0 Else 1 End As Level4TitleIsPresent, Case When dbo.view_ApplicationRights.Level5Title Is Null Then 0 Else 1 End As Level5TitleIsPresent, Case When dbo.view_ApplicationRights.Level6Title Is Null Then 0 Else 1 End As Level6TitleIsPresent
-, case when (select top 1 Level1Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level1Title = dbo.view_applicationrights.Level1Title) is null then 0 else 1 end as Level1IsUpdated
-, case when (select top 1 Level2Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level2Title = dbo.view_applicationrights.Level2Title) is null then 0 else 1 end as Level2IsUpdated
-, case when (select top 1 Level3Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level3Title = dbo.view_applicationrights.Level3Title) is null then 0 else 1 end as Level3IsUpdated
-, case when (select top 1 Level4Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level4Title = dbo.view_applicationrights.Level4Title) is null then 0 else 1 end as Level4IsUpdated
-, case when (select top 1 Level5Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level5Title = dbo.view_applicationrights.Level5Title) is null then 0 else 1 end as Level5IsUpdated
-, case when (select top 1 Level6Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level6Title = dbo.view_applicationrights.Level6Title) is null then 0 else 1 end as Level6IsUpdated,
-Case When Substring(NavURL,1,1) = '/' Then ServerProtocol + '://' + ServerName + Case When ServerPort Is Not Null Then ':' +Cast(ServerPort as Varchar(6)) Else '' End + NavURL Else NavURL End As NavURLAutocompleted			FROM dbo.view_ApplicationRights LEFT OUTER JOIN dbo.Memberships ON dbo.view_ApplicationRights.ID_Group = dbo.Memberships.ID_Group  LEFT JOIN dbo.System_Servers ON dbo.view_ApplicationRights.LocationID = dbo.System_Servers.ID
-			WHERE dbo.System_Servers.ServerGroup = @AllowedLocation And dbo.view_ApplicationRights.ID_Group = @AnonymousGroupID And dbo.view_ApplicationRights.LanguageID in (@LanguageID, @AlternativeLanguage) And (dbo.view_ApplicationRights.AppDisabled = 0 Or dbo.view_ApplicationRights.DevelopmentTeamMember = 1)
-			ORDER BY dbo.view_ApplicationRights.Sort, Case When dbo.view_ApplicationRights.Level2Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level1Title, Case When dbo.view_ApplicationRights.Level3Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level2Title, Case When dbo.view_ApplicationRights.Level4Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level3Title, Case When dbo.view_ApplicationRights.Level5Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level4Title, Case When dbo.view_ApplicationRights.Level6Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level5Title, dbo.view_ApplicationRights.Level6Title
+			SELECT DISTINCT 
+				dbo.Applications.Level1Title, dbo.Applications.Level2Title, dbo.Applications.Level3Title, 
+				dbo.Applications.Level4Title, dbo.Applications.Level5Title, dbo.Applications.Level6Title, 
+				dbo.Applications.Level1TitleIsHTMLCoded, dbo.Applications.Level2TitleIsHTMLCoded, 
+				dbo.Applications.Level3TitleIsHTMLCoded, dbo.Applications.Level4TitleIsHTMLCoded, 
+				dbo.Applications.Level5TitleIsHTMLCoded, dbo.Applications.Level6TitleIsHTMLCoded, 
+				dbo.Applications.NavURL, dbo.Applications.NavFrame, 
+				dbo.Applications.IsNew, dbo.Applications.IsUpdated, 
+				dbo.Applications.NavToolTipText, dbo.Applications.Sort, dbo.Applications.AppDisabled, 
+				dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, 
+				dbo.Applications.AddLanguageID2URL,
+				Case When dbo.Applications.Level1Title Is Null Then 0 Else 1 End As Level1TitleIsPresent, 
+				Case When dbo.Applications.Level2Title Is Null Then 0 Else 1 End As Level2TitleIsPresent, 
+				Case When dbo.Applications.Level3Title Is Null Then 0 Else 1 End As Level3TitleIsPresent, 
+				Case When dbo.Applications.Level4Title Is Null Then 0 Else 1 End As Level4TitleIsPresent, 
+				Case When dbo.Applications.Level5Title Is Null Then 0 Else 1 End As Level5TitleIsPresent, 
+				Case When dbo.Applications.Level6Title Is Null Then 0 Else 1 End As Level6TitleIsPresent,
+				case when 
+					(
+						select top 1 Level1Title 
+						from #NavUpdatedItems_Filtered 
+						where #NavUpdatedItems_Filtered.Level1Title = dbo.Applications.Level1Title
+					) is null then 0 else 1 end as Level1IsUpdated,
+				case when 
+					(
+						select top 1 Level2Title 
+						from #NavUpdatedItems_Filtered 
+						where #NavUpdatedItems_Filtered.Level1Title = dbo.Applications.Level1Title 
+							AND #NavUpdatedItems_Filtered.Level2Title = dbo.Applications.Level2Title
+					) is null then 0 else 1 end as Level2IsUpdated,
+				case when 
+					(
+						select top 1 Level3Title 
+						from #NavUpdatedItems_Filtered 
+						where #NavUpdatedItems_Filtered.Level1Title = dbo.Applications.Level1Title 
+							AND #NavUpdatedItems_Filtered.Level2Title = dbo.Applications.Level2Title 
+							AND #NavUpdatedItems_Filtered.Level3Title = dbo.Applications.Level3Title
+					) is null then 0 else 1 end as Level3IsUpdated,
+				case when 
+					(
+						select top 1 Level4Title 
+						from #NavUpdatedItems_Filtered 
+						where #NavUpdatedItems_Filtered.Level1Title = dbo.Applications.Level1Title 
+							AND #NavUpdatedItems_Filtered.Level2Title = dbo.Applications.Level2Title 
+							AND #NavUpdatedItems_Filtered.Level3Title = dbo.Applications.Level3Title 
+							AND #NavUpdatedItems_Filtered.Level4Title = dbo.Applications.Level4Title
+					) is null then 0 else 1 end as Level4IsUpdated,
+				case when 
+					(
+						select top 1 Level5Title 
+						from #NavUpdatedItems_Filtered 
+						where #NavUpdatedItems_Filtered.Level1Title = dbo.Applications.Level1Title 
+							AND #NavUpdatedItems_Filtered.Level2Title = dbo.Applications.Level2Title 
+							AND #NavUpdatedItems_Filtered.Level3Title = dbo.Applications.Level3Title 
+							AND #NavUpdatedItems_Filtered.Level4Title = dbo.Applications.Level4Title 
+							AND #NavUpdatedItems_Filtered.Level5Title = dbo.Applications.Level5Title
+					) is null then 0 else 1 end as Level5IsUpdated,
+				case when 
+					(
+						select top 1 Level6Title 
+						from #NavUpdatedItems_Filtered 
+						where #NavUpdatedItems_Filtered.Level1Title = dbo.Applications.Level1Title 
+							AND #NavUpdatedItems_Filtered.Level2Title = dbo.Applications.Level2Title 
+							AND #NavUpdatedItems_Filtered.Level3Title = dbo.Applications.Level3Title 
+							AND #NavUpdatedItems_Filtered.Level4Title = dbo.Applications.Level4Title 
+							AND #NavUpdatedItems_Filtered.Level5Title = dbo.Applications.Level5Title 
+							AND #NavUpdatedItems_Filtered.Level6Title = dbo.Applications.Level6Title
+					) is null then 0 else 1 end as Level6IsUpdated,
+				Case 
+					When Substring(NavURL,1,1) = '/' 
+						Then ServerProtocol + '://' 
+								+ ServerName 
+								+ Case 
+										When ServerPort Is Not Null 
+											Then ':' +Cast(ServerPort as Varchar(6)) 
+										Else '' 
+										End 
+								+ NavURL 
+					Else 
+						NavURL 
+					End As NavURLAutocompleted
+			FROM dbo.Applications
+				INNER JOIN dbo.System_Servers 
+					ON dbo.Applications.LocationID = dbo.System_Servers.ID
+			WHERE 
+				dbo.Applications.ID IN 
+					(
+						SELECT ID_SecurityObject
+						FROM dbo.ApplicationsRightsByGroup_EffectiveCumulative
+						WHERE ID_ServerGroup = @ServerGroupID 
+							AND ID_Group IN (@GroupID, @PublicGroupID, @AnonymousGroupID) 
+					)	
+				AND dbo.System_Servers.ServerGroup = @ServerGroupID
+				AND LanguageID in (@LanguageID, @AlternativeLanguage)  
+				AND (IsNull(Level1Title, '')<>'' OR IsNull(NavUrl, '')<>'')
+			ORDER BY dbo.Applications.Sort, 
+				Case When dbo.Applications.Level2Title Is Null Then 0 Else 1 End, 
+				dbo.Applications.Level1Title, 
+				Case When dbo.Applications.Level3Title Is Null Then 0 Else 1 End, 
+				dbo.Applications.Level2Title, 
+				Case When dbo.Applications.Level4Title Is Null Then 0 Else 1 End, 
+				dbo.Applications.Level3Title, 
+				Case When dbo.Applications.Level5Title Is Null Then 0 Else 1 End, 
+				dbo.Applications.Level4Title, 
+				Case When dbo.Applications.Level6Title Is Null Then 0 Else 1 End, 
+				dbo.Applications.Level5Title, 
+				dbo.Applications.Level6Title
 
 		DROP TABLE #NavUpdatedItems_Filtered
-
+GO
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = object_id(N'[dbo].[Public_GetNavPointsOfUser]') AND OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
+DROP PROCEDURE [Public_GetNavPointsOfUser]
 GO
 ----------------------------------------------------
 -- dbo.Public_GetNavPointsOfUser
 ----------------------------------------------------
-ALTER Procedure dbo.Public_GetNavPointsOfUser
+CREATE Procedure dbo.Public_GetNavPointsOfUser
 (
 	@UserID int,
 	@ServerIP nvarchar(32),
@@ -2546,30 +2738,10 @@ As
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
-DECLARE @IsSecurityAdmin bit
-DECLARE @AllowedLocation int
-DECLARE @buffer int
-DECLARE @PublicGroupID int
-DECLARE @AnonymousGroupID int
+DECLARE @ServerGroupID int
 DECLARE @AlternativeLanguage int
 
 SET NoCount ON
-
--- for example: LanguageID = 512 --> also search for the alternative language with ID 2
-If @SearchForAlternativeLanguages = 1
-	SELECT @AlternativeLanguage = AlternativeLanguage
-	FROM System_Languages
-	WHERE ID = @LanguageID
-Else
-	SELECT @AlternativeLanguage = @LanguageID
-If @AlternativeLanguage IS NULL
-	SELECT @AlternativeLanguage = @LanguageID
-
-SET @buffer = (SELECT COUNT(ID_Group) FROM dbo.view_Memberships WHERE (ID_Group = 6) AND (ID_User = @UserID))
-If @buffer = 0 
-	SET @IsSecurityAdmin = 0
-Else
-	SET @IsSecurityAdmin = 1
 
 -- Überprüfung auf Vollständigkeit übergebener Parameter, die sonst nicht mehr weiter geprüft werden
 If (IsNull(@ServerIP,'') = '')
@@ -2578,138 +2750,168 @@ If (IsNull(@ServerIP,'') = '')
 		Return
 	END
 
--- Application des Internet-Server
-SELECT   @AllowedLocation = dbo.System_Servers.ServerGroup, @PublicGroupID = dbo.System_ServerGroups.ID_Group_Public, @AnonymousGroupID = dbo.System_ServerGroups.ID_Group_Anonymous
-FROM         dbo.System_Servers INNER JOIN
-                      dbo.System_ServerGroups ON dbo.System_Servers.ServerGroup = dbo.System_ServerGroups.ID
-WHERE     (dbo.System_Servers.IP = @ServerIP)
-IF @AllowedLocation Is Null 
+-- for example: LanguageID = 512 --> also search for the alternative language with ID 2
+If @SearchForAlternativeLanguages = 1
+	SELECT @AlternativeLanguage = AlternativeLanguage
+		FROM System_Languages WITH (NOLOCK)
+		WHERE ID = @LanguageID
+Else
+	SELECT @AlternativeLanguage = @LanguageID
+If @AlternativeLanguage IS NULL
+	SELECT @AlternativeLanguage = @LanguageID
+
+-- Lookup ServerGroupID of given serverIP
+SELECT @ServerGroupID = dbo.System_Servers.ServerGroup
+FROM dbo.System_Servers WITH (NOLOCK) 
+	INNER JOIN dbo.System_ServerGroups WITH (NOLOCK) 
+		ON dbo.System_Servers.ServerGroup = dbo.System_ServerGroups.ID
+WHERE dbo.System_Servers.IP = @ServerIP
+IF @ServerGroupID Is Null 
 	Return
 
+IF @AnonymousAccess <> 0
+	SELECT @UserID = -1 -- ID of anonymous user
+
 --ResetIsNewUpdatedStatusOn
-UPDATE dbo.Applications_CurrentAndInactiveOnes SET IsNew = 0, IsUpdated = 0, ResetIsNewUpdatedStatusOn = Null WHERE (ResetIsNewUpdatedStatusOn < GETDATE())
+UPDATE dbo.Applications_CurrentAndInactiveOnes 
+SET IsNew = 0, IsUpdated = 0, ResetIsNewUpdatedStatusOn = Null 
+WHERE ResetIsNewUpdatedStatusOn < GETDATE()
 
 -- Recordset zurückgeben	
-If (@IsSecurityAdmin = 0)	-- True would be = 1
 
-	BEGIN
-
+		-- All NavItem Titles where the user is authorized for AND where it is marked as IsUpdated/IsNew
 		CREATE TABLE #NavUpdatedItems_Filtered (Level1Title nvarchar(255), Level2Title nvarchar(255), Level3Title nvarchar(255), Level4Title nvarchar(255), Level5Title nvarchar(255), Level6Title nvarchar(255));
 		INSERT INTO #NavUpdatedItems_Filtered (Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title)
-		SELECT distinct Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title
-			FROM dbo.view_ApplicationRights LEFT OUTER JOIN dbo.Memberships ON dbo.view_ApplicationRights.ID_Group = dbo.Memberships.ID_Group LEFT JOIN dbo.System_Servers ON dbo.view_ApplicationRights.LocationID = dbo.System_Servers.ID
-			WHERE (dbo.System_Servers.ServerGroup = @AllowedLocation And ((dbo.view_ApplicationRights.ID_User = @UserID) OR (dbo.Memberships.ID_User = @UserID) OR (dbo.view_ApplicationRights.ID_Group = @PublicGroupID) OR (dbo.view_ApplicationRights.ID_Group = @AnonymousGroupID)))  And dbo.view_ApplicationRights.LanguageID in (@LanguageID, @AlternativeLanguage) And (dbo.view_ApplicationRights.AppDisabled = 0 Or dbo.view_ApplicationRights.DevelopmentTeamMember = 1) 
-				AND dbo.view_ApplicationRights.Title <> 'System - Login'
-				AND (IsUpdated <> 0 OR IsNew <> 0)
+		SELECT Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title
+		FROM dbo.Applications 
+			INNER JOIN dbo.System_Servers 
+				ON dbo.Applications.LocationID = dbo.System_Servers.ID
+		WHERE 
+			dbo.Applications.ID IN 
+				(
+					SELECT ID_SecurityObject
+					FROM dbo.ApplicationsRightsByUser_EffectiveCumulative
+					WHERE ID_ServerGroup = @ServerGroupID 
+						AND ID_User = @UserID 
+				)	
+			AND dbo.System_Servers.ServerGroup = @ServerGroupID
+			AND LanguageID in (@LanguageID, @AlternativeLanguage)  
+			AND (IsUpdated <> 0 OR IsNew <> 0)
+		GROUP BY Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title
 
 		SET NoCount OFF
 
-		IF @AnonymousAccess = 0
-			SELECT DISTINCT dbo.view_ApplicationRights.Level1Title, dbo.view_ApplicationRights.Level2Title, dbo.view_ApplicationRights.Level3Title, dbo.view_ApplicationRights.Level4Title, dbo.view_ApplicationRights.Level5Title, dbo.view_ApplicationRights.Level6Title, 
-				dbo.view_ApplicationRights.Level1TitleIsHTMLCoded, dbo.view_ApplicationRights.Level2TitleIsHTMLCoded, dbo.view_ApplicationRights.Level3TitleIsHTMLCoded, dbo.view_ApplicationRights.Level4TitleIsHTMLCoded, dbo.view_ApplicationRights.Level5TitleIsHTMLCoded, dbo.view_ApplicationRights.Level6TitleIsHTMLCoded, 
-				dbo.view_ApplicationRights.NavURL, dbo.view_ApplicationRights.NavFrame, dbo.view_ApplicationRights.IsNew, dbo.view_ApplicationRights.IsUpdated, dbo.view_ApplicationRights.NavToolTipText, dbo.view_ApplicationRights.Sort, 
-				dbo.view_ApplicationRights.AppDisabled, dbo.view_ApplicationRights.OnMouseOver, dbo.view_ApplicationRights.OnMouseOut, dbo.view_ApplicationRights.OnClick, dbo.view_ApplicationRights.AddLanguageID2URL
-				, Case When dbo.view_ApplicationRights.Level1Title Is Null Then 0 Else 1 End As Level1TitleIsPresent, Case When dbo.view_ApplicationRights.Level2Title Is Null Then 0 Else 1 End As Level2TitleIsPresent, Case When dbo.view_ApplicationRights.Level3Title Is Null Then 0 Else 1 End As Level3TitleIsPresent, Case When dbo.view_ApplicationRights.Level4Title Is Null Then 0 Else 1 End As Level4TitleIsPresent, Case When dbo.view_ApplicationRights.Level5Title Is Null Then 0 Else 1 End As Level5TitleIsPresent, Case When dbo.view_ApplicationRights.Level6Title Is Null Then 0 Else 1 End As Level6TitleIsPresent
-, case when (select top 1 Level1Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level1Title = dbo.view_applicationrights.Level1Title) is null then 0 else 1 end as Level1IsUpdated
-, case when (select top 1 Level2Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level2Title = dbo.view_applicationrights.Level2Title) is null then 0 else 1 end as Level2IsUpdated
-, case when (select top 1 Level3Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level3Title = dbo.view_applicationrights.Level3Title) is null then 0 else 1 end as Level3IsUpdated
-, case when (select top 1 Level4Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level4Title = dbo.view_applicationrights.Level4Title) is null then 0 else 1 end as Level4IsUpdated
-, case when (select top 1 Level5Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level5Title = dbo.view_applicationrights.Level5Title) is null then 0 else 1 end as Level5IsUpdated
-, case when (select top 1 Level6Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level6Title = dbo.view_applicationrights.Level6Title) is null then 0 else 1 end as Level6IsUpdated,
-Case When Substring(NavURL,1,1) = '/' Then ServerProtocol + '://' + ServerName + Case When ServerPort Is Not Null Then ':' +Cast(ServerPort as Varchar(6)) Else '' End + NavURL Else NavURL End As NavURLAutocompleted
-			FROM dbo.view_ApplicationRights LEFT OUTER JOIN dbo.Memberships ON dbo.view_ApplicationRights.ID_Group = dbo.Memberships.ID_Group  LEFT JOIN dbo.System_Servers ON dbo.view_ApplicationRights.LocationID = dbo.System_Servers.ID
-			WHERE (dbo.System_Servers.ServerGroup = @AllowedLocation And ((dbo.view_ApplicationRights.ID_User = @UserID) OR (dbo.Memberships.ID_User = @UserID) OR (dbo.view_ApplicationRights.ID_Group = @PublicGroupID) OR (dbo.view_ApplicationRights.ID_Group = @AnonymousGroupID)))  And dbo.view_ApplicationRights.LanguageID in (@LanguageID, @AlternativeLanguage)  And (dbo.view_ApplicationRights.AppDisabled = 0 Or dbo.view_ApplicationRights.DevelopmentTeamMember = 1) 
-				AND dbo.view_ApplicationRights.Title <> 'System - Login'
-			ORDER BY dbo.view_ApplicationRights.Sort, Case When dbo.view_ApplicationRights.Level2Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level1Title, Case When dbo.view_ApplicationRights.Level3Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level2Title, Case When dbo.view_ApplicationRights.Level4Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level3Title, Case When dbo.view_ApplicationRights.Level5Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level4Title, Case When dbo.view_ApplicationRights.Level6Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level5Title, dbo.view_ApplicationRights.Level6Title
-		Else
-			SELECT DISTINCT dbo.view_ApplicationRights.Level1Title, dbo.view_ApplicationRights.Level2Title, dbo.view_ApplicationRights.Level3Title, dbo.view_ApplicationRights.Level4Title, dbo.view_ApplicationRights.Level5Title, dbo.view_ApplicationRights.Level6Title, 
-				dbo.view_ApplicationRights.Level1TitleIsHTMLCoded, dbo.view_ApplicationRights.Level2TitleIsHTMLCoded, dbo.view_ApplicationRights.Level3TitleIsHTMLCoded, dbo.view_ApplicationRights.Level4TitleIsHTMLCoded, dbo.view_ApplicationRights.Level5TitleIsHTMLCoded, dbo.view_ApplicationRights.Level6TitleIsHTMLCoded, 
-				dbo.view_ApplicationRights.NavURL, dbo.view_ApplicationRights.NavFrame, dbo.view_ApplicationRights.IsNew, dbo.view_ApplicationRights.IsUpdated, dbo.view_ApplicationRights.NavToolTipText, dbo.view_ApplicationRights.Sort, 
-				dbo.view_ApplicationRights.AppDisabled, dbo.view_ApplicationRights.OnMouseOver, dbo.view_ApplicationRights.OnMouseOut, dbo.view_ApplicationRights.OnClick, dbo.view_ApplicationRights.AddLanguageID2URL
-				, Case When dbo.view_ApplicationRights.Level1Title Is Null Then 0 Else 1 End As Level1TitleIsPresent, Case When dbo.view_ApplicationRights.Level2Title Is Null Then 0 Else 1 End As Level2TitleIsPresent, Case When dbo.view_ApplicationRights.Level3Title Is Null Then 0 Else 1 End As Level3TitleIsPresent, Case When dbo.view_ApplicationRights.Level4Title Is Null Then 0 Else 1 End As Level4TitleIsPresent, Case When dbo.view_ApplicationRights.Level5Title Is Null Then 0 Else 1 End As Level5TitleIsPresent, Case When dbo.view_ApplicationRights.Level6Title Is Null Then 0 Else 1 End As Level6TitleIsPresent
-, case when (select top 1 Level1Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level1Title = dbo.view_applicationrights.Level1Title) is null then 0 else 1 end as Level1IsUpdated
-, case when (select top 1 Level2Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level2Title = dbo.view_applicationrights.Level2Title) is null then 0 else 1 end as Level2IsUpdated
-, case when (select top 1 Level3Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level3Title = dbo.view_applicationrights.Level3Title) is null then 0 else 1 end as Level3IsUpdated
-, case when (select top 1 Level4Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level4Title = dbo.view_applicationrights.Level4Title) is null then 0 else 1 end as Level4IsUpdated
-, case when (select top 1 Level5Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level5Title = dbo.view_applicationrights.Level5Title) is null then 0 else 1 end as Level5IsUpdated
-, case when (select top 1 Level6Title from #NavUpdatedItems_Filtered where #NavUpdatedItems_Filtered.Level6Title = dbo.view_applicationrights.Level6Title) is null then 0 else 1 end as Level6IsUpdated,
-Case When Substring(NavURL,1,1) = '/' Then ServerProtocol + '://' + ServerName + Case When ServerPort Is Not Null Then ':' +Cast(ServerPort as Varchar(6)) Else '' End + NavURL Else NavURL End As NavURLAutocompleted			FROM dbo.view_ApplicationRights LEFT OUTER JOIN dbo.Memberships ON dbo.view_ApplicationRights.ID_Group = dbo.Memberships.ID_Group  LEFT JOIN dbo.System_Servers ON dbo.view_ApplicationRights.LocationID = dbo.System_Servers.ID
-			WHERE dbo.System_Servers.ServerGroup = @AllowedLocation And dbo.view_ApplicationRights.ID_Group = @AnonymousGroupID And dbo.view_ApplicationRights.LanguageID in (@LanguageID, @AlternativeLanguage) And (dbo.view_ApplicationRights.AppDisabled = 0 Or dbo.view_ApplicationRights.DevelopmentTeamMember = 1)
-			ORDER BY dbo.view_ApplicationRights.Sort, Case When dbo.view_ApplicationRights.Level2Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level1Title, Case When dbo.view_ApplicationRights.Level3Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level2Title, Case When dbo.view_ApplicationRights.Level4Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level3Title, Case When dbo.view_ApplicationRights.Level5Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level4Title, Case When dbo.view_ApplicationRights.Level6Title Is Null Then 0 Else 1 End, dbo.view_ApplicationRights.Level5Title, dbo.view_ApplicationRights.Level6Title
+			SELECT DISTINCT 
+				dbo.Applications.Level1Title, dbo.Applications.Level2Title, dbo.Applications.Level3Title, 
+				dbo.Applications.Level4Title, dbo.Applications.Level5Title, dbo.Applications.Level6Title, 
+				dbo.Applications.Level1TitleIsHTMLCoded, dbo.Applications.Level2TitleIsHTMLCoded, 
+				dbo.Applications.Level3TitleIsHTMLCoded, dbo.Applications.Level4TitleIsHTMLCoded, 
+				dbo.Applications.Level5TitleIsHTMLCoded, dbo.Applications.Level6TitleIsHTMLCoded, 
+				dbo.Applications.NavURL, dbo.Applications.NavFrame, 
+				dbo.Applications.IsNew, dbo.Applications.IsUpdated, 
+				dbo.Applications.NavToolTipText, dbo.Applications.Sort, dbo.Applications.AppDisabled, 
+				dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, 
+				dbo.Applications.AddLanguageID2URL,
+				Case When dbo.Applications.Level1Title Is Null Then 0 Else 1 End As Level1TitleIsPresent, 
+				Case When dbo.Applications.Level2Title Is Null Then 0 Else 1 End As Level2TitleIsPresent, 
+				Case When dbo.Applications.Level3Title Is Null Then 0 Else 1 End As Level3TitleIsPresent, 
+				Case When dbo.Applications.Level4Title Is Null Then 0 Else 1 End As Level4TitleIsPresent, 
+				Case When dbo.Applications.Level5Title Is Null Then 0 Else 1 End As Level5TitleIsPresent, 
+				Case When dbo.Applications.Level6Title Is Null Then 0 Else 1 End As Level6TitleIsPresent,
+				case when 
+					(
+						select top 1 Level1Title 
+						from #NavUpdatedItems_Filtered 
+						where #NavUpdatedItems_Filtered.Level1Title = dbo.Applications.Level1Title
+					) is null then 0 else 1 end as Level1IsUpdated,
+				case when 
+					(
+						select top 1 Level2Title 
+						from #NavUpdatedItems_Filtered 
+						where #NavUpdatedItems_Filtered.Level1Title = dbo.Applications.Level1Title 
+							AND #NavUpdatedItems_Filtered.Level2Title = dbo.Applications.Level2Title
+					) is null then 0 else 1 end as Level2IsUpdated,
+				case when 
+					(
+						select top 1 Level3Title 
+						from #NavUpdatedItems_Filtered 
+						where #NavUpdatedItems_Filtered.Level1Title = dbo.Applications.Level1Title 
+							AND #NavUpdatedItems_Filtered.Level2Title = dbo.Applications.Level2Title 
+							AND #NavUpdatedItems_Filtered.Level3Title = dbo.Applications.Level3Title
+					) is null then 0 else 1 end as Level3IsUpdated,
+				case when 
+					(
+						select top 1 Level4Title 
+						from #NavUpdatedItems_Filtered 
+						where #NavUpdatedItems_Filtered.Level1Title = dbo.Applications.Level1Title 
+							AND #NavUpdatedItems_Filtered.Level2Title = dbo.Applications.Level2Title 
+							AND #NavUpdatedItems_Filtered.Level3Title = dbo.Applications.Level3Title 
+							AND #NavUpdatedItems_Filtered.Level4Title = dbo.Applications.Level4Title
+					) is null then 0 else 1 end as Level4IsUpdated,
+				case when 
+					(
+						select top 1 Level5Title 
+						from #NavUpdatedItems_Filtered 
+						where #NavUpdatedItems_Filtered.Level1Title = dbo.Applications.Level1Title 
+							AND #NavUpdatedItems_Filtered.Level2Title = dbo.Applications.Level2Title 
+							AND #NavUpdatedItems_Filtered.Level3Title = dbo.Applications.Level3Title 
+							AND #NavUpdatedItems_Filtered.Level4Title = dbo.Applications.Level4Title 
+							AND #NavUpdatedItems_Filtered.Level5Title = dbo.Applications.Level5Title
+					) is null then 0 else 1 end as Level5IsUpdated,
+				case when 
+					(
+						select top 1 Level6Title 
+						from #NavUpdatedItems_Filtered 
+						where #NavUpdatedItems_Filtered.Level1Title = dbo.Applications.Level1Title 
+							AND #NavUpdatedItems_Filtered.Level2Title = dbo.Applications.Level2Title 
+							AND #NavUpdatedItems_Filtered.Level3Title = dbo.Applications.Level3Title 
+							AND #NavUpdatedItems_Filtered.Level4Title = dbo.Applications.Level4Title 
+							AND #NavUpdatedItems_Filtered.Level5Title = dbo.Applications.Level5Title 
+							AND #NavUpdatedItems_Filtered.Level6Title = dbo.Applications.Level6Title
+					) is null then 0 else 1 end as Level6IsUpdated,
+				Case 
+					When Substring(NavURL,1,1) = '/' 
+						Then ServerProtocol + '://' 
+								+ ServerName 
+								+ Case 
+										When ServerPort Is Not Null 
+											Then ':' +Cast(ServerPort as Varchar(6)) 
+										Else '' 
+										End 
+								+ NavURL 
+					Else 
+						NavURL 
+					End As NavURLAutocompleted
+			FROM dbo.Applications
+				INNER JOIN dbo.System_Servers 
+					ON dbo.Applications.LocationID = dbo.System_Servers.ID
+			WHERE 
+				dbo.Applications.ID IN 
+					(
+					SELECT ID_SecurityObject
+					FROM dbo.ApplicationsRightsByUser_EffectiveCumulative
+						WHERE ID_ServerGroup = @ServerGroupID 
+							AND ID_User = @UserID 
+					)	
+				AND dbo.System_Servers.ServerGroup = @ServerGroupID
+				AND LanguageID in (@LanguageID, @AlternativeLanguage)  
+				AND (IsNull(Level1Title, '')<>'' OR IsNull(NavUrl, '')<>'')
+			ORDER BY dbo.Applications.Sort, 
+				Case When dbo.Applications.Level2Title Is Null Then 0 Else 1 End, 
+				dbo.Applications.Level1Title, 
+				Case When dbo.Applications.Level3Title Is Null Then 0 Else 1 End, 
+				dbo.Applications.Level2Title, 
+				Case When dbo.Applications.Level4Title Is Null Then 0 Else 1 End, 
+				dbo.Applications.Level3Title, 
+				Case When dbo.Applications.Level5Title Is Null Then 0 Else 1 End, 
+				dbo.Applications.Level4Title, 
+				Case When dbo.Applications.Level6Title Is Null Then 0 Else 1 End, 
+				dbo.Applications.Level5Title, 
+				dbo.Applications.Level6Title
 
 		DROP TABLE #NavUpdatedItems_Filtered
-	END
-
-Else 
-	BEGIN
-
-		CREATE TABLE #NavUpdatedItems_Level1Title (Level1Title nvarchar(255));
-		INSERT INTO #NavUpdatedItems_Level1Title (Level1Title)
-		SELECT distinct Level1Title
-		FROM dbo.Applications
-		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
-
-		CREATE TABLE #NavUpdatedItems_Level2Title (Level2Title nvarchar(255));
-		INSERT INTO #NavUpdatedItems_Level2Title (Level2Title)
-		SELECT distinct Level2Title
-		FROM dbo.Applications
-		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
-
-		CREATE TABLE #NavUpdatedItems_Level3Title (Level3Title nvarchar(255));
-		INSERT INTO #NavUpdatedItems_Level3Title (Level3Title)
-		SELECT distinct Level3Title
-		FROM dbo.Applications
-		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
-
-		CREATE TABLE #NavUpdatedItems_Level4Title (Level4Title nvarchar(255));
-		INSERT INTO #NavUpdatedItems_Level4Title (Level4Title)
-		SELECT distinct Level4Title
-		FROM dbo.Applications
-		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
-
-		CREATE TABLE #NavUpdatedItems_Level5Title (Level5Title nvarchar(255));
-		INSERT INTO #NavUpdatedItems_Level5Title (Level5Title)
-		SELECT distinct Level5Title
-		FROM dbo.Applications
-		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
-
-		CREATE TABLE #NavUpdatedItems_Level6Title (Level6Title nvarchar(255));
-		INSERT INTO #NavUpdatedItems_Level6Title (Level6Title)
-		SELECT distinct Level6Title
-		FROM dbo.Applications
-		WHERE ((IsUpdated <> 0) OR (IsNew <> 0))
-
-		IF @AnonymousAccess = 0
-			SET @AnonymousGroupID = 0 -- ungültige GroupID, damit das Ergebnis später nicht verfälscht wird
-
-		SET NoCount OFF
-
-		SELECT DISTINCT dbo.Applications.Level1Title, dbo.Applications.Level2Title, dbo.Applications.Level3Title, dbo.Applications.Level4Title, dbo.Applications.Level5Title, dbo.Applications.Level6Title, 
-			dbo.Applications.Level1TitleIsHTMLCoded, dbo.Applications.Level2TitleIsHTMLCoded, dbo.Applications.Level3TitleIsHTMLCoded, dbo.Applications.Level4TitleIsHTMLCoded, dbo.Applications.Level5TitleIsHTMLCoded, dbo.Applications.Level6TitleIsHTMLCoded, 
-			dbo.Applications.NavURL, dbo.Applications.NavFrame, dbo.Applications.IsNew, dbo.Applications.IsUpdated, dbo.Applications.NavToolTipText, dbo.Applications.Sort, Level1IsUpdated = Case When  #NavUpdatedItems_Level1Title.Level1Title Is Not Null Then -1 Else 0 End, Level2IsUpdated = Case When  #NavUpdatedItems_Level2Title.Level2Title Is Not Null Then -1 Else 0 End, 
-			Level3IsUpdated = Case When  #NavUpdatedItems_Level3Title.Level3Title Is Not Null Then -1 Else 0 End, Level4IsUpdated = Case When  #NavUpdatedItems_Level4Title.Level4Title Is Not Null Then -1 Else 0 End, Level5IsUpdated = Case When  #NavUpdatedItems_Level5Title.Level5Title Is Not Null Then -1 Else 0 End, Level6IsUpdated = Case When  #NavUpdatedItems_Level6Title.Level6Title Is Not Null Then -1 Else 0 End, 
-			dbo.Applications.AppDisabled, dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, dbo.Applications.AddLanguageID2URL
-			, Case When dbo.Applications.Level1Title Is Null Then 0 Else 1 End As Level1TitleIsPresent, Case When dbo.Applications.Level2Title Is Null Then 0 Else 1 End As Level2TitleIsPresent, Case When dbo.Applications.Level3Title Is Null Then 0 Else 1 End  As Level3TitleIsPresent, Case When dbo.Applications.Level4Title Is Null Then 0 Else 1 End As Level4TitleIsPresent, Case When dbo.Applications.Level5Title Is Null Then 0 Else 1 End As Level5TitleIsPresent, Case When dbo.Applications.Level6Title Is Null Then 0 Else 1 End As Level6TitleIsPresent,
-			Case When Substring(NavURL,1,1) = '/' Then ServerProtocol + '://' + ServerName + Case When ServerPort Is Not Null Then ':' +Cast(ServerPort as Varchar(6)) Else '' End + NavURL Else NavURL End As NavURLAutocompleted
-		FROM ((((((dbo.Applications
-			 left join #NavUpdatedItems_Level1Title on dbo.Applications.Level1Title = #NavUpdatedItems_Level1Title.Level1Title
-			) left join #NavUpdatedItems_Level2Title on dbo.Applications.Level2Title = #NavUpdatedItems_Level2Title.Level2Title
-			) left join #NavUpdatedItems_Level3Title on dbo.Applications.Level3Title = #NavUpdatedItems_Level3Title.Level3Title
-			) left join #NavUpdatedItems_Level4Title on dbo.Applications.Level4Title = #NavUpdatedItems_Level4Title.Level4Title
-			) left join #NavUpdatedItems_Level5Title on dbo.Applications.Level5Title = #NavUpdatedItems_Level5Title.Level5Title
-			) left join #NavUpdatedItems_Level6Title on dbo.Applications.Level6Title = #NavUpdatedItems_Level6Title.Level6Title
-			)  LEFT JOIN dbo.System_Servers ON dbo.Applications.LocationID = dbo.System_Servers.ID
-		WHERE dbo.System_Servers.ServerGroup = @AllowedLocation And dbo.Applications.LanguageID in (@LanguageID, @AlternativeLanguage) And dbo.Applications.Title <> 'System - Login'
-		ORDER BY dbo.Applications.Sort, Case When dbo.Applications.Level2Title Is Null Then 0 Else 1 End, dbo.Applications.Level1Title, Case When dbo.Applications.Level3Title Is Null Then 0 Else 1 End, dbo.Applications.Level2Title, Case When dbo.Applications.Level4Title Is Null Then 0 Else 1 End, dbo.Applications.Level3Title, Case When dbo.Applications.Level5Title Is Null Then 0 Else 1 End, dbo.Applications.Level4Title, Case When dbo.Applications.Level6Title Is Null Then 0 Else 1 End, dbo.Applications.Level5Title, dbo.Applications.Level6Title
-
-		DROP TABLE #NavUpdatedItems_Level1Title
-		DROP TABLE #NavUpdatedItems_Level2Title
-		DROP TABLE #NavUpdatedItems_Level3Title
-		DROP TABLE #NavUpdatedItems_Level4Title
-		DROP TABLE #NavUpdatedItems_Level5Title
-		DROP TABLE #NavUpdatedItems_Level6Title
-	END
 GO
+
 ----------------------------------------------------
 -- dbo.Public_GetServerConfig
 ----------------------------------------------------
@@ -3024,7 +3226,7 @@ DECLARE @bufferUserIDByGroup int
 DECLARE @bufferUserIDByAdmin int
 DECLARE @WebSessionTimeOut int -- in minutes
 DECLARE @bufferLastLoginOn datetime
-DECLARE @LocationID int		-- ServerGroup
+DECLARE @ServerGroupID int		
 DECLARE @ServerID int
 DECLARE @PublicGroupID int
 DECLARE @ServerIsAccessable int
@@ -3074,12 +3276,12 @@ If @CurUserAccountAccessability Is Null
 ----------------------------------
 -- ServerGroup bestimmen --
 ----------------------------------
-SELECT   @LocationID = dbo.System_Servers.ServerGroup, @ServerID = ID
+SELECT   @ServerGroupID = dbo.System_Servers.ServerGroup, @ServerID = ID
 FROM         dbo.System_Servers
 WHERE     (dbo.System_Servers.IP = @ServerIP AND dbo.System_Servers.Enabled <> 0)
-IF @LocationID Is Null 
-	SELECT @LocationID = 0
-If @LocationID = 0
+IF @ServerGroupID Is Null 
+	SELECT @ServerGroupID = 0
+If @ServerGroupID = 0
 	-- Nicht authentifizierter Zugang über den aktuell gewählten Server
 	BEGIN
 		-- Rückgabewert setzen
@@ -3248,7 +3450,7 @@ DECLARE @bufferUserIDByGroup int
 DECLARE @bufferUserIDByAdmin int
 DECLARE @WebSessionTimeOut int -- in minutes
 DECLARE @bufferLastLoginOn datetime
-DECLARE @LocationID int 	-- ServerGroup
+DECLARE @ServerGroupID int
 DECLARE @PublicGroupID int
 DECLARE @ServerIsAccessable int
 DECLARE @ReAuthSuccessfull bit
@@ -3275,13 +3477,13 @@ If (IsNull(@ServerIP,'') = '') Or (IsNull(@RemoteIP,'') = '')
 ----------------------------------
 -- ServerGroup bestimmen --
 ----------------------------------
-SELECT   @LocationID = dbo.System_ServerGroups.ID, @RequestedServerID = dbo.System_Servers.ID
+SELECT   @ServerGroupID = dbo.System_ServerGroups.ID, @RequestedServerID = dbo.System_Servers.ID
 FROM         dbo.System_Servers INNER JOIN
                       dbo.System_ServerGroups ON dbo.System_Servers.ServerGroup = dbo.System_ServerGroups.ID
 WHERE     (dbo.System_Servers.IP = @ServerIP)
-IF @LocationID Is Null 
-	SELECT @LocationID = 0
-If @LocationID = 0
+IF @ServerGroupID Is Null 
+	SELECT @ServerGroupID = 0
+If @ServerGroupID = 0
 	-- Nicht authentifizierter Zugang über den aktuell gewählten Server
 	BEGIN
 		-- Rückgabewert setzen
@@ -3294,7 +3496,7 @@ If @LocationID = 0
 ----------------------------------------------------------------
 -- WebAppID ermitteln für ordentliche Protokollierung --
 ----------------------------------------------------------------
-SELECT @WebAppID = (select top 1 ID from Applications where ((Applications.Title = @WebApplication) AND (Applications.LocationID = @LocationID)))
+SELECT @WebAppID = (select top 1 ID from Applications where ((Applications.Title = @WebApplication) AND (Applications.LocationID = @RequestedServerID)))
 
 ------------------------------
 -- UserLoginValidierung --
@@ -3305,9 +3507,9 @@ SELECT @WebAppID = (select top 1 ID from Applications where ((Applications.Title
 		SELECT @PublicGroupID = dbo.System_ServerGroups.ID_Group_Public FROM dbo.System_ServerGroups INNER JOIN dbo.System_Servers ON dbo.System_ServerGroups.ID = dbo.System_Servers.ServerGroup WHERE system_servers.ip = @ServerIP
 		If @PublicGroupID Is Null 
 			SELECT @PublicGroupID = 0
-		SELECT @bufferUserIDByPublicGroup = (SELECT DISTINCT ApplicationsRightsByGroup.ID_GroupOrPerson FROM Memberships RIGHT OUTER JOIN ApplicationsRightsByGroup ON Memberships.ID_Group = ApplicationsRightsByGroup.ID_GroupOrPerson RIGHT OUTER JOIN Applications ON ApplicationsRightsByGroup.ID_Application = Applications.ID WHERE (Applications.Title = @WebApplication) AND (Applications.LocationID = @LocationID) AND (ApplicationsRightsByGroup.ID_GroupOrPerson = @PublicGroupID))
-		SELECT @bufferUserIDByGroup = (SELECT DISTINCT Memberships.ID_User FROM Memberships RIGHT OUTER JOIN ApplicationsRightsByGroup ON Memberships.ID_Group = ApplicationsRightsByGroup.ID_GroupOrPerson RIGHT OUTER JOIN Applications ON ApplicationsRightsByGroup.ID_Application = Applications.ID WHERE (((Memberships.ID_User = @CurUserID) AND (Applications.Title = @WebApplication))) AND Applications.LocationID = @LocationID)
-		SELECT @bufferUserIDByAdmin = (SELECT DISTINCT ID_User FROM Memberships WHERE (ID_User = @CurUserID) AND (ID_Group = 6))
+		SELECT @bufferUserIDByPublicGroup = (SELECT DISTINCT ApplicationsRightsByGroup.ID_GroupOrPerson FROM view_Memberships_Effective_wo_PublicNAnonymous RIGHT OUTER JOIN ApplicationsRightsByGroup ON view_Memberships_Effective_wo_PublicNAnonymous.ID_Group = ApplicationsRightsByGroup.ID_GroupOrPerson RIGHT OUTER JOIN Applications ON ApplicationsRightsByGroup.ID_Application = Applications.ID WHERE (Applications.Title = @WebApplication) AND (Applications.LocationID = @RequestedServerID) AND (ApplicationsRightsByGroup.ID_GroupOrPerson = @PublicGroupID))
+		SELECT @bufferUserIDByGroup = (SELECT DISTINCT view_Memberships_Effective_wo_PublicNAnonymous.ID_User FROM view_Memberships_Effective_wo_PublicNAnonymous RIGHT OUTER JOIN ApplicationsRightsByGroup ON view_Memberships_Effective_wo_PublicNAnonymous.ID_Group = ApplicationsRightsByGroup.ID_GroupOrPerson RIGHT OUTER JOIN Applications ON ApplicationsRightsByGroup.ID_Application = Applications.ID WHERE (((view_Memberships_Effective_wo_PublicNAnonymous.ID_User = @CurUserID) AND (Applications.Title = @WebApplication))) AND Applications.LocationID = @RequestedServerID)
+		SELECT @bufferUserIDByAdmin = (SELECT DISTINCT ID_User FROM view_Memberships_Effective_wo_PublicNAnonymous WHERE ID_User = @CurUserID AND ID_Group = 6)
 		If NullIf(@bufferUserIDByPublicGroup, -1) <> -1 Or NullIf(@bufferUserIDByGroup, -1) <> -1 Or NullIf(@bufferUserIDByAdmin, -1) <> -1 Or NullIf(@WebApplication, '') = 'Public'
 			SET @MyResult = 1 -- Zugriff gewährt
 		Else
@@ -3565,10 +3767,83 @@ Else
 	SELECT Result = 0
 GO
 
+IF  EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[Public_UserIsAuthorized]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Public_UserIsAuthorized]
+GO
+----------------------------------------------------
+-- dbo.Public_UserIsAuthorized
+----------------------------------------------------
+CREATE PROCEDURE dbo.Public_UserIsAuthorized
+(
+	@UserID bigint,
+	@SecurityObjectID int,
+	@SecurityObjectName varchar(255),
+	@ServerGroupID int
+)
+WITH ENCRYPTION
+AS 
+-- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+SET NOCOUNT ON
+
+-------------------------------------------------------------------------------------------------------------------------
+-- Überprüfung auf Vollständigkeit übergebener Parameter, die sonst nicht mehr weiter geprüft werden --
+-------------------------------------------------------------------------------------------------------------------------
+If IsNull(@UserID, 0) = 0 
+	OR IsNull(@ServerGroupID, 0) = 0 
+	OR 
+		(
+		IsNull(@SecurityObjectID, 0) = 0 
+		AND IsNull(@SecurityObjectName, '') = ''
+		)
+	OR 
+		(
+		IsNull(@SecurityObjectID, 0) <> 0 
+		AND IsNull(@SecurityObjectName, '') <> ''
+		)
+	BEGIN
+		-- Rückgabewert
+		SET NOCOUNT OFF
+		-- Abbruch
+		Return 0
+	END
+
+------------------------------
+-- UserLoginValidierung --
+------------------------------
+
+If IsNull(@SecurityObjectName, '') = 'Anonymous' 
+	Return 1 -- Zugriff gewährt
+If IsNull(@SecurityObjectName, '') = 'Public' And @UserID <> -1
+	Return 1 -- Zugriff gewährt
+	
+DECLARE @FoundAuthsCount int
+IF @SecurityObjectID <> 0
+	SELECT @FoundAuthsCount = COUNT(*)
+		FROM dbo.ApplicationsRightsByUser_EffectiveCumulative WITH (NOLOCK)
+		WHERE ID_User = @UserID
+			AND ID_ServerGroup = @ServerGroupID 
+			AND ID_SecurityObject = @SecurityObjectID
+ELSE
+	SELECT @FoundAuthsCount = COUNT(*)
+		FROM dbo.ApplicationsRightsByUser_EffectiveCumulative WITH (NOLOCK)
+		WHERE ID_User = @UserID
+			AND ID_ServerGroup = @ServerGroupID 
+			AND ID_SecurityObject IN (SELECT ID FROM dbo.Applications WITH (NOLOCK) WHERE Title = @SecurityObjectName)
+If @FoundAuthsCount > 0
+	Return 1 -- Zugriff gewährt
+Else
+	Return 0 -- kein Zugriff auf aktuelles Dokument
+
+GO
+
+IF  EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[Public_UserIsAuthorizedForApp]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Public_UserIsAuthorizedForApp]
+GO
 ----------------------------------------------------
 -- dbo.Public_UserIsAuthorizedForApp
 ----------------------------------------------------
-ALTER PROCEDURE dbo.Public_UserIsAuthorizedForApp
+CREATE PROCEDURE dbo.Public_UserIsAuthorizedForApp
 (
 	@Username nvarchar(50),
 	@WebApplication varchar(255),
@@ -3580,20 +3855,11 @@ AS
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
 DECLARE @CurUserID int
-DECLARE @bufferUserIDByPublicGroup int
-DECLARE @bufferUserIDByAnonymousGroup int
-DECLARE @bufferUserIDByUser int
-DECLARE @bufferUserIDByGroup int
-DECLARE @bufferUserIDByAdmin int
-DECLARE @LocationID int 	-- ServerGroup
-DECLARE @PublicGroupID int
-DECLARE @AnonymousGroupID int
-DECLARE @RequestedServerID int
-DECLARE @OneOfTheSeveralAppIDs int
+DECLARE @ServerGroupID int
 
 SET NOCOUNT ON
 
-SELECT @CurUserID = ID FROM dbo.Benutzer WHERE LoginName = @Username
+SELECT @CurUserID = ID FROM dbo.Benutzer WITH (NOLOCK) WHERE LoginName = @Username
 
 -------------------------------------------------------------------------------------------------------------------------
 -- Überprüfung auf Vollständigkeit übergebener Parameter, die sonst nicht mehr weiter geprüft werden --
@@ -3609,13 +3875,14 @@ If (IsNull(@ServerIP,'') = '')
 ----------------------------------
 -- ServerGroup bestimmen --
 ----------------------------------
-SELECT   @LocationID = dbo.System_ServerGroups.ID, @RequestedServerID = dbo.System_Servers.ID
-FROM         dbo.System_Servers INNER JOIN
-                      dbo.System_ServerGroups ON dbo.System_Servers.ServerGroup = dbo.System_ServerGroups.ID
-WHERE     (dbo.System_Servers.IP = @ServerIP)
-IF @LocationID Is Null 
-	SELECT @LocationID = 0
-If @LocationID = 0
+SELECT @ServerGroupID = dbo.System_ServerGroups.ID
+FROM dbo.System_Servers WITH (NOLOCK)
+	INNER JOIN dbo.System_ServerGroups WITH (NOLOCK)
+		ON dbo.System_Servers.ServerGroup = dbo.System_ServerGroups.ID
+WHERE dbo.System_Servers.IP = @ServerIP
+IF @ServerGroupID Is Null 
+	SELECT @ServerGroupID = 0
+If @ServerGroupID = 0
 	-- Nicht authentifizierter Zugang über den aktuell gewählten Server
 	BEGIN
 		-- Rückgabewert setzen
@@ -3628,33 +3895,21 @@ If @LocationID = 0
 -- UserLoginValidierung --
 ------------------------------
 
-		If IsNull(@WebApplication, '') = 'Public' And @CurUserID Is Not Null
-			Return 1 -- Zugriff gewährt
-		SELECT TOP 1 @OneOfTheSeveralAppIDs = ID FROM dbo.Applications WHERE (Title = @WebApplication) AND (LocationID = @RequestedServerID)
-		If @OneOfTheSeveralAppIDs Is Null
-			Return 0 -- Security object nicht vorhanden
-		SELECT @PublicGroupID = dbo.System_ServerGroups.ID_Group_Public, @AnonymousGroupID = dbo.System_ServerGroups.ID_Group_Anonymous FROM dbo.System_ServerGroups INNER JOIN dbo.System_Servers ON dbo.System_ServerGroups.ID = dbo.System_Servers.ServerGroup WHERE system_servers.ip = @ServerIP
-		If @PublicGroupID Is Null 
-			SELECT @PublicGroupID = 0
-		If @AnonymousGroupID Is Null 
-			SELECT @AnonymousGroupID = 0
-		SELECT TOP 1 @bufferUserIDByAnonymousGroup = ID_Group FROM view_ApplicationRights WHERE (Title = @WebApplication) AND (LocationID = @RequestedServerID) AND (ID_Group = @AnonymousGroupID)
-		If IsNull(@bufferUserIDByAnonymousGroup, -1) <> -1
-			Return 1 -- Zugriff gewährt
-		SELECT TOP 1 @bufferUserIDByPublicGroup = ID_Group FROM view_ApplicationRights WHERE (Title = @WebApplication) AND (LocationID = @RequestedServerID) AND (ID_Group = @PublicGroupID)
-		If IsNull(@bufferUserIDByPublicGroup, -1) <> -1 And @CurUserID Is Not Null
-			Return 1 -- Zugriff gewährt
-		SELECT TOP 1 @bufferUserIDByUser = ID_User FROM view_ApplicationRights WHERE (Title = @WebApplication) AND (LocationID = @RequestedServerID) AND (ID_User = @CurUserID)
-		If IsNull(@bufferUserIDByUser, -1) <> -1 
-			Return 1 -- Zugriff gewährt
-		SELECT TOP 1 @bufferUserIDByGroup = Memberships.ID_User FROM Memberships INNER JOIN view_ApplicationRights ON Memberships.ID_Group = view_ApplicationRights.ID_Group WHERE (view_ApplicationRights.Title = @WebApplication) AND (view_ApplicationRights.LocationID = @RequestedServerID) AND (Memberships.ID_User = @CurUserID)
-		If IsNull(@bufferUserIDByGroup, -1) <> -1
-			Return 1 -- Zugriff gewährt
-		SELECT TOP 1 @bufferUserIDByAdmin = ID_User FROM Memberships WHERE (ID_User = @CurUserID) AND (ID_Group = 6)
-		If IsNull(@bufferUserIDByAdmin, -1) <> -1 
-			Return 1 -- Zugriff gewährt
-		Else
-			Return 0 -- kein Zugriff auf aktuelles Dokument
+If IsNull(@WebApplication, '') = 'Anonymous' 
+	Return 1 -- Zugriff gewährt
+If IsNull(@WebApplication, '') = 'Public' And @CurUserID Is Not Null
+	Return 1 -- Zugriff gewährt
+	
+DECLARE @FoundAuthsCount int
+SELECT @FoundAuthsCount = COUNT(*)
+	FROM dbo.ApplicationsRightsByUser_EffectiveCumulative WITH (NOLOCK)
+	WHERE ID_User = IsNull(@CurUserID, -1)
+		AND ID_ServerGroup = @ServerGroupID 
+		AND ID_SecurityObject IN (SELECT ID FROM dbo.Applications WITH (NOLOCK) WHERE Title = @WebApplication)
+If @FoundAuthsCount > 0
+	Return 1 -- Zugriff gewährt
+Else
+	Return 0 -- kein Zugriff auf aktuelles Dokument
 
 GO
 
@@ -3681,38 +3936,18 @@ AS
 
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
-DECLARE @CurUserPW varchar(4096)
 DECLARE @CurUserLoginDisabled bit
 DECLARE @CurUserLoginLockedTill datetime
-DECLARE @CurUserLoginFailures int
 DECLARE @CurUserLoginCount int
-DECLARE @MaxLoginFailures int
 DECLARE @CurUserAccountAccessability int
-DECLARE @LoginFailureDelayHours float
-DECLARE @position int
-DECLARE @MyResult int
-DECLARE @Dummy bit
-DECLARE @bufferUserIDByAnonymousGroup int
-DECLARE @bufferUserIDByPublicGroup int
-DECLARE @bufferUserIDByUser int
-DECLARE @bufferUserIDByGroup int
-DECLARE @bufferUserIDByAdmin int
-DECLARE @WebSessionTimeOut int -- in minutes
-DECLARE @bufferLastLoginOn datetime
-DECLARE @LocationID int 	-- ServerGroup
-DECLARE @PublicGroupID int
-DECLARE @AnonymousGroupID int
+DECLARE @ServerGroupID int
 DECLARE @ServerIsAccessable int
-DECLARE @ReAuthSuccessfull bit
 DECLARE @RequestedServerID int
-DECLARE @WebAppID int
 DECLARE @LoggingSuccess_Disabled bit
 DECLARE @CurrentSessionID int
+DECLARE @FoundFirstExistingIDApplication int
 
 SET NOCOUNT ON
-
--- Konstanten setzen
-SET @MaxLoginFailures = 3
 
 -- Reserved-Parameter auswerten
 IF @Reserved = 1
@@ -3720,23 +3955,15 @@ IF @Reserved = 1
 ELSE
 	SELECT @LoggingSuccess_Disabled = 0
 
--- Wertzuweisungen Benutzereigenschaften --> lokale Variablen
-
-SELECT @CurUserID = ID, @CurUserPW = LoginPW, @CurUserLoginDisabled = LoginDisabled, @CurUserLoginLockedTill = LoginLockedTill, 
-		@CurUserLoginFailures = LoginFailures, @CurUserLoginCount = LoginCount, @CurUserAccountAccessability = AccountAccessability,
-		@bufferLastLoginOn = LastLoginOn
-FROM dbo.Benutzer WITH (XLOCK, ROWLOCK)
-WHERE LoginName = @Username
-
 -------------------------------------------------------------------------------------------------------------------------
 -- Überprüfung auf Vollständigkeit übergebener Parameter, die sonst nicht mehr weiter geprüft werden --
 -------------------------------------------------------------------------------------------------------------------------
-If (IsNull(@WebApplication,'') = '')
-	-- No application title --> anonymous access allowed
+If IsNull(@WebApplication,'') IN ('', 'Anonymous')
+	-- No or the anonymous application title --> anonymous access allowed
 	BEGIN
 		-- Rückgabewert
 		SET NOCOUNT OFF
-		SELECT Result = -1, Null As LoginName, Null As System_SessionID
+		SELECT Result = -1, Null As LoginName, Null As System_SessionID -- access granted without logging
 		-- Abbruch
 		Return
 	END
@@ -3748,17 +3975,30 @@ If (IsNull(@ServerIP,'') = '') Or (IsNull(@RemoteIP,'') = '')
 		-- Abbruch
 		Return
 	END
+------------------------------------------------------------------------------------------
+-- Anonymous user accessing a real application always required login, first --
+------------------------------------------------------------------------------------------
+IF @Username IS NULL AND @WebApplication IS NOT NULL
+	-- Public application title --> access of any valid user is allowed
+	BEGIN
+		-- Rückgabewert
+		SET NOCOUNT OFF
+		SELECT Result = 58 -- login required
+		-- Abbruch
+		Return
+	END
 
 ----------------------------------
 -- ServerGroup bestimmen --
 ----------------------------------
-SELECT   @LocationID = dbo.System_ServerGroups.ID, @RequestedServerID = dbo.System_Servers.ID
-FROM         dbo.System_Servers INNER JOIN
-                      dbo.System_ServerGroups ON dbo.System_Servers.ServerGroup = dbo.System_ServerGroups.ID
-WHERE     (dbo.System_Servers.IP = @ServerIP AND dbo.System_Servers.Enabled <> 0)
-IF @LocationID Is Null 
-	SELECT @LocationID = 0
-If @LocationID = 0
+SELECT @ServerGroupID = dbo.System_ServerGroups.ID, @RequestedServerID = dbo.System_Servers.ID
+	FROM dbo.System_Servers WITH (NOLOCK)
+		INNER JOIN dbo.System_ServerGroups WITH (NOLOCK)
+			ON dbo.System_Servers.ServerGroup = dbo.System_ServerGroups.ID
+	WHERE dbo.System_Servers.IP = @ServerIP AND dbo.System_Servers.Enabled <> 0
+IF @ServerGroupID Is Null 
+	SELECT @ServerGroupID = 0
+If @ServerGroupID = 0
 	-- Nicht authentifizierter Zugang über den aktuell gewählten Server
 	BEGIN
 		-- Rückgabewert setzen
@@ -3766,58 +4006,19 @@ If @LocationID = 0
 		SELECT Result = -10
 		-- Abbruch
 		Return
-
 	END
 
-----------------------------------------------------------------
--- WebAppID ermitteln für ordentliche Protokollierung --
-----------------------------------------------------------------
-SELECT @WebAppID = (select top 1 ID from Applications where ((Applications.Title = @WebApplication) AND (Applications.LocationID = @RequestedServerID)) ORDER BY AppDeleted ASC)
-If @WebAppID Is Null And @WebApplication Not Like 'Public'
-	BEGIN
-		SELECT Result = -5	 -- kein Zugriff auf aktuelles Dokument
-		PRINT 'Error resolving security object ID for logging purposes'
-		RETURN
-	END
-
---------------------------------------------------
--- Anonyme Userberechtigungen checken --
---------------------------------------------------
-If (IsNull(@Username,'') = '')
-	BEGIN
-		-- Is Application available for anonymous access?
-		SELECT @AnonymousGroupID = dbo.System_ServerGroups.ID_Group_Anonymous FROM dbo.System_ServerGroups INNER JOIN dbo.System_Servers ON dbo.System_ServerGroups.ID = dbo.System_Servers.ServerGroup WHERE system_servers.ip = @ServerIP
-		If @AnonymousGroupID Is Null 
-			SELECT @AnonymousGroupID = 0
-		SELECT @bufferUserIDByAnonymousGroup = (SELECT DISTINCT ID_Group FROM view_ApplicationRights WHERE (Title = @WebApplication) AND (LocationID = @RequestedServerID) AND (ID_Group = @AnonymousGroupID))
-		If IsNull(@bufferUserIDByAnonymousGroup, -1) <> -1
-			-- Zugriff gewährt
-			BEGIN
-				-- Logging
-				insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, URL, ConflictType) values (-1, GetDate(), @ServerIP, @RemoteIP, @WebAppID, @WebURL, 0)
-				-- Rückgabewert
-				SET NOCOUNT OFF
-				SELECT Result = -1, Null As LoginName, Null As System_SessionID
-				-- Abbruch
-				Return
-			END
-		Else
-			-- Login required
-			BEGIN
-				-- Logging
-				insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, URL, ConflictType) values (-1, GetDate(), @ServerIP, @RemoteIP, @WebAppID, @WebURL, -25)
-				-- Rückgabewert
-				SET NOCOUNT OFF
-				SELECT Result = 58
-				-- Abbruch
-				Return
-			END
-	END
-
---------------------------------------------------
--- Server-Zugriff durch Benutzer erlaubt? --
---------------------------------------------------
-If @CurUserAccountAccessability Is Null
+--------------------------------------------------------------------
+-- Wertzuweisungen Benutzereigenschaften --> lokale Variablen
+--------------------------------------------------------------------
+SELECT @CurUserID = ID, 
+		@CurUserLoginDisabled = LoginDisabled, 
+		@CurUserLoginLockedTill = LoginLockedTill, 
+		@CurUserLoginCount = LoginCount, 
+		@CurUserAccountAccessability = AccountAccessability
+	FROM dbo.Benutzer WITH (XLOCK, ROWLOCK)
+	WHERE LoginName = @Username
+If @Username IS NOT NULL AND @CurUserAccountAccessability Is Null
 	-- Benutzer nicht gefunden
 	BEGIN
 		-- Rückgabewert
@@ -3826,152 +4027,172 @@ If @CurUserAccountAccessability Is Null
 		-- Abbruch
 		Return
 	END
-SELECT     @ServerIsAccessable = COUNT(*)
-	FROM         System_ServerGroupsAndTheirUserAccessLevels INNER JOIN       System_Servers ON System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = System_Servers.ServerGroup
-	WHERE     (System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = @CurUserAccountAccessability) AND (System_Servers.IP = @ServerIP)
-If @ServerIsAccessable Is Null 
-	SELECT @ServerIsAccessable = 0
-If @ServerIsAccessable = 0
-	-- Nicht authentifizierter Zugang über den aktuell gewählten Server
-	BEGIN
-		-- Rückgabewert setzen
-		SET NOCOUNT OFF
-		SELECT Result = -9
-		-- Abbruch
-		Return
-	END
 
----------------------------------------------------------------------------------
--- Versuch der Authentifizierung durch die mitgelieferte SessionID --
----------------------------------------------------------------------------------
--- Lookup internal session ID
-SELECT TOP 1 @CurrentSessionID = SessionID
-FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) 
-WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID 
-	AND ScriptEngine_ID = @ScriptEngine_ID
-	AND Server = @RequestedServerID
-	AND SessionID IN (SELECT ID_Session FROM [dbo].[System_UserSessions] WHERE ID_User = @CurUserID)
+IF @CurUserID IS NOT NULL
+BEGIN
+	------------------------------
+	-- UserLoginValidierung --
+	------------------------------
+	If (@CurUserLoginDisabled = 1)
+		BEGIN
+			-- Logging
+			insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ConflictType, ConflictDescription) 
+				values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, -28, 'Account disabled')
+			-- Konto gesperrt - Rückgabewert
+			SET NOCOUNT OFF
+			SELECT Result = 44
+			Return
+		END
+	If  @CurUserLoginLockedTill > GetDate()
+		BEGIN
+			-- Logging
+			insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ConflictType, ConflictDescription) 
+				values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, -29, 'Account locked temporary')
+			-- LoginSperre aktiv - Rückgabewert
+			SET NOCOUNT OFF
+			SELECT Result = -2
+			Return
+		END
+	--------------------------------------------------
+	-- Server-Zugriff durch Benutzer erlaubt? --
+	--------------------------------------------------
+	SELECT @ServerIsAccessable = COUNT(*)
+		FROM System_ServerGroupsAndTheirUserAccessLevels WITH (NOLOCK)
+			INNER JOIN System_Servers WITH (NOLOCK)
+				ON System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = System_Servers.ServerGroup
+		WHERE System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = @CurUserAccountAccessability 
+			AND System_Servers.IP = @ServerIP
+	If @ServerIsAccessable Is Null 
+		SELECT @ServerIsAccessable = 0
+	If @ServerIsAccessable = 0
+		-- Nicht authentifizierter Zugang über den aktuell gewählten Server
+		BEGIN
+			-- Rückgabewert setzen
+			SET NOCOUNT OFF
+			SELECT Result = -9
+			-- Abbruch
+			Return
+		END
+	---------------------------------------------------------------------------------
+	-- Versuch der Authentifizierung durch die mitgelieferte SessionID --
+	---------------------------------------------------------------------------------
+	-- Lookup internal session ID
+	SELECT TOP 1 @CurrentSessionID = SessionID
+		FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) 
+		WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID 
+			AND ScriptEngine_ID = @ScriptEngine_ID
+			AND Server = @RequestedServerID
+			AND SessionID IN (
+								SELECT ID_Session 
+								FROM [dbo].[System_UserSessions] WITH (NOLOCK) 
+								WHERE ID_User = @CurUserID
+							 )
+	If @CurrentSessionID IS NULL
+		BEGIN
+			-- Logging
+			insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ConflictType, ConflictDescription) 
+				values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, -98, 'Browser/client session not found: ' + @ScriptEngine_SessionID + ', ReAuthSuccessfull = 0, Login denied')
+			-- Rückgabewert
+			SET NOCOUNT OFF
+			SELECT Result = -4
+			-- Abbruch
+			Return
+		END
+	---------------------------------------------------------------------------------
+	-- Abkürzung beim Zugriff auf Application 'Public' durch angemeldeten, validen Benutzer
+	---------------------------------------------------------------------------------
+	IF @WebApplication = 'Public'
+		-- Public application title --> access of any valid user is allowed
+		BEGIN
+			-- Rückgabewert
+			SET NOCOUNT OFF
+			SELECT Result = -1, @Username As LoginName, @CurrentSessionID As System_SessionID -- access granted without logging
+			-- Abbruch
+			Return
+		END
+END
 
-SELECT @ReAuthSuccessfull = 0 -- Variablen-Initialisierung
-If @CurrentSessionID IS NOT NULL
-	SELECT @ReAuthSuccessfull = 1
-If @ReAuthSuccessfull = 0
+------------------------------
+-- Test for a really exisiting app with specified name --
+------------------------------
+SELECT @FoundFirstExistingIDApplication = 
+	(
+	select top 1 ID 
+	from Applications WITH (NOLOCK) 
+	where Applications.Title = @WebApplication 
+		AND Applications.LocationID = @RequestedServerID
+	)
+If @FoundFirstExistingIDApplication Is Null
 	BEGIN
-		-- Logging
-		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, @WebAppID, -98, 'Browser/client session not found: ' + @ScriptEngine_SessionID + ', ReAuthSuccessfull = ' + Cast(@ReAuthSuccessfull as varchar(30)) + ', Login denied')
-		-- Rückgabewert
-		SET NOCOUNT OFF
-		SELECT Result = -4
-		-- Abbruch
-		Return
+		SELECT Result = -5	 -- kein Zugriff auf aktuelles Dokument
+		PRINT 'Error resolving security object ID for logging purposes'
+		RETURN
 	END
 
 ------------------------------
 -- UserLoginValidierung --
 ------------------------------
-If (@CurUserLoginDisabled = 1)
+DECLARE @FoundFirstIDApplication int
+SELECT TOP 1 @FoundFirstIDApplication = ID_SecurityObject
+    FROM dbo.ApplicationsRightsByUser_EffectiveCumulative WITH (NOLOCK)
+	WHERE ID_User = IsNull(@CurUserID, -1)
+		AND ID_ServerGroup = @ServerGroupID 
+		AND ID_SecurityObject IN (SELECT ID FROM dbo.Applications WITH (NOLOCK) WHERE Title = @WebApplication)
+    
+----------------------------------------------------------------
+-- Ergebnis-Rückmeldung und ordentliche Protokollierung
+----------------------------------------------------------------
+IF @FoundFirstIDApplication IS NOT NULL
+	-- Authorization GRANTED within valid user session with a valid user
+	IF @CurUserID IS NOT NULL
+		-- User with login
+		BEGIN
+			-- LoginRemoteIP und SessionIDs setzen + LoginFailureFields zurücksetzen
+			update dbo.Benutzer 
+				set LastLoginViaRemoteIP = @RemoteIP, LastLoginOn = GetDate(), 
+					LoginFailures = 0, LoginLockedTill = Null  
+				where LoginName = @Username 
+			If @LoggingSuccess_Disabled = 0 
+				-- LoginCount hochzählen
+				update dbo.Benutzer 
+					set LoginCount = @CurUserLoginCount + 1 
+					where LoginName = @Username
+				-- Logging
+				insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, URL, ConflictType) 
+					values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, @FoundFirstIDApplication, @WebURL, 0)
+			-- WebAreaSessionState aktualisieren
+			update dbo.System_WebAreasAuthorizedForSession 
+				set LastSessionStateRefresh = getdate() 
+				where ScriptEngine_ID = @ScriptEngine_ID 
+					and SessionID = @CurrentSessionID 
+					And Server = @RequestedServerID
+			-- Rückgabewert
+			SET NOCOUNT OFF
+			SELECT Result = -1, LoginName, @CurrentSessionID As System_SessionID
+				FROM dbo.Benutzer
+				WHERE LoginName = @Username
+			Return
+		END	
+	ELSE
+		-- User without login / anonymous user
+		BEGIN
+			-- Rückgabewert
+			SET NOCOUNT OFF
+			SELECT Result = -1, Null As LoginName, Null As System_SessionID -- access granted without logging
+			Return
+		END
+ELSE 
+	-- Authorization DENIED
 	BEGIN
-		-- Logging
-		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, @WebAppID, -28, 'Account disabled')
-		-- Konto gesperrt - Rückgabewert
-		SET NOCOUNT OFF
-		SELECT Result = 44
-		Return
-	END
-If  @CurUserLoginLockedTill > GetDate()
-	BEGIN
-		-- Logging
-		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, @WebAppID, -29, 'Account locked temporary')
-		-- LoginSperre aktiv - Rückgabewert
-		SET NOCOUNT OFF
-		SELECT Result = -2
-		Return
-	END
-
-------------------------------
--- UserLoginValidierung --
-------------------------------
-
--- ReAuthentifizierung?
-If @ReAuthSuccessfull = 1
-	-- Does the user has got authorization?
-	BEGIN
-		SELECT @PublicGroupID = dbo.System_ServerGroups.ID_Group_Public FROM dbo.System_ServerGroups INNER JOIN dbo.System_Servers ON dbo.System_ServerGroups.ID = dbo.System_Servers.ServerGroup WHERE system_servers.ip = @ServerIP
-		If @PublicGroupID Is Null 
-			SELECT @PublicGroupID = 0
-		SELECT @AnonymousGroupID = dbo.System_ServerGroups.ID_Group_Anonymous FROM dbo.System_ServerGroups INNER JOIN dbo.System_Servers ON dbo.System_ServerGroups.ID = dbo.System_Servers.ServerGroup WHERE system_servers.ip = @ServerIP
-		If @AnonymousGroupID Is Null 
-			SELECT @AnonymousGroupID = 0
-		SELECT @bufferUserIDByAnonymousGroup = (SELECT DISTINCT ID_Group FROM view_ApplicationRights WHERE (Title = @WebApplication) AND (LocationID = @RequestedServerID) AND (ID_Group = @AnonymousGroupID))
-		SELECT @bufferUserIDByPublicGroup = (SELECT DISTINCT ID_Group FROM view_ApplicationRights WHERE (Title = @WebApplication) AND (LocationID = @RequestedServerID) AND (ID_Group = @PublicGroupID))
-		SELECT @bufferUserIDByUser = (SELECT DISTINCT ID_User FROM view_ApplicationRights WHERE (Title = @WebApplication) AND (LocationID = @RequestedServerID) AND (ID_User = @CurUserID))
-		SELECT @bufferUserIDByGroup = (SELECT DISTINCT Memberships.ID_User FROM Memberships INNER JOIN view_ApplicationRights ON Memberships.ID_Group = view_ApplicationRights.ID_Group WHERE (view_ApplicationRights.Title = @WebApplication) AND (view_ApplicationRights.LocationID = @RequestedServerID) AND (Memberships.ID_User = @CurUserID))
-		SELECT @bufferUserIDByAdmin = (SELECT DISTINCT ID_User FROM Memberships WHERE (ID_User = @CurUserID) AND (ID_Group = 6))
-		If IsNull(@bufferUserIDByAnonymousGroup, -1) <> -1 Or IsNull(@bufferUserIDByPublicGroup, -1) <> -1 Or IsNull(@bufferUserIDByUser, -1) <> -1 Or IsNull(@bufferUserIDByGroup, -1) <> -1 Or IsNull(@bufferUserIDByAdmin, -1) <> -1 Or IsNull(@WebApplication, '') = 'Public'
-			SET @MyResult = 1 -- Zugriff gewährt
-		Else
-			SET @MyResult = 2 -- kein Zugriff auf aktuelles Dokument
-	END
-Else
-	SET @MyResult = 0 -- Reauthentifizierung schlug fehl - Neuanmeldung erforderlich
-
-IF @MyResult = 1
-	-- Login successfull
-	BEGIN
-		-- LoginRemoteIP und SessionIDs setzen
-		update dbo.Benutzer set LastLoginViaRemoteIP = @RemoteIP, LastLoginOn = GetDate() where LoginName = @Username 
-		-- LoginCount hochzählen
-		If @LoggingSuccess_Disabled = 0 
-			update dbo.Benutzer set LoginCount = @CurUserLoginCount + 1 where LoginName = @Username
-		-- LoginFailureFields zurücksetzen
-		update dbo.Benutzer set LoginFailures = 0, LoginLockedTill = Null where LoginName = @Username
-		-- Logging
-		If @LoggingSuccess_Disabled = 0 
-			insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, URL, ConflictType) values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, @WebAppID, @WebURL, 0)
-		-- WebAreaSessionState aktualisieren
-		update dbo.System_WebAreasAuthorizedForSession set LastSessionStateRefresh = getdate() where ScriptEngine_ID = @ScriptEngine_ID and SessionID = @CurrentSessionID And Server = @RequestedServerID
+		-- Logging - PLEASE NOTE: möglicherweise jedoch nicht exakt die angefragte/erlaubte AppID da nur Logging einer exemplarischen AppID mit gleichem/angefragtem AppName jedoch ohne entsprechende Rechte --
+		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, URL, ConflictType) 
+			values (IsNull(@CurUserID, -1), GetDate(), @ServerIP, @RemoteIP, @FoundFirstExistingIDApplication, @WebURL, -27)
 		-- Rückgabewert
 		SET NOCOUNT OFF
-		SELECT Result = -1, LoginName, @CurrentSessionID As System_SessionID
-		FROM dbo.Benutzer
-		WHERE LoginName = @Username
-		SET NOCOUNT ON
+		SELECT Result = -5	 -- kein Zugriff auf aktuelles Dokument
+		PRINT 'No access to current document'
+		Return
 	END
-Else -- @MyResult = 0 Or @MyResult = 2
-	-- Login failed
-	BEGIN
-		IF @CurUserLoginFailures = @MaxLoginFailures - 1
-			-- LoginFailure Maximum nun erreicht
-			BEGIN	
-				-- Rückgabewert
-				SET NOCOUNT OFF
-				SELECT Result = -2	
-				SET NOCOUNT ON
-				-- Zeitliche Loginsperre setzen
-				update dbo.Benutzer set LoginLockedTill = getdate() + 1.0/24*@LoginFailureDelayHours where LoginName = @Username
-			END	
-		Else
-			BEGIN
-				SET NOCOUNT OFF
-				If @MyResult = 0 -- Weitere Logins möglich - Rückgabewert
-					SELECT Result = 57	 -- Reauthentifizierung schlug fehl - Neuanmeldung erforderlich
-				Else
-					SELECT Result = -5	 -- kein Zugriff auf aktuelles Dokument
-					PRINT 'No access to current document'
-				SET NOCOUNT ON
-			END
-		-- Logging
-		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, URL, ConflictType) values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, @WebAppID, @WebURL, -27)
-	END
-
--- Wenn @CurUserLoginLockedTill vorhanden und älter als aktuelles Systemdatum, LoginFailureFields zurücksetzen
-If Not (@CurUserLoginLockedTill > GetDate())
-
-	If @MyResult = 1 Or @MyResult = 2
-		-- Reauth-check successful --> LoginFailures = 0
-		-- (Access may be granted or not - the password check has been successfull and so there aren no really LoginFailures;
-		-- if you would say it is one, then the user would try to access a locked modul 3 times and after this he would be locked by the system...)
-		update dbo.Benutzer set LoginFailures = 0, LoginLockedTill = Null where LoginName = @Username
 GO
 
 ----------------------------------------------------
@@ -4074,7 +4295,7 @@ DECLARE @bufferUserIDByGroup int
 DECLARE @bufferUserIDByAdmin int
 DECLARE @WebSessionTimeOut int -- in minutes
 DECLARE @bufferLastLoginOn datetime
-DECLARE @LocationID int		-- ServerGroup
+DECLARE @ServerGroupID int
 DECLARE @ServerID int
 DECLARE @PublicGroupID int
 DECLARE @ServerIsAccessable int
@@ -4126,12 +4347,12 @@ If @CurUserAccountAccessability Is Null
 ----------------------------------
 -- ServerGroup bestimmen --
 ----------------------------------
-SELECT   @LocationID = dbo.System_Servers.ServerGroup, @ServerID = ID
+SELECT   @ServerGroupID = dbo.System_Servers.ServerGroup, @ServerID = ID
 FROM         dbo.System_Servers
 WHERE     (dbo.System_Servers.IP = @ServerIP AND dbo.System_Servers.Enabled <> 0)
-IF @LocationID Is Null 
-	SELECT @LocationID = 0
-If @LocationID = 0
+IF @ServerGroupID Is Null 
+	SELECT @ServerGroupID = 0
+If @ServerGroupID = 0
 	-- Nicht authentifizierter Zugang über den aktuell gewählten Server
 	BEGIN
 		-- Rückgabewert setzen
@@ -4270,7 +4491,7 @@ IF @MyResult = 1
 												AND dbo.System_WebAreaScriptEnginesAuthorization.Server = @ServerID THEN @ScriptEngine_SessionID ELSE NULL END
 				FROM         dbo.System_Servers INNER JOIN
 				                      dbo.System_WebAreaScriptEnginesAuthorization ON dbo.System_Servers.ID = dbo.System_WebAreaScriptEnginesAuthorization.Server
-				WHERE     (dbo.System_Servers.Enabled <> 0) AND (dbo.System_Servers.ServerGroup = @LocationID)
+				WHERE     (dbo.System_Servers.Enabled <> 0) AND (dbo.System_Servers.ServerGroup = @ServerGroupID)
 				-- Ggf. weitere Sessions schließen, welche noch offen sind und von der gleichen Browsersession geöffnet wurden
 				-- Konkreter Beispielfall: 
 				-- 2 Browserfenster wurden geöffnet, die Cookies und damit die Sessions sind die gleichen; 
@@ -4410,288 +4631,8 @@ GO
 IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[RefillSplittedSecObjAndNavPointsTables]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[RefillSplittedSecObjAndNavPointsTables]
 GO
-CREATE PROCEDURE dbo.RefillSplittedSecObjAndNavPointsTables
-AS
-BEGIN
--- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
-SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-
-TRUNCATE TABLE dbo.SecurityObjects_CurrentAndInactiveOnes
-TRUNCATE TABLE dbo.NavItems
-TRUNCATE TABLE dbo.SecurityObjects_vs_NavItems
-TRUNCATE TABLE dbo.SecurityObjects_AuthsByGroup
-TRUNCATE TABLE dbo.SecurityObjects_AuthsByUser
-TRUNCATE TABLE dbo.Apps2SecObj_SyncWarnLog
-
--- AppSecurityObjects übernehmen
-INSERT INTO dbo.SecurityObjects_CurrentAndInactiveOnes (Title, TitleAdminArea, ReleasedOn, ReleasedBy, Remarks, SystemAppType, Deleted, AuthsAsSecObjID, [Disabled], ModifiedBy, ModifiedOn)
-SELECT     Title, MAX(TitleAdminArea) AS Expr1, MAX(ReleasedOn) AS Expr2, MIN(ReleasedBy) AS Expr3, MAX(Remarks) AS Expr4, MAX(SystemAppType) 
-                      AS Expr5, MIN(Case when AppDeleted <> 0 then 1 else 0 end) AS Expr7, NULL AS Expr8, MIN(case when AppDisabled <> 0 then 1 else 0 end) AS Expr9, MIN(ModifiedBy) AS Expr11, 
-                      IsNull(MAX(ModifiedOn), MAX(ReleasedOn)) AS Expr10
-FROM         dbo.Applications
-GROUP BY Title
-
--- AppNavItems übernehmen
-INSERT INTO dbo.NavItems
-                      (Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title, NavURL, NavFrame, NavTooltipText, IsNew, IsUpdated, ServerID, 
-                      LanguageID, SystemAppType, Remarks, ReleasedOn, ReleasedBy, ModifiedOn, ModifiedBy, Disabled, Sort, ResetIsNewUpdatedStatusOn,
-                       OnMouseOver, OnMouseOut, OnClick, AddLanguageID2URL, Level1TitleIsHTMLCoded, Level2TitleIsHTMLCoded, Level3TitleIsHTMLCoded, 
-                      Level4TitleIsHTMLCoded, Level5TitleIsHTMLCoded, Level6TitleIsHTMLCoded)
-SELECT     Level1Title, Level2Title, Level3Title, Level4Title, Level5Title, Level6Title, NavURL, NavFrame, NavTooltipText, IsNew, IsUpdated, LocationID, 
-                      LanguageID, SystemAppType, Remarks, ReleasedOn, ReleasedBy, IsNull(ModifiedOn, ReleasedOn), ModifiedBy, AppDisabled, Sort, 
-                      ResetIsNewUpdatedStatusOn, OnMouseOver, OnMouseOut, OnClick, AddLanguageID2URL, Level1TitleIsHTMLCoded, Level2TitleIsHTMLCoded, 
-                      Level3TitleIsHTMLCoded, Level4TitleIsHTMLCoded, Level5TitleIsHTMLCoded, Level6TitleIsHTMLCoded
-FROM         dbo.Applications
-WHERE     (AppDeleted = 0)
-
--- Verknüpfungen zwischen SecurityObjects und NavItems aufbauen
-INSERT INTO dbo.SecurityObjects_vs_NavItems (ID_SecurityObject, ID_NavItem)
-SELECT dbo.SecurityObjects_CurrentAndInactiveOnes.ID as SecID, dbo.NavItems.ID as NavID
-FROM dbo.Applications
-	LEFT JOIN dbo.SecurityObjects_CurrentAndInactiveOnes ON dbo.Applications.Title = dbo.SecurityObjects_CurrentAndInactiveOnes.Title
-	LEFT JOIN dbo.NavItems ON
-		ISNULL(dbo.Applications.Level1Title, '') = ISNULL(dbo.NavItems.Level1Title, '') AND 
-		ISNULL(dbo.Applications.Level2Title, '') = ISNULL(dbo.NavItems.Level2Title, '') AND 
-		ISNULL(dbo.Applications.Level3Title, '') = ISNULL(dbo.NavItems.Level3Title, '') AND 
-		ISNULL(dbo.Applications.Level4Title, '') = ISNULL(dbo.NavItems.Level4Title, '') AND 
-		ISNULL(dbo.Applications.Level5Title, '') = ISNULL(dbo.NavItems.Level5Title, '') AND 
-		ISNULL(dbo.Applications.Level6Title, '') = ISNULL(dbo.NavItems.Level6Title, '') AND 
-		dbo.Applications.NavURL = dbo.NavItems.NavURL AND
-		dbo.Applications.LanguageID = dbo.NavItems.LanguageID AND
-		dbo.Applications.LocationID = dbo.NavItems.ServerID
-WHERE dbo.NavItems.ID Is Not NULL
-GROUP BY dbo.SecurityObjects_CurrentAndInactiveOnes.ID, dbo.NavItems.ID
-
--- Zusammenstellung der Applikationsvererbungen, welche über die Title-Grenzen hinweg gehen
-CREATE TABLE #AuthInheritionsBetweenDifferentApps
-(
-        InheritingID int,
-        InheritingTitle varchar(255),
-        InheritedFromID int,
-        InheritedFromTitle varchar(255)
-)
-;
-INSERT INTO #AuthInheritionsBetweenDifferentApps
-(
-        InheritingID,
-        InheritingTitle,
-        InheritedFromID,
-        InheritedFromTitle
-)
-SELECT     dbo.Applications.ID AS InheritingID, dbo.Applications.Title AS InheritingTitle, 
-                      ApplicationsInheritFrom.ID AS InheritedFromID, ApplicationsInheritFrom.Title AS InheritedFromTitle
-FROM         dbo.Applications INNER JOIN
-                      dbo.Applications ApplicationsInheritFrom ON 
-                      dbo.Applications.AuthsAsAppID = ApplicationsInheritFrom.ID AND 
-                      dbo.Applications.Title <> ApplicationsInheritFrom.Title
-
--- Berechtigungsvererbung zwischen Anwendungen unterschiedlicher ApplicationTitles wiederherstellen
-UPDATE dbo.SecurityObjects
-SET dbo.SecurityObjects.AuthsAsSecObjID = secobj_by_authsasSecObjid.ID
-FROM dbo.SecurityObjects 
-	INNER JOIN dbo.Applications ON dbo.SecurityObjects.Title = dbo.Applications.Title
-	INNER JOIN dbo.Applications apps_by_authsasappid ON Applications.AuthsAsAppID = apps_by_authsasappid.ID
-	INNER JOIN dbo.SecurityObjects secobj_by_authsasSecObjid ON apps_by_authsasappid.Title = secobj_by_authsasSecObjid.Title
-WHERE dbo.Applications.AuthsAsAppID Is Not Null AND dbo.Applications.ID IN (SELECT InheritingID FROM #AuthInheritionsBetweenDifferentApps)
-
--- Gruppenberechtigungen neu aufbauen - Apps ohne Vererbung
-INSERT INTO SecurityObjects_AuthsByGroup (ID_SecurityObject, ID_Group, ReleasedOn, ReleasedBy, ID_ServerGroup)
-SELECT dbo.SecurityObjects.ID As ID_Application, 
-	dbo.ApplicationsRightsByGroup.ID_GroupOrPerson, dbo.ApplicationsRightsByGroup.ReleasedOn, dbo.ApplicationsRightsByGroup.ReleasedBy,
-	dbo.System_Servers.ServerGroup
-FROM dbo.Applications 
-	INNER JOIN dbo.SecurityObjects ON dbo.Applications.Title = dbo.SecurityObjects.Title
-	INNER JOIN dbo.ApplicationsRightsByGroup ON dbo.Applications.ID = dbo.ApplicationsRightsByGroup.ID_Application
-	INNER JOIN dbo.System_Servers ON dbo.Applications.LocationID = dbo.System_Servers.ID
-WHERE dbo.Applications.AuthsAsAppID Is Null
-
--- Gruppenberechtigungen neu aufbauen - Apps mit Vererbung - Gleicher AppTitle
-INSERT INTO SecurityObjects_AuthsByGroup (ID_SecurityObject, ID_Group, ReleasedOn, ReleasedBy, ID_ServerGroup)
-SELECT dbo.SecurityObjects.ID As ID_Application, 
-	dbo.ApplicationsRightsByGroup.ID_GroupOrPerson, dbo.ApplicationsRightsByGroup.ReleasedOn, dbo.ApplicationsRightsByGroup.ReleasedBy,
-	dbo.System_Servers.ServerGroup
-FROM dbo.Applications 
-	INNER JOIN dbo.SecurityObjects ON dbo.Applications.Title = dbo.SecurityObjects.Title
-	INNER JOIN dbo.ApplicationsRightsByGroup ON dbo.Applications.ID = dbo.ApplicationsRightsByGroup.ID_Application
-	INNER JOIN dbo.System_Servers ON dbo.Applications.LocationID = dbo.System_Servers.ID
-WHERE dbo.Applications.AuthsAsAppID Is Not Null AND dbo.Applications.ID Not IN (SELECT InheritingID FROM #AuthInheritionsBetweenDifferentApps)
-
--- Gruppenberechtigungen neu aufbauen - Apps mit Vererbung - Unterschiedlicher AppTitle
-INSERT INTO SecurityObjects_AuthsByGroup (ID_SecurityObject, ID_Group, ReleasedOn, ReleasedBy, ID_ServerGroup)
-SELECT dbo.SecurityObjects.ID As ID_Application, 
-	dbo.ApplicationsRightsByGroup.ID_GroupOrPerson, dbo.ApplicationsRightsByGroup.ReleasedOn, dbo.ApplicationsRightsByGroup.ReleasedBy,
-	dbo.System_Servers.ServerGroup
-FROM dbo.Applications 
-	INNER JOIN dbo.Applications apps_by_authsasappid ON Applications.AuthsAsAppID = apps_by_authsasappid.ID
-	INNER JOIN dbo.SecurityObjects ON apps_by_authsasappid.Title = dbo.SecurityObjects.Title
-	INNER JOIN dbo.ApplicationsRightsByGroup ON dbo.Applications.ID = dbo.ApplicationsRightsByGroup.ID_Application
-	INNER JOIN dbo.System_Servers ON dbo.Applications.LocationID = dbo.System_Servers.ID
-WHERE dbo.Applications.AuthsAsAppID Is Not Null AND dbo.Applications.ID IN (SELECT InheritingID FROM #AuthInheritionsBetweenDifferentApps)
-
--- Benutzerberechtigungen neu aufbauen - Apps ohne Vererbung
-INSERT INTO SecurityObjects_AuthsByUser (ID_SecurityObject, ID_User, ReleasedOn, ReleasedBy, DevelopmentTeamMember, ID_ServerGroup)
-SELECT dbo.SecurityObjects.ID As ID_Application, 
-	dbo.ApplicationsRightsByUser.ID_GroupOrPerson, 
-	dbo.ApplicationsRightsByUser.ReleasedOn, 
-	dbo.ApplicationsRightsByUser.ReleasedBy, 
-	dbo.ApplicationsRightsByUser.DevelopmentTeamMember,
-	dbo.System_Servers.ServerGroup
-FROM dbo.Applications 
-	INNER JOIN dbo.SecurityObjects ON dbo.Applications.Title = dbo.SecurityObjects.Title
-	INNER JOIN dbo.ApplicationsRightsByUser ON dbo.Applications.ID = dbo.ApplicationsRightsByUser.ID_Application
-	INNER JOIN dbo.System_Servers ON dbo.Applications.LocationID = dbo.System_Servers.ID
-WHERE dbo.Applications.AuthsAsAppID Is Null
-
--- Benutzerberechtigungen neu aufbauen - Apps mit Vererbung - Gleicher AppTitle
-INSERT INTO SecurityObjects_AuthsByUser (ID_SecurityObject, ID_User, ReleasedOn, ReleasedBy, DevelopmentTeamMember, ID_ServerGroup)
-SELECT dbo.SecurityObjects.ID As ID_Application, 
-	dbo.ApplicationsRightsByUser.ID_GroupOrPerson, dbo.ApplicationsRightsByUser.ReleasedOn, dbo.ApplicationsRightsByUser.ReleasedBy, dbo.ApplicationsRightsByUser.DevelopmentTeamMember,
-	dbo.System_Servers.ServerGroup
-FROM dbo.Applications 
-	INNER JOIN dbo.SecurityObjects ON dbo.Applications.Title = dbo.SecurityObjects.Title
-	INNER JOIN dbo.ApplicationsRightsByUser ON dbo.Applications.ID = dbo.ApplicationsRightsByUser.ID_Application
-	INNER JOIN dbo.System_Servers ON dbo.Applications.LocationID = dbo.System_Servers.ID
-WHERE dbo.Applications.AuthsAsAppID Is Not Null AND dbo.Applications.ID Not IN (SELECT InheritingID FROM #AuthInheritionsBetweenDifferentApps)
-
--- Benutzerberechtigungen neu aufbauen - Apps mit Vererbung - Unterschiedlicher AppTitle
-INSERT INTO SecurityObjects_AuthsByUser (ID_SecurityObject, ID_User, ReleasedOn, ReleasedBy, DevelopmentTeamMember, ID_ServerGroup)
-SELECT dbo.SecurityObjects.ID As ID_Application, 
-	dbo.ApplicationsRightsByUser.ID_GroupOrPerson, dbo.ApplicationsRightsByUser.ReleasedOn, dbo.ApplicationsRightsByUser.ReleasedBy, dbo.ApplicationsRightsByUser.DevelopmentTeamMember,
-	dbo.System_Servers.ServerGroup
-FROM dbo.Applications 
-	INNER JOIN dbo.Applications apps_by_authsasappid ON Applications.AuthsAsAppID = apps_by_authsasappid.ID
-	INNER JOIN dbo.SecurityObjects ON apps_by_authsasappid.Title = dbo.SecurityObjects.Title
-	INNER JOIN dbo.ApplicationsRightsByUser ON dbo.Applications.ID = dbo.ApplicationsRightsByUser.ID_Application
-	INNER JOIN dbo.System_Servers ON dbo.Applications.LocationID = dbo.System_Servers.ID
-WHERE dbo.Applications.AuthsAsAppID Is Not Null AND dbo.Applications.ID IN (SELECT InheritingID FROM #AuthInheritionsBetweenDifferentApps)
-
-/*
--- Warnungen protokollieren bei Auftreten von mehreren gleichen AppTitles mit unterschiedlichen Vererbungsinformationen
-INSERT INTO dbo.Apps2SecObj_SyncWarnLog (ConflictDescription)
-SELECT N'Authorizations of application "' + InheritingTitle + '" (ID ' + Cast(InheritingID as nvarchar(30)) + ') have been transferred to application "' + InheritedFromTitle + '" (ID ' + Cast(InheritedFromID as nvarchar(30)) + ') because application "' + InheritingTitle + '" (ID ' + Cast(InheritingID as nvarchar(30)) + ') inherits all authorizations from application "' + InheritedFromTitle + '" (ID ' + Cast(InheritedFromID as nvarchar(30)) + '). Please check the current inheritions between these two applications.'
-FROM #AuthInheritionsBetweenDifferentApps
-
-INSERT INTO dbo.Apps2SecObj_SyncWarnLog (ConflictDescription)
-SELECT N'The old application ID ' + cast(dbo.Applications.ID as nvarchar(20)) + ' and title "' + dbo.Applications.Title + '" had set up different applications to inherit from. One of these is application ID ' + cast(isnull(apps_auths_as_appid.ID,0) as nvarchar(20)) + ' and title "' + IsNull(apps_auths_as_appid.Title, '(no application)') + '". Please check the current inheritions between these two applications.'
-FROM #AuthInheritionsBetweenDifferentApps 
-	INNER JOIN dbo.Applications ON #AuthInheritionsBetweenDifferentApps.InheritingTitle = dbo.Applications.Title
-	LEFT JOIN dbo.Applications apps_auths_as_appid ON dbo.Applications.AuthsAsAppID = apps_auths_as_appid.ID
-
-INSERT INTO dbo.Apps2SecObj_SyncWarnLog (ConflictDescription)
-VALUES ('Authorizations of different applications with the same application title have been collected and summarized into one application security object.')
-*/
-
--- Aufräumarbeiten
-DROP TABLE #AuthInheritionsBetweenDifferentApps
-
-END
-GO
-EXEC RefillSplittedSecObjAndNavPointsTables
 
 GO
 IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationRights_CumulatedPerUserAndServerGroup]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE dbo.ApplicationRights_CumulatedPerUserAndServerGroup
-GO
-CREATE PROCEDURE dbo.ApplicationRights_CumulatedPerUserAndServerGroup
-(
-	@UserID int,
-	@ServerGroupID int,
-	@AuthorizedAppsCursor AS CURSOR VARYING OUTPUT 
-)
-WITH ENCRYPTION
-AS
- -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
-SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-
-/*
- * @UserID NULL means: search for anonymous auths only
- */
-
-DECLARE @PublicGroupID int, @AnonymousGroupID int
-SELECT @PublicGroupID = id_group_public, @AnonymousGroupID = id_group_anonymous
-FROM system_servergroups where id = @ServerGroupID
-IF @AnonymousGroupID IS NULL SET @AnonymousGroupID = 58
-
-SET @AuthorizedAppsCursor = CURSOR FOR 
-	    
-SELECT ID_Application 
-FROM
-(
-    -- Direct authorizations
-    SELECT     dbo.ApplicationsRightsByUser.ID_Application
-    FROM dbo.ApplicationsRightsByUser
-    WHERE     dbo.ApplicationsRightsByUser.ID_GroupOrPerson = @UserID
-    UNION ALL
-    -- Indirect authorizations caused by application inheritage
-    SELECT     dbo.Applications.ID
-    FROM dbo.ApplicationsRightsByUser 
-    	INNER JOIN dbo.Applications ON dbo.ApplicationsRightsByUser.ID_Application = dbo.Applications.AuthsAsAppID
-    WHERE     dbo.ApplicationsRightsByUser.ID_GroupOrPerson = @UserID
-    UNION ALL
-    -- Indirect authorizations caused by memberships as well as public and anonymous user
-    SELECT     dbo.ApplicationsRightsByGroup.ID_Application
-    FROM dbo.ApplicationsRightsByGroup LEFT OUTER JOIN
-        (
-          SELECT     ID_Group, ID_User
-          FROM         dbo.Memberships
-          WHERE ID_User = @UserID
-          UNION ALL
-          SELECT     @AnonymousGroupID, id
-          FROM         dbo.benutzer
-          WHERE ID = @UserID AND @AnonymousGroupID IS NOT NULL
-          UNION ALL
-          SELECT     @PublicGroupID, id
-          FROM         dbo.benutzer
-          WHERE ID = @UserID AND @PublicGroupID IS NOT NULL
-          UNION ALL
-          SELECT     @AnonymousGroupID, NULL
-         ) AS Memberships_CummulatedWithAnonymousAndPublic ON 
-         dbo.ApplicationsRightsByGroup.ID_GroupOrPerson = Memberships_CummulatedWithAnonymousAndPublic.ID_Group
-    WHERE CASE 
-        WHEN @UserID IS NOT NULL AND Memberships_CummulatedWithAnonymousAndPublic.ID_User = @UserID 
-			THEN 1 -- Normal user membership search
-        WHEN @UserID IS NULL AND Memberships_CummulatedWithAnonymousAndPublic.ID_Group = @AnonymousGroupID 
-			THEN 1 -- No user search but search for authorizations of ANONYMOUS group-user
-        ELSE 0
-        END = 1
-    UNION ALL
-    -- Indirect authorizations caused by memberships as well as public and anonymous user
-    SELECT     dbo.Applications.ID
-    FROM dbo.ApplicationsRightsByGroup 
-    	INNER JOIN dbo.Applications ON dbo.ApplicationsRightsByGroup.ID_Application = dbo.Applications.AuthsAsAppID
-        LEFT OUTER JOIN
-        (
-          SELECT     ID_Group, ID_User
-          FROM         dbo.Memberships
-          WHERE ID_User = @UserID
-          UNION ALL
-          SELECT     @AnonymousGroupID, id
-          FROM         dbo.benutzer
-          WHERE ID = @UserID AND @AnonymousGroupID IS NOT NULL
-          UNION ALL
-          SELECT     @PublicGroupID, id
-          FROM         dbo.benutzer
-          WHERE ID = @UserID AND @PublicGroupID IS NOT NULL
-          UNION ALL
-          SELECT     @AnonymousGroupID, NULL
-         ) AS Memberships_CummulatedWithAnonymousAndPublic ON 
-         dbo.ApplicationsRightsByGroup.ID_GroupOrPerson = Memberships_CummulatedWithAnonymousAndPublic.ID_Group
-    WHERE CASE 
-        WHEN @UserID IS NOT NULL AND Memberships_CummulatedWithAnonymousAndPublic.ID_User = @UserID 
-			THEN 1 -- Normal user membership search
-        WHEN @UserID IS NULL AND Memberships_CummulatedWithAnonymousAndPublic.ID_Group = @AnonymousGroupID 
-			THEN 1 -- No user search but search for authorizations of ANONYMOUS group-user
-        ELSE 0
-        END = 1
-    UNION ALL
-    -- Add authorizations caused by supervisor membership
-    SELECT     Applications.ID AS ID_Application
-    FROM         dbo.Applications CROSS JOIN
-                          dbo.Memberships
-    WHERE     dbo.Memberships.ID_Group = 6 AND dbo.Memberships.ID_User = @UserID
-) AS BaseTable
-GROUP BY ID_Application
-
-OPEN @AuthorizedAppsCursor
-
 GO

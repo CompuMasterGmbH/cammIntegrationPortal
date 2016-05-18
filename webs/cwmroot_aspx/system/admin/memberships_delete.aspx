@@ -22,6 +22,10 @@
 						<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2"><asp:Label id="lblMembershipID" runat="server" /></FONT></P></TD>
 					</TR>
 					<TR>
+						<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2">Rule type</FONT></P></TD>
+						<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2"><asp:Label id="lblRule" runat="server" /> </FONT></P></TD>
+					</TR>
+					<TR>
 						<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2">Group name</FONT></P></TD>
 						<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2"><asp:Label id="lblGroupName" runat="server" /> </FONT></P></TD>
 					</TR>

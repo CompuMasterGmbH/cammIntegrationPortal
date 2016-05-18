@@ -20,31 +20,31 @@ Imports CompuMaster.camm.WebManager.WMSystem
 Namespace CompuMaster.camm.WebManager.Security
 
     ''' <summary>
-    ''' GroupAuthorizationItemsByRule for usage in GroupInformation class
+    ''' UserAuthorizationItemsByRule for usage in SecurityObjectInformation class
     ''' </summary>
-    Public Class GroupAuthorizationItemsByRuleForGroups
-        Inherits BaseGroupAuthorizationItemsByRule
+    Public Class UserAuthorizationItemsByRuleForSecurityObjects
+        Inherits BaseUserAuthorizationItemsByRule
 
         Friend Sub New(currentContextServerGroupID As Integer, _
-                              currentContextGroupID As Integer, _
-                              currentContextSecurityObjectID As Integer, _
-                              allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
-                              allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
-                              denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
-                              denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
-                              webManager As WMSystem)
-            MyBase.New(currentContextServerGroupID, currentContextGroupID, currentContextSecurityObjectID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev, webManager)
+                          currentContextUserID As Long, _
+                          currentContextSecurityObjectID As Integer, _
+                          allowRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
+                          allowRuleItemsIsDev As SecurityObjectAuthorizationForUser(), _
+                          denyRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
+                          denyRuleItemsIsDev As SecurityObjectAuthorizationForUser(), _
+                          webManager As WMSystem)
+            MyBase.New(currentContextServerGroupID, currentContextUserID, currentContextSecurityObjectID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev, webManager)
         End Sub
 
-        Public ReadOnly Property EffectiveByDenyRuleStandard As SecurityObjectAuthorizationForGroup()
+        Public ReadOnly Property EffectiveByDenyRuleStandard As SecurityObjectAuthorizationForUser()
             Get
-                Return MyBase.EffectiveByDenyRuleStandardInternal(EffectivityType.SecurityObjectByUserGroup)
+                Return MyBase.EffectiveByDenyRuleStandardInternal(EffectivityType.UserBySecurityObject)
             End Get
         End Property
 
-        Public ReadOnly Property EffectiveByDenyRuleForDevelopment As SecurityObjectAuthorizationForGroup()
+        Public ReadOnly Property EffectiveByDenyRuleForDevelopment As SecurityObjectAuthorizationForUser()
             Get
-                Return MyBase.EffectiveByDenyRuleForDevelopmentInternal(EffectivityType.SecurityObjectByUserGroup)
+                Return MyBase.EffectiveByDenyRuleForDevelopmentInternal(EffectivityType.UserBySecurityObject)
             End Get
         End Property
 
@@ -54,8 +54,8 @@ Namespace CompuMaster.camm.WebManager.Security
         ''' <param name="serverGroupID">The server group where an authorizations will be granted</param>
         ''' <returns></returns>
         ''' <remarks>Note: Use method cammWebManager.IsUserAuthorized to check a single, finally effective authorization for a user</remarks>
-        Public Function EffectiveFinally(serverGroupID As Integer) As SecurityObjectAuthorizationForGroup()
-            Return MyBase.EffectiveFinallyInternal(EffectivityType.SecurityObjectByUserGroup, serverGroupID)
+        Public Function EffectiveFinally(serverGroupID As Integer) As SecurityObjectAuthorizationForUser()
+            Return MyBase.EffectiveFinallyInternal(EffectivityType.UserBySecurityObject, serverGroupID)
         End Function
 
     End Class

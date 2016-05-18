@@ -44,7 +44,7 @@
 				<asp:RadioButton runat="server" id="RadioStep3ActionUpdateOnly" groupname="Action" Text="Update only" autopostback="true" /><br>
 				<asp:RadioButton runat="server" id="RadioStep3ActionRemoveOnly" groupname="Action" Text="Remove only" autopostback="true" /><br>
 			</ul>
-			<asp:Checkbox runat="server" id="CheckboxStep3SuppressAllNotificationMails" text="Suppress all notification mails" checked="true" /><br>
+			<asp:Checkbox runat="server" id="CheckboxStep3SuppressAllNotificationMails" text="Suppress all notification mails" checked="true" AutoPostBack="true" /><br>
 			<asp:Panel runat="server" id="PanelStep3MembershipsImportType">
 			<h5>Please choose the desired action type for the users' memberships:</h5>
 			<ul>
@@ -57,6 +57,12 @@
 			<ul>
 				<asp:RadioButton runat="server" id="RadioStep3ActionAuthorizationsFitExact" groupname="ActionAuthorizations" Text="Setup authorizations exactly as defined (remove undefined ones)" /><br>
 				<asp:RadioButton runat="server" id="RadioStep3ActionAuthorizationsInsertOnly" checked="true" groupname="ActionAuthorizations" Text="Add authorizations only" /><br>
+			</ul>
+			</asp:Panel>
+			<asp:Panel runat="server" id="PanelStep3AdditionalFlagsImportType">
+			<h5>Please note: the action type for the users' additional flags is always:</h5>
+			<ul>
+				<asp:RadioButton runat="server" id="RadioStep3ActionAdditionalFlagsDefinedKeysOnly" checked="true" groupname="ActionAdditionalFlags" Text="Setup declared additional flags only (add/update/remove defined keys only)" /><br>
 			</ul>
 			</asp:Panel>
 			<h5>Imported fields summary:</h5>

@@ -19,82 +19,37 @@ Imports CompuMaster.camm.WebManager.WMSystem
 
 Namespace CompuMaster.camm.WebManager.Security
 
-    ''' <summary>
-    ''' UserAuthorizationItemsByRule for usage in SecurityObjectInformation class
-    ''' </summary>
-    Public Class UserAuthorizationItemsByRuleForSecurityObjects
-        Inherits BaseUserAuthorizationItemsByRule
-
-        Friend Sub New(currentContextServerGroupID As Integer, _
-                          allowRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
-                          allowRuleItemsIsDev As SecurityObjectAuthorizationForUser(), _
-                          denyRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
-                          denyRuleItemsIsDev As SecurityObjectAuthorizationForUser())
-            MyBase.New(currentContextServerGroupID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev)
-        End Sub
-
-        Friend ReadOnly Property EffectiveStandard As SecurityObjectAuthorizationForUser()
-            Get
-                Return MyBase.EffectiveStandardInternal(EffectivityType.UserBySecurityObject)
-            End Get
-        End Property
-
-        Friend ReadOnly Property EffectiveForDevelopment As SecurityObjectAuthorizationForUser()
-            Get
-                Return MyBase.EffectiveForDevelopmentInternal(EffectivityType.UserBySecurityObject)
-            End Get
-        End Property
-
-    End Class
-
-    ''' <summary>
-    ''' UserAuthorizationItemsByRule for usage in UserInformation class
-    ''' </summary>
-    Public Class UserAuthorizationItemsByRuleForUsers
-        Inherits BaseUserAuthorizationItemsByRule
-
-        Friend Sub New(currentContextServerGroupID As Integer, _
-                              allowRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
-                              allowRuleItemsIsDev As SecurityObjectAuthorizationForUser(), _
-                              denyRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
-                              denyRuleItemsIsDev As SecurityObjectAuthorizationForUser())
-            MyBase.New(currentContextServerGroupID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev)
-        End Sub
-
-        Friend ReadOnly Property EffectiveStandard As SecurityObjectAuthorizationForUser()
-            Get
-                Return MyBase.EffectiveStandardInternal(EffectivityType.SecurityObjectByUser)
-            End Get
-        End Property
-
-        Friend ReadOnly Property EffectiveForDevelopment As SecurityObjectAuthorizationForUser()
-            Get
-                Return MyBase.EffectiveForDevelopmentInternal(EffectivityType.SecurityObjectByUser)
-            End Get
-        End Property
-
-    End Class
-
     Public Class BaseUserAuthorizationItemsByRule
+
         Friend Sub New(currentContextServerGroupID As Integer, _
-                           allowRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
-                           allowRuleItemsIsDev As SecurityObjectAuthorizationForUser(), _
-                           denyRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
-                           denyRuleItemsIsDev As SecurityObjectAuthorizationForUser())
+                       currentContextUserID As Long, _
+                       currentContextSecurityObjectID As Integer, _
+                       allowRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
+                       allowRuleItemsIsDev As SecurityObjectAuthorizationForUser(), _
+                       denyRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
+                       denyRuleItemsIsDev As SecurityObjectAuthorizationForUser(), _
+                       webManager As WMSystem)
             Me._AllowRuleNonDev = allowRuleItemsNonDev
             Me._AllowRuleIsDev = allowRuleItemsIsDev
             Me._DenyRuleNonDev = denyRuleItemsNonDev
             Me._DenyRuleIsDev = denyRuleItemsIsDev
             Me._CurrentContextServerGroupID = currentContextServerGroupID
+            Me._CurrentContextUserID = currentContextUserID
+            Me._CurrentContextSecurityObjectID = currentContextSecurityObjectID
+            Me._WebManager = webManager
         End Sub
 
         Private _CurrentContextServerGroupID As Integer
+        Private _CurrentContextUserID As Long
+        Private _CurrentContextSecurityObjectID As Integer
         Private _AllowRuleIsDev As SecurityObjectAuthorizationForUser()
         Private _AllowRuleNonDev As SecurityObjectAuthorizationForUser()
         Private _DenyRuleIsDev As SecurityObjectAuthorizationForUser()
         Private _DenyRuleNonDev As SecurityObjectAuthorizationForUser()
-        Private _EffectiveStandard As SecurityObjectAuthorizationForUser()
-        Private _EffectiveForDevelopment As SecurityObjectAuthorizationForUser()
+        Private _EffectiveByDenyRuleStandard As SecurityObjectAuthorizationForUser()
+        Private _EffectiveByDenyRuleForDevelopment As SecurityObjectAuthorizationForUser()
+        Private _EffectiveFinally As SecurityObjectAuthorizationForUser()
+        Private _WebManager As WMSystem
 
         Public ReadOnly Property AllowRuleStandard As SecurityObjectAuthorizationForUser()
             Get
@@ -118,7 +73,7 @@ Namespace CompuMaster.camm.WebManager.Security
         End Property
 
         ''' <summary>
-        ''' Effective authorizations (in context of user's current server group environment) are the combination of the rules [{AllowDevelopment} - {DenyDevelopment} - {DenyStandard}] + [{AllowStandard} - {DenyStandard}]
+        ''' Effective authorizations (in context of user's current server group environment) are the combination of the rules [{AllowDevelopment} - {DenyDevelopment}] + [{AllowStandard} - {DenyStandard}]
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks>
@@ -130,7 +85,7 @@ Namespace CompuMaster.camm.WebManager.Security
         ''' <DenyDevelopment>DenyDevelopment</DenyDevelopment>
         ''' <AllowStandard>AllowStandard</AllowStandard>
         ''' <DenyStandard>DenyStandard</DenyStandard>
-        ''' <Result>Result</Result>
+        ''' <Result>Result IsAllowedEffectively</Result>
         ''' </listheader>
         ''' <item>
         ''' <AllowDevelopment>0</AllowDevelopment>
@@ -172,7 +127,7 @@ Namespace CompuMaster.camm.WebManager.Security
         ''' <DenyDevelopment>0</DenyDevelopment>
         ''' <AllowStandard>1</AllowStandard>
         ''' <DenyStandard>1</DenyStandard>
-        ''' <Result>0</Result>
+        ''' <Result>1</Result>
         ''' </item>
         ''' <item>
         ''' <AllowDevelopment>0</AllowDevelopment>
@@ -207,26 +162,20 @@ Namespace CompuMaster.camm.WebManager.Security
         ''' <DenyDevelopment>0</DenyDevelopment>
         ''' <AllowStandard>0</AllowStandard>
         ''' <DenyStandard>1</DenyStandard>
-        ''' <Result>0</Result>
+        ''' <Result>1</Result>
         ''' </item>
         ''' </list>
         ''' </para>
         ''' </remarks>
-        Friend ReadOnly Property EffectiveStandardInternal(filterType As EffectivityType) As SecurityObjectAuthorizationForUser()
+        Friend ReadOnly Property EffectiveByDenyRuleStandardInternal(filterType As EffectivityType) As SecurityObjectAuthorizationForUser()
             Get
-                If Me._EffectiveStandard Is Nothing Then
+                If Me._EffectiveByDenyRuleStandard Is Nothing Then
                     Dim RuleResult As New ArrayList()
                     For AllowRuleCounter As Integer = 0 To Me._AllowRuleIsDev.Length - 1
                         If Me._AllowRuleIsDev(AllowRuleCounter).ServerGroupID = 0 OrElse Me._AllowRuleIsDev(AllowRuleCounter).ServerGroupID = _CurrentContextServerGroupID Then
                             Dim IsDenied As Boolean = False
                             For DenyRuleCounter As Integer = 0 To Me._DenyRuleIsDev.Length - 1
                                 If (Me._DenyRuleIsDev(DenyRuleCounter).ServerGroupID = 0 OrElse Me._DenyRuleIsDev(DenyRuleCounter).ServerGroupID = _CurrentContextServerGroupID) AndAlso EffictivityFilterComparisonValue(Me._AllowRuleIsDev(AllowRuleCounter), filterType) = EffictivityFilterComparisonValue(Me._DenyRuleIsDev(DenyRuleCounter), filterType) Then
-                                    IsDenied = True
-                                    Exit For
-                                End If
-                            Next
-                            For DenyRuleCounter As Integer = 0 To Me._DenyRuleNonDev.Length - 1
-                                If (Me._DenyRuleNonDev(DenyRuleCounter).ServerGroupID = 0 OrElse Me._DenyRuleNonDev(DenyRuleCounter).ServerGroupID = _CurrentContextServerGroupID) AndAlso EffictivityFilterComparisonValue(Me._AllowRuleIsDev(AllowRuleCounter), filterType) = EffictivityFilterComparisonValue(Me._DenyRuleNonDev(DenyRuleCounter), filterType) Then
                                     IsDenied = True
                                     Exit For
                                 End If
@@ -250,9 +199,9 @@ Namespace CompuMaster.camm.WebManager.Security
                             End If
                         End If
                     Next
-                    Me._EffectiveStandard = CType(RuleResult.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser())
+                    Me._EffectiveByDenyRuleStandard = CType(RuleResult.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser())
                 End If
-                Return Me._EffectiveStandard
+                Return Me._EffectiveByDenyRuleStandard
             End Get
         End Property
 
@@ -273,9 +222,9 @@ Namespace CompuMaster.camm.WebManager.Security
         ''' Effective authorizations (in context of user's current server group environment) are the combination of the rules [{AllowIsDev} - {DenyIsDev}]
         ''' </summary>
         ''' <returns></returns>
-        Friend ReadOnly Property EffectiveForDevelopmentInternal(filterType As EffectivityType) As SecurityObjectAuthorizationForUser()
+        Friend ReadOnly Property EffectiveByDenyRuleForDevelopmentInternal(filterType As EffectivityType) As SecurityObjectAuthorizationForUser()
             Get
-                If Me._EffectiveForDevelopment Is Nothing Then
+                If Me._EffectiveByDenyRuleForDevelopment Is Nothing Then
                     Dim RuleResult As New ArrayList()
                     For AllowRuleCounter As Integer = 0 To Me._AllowRuleIsDev.Length - 1
                         If Me._AllowRuleIsDev(AllowRuleCounter).ServerGroupID = 0 OrElse Me._AllowRuleIsDev(AllowRuleCounter).ServerGroupID = _CurrentContextServerGroupID Then
@@ -290,11 +239,43 @@ Namespace CompuMaster.camm.WebManager.Security
                             End If
                         End If
                     Next
-                    Me._EffectiveForDevelopment = CType(RuleResult.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser())
+                    Me._EffectiveByDenyRuleForDevelopment = CType(RuleResult.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser())
                 End If
-                Return Me._EffectiveForDevelopment
+                Return Me._EffectiveByDenyRuleForDevelopment
             End Get
         End Property
+
+        Friend ReadOnly Property EffectiveFinallyInternal(filterType As EffectivityType, serverGroupID As Integer) As SecurityObjectAuthorizationForUser()
+            Get
+                If _EffectiveFinally Is Nothing Then
+                    Dim MyCmd As New SqlClient.SqlCommand("", New SqlClient.SqlConnection(Me._WebManager.ConnectionString))
+                    MyCmd.CommandType = CommandType.Text
+                    MyCmd.Parameters.Add("@ServerGroupID", SqlDbType.Int).Value = serverGroupID
+                    If filterType = EffectivityType.UserBySecurityObject Then
+                        MyCmd.CommandText = "SELECT ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule" & vbNewLine & _
+                        "FROM ApplicationsRightsByUser_EffectiveCumulative" & vbNewLine & _
+                        "WHERE ID_SecurityObject = @SecurityObjectID" & vbNewLine & _
+                        "    AND ID_ServerGroup = @ServerGroupID"
+                        MyCmd.Parameters.Add("@SecurityObjectID", SqlDbType.Int).Value = Me._CurrentContextSecurityObjectID
+                    Else 'If filterType = EffectivityType.SecurityObjectByUser Then
+                        MyCmd.CommandText = "SELECT ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule" & vbNewLine & _
+                        "FROM ApplicationsRightsByUser_EffectiveCumulative" & vbNewLine & _
+                        "WHERE ID_ServerGroup = @ServerGroupID" & vbNewLine & _
+                        "    AND ID_User = @UserID"
+                        MyCmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = Me._CurrentContextUserID
+                    End If
+                    Dim QueryResults As DataTable = Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "auths")
+                    Dim Results As New ArrayList
+                    For MyCounter As Integer = 0 To QueryResults.Rows.Count - 1
+                        Dim item As New SecurityObjectAuthorizationForUser(Me._WebManager, Nothing, CType(QueryResults.Rows(MyCounter)("ID_User"), Long), CType(QueryResults.Rows(MyCounter)("ID_SecurityObject"), Integer), CType(QueryResults.Rows(MyCounter)("ID_ServerGroup"), Integer), CType(QueryResults.Rows(MyCounter)("IsDevRule"), Boolean), False, Nothing, 0L, True)
+                        Results.Add(item)
+                    Next
+                    _EffectiveFinally = CType(Results.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser())
+                End If
+                Return _EffectiveFinally
+            End Get
+        End Property
+
     End Class
 
 End Namespace

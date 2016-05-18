@@ -4,16 +4,16 @@
         <version>
             <major>4</major>
             <minor>10</minor>
-            <build>205</build>
+            <build>2106</build>
         </version>
         <updatedetails>
-            <BuildFor>204</BuildFor>
+            <BuildFor>2105</BuildFor>
         </updatedetails>
         <requires>
             <product>MSSQLServer</product>
             <version_major>9</version_major>
             <version_minor>0</version_minor>
-              <file>camm-WebManager_indexes_till205.sql</file>
+             <file>camm-WebManager_indexes_latest.sql</file>
             <execfile>
             </execfile>
         </requires>
@@ -21,7 +21,7 @@
             <product>MSSQLServer</product>
             <version_major>10</version_major>
             <version_minor>0</version_minor>
-              <file>camm-WebManager_indexes_till205.sql</file>
+              <file>camm-WebManager_indexes_latest.sql</file>
             <execfile>
             </execfile>
         </requires>
@@ -29,7 +29,7 @@
             <product>MSSQLServer</product>
             <version_major>11</version_major>
             <version_minor>0</version_minor>
-              <file>camm-WebManager_indexes_till205.sql</file>
+              <file>camm-WebManager_indexes_latest.sql</file>
             <execfile>
             </execfile>
         </requires>
@@ -37,7 +37,7 @@
             <product>MSSQLServerAzure</product>
             <version_major>12</version_major>
             <version_minor>0</version_minor>
-              <file>camm-WebManager_indexes_till205.sql</file>
+			<file>camm-WebManager_indexes_latest.sql</file>
             <execfile>
             </execfile>
         </requires>
@@ -45,7 +45,7 @@
             <product>MSSQLServer</product>
             <version_major>12</version_major>
             <version_minor>0</version_minor>
-              <file>camm-WebManager_indexes_till205.sql</file>
+            <file>camm-WebManager_indexes_latest.sql</file>
             <execfile>
             </execfile>
         </requires>

@@ -253,21 +253,54 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
         End Sub
 
         Private Function GetUsersBySecurityObjectID(ByVal securityObjectID As Integer) As CompuMaster.camm.WebManager.WMSystem.UserInformation()
+            Dim Sql As String
+            If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                Sql = "SELECT ID_User " & vbNewLine & _
+                    "FROM (" & vbNewLine & _
+                    "    SELECT [ID_User] " & vbNewLine & _
+                    "    FROM [dbo].[view_Memberships_Effective_with_PublicNAnonymous] " & vbNewLine & _
+                    "    WHERE [ID_Group] IN " & vbNewLine & _
+                    "        ( " & vbNewLine & _
+                    "        SELECT ID_Group " & vbNewLine & _
+                    "        FROM [dbo].[view_ApplicationRights] " & vbNewLine & _
+                    "        WHERE ID_Group Is NOT Null " & vbNewLine & _
+                    "            AND ID_Application = @AppID" & vbNewLine & _
+                    "        )" & vbNewLine & _
+                    "    UNION ALL" & vbNewLine & _
+                    "    SELECT ID_User " & vbNewLine & _
+                    "    FROM [dbo].[view_ApplicationRights] " & vbNewLine & _
+                    "    WHERE ID_User IS NOT NULL " & vbNewLine & _
+                    "        AND ID_Application = @AppID" & vbNewLine & _
+                    "    ) AS UserList " & vbNewLine & _
+                    "GROUP BY ID_User " & vbNewLine & _
+                    "ORDER BY ID_User "
+            Else
+                Sql = "SELECT ID_User " & vbNewLine & _
+                    "FROM (" & vbNewLine & _
+                    "    SELECT [ID_User] " & vbNewLine & _
+                    "    FROM [dbo].[view_Memberships_CummulatedWithAnonymous] " & vbNewLine & _
+                    "    WHERE [ID_Group] IN " & vbNewLine & _
+                    "        ( " & vbNewLine & _
+                    "        SELECT ID_Group " & vbNewLine & _
+                    "        FROM [dbo].[view_ApplicationRights] " & vbNewLine & _
+                    "        WHERE ID_Group Is NOT Null " & vbNewLine & _
+                    "            AND ID_Application = @AppID" & vbNewLine & _
+                    "        )" & vbNewLine & _
+                    "    UNION ALL" & vbNewLine & _
+                    "    SELECT ID_User " & vbNewLine & _
+                    "    FROM [dbo].[view_ApplicationRights] " & vbNewLine & _
+                    "    WHERE ID_User IS NOT NULL " & vbNewLine & _
+                    "        AND ID_Application = @AppID" & vbNewLine & _
+                    "    ) AS UserList " & vbNewLine & _
+                    "GROUP BY ID_User " & vbNewLine & _
+                    "ORDER BY ID_User "
+            End If
+
             Dim Result As New ArrayList
 
             Dim SqlCmd As New SqlCommand
             SqlCmd.Connection = New SqlConnection(Me.cammWebManager.ConnectionString)
-            SqlCmd.CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                "SELECT [ID_User] " & _
-                                "FROM [dbo].[view_Memberships] " & _
-                                "WHERE [ID_Group] IN( " & _
-                                "SELECT ID_Group " & _
-                                "FROM [dbo].[view_ApplicationRights] " & _
-                                "WHERE ID_Group Is NOT Null AND ID_Application = @AppID) " & _
-                                "UNION " & _
-                                "SELECT ID_User " & _
-                                "FROM [dbo].[view_ApplicationRights] " & _
-                                "WHERE ID_User IS NOT NULL AND ID_Application = @AppID ORDER BY ID_USER"
+            SqlCmd.CommandText = Sql
             SqlCmd.Parameters.Add("@AppID", SqlDbType.Int).Value = securityObjectID
             Dim ResultDT As DataTable = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(SqlCmd, Automations.AutoOpenAndCloseAndDisposeConnection, "UserIDs")
 
@@ -585,8 +618,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
 
         Private Function IsFlagValid(ByVal userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation) As Boolean
             Dim flag As String = Me.txtFlagname.Text
-            Dim flagvalidation As New CompuMaster.camm.WebManager.Administration.FlagValidation(flag)
-            Return flagvalidation.Validate(userInfo).code = CompuMaster.camm.WebManager.Administration.FlagValidation.FlagValidationResultCode.Success
+            Dim flagvalidation As New CompuMaster.camm.WebManager.FlagValidation(flag)
+            Return flagvalidation.Validate(userInfo).ValidationResult = CompuMaster.camm.WebManager.FlagValidation.FlagValidationResultCode.Success
         End Function
 
 

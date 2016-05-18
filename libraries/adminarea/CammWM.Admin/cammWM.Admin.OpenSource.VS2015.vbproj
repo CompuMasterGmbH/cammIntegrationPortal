@@ -122,7 +122,6 @@
     <Compile Include="controls_admin.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="FlagValidation.vb" />
     <Compile Include="import_export.vb">
       <SubType>Code</SubType>
     </Compile>

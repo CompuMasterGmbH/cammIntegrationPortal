@@ -35,6 +35,13 @@
 					<asp:HyperLink id="hypNoDelete" runat="server" />
 					</FONT></P></TD>
 					</TR>
+					<TR>
+					<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2">
+					<asp:HyperLink id="hypDeleteButCopyAuths" runat="server" />
+					</FONT></P></TD>
+					<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2">
+					</FONT></P></TD>
+					</TR>
 		        </TBODY></TABLE></TD></TR>
 	      </TBODY></TABLE>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>

@@ -91,109 +91,92 @@ Namespace CompuMaster.camm.WebManager
 
         End Sub
 
-        Private Sub ExecuteParameterizedQuery(ByVal cmd As SqlClient.SqlCommand, ByVal key As String, ByVal value As Object)
-            cmd.Parameters("@key").Value = key
-            cmd.Parameters("@value").Value = value
-            cmd.ExecuteNonQuery()
-        End Sub
-
         Public Sub AddLogTypeDeletionSetting(ByVal key As String, ByVal delete As Boolean)
-            Dim newSetting As New ArrayList
-            newSetting.Add(key)
-            newSetting.Add(delete)
-            LogTypeDeletionList.Add(newSetting)
+            LogTypeDeletionList.Add(New DictionaryEntry(key, delete))
         End Sub
-
-        'TODO: maybe this doesn't really belong here
-        'TODO: replace DISTINCT by GROUP BY construct
-        Public Function GetLogTypes() As ArrayList
-            Dim connection As New SqlClient.SqlConnection(Me.ConnectionString)
-            Dim commandText As String = "SELECT DISTINCT Type, COALESCE((SELECT 1 FROM [dbo].System_GlobalProperties WHERE ValueNVarChar=dbo.Log_users.Type And ValueBoolean = 1 AND PropertyName='" & PropertyName_LogTypeDeletion & "'), 0) FROM dbo.Log_users"
-            Dim cmd As New SqlClient.SqlCommand(commandText, connection)
-
-            Dim reader As IDataReader = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReader(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-            Dim result As New ArrayList
-
-            While reader.Read()
-                Dim entry As New ArrayList
-                entry.Add(reader(0))
-                entry.Add(reader(1))
-                result.Add(entry)
-            End While
-            Return result
-        End Function
-
-
-
-
 
         ''' <summary>
-        ''' Creates an sql command with an open connection and opened transaction
+        ''' Load currently in database used flag names and their related setting value
         ''' </summary>
         ''' <returns></returns>
-        ''' <remarks></remarks>
-        Private Function CreateSqlTransactionCommand() As SqlClient.SqlCommand
-            Dim result As New SqlClient.SqlCommand
-            result.Connection = New SqlClient.SqlConnection(Me.ConnectionString)
-            result.Connection.Open()
-            result.Transaction = result.Connection.BeginTransaction()
-            Return result
+        Public Function GetLogTypes() As DictionaryEntry()
+            Dim Sql As String = " SELECT Type, Max(IsNull(Config.RemoveOnUserDeletion, 0))" & vbNewLine & _
+                    "    FROM dbo.Log_users" & vbNewLine & _
+                    "        LEFT JOIN " & vbNewLine & _
+                    "            (" & vbNewLine & _
+                    "                SELECT ValueNVarChar, 1 AS RemoveOnUserDeletion" & vbNewLine & _
+                    "                FROM [dbo].System_GlobalProperties " & vbNewLine & _
+                    "                WHERE ValueBoolean = 1 " & vbNewLine & _
+                    "                    AND PropertyName='" & PropertyName_LogTypeDeletion & "'" & vbNewLine & _
+                    "            ) AS Config" & vbNewLine & _
+                    "            ON dbo.Log_users.Type = Config.ValueNVarChar" & vbNewLine & _
+                    "    GROUP BY Type" & vbNewLine & _
+                    "    ORDER BY Type"
+            Dim cmd As New SqlClient.SqlCommand(Sql, New SqlClient.SqlConnection(Me.ConnectionString))
+
+            Return CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
 
-
-        Public Sub SaveSettings()
-            Dim cmd As SqlClient.SqlCommand = Nothing
-            Try
-                cmd = CreateSqlTransactionCommand()
-                cmd.CommandText = "UPDATE System_GlobalProperties SET ValueInt = @value WHERE PropertyName = @key " & _
-                    "IF @@ROWCOUNT = 0 " & _
-                    "INSERT INTO [dbo].[System_GlobalProperties] (PropertyName, ValueInt) VALUES (@key, @value)"
-                cmd.Parameters.Add("@value", SqlDbType.Int)
-                cmd.Parameters.Add("@key", SqlDbType.VarChar)
-
-                ExecuteParameterizedQuery(cmd, PropertyName_AnonymizeIPs, Me.AnonymizeIPsAfterDays)
-                ExecuteParameterizedQuery(cmd, PropertyName_DeleteUsersAfterDays, Me.DeleteDeactivatedUsersAfterDays)
-                ExecuteParameterizedQuery(cmd, PropertyName_DeleteMailsAfterDays, Me.DeleteMailsAfterDays)
-
-                cmd.CommandText = "UPDATE [dbo].[System_GlobalProperties] SET ValueBoolean = @value WHERE ValueNVarChar = @key AND PropertyName= '" & PropertyName_LogTypeDeletion & "'  " & _
-                  "IF @@ROWCOUNT = 0 " & _
-                  "INSERT INTO [dbo].[System_GlobalProperties] (PropertyName, ValueNVarChar, ValueBoolean) VALUES ('" & PropertyName_LogTypeDeletion & "', @key, @value)"
-                cmd.Parameters.Remove(cmd.Parameters("@value"))
-                cmd.Parameters.Add("@value", SqlDbType.Bit)
-                For Each logtype As ArrayList In LogTypeDeletionList
-                    ExecuteParameterizedQuery(cmd, CType(logtype(0), String), CType(logtype(1), Boolean))
-                Next
-
-                cmd.Transaction.Commit()
-            Catch
-                Try
-                    If Not cmd Is Nothing Then
-                        If Not cmd.Transaction Is Nothing Then
-                            cmd.Transaction.Rollback()
-                            cmd.Transaction.Dispose()
-                            cmd.Transaction = Nothing
-                        End If
-                    End If
-                Catch rollbackException As Exception
-                    Throw New Exception("Failed to rollback transaction", rollbackException)
-                End Try
-            Finally
-                If Not cmd Is Nothing Then
-                    If Not cmd.Transaction Is Nothing Then
-                        cmd.Transaction.Dispose()
-                        cmd.Transaction = Nothing
-                    End If
-                    If Not cmd.Connection Is Nothing Then
-                        Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(cmd.Connection)
-                    End If
-                End If
-            End Try
-
+        ''' <summary>
+        ''' Cleanup all settings of already deleted users
+        ''' </summary>
+        Public Sub CleanupSettings()
+            Dim Sql As String = "    DELETE " & vbNewLine & _
+                "    FROM dbo.Log_Users " & vbNewLine & _
+                "    WHERE ID_User NOT IN (SELECT ID FROM Benutzer)" & vbNewLine & _
+                "        AND [Type] IN (SELECT ValueNVarChar FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LogTypeDeletionSetting' And ValueBoolean = 1)"
+            Dim cmd As New SqlClient.SqlCommand(Sql, New SqlClient.SqlConnection(Me.ConnectionString))
+            Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Sub
 
+        ''' <summary>
+        ''' Save all settings
+        ''' </summary>
+        Public Sub SaveSettings()
+            If True Then
+                Dim sql As String = "UPDATE System_GlobalProperties SET ValueInt = @value WHERE PropertyName = @key " & vbNewLine & _
+                    "IF @@ROWCOUNT = 0 " & vbNewLine & _
+                    "INSERT INTO [dbo].[System_GlobalProperties] (PropertyName, ValueInt) VALUES (@key, @value)"
+                Dim cmd As New SqlClient.SqlCommand(sql, New SqlClient.SqlConnection(Me.ConnectionString))
+                cmd.Parameters.Add("@value", SqlDbType.Int)
+                cmd.Parameters.Add("@key", SqlDbType.NVarChar)
+                'Save the several settings one by one
+                Try
+                    cmd.Parameters("@key").Value = PropertyName_AnonymizeIPs
+                    cmd.Parameters("@value").Value = Me.AnonymizeIPsAfterDays
+                    Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenConnection)
 
+                    cmd.Parameters("@key").Value = PropertyName_DeleteUsersAfterDays
+                    cmd.Parameters("@value").Value = Me.DeleteDeactivatedUsersAfterDays
+                    Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenConnection)
 
+                    cmd.Parameters("@key").Value = PropertyName_DeleteMailsAfterDays
+                    cmd.Parameters("@value").Value = Me.DeleteMailsAfterDays
+                    Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenConnection)
+                Finally
+                    Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeCommandAndConnection(cmd)
+                End Try
+            End If
 
+            If True Then
+                Dim sql As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueBoolean = @value WHERE ValueNVarChar = @key AND PropertyName= '" & PropertyName_LogTypeDeletion & "'  " & vbNewLine & _
+                  "IF @@ROWCOUNT = 0 " & vbNewLine & _
+                  "INSERT INTO [dbo].[System_GlobalProperties] (PropertyName, ValueNVarChar, ValueBoolean) VALUES ('" & PropertyName_LogTypeDeletion & "', @key, @value)"
+                Dim cmd As New SqlClient.SqlCommand(sql, New SqlClient.SqlConnection(Me.ConnectionString))
+                cmd.Parameters.Add("@key", SqlDbType.NVarChar)
+                cmd.Parameters.Add("@value", SqlDbType.Bit)
+                Try
+                    For Each logtype As DictionaryEntry In LogTypeDeletionList
+                        cmd.Parameters("@key").Value = logtype.Key
+                        cmd.Parameters("@value").Value = logtype.Value
+                        Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenConnection)
+                    Next
+                Finally
+                    Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeCommandAndConnection(cmd)
+                End Try
+            End If
+
+        End Sub
 
     End Class
 End Namespace

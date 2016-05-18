@@ -142,19 +142,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.FieldUserList
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to view a list of users as per selected user-field
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	08.09.2008	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class FieldUserList
         Inherits Page
 
@@ -258,19 +248,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.ReplaceFieldInfo
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to replace perticular field value with new value
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	08.09.2008	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class ReplaceFieldInfo
         Inherits Page
 
@@ -359,19 +339,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.ListAllRules
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to view the list of rules, also rule can be edited or applied
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	16.09.2008	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class ListAllRules
         Inherits Page
 

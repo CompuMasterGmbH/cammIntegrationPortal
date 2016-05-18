@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="vb" ValidateRequest="False" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Pages.TextModules_Edit"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<%@ Register TagPrefix="cammWebEdit" Namespace="CompuMaster.camm.WebManager.Modules.WebEdit.Controls" Assembly="cammWM" %>
+<%@ Register TagPrefix="cammWebEdit" Namespace="CompuMaster.camm.SmartWebEditor.Controls" Assembly="cammWM.SmartEditor" %>
 <camm:WebManager id="cammWebmanager" runat="server" SecurityObject="System - TextModules" />
 <!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
 		<script language="javascript" type="text/javascript">
@@ -107,10 +107,10 @@ function ToggleVisibility(panel) {
 										<asp:TextBox id="TextboxEditValue" Runat="server" TextMode="MultiLine" Columns="70" Rows="12"></asp:TextBox>
 									</asp:Panel>
 									<asp:Panel ID="PanelEditorHtml" Runat="server">
-										<cammWebEdit:RadEditor id="EditorHtml" style="FONT-SIZE: smaller" Runat="server" hasPermission="True" ToolsFile="/sysdata/admin/TextModule_ToolsFile.xml"
+										<cammWebEdit:SmartPlainHtmlEditor id="EditorHtml" style="FONT-SIZE: smaller" Runat="server" hasPermission="True" 
 											Editable="True" width="580px" height="200px" ToolsWidth="580px" ToolsHeight="70px" SaveInFile="False"
 											ImagesPaths="" UploadImagesPaths="" DeleteImagesPaths="" ToolsOnPage="True" MaxDocumentSize="1512000"
-											Scheme="Custom"></cammWebEdit:RadEditor>
+											Scheme="Custom"></cammWebEdit:SmartPlainHtmlEditor>
 									</asp:Panel>
 								</TD>
 							</TR>

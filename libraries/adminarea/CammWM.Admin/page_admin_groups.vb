@@ -72,8 +72,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Sub
 #End Region
 
-#Region "User-Defined Function(s)"
-        'Added by I-link on 07.08.2008 for setting Navigation Preview link.-----------
+        'Added for setting Navigation Preview link
         Private Function IsPublicOrAnonymous(ByVal GroupId As Integer) As Boolean
             For iCount As Integer = 0 To dtPublic.Rows.Count - 1
                 If (CInt(dtPublic.Rows(iCount)("id_group_public")) = GroupId OrElse CInt(dtPublic.Rows(iCount)("id_group_anonymous")) = GroupId) Then
@@ -82,7 +81,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Next
             Return False
         End Function
-#End Region
 
 #Region "Control Events"
         Private Sub rptGroupListItemBound(ByVal sender As Object, ByVal e As RepeaterItemEventArgs) Handles rptGroupList.ItemDataBound
@@ -242,19 +240,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.GroupNew
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to create new group
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	04.09.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class GroupNew
         Inherits Page
 
@@ -304,19 +292,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.GroupDelete
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to delete a group
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	9.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class GroupDelete
         Inherits Page
 
@@ -328,7 +306,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 #Region "Page Events"
         Private Sub GroupDeleteLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
-            Dim MyGroupInfo As New CompuMaster.camm.webmanager.WMSystem.GroupInformation(CInt(Request.QueryString("ID")), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
+            Dim MyGroupInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(CInt(Request.QueryString("ID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
             cammWebManagerAdminGroupInfoDetails.MyGroupInfo = MyGroupInfo
 
             If Not (cammWebManager.System_GetSubAuthorizationStatus("Groups", CInt(Request("ID")), cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "Owner") Or cammWebManager.System_GetSubAuthorizationStatus("Groups", CInt(Request("ID")), cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "Delete")) Then
@@ -371,7 +349,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         hypCreatedBy.Text = Server.HtmlEncode(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(.Item("ReleasedByID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem)).FullName)
                         lblLastModificationOn.Text = Server.HtmlEncode(Utils.Nz(.Item("ModifiedOn"), String.Empty))
                         hypLastModificationBy.NavigateUrl = "users_update.aspx?ID=" + .Item("ModifiedByID").ToString
-                        hypLastModificationBy.Text = Server.HtmlEncode(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(.Item("ModifiedByID")), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem)).FullName)
+                        hypLastModificationBy.Text = Server.HtmlEncode(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(.Item("ModifiedByID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem)).FullName)
                         hypDeleteConfirmation.NavigateUrl = "groups_delete.aspx?ID=" + Request.QueryString("ID") + "&DEL=NOW&token=" & Session.SessionID
                         hypDeleteConfirmation.Text = "Yes, delete it!"
                     End With
@@ -382,19 +360,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.GroupUpdate
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to update a group
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	10.10.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class GroupUpdate
         Inherits Page
 
@@ -415,7 +383,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #Region "Page Events"
         Private Sub GroupUpdate_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
             Try
-                Dim MyGroupInfo As New CompuMaster.camm.webmanager.WMSystem.GroupInformation(CInt(Request.QueryString("ID")), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
+                Dim MyGroupInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(CInt(Request.QueryString("ID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
                 cammWebManagerAdminGroupInfoDetails.MyGroupInfo = MyGroupInfo
                 cammWebManagerAdminDelegates.GroupInfo = MyGroupInfo
 
@@ -424,30 +392,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     btnSubmit.Visible = False
                 End If
 
-                'dtPublic = FilDataTable(New SqlCommand("select id_group_public,id_group_anonymous from dbo.System_ServerGroups", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
-                'Dim Auths As CompuMaster.camm.WebManager.WMSystem.Authorizations
-                'Auths = New CompuMaster.camm.WebManager.WMSystem.Authorizations(Nothing, cammWebManager, Nothing, MyGroupInfo.ID, Nothing)
-                'Dim MyGroupAuths As CompuMaster.camm.WebManager.WMSystem.Authorizations.GroupAuthorizationInformation()
-                'MyGroupAuths = Auths.GroupAuthorizationInformations(MyGroupInfo.ID)
-                'If Not MyGroupAuths Is Nothing Then
-                '    For Each MyGroupAuthInfo As CompuMaster.camm.WebManager.WMSystem.Authorizations.GroupAuthorizationInformation In MyGroupAuths
-                '        Try
-                '            Dim SecObjID As String = MyGroupAuthInfo.SecurityObjectInfo.ID.ToString
-                '            Dim SecObjName As String = MyGroupAuthInfo.SecurityObjectInfo.DisplayName
-                '        Catch
-                '            cammWebManager.Log.Warn("Missing security object with ID " & MyGroupAuthInfo.SecurityObjectID & " in authorizations for group ID " & MyGroupInfo.ID)
-                '            Response.Write(MyGroupAuthInfo.SecurityObjectID)
-
-                '        End Try
-                '    Next
-                'End If
-
-                'Added by I-link on 07.08.2008 for setting Navigation Preview link.-----------
+                'Added for setting Navigation Preview link
                 If (Not Request.QueryString("IsAnonymousOrPublic") Is Nothing AndAlso CInt(Request.QueryString("IsAnonymousOrPublic")) = 0) Then
                     CType(Me.FindControl("cammWebManagerAdminGroupInfoDetails").FindControl("ancPreview"), HtmlAnchor).HRef = "users_navbar_preview.aspx?" + "GroupName=" + MyGroupInfo.Name + "&GroupId=" + MyGroupInfo.ID.ToString
                     CType(Me.FindControl("cammWebManagerAdminGroupInfoDetails").FindControl("ancPreview"), HtmlAnchor).InnerHtml = "Navigation Preview"
                 End If
-                '---------------------------------------
 
 
                 If Not (Me.CurrentAdminIsPrivilegedForItemAdministration(AdministrationItemType.Groups, AuthorizationTypeEffective.Owner, CInt(Request("ID"))) OrElse Me.CurrentAdminIsPrivilegedForItemAdministration(AdministrationItemType.Groups, AuthorizationTypeEffective.Update, CInt(Request("ID")))) AndAlso Me.CurrentAdminIsPrivilegedForItemAdministration(AdministrationItemType.Groups, AuthorizationTypeEffective.View, CInt(Request("ID"))) Then
@@ -501,9 +450,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         lblCreationDate.Text = Server.HtmlEncode(Utils.Nz(dtGroupInfo.Rows(0)("ReleasedOn"), String.Empty))
                         lblModificationDate.Text = Server.HtmlEncode(Utils.Nz(dtGroupInfo.Rows(0)("ModifiedOn"), String.Empty))
                         hypCreatedBy.NavigateUrl = "users_update.aspx?ID=" + Utils.Nz(dtGroupInfo.Rows(0)("ReleasedByID"), 0).ToString
-                        hypCreatedBy.Text = Server.HtmlEncode(New CompuMaster.camm.webmanager.WMSystem.UserInformation(CLng(dtGroupInfo.Rows(0)("ReleasedByID")), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem), True).FullName)
+                        hypCreatedBy.Text = Server.HtmlEncode(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(dtGroupInfo.Rows(0)("ReleasedByID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem), True).FullName)
                         hypModifiedBy.NavigateUrl = "users_update.aspx?ID=" + Utils.Nz(dtGroupInfo.Rows(0)("ModifiedByID"), 0).ToString
-                        hypModifiedBy.Text = Server.HtmlEncode(New CompuMaster.camm.webmanager.WMSystem.UserInformation(CLng(dtGroupInfo.Rows(0)("ModifiedByID")), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem), True).FullName)
+                        hypModifiedBy.Text = Server.HtmlEncode(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(dtGroupInfo.Rows(0)("ModifiedByID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem), True).FullName)
                     End If
 
                     Dim dtMembership As DataTable

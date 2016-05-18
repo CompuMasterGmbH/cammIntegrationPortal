@@ -25,8 +25,8 @@
 												<TABLE WIDTH="100%" BGCOLOR="#C1C1C1" CELLSPACING="0" CELLPADDING="2" border="0" bordercolor="#FFFFFF">
 													<TR>
 														<TD VAlign="Top" Width="30"><P><FONT face="Arial" size="2"><b>ID<a class="None"  runat="server" id="ancGroupID" /><br><asp:Label runat="server" id="lblGroupID" />&nbsp;</b></FONT></P></TD>
-														<TD VAlign="Top" Width="190"><P><FONT face="Arial" size="2"><b><nobr><a runat="server" id="ancServerGroup" /></nobr><br><nobr><asp:Label runat="server" id="lblAreaNavTitle" /></nobr>&nbsp;</b><br><em></em></FONT></P></TD>
-														<TD VAlign="Top" Width="190"><P><FONT face="Arial" size="2"><em>Admin Server: <a id="ancAdminServer" runat="server" />&nbsp;<br>Master: <a runat="server" id="ancMasterServer" />&nbsp;<br>Guest user: <asp:Label id="lblGroupPublicName" runat="server" /></em></FONT></P></TD>
+														<TD VAlign="Top" Width="290"><P><FONT face="Arial" size="2"><b><nobr><a runat="server" id="ancServerGroup" /></nobr><br><nobr><asp:Label runat="server" id="lblAreaNavTitle" /></nobr>&nbsp;</b><br /><em>Guest user without login: <asp:Hyperlink id="hypGroupAnonymousName" runat="server" /></em></FONT></P></TD>
+														<TD VAlign="Top" Width="290"><P><FONT face="Arial" size="2"><em>Admin Server: <a id="ancAdminServer" runat="server" />&nbsp;<br>Master: <a runat="server" id="ancMasterServer" />&nbsp;<br>Guest user with login: <asp:Hyperlink id="hypGroupPublicName" runat="server" /></em></FONT></P></TD>
 														<TD VAlign="Top"><P><FONT face="Arial" size="2"><nobr><a href="servers_new_group.aspx">New Server Group</a>&nbsp;</nobr><br><nobr><a runat="server" id="ancDeleteServerGroup" />&nbsp;</nobr></FONT></P></TD>
 													</TR>
 												</TABLE>

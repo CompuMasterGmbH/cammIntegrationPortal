@@ -112,6 +112,7 @@
     <Compile Include="dataprotection.vb" />
     <Compile Include="definitions.vb" />
     <Compile Include="DownloadHandler.vb" />
+    <Compile Include="FlagValidation.vb" />
     <Compile Include="Global.asax.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -169,7 +170,9 @@
     <Compile Include="Security\MemberIDsByRule.vb" />
     <Compile Include="Security\MembershipItemsByRule.vb" />
     <Compile Include="Security\NavigationInformation.vb" />
-    <Compile Include="Security\UserAuthorizationItemsByRule.vb" />
+    <Compile Include="Security\BaseUserAuthorizationItemsByRule.vb" />
+    <Compile Include="Security\UserAuthorizationItemsByRuleForSecurityObjects.vb" />
+    <Compile Include="Security\UserAuthorizationItemsByRuleForUsers.vb" />
     <Compile Include="Security\GroupAuthorizationItemsByRuleForGroups.vb" />
     <Compile Include="Settings.vb" />
     <Compile Include="Setup.vb" />

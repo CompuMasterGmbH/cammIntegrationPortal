@@ -1,4 +1,4 @@
-<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.PasswordConvert" %>
+﻿<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.PasswordConvert" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify user account" id="cammWebManager"

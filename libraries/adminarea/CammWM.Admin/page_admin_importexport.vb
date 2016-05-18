@@ -606,8 +606,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_AccountProfileValidatedByEMailTest", GetType(Boolean), False, False, False, False, False)
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_AutomaticLogonAllowedByMachineToMachineCommunication", GetType(Boolean), False, False, False, False, False)
                 Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_AdditionalFlags", GetType(String), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Memberships", GetType(Integer()), False, False, False, True, True)
-                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Authorizations", GetType(Integer()), False, False, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Memberships_AllowRule_GroupIDs", GetType(Integer()), False, False, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Memberships_DenyRule_GroupIDs", GetType(Integer()), False, False, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Authorizations_AllowRule_AppIDs", GetType(Integer()), False, False, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Authorizations_AllowRule_IsDevRule", GetType(Boolean()), False, False, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Authorizations_AllowRule_IsDenyRule", GetType(Boolean()), False, False, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Authorizations_AllowRule_SrvGroupID", GetType(Integer()), False, False, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Authorizations_DenyRule_AppIDs", GetType(Integer()), False, False, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Authorizations_DenyRule_IsDevRule", GetType(Boolean()), False, False, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Authorizations_DenyRule_IsDenyRule", GetType(Boolean()), False, False, False, True, True)
+                Result = Result And PrepareStep4ValidateImportColumn(CheckResult, Me.ImportTable, ImportFileCulture, "User_Authorizations_DenyRule_SrvGroupID", GetType(Integer()), False, False, False, True, True)
                 'Verify that column "User_LoginName" doesn't contain any duplicates
                 If Result = True AndAlso Me.ImportTable.Columns.Contains("User_LoginName") Then
                     Dim duplicates As Hashtable = CompuMaster.camm.WebManager.Administration.Tools.Data.DataTables.FindDuplicates(Me.ImportTable.Columns("User_LoginName"))
@@ -618,13 +626,30 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         End If
                     End If
                 End If
-                'Show import action radio buttons for memberships or authtorizations when required
-                If Me.ImportTable.Columns.Contains("User_Memberships") Then
+                'Verify that column "User_Authorizations_*Rule_IsDe*/SrvGroupID" has got array length or 0 (zero) or same length as User_Authorizations_*Rule_AppIDs array
+                If Result = True AndAlso (Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDevRule") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDenyRule") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_SrvGroupID") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDevRule") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDenyRule") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_SrvGroupID")) Then
+                    'TODO: further implementation required for import with columns User_Authorizations_*Rule_IsDe*/SrvGroupID
+                    LabelStep3Errors.Text = "Error: column support not yet implemented for ""User_Authorizations_*Rule_IsDevRule"", ""User_Authorizations_*Rule_IsDenyRule"", ""User_Authorizations_*Rule_SrvGroupID""<br>"
+                    If preValidateOnly = False Then
+                        Result = False
+                    End If
+                End If
+                If Result = True Then
+                    Me.AddTestResultRowToTable(CheckResult, "User_Memberships_AllowRule_GroupIDs|RequiredFlags", CheckForRequiredFlagsForNewMemberships(Me.ImportTable))
+                    Me.AddTestResultRowToTable(CheckResult, "User_Authorizations_AllowRule_AppIDs|RequiredFlags", CheckForRequiredFlagsForNewAuthorizations(Me.ImportTable))
+                End If
+                'Show import action radio buttons for memberships or authorizations when required
+                If Me.ImportTable.Columns.Contains("User_Memberships_AllowRule_GroupIDs") OrElse Me.ImportTable.Columns.Contains("User_Memberships_DenyRule_GroupIDs") Then
                     Me.PanelStep3MembershipsImportType.Visible = True
                 Else
                     Me.PanelStep3MembershipsImportType.Visible = False
                 End If
-                If Me.ImportTable.Columns.Contains("User_Authorizations") Then
+                If Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_AppIDs") OrElse Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_AppIDs") Then
                     Me.PanelStep3AuthorizationsImportType.Visible = True
                 Else
                     Me.PanelStep3AuthorizationsImportType.Visible = False
@@ -645,6 +670,82 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             'Bind the verification results data
             Me.DatagridStep3ColumnsCheck.DataSource = CheckResult
             Me.DatagridStep3ColumnsCheck.DataBind()
+
+            Return Result
+        End Function
+
+        Protected Overridable Function CheckForRequiredFlagsForNewMemberships(ByVal importData As DataTable) As String
+            Dim Result As String = ""
+            If importData.Columns.Contains("User_Memberships_AllowRule_GroupIDs") Then
+                Dim ToAddGroupIDs As New Generic.List(Of Integer)
+                'Collect group IDs
+                For MyRowCounter As Integer = 0 To importData.Rows.Count - 1
+                    Dim value As String = Utils.StringNotNothingOrEmpty(Utils.Nz(importData.Rows(MyRowCounter)("User_Memberships_AllowRule_GroupIDs"), ""))
+                    Dim values As String() = value.Split(New Char() {","c})
+                    For MyConversionTestCounter As Integer = 0 To values.Length - 1
+                        If Not Trim(values(MyConversionTestCounter)) = Nothing Then
+                            Dim GroupID As Integer = Integer.Parse(values(MyConversionTestCounter), System.Globalization.CultureInfo.InvariantCulture)
+                            If ToAddGroupIDs.Contains(GroupID) = False Then
+                                ToAddGroupIDs.Add(GroupID)
+                            End If
+                        End If
+                    Next
+                Next
+                'Combine all infos to a datatable
+                Dim RequiredFlagsInfo As New DataTable
+                RequiredFlagsInfo.Columns.Add("Required flag", GetType(String))
+                RequiredFlagsInfo.Columns.Add("Required by group", GetType(String))
+                Dim GroupInfos As WMSystem.GroupInformation() = Me.cammWebManager.System_GetGroupInfos(ToAddGroupIDs.ToArray)
+                For MyGroupCounter As Integer = 0 To GroupInfos.Length - 1
+                    Dim RequiredFlags As String() = GroupInfos(MyGroupCounter).RequiredAdditionalFlags
+                    For MyCounter As Integer = 0 To RequiredFlags.Length - 1
+                        Dim row As DataRow = RequiredFlagsInfo.NewRow
+                        row(0) = RequiredFlags(MyCounter)
+                        row(1) = GroupInfos(MyGroupCounter).ID & ": " & GroupInfos(MyGroupCounter).Name
+                        RequiredFlagsInfo.Rows.Add(row)
+                    Next
+                Next
+                'Convert info datatable to HTML
+                Result = WebManager.Administration.Tools.Data.DataTables.ConvertToHtmlTable(RequiredFlagsInfo, "", "", "style=""border-width: 1px; border-style: solid; width: 100%;""")
+            End If
+
+            Return Result
+        End Function
+
+        Protected Overridable Function CheckForRequiredFlagsForNewAuthorizations(ByVal importData As DataTable) As String
+            Dim Result As String = ""
+            If importData.Columns.Contains("User_Authorizations_AllowRule_AppIDs") Then
+                Dim ToAddSecObjIDs As New Generic.List(Of Integer)
+                'Collect group IDs
+                For MyRowCounter As Integer = 0 To importData.Rows.Count - 1
+                    Dim value As String = Utils.StringNotNothingOrEmpty(Utils.Nz(importData.Rows(MyRowCounter)("User_Authorizations_AllowRule_AppIDs"), ""))
+                    Dim values As String() = value.Split(New Char() {","c})
+                    For MyConversionTestCounter As Integer = 0 To values.Length - 1
+                        If Not Trim(values(MyConversionTestCounter)) = Nothing Then
+                            Dim SecObjID As Integer = Integer.Parse(values(MyConversionTestCounter), System.Globalization.CultureInfo.InvariantCulture)
+                            If ToAddSecObjIDs.Contains(SecObjID) = False Then
+                                ToAddSecObjIDs.Add(SecObjID)
+                            End If
+                        End If
+                    Next
+                Next
+                'Combine all infos to a datatable
+                Dim RequiredFlagsInfo As New DataTable
+                RequiredFlagsInfo.Columns.Add("Required flag", GetType(String))
+                RequiredFlagsInfo.Columns.Add("Required by security object", GetType(String))
+                Dim SecObjInfos As WMSystem.SecurityObjectInformation() = Me.cammWebManager.System_GetSecurityObjectInformations(ToAddSecObjIDs.ToArray)
+                For MyGroupCounter As Integer = 0 To SecObjInfos.Length - 1
+                    Dim RequiredFlags As String() = SecObjInfos(MyGroupCounter).RequiredAdditionalFlags
+                    For MyCounter As Integer = 0 To RequiredFlags.Length - 1
+                        Dim row As DataRow = RequiredFlagsInfo.NewRow
+                        row(0) = RequiredFlags(MyCounter)
+                        row(1) = SecObjInfos(MyGroupCounter).ID & ": " & SecObjInfos(MyGroupCounter).Name
+                        RequiredFlagsInfo.Rows.Add(row)
+                    Next
+                Next
+                'Convert info datatable to HTML
+                Result = WebManager.Administration.Tools.Data.DataTables.ConvertToHtmlTable(RequiredFlagsInfo, "", "", "style=""border-width: 1px; border-style: solid; width: 100%;""")
+            End If
 
             Return Result
         End Function
@@ -697,6 +798,17 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Return True
             End If
         End Function
+        ''' <summary>
+        ''' Add an additional notification result record to the checkTable table
+        ''' </summary>
+        Private Sub AddTestResultRowToTable(checkTable As DataTable, columnName As String, noteHtmlData As String)
+            Dim MyRow As DataRow = checkTable.NewRow
+            MyRow(0) = columnName
+            MyRow(1) = "REQUIREMENT"
+            MyRow(2) = noteHtmlData
+            checkTable.Rows.Add(MyRow)
+        End Sub
+
         ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Verify the existance and the datatype of a column with its requirements
@@ -1418,26 +1530,27 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Throw New ArgumentException("Invalid import action", "importActionAuthorizations")
             End If
 
+            'Prepare correct notifications class
+            Dim MyNotifications As WebManager.Notifications.INotifications
+            If Me.SuppressNotificationMails = True Then
+                MyNotifications = New WebManager.Notifications.NoNotifications(cammWebManager)
+            Else
+                MyNotifications = cammWebManager.Notifications()
+            End If
+
             'Memberships
-            If userData.Table.Columns.Contains("User_Memberships") And importActionMemberships <> Nothing Then
+            If userData.Table.Columns.Contains("User_Memberships_AllowRule_GroupIDs") And importActionMemberships <> Nothing Then
                 'Collect group IDs
-                Dim value As String = Utils.StringNotNothingOrEmpty(Utils.Nz(userData("User_Memberships"), ""))
-                Dim values As String() = Value.Split(New Char() {","c})
+                Dim value As String = Utils.StringNotNothingOrEmpty(Utils.Nz(userData("User_Memberships_AllowRule_GroupIDs"), ""))
+                Dim values As String() = value.Split(New Char() {","c})
                 Dim requiredGroups As New ArrayList
                 For MyConversionTestCounter As Integer = 0 To values.Length - 1
                     If Not Trim(values(MyConversionTestCounter)) = Nothing Then
                         requiredGroups.Add(Integer.Parse(values(MyConversionTestCounter), culture))
                     End If
                 Next
-                'Prepare correct notifications class
-                Dim MyNotifications As WebManager.Notifications.INotifications
-                If Me.SuppressNotificationMails = True Then
-                    MyNotifications = New WebManager.Notifications.NoNotifications(cammWebManager)
-                Else
-                    MyNotifications = cammWebManager.Notifications()
-                End If
                 'Remove unwanted memberships
-                Dim CurrentMemberships As WMSystem.GroupInformation() = user.Memberships
+                Dim CurrentMemberships As WMSystem.GroupInformation() = user.MembershipsByRule.AllowRule
                 If importActionMemberships = ImportBase.ImportActions.FitExact Then
                     For MyCounterIsCurrently As Integer = 0 To CurrentMemberships.Length - 1
                         'Evaluate if wanted membership
@@ -1449,7 +1562,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Next
                         'Remove unwanted membership
                         If ShallBeThere = False Then
-                            user.RemoveMembership(CurrentMemberships(MyCounterIsCurrently).id)
+                            user.RemoveMembership(CurrentMemberships(MyCounterIsCurrently).ID, False)
                         End If
                     Next
                 End If
@@ -1464,62 +1577,213 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Next
                     'Add missing membership
                     If AlreadyExist = False Then
-                        user.AddMembership(CType(requiredGroups(MyCounterShallBe), Integer), MyNotifications)
+                        user.AddMembership(CType(requiredGroups(MyCounterShallBe), Integer), False, MyNotifications)
+                    End If
+                Next
+            End If
+            If userData.Table.Columns.Contains("User_Memberships_DenyRule_GroupIDs") And importActionMemberships <> Nothing Then
+                'Collect group IDs
+                Dim value As String = Utils.StringNotNothingOrEmpty(Utils.Nz(userData("User_Memberships_DenyRule_GroupIDs"), ""))
+                Dim values As String() = value.Split(New Char() {","c})
+                Dim requiredGroups As New ArrayList
+                For MyConversionTestCounter As Integer = 0 To values.Length - 1
+                    If Not Trim(values(MyConversionTestCounter)) = Nothing Then
+                        requiredGroups.Add(Integer.Parse(values(MyConversionTestCounter), culture))
+                    End If
+                Next
+                'Remove unwanted memberships
+                Dim CurrentMemberships As WMSystem.GroupInformation() = user.MembershipsByRule.DenyRule
+                If importActionMemberships = ImportBase.ImportActions.FitExact Then
+                    For MyCounterIsCurrently As Integer = 0 To CurrentMemberships.Length - 1
+                        'Evaluate if wanted membership
+                        Dim ShallBeThere As Boolean = False
+                        For MyCounterShallBe As Integer = 0 To requiredGroups.Count - 1
+                            If CType(requiredGroups(MyCounterShallBe), Integer) = CurrentMemberships(MyCounterIsCurrently).ID Then
+                                ShallBeThere = True
+                            End If
+                        Next
+                        'Remove unwanted membership
+                        If ShallBeThere = False Then
+                            user.RemoveMembership(CurrentMemberships(MyCounterIsCurrently).ID, True)
+                        End If
+                    Next
+                End If
+                'Add missing memberships
+                For MyCounterShallBe As Integer = 0 To requiredGroups.Count - 1
+                    'Evaluate if missing membership
+                    Dim AlreadyExist As Boolean = False
+                    For MyCounterIsCurrently As Integer = 0 To CurrentMemberships.Length - 1
+                        If CType(requiredGroups(MyCounterShallBe), Integer) = CurrentMemberships(MyCounterIsCurrently).ID Then
+                            AlreadyExist = True
+                        End If
+                    Next
+                    'Add missing membership
+                    If AlreadyExist = False Then
+                        user.AddMembership(CType(requiredGroups(MyCounterShallBe), Integer), True, MyNotifications)
                     End If
                 Next
             End If
             'Authorizations
-            If userData.Table.Columns.Contains("User_Authorizations") And importActionAuthorizations <> Nothing Then
-                'Collect security object IDs
-                Dim value As String = Utils.StringNotNothingOrEmpty(Utils.Nz(userData("User_Authorizations"), ""))
-                Dim values As String() = CType(Value, String).Split(New Char() {","c})
-                Dim requiredSecurityObjectsList As New ArrayList
+            If userData.Table.Columns.Contains("User_Authorizations_AllowRule_AppIDs") And importActionAuthorizations <> Nothing Then
+                'Collect security object IDs and other required infos for authorizations
+                Dim RequiredSecurityObjects As Integer() = ApplyMembershipsAndAuthorizations_LoadAppIDs(userData("User_Authorizations_AllowRule_AppIDs"), culture)
+                Dim RequiredSecurityObjects_IsDev As Boolean() = ApplyMembershipsAndAuthorizations_LoadIsDevRules(userData("User_Authorizations_AllowRule_IsDevRule"), RequiredSecurityObjects)
+                Dim RequiredSecurityObjects_SrvGroupIDs As Integer() = ApplyMembershipsAndAuthorizations_LoadSrvGroupIDs(userData("User_Authorizations_AllowRule_SrvGroupID"), RequiredSecurityObjects, culture)
+                'Apply all required auth changes
+                ApplyMembershipsAndAuthorizations_ApplyAuths(importActionAuthorizations, user, False, False, RequiredSecurityObjects, RequiredSecurityObjects_SrvGroupIDs, RequiredSecurityObjects_IsDev, MyNotifications)
+                ApplyMembershipsAndAuthorizations_ApplyAuths(importActionAuthorizations, user, True, False, RequiredSecurityObjects, RequiredSecurityObjects_SrvGroupIDs, RequiredSecurityObjects_IsDev, MyNotifications)
+            End If
+            If userData.Table.Columns.Contains("User_Authorizations_DenyRule_AppIDs") And importActionAuthorizations <> Nothing Then
+                'Collect security object IDs and other required infos for authorizations
+                Dim RequiredSecurityObjects As Integer() = ApplyMembershipsAndAuthorizations_LoadAppIDs(userData("User_Authorizations_DenyRule_AppIDs"), culture)
+                Dim RequiredSecurityObjects_IsDev As Boolean() = ApplyMembershipsAndAuthorizations_LoadIsDevRules(userData("User_Authorizations_DenyRule_IsDevRule"), RequiredSecurityObjects)
+                Dim RequiredSecurityObjects_SrvGroupIDs As Integer() = ApplyMembershipsAndAuthorizations_LoadSrvGroupIDs(userData("User_Authorizations_DenyRule_SrvGroupID"), RequiredSecurityObjects, culture)
+                'Apply all required auth changes
+                ApplyMembershipsAndAuthorizations_ApplyAuths(importActionAuthorizations, user, False, True, RequiredSecurityObjects, RequiredSecurityObjects_SrvGroupIDs, RequiredSecurityObjects_IsDev, MyNotifications)
+                ApplyMembershipsAndAuthorizations_ApplyAuths(importActionAuthorizations, user, True, True, RequiredSecurityObjects, RequiredSecurityObjects_SrvGroupIDs, RequiredSecurityObjects_IsDev, MyNotifications)
+            End If
+        End Sub
+
+        Friend Shared Function ApplyMembershipsAndAuthorizations_LoadAppIDs(valueCell As Object, culture As System.Globalization.CultureInfo) As Integer()
+            Dim value As String = Utils.StringNotNothingOrEmpty(Utils.Nz(valueCell, ""))
+            Dim values As String() = value.Split(New Char() {","c})
+            Dim requiredSecurityObjectsList As New ArrayList
+            For MyConversionTestCounter As Integer = 0 To values.Length - 1
+                If Not Trim(values(MyConversionTestCounter)) = Nothing Then
+                    requiredSecurityObjectsList.Add(Integer.Parse(values(MyConversionTestCounter), culture))
+                End If
+            Next
+            Return CType(requiredSecurityObjectsList.ToArray(GetType(Integer)), Integer())
+        End Function
+
+        Private Function ApplyMembershipsAndAuthorizations_LoadIsDevRules(valueCell As Object, RequiredSecurityObjects As Integer()) As Boolean()
+            Dim Result As Boolean()
+            Dim values As String() = Utils.StringNotNothingOrEmpty(Utils.Nz(valueCell, "")).Split(New Char() {","c})
+            If values.Length = 0 Then
+                'JIT-create initialized array with values False
+                ReDim Result(RequiredSecurityObjects.Length)
+            Else
+                Dim requiredSecurityObjectsList_IsDev As New ArrayList
                 For MyConversionTestCounter As Integer = 0 To values.Length - 1
                     If Not Trim(values(MyConversionTestCounter)) = Nothing Then
-                        requiredSecurityObjectsList.Add(Integer.Parse(values(MyConversionTestCounter), culture))
+                        requiredSecurityObjectsList_IsDev.Add(Boolean.Parse(values(MyConversionTestCounter)))
+                    Else
+                        requiredSecurityObjectsList_IsDev.Add(False)
                     End If
                 Next
-                Dim RequiredSecurityObjects As Integer() = CType(requiredSecurityObjectsList.ToArray(GetType(Integer)), Integer())
+                Result = CType(requiredSecurityObjectsList_IsDev.ToArray(GetType(Boolean)), Boolean())
+            End If
+            If Result.Length <> RequiredSecurityObjects.Length Then
+                Throw New Exception("IsDev array must be empty or same size as AppIDs array")
+            End If
+            Return Result
+        End Function
 
-                'Prepare correct notifications class
-                Dim MyNotifications As WebManager.Notifications.INotifications
-                If Me.SuppressNotificationMails = True Then
-                    MyNotifications = New WebManager.Notifications.NoNotifications(cammWebManager)
-                Else
-                    MyNotifications = cammWebManager.Notifications()
-                End If
-                'Remove unwanted authorizations
-                Dim CurrentAuthorizations As WMSystem.SecurityObjectAuthorizationForUser() = user.Authorizations
-                If importActionMemberships = ImportBase.ImportActions.FitExact Then
-                    For MyCounterIsCurrently As Integer = 0 To CurrentAuthorizations.Length - 1
-                        'Evaluate if wanted authorization
-                        Dim ShallBeThere As Boolean = False
-                        For MyCounterShallBe As Integer = 0 To RequiredSecurityObjects.Length - 1
-                            If RequiredSecurityObjects(MyCounterShallBe) = CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID Then
-                                ShallBeThere = True
-                            End If
-                        Next
-                        'Remove unwanted authorization
-                        If ShallBeThere = False Then
-                            user.RemoveAuthorization(CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID, CurrentAuthorizations(MyCounterIsCurrently).ServerGroupID)
-                        End If
-                    Next
-                End If
-                'Add missing authorizations
-                For MyCounterShallBe As Integer = 0 To RequiredSecurityObjects.Length - 1
+        Private Function ApplyMembershipsAndAuthorizations_LoadSrvGroupIDs(valueCell As Object, RequiredSecurityObjects As Integer(), culture As System.Globalization.CultureInfo) As Integer()
+            Dim Result As Integer()
+            Dim values As String() = Utils.StringNotNothingOrEmpty(Utils.Nz(valueCell, "")).Split(New Char() {","c})
+            If values.Length = 0 Then
+                'JIT-create initialized array with values False
+                ReDim Result(RequiredSecurityObjects.Length)
+            Else
+                Dim requiredSecurityObjectsList_SrvGroupID As New ArrayList
+                For MyConversionTestCounter As Integer = 0 To values.Length - 1
+                    If Not Trim(values(MyConversionTestCounter)) = Nothing Then
+                        requiredSecurityObjectsList_SrvGroupID.Add(Integer.Parse(values(MyConversionTestCounter), culture))
+                    Else
+                        requiredSecurityObjectsList_SrvGroupID.Add(0)
+                    End If
+                Next
+                Result = CType(requiredSecurityObjectsList_SrvGroupID.ToArray(GetType(Integer)), Integer())
+            End If
+            If Result.Length <> RequiredSecurityObjects.Length Then
+                Throw New Exception("SrvGroupIDs array must be empty or same size as AppIDs array")
+            End If
+            Return Result
+        End Function
+
+        ''' <summary>
+        ''' Apply all required auth changes
+        ''' </summary>
+        ''' <param name="importActionAuthorizations"></param>
+        ''' <param name="user"></param>
+        ''' <param name="isDevRule">Chosen calling mode of this method will only change this rule type</param>
+        ''' <param name="isDenyRule">Chosen calling mode of this method will only change this rule type</param>
+        ''' <param name="RequiredSecurityObjects"></param>
+        ''' <param name="RequiredSecurityObjects_SrvGroupIDs"></param>
+        ''' <param name="RequiredSecurityObjects_IsDevRule"></param>
+        ''' <param name="MyNotifications"></param>
+        Private Sub ApplyMembershipsAndAuthorizations_ApplyAuths(importActionAuthorizations As ImportBase.ImportActions, user As WMSystem.UserInformation, isDevRule As Boolean, isDenyRule As Boolean, RequiredSecurityObjects As Integer(), RequiredSecurityObjects_SrvGroupIDs As Integer(), RequiredSecurityObjects_IsDevRule As Boolean(), MyNotifications As WebManager.Notifications.INotifications)
+            'Remove unwanted authorizations
+            Dim CurrentAuthorizations As WMSystem.SecurityObjectAuthorizationForUser()
+            If isDenyRule = False And isDevRule = False Then
+                CurrentAuthorizations = user.AuthorizationsByRule.AllowRuleStandard
+            ElseIf isDenyRule = False And isDevRule = True Then
+                CurrentAuthorizations = user.AuthorizationsByRule.AllowRuleDevelopers
+            ElseIf isDenyRule = True And isDevRule = False Then
+                CurrentAuthorizations = user.AuthorizationsByRule.DenyRuleStandard
+            Else 'If isDenyRule = True And isDevRule = True Then
+                CurrentAuthorizations = user.AuthorizationsByRule.DenyRuleDevelopers
+            End If
+            If importActionAuthorizations = ImportBase.ImportActions.FitExact Then
+                ApplyMembershipsAndAuthorizations_DropAuths(user, CurrentAuthorizations, False, True, RequiredSecurityObjects, RequiredSecurityObjects_SrvGroupIDs, RequiredSecurityObjects_IsDevRule)
+            End If
+            'Add missing authorizations
+            ApplyMembershipsAndAuthorizations_AddMissingAuths(user, CurrentAuthorizations, False, True, RequiredSecurityObjects, RequiredSecurityObjects_SrvGroupIDs, RequiredSecurityObjects_IsDevRule, MyNotifications)
+        End Sub
+
+        ''' <summary>
+        ''' Add missing authorizations
+        ''' </summary>
+        Private Sub ApplyMembershipsAndAuthorizations_AddMissingAuths(user As WMSystem.UserInformation, CurrentAuthorizations As WMSystem.SecurityObjectAuthorizationForUser(), isDevRule As Boolean, isDenyRule As Boolean, RequiredSecurityObjects As Integer(), RequiredSecurityObjects_SrvGroupIDs As Integer(), RequiredSecurityObjects_IsDevRule As Boolean(), MyNotifications As WebManager.Notifications.INotifications)
+            For MyCounterShallBe As Integer = 0 To RequiredSecurityObjects.Length - 1
+                If RequiredSecurityObjects_IsDevRule(MyCounterShallBe) = isDevRule Then
+                    Dim RequiredSrvGroupID As Integer = RequiredSecurityObjects_SrvGroupIDs(MyCounterShallBe)
+                    Dim RequiredSecObjID As Integer = RequiredSecurityObjects(MyCounterShallBe)
                     'Evaluate if missing authorization
                     Dim AlreadyExist As Boolean = False
                     For MyCounterIsCurrently As Integer = 0 To CurrentAuthorizations.Length - 1
-                        If RequiredSecurityObjects(MyCounterShallBe) = CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID Then
+                        If RequiredSecObjID = CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID AndAlso _
+                                    RequiredSrvGroupID = CurrentAuthorizations(MyCounterIsCurrently).ServerGroupID Then
                             AlreadyExist = True
                         End If
                     Next
                     'Add missing authorization
                     If AlreadyExist = False Then
-                        user.AddAuthorization(RequiredSecurityObjects(MyCounterShallBe), cammWebManager.CurrentServerInfo.ParentServerGroupID, MyNotifications)
+                        user.AddAuthorization(RequiredSecObjID, RequiredSrvGroupID, isDevRule, isDenyRule, MyNotifications)
                     End If
-                Next
-            End If
+                End If
+            Next
+        End Sub
+
+        ''' <summary>
+        ''' Remove unwanted authorizations
+        ''' </summary>
+        ''' <param name="user"></param>
+        ''' <param name="CurrentAuthorizations"></param>
+        ''' <param name="isDevRule"></param>
+        ''' <param name="isDenyRule"></param>
+        ''' <param name="RequiredSecurityObjects"></param>
+        ''' <param name="RequiredSecurityObjects_SrvGroupIDs"></param>
+        Private Sub ApplyMembershipsAndAuthorizations_DropAuths(user As WMSystem.UserInformation, CurrentAuthorizations As WMSystem.SecurityObjectAuthorizationForUser(), isDevRule As Boolean, isDenyRule As Boolean, RequiredSecurityObjects As Integer(), RequiredSecurityObjects_SrvGroupIDs As Integer(), RequiredSecurityObjects_IsDevRule As Boolean())
+            For MyCounterIsCurrently As Integer = 0 To CurrentAuthorizations.Length - 1
+                If CurrentAuthorizations(MyCounterIsCurrently).IsDeveloperAuthorization = isDevRule Then
+                    'Evaluate if wanted authorization
+                    Dim SrvGroupID As Integer = CurrentAuthorizations(MyCounterIsCurrently).ServerGroupID
+                    Dim ShallBeThere As Boolean = False
+                    For MyCounterShallBe As Integer = 0 To RequiredSecurityObjects.Length - 1
+                        If RequiredSecurityObjects(MyCounterShallBe) = CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID AndAlso _
+                                    RequiredSecurityObjects_SrvGroupIDs(MyCounterShallBe) = SrvGroupID AndAlso _
+                                    RequiredSecurityObjects_IsDevRule(MyCounterShallBe) = isDevRule Then
+                            ShallBeThere = True
+                        End If
+                    Next
+                    'Remove unwanted authorization
+                    If ShallBeThere = False Then
+                        user.RemoveAuthorization(CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID, SrvGroupID, isDevRule, isDenyRule)
+                    End If
+                End If
+            Next
         End Sub
 
         ''' -----------------------------------------------------------------------------

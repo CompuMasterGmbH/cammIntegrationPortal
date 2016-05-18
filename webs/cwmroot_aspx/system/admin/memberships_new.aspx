@@ -23,6 +23,7 @@
 						<p>
 						<font face="Arial" size="2">
 							<a id="grp" href="groups_update.aspx?ID=<%=drp_groups.SelectedValue%>">Go to selected group</a>
+							<a id="grp" href="memberships.aspx?groupID=<%=drp_groups.SelectedValue%>">Go to selected group memberships</a>
 						</font>
 						</p>
 					</TD>
@@ -66,7 +67,7 @@
 								<TD VAlign="Top" Width="160"><P><FONT face="Arial" size="2"><a runat="server" id="ancUserNameComplete" /></FONT></P></TD>
 								<TD VAlign="Top" Width="130"><P><FONT face="Arial" size="2"><a runat="server" id="lblLoginName" /></FONT></P></TD>
 								<TD VAlign="Top" Width="130"><P><FONT face="Arial" size="2"><asp:Label runat="server" id="lblCompany" /></FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:checkbox runat="server" id="chk_user" text="Add membership" /></FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:checkbox runat="server" id="chk_user" text="Add membership" /> <asp:checkbox runat="server" id="chk_denyuser" text="Deny membership" /></FONT></P></TD>
 							</TR>
 						</ItemTemplate>
 						<AlternatingItemTemplate>
@@ -75,7 +76,7 @@
 								<TD BGCOLOR="#E1E1E1" VAlign="Top" Width="160"><P><FONT face="Arial" size="2"><a runat="server" id="ancUserNameComplete" /></FONT></P></TD>
 								<TD BGCOLOR="#E1E1E1" VAlign="Top" Width="130"><P><FONT face="Arial" size="2"><a runat="server" id="lblLoginName" /></FONT></P></TD>
 								<TD BGCOLOR="#E1E1E1" VAlign="Top" Width="130"><P><FONT face="Arial" size="2"><asp:Label runat="server" id="lblCompany" /></FONT></P></TD>
-								<TD BGCOLOR="#E1E1E1" VAlign="Top"><P><FONT face="Arial" size="2"><asp:checkbox runat="server" id="chk_user" text="Add membership" /></FONT></P></TD>
+								<TD BGCOLOR="#E1E1E1" VAlign="Top"><P><FONT face="Arial" size="2"><asp:checkbox runat="server" id="chk_user" text="Add membership" /> <asp:checkbox runat="server" id="chk_denyuser" text="Deny membership" /></FONT></P></TD>
 							</TR>
 						</AlternatingItemTemplate>
 					</asp:Repeater>
@@ -84,7 +85,7 @@
 					</TD>
 					</TR>
 					</TBODY></TABLE>
-					<asp:Button runat="Server" ID="btnOK" Text="Create membership" />
+					<asp:Button runat="Server" ID="btnOK" Text="Create membership rules" />
 		        
 		        </TD></TR>
 	      </TBODY></TABLE>

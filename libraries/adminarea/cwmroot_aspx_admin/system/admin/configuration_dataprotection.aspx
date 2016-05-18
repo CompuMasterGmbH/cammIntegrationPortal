@@ -14,7 +14,7 @@
 <h3>
 <font face="Arial">Administration - Data protection rules</font></h3>
 <asp:label runat="server" id="lblMsg" forecolor="green" />
-Choose the types that should be <u>deleted</u> in the log table after user deletion<br>
+Choose the types that should be <b>deleted</b> in the log table after user deletion<br>
 <asp:Placeholder runat="server" id="ltrlTypeList" />
 <br>	
 Delete deactivated users after<br>
@@ -32,7 +32,7 @@ Anonymize IP addresses after<br>
 <asp:CompareValidator runat="server" id="validatetxtBoxAnonymizeIPs" ControlToValidate="txtBoxAnonymizeIPs" ErrorMessage="field must be a number" Type="Integer" Operator="DataTypeCheck" />
 <br><br>
 
-<asp:Button runat="server" id="btnSaveSettings" Text="Save settings" />
+<asp:Button runat="server" id="btnSaveSettings" Text="Save settings" /> <asp:Button runat="server" id="btnSaveAndCleanupSettings" Text="Save &amp; cleanup settings of all already deleted users, now" />
 
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="configuration.aspx" id="cammWebManagerAdminMenu"

@@ -23,19 +23,12 @@ Imports System.Collections
 
 Namespace CompuMaster.camm.WebManager.Tools.Data
 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     CompuMaster common tools and utilities
     ''' </summary>
     ''' <remarks>
     '''		Changes on this file only after discussion with Jochen Wezel!!
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	04/10/2004	Created
-    ''' 	[adminwezel]	2006-02-10  Latest patch
-    ''' </history>
-    ''' <copyright>CompuMaster GmbH</copyright>
-    ''' -----------------------------------------------------------------------------
     Friend Class NamespaceDoc
         'UPDATE FOLLOWING LINE FOR EVERY CHANGE TO TRACK THE VERSION NUMBER INSIDE THIS DOCUMENT
         'Last change on V3.10 - 2007-02-08 JW
@@ -58,8 +51,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="CommandText">The command text</param>
             ''' <param name="CommandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
-            ''' <remarks>
-            ''' </remarks>
             Friend Shared Sub ExecuteNonQuery(ByVal ConnectionString As String, ByVal CommandText As String, ByVal CommandType As System.Data.CommandType, ByVal sqlParameters As System.Data.SqlClient.SqlParameter())
                 Dim MyConn As New System.Data.SqlClient.SqlConnection(ConnectionString)
                 Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyConn, CommandText, CommandType, sqlParameters)
@@ -73,14 +64,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="CommandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
             Friend Shared Function ExecuteScalar(ByVal ConnectionString As String, ByVal CommandText As String, ByVal CommandType As System.Data.CommandType, ByVal sqlParameters As System.Data.SqlClient.SqlParameter()) As Object
                 Dim MyConn As New System.Data.SqlClient.SqlConnection(ConnectionString)
                 Return Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyConn, CommandText, CommandType, sqlParameters)
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command with a data reader and returns the values of the first column
             ''' </summary>
@@ -89,18 +77,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="CommandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReaderAndPutFirstColumnIntoArrayList(ByVal ConnectionString As String, ByVal CommandText As String, ByVal CommandType As System.Data.CommandType, ByVal sqlParameters As System.Data.SqlClient.SqlParameter()) As ArrayList
                 Dim MyConn As New System.Data.SqlClient.SqlConnection(ConnectionString)
                 Return Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoArrayList(MyConn, CommandText, CommandType, sqlParameters)
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command with a data reader and returns the values of the first two columns
             ''' </summary>
@@ -112,10 +93,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <remarks>
             ''' ATTENTION: Please note that multiple but equal values from the first column will result in 1 key/value pair since hashtables use a unique key and override the value with the last assignment. Alternatively you may want to receive an array of DictionaryEntry.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReaderAndPutFirstTwoColumnsIntoHashtable(ByVal ConnectionString As String, ByVal CommandText As String, ByVal CommandType As System.Data.CommandType, ByVal sqlParameters As System.Data.SqlClient.SqlParameter()) As Hashtable
                 Dim MyConn As New System.Data.SqlClient.SqlConnection(ConnectionString)
                 Return Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstTwoColumnsIntoHashtable(MyConn, CommandText, CommandType, sqlParameters)
@@ -126,8 +103,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <summary>
         '''     Common routines to query data from any data provider
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
         Friend Class AnyIDataProvider
 
             ''' <summary>
@@ -160,7 +135,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Create a new database connection by reflection of a type name
             ''' </summary>
@@ -171,26 +145,15 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <remarks>
             '''     Errors will be thrown in case of unresolvable parameter values or if the created type can't be casted into an IDbConnection.
             ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	14.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Shared Function CreateConnection(ByVal assemblyName As String, ByVal connectionTypeName As String, ByVal connectionString As String) As IDbConnection
                 Dim Result As IDbConnection = CreateConnection(assemblyName, connectionTypeName)
                 Result.ConnectionString = connectionString
                 Return Result
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Automations for the connection in charge
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	19.01.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Enum Automations As Integer
                 None = 0
                 AutoOpenConnection = 1
@@ -198,7 +161,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 AutoOpenAndCloseAndDisposeConnection = 3
             End Enum
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command without returning any data
             ''' </summary>
@@ -208,12 +170,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <param name="automations">Automation options for the connection</param>
             ''' <param name="commandTimeout">A timeout value in seconds for the command object (negative values will be ignored and leave the timeout value on default)</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Sub ExecuteNonQuery(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations, ByVal commandTimeout As Integer)
                 Dim MyConn As IDbConnection = dbConnection
                 Dim MyCmd As IDbCommand = MyConn.CreateCommand
@@ -252,18 +208,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 End Try
             End Sub
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command without returning any data
             ''' </summary>
             ''' <param name="dbCommand">The command with an assigned connection property value</param>
             ''' <param name="automations">Automation options for the connection</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	05.04.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Sub ExecuteNonQuery(ByVal dbCommand As IDbCommand, ByVal automations As Automations)
                 Dim MyCmd As IDbCommand = dbCommand
                 Dim MyConn As IDbConnection = MyCmd.Connection
@@ -289,7 +238,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 End Try
             End Sub
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command without returning any data
             ''' </summary>
@@ -298,17 +246,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="commandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <param name="automations">Automation options for the connection</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Sub ExecuteNonQuery(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations)
                 ExecuteNonQuery(dbConnection, commandText, commandType, sqlParameters, automations, -1)
             End Sub
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command without returning any data
             ''' </summary>
@@ -316,17 +257,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="commandText">The command text</param>
             ''' <param name="commandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Sub ExecuteNonQuery(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter())
                 ExecuteNonQuery(dbConnection, commandText, commandType, sqlParameters, Automations.AutoOpenAndCloseAndDisposeConnection)
             End Sub
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command scalar and returns the value
             ''' </summary>
@@ -336,12 +270,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <param name="automations">Automation options for the connection</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteScalar(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations) As Object
                 Dim MyConn As IDbConnection = dbConnection
                 Dim MyCmd As IDbCommand = MyConn.CreateCommand
@@ -378,18 +306,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return Result
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command scalar and returns the value
             ''' </summary>
             ''' <param name="dbCommand">The command with an assigned connection property value</param>
             ''' <param name="automations">Automation options for the connection</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	05.04.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteScalar(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As Object
                 Dim MyCmd As IDbCommand = dbCommand
                 Dim MyConn As IDbConnection = MyCmd.Connection
@@ -416,20 +337,9 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return Result
             End Function
 
-            ''' -----------------------------------------------------------------------------
-            ''' Project	 : kvp
-            ''' Class	 : Tools.Data.DataQuery.AnyIDataProvider.DataException
-            ''' 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Data execution exceptions with details on the executed IDbCommand
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	23.06.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Class DataException
                 Inherits System.Exception
 
@@ -450,18 +360,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 End Sub
 
 #If DEBUG Then
-                ''' -----------------------------------------------------------------------------
                 ''' <summary>
                 '''     Convert the collection with all the parameters to a plain text string
                 ''' </summary>
                 ''' <param name="parameters">An IDataParameterCollection of a IDbCommand</param>
                 ''' <returns></returns>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminwezel]	23.06.2005	Created
-                ''' </history>
-                ''' -----------------------------------------------------------------------------
                 Private Function ConvertParameterCollectionToString(ByVal parameters As System.Data.IDataParameterCollection) As String
                     Dim Result As String = Nothing
                     For MyCounter As Integer = 0 To parameters.Count - 1
@@ -487,24 +390,16 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                     Return Result
                 End Function
 
-                ''' -----------------------------------------------------------------------------
                 ''' <summary>
                 '''     The complete and detailed exception information inclusive the command text
                 ''' </summary>
                 ''' <returns></returns>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminwezel]	23.06.2005	Created
-                ''' </history>
-                ''' -----------------------------------------------------------------------------
                 Public Overrides Function ToString() As String
                     Return MyBase.ToString & vbNewLine & vbNewLine & _commandText
                 End Function
 #End If
             End Class
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command scalar and returns the value
             ''' </summary>
@@ -513,17 +408,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="commandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteScalar(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter()) As Object
                 Return ExecuteScalar(dbConnection, commandText, commandType, sqlParameters, Automations.AutoOpenAndCloseAndDisposeConnection)
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command with a data reader and returns the values of the first column
             ''' </summary>
@@ -533,12 +421,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <param name="automations">Automation options for the connection</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReaderAndPutFirstColumnIntoArrayList(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations) As ArrayList
                 Dim MyConn As IDbConnection = dbConnection
                 Dim MyCmd As IDbCommand = MyConn.CreateCommand
@@ -552,19 +434,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return ExecuteReaderAndPutFirstColumnIntoArrayList(MyCmd, automations)
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command with a data reader and returns the values of the first column
             ''' </summary>
             ''' <param name="dbCommand">The command object which shall be executed</param>
             ''' <param name="automations">Automation options for the connection</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReaderAndPutFirstColumnIntoArrayList(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As ArrayList
                 Dim MyConn As IDbConnection = dbCommand.Connection
                 Dim MyCmd As IDbCommand = dbCommand
@@ -598,7 +473,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return Result
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command with a data reader and returns the values of the first column
             ''' </summary>
@@ -607,17 +481,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="commandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReaderAndPutFirstColumnIntoArrayList(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter()) As ArrayList
                 Return ExecuteReaderAndPutFirstColumnIntoArrayList(dbConnection, commandText, commandType, sqlParameters, Automations.AutoOpenAndCloseAndDisposeConnection)
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command with a data reader and returns the values of the first column
             ''' </summary>
@@ -627,10 +494,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <remarks>
             ''' ATTENTION: Please note that multiple but equal values from the first column will result in 1 key/value pair since hashtables use a unique key and override the value with the last assignment. Alternatively you may want to receive an array of DictionaryEntry.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReaderAndPutFirstTwoColumnsIntoHashtable(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As Hashtable
                 Dim Result As New Hashtable
                 Dim MyCmd As IDbCommand = dbCommand
@@ -663,7 +526,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return Result
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command with a data reader and returns the values of the first two columns
             ''' </summary>
@@ -676,10 +538,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <remarks>
             ''' ATTENTION: Please note that multiple but equal values from the first column will result in 1 key/value pair since hashtables use a unique key and override the value with the last assignment. Alternatively you may want to receive an array of DictionaryEntry.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReaderAndPutFirstTwoColumnsIntoHashtable(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations) As Hashtable
                 Dim MyConn As IDbConnection = dbConnection
                 Dim MyCmd As IDbCommand = MyConn.CreateCommand
@@ -723,19 +581,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return Result
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command with a data reader and returns the values of the first two columns
             ''' </summary>
             ''' <param name="dbCommand">The prepared command to the database</param>
             ''' <param name="automations">Automation options for the connection</param>
             ''' <returns>An array of DictionaryEntry with the values of the first column as the key element and the second column values in the value element of the DictionaryEntry</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As DictionaryEntry()
                 Dim Result As New ArrayList
                 Dim MyCmd As IDbCommand = dbCommand
@@ -768,7 +619,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return CType(Result.ToArray(GetType(DictionaryEntry)), DictionaryEntry())
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command with a data reader and returns the values of the first two columns
             ''' </summary>
@@ -778,12 +628,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <param name="automations">Automation options for the connection</param>
             ''' <returns>An array of DictionaryEntry with the values of the first column as the key element and the second column values in the value element of the DictionaryEntry</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations) As DictionaryEntry()
                 Dim Result As New ArrayList
                 Dim MyConn As IDbConnection = dbConnection
@@ -827,7 +671,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return CType(Result.ToArray(GetType(DictionaryEntry)), DictionaryEntry())
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command with a data reader and returns the values of the first two columns
             ''' </summary>
@@ -839,15 +682,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <remarks>
             ''' ATTENTION: Please note that multiple but equal values from the first column will result in 1 key/value pair since hashtables use a unique key and override the value with the last assignment. Alternatively you may want to receive an array of DictionaryEntry.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReaderAndPutFirstTwoColumnsIntoHashtable(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter()) As Hashtable
                 Return ExecuteReaderAndPutFirstTwoColumnsIntoHashtable(dbConnection, commandText, commandType, sqlParameters, Automations.AutoOpenAndCloseAndDisposeConnection)
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command and return the data reader object for it
             ''' </summary>
@@ -861,10 +699,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <remarks>
             '''     Automations can only open a connection, but never close. This is because you have to close the connection by yourself AFTER you walked through the data reader.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReader(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations, ByVal commandTimeout As Integer) As IDataReader
                 If automations = Automations.AutoCloseAndDisposeConnection OrElse automations = Automations.AutoOpenAndCloseAndDisposeConnection Then
                     Throw New Exception("Can't close a data reader automatically since data has to be read first")
@@ -900,7 +734,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return Result
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command and return the data reader object for it
             ''' </summary>
@@ -909,12 +742,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="commandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	03.12.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReader(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations) As IDataReader
 
                 Dim MyConn As IDbConnection = dbConnection
@@ -948,18 +775,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return Result
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Executes a command and return the data reader object for it
             ''' </summary>
             ''' <param name="dbCommand">The command with an assigned connection property value</param>
             ''' <param name="automations">Automation options for the connection</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	05.04.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function ExecuteReader(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As IDataReader
                 Dim MyCmd As IDbCommand = dbCommand
                 Dim MyConn As IDbConnection = MyCmd.Connection
@@ -982,7 +802,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return Result
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Fill a new data table with the result of a command
             ''' </summary>
@@ -990,12 +809,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="automations">Automation options for the connection</param>
             ''' <param name="tableName">The name for the new table</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	20.01.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function FillDataTable(ByVal dbCommand As IDbCommand, ByVal automations As Automations, ByVal tableName As String) As System.Data.DataTable
                 Dim MyReader As IDataReader = Nothing
                 Dim Result As New System.Data.DataTable
@@ -1030,7 +843,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return Result
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Fill a new data table with the result of a command
             ''' </summary>
@@ -1042,12 +854,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="tableName">The name for the new table</param>
             ''' <param name="commandTimeout">A timeout value in seconds for the command object (negative values will be ignored and leave the timeout value on default)</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	20.01.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function FillDataTable(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations, ByVal tableName As String, ByVal commandTimeout As Integer) As System.Data.DataTable
                 Dim MyCmd As IDbCommand = dbConnection.CreateCommand
                 MyCmd.CommandType = commandType
@@ -1063,7 +869,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return FillDataTable(MyCmd, automations, tableName)
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Fill a new data table with the result of a command
             ''' </summary>
@@ -1074,17 +879,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="automations">Automation options for the connection</param>
             ''' <param name="tableName">The name for the new table</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	20.01.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function FillDataTable(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations, ByVal tableName As String) As System.Data.DataTable
                 Return FillDataTable(dbConnection, commandText, commandType, sqlParameters, automations, tableName, -1)
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Fill a new data table with the result of a command
             ''' </summary>
@@ -1094,29 +892,16 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <param name="automations">Automation options for the connection</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	20.01.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function FillDataTable(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations) As System.Data.DataTable
                 Return FillDataTable(dbConnection, commandText, commandType, sqlParameters, automations, Nothing)
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Fill a new data table with the result of a command
             ''' </summary>
             ''' <param name="dbCommand">The command object</param>
             ''' <param name="automations">Automation options for the connection</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	20.01.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Function FillDataTables(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As System.Data.DataTable()
                 Dim MyReader As IDataReader = Nothing
                 Dim Results As New ArrayList
@@ -1155,17 +940,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return CType(Results.ToArray(GetType(DataTable)), DataTable())
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Securely close and dispose a database connection
             ''' </summary>
             ''' <param name="connection">The connection to close and dispose</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	20.01.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Sub CloseAndDisposeConnection(ByVal connection As IDbConnection)
                 Dim MyConn As IDbConnection = connection
                 If Not MyConn Is Nothing Then
@@ -1176,17 +954,23 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 End If
             End Sub
 
-            ''' -----------------------------------------------------------------------------
+            ''' <summary>
+            ''' Securely close and dispose a connection inclusive its database connection
+            ''' </summary>
+            ''' <param name="command"></param>
+            Friend Shared Sub CloseAndDisposeCommandAndConnection(ByVal command As IDbCommand)
+                If Not command Is Nothing Then
+                    CloseAndDisposeConnection(command.Connection)
+                End If
+                If Not command Is Nothing Then
+                    command.Dispose()
+                End If
+            End Sub
+
             ''' <summary>
             '''     Securely close a database connection
             ''' </summary>
             ''' <param name="connection">The connection to close</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	20.01.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Sub CloseConnection(ByVal connection As IDbConnection)
                 Dim MyConn As IDbConnection = connection
                 If Not MyConn Is Nothing Then
@@ -1197,17 +981,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 End If
             End Sub
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Open a database connection if it is not already opened
             ''' </summary>
             ''' <param name="connection">The connection to open</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	20.01.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Friend Shared Sub OpenConnection(ByVal connection As IDbConnection)
                 If connection Is Nothing Then
                     Throw New ArgumentNullException("connection")
@@ -1223,27 +1000,14 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <summary>
         ''' Methods for simplifying the handling with data readers
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	22.10.2009	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Class DataReaderUtils
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             ''' Lookup if the reader contains a result column with the requested name
             ''' </summary>
             ''' <param name="reader">A data reader object</param>
             ''' <param name="columnName">The name of the column which shall be identified</param>
             ''' <returns>True if the column exist else False</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	22.10.2009	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Shared Function ContainsColumn(ByVal reader As IDataReader, ByVal columnName As String) As Boolean
                 If reader Is Nothing Then Throw New ArgumentNullException("reader", "Parameter reader is required")
                 If columnName = Nothing Then Throw New ArgumentNullException("columnName", "Parameter columnName can't be an empty value")
@@ -1253,18 +1017,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return False
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             ''' Return the column names of a data reader as a String array
             ''' </summary>
             ''' <param name="reader">A data reader object</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	22.10.2009	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Shared Function ColumnNames(ByVal reader As IDataReader) As String()
                 If reader Is Nothing Then Return Nothing
                 Dim Result As New ArrayList
@@ -1274,18 +1031,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 Return CType(Result.ToArray(GetType(String)), String())
             End Function
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             ''' Return the column data types of a data reader as an array
             ''' </summary>
             ''' <param name="reader">A data reader object</param>
             ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	22.10.2009	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Shared Function DataTypes(ByVal reader As IDataReader) As Type()
                 If reader Is Nothing Then Return Nothing
                 Dim Result As New ArrayList
@@ -1299,20 +1049,9 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
     End Namespace
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : DebugApp
-    ''' Class	 : CompuMaster.camm.WebManager.Tools.Data.CSV
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Provides simplified access to CSV files
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	03.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Friend Class Csv
 
 #Region "Read data"
@@ -2148,7 +1887,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             'Column headers
             If includesColumnHeaders Then
                 For ColCounter As Integer = 0 To System.Math.Min(columnWidths.Length, dataTable.Columns.Count) - 1
-                    writer.Append(FixedLengthText(dataTable.Columns(ColCounter).ColumnName, columnWidths(colcounter), False))
+                    writer.Append(FixedLengthText(dataTable.Columns(ColCounter).ColumnName, columnWidths(ColCounter), False))
                 Next
                 writer.Append(vbNewLine)
             End If
@@ -2156,42 +1895,42 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             'Data values
             For RowCounter As Integer = 0 To dataTable.Rows.Count - 1
                 For ColCounter As Integer = 0 To System.Math.Min(columnWidths.Length, dataTable.Columns.Count) - 1
-                    If dataTable.Rows(RowCounter)(colcounter) Is DBNull.Value Then
-                        writer.Append(FixedLengthText(String.Empty, columnWidths(colcounter), False))
+                    If dataTable.Rows(RowCounter)(ColCounter) Is DBNull.Value Then
+                        writer.Append(FixedLengthText(String.Empty, columnWidths(ColCounter), False))
                     ElseIf dataTable.Columns(ColCounter).DataType Is GetType(String) Then
                         'Strings
                         If Not dataTable.Rows(RowCounter)(ColCounter) Is DBNull.Value Then
-                            writer.Append(FixedLengthText(CType(dataTable.Rows(RowCounter)(ColCounter), String), columnWidths(colcounter), False))
+                            writer.Append(FixedLengthText(CType(dataTable.Rows(RowCounter)(ColCounter), String), columnWidths(ColCounter), False))
                         End If
                     ElseIf dataTable.Columns(ColCounter).DataType Is GetType(System.Double) Then
                         'Doubles
                         If Not dataTable.Rows(RowCounter)(ColCounter) Is DBNull.Value Then
                             'Other data types which do not require textual handling
-                            writer.Append(FixedLengthText(CType(dataTable.Rows(RowCounter)(ColCounter), Double).ToString(cultureFormatProvider), columnWidths(colcounter), True))
+                            writer.Append(FixedLengthText(CType(dataTable.Rows(RowCounter)(ColCounter), Double).ToString(cultureFormatProvider), columnWidths(ColCounter), True))
                         End If
                     ElseIf dataTable.Columns(ColCounter).DataType Is GetType(System.Decimal) Then
                         'Decimals
                         If Not dataTable.Rows(RowCounter)(ColCounter) Is DBNull.Value Then
                             'Other data types which do not require textual handling
-                            writer.Append(FixedLengthText(CType(dataTable.Rows(RowCounter)(ColCounter), Decimal).ToString(cultureFormatProvider), columnWidths(colcounter), True))
+                            writer.Append(FixedLengthText(CType(dataTable.Rows(RowCounter)(ColCounter), Decimal).ToString(cultureFormatProvider), columnWidths(ColCounter), True))
                         End If
                     ElseIf dataTable.Columns(ColCounter).DataType Is GetType(System.DateTime) Then
                         'Datetime
                         If Not dataTable.Rows(RowCounter)(ColCounter) Is DBNull.Value Then
                             'Other data types which do not require textual handling
-                            writer.Append(FixedLengthText(CType(dataTable.Rows(RowCounter)(ColCounter), DateTime).ToString(cultureFormatProvider), columnWidths(colcounter), False))
+                            writer.Append(FixedLengthText(CType(dataTable.Rows(RowCounter)(ColCounter), DateTime).ToString(cultureFormatProvider), columnWidths(ColCounter), False))
                         End If
                     ElseIf dataTable.Columns(ColCounter).DataType Is GetType(System.Int16) OrElse dataTable.Columns(ColCounter).DataType Is GetType(System.Int32) OrElse dataTable.Columns(ColCounter).DataType Is GetType(System.Int64) Then
                         'Datetime
                         If Not dataTable.Rows(RowCounter)(ColCounter) Is DBNull.Value Then
                             'Other data types which do not require textual handling
-                            writer.Append(FixedLengthText(CType(dataTable.Rows(RowCounter)(ColCounter), System.Int64).ToString(cultureFormatProvider), columnWidths(colcounter), True))
+                            writer.Append(FixedLengthText(CType(dataTable.Rows(RowCounter)(ColCounter), System.Int64).ToString(cultureFormatProvider), columnWidths(ColCounter), True))
                         End If
                     Else
                         'Other data types
                         If Not dataTable.Rows(RowCounter)(ColCounter) Is DBNull.Value Then
                             'Other data types which do not require textual handling
-                            writer.Append(FixedLengthText(CType(dataTable.Rows(RowCounter)(ColCounter), String), columnWidths(colcounter), False))
+                            writer.Append(FixedLengthText(CType(dataTable.Rows(RowCounter)(ColCounter), String), columnWidths(ColCounter), False))
                         End If
                     End If
                 Next
@@ -2749,35 +2488,17 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : DebugApp
-    ''' Class	 : CompuMaster.camm.WebManager.Tools.Data.DataTables
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Common DataTable operations
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	03.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Friend Class DataTables
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Remove rows with duplicate values in a given column
         ''' </summary>
         ''' <param name="dataTable">A datatable with duplicate values</param>
         ''' <param name="columnName">Column name of the datatable which contains the duplicate values</param>
         ''' <returns>A datatable with unique records in the specified column</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	04.05.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function RemoveDuplicates(ByVal dataTable As DataTable, ByVal columnName As String) As DataTable
             Dim hTable As New Hashtable
             Dim duplicateList As New ArrayList
@@ -2801,7 +2522,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return dataTable
         End Function 'RemoveDuplicateRows
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Drop all columns except the required ones
         ''' </summary>
@@ -2811,10 +2531,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     If the list of the remaining columns contains some column names which are not existing, then those column names will be ignored. There will be no exception in this case.
         '''     The names of the columns are handled case-insensitive.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	07.03.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Sub KeepColumnsAndRemoveAllOthers(ByVal table As DataTable, ByVal remainingColumns As String())
             Dim KeepColFlags(table.Columns.Count - 1) As Boolean
             'Identify unwanted columns
@@ -2835,18 +2551,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Next
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Lookup the row index for a data row in a data table
         ''' </summary>
         ''' <param name="dataRow">The data row whose index number is required</param>
         ''' <returns>An index number for the given data row</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	12.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function RowIndex(ByVal dataRow As DataRow) As Integer
             If dataRow.Table Is Nothing Then
                 Throw New Exception("Datarow must be part of a table to retrieve its row index")
@@ -2859,35 +2568,21 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Throw New Exception("Unexpected error: provided data row can't be identified in its data table. Please contact your software vendor.")
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Find duplicate values in a given row and calculate the number of occurances of each value in the table
         ''' </summary>
         ''' <param name="column">A column of a datatable</param>
         ''' <returns>A hashtable containing the origin column value as key and the number of occurances as value</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	30.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function FindDuplicates(ByVal column As DataColumn) As Hashtable
             Return FindDuplicates(column, 2)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Find duplicate values in a given row and calculate the number of occurances of each value in the table
         ''' </summary>
         ''' <param name="column">A column of a datatable</param>
         ''' <param name="minOccurances">Only values with occurances equal or more than this number will be returned</param>
         ''' <returns>A hashtable containing the origin column value as key and the number of occurances as value</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	30.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function FindDuplicates(ByVal column As DataColumn, ByVal minOccurances As Integer) As Hashtable
 
             Dim Table As DataTable = column.Table
@@ -2920,18 +2615,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert the first two columns into objects which can be consumed by the ListControl objects in the System.Windows.Forms namespaces
         ''' </summary>
         ''' <param name="datatable">The datatable which contains a key column and a value column for the list control</param>
         ''' <returns>An array of WinFormsListControlItem</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	29.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataTableToWinFormsListControlItem(ByVal datatable As DataTable) As WinFormsListControlItem()
             If datatable Is Nothing Then
                 Return Nothing
@@ -2980,18 +2668,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             End Property
         End Class
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a dataset to an xml string with data and schema information
         ''' </summary>
         ''' <param name="dataset"></param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDatasetToXml(ByVal dataset As DataSet) As String
             Dim sbuilder As New System.Text.StringBuilder
             Dim xmlSW As System.IO.StringWriter = New System.IO.StringWriter(sbuilder)
@@ -3000,18 +2681,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return sbuilder.ToString
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert an xml string to a dataset
         ''' </summary>
         ''' <param name="xml"></param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertXmlToDataset(ByVal xml As String) As DataSet
             Dim reader As System.IO.StringReader = New System.IO.StringReader(xml)
             Dim DataSet As New DataSet
@@ -3020,24 +2694,16 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return DataSet
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a new data table clone with only some first rows
         ''' </summary>
         ''' <param name="SourceTable">The source table to be copied</param>
         ''' <param name="NumberOfRows">The number of rows to be copied</param>
         ''' <returns>The new clone of the datatable</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	28.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetDataTableWithSubsetOfRows(ByVal SourceTable As DataTable, ByVal NumberOfRows As Integer) As DataTable
             Return GetDataTableWithSubsetOfRows(SourceTable, 0, NumberOfRows)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a new data table clone with only some first rows
         ''' </summary>
@@ -3045,12 +2711,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="StartAtRow">The position where to start the copy process, the first row is at 0</param>
         ''' <param name="NumberOfRows">The number of rows to be copied</param>
         ''' <returns>The new clone of the datatable</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	28.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetDataTableWithSubsetOfRows(ByVal SourceTable As DataTable, ByVal StartAtRow As Integer, ByVal NumberOfRows As Integer) As DataTable
             Dim Result As DataTable = SourceTable.Clone
             Dim MyRows As DataRowCollection = SourceTable.Rows
@@ -3080,7 +2740,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Remove those rows in the source column which haven't got the same value in the compare table
         ''' </summary>
@@ -3090,15 +2749,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <remarks>
         '''     Strings will be compared case-insensitive, DBNull values in the source table will always be removed
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	07.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function RemoveRowsWithNoCorrespondingValueInComparisonTable(ByVal sourceColumn As DataColumn, ByVal valuesMustExistInThisColumnToKeepTheSourceRow As DataColumn) As ArrayList
             Return RemoveRowsWithNoCorrespondingValueInComparisonTable(sourceColumn, valuesMustExistInThisColumnToKeepTheSourceRow, True, True)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Remove those rows in the source column which haven't got the same value in the compare table
         ''' </summary>
@@ -3107,12 +2761,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="ignoreCaseInStrings">Strings will be compared case-insensitive</param>
         ''' <param name="alwaysRemoveDBNullValues">Always remove the source row when it contains a DBNull value</param>
         ''' <returns>An arraylist of removed keys</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	07.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function RemoveRowsWithNoCorrespondingValueInComparisonTable(ByVal sourceColumn As DataColumn, ByVal valuesMustExistInThisColumnToKeepTheSourceRow As DataColumn, ByVal ignoreCaseInStrings As Boolean, ByVal alwaysRemoveDBNullValues As Boolean) As ArrayList
 
             'parameters validation
@@ -3228,46 +2876,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
         End Function
 
-#If notyetimplemented Then
-        ''' -----------------------------------------------------------------------------
-        ''' <summary>
-        '''     Remove those rows in the source column which haven't got the same value in the compare table
-        ''' </summary>
-        ''' <param name="sourceColumns">These are the columns of the master table where all operations shall be executed</param>
-        ''' <param name="valuesMustExistInTheseColumnsToKeepTheSourceRow">These are the comparison values against the source table's columns</param>
-        ''' <param name="ignoreCaseInStrings">Strings will be compared case-insensitive</param>
-        ''' <param name="alwaysRemoveDBNullValues">Always remove the source row when it contains a DBNull value</param>
-        ''' <returns>An arraylist with object arrays containing all key values of a row in the order of the source columns</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	07.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        Friend Shared Function RemoveRowsWithNoCorrespondingValueInComparisonTable(ByVal sourceColumns As DataColumn(), ByVal valuesMustExistInTheseColumnsToKeepTheSourceRow As DataColumn(), ByVal ignoreCaseInStrings As Boolean, ByVal alwaysRemoveDBNullValues As Boolean) As ArrayList
-
-            'parameter validation
-            If sourceColumns Is Nothing Then
-                Throw New ArgumentNullException("sourceColumns")
-            ElseIf valuesMustExistInTheseColumnsToKeepTheSourceRow Is Nothing Then
-                Throw New ArgumentNullException("valuesMustExistInTheseColumnsToKeepTheSourceRow")
-            ElseIf sourceColumns.Length <> valuesMustExistInTheseColumnsToKeepTheSourceRow.Length Then
-                Throw New ArgumentException("Key definition of both tables must contain the same number of keys")
-            Else
-                'ToDo: additional testings
-                '- Are table references of all source columns the same?
-                '- Are table references of all comparison columns the same?
-                '- Are all keys in the source table matching the same datatype as in the comparison table?
-                '- Additional checks see already implemented functions
-            End If
-
-            'Attention: result of this function is not an arraylist containing keys!
-            '           result of this funciton is an arraylist containing object arrays of keys!
-
-        End Function
-#End If
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a complete clone of a DataRow with structure as well as data
         ''' </summary>
@@ -3276,10 +2884,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <remarks>
         '''     The resulting DataRow has got the schema from the sourceRow's DataTable, but it hasn't been added to the table yet.
         ''' </remarks>
-        ''' <history>
-        ''' 	[baldauf]	2005-07-02  Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function CreateDataRowClone(ByVal sourceRow As DataRow) As DataRow
             If sourceRow Is Nothing Then Throw New ArgumentNullException("sourceRow")
             Dim Result As DataRow = sourceRow.Table.NewRow
@@ -3287,40 +2891,25 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a complete clone of a DataTable with structure as well as data
         ''' </summary>
         ''' <param name="SourceTable">The source table to be copied</param>
         ''' <returns>The new clone of the datatable</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetDataTableClone(ByVal SourceTable As DataTable) As DataTable
             Return GetDataTableClone(SourceTable, Nothing, Nothing)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a complete clone of a DataTable with structure as well as data
         ''' </summary>
         ''' <param name="SourceTable">The source table to be copied</param>
         ''' <param name="RowFilter">An additional row filter, for all rows set it to null (Nothing in VisualBasic)</param>
         ''' <returns>The new clone of the datatable</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetDataTableClone(ByVal SourceTable As DataTable, ByVal RowFilter As String) As DataTable
             Return GetDataTableClone(SourceTable, RowFilter, Nothing)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a complete clone of a DataTable with structure as well as data
         ''' </summary>
@@ -3328,17 +2917,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="RowFilter">An additional row filter, for all rows set it to null (Nothing in VisualBasic)</param>
         ''' <param name="Sort">An additional sort command</param>
         ''' <returns>The new clone of the datatable</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetDataTableClone(ByVal SourceTable As DataTable, ByVal RowFilter As String, ByVal Sort As String) As DataTable
             Return GetDataTableClone(SourceTable, RowFilter, Sort, Nothing)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a complete clone of a DataTable with structure as well as data
         ''' </summary>
@@ -3347,12 +2929,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="Sort">An additional sort command</param>
         ''' <param name="topRows">How many rows from top shall be returned as maximum?</param>
         ''' <returns>The new clone of the datatable</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetDataTableClone(ByVal SourceTable As DataTable, ByVal RowFilter As String, ByVal Sort As String, ByVal topRows As Integer) As DataTable
             Dim Result As DataTable = SourceTable.Clone
             Dim MyRows As DataRow() = SourceTable.Select(RowFilter, Sort)
@@ -3378,7 +2954,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a complete clone of a DataTable with structure as well as data
         ''' </summary>
@@ -3390,12 +2965,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="overwritePropertiesOfExistingColumns">Shall the data type or any other settings of an existing table be modified to match the source column's definition?</param>
         ''' <param name="dropExistingRowsInDestinationTable">Remove the existing rows of the destination table, first</param>
         ''' <param name="removeUnusedColumnsFromDestinationTable">Remove the existing columns of the destination table which are not present in the source table</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	27.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Sub GetDataTableClone(ByVal sourceTable As DataTable, ByVal destinationTable As DataTable, ByVal rowFilter As String, ByVal sort As String, ByVal topRows As Integer, ByVal overwritePropertiesOfExistingColumns As Boolean, ByVal dropExistingRowsInDestinationTable As Boolean, ByVal removeUnusedColumnsFromDestinationTable As Boolean)
 
             If dropExistingRowsInDestinationTable Then
@@ -3508,18 +3077,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a clone of a dataview but as a new data table
         ''' </summary>
         ''' <param name="data">The data view to create the data table from</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[mecky]	20.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataViewToDataTable(ByVal data As DataView) As System.Data.DataTable
             Dim Result As DataTable = data.Table.Clone
             'Dim MyRows As DataRowView() = data.Item
@@ -3536,67 +3098,39 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert an ArrayList to a datatable
         ''' </summary>
         ''' <param name="arrayList">An ArrayList with some content</param>
         ''' <returns>Datatable with column &quot;key&quot; and &quot;value&quot;</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	08.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete("use ConvertICollectionToDataTable instead", False)> Friend Shared Function ConvertArrayListToDataTable(ByVal arrayList As ArrayList) As DataTable
             Return ConvertICollectionToDataTable(arrayList)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a data table to an arraylist
         ''' </summary>
         ''' <param name="column">The column which shall be used to fill the arraylist</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataTableToArrayList(ByVal column As DataColumn) As ArrayList
             Return ConvertDataTableToArrayList(column.Table, column.Ordinal)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a data table to an arraylist
         ''' </summary>
         ''' <param name="data">The first column of this data table will be used</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataTableToArrayList(ByVal data As DataTable) As ArrayList
             Return ConvertDataTableToArrayList(data, 0)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a data table to an arraylist
         ''' </summary>
         ''' <param name="data">The data table with the content</param>
         ''' <param name="selectedColumnIndex">The column which shall be used to fill the arraylist</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataTableToArrayList(ByVal data As DataTable, ByVal selectedColumnIndex As Integer) As ArrayList
             Dim Result As New ArrayList
             For MyCounter As Integer = 0 To data.Rows.Count - 1
@@ -3605,7 +3139,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a data table to a hash table
         ''' </summary>
@@ -3615,10 +3148,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <remarks>
         ''' ATTENTION: the very first column is used as key column and must be unique therefore
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataTableToHashtable(ByVal keyColumn As DataColumn, ByVal valueColumn As DataColumn) As Hashtable
             If Not keyColumn.Table Is valueColumn.Table Then
                 Throw New Exception("Key column and value column must be from the same table")
@@ -3626,7 +3155,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return ConvertDataTableToHashtable(keyColumn.Table, keyColumn.Ordinal, valueColumn.Ordinal)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a data table to a hash table
         ''' </summary>
@@ -3635,15 +3163,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <remarks>
         '''     ATTENTION: the very first column is used as key column and must be unique therefore
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataTableToHashtable(ByVal data As DataTable) As Hashtable
             Return ConvertDataTableToHashtable(data, 0, 1)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a data table to a hash table
         ''' </summary>
@@ -3654,10 +3177,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <remarks>
         '''     ATTENTION: the very first column is used as key column and must be unique therefore
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataTableToHashtable(ByVal data As DataTable, ByVal keyColumnIndex As Integer, ByVal valueColumnIndex As Integer) As Hashtable
             If data.Columns(keyColumnIndex).Unique = False Then
                 Throw New Exception("The hashtable requires your key column to be a unique column - make it a unique column, first!")
@@ -3669,7 +3188,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a data table to an array of dictionary entries
         ''' </summary>
@@ -3678,27 +3196,16 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <remarks>
         '''     The very first column is used as key column, the second one as the value column
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataTableToDictionaryEntryArray(ByVal data As DataTable) As DictionaryEntry()
             Return ConvertDataTableToDictionaryEntryArray(data, 0, 1)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a data table to an array of dictionary entries
         ''' </summary>
         ''' <param name="keyColumn">This is the key column from the data table</param>
         ''' <param name="valueColumn">A column which contains the values</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataTableToDictionaryEntryArray(ByVal keyColumn As DataColumn, ByVal valueColumn As DataColumn) As DictionaryEntry()
             If Not keyColumn.Table Is valueColumn.Table Then
                 Throw New Exception("Key column and value column must be from the same table")
@@ -3706,7 +3213,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return ConvertDataTableToDictionaryEntryArray(keyColumn.Table, keyColumn.Ordinal, valueColumn.Ordinal)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a data table to an array of dictionary entries
         ''' </summary>
@@ -3714,12 +3220,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="keyColumnIndex">This is the key column from the data table</param>
         ''' <param name="valueColumnIndex">A column which contains the values</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataTableToDictionaryEntryArray(ByVal data As DataTable, ByVal keyColumnIndex As Integer, ByVal valueColumnIndex As Integer) As DictionaryEntry()
             Dim Result As DictionaryEntry()
             ReDim Result(data.Rows.Count - 1)
@@ -3729,34 +3229,20 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a hashtable to a datatable
         ''' </summary>
         ''' <param name="hashtable">A hashtable with some content</param>
         ''' <returns>Datatable with column &quot;key&quot; and &quot;value&quot;</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	08.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete("use ConvertIDictionaryToDataTable instead and pay attention to parameter keyIsUnique", False)> Friend Shared Function ConvertHashtableToDataTable(ByVal hashtable As Hashtable) As DataTable
             Return ConvertIDictionaryToDataTable(hashtable, True)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert an ICollection to a datatable
         ''' </summary>
         ''' <param name="collection">An ICollection with some content</param>
         ''' <returns>Datatable with column &quot;key&quot; and &quot;value&quot;</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	08.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertICollectionToDataTable(ByVal collection As ICollection) As DataTable
             Dim Result As New DataTable
             Result.Columns.Add(New DataColumn("value"))
@@ -3770,35 +3256,21 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert an IDictionary to a datatable
         ''' </summary>
         ''' <param name="dictionary">An IDictionary with some content</param>
         ''' <returns>Datatable with column &quot;key&quot; and &quot;value&quot;</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	08.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertIDictionaryToDataTable(ByVal dictionary As IDictionary) As DataTable
             Return ConvertIDictionaryToDataTable(dictionary, False)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert an IDictionary to a datatable
         ''' </summary>
         ''' <param name="dictionary">An IDictionary with some content</param>
         ''' <param name="keyIsUnique">If true, the key column in the data table will be marked as unique</param>
         ''' <returns>Datatable with column &quot;key&quot; and &quot;value&quot;</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	08.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertIDictionaryToDataTable(ByVal dictionary As IDictionary, ByVal keyIsUnique As Boolean) As DataTable
             Dim Result As New DataTable
             Result.Columns.Add(New DataColumn("key"))
@@ -3815,35 +3287,21 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a NameValueCollection to a datatable
         ''' </summary>
         ''' <param name="nameValueCollection">An IDictionary with some content</param>
         ''' <returns>Datatable with column &quot;key&quot; and &quot;value&quot;</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	08.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertNameValueCollectionToDataTable(ByVal nameValueCollection As Specialized.NameValueCollection) As DataTable
             Return ConvertNameValueCollectionToDataTable(nameValueCollection, False)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a NameValueCollection to a datatable
         ''' </summary>
         ''' <param name="nameValueCollection">An IDictionary with some content</param>
         ''' <param name="keyIsUnique">If true, the key column in the data table will be marked as unique</param>
         ''' <returns>Datatable with column &quot;key&quot; and &quot;value&quot;</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	08.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertNameValueCollectionToDataTable(ByVal nameValueCollection As Specialized.NameValueCollection, ByVal keyIsUnique As Boolean) As DataTable
             Dim Result As New DataTable
             Result.Columns.Add(New DataColumn("key"))
@@ -3860,7 +3318,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Simplified creation of a DataTable by definition of a SQL statement and a connection string
         ''' </summary>
@@ -3868,12 +3325,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="ConnectionString">The connection string to the data source</param>
         ''' <param name="NameOfNewDataTable">The name of the new DataTable</param>
         ''' <returns>A filled DataTable</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetDataTableViaODBC(ByVal strSQL As String, ByVal ConnectionString As String, ByVal NameOfNewDataTable As String) As DataTable
 
             Dim MyConn As New Odbc.OdbcConnection(ConnectionString)
@@ -3902,7 +3353,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Simplified creation of a DataTable by definition of a SQL statement and a connection string
         ''' </summary>
@@ -3910,12 +3360,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="ConnectionString">The connection string to the data source</param>
         ''' <param name="NameOfNewDataTable">The name of the new DataTable</param>
         ''' <returns>A filled DataTable</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetDataTableViaSqlClient(ByVal strSQL As String, ByVal ConnectionString As String, ByVal NameOfNewDataTable As String) As DataTable
 
             Dim MyConn As New System.Data.SqlClient.SqlConnection(ConnectionString)
@@ -3945,57 +3389,35 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return a string with all columns and rows as an html table
         ''' </summary>
         ''' <param name="dataTable">The datatable to retrieve the content from</param>
         ''' <returns>If no rows have been processed, the return string is nothing</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[baldauf]	2005-07-02  Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ConvertToHtmlTable(ByVal dataTable As DataTable) As String
             Return Tools.Data.DataTables.ConvertToHtmlTable(dataTable, "<H1>", "</H1>", Nothing)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return a string with all columns and rows as an html table
         ''' </summary>
         ''' <param name="rows">The rows to be processed</param>
         ''' <param name="label">An optional title of the rows</param>
         ''' <returns>If no rows have been processed, the return string is nothing</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[baldauf]	2005-07-02  Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ConvertToHtmlTable(ByVal rows As DataRowCollection, ByVal label As String) As String
             Return Tools.Data.DataTables.ConvertToHtmlTable(rows, label, "<H1>", "</H1>", Nothing)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return a string with all columns and rows as an html table
         ''' </summary>
         ''' <param name="rows">The rows to be processed</param>
         ''' <param name="label">An optional title of the rows</param>
         ''' <returns>If no rows have been processed, the return string is nothing</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[baldauf]	2005-07-02  Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ConvertToHtmlTable(ByVal rows() As DataRow, ByVal label As String) As String
             Return Tools.Data.DataTables.ConvertToHtmlTable(rows, label, "<H1>", "</H1>", Nothing)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return a string with all columns and rows as an html table
         ''' </summary>
@@ -4004,17 +3426,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="titleTagEnd">The closing tag after the table title</param>
         ''' <param name="additionalTableAttributes">Additional attributes for the rendered table</param>
         ''' <returns>If no rows have been processed, the return string is nothing</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertToHtmlTable(ByVal dataTable As DataTable, ByVal titleTagOpener As String, ByVal titleTagEnd As String, ByVal additionalTableAttributes As String) As String
             Return ConvertToHtmlTable(dataTable.Rows, dataTable.TableName, titleTagOpener, titleTagEnd, additionalTableAttributes)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return a string with all columns and rows as an html table
         ''' </summary>
@@ -4024,17 +3439,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="titleTagEnd">The closing tag after the table title</param>
         ''' <param name="additionalTableAttributes">Additional attributes for the rendered table</param>
         ''' <returns>If no rows have been processed, the return string is nothing</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertToHtmlTable(ByVal rows As DataRowCollection, ByVal label As String, ByVal titleTagOpener As String, ByVal titleTagEnd As String, ByVal additionalTableAttributes As String) As String
             Return ConvertToHtmlTable(rows, label, titleTagOpener, titleTagEnd, additionalTableAttributes, False)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return a string with all columns and rows as an html table
         ''' </summary>
@@ -4045,12 +3453,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="additionalTableAttributes">Additional attributes for the rendered table</param>
         ''' <param name="htmlEncodeCellContentAndLineBreaks">Encode all output to valid HTML</param>
         ''' <returns>If no rows have been processed, the return string is nothing</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertToHtmlTable(ByVal rows As DataRowCollection, ByVal label As String, ByVal titleTagOpener As String, ByVal titleTagEnd As String, ByVal additionalTableAttributes As String, ByVal htmlEncodeCellContentAndLineBreaks As Boolean) As String
             Dim Result As New System.Text.StringBuilder
             If label <> "" Then
@@ -4105,7 +3507,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result.ToString
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Converts all line breaks into HTML line breaks (&quot;&lt;br&gt;&quot;)
         ''' </summary>
@@ -4114,15 +3515,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <remarks>
         '''     Supported line breaks are linebreaks of Windows, MacOS as well as Linux/Unix.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function HtmlEncodeLineBreaks(ByVal Text As String) As String
             Return Text.Replace(ControlChars.CrLf, "<br>").Replace(ControlChars.Cr, "<br>").Replace(ControlChars.Lf, "<br>")
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return a string with all columns and rows as an html table
         ''' </summary>
@@ -4132,12 +3528,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="titleTagEnd">The closing tag after the table title</param>
         ''' <param name="additionalTableAttributes">Additional attributes for the rendered table</param>
         ''' <returns>If no rows have been processed, the return string is nothing</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertToHtmlTable(ByVal rows() As DataRow, ByVal label As String, ByVal titleTagOpener As String, ByVal titleTagEnd As String, ByVal additionalTableAttributes As String) As String
             Dim Result As New System.Text.StringBuilder
             If label <> "" Then
@@ -4170,35 +3560,21 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result.ToString
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return a string with all columns and rows, helpfull for debugging purposes
         ''' </summary>
         ''' <param name="dataTable">The datatable to retrieve the content from</param>
         ''' <returns>All rows are tab separated. If no rows have been processed, the user will get notified about this fact</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertToPlainTextTable(ByVal dataTable As DataTable) As String
             Return _ConvertToPlainTextTable(dataTable.Rows, dataTable.TableName)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return a string with all columns and rows, helpfull for debugging purposes
         ''' </summary>
         ''' <param name="rows">The rows to be processed</param>
         ''' <param name="label">An optional title of the rows</param>
         ''' <returns>All rows are tab separated. If no rows have been processed, the user will get notified about this fact</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertToPlainTextTable(ByVal rows() As DataRow, ByVal label As String) As String
             Const separator As Char = ControlChars.Tab
             Dim Result As New System.Text.StringBuilder
@@ -4228,19 +3604,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result.ToString
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return a string with all columns and rows, helpfull for debugging purposes
         ''' </summary>
         ''' <param name="rows">The rows to be processed</param>
         ''' <param name="label">An optional title of the rows</param>
         ''' <returns>All rows are tab separated. If no rows have been processed, the user will get notified about this fact</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function _ConvertToPlainTextTable(ByVal rows As DataRowCollection, ByVal label As String) As String
             Const separator As Char = ControlChars.Tab
             Dim Result As New System.Text.StringBuilder
@@ -4270,7 +3639,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result.ToString
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Remove the specified columns if they exist
         ''' </summary>
@@ -4279,10 +3647,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <remarks>
         '''     The columns will only be removed if they exist. If a column name doesn't exist, it will be ignored.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	07.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Sub RemoveColumns(ByVal datatable As System.Data.DataTable, ByVal columnNames As String())
             If Not columnNames Is Nothing Then
                 For MyRemoveCounter As Integer = 0 To columnNames.Length - 1
@@ -4295,35 +3659,21 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             End If
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return a string with all columns and rows, helpfull for debugging purposes
         ''' </summary>
         ''' <param name="rows">The rows to be processed</param>
         ''' <param name="label">An optional title of the rows</param>
         ''' <returns>All rows are tab separated. If no rows have been processed, the user will get notified about this fact</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertToPlainTextTable(ByVal rows As DataRowCollection, ByVal label As String) As String
             Return _ConvertToPlainTextTable(rows, label)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert any opened datareader into a dataset
         ''' </summary>
         ''' <param name="dataReader">An already opened dataReader</param>
         ''' <returns>A dataset containing all datatables the dataReader was able to read</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	13.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataReaderToDataSet(ByVal datareader As IDataReader) As DataSet
             Dim Result As New DataSet
             Dim DRA As New DataReaderAdapter
@@ -4331,35 +3681,21 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert any opened datareader into a data table
         ''' </summary>
         ''' <param name="dataReader">An already opened dataReader</param>
         ''' <returns>A data table containing all data the dataReader was able to read</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	13.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataReaderToDataTable(ByVal dataReader As IDataReader) As DataTable
             Return ConvertDataReaderToDataTable(dataReader, Nothing)
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert any opened datareader into a data table
         ''' </summary>
         ''' <param name="dataReader">An already opened dataReader</param>
         ''' <param name="tableName">The name for the new table</param>
         ''' <returns>A data table containing all data the dataReader was able to read</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	13.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataReaderToDataTable(ByVal dataReader As IDataReader, ByVal tableName As String) As DataTable
 
             Dim Result As DataTable
@@ -4374,20 +3710,9 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : SqlServerCommandExecutionTimeStopper
-        ''' Class	 : CompuMaster.camm.WebManager.Tools.Data.DataTables.DataReaderAdapter
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A data adapter for data readers making the real conversion
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	13.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Class DataReaderAdapter
             Inherits System.Data.Common.DbDataAdapter
 
@@ -4415,53 +3740,23 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Class
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Table join types
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	22.03.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Enum JoinTypes As Integer
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The result contains only those rows which exist in both tables
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	17.01.2006	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Inner = 0
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The result contains all rows of the left, parent table and only those rows of the other table which are related the rows of the left table
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	17.01.2006	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Left = 1
-            '''' -----------------------------------------------------------------------------
             '''' <summary>
             ''''     The result contains all rows of the left, parent table and all rows of the right, child table. Missing values on the other side will be of value DBNull 
             '''' </summary>
-            '''' <remarks>
-            '''' </remarks>
-            '''' <history>
-            '''' 	[adminwezel]	17.01.2006	Created
-            '''' </history>
-            '''' -----------------------------------------------------------------------------
-            'Full = 2
         End Enum
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Execute a table join on two tables of the same dataset based on the first relation found
         ''' </summary>
@@ -4469,12 +3764,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="rightChildTable"></param>
         ''' <param name="joinType">Inner or left join</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	22.03.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function JoinTables(ByVal leftParentTable As DataTable, ByVal rightChildTable As DataTable, ByVal joinType As JoinTypes) As DataTable
 
             'Find the appropriate relation information
@@ -4490,7 +3779,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Execute a table join on two tables of the same dataset which have got a defined relation
         ''' </summary>
@@ -4507,10 +3795,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''         <item>LEFT JOIN: all columns from the right child table</item>
         '''     </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	22.03.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function JoinTables(ByVal leftParentTable As DataTable, ByVal rightChildTable As DataTable, ByVal relation As DataRelation, ByVal joinType As JoinTypes) As DataTable
 
             'Verify parameters
@@ -4550,7 +3834,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Execute a table join on two tables of the same dataset which have got a defined relation
         ''' </summary>
@@ -4560,12 +3843,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="rightTableColumnsToCopy">An array of columns to copy from the right table</param>
         ''' <param name="joinType">Inner or left join</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	22.03.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function JoinTables(ByVal leftParentTable As DataTable, ByVal leftTableColumnsToCopy As DataColumn(), ByVal rightChildTable As DataTable, ByVal rightTableColumnsToCopy As DataColumn(), ByVal joinType As JoinTypes) As DataTable
 
             'Find the appropriate relation information
@@ -4600,7 +3877,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Execute a table join on two tables of the same dataset which have got a defined relation
         ''' </summary>
@@ -4610,12 +3886,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="indexesOfRightTableColumnsToCopy">An array of column indexes to copy from the right table</param>
         ''' <param name="joinType">Inner or left join</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	22.03.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function JoinTables(ByVal leftParentTable As DataTable, ByVal indexesOfLeftTableColumnsToCopy As Integer(), ByVal rightChildTable As DataTable, ByVal indexesOfRightTableColumnsToCopy As Integer(), ByVal joinType As JoinTypes) As DataTable
 
             'Find the appropriate relation information
@@ -4631,7 +3901,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Execute a table join on two tables of the same dataset which have got a defined relation
         ''' </summary>
@@ -4642,12 +3911,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="relation">A data table relation which shall be used for the joining</param>
         ''' <param name="joinType">Inner or left join</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	22.03.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function JoinTables(ByVal leftParentTable As DataTable, ByVal indexesOfLeftTableColumnsToCopy As Integer(), ByVal rightChildTable As DataTable, ByVal indexesOfRightTableColumnsToCopy As Integer(), ByVal relation As DataRelation, ByVal joinType As JoinTypes) As DataTable
 
             'Verify parameters
@@ -4763,7 +4026,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Cross join of two tables
         ''' </summary>
@@ -4772,12 +4034,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="rightTable">A second datatable</param>
         ''' <param name="indexesOfRightTableColumnsToCopy">An array of column indexes to copy from the right table</param>
         ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	27.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function CrossJoinTables(ByVal leftTable As DataTable, ByVal indexesOfLeftTableColumnsToCopy As Integer(), ByVal rightTable As DataTable, ByVal indexesOfRightTableColumnsToCopy As Integer()) As DataTable
 
             'Verify parameters
@@ -4876,19 +4132,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Add a prefix to the names of the columns
         ''' </summary>
         ''' <param name="dataTable"></param>
         ''' <param name="columnIndexes"></param>
         ''' <param name="prefix">e. g. "orders."</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	27.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Sub AddPrefixesToColumnNames(ByVal dataTable As DataTable, ByVal columnIndexes As Integer(), ByVal prefix As String)
 
             'all columns if nothing is given
@@ -4905,19 +4154,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Add a suffix to the names of the columns
         ''' </summary>
         ''' <param name="dataTable"></param>
         ''' <param name="columnIndexes"></param>
         ''' <param name="suffix">e. g. "-orders"</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	27.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Sub AddSuffixesToColumnNames(ByVal dataTable As DataTable, ByVal columnIndexes As Integer(), ByVal suffix As String)
 
             'all columns if nothing is given
@@ -4934,19 +4176,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Lookup a new unique column name for a data table
         ''' </summary>
         ''' <param name="dataTable">The data table which shall get a new data column</param>
         ''' <param name="suggestedColumnName">A column name suggestion</param>
         ''' <returns>The suggested column name as it is or modified column name to be unique</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	22.03.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function LookupUnqiueColumnName(ByVal dataTable As DataTable, ByVal suggestedColumnName As String) As String
 
             Dim ColumnNameAlreadyExistant As Boolean = False
@@ -5202,36 +4437,21 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Provides simplified read access to XLS files via MS OLEDB Jet Providers
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	30.05.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Friend Class XlsReader
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read from an excel file
         ''' </summary>
         ''' <param name="path">The path of the .XLS file</param>
         ''' <param name="sheetName">A name of a sheet where the read operations shall execute</param>
         ''' <returns>A new and independent datatable with the content of the sheet</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[baldauf]	2005-07-02  Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ReadDataTableFromXlsFile(ByVal path As String, ByVal sheetName As String) As DataTable
             Return ReadDataTableFromXlsFile(path, sheetName, "SELECT * FROM [" & sheetName & "$]")
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read from an excel file
         ''' </summary>
@@ -5239,12 +4459,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="sheetName">A name of a sheet where the read operations shall execute</param>
         ''' <param name="querySql">A query SQL to filter the returned data, e. g. SELECT * FROM [sheetName$]</param>
         ''' <returns>A new and independent datatable with the content of the sheet</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[baldauf]	2005-07-02  Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ReadDataTableFromXlsFile(ByVal path As String, ByVal sheetName As String, ByVal querySql As String) As DataTable
             Dim MyConn As New OleDb.OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & path & ";Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1""")
             Dim MyCmd As IDbCommand = MyConn.CreateCommand

@@ -225,19 +225,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.ApplicationNew
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to create new application
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	04.09.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class ApplicationNew
         Inherits Page
 
@@ -281,21 +271,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.ApplicationClone
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to clone an application
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	05.09.2007	Created
-    '''     [zeutzheim] 03.08.2010  Modified
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class ApplicationClone
         Inherits Page
 
@@ -337,19 +315,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    '' -----------------------------------------------------------------------------
-    '' Project	 : camm WebManager
-    '' Class	 : camm.WebManager.Pages.Administration.ApplicationUpdate
-    '' -----------------------------------------------------------------------------
     '' <summary>
     ''     A page to update an application
     '' </summary>
-    '' <remarks>
-    '' </remarks>
-    '' <history>
-    '' 	[I-link]	05.09.2007	Created
-    '' </history>
-    '' -----------------------------------------------------------------------------
     Public Class ApplicationUpdate
         Inherits Page
 
@@ -504,7 +472,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             If CInt(dr("ItemType")) = 1 Then
                                 strBlr.Append("<TR><TD VAlign=""Top"" WIDTH=""160""><P><FONT face=""Arial"" size=""2"">Group</FONT></P></TD><TD VAlign=""Top"" Width=""240""><P><FONT face=""Arial"" size=""2""><a href=""groups_update.aspx?ID=" & Utils.Nz(dr("ID_Group"), 0) & """>" & Server.HtmlEncode(Utils.Nz(dr("Name"), String.Empty)) & "</a></FONT></P></TD></TR>")
                             Else
-                                strBlr.Append("<TR><TD VAlign=""Top"" WIDTH=""160""><P><FONT face=""Arial"" size=""2"">User " + Utils.Nz(IIf(Utils.Nz(dr("DevelopmentTeamMember"), False), "<B> {Dev} </B>", ""), String.Empty) + "</FONT></P></TD><TD VAlign=""Top"" Width=""240""><P><FONT face=""Arial"" size=""2""><a href=""users_update.aspx?ID=" & Utils.Nz(dr("ID_User"), 0).ToString & """>" & Utils.Nz(Server.HtmlEncode(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(Utils.Nz(dr("ID_User"), -1).ToString), cammWebManager).FullName), String.Empty) & " (" & Server.HtmlEncode(Utils.Nz(dr("LoginName"), String.Empty)) & ")</a>" & Utils.Nz(IIf(Utils.Nz(dr("LoginDisabled"), False) <> False, "&nbsp;<em><font color=""#D1D1D1"">(Disabled)</font></em>", ""), String.Empty) & "</FONT></P></TD></TR>")
+                                strBlr.Append("<TR><TD VAlign=""Top"" WIDTH=""160""><P><FONT face=""Arial"" size=""2"">User " + Utils.Nz(IIf(Utils.Nz(dr("DevelopmentTeamMember"), False), "<B title=""Authorization for test and development purposes and for inactive security objects""> {Dev} </B>", ""), String.Empty) + "</FONT></P></TD><TD VAlign=""Top"" Width=""240""><P><FONT face=""Arial"" size=""2""><a href=""users_update.aspx?ID=" & Utils.Nz(dr("ID_User"), 0).ToString & """>" & Utils.Nz(Server.HtmlEncode(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(Utils.Nz(dr("ID_User"), -1).ToString), cammWebManager).FullName), String.Empty) & " (" & Server.HtmlEncode(Utils.Nz(dr("LoginName"), String.Empty)) & ")</a>" & Utils.Nz(IIf(Utils.Nz(dr("LoginDisabled"), False) <> False, "&nbsp;<em><font color=""#D1D1D1"">(Disabled)</font></em>", ""), String.Empty) & "</FONT></P></TD></TR>")
                             End If
                         Next
                     End If
@@ -638,8 +606,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 If MyDBVersion.Build >= 147 Then
                     Dim requiredApplicationFlags() As String = txtField_RequiredUserFlags.Text.Split(CChar(","))
 
-                    Dim cmd As New SqlClient.SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "Select * From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_USer from Memberships where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a GROUP BY ID_User", New SqlConnection(cammWebManager.ConnectionString))
+                    Dim cmd As SqlClient.SqlCommand
+                    If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                        cmd = New SqlClient.SqlCommand("Select * From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_User from view_Memberships_Effective_with_PublicNAnonymous where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a GROUP BY ID_User", New SqlConnection(cammWebManager.ConnectionString))
+                    Else
+                        cmd = New SqlClient.SqlCommand("Select * From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_User from Memberships where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a GROUP BY ID_User", New SqlConnection(cammWebManager.ConnectionString))
+                    End If
                     cmd.Parameters.Add("@ID", SqlDbType.Int).Value = CType(Trim(lblField_ID.Text), Integer)
 
                     Dim tbleUsersAllowedForApplication As DataTable = FillDataTable(cmd, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
@@ -648,9 +620,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Dim userId As Long = CType(Utils.Nz(row.Item("ID_User")), Long)
                         Dim userInfo As WMSystem.UserInformation = cammWebManager.System_GetUserInfo(userId)
                         If Not userInfo Is Nothing Then
-                            Dim validationResults As FlagValidation.FlagValidationResult() = FlagValidation.GetFlagValidationResults(userInfo, requiredApplicationFlags)
-                            For Each validationResult As FlagValidation.FlagValidationResult In validationResults
-                                If validationResult.Code <> FlagValidation.FlagValidationResultCode.Success Then
+                            Dim validationResults As CompuMaster.camm.WebManager.FlagValidation.FlagValidationResult() = CompuMaster.camm.WebManager.FlagValidation.ValidateRequiredFlags(userInfo, requiredApplicationFlags, True)
+                            For Each validationResult As CompuMaster.camm.WebManager.FlagValidation.FlagValidationResult In validationResults
+                                If validationResult.ValidationResult <> CompuMaster.camm.WebManager.FlagValidation.FlagValidationResultCode.Success Then
                                     If Not invalidFlags.Contains(validationResult.Flag) Then
                                         invalidFlags.Add(validationResult.Flag)
                                     End If
@@ -687,19 +659,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.ApplicationDelete
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to delete an application
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[I-link]	05.09.2007	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class ApplicationDelete
         Inherits Page
 
@@ -733,7 +695,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim strBlr As New Text.StringBuilder
 
             lblField_ID.Text = Request.QueryString("ID")
-            Dim MySecurityObjectInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(Utils.Nz(lblField_ID.Text, 0), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
+            Dim MySecurityObjectInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(Utils.Nz(lblField_ID.Text, 0), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
 
             If Request.QueryString("ID") <> "" AndAlso Request.QueryString("DEL") = "NOW" AndAlso Request.QueryString("token") = Session.SessionID Then
                 Try

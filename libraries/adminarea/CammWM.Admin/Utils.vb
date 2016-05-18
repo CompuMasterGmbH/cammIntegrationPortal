@@ -134,13 +134,13 @@ Namespace CompuMaster.camm.WebManager.Administration
             Return Result
         End Function
 
-        Friend Shared Function ConstructLinkToFlagUpdatePage(ByVal validationResult As FlagValidation.FlagValidationResult, ByVal userInfo As WMSystem.UserInformation) As String
+        Friend Shared Function ConstructLinkToFlagUpdatePage(ByVal validationResult As CompuMaster.camm.WebManager.FlagValidation.FlagValidationResult, ByVal userInfo As WMSystem.UserInformation) As String
             Dim result As String = String.Empty
-            If validationResult.code <> FlagValidation.FlagValidationResultCode.Success Then
+            If validationResult.ValidationResult <> CompuMaster.camm.WebManager.FlagValidation.FlagValidationResultCode.Success Then
                 Dim problem As String = String.Empty
-                If validationResult.code = FlagValidation.FlagValidationResultCode.Missing Then
+                If validationResult.ValidationResult = CompuMaster.camm.WebManager.FlagValidation.FlagValidationResultCode.Missing Then
                     problem = "missing"
-                ElseIf validationResult.code = FlagValidation.FlagValidationResultCode.InvalidValue Then
+                ElseIf validationResult.ValidationResult = CompuMaster.camm.WebManager.FlagValidation.FlagValidationResultCode.InvalidValue Then
                     problem = "invalid value for type"
                 End If
 
@@ -149,10 +149,10 @@ Namespace CompuMaster.camm.WebManager.Administration
             Return result
         End Function
 
-        Friend Shared Function FormatLinksToFlagUpdatePages(ByVal validationResults As FlagValidation.FlagValidationResult(), ByVal userInfo As WMSystem.UserInformation) As String
+        Friend Shared Function FormatLinksToFlagUpdatePages(ByVal validationResults As CompuMaster.camm.WebManager.FlagValidation.FlagValidationResult(), ByVal userInfo As WMSystem.UserInformation) As String
             Dim result As String = String.Empty
-            For Each flagResult As FlagValidation.FlagValidationResult In validationResults
-                If flagResult.code <> FlagValidation.FlagValidationResultCode.Success Then
+            For Each flagResult As CompuMaster.camm.WebManager.FlagValidation.FlagValidationResult In validationResults
+                If flagResult.ValidationResult <> CompuMaster.camm.WebManager.FlagValidation.FlagValidationResultCode.Success Then
                     result &= CompuMaster.camm.WebManager.Administration.Utils.ConstructLinkToFlagUpdatePage(flagResult, userInfo) & "<br>"
                 End If
             Next

@@ -28,8 +28,10 @@ Namespace CompuMaster.camm.WebManager
 
         Enum GenderType
             Undefined = Sex.Undefined
-            Masculin = Sex.Masculin
-            Feminin = Sex.Feminin
+            Masculine = Sex.Masculine
+            Feminine = Sex.Feminine
+            <Obsolete("Use value Masculine instead", False), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Masculin = Sex.Masculine
+            <Obsolete("Use value Feminine instead", False), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Feminin = Sex.Feminine
             MissingNameOrGroupOfPersons = Sex.MissingNameOrGroupOfPersons
         End Enum
 

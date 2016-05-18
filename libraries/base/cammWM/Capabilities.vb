@@ -28,17 +28,10 @@ Namespace CompuMaster.camm.WebManager
     ''' </remarks>
     Public Class WMCapabilities
         Private _WebManager As WMSystem
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a new WMCapabilities class
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance this class shall work with</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub New(ByVal webManager As WMSystem)
             _WebManager = webManager
 
@@ -48,17 +41,10 @@ Namespace CompuMaster.camm.WebManager
 
         Private _Messaging As WMCapabilitiesMessaging
         Private _Delivery As WMCapabilitiesDelivery
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Messaging capabilities
         ''' </summary>
         ''' <value>A new WMCapabilitiesMessaging</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Messaging() As WMCapabilitiesMessaging
             Get
                 Return _Messaging
@@ -67,17 +53,10 @@ Namespace CompuMaster.camm.WebManager
                 _Messaging = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The delivery capabilities
         ''' </summary>
         ''' <value>A new WMCapabilitiesDelivery</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Delivery() As WMCapabilitiesDelivery
             Get
                 Return _Delivery
@@ -141,47 +120,22 @@ Namespace CompuMaster.camm.WebManager
             Return Tools.Data.DataTables.ConvertToPlainTextTable(RequiredComponentsDetailedCheck.Rows, "")
         End Function
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.WMCapabilities.WMCapabilitiesMessaging
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Messaging capabilities
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class WMCapabilitiesMessaging
             Private _WebManager As WMSystem
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Creates a new WMCapabilitiesMessaging class
             ''' </summary>
             ''' <param name="webManager">The camm Web-Manager instance this class shall work with</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	06.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Sub New(ByVal webManager As WMSystem)
                 _WebManager = webManager
             End Sub
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Support of e-mails
             ''' </summary>
             ''' <value>True if supported</value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	06.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property eMail() As Boolean
                 Get
                     If _WebManager.SMTPServerName <> "" Then
@@ -191,34 +145,20 @@ Namespace CompuMaster.camm.WebManager
                     End If
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Support of SMS
             ''' </summary>
             ''' <value>True if supported</value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	06.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property SMS() As Boolean
                 Get
                     'TODO: Not yet implemented
                     Return False
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Support of MMS
             ''' </summary>
             ''' <value>True if supported</value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	06.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             <Obsolete, System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public ReadOnly Property MMS() As Boolean
                 Get
                     'TODO: Not yet implemented
@@ -226,17 +166,10 @@ Namespace CompuMaster.camm.WebManager
                 End Get
             End Property
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Support of e-mail queue
             ''' </summary>
             ''' <value>True if supported</value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	06.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property eMailQueue() As Boolean
                 Get
                     Try
@@ -252,51 +185,29 @@ Namespace CompuMaster.camm.WebManager
                 End Get
             End Property
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Support of SMS queue
             ''' </summary>
             ''' <value>True if supported</value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	06.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property SMSQueue() As Boolean
                 Get
                     'TODO: Not yet implemented
                     Return False
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Support of MMSQueue
             ''' </summary>
             ''' <value>True if supported</value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	06.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             <Obsolete, System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public ReadOnly Property MMSQueue() As Boolean
                 Get
                     'TODO: Not yet implemented
                     Return False
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Support of news archiving system
             ''' </summary>
-            ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	06.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property NewsArchiveSystem() As Boolean
                 Get
                     'TODO: Not yet implemented
@@ -322,48 +233,23 @@ Namespace CompuMaster.camm.WebManager
 #End If
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.WMCapabilities.WMCapabilitiesDelivery
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Delivery capabilities
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class WMCapabilitiesDelivery
             Private _WebManager As WMSystem
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Creates a new WMCapabilities class
             ''' </summary>
             ''' <param name="webManager">The camm Web-Manager instance this class shall work with</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	06.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Sub New(ByVal webManager As WMSystem)
                 _WebManager = webManager
             End Sub
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Support of download handler
             ''' </summary>
             ''' <value>True if supported</value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	06.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property DownloadHandler() As Boolean
                 Get
                     Return _WebManager.DownloadHandler.IsFullyFeatured

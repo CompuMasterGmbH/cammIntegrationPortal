@@ -26,11 +26,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
     ''' </remarks>
     Friend Class Ldap
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
-        '''     Returns different information on all the users matching the filter
-        '''     expression within the given domain as contents of a DataTable
-        '''
+        '''     Returns different information on all the users matching the filter expression within the given domain as contents of a DataTable
+        ''' </summary>
+        ''' <remarks>
         '''     The Table contains the following columns:
         '''     - UserName      User's accountname
         '''     - FirstName     First name
@@ -52,20 +51,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     Note that any field except "UserName" is optional.
         '''     All fields are of type String.
         '''     Each user account is represented by a DataRow.
-        '''     
-        ''' </summary>
+        ''' </remarks>
         ''' <param name="domain">The domain from which to gather the information</param>
         ''' <param name="SearchFilterExpression">The filter expression for specific selection purposes.
         '''             For valid filter expressions see the documentation about
         '''             System.DirectoryServices.DirectorySearcher.Filter</param>
         ''' <returns>A DataTable containing the information, Nothing if an error occurs during execution</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[abaldauf]	2005-06-16	Created
-        '''     [abaldauf]  2005-06-20  Modified for usage of a filter expression
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function QueryUsers(ByVal domain As String, ByVal SearchFilterExpression As String) As DataTable
             Dim UserDataTable As DataTable = QueryUsers_CreateInfoTable(domain)
             Try
@@ -138,11 +129,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             End Try
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns different information on all the users with the given account
         '''     name within the given domain as contents of a DataTable
-        '''
+        ''' </summary>
+        ''' <remarks>
         '''     The Table contains the following columns:
         '''     - UserName      User's accountname
         '''     - FirstName     First name
@@ -165,16 +156,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     All fields are of type String.
         '''     Each user account is represented by a DataRow.
         '''     
-        ''' </summary>
+        ''' </remarks>
         ''' <param name="domain">The domain from which to gather the information</param>
         ''' <param name="UserAccountName">The account name for which to search</param>
         ''' <returns>A DataTable containing the information, Nothing if an error occurs during execution</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        '''     [abaldauf]  2005-06-20  Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function QueryUsersByAccountName(ByVal domain As String, ByVal UserAccountName As String) As DataTable
             If UserAccountName = Nothing Then
                 Return Nothing
@@ -183,11 +168,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             End If
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns different information on all the users with the given first
         '''     and / or last name within the given domain as contents of a DataTable
-        '''
+        ''' </summary>
+        ''' <remarks>
         '''     The Table contains the following columns:
         '''     - UserName      User's accountname
         '''     - FirstName     First name
@@ -210,17 +195,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     All fields are of type String.
         '''     Each user account is represented by a DataRow.
         '''     
-        ''' </summary>
+        ''' </remarks>
         ''' <param name="domain">The domain from which to gather the information</param>
         ''' <param name="UserFirstName">The first name for which to search (may be empty or nothing if last name is given)</param>
         ''' <param name="UserLastName">The last name for which to search (may be empty or nothing if first name is given)</param>
         ''' <returns>A DataTable containing the information, Nothing if an error occurs during execution</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        '''     [abaldauf]  2005-06-20  Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function QueryUsersByName(ByVal domain As String, ByVal UserFirstName As String, ByVal UserLastName As String) As DataTable
             If ((IsNothing(UserFirstName) OrElse (UserFirstName.Trim() = "")) AndAlso (IsNothing(UserLastName) OrElse (UserLastName.Trim() = ""))) Then
                 Return Nothing
@@ -240,19 +219,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             End If
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Query the LDAP
         ''' </summary>
         ''' <param name="domain">The domain name which will be used as LDAP server name (to query the domain controller)</param>
         ''' <param name="searchFilterExpression">A search expression to filter the results</param>
         ''' <returns>A datatable containing all data as strings</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	07.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function Query(ByVal domain As String, ByVal searchFilterExpression As String) As DataTable
 
             ' User-Einträge abfragen
@@ -295,11 +267,11 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         End Function
 
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns different information on all users within the given domain
         '''     as contents of a DataTable
-        '''
+        ''' </summary>
+        ''' <remarks>
         '''     The Table contains the following columns:
         '''     - UserName      User's accountname
         '''     - FirstName     First name
@@ -322,34 +294,19 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     All fields are of type String.
         '''     Each user account is represented by a DataRow.
         '''     
-        ''' </summary>
+        ''' </remarks>
         ''' <param name="domain">The domain from which to gather the information</param>
         ''' <returns>A DataTable containing the information, Nothing if an error occurs during execution</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        '''     [abaldauf]  2005-06-20  Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function QueryAllUsers(ByVal domain As String) As DataTable
             Return QueryUsers(domain, "(objectCategory=user)")
         End Function
 
-
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a DataTable with all the required columns for containing
         '''     user information
         ''' </summary>
         ''' <param name="DomName">The domain name to be included in the table's title</param>
         ''' <returns>An empty DataTable containing the prepared columns</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[abaldauf]	2005-06-16	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function QueryUsers_CreateInfoTable(ByVal DomName As String) As DataTable
             ' Neue DataTable mit den benötigten Columns erzeugen
             Dim MyTable As New DataTable("UserInformation")

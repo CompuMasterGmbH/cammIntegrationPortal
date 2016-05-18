@@ -13,7 +13,7 @@
             <product>MSSQLServer</product>
             <version_major>9</version_major>
             <version_minor>0</version_minor>
-             <file>camm-WebManager_indexes_latest.sql</file>
+             <file>camm-WebManager_indexes_till205.sql</file>
             <execfile>
             </execfile>
         </requires>
@@ -21,7 +21,7 @@
             <product>MSSQLServer</product>
             <version_major>10</version_major>
             <version_minor>0</version_minor>
-              <file>camm-WebManager_indexes_latest.sql</file>
+              <file>camm-WebManager_indexes_till205.sql</file>
             <execfile>
             </execfile>
         </requires>
@@ -29,7 +29,7 @@
             <product>MSSQLServer</product>
             <version_major>11</version_major>
             <version_minor>0</version_minor>
-              <file>camm-WebManager_indexes_latest.sql</file>
+              <file>camm-WebManager_indexes_till205.sql</file>
             <execfile>
             </execfile>
         </requires>
@@ -37,7 +37,7 @@
             <product>MSSQLServerAzure</product>
             <version_major>12</version_major>
             <version_minor>0</version_minor>
-			<file>camm-WebManager_indexes_latest.sql</file>
+              <file>camm-WebManager_indexes_till205.sql</file>
             <execfile>
             </execfile>
         </requires>
@@ -45,7 +45,7 @@
             <product>MSSQLServer</product>
             <version_major>12</version_major>
             <version_minor>0</version_minor>
-            <file>camm-WebManager_indexes_latest.sql</file>
+              <file>camm-WebManager_indexes_till205.sql</file>
             <execfile>
             </execfile>
         </requires>
