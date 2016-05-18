@@ -154,6 +154,20 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property
 
+        Private _NoteForEditor As String
+        ''' <summary>
+        ''' An optional note for the editor how to edit page content correctly (e.g. to update on which markets/servergroups)
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property NoteForEditor As String
+            Get
+                Return _NoteForEditor
+            End Get
+            Set(value As String)
+                _NoteForEditor = value
+            End Set
+        End Property
+
         ''' <summary>
         '''     The edit mode as it is defined in the viewstate
         ''' </summary>
@@ -1422,6 +1436,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.lblCurrentEditInformation.Text = Nothing
                 Else
                     Me.lblCurrentEditInformation.Text = HtmlCodeCurrentEditInformation & "<br>"
+                End If
+                If Trim(Me.NoteForEditor) <> Nothing Then
+                    Me.lblCurrentEditInformation.Text = Me.NoteForEditor & "<br>" & Me.lblCurrentEditInformation.Text
                 End If
 
                 'Initialize ToolbarSetting who indicates which toolbar shall be used
