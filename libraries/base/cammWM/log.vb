@@ -162,7 +162,6 @@ Namespace CompuMaster.camm.WebManager
 
 #Region "Send error e-mail"
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Send an exception notification to the responsible contact
         ''' </summary>
@@ -171,12 +170,22 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	19.08.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")>
         Public Sub ReportWarningViaEMail(ByVal exception As Exception, ByVal messageSubject As String)
-            Log.WriteEventLogTrace("ReportWarningViaEMail:Begin")
+            ReportWarningByEMail(exception, messageSubject)
+        End Sub
+
+        ''' <summary>
+        ''' Send an exception notification to the responsible contact
+        ''' </summary>
+        ''' <param name="exception">A warning message which shall be reported to the developer/technical contact</param>
+        ''' <param name="messageSubject">The e-mail subject</param>
+        ''' <returns>True if the e-mail could be sent using a configured e-mail send system, False if no configured e-mail send system has been available or if another error occured</returns>
+        ''' <remarks>
+        ''' Requires an active e-mail system. Errors will be ignored.
+        ''' </remarks>
+        Public Function ReportWarningByEMail(ByVal exception As Exception, ByVal messageSubject As String) As Boolean
+            Log.WriteEventLogTrace("ReportWarningByEMail1:Begin")
             Dim BodyHtmlText As String = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(exception.ToString))
             Dim BodyPlainText As String = exception.ToString
 
@@ -187,11 +196,12 @@ Namespace CompuMaster.camm.WebManager
                 BodyHtmlText &= "<p><em>" & Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(AdditionalExceptionDetails)) & "</em></p>"
             End If
 
-            ReportWarningViaEMail(BodyPlainText, BodyHtmlText, messageSubject)
-            Log.WriteEventLogTrace("ReportWarningViaEMail:End")
-        End Sub
+            Dim Result As Boolean
+            Result = ReportWarningByEMail(BodyPlainText, BodyHtmlText, messageSubject)
+            Log.WriteEventLogTrace("ReportWarningByEMail1:End")
+            Return Result
+        End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Send a warning notification to the responsible contact
         ''' </summary>
@@ -201,12 +211,23 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	20.08.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")>
         Public Sub ReportWarningViaEMail(ByVal plainText As String, ByVal htmlText As String, ByVal messageSubject As String)
-            Log.WriteEventLogTrace("ReportWarningViaEMail2:Begin")
+            ReportWarningByEMail(plainText, htmlText, messageSubject)
+        End Sub
+
+        ''' <summary>
+        ''' Send a warning notification to the responsible contact
+        ''' </summary>
+        ''' <param name="plainText">A plain text warning message which shall be reported to the developer/technical contact</param>
+        ''' <param name="htmlText">An HTML warning message which shall be reported to the developer/technical contact</param>
+        ''' <param name="messageSubject">The e-mail subject</param>
+        ''' <returns>True if the e-mail could be sent using a configured e-mail send system, False if no configured e-mail send system has been available or if another error occured</returns>
+        ''' <remarks>
+        ''' Requires an active e-mail system. Errors will be ignored.
+        ''' </remarks>
+        Public Function ReportWarningByEMail(ByVal plainText As String, ByVal htmlText As String, ByVal messageSubject As String) As Boolean
+            Log.WriteEventLogTrace("ReportWarningByEMail2:Begin")
             If Not HttpContext.Current Is Nothing Then
                 'Web application
                 If messageSubject = Nothing Then messageSubject = "Page warning @ " & Me._WebManager.Page.Request.Url.Host
@@ -214,12 +235,10 @@ Namespace CompuMaster.camm.WebManager
                 'Console/windows application
                 If messageSubject = Nothing Then messageSubject = "Warning @ " & System.Environment.MachineName
             End If
-            Log.WriteEventLogTrace("ReportWarningViaEMail2:End")
-            ReportErrorViaEMail(plainText, htmlText, messageSubject)
+            Log.WriteEventLogTrace("ReportWarningByEMail2:End")
+            Return ReportErrorByEMail(plainText, htmlText, messageSubject)
+        End Function
 
-        End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Send an exception notification to the responsible contact
         ''' </summary>
@@ -228,11 +247,21 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	19.08.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")>
         Public Sub ReportErrorViaEMail(ByVal exception As Exception, ByVal messageSubject As String)
+            ReportErrorByEMail(exception, messageSubject)
+        End Sub
+
+        ''' <summary>
+        ''' Send an exception notification to the responsible contact
+        ''' </summary>
+        ''' <param name="exception">An error which shall be reported to the developer/technical contact</param>
+        ''' <param name="messageSubject">The e-mail subject</param>
+        ''' <returns>True if the e-mail could be sent using a configured e-mail send system, False if no configured e-mail send system has been available or if another error occured</returns>
+        ''' <remarks>
+        ''' Requires an active e-mail system. Errors will be ignored.
+        ''' </remarks>
+        Public Function ReportErrorByEMail(ByVal exception As Exception, ByVal messageSubject As String) As Boolean
             Dim BodyHtmlText As String = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(exception.ToString))
             Dim BodyPlainText As String = exception.ToString
 
@@ -243,8 +272,8 @@ Namespace CompuMaster.camm.WebManager
                 BodyHtmlText &= "<p><em>" & Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(AdditionalExceptionDetails)) & "</em></p>"
             End If
 
-            ReportErrorViaEMail(BodyPlainText, BodyHtmlText, messageSubject)
-        End Sub
+            Return ReportErrorByEMail(BodyPlainText, BodyHtmlText, messageSubject)
+        End Function
 
         ''' <summary>
         ''' Step through the exception tree and collection additional data
@@ -273,7 +302,6 @@ Namespace CompuMaster.camm.WebManager
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Send an error notification to the responsible contact
         ''' </summary>
@@ -283,12 +311,23 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	20.08.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")>
         Public Sub ReportErrorViaEMail(ByVal plainText As String, ByVal htmlText As String, ByVal messageSubject As String)
-            Log.WriteEventLogTrace("ReportErrorViaEMail:Begin")
+            ReportErrorByEMail(plainText, htmlText, messageSubject)
+        End Sub
+
+        ''' <summary>
+        ''' Send an error notification to the responsible contact
+        ''' </summary>
+        ''' <param name="plainText">A plain text error message which shall be reported to the developer/technical contact</param>
+        ''' <param name="htmlText">An HTML error message which shall be reported to the developer/technical contact</param>
+        ''' <param name="messageSubject">The e-mail subject</param>
+        ''' <returns>True if the e-mail could be sent using a configured e-mail send system, False if no configured e-mail send system has been available or if another error occured</returns>
+        ''' <remarks>
+        ''' Requires an active e-mail system. Errors will be ignored.
+        ''' </remarks>
+        Public Function ReportErrorByEMail(ByVal plainText As String, ByVal htmlText As String, ByVal messageSubject As String) As Boolean
+            Log.WriteEventLogTrace("ReportErrorByEMail1:Begin")
             If plainText = Nothing Then
                 Throw New ArgumentNullException("plainText")
             End If
@@ -315,22 +354,26 @@ Namespace CompuMaster.camm.WebManager
 
             Dim BodyHtmlText As String = Log.BuildHtmlMessage(htmlText, messageSubject, "", request, context, user, _WebManager, -1)
             Dim BodyPlainText As String = Log.BuildPlainMessage(plainText, messageSubject, "", request, context, user, _WebManager, -1)
-            ReportErrorViaEMail(BodyPlainText, BodyHtmlText, messageSubject, user, request, context)
-            Log.WriteEventLogTrace("ReportErrorViaEMail:End")
+            Dim Result As Boolean
+            Result = ReportErrorByEMail(BodyPlainText, BodyHtmlText, messageSubject, user, request, context)
+            Log.WriteEventLogTrace("ReportErrorByEMail1:End")
+            Return Result
+        End Function
 
-        End Sub
-
+        ''' <summary>
+        ''' The location of the executed code/assembly, typically somewhere in the parent or grand parent directory
+        ''' </summary>
+        ''' <returns></returns>
         Private Shared Function GetCodeLocation() As String
             Dim result As String = ""
             Try
-                result = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(New Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath))
+                result = System.IO.Path.GetDirectoryName(System.IO.Path.GetDirectoryName(New Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath)) & "|" & System.IO.Path.GetDirectoryName(New Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath)
             Catch ex As Exception
                 result = "(couldn't get code location)"
             End Try
             Return result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Send an exception notification to the responsible contact
         ''' </summary>
@@ -340,15 +383,13 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="user">The current user principal</param>
         ''' <param name="request">The current request</param>
         ''' <param name="context">The current context of the request</param>
+        ''' <returns>True if the e-mail could be sent using a configured e-mail send system, False if no configured e-mail send system has been available or if another error occured</returns>
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	19.08.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        Friend Sub ReportErrorViaEMail(ByVal plainText As String, ByVal htmlText As String, ByVal messageSubject As String, ByVal user As System.Security.Principal.IPrincipal, ByVal request As System.Web.HttpRequest, ByVal context As System.Web.HttpContext)
-            Log.WriteEventLogTrace("ReportErrorViaEMail2:Begin")
+        Friend Function ReportErrorByEMail(ByVal plainText As String, ByVal htmlText As String, ByVal messageSubject As String, ByVal user As System.Security.Principal.IPrincipal, ByVal request As System.Web.HttpRequest, ByVal context As System.Web.HttpContext) As Boolean
+            Log.WriteEventLogTrace("ReportErrorByEMail2:Begin")
+            Dim Result As Boolean = True
             Try
                 If Not HttpContext.Current Is Nothing Then
                     'Web application
@@ -381,14 +422,16 @@ Namespace CompuMaster.camm.WebManager
                         End If
                     Else
                         'No mailing system available
+                        Result = False
                     End If
                 End If
             Catch
+                Result = False
             End Try
-            Log.WriteEventLogTrace("ReportErrorViaEMail2:End")
-        End Sub
+            Log.WriteEventLogTrace("ReportErrorByEMail2:End")
+            Return Result
+        End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Prepare the message text for the exception in plain text format
         ''' </summary>
@@ -397,22 +440,20 @@ Namespace CompuMaster.camm.WebManager
         ''' <returns></returns>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function BuildPlainMessage(ByVal exceptionDetails As String, ByVal exceptionIdentifier As String, exceptionGuid As String, ByVal request As System.Web.HttpRequest, ByVal context As System.Web.HttpContext, ByVal user As System.Security.Principal.IPrincipal, ByVal webManager As WebManager.WMSystem, errorCounter As Integer) As String
 
-            Dim ContextRequest As HttpRequest
-            Try
-                ContextRequest = context.Request
-            Catch ex As HttpException
-                'Integrated mode of IIS 7 throw an HttpException in Application_Init event because the request/response objects haven't been available, yet
-                ContextRequest = Nothing
-            End Try
+            Dim ContextRequest As HttpRequest = Nothing
+            If Not context Is Nothing Then
+                Try
+                    ContextRequest = context.Request
+                Catch ex As HttpException
+                    'Integrated mode of IIS 7 throw an HttpException in Application_Init event because the request/response objects haven't been available, yet
+                    ContextRequest = Nothing
+                End Try
+            End If
 
             'For safety
-            If request Is Nothing And Not context Is Nothing Then
+            If request Is Nothing AndAlso Not context Is Nothing Then
                 request = ContextRequest
             End If
 
@@ -467,8 +508,10 @@ Namespace CompuMaster.camm.WebManager
                 End Try
             ElseIf context Is Nothing AndAlso Not webManager Is Nothing AndAlso webManager.CurrentUserLoginName <> Nothing Then 'non-web-environment (no httpcontext)
                 strMessage.Append("CWM user: " & webManager.CurrentUserLoginName & ControlChars.CrLf)
+            ElseIf Not webManager Is Nothing AndAlso webManager.DebugLevel >= DebugLevels.Low_WarningMessagesOnAccessError_AdditionalDetails Then
+                strMessage.Append("CWM user: {not avilable in this context: HC:" & (Not context Is Nothing) & "|WM:" & (Not webManager Is Nothing) & "|SID:" & webManager.CurrentServerIdentStringNoAutoLookup & "}" & ControlChars.CrLf)
             Else
-                strMessage.Append("CWM user: {not avilable in this context}" & ControlChars.CrLf)
+                strMessage.Append("CWM user: {not avilable in this context: HC:" & (Not context Is Nothing) & "|WM:" & (Not webManager Is Nothing) & "}" & ControlChars.CrLf)
             End If
 
             'IIS/ASP.Net / Authenticated user
@@ -658,7 +701,6 @@ Namespace CompuMaster.camm.WebManager
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Prepare the message text for the exception in HTML output format
         ''' </summary>
@@ -667,22 +709,20 @@ Namespace CompuMaster.camm.WebManager
         ''' <returns></returns>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function BuildHtmlMessage(ByVal exceptionDetailsAsHtml As String, ByVal exceptionIdentifier As String, exceptionGuid As String, ByVal request As System.Web.HttpRequest, ByVal context As System.Web.HttpContext, ByVal user As System.Security.Principal.IPrincipal, ByVal webManager As WebManager.WMSystem, errorCounter As Integer) As String
 
-            Dim ContextRequest As HttpRequest
-            Try
-                ContextRequest = context.Request
-            Catch ex As HttpException
-                'Integrated mode of IIS 7 throw an HttpException in Application_Init event because the request/response objects haven't been available, yet
-                ContextRequest = Nothing
-            End Try
+            Dim ContextRequest As HttpRequest = Nothing
+            If Not context Is Nothing Then
+                Try
+                    ContextRequest = context.Request
+                Catch ex As HttpException
+                    'Integrated mode of IIS 7 throw an HttpException in Application_Init event because the request/response objects haven't been available, yet
+                    ContextRequest = Nothing
+                End Try
+            End If
 
             'For safety
-            If request Is Nothing And Not context Is Nothing Then
+            If request Is Nothing AndAlso Not context Is Nothing Then
                 request = ContextRequest
             End If
 
@@ -804,10 +844,15 @@ Namespace CompuMaster.camm.WebManager
                 strMessage.Append("<td valign=""top"" width=""200"" align=""right"" bgcolor=""#eeeeee"" class=""header1"" nowrap>CWM user</td>")
                 strMessage.Append("<td valign=""top"" bgcolor=""#FFFFFF"" class=""basix"">" & System.Web.HttpUtility.HtmlEncode(webManager.CurrentUserLoginName) & "</td>")
                 strMessage.Append("</tr>")
+            ElseIf Not webManager Is Nothing AndAlso webManager.DebugLevel >= DebugLevels.Low_WarningMessagesOnAccessError_AdditionalDetails Then
+                strMessage.Append("<tr>")
+                strMessage.Append("<td valign=""top"" width=""200"" align=""right"" bgcolor=""#eeeeee"" class=""header1"" nowrap>CWM user</td>")
+                strMessage.Append("<td valign=""top"" bgcolor=""#FFFFFF"" class=""basix""><em>{not available in this context: HC:" & (Not context Is Nothing) & "|WM:" & (Not webManager Is Nothing) & "|SID:" & webManager.CurrentServerIdentStringNoAutoLookup & "}</em></td>")
+                strMessage.Append("</tr>")
             Else
                 strMessage.Append("<tr>")
                 strMessage.Append("<td valign=""top"" width=""200"" align=""right"" bgcolor=""#eeeeee"" class=""header1"" nowrap>CWM user</td>")
-                strMessage.Append("<td valign=""top"" bgcolor=""#FFFFFF"" class=""basix""><em>{not available in this context & " & (Not context Is Nothing) & "|" & (Not webManager Is Nothing) & "|" & webManager.CurrentServerIdentString & "}</em></td>")
+                strMessage.Append("<td valign=""top"" bgcolor=""#FFFFFF"" class=""basix""><em>{not available in this context: HC:" & (Not context Is Nothing) & "|WM:" & (Not webManager Is Nothing) & "}</em></td>")
                 strMessage.Append("</tr>")
             End If
 

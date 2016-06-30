@@ -1669,17 +1669,23 @@ Namespace CompuMaster.camm.WebManager
                 _URLReplacements = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
+
+        ''' <summary>
+        '''     The server identification string of the current server
+        ''' </summary>
+        ''' <value>A server identification string</value>
+        Friend ReadOnly Property CurrentServerIdentStringNoAutoLookup() As String
+            Get
+                Return _CurrentServerIdentString
+            End Get
+        End Property
+
         ''' <summary>
         '''     The server identification string of the current server
         ''' </summary>
         ''' <value>A server identification string</value>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property CurrentServerIdentString() As String
             Get
                 If _CurrentServerIdentString = Nothing Then

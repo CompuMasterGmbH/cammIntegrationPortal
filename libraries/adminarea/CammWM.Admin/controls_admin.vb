@@ -32,6 +32,28 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
     Public Class FloatingMenu
         Inherits System.Web.UI.UserControl
 
+        Public Sub New()
+            Me.AnchorText = "Overview"
+        End Sub
+
+        Public Property AnchorText() As String
+            Get
+                Return Utils.Nz(ViewState("AnchorText"), String.Empty)
+            End Get
+            Set(ByVal Value As String)
+                ViewState("AnchorText") = Value
+            End Set
+        End Property
+
+        Public Property AnchorTitle() As String
+            Get
+                Return Utils.Nz(ViewState("AnchorTitle"), String.Empty)
+            End Get
+            Set(ByVal Value As String)
+                ViewState("AnchorTitle") = Value
+            End Set
+        End Property
+
         Public Property HRef() As String
             Get
                 Return Utils.Nz(ViewState("HRef"), String.Empty)
@@ -47,7 +69,7 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
             Me.Controls.Add(Literal)
         End Sub
 
-        Private Sub ControlLoad(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
+        Private Sub ControlPreRender(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.PreRender
             Dim Script As New System.Text.StringBuilder
             If HRef = Nothing Then
                 Script.Append("<div id=""RePos"" style=""float: left; width: 80px; height: 60px; line-height: 60px; position: fixed; right: 0px; bottom: 20px; z-index: 10000; background-color: #ffffff; border: solid 2px #E1E1E1; font-family: Arial; font-size: 8pt; text-align: center;"">")
@@ -57,7 +79,11 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
                 Script.Append("<div id=""RePos"" style=""float: left; width: 80px; height: 60px; line-height: 30px; position: fixed; right: 0px; bottom: 20px; z-index: 10000; background-color: #ffffff; border: solid 2px #E1E1E1; font-family: Arial; font-size: 8pt; text-align: center;"">")
                 Script.Append("<a href=""#top"">Go to top</a>")
                 Script.Append("<br>")
-                Script.Append("<a href=""" & HRef & """>Overview</a>")
+                Script.Append("<a href=""" & HRef & """")
+                If Me.AnchorTitle <> Nothing Then Script.Append(" title=""" & Server.HtmlEncode(Me.AnchorTitle) & """")
+                Script.Append(">")
+                Script.Append(Server.HtmlEncode(Me.AnchorText))
+                Script.Append("</a>")
                 Script.Append("</div>")
             End If
             Literal.Text = Script.ToString

@@ -1674,10 +1674,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected Sub AssignFormDataToUserInfo()
             UserInfo.Company = Trim(Mid(Me.Field_Company.Text, 1, 50))
             If cmbAnrede.SelectedValue <> Nothing Then
-                If Integer.Parse(cmbAnrede.SelectedValue) = CType(IUserInformation.GenderType.Feminin, Integer) Then
-                    UserInfo.Gender = CType(IUserInformation.GenderType.Feminin, WMSystem.Sex)
-                ElseIf Integer.Parse(cmbAnrede.SelectedValue) = CType(IUserInformation.GenderType.Masculin, Integer) Then
-                    UserInfo.Gender = CType(IUserInformation.GenderType.Masculin, WMSystem.Sex)
+                If Integer.Parse(cmbAnrede.SelectedValue) = CType(IUserInformation.GenderType.Feminine, Integer) Then
+                    UserInfo.Gender = CType(IUserInformation.GenderType.Feminine, WMSystem.Sex)
+                ElseIf Integer.Parse(cmbAnrede.SelectedValue) = CType(IUserInformation.GenderType.Masculine, Integer) Then
+                    UserInfo.Gender = CType(IUserInformation.GenderType.Masculine, WMSystem.Sex)
                 End If
             Else
                 UserInfo.Gender = WMSystem.Sex.Undefined

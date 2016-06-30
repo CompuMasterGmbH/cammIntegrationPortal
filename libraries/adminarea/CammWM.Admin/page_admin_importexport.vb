@@ -168,6 +168,19 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End Set
         End Property
 
+        ''' <summary>
+        ''' Overwrite user profiles with empty values when the import file provides empty cells OR overwrite user profiles only with existing values from import files while ignoring overwriting of filled user profile fields with empty values from import file
+        ''' </summary>
+        ''' <returns></returns>
+        Protected Property ImportOverwriteWithEmptyCellValues() As Boolean
+            Get
+                Return CType(Session("WebManager.Administration.Import.UserList.ImportOverwriteWithEmptyCellValues"), Boolean)
+            End Get
+            Set(ByVal Value As Boolean)
+                Session("WebManager.Administration.Import.UserList.ImportOverwriteWithEmptyCellValues") = Value
+            End Set
+        End Property
+
         ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Messages logged by the import process
@@ -304,12 +317,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected WithEvents PanelStep3MembershipsImportType As Panel
         Protected WithEvents PanelStep3AuthorizationsImportType As Panel
         Protected WithEvents PanelStep3AdditionalFlagsImportType As Panel
+        Protected WithEvents PanelStep3OverrideWithEmptyValuesFromImportFile As Panel
         Protected WithEvents RadioStep3ActionMembershipsFitExact As RadioButton
         Protected WithEvents RadioStep3ActionMembershipsInsertOnly As RadioButton
         Protected WithEvents RadioStep3ActionAuthorizationsFitExact As RadioButton
         Protected WithEvents RadioStep3ActionAuthorizationsInsertOnly As RadioButton
         Protected WithEvents RadioStep3ActionAdditionalFlagsFitExact As RadioButton
         Protected WithEvents RadioStep3ActionAdditionalFlagsDefinedKeysOnly As RadioButton
+        Protected WithEvents RadioStep3OverrideWithEmptyValuesFromImportFileYes As RadioButton
+        Protected WithEvents RadioStep3OverrideWithEmptyValuesFromImportFileNo As RadioButton
         Protected LabelStep1Errors As Label
         Protected LabelStep2Errors As Label
         Protected LabelStep3Errors As Label
@@ -356,6 +372,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 'Start the import in the first page request
                 'MessagesLog = Nothing
                 StartImport()
+            End If
+
+            If stepNumber = 1 OrElse stepNumber = 4 Then
+                Me.cammWebManagerAdminMenu.AnchorText = ""
+                Me.cammWebManagerAdminMenu.AnchorTitle = ""
+                Me.cammWebManagerAdminMenu.HRef = ""
+            Else
+                Me.cammWebManagerAdminMenu.AnchorText = "Restart"
+                Me.cammWebManagerAdminMenu.AnchorTitle = "Reset and begin a new import"
+                Me.cammWebManagerAdminMenu.HRef = "users_import.aspx"
             End If
 
         End Sub
@@ -478,6 +504,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Dim tempFolder As String = System.IO.Path.GetDirectoryName(ImportFile)
                         If System.IO.Directory.Exists(tempFolder) = False Then System.IO.Directory.CreateDirectory(tempFolder)
                         Request.Files(0).SaveAs(ImportFile)
+                        Me.LabelStep1Errors.Text = Nothing
                         Me.LabelStep2Errors.Text = Nothing
                         Return True
                     Catch ex As Exception
@@ -567,6 +594,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Me.ImportActionMemberships = ImportBase.ImportActions.FitExact
                 Else
                     Me.ImportActionMemberships = ImportBase.ImportActions.InsertOnly
+                End If
+                If Me.RadioStep3OverrideWithEmptyValuesFromImportFileYes Is Nothing OrElse Me.RadioStep3OverrideWithEmptyValuesFromImportFileYes.Checked Then
+                    Me.ImportOverwriteWithEmptyCellValues = True
+                Else
+                    Me.ImportOverwriteWithEmptyCellValues = False
                 End If
 
                 'Suppress notification mails?
@@ -1301,16 +1333,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     'Assign user profile values 
                     ApplyUserProfileData(MyUser, userData, Me.ImportFileCulture)
                     If userData.Table.Columns.Contains("User_PhoneNumber") Then
-                        MyUser.PhoneNumber = Utils.Nz(userData("User_PhoneNumber"), "")
+                        ApplyUserProfileFlagConditionally_Internal(MyUser.PhoneNumber, Trim(Utils.Nz(userData("User_PhoneNumber"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
                     End If
                     If userData.Table.Columns.Contains("User_MobileNumber") Then
-                        MyUser.MobileNumber = Utils.Nz(userData("User_MobileNumber"), "")
+                        ApplyUserProfileFlagConditionally_Internal(MyUser.MobileNumber, Trim(Utils.Nz(userData("User_MobileNumber"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
                     End If
                     If userData.Table.Columns.Contains("User_FaxNumber") Then
-                        MyUser.FaxNumber = Utils.Nz(userData("User_FaxNumber"), "")
+                        ApplyUserProfileFlagConditionally_Internal(MyUser.FaxNumber, Trim(Utils.Nz(userData("User_FaxNumber"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
                     End If
                     If userData.Table.Columns.Contains("User_Position") Then
-                        MyUser.Position = Utils.Nz(userData("User_Position"), "")
+                        ApplyUserProfileFlagConditionally_Internal(MyUser.Position, Trim(Utils.Nz(userData("User_Position"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
                     End If
                     'And save all changes (as well as the password)
                     If userIDToUpdate = -1 Then
@@ -1379,9 +1411,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Catch ex As Exception
                 If True Then 'Debugging without stacktrace is very difficult-->always true! 'cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                    Me.MessagesLog &= "<font color=""red"">Row #" & rowID & ": " & Server.HtmlDecode(ex.ToString).Replace(vbNewLine, "<br>") & "</font>" & vbNewLine
+                    Me.MessagesLog &= "<font color=""red"">Row #" & rowID & ": " & Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br>") & "</font>" & vbNewLine
                 Else
-                    Me.MessagesLog &= "<font color=""red"">Row #" & rowID & ": " & Server.HtmlDecode(ex.Message) & "</font>" & vbNewLine
+                    Me.MessagesLog &= "<font color=""red"">Row #" & rowID & ": " & Server.HtmlEncode(ex.Message) & "</font>" & vbNewLine
                 End If
             End Try
 
@@ -1405,7 +1437,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             'User account data
             If userData.Table.Columns.Contains("User_EMailAddress") Then
-                user.EMailAddress = Trim(Utils.Nz(userData("User_EMailAddress"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.EMailAddress, Trim(Utils.Nz(userData("User_EMailAddress"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_Gender") Then
                 If Utils.Nz(userData("User_Gender"), "") = "" Then
@@ -1415,46 +1447,46 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
             End If
             If userData.Table.Columns.Contains("User_AcademicTitle") Then
-                user.AcademicTitle = Trim(Utils.Nz(userData("User_AcademicTitle"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.AcademicTitle, Trim(Utils.Nz(userData("User_AcademicTitle"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_FirstName") Then
-                user.FirstName = Trim(Utils.Nz(userData("User_FirstName"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.FirstName, Trim(Utils.Nz(userData("User_FirstName"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_LastName") Then
-                user.LastName = Trim(Utils.Nz(userData("User_LastName"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.LastName, Trim(Utils.Nz(userData("User_LastName"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_NameAddition") Then
-                user.NameAddition = Trim(Utils.Nz(userData("User_NameAddition"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.NameAddition, Trim(Utils.Nz(userData("User_NameAddition"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_Company") Then
-                user.Company = Trim(Utils.Nz(userData("User_Company"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.Company, Trim(Utils.Nz(userData("User_Company"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_Position") Then
-                user.Position = Trim(Utils.Nz(userData("User_Position"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.Position, Trim(Utils.Nz(userData("User_Position"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_Street") Then
-                user.Street = Trim(Utils.Nz(userData("User_Street"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.Street, Trim(Utils.Nz(userData("User_Street"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_ZipCode") Then
-                user.ZipCode = Trim(Utils.Nz(userData("User_ZipCode"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.ZipCode, Trim(Utils.Nz(userData("User_ZipCode"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_Location") Then
-                user.Location = Trim(Utils.Nz(userData("User_Location"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.Location, Trim(Utils.Nz(userData("User_Location"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_State") Then
-                user.State = Trim(Utils.Nz(userData("User_State"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.State, Trim(Utils.Nz(userData("User_State"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_Country") Then
-                user.Country = Trim(Utils.Nz(userData("User_Country"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.Country, Trim(Utils.Nz(userData("User_Country"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_PhoneNumber") Then
-                user.PhoneNumber = Trim(Utils.Nz(userData("User_PhoneNumber"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.PhoneNumber, Trim(Utils.Nz(userData("User_PhoneNumber"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_MobileNumber") Then
-                user.MobileNumber = Trim(Utils.Nz(userData("User_MobileNumber"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.MobileNumber, Trim(Utils.Nz(userData("User_MobileNumber"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_FaxNumber") Then
-                user.FaxNumber = Trim(Utils.Nz(userData("User_FaxNumber"), ""))
+                ApplyUserProfileFlagConditionally_Internal(user.FaxNumber, Trim(Utils.Nz(userData("User_FaxNumber"), "")), Not Me.ImportOverwriteWithEmptyCellValues)
             End If
             If userData.Table.Columns.Contains("User_PreferredLanguage1") Then
                 user.PreferredLanguage1 = New WMSystem.LanguageInformation(CType(userData("User_PreferredLanguage1"), Integer), cammWebManager)
@@ -1504,6 +1536,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Utils.ReFillNameValueCollection(user.AdditionalFlags, value)
             End If
 
+        End Sub
+
+        Protected Sub ApplyUserProfileFlagConditionally_Internal(ByRef userInfoField As String, newValue As String, skipIfEmptyValue As Boolean)
+            If skipIfEmptyValue = True And newValue = Nothing Then
+                'don't update
+            Else
+                userInfoField = newValue
+            End If
         End Sub
 
         ''' -----------------------------------------------------------------------------
