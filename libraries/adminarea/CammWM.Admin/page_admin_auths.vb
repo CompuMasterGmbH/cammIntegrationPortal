@@ -291,16 +291,17 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 
                     If (Trim(Request.QueryString("Application")) <> "" OrElse Utils.Nz(Request.QueryString("Showall"), 0) = 1 OrElse CurUserIsSecurityOperator OrElse Trim(txtSearchUser.Text & "") <> "") Then
+                        'Show all groups
                         dt = New DataTable
                         tempStr = New Text.StringBuilder
 
                         Dim sqlParams As SqlParameter() = {New SqlParameter("@AppID", NewAppID)}
                         If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
                             'Older / without IsDenyRule column
-                            strQuery = "select LoginDisabled,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_Group,DevelopmentTeamMember,Name,Vorname,Description,0 AS IsDenyRule from [view_ApplicationRights] where id_application=@AppID and isnull(ID_Group,0)<>0 order by Name"
+                            strQuery = "select LoginDisabled,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_Group,DevelopmentTeamMember,Name,Vorname,Description,CAST (0 AS bit) AS IsDenyRule,CAST(0 AS int) AS ID_ServerGroup from [view_ApplicationRights] where id_application=@AppID and isnull(ID_Group,0)<>0 order by Name"
                         Else
                             'Newer / IsDenyRule column available
-                            strQuery = "select LoginDisabled,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_Group,DevelopmentTeamMember,Name,Vorname,Description,IsDenyRule from [view_ApplicationRights] where id_application=@AppID and isnull(ID_Group,0)<>0 order by Name, IsDenyRule"
+                            strQuery = "select LoginDisabled,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_Group,DevelopmentTeamMember,Name,Vorname,Description,IsDenyRule,ID_ServerGroup,IsSupervisorAutoAccessRule from [view_ApplicationRights] where id_application=@AppID and isnull(ID_Group,0)<>0 order by Name, IsDenyRule"
                         End If
 
                         dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
@@ -327,56 +328,75 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 tempStr.Append("<TR>")
                                 tempStr.Append("<TD>&nbsp;</TD>")
                                 tempStr.Append("<TD><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(dt.Rows(j)("ID_Group"), 0).ToString) & IIf(Utils.Nz(dt.Rows(j)("DevelopmentTeamMember"), False), "<b title=""Authorization for test and development purposes and for inactive security objects"">{Dev}</b>", "").ToString & "&nbsp;</P></TD>")
-                                tempStr.Append("<TD><P class=""normalFont"">" & IIf(Utils.Nz(dt.Rows(j)("IsDenyRule"), False) = False, "GRANT", "DENY").ToString & "</P></TD>")
+                                Dim RuleTitleForGroup As String
+                                If MyDt.Columns.Contains("IsDenyRule") = True AndAlso Utils.Nz(dt.Rows(j).Item("IsDenyRule"), False) = True Then
+                                    RuleTitleForGroup = "DENY"
+                                Else
+                                    RuleTitleForGroup = "GRANT"
+                                End If
+                                tempStr.Append("<TD><P class=""normalFont"" title=""Authorization for this group is set up as " & Server.HtmlEncode(RuleTitleForGroup) & """>" & Server.HtmlEncode(RuleTitleForGroup) & "</P></TD>")
                                 tempStr.Append("<TD WIDTH=""170""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(dt.Rows(j)("Name"), String.Empty)) & "</P></TD>")
                                 tempStr.Append("<TD WIDTH=""200""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(dt.Rows(j)("Description"), String.Empty)) & "&nbsp;</P></TD>")
                                 tempStr.Append("<TD><P class=""normalFont"">")
-                                If IsDBNull(dt.Rows(j)("ThisAuthIsFromAppID")) = True AndAlso Utils.Nz(dt.Rows(j)("ID_Group"), 0) = 6 AndAlso Utils.Nz(dt.Rows(j)("DevelopmentTeamMember"), False) = True AndAlso Utils.Nz(dt.Rows(j)("IsDenyRule"), False) = False Then
+                                If dt.Columns.Contains("IsSupervisorAutoAccessRule") AndAlso Utils.Nz(dt.Rows(j)("IsSupervisorAutoAccessRule"), False) = True OrElse (dt.Columns.Contains("IsSupervisorAutoAccessRule") = False AndAlso IsDBNull(dt.Rows(j)("ThisAuthIsFromAppID")) = True AndAlso Utils.Nz(dt.Rows(j)("ID_Group"), 0) = 6 AndAlso Utils.Nz(dt.Rows(j)("DevelopmentTeamMember"), False) = True AndAlso Utils.Nz(dt.Rows(j)("IsDenyRule"), False) = False) Then
                                     'supervisor-auth - can't be deleted
+                                    tempStr.Append("<em>Auto-Rule</em>")
                                 ElseIf IsDBNull(dt.Rows(j)("ThisAuthIsFromAppID")) Then
                                     'standard auth - can be deleted
                                     If Not IsDBNull(dt.Rows(j)("ID_AppRight")) Then tempStr.Append("<a href=""apprights_delete_groups.aspx?ID=" & Utils.Nz(dt.Rows(j)("ID_AppRight"), 0).ToString & "&AuthsAsAppID=" & Utils.Nz(dt.Rows(j)("AuthsAsAppID"), 0).ToString & """>Delete</a>")
                                 Else
-                                    'inherited auth - can't be deleted, but should be identifiedd as inherited auth
+                                    'inherited auth - can't be deleted, but should be identified as inherited auth
                                     tempStr.Append("<em>Inherited</em>")
                                 End If
                                 tempStr.Append("&nbsp;</P></TD>")
                                 tempStr.Append("</TR>")
 
+                                'Additional info on single-servergroup-rules
+                                If dt.Columns.Contains("ID_ServerGroup") = True AndAlso CType(dt.Rows(j).Item("ID_ServerGroup"), Integer) <> 0 Then
+                                    tempStr.Append("<TR>")
+                                    tempStr.Append("<TD COLSPAN=""3"">&nbsp;</TD>")
+                                    tempStr.Append("<TD COLSPAN=""2""><P class=""normalFont"">")
+                                    tempStr.Append("<em>Applies only to server group: " & ServerGroupTitle(CType(dt.Rows(j).Item("ID_ServerGroup"), Integer)) & "</em>")
+                                    tempStr.Append("&nbsp;</P></TD>")
+                                    tempStr.Append("<TD COLSPAN=""1"">&nbsp;</TD>")
+                                    tempStr.Append("</TR>")
+                                End If
+
+                                'Show all member users of current group
                                 If Not Request.QueryString("ShowAllUsers") Is Nothing AndAlso Utils.Nz(Request.QueryString("ShowAllUsers"), 0) = 1 Then
                                     MyDt = New DataTable
-                                    strQuery = "SELECT * " & vbNewLine & _
-                                        "FROM [view_Memberships] " & vbNewLine & _
-                                        "WHERE ID_Group = " & Utils.Nz(dt.Rows(j)("ID_Group"), 0).ToString & " " & vbNewLine & _
-                                        "   And ID_Group not in " & vbNewLine & _
-                                        "       (" & vbNewLine & _
-                                        "           Select id_group_public " & vbNewLine & _
-                                        "           from system_servergroups" & vbNewLine & _
-                                        "       ) " & vbNewLine & _
-                                        "   and ID_Group not in " & vbNewLine & _
-                                        "       (" & vbNewLine & _
-                                        "           Select id_group_anonymous " & vbNewLine & _
-                                        "           from system_servergroups" & vbNewLine & _
-                                        "       ) " & vbNewLine & _
-                                        "   and (" & vbNewLine & _
-                                        "       0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " " & vbNewLine & _
-                                        "       OR 0 in " & vbNewLine & _
-                                        "           (" & vbNewLine & _
-                                        "               select tableprimaryidvalue " & vbNewLine & _
-                                        "               from System_SubSecurityAdjustments " & vbNewLine & _
-                                        "               Where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " " & vbNewLine & _
-                                        "                   AND TableName = 'Applications' " & vbNewLine & _
-                                        "                   AND AuthorizationType In ('SecurityMaster','ViewAllRelations')" & vbNewLine & _
-                                        "           ) " & vbNewLine & _
-                                        "       OR id_group in " & vbNewLine & _
-                                        "           (" & vbNewLine & _
-                                        "               select tableprimaryidvalue " & vbNewLine & _
-                                        "               from System_SubSecurityAdjustments " & vbNewLine & _
-                                        "               where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " " & vbNewLine & _
-                                        "                   AND TableName = 'Applications' " & vbNewLine & _
-                                        "                   AND AuthorizationType In ('UpdateRelations','ViewRelations','Owner')" & vbNewLine & _
-                                        "           )" & vbNewLine & _
-                                        "       ) " & vbNewLine & _
+                                    strQuery = "SELECT * " & vbNewLine &
+                                        "FROM [view_Memberships] " & vbNewLine &
+                                        "WHERE ID_Group = " & Utils.Nz(dt.Rows(j)("ID_Group"), 0).ToString & " " & vbNewLine &
+                                        "   And ID_Group not in " & vbNewLine &
+                                        "       (" & vbNewLine &
+                                        "           Select id_group_public " & vbNewLine &
+                                        "           from system_servergroups" & vbNewLine &
+                                        "       ) " & vbNewLine &
+                                        "   and ID_Group not in " & vbNewLine &
+                                        "       (" & vbNewLine &
+                                        "           Select id_group_anonymous " & vbNewLine &
+                                        "           from system_servergroups" & vbNewLine &
+                                        "       ) " & vbNewLine &
+                                        "   and (" & vbNewLine &
+                                        "       0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " " & vbNewLine &
+                                        "       OR 0 in " & vbNewLine &
+                                        "           (" & vbNewLine &
+                                        "               select tableprimaryidvalue " & vbNewLine &
+                                        "               from System_SubSecurityAdjustments " & vbNewLine &
+                                        "               Where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " " & vbNewLine &
+                                        "                   AND TableName = 'Applications' " & vbNewLine &
+                                        "                   AND AuthorizationType In ('SecurityMaster','ViewAllRelations')" & vbNewLine &
+                                        "           ) " & vbNewLine &
+                                        "       OR id_group in " & vbNewLine &
+                                        "           (" & vbNewLine &
+                                        "               select tableprimaryidvalue " & vbNewLine &
+                                        "               from System_SubSecurityAdjustments " & vbNewLine &
+                                        "               where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " " & vbNewLine &
+                                        "                   AND TableName = 'Applications' " & vbNewLine &
+                                        "                   AND AuthorizationType In ('UpdateRelations','ViewRelations','Owner')" & vbNewLine &
+                                        "           )" & vbNewLine &
+                                        "       ) " & vbNewLine &
                                         "ORDER BY Nachname, Name, ID_Group, Vorname"
                                     MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                                     If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 AndAlso Not (MyDt.Rows.Count = 1 AndAlso IsDBNull(MyDt.Rows(0)("ID_User"))) Then
@@ -427,10 +447,17 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             CType(e.Item.FindControl("tdAddUserGroupDetails"), HtmlTableCell).InnerHtml = tempStr.ToString
                         End If
 
+                        'Show authorized users
                         MyDt = New DataTable
                         tempStr = New Text.StringBuilder
                         Dim sqlParams1 As SqlParameter() = {New SqlParameter("@AppID", NewAppID)}
-                        strQuery = "select companyname,name1,LoginDisabled,DevelopmentTeamMember,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_User,Nachname,Vorname,LoginName, IsDenyRule from [view_ApplicationRights] where id_application=@AppID and isnull(ID_User,0)<>0 order by Nachname, CompanyName, IsDenyRule"
+                        If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
+                            'Older / without IsDenyRule column
+                            strQuery = "select companyname,name1,LoginDisabled,DevelopmentTeamMember,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_User,Nachname,Vorname,LoginName, IsDenyRule,CAST(0 AS int) AS ID_ServerGroup from [view_ApplicationRights] where id_application=@AppID and isnull(ID_User,0)<>0 order by Nachname, CompanyName, IsDenyRule"
+                        Else
+                            'Newer / IsDenyRule column available
+                            strQuery = "select companyname,name1,LoginDisabled,DevelopmentTeamMember,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_User,Nachname,Vorname,LoginName, IsDenyRule,ID_ServerGroup,IsSupervisorAutoAccessRule from [view_ApplicationRights] where id_application=@AppID and isnull(ID_User,0)<>0 order by Nachname, CompanyName, IsDenyRule"
+                        End If
                         MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, sqlParams1, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                         If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then
@@ -455,12 +482,22 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 tempStr.Append("<TR>")
                                 tempStr.Append("<TD>&nbsp;</TD>")
                                 tempStr.Append("<TD><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("ID_User"), 0).ToString) & IIf(Utils.Nz(MyDt.Rows(RowCounterI)("DevelopmentTeamMember"), False), "<b title=""Authorization for test and development purposes and for inactive security objects"">{Dev}</b>", "").ToString)
-                                If Utils.Nz(MyDt.Rows(RowCounterI)("LoginDisabled"), False) = True Then tempStr.Append("<nobr title=""Disabled"">(D)</nobr>")
+                                If Utils.Nz(MyDt.Rows(RowCounterI)("LoginDisabled"), False) = True Then tempStr.Append("<nobr title=""Disabled user account"">(D)</nobr>")
                                 tempStr.Append("&nbsp;</P></TD>")
-                                tempStr.Append("<TD><P class=""normalFont"">" & IIf(MyDt.Columns.Contains("IsDenyRule") = False OrElse Utils.Nz(MyDt.Rows(RowCounterI)("IsDenyRule"), False) = False, "GRANT", "DENY").ToString & "</P></TD>")
+                                Dim RuleTitle As String
+                                If MyDt.Columns.Contains("IsDenyRule") = True AndAlso Utils.Nz(MyDt.Rows(RowCounterI).Item("IsDenyRule"), False) = True Then
+                                    RuleTitle = "DENY"
+                                Else
+                                    RuleTitle = "GRANT"
+                                End If
+                                tempStr.Append("<TD><P class=""normalFont"" title=""Authorization for this user is set up as " & Server.HtmlEncode(RuleTitle) & """>" & Server.HtmlEncode(RuleTitle) & "</P></TD>")
                                 tempStr.Append("<TD WIDTH=""170""><P class=""normalFont"">")
 
-                                If Me.CurrentDbVersion.Build >= 147 Then tempStr.Append(Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("Name1"), String.Empty))) Else tempStr.Append(Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("VorName"), String.Empty)) + " " + Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("NachName"), String.Empty)))
+                                If Me.CurrentDbVersion.Build >= WMSystem.MilestoneDBBuildNumber_Build147 Then
+                                    tempStr.Append(Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("Name1"), String.Empty)))
+                                Else
+                                    tempStr.Append(Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("VorName"), String.Empty)) + " " + Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("NachName"), String.Empty)))
+                                End If
 
                                 tempStr.Append("&nbsp;</P></TD>")
                                 tempStr.Append("<TD WIDTH=""200""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("LoginName"), String.Empty)) & "&nbsp;</P></TD>")
@@ -474,6 +511,17 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                                 tempStr.Append("&nbsp;</P></TD>")
                                 tempStr.Append("</TR>")
+
+                                'Additional info on single-servergroup-rules
+                                If MyDt.Columns.Contains("ID_ServerGroup") = True AndAlso CType(MyDt.Rows(RowCounterI).Item("ID_ServerGroup"), Integer) <> 0 Then
+                                    tempStr.Append("<TR>")
+                                    tempStr.Append("<TD COLSPAN=""3"">&nbsp;</TD>")
+                                    tempStr.Append("<TD COLSPAN=""3""><P class=""normalFont"">")
+                                    tempStr.Append("<em>Applies only to server group: " & ServerGroupTitle(CType(MyDt.Rows(RowCounterI).Item("ID_ServerGroup"), Integer)) & "</em>")
+                                    tempStr.Append("&nbsp;</P></TD>")
+                                    tempStr.Append("<TD COLSPAN=""1"">&nbsp;</TD>")
+                                    tempStr.Append("</TR>")
+                                End If
                             Next
                             tempStr.Append("</TABLE>")
                             CType(e.Item.FindControl("tdAddUserDetails"), HtmlTableCell).InnerHtml = tempStr.ToString
@@ -485,6 +533,25 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End With
             End If
         End Sub
+
+        Private Function ServerGroupTitle(serverGroupID As Integer) As String
+            For MyCounter As Integer = 0 To AllServerGroupsInfo.Length - 1
+                If AllServerGroupsInfo(MyCounter).ID = serverGroupID Then
+                    Return """" & AllServerGroupsInfo(MyCounter).Title & """"
+                End If
+            Next
+            Return "{Invalid reference " & serverGroupID & "}"
+        End Function
+
+        Private ReadOnly Property AllServerGroupsInfo As WMSystem.ServerGroupInformation()
+            Get
+                Static _BufferedResult As WMSystem.ServerGroupInformation()
+                If _BufferedResult Is Nothing Then
+                    _BufferedResult = Me.cammWebManager.System_GetServerGroupsInfo()
+                End If
+                Return _BufferedResult
+            End Get
+        End Property
 #End Region
 
     End Class
@@ -769,7 +836,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                     Response.Write("No authorization To administrate this application.")
                                     Response.End()
                                 ElseIf dropAppText.ToString.Trim() <> "" And dropUserText.ToString.Trim() <> "" Then
-                                    If IsChecked(CType(MyListItem.FindControl("chk_deny"), CheckBox)) = False AndAlso Me.CurrentDbVersion.Build >= 147 Then 'Newer
+                                    If IsChecked(CType(MyListItem.FindControl("chk_deny"), CheckBox)) = False AndAlso Me.CurrentDbVersion.Build >= WMSystem.MilestoneDBBuildNumber_Build147 Then 'Newer
                                         'Allow-rule requires flag-check
                                         If Not userInfo Is Nothing Then
                                             Dim validationResults As CompuMaster.camm.WebManager.FlagValidation.FlagValidationResult() = CompuMaster.camm.WebManager.FlagValidation.ValidateRequiredFlags(userInfo, arrRequiredUserFlags, True)
@@ -1010,7 +1077,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ElseIf dropAppText.Trim <> "" And dropGroupText.ToString.Trim <> "" Then
                 CurUserID = cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)
 
-                If IsChecked(Me.chk_deny) = False AndAlso Me.CurrentDbVersion.Build >= 147 Then
+                If IsChecked(Me.chk_deny) = False AndAlso Me.CurrentDbVersion.Build >= WMSystem.MilestoneDBBuildNumber_Build147 Then
                     'Allow-rules require flags-check
                     Dim requiredFlags() As String = GetRequiredUserFlagsForApplication(dropAppID)
 

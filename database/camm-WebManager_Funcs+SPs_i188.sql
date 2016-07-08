@@ -8,7 +8,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CloneApplication
 	@AppID int,
 	@CloneType int,
 	@CopyDelegates int
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 DECLARE @NewAppID int
@@ -96,7 +96,7 @@ GO
 ALTER PROCEDURE dbo.AdminPrivate_CreateAccessLevel 
 	@ReleasedByUserID int,
 	@Title nvarchar(50)
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 SET @CurUserID = (select ID from dbo.Benutzer where id = @ReleasedByUserID)
@@ -126,7 +126,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateAdminServerNavPoints
 		@ModifiedBy int,
 		@ForceRewrite bit = 0
 	)
-WITH ENCRYPTION
+
 AS
 
 If @NewServerID = @OldServerID AND @ForceRewrite = 0
@@ -707,7 +707,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateApplication
 	@ReleasedByUserID int,
 	@Title varchar(255)
 )
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 DECLARE @NewAppID int
@@ -737,7 +737,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateApplicationRightsByGroup
 	@ReleasedByUserID int,
 	@AppID int,
 	@GroupID int
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -799,7 +799,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateApplicationRightsByUser
 	@AppID int,
 	@UserID int,
 	@IsDevelopmentTeamMember bit
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -883,7 +883,7 @@ ALTER PROCEDURE [dbo].[AdminPrivate_DeleteApplicationRightsByGroup]
 	@AuthID int,
 	@ReleasedByUserID int
 )
-WITH ENCRYPTION
+
 AS 
 
 declare @groupID int
@@ -902,7 +902,7 @@ ALTER PROCEDURE [dbo].[AdminPrivate_DeleteApplicationRightsByUser]
 	@AuthID int,
 	@ReleasedByUserID int = NULL
 )
-WITH ENCRYPTION
+
 AS
 declare @UserID int
 declare @AppID int
@@ -925,7 +925,7 @@ CREATE PROCEDURE [dbo].[AdminPrivate_DeleteMemberships]
 	@GroupID int,
 	@UserID int
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -961,7 +961,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateGroup
 	@Name nvarchar(50),
 	@Description nvarchar(1024)
 )
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 SELECT @CurUserID = (select ID from dbo.Benutzer where id = @ReleasedByUserID)
@@ -990,7 +990,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateMasterServerNavPoints
 		@OldServerID int,
 		@ModifiedBy int
 	)
-WITH ENCRYPTION
+
 AS
 
 -- Removed functionality
@@ -1005,7 +1005,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateMemberships
 	@ReleasedByUserID int,
 	@GroupID int,
 	@UserID int
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -1045,7 +1045,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateServer
 		@ServerIP varchar(32),
 		@ServerGroup int
 	)
-WITH ENCRYPTION
+
 AS
 
 declare @NewServerID int
@@ -1080,7 +1080,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateServerGroup
 @email_Developer nvarchar(255),
 @UserID_Creator int
 )
-WITH ENCRYPTION
+
 AS 
 
 DECLARE @ID_ServerGroup int
@@ -1209,7 +1209,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateUserAccount
 	@IsUserChange bit = 0,
 	@ModifiedBy int = 0
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -1282,7 +1282,7 @@ GO
 ALTER PROCEDURE dbo.AdminPrivate_DeleteAccessLevel 
 	@ID int,
 	@JustAnotherAccessLevel int = Null
-WITH ENCRYPTION
+
 AS
 
 -- If no replacement ID is given then search for a random one
@@ -1309,7 +1309,7 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteServer
 	(
 		@ServerID int
 	)
-WITH ENCRYPTION
+
 AS
 
 -- Script engines of connected servers will be UNREGISTERED. 
@@ -1343,7 +1343,7 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteServerGroup
 (
 @ID_ServerGroup int
 )
-WITH ENCRYPTION
+
 AS 
 
 -- The corresponding public user group will be DELETED. And its items in the security admjustments table, too.
@@ -1419,7 +1419,7 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteUser
 		@UserID int,
 		@AdminUserID int = null
 	)
-WITH ENCRYPTION
+
 AS
 
 
@@ -1438,7 +1438,7 @@ ALTER Procedure dbo.AdminPrivate_GetCompleteUserInfo
 (
 	@UserID int
 )
-WITH ENCRYPTION
+
 As
 SELECT * FROM dbo.Benutzer WHERE ID = @UserID
 	/* set nocount on */
@@ -1453,7 +1453,7 @@ ALTER PROCEDURE dbo.AdminPrivate_GetScriptEnginesOfServer
 (
 @ServerID int
 )
-WITH ENCRYPTION
+
 AS 
 SELECT     (SELECT     WebEngine.ScriptEngine
                        FROM          System_WebAreaScriptEnginesAuthorization AS WebEngine
@@ -1473,7 +1473,7 @@ ALTER PROCEDURE dbo.AdminPrivate_ResetLoginLockedTill
 	(
 		@ID int
 	)
-WITH ENCRYPTION
+
 AS
 declare @AccountAccessability tinyint
 declare @LoginDisabled bit
@@ -1512,7 +1512,7 @@ ALTER PROCEDURE dbo.AdminPrivate_SetAuthorizationInherition
 @IDApp int, 
 @InheritsFrom int
 )
-WITH ENCRYPTION
+
 AS 
 SET NOCOUNT ON
 UPDATE    dbo.Applications
@@ -1549,7 +1549,7 @@ ALTER PROCEDURE dbo.AdminPrivate_SetScriptEngineActivation
 @Enabled bit,
 @CheckMinimalActivations bit = 0
 )
-WITH ENCRYPTION
+
 AS 
 
 declare @ID int
@@ -1607,7 +1607,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateAccessLevel
 	@Title nvarchar(50),
 	@Remarks ntext
 )
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 SET @CurUserID = (select ID from dbo.Benutzer where id = @ReleasedByUserID)
@@ -1663,7 +1663,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateApp
 @AddLanguageID2URL bit,
 @ID int
 )
-WITH ENCRYPTION
+
 AS 
 IF @LocationID < 0 
 	UPDATE    dbo.Applications
@@ -1711,7 +1711,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateServer
 @ServerPort int,
 @ID int
 )
-WITH ENCRYPTION
+
 AS
 
 DECLARE @CurServerIP nvarchar(32)
@@ -1777,7 +1777,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateServerGroup
 @ModifiedBy int,
 @AccessLevel_Default int
 )
-WITH ENCRYPTION
+
 AS
 
 DECLARE @OldAdminServer int
@@ -1814,7 +1814,7 @@ ALTER PROCEDURE AdminPrivate_UpdateStatusLoginDisabled
 	@Username nvarchar(20),
 	@boolStatus bit
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -1844,7 +1844,7 @@ ALTER PROCEDURE [dbo].[AdminPrivate_UpdateSubSecurityAdjustment]
 	@AuthorizationType nvarchar(50),
 	@ReleasedBy int	
 )
-WITH ENCRYPTION
+
 AS
 DECLARE @CurrentPrimID int
 
@@ -1902,7 +1902,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateUserDetails
 	@IsUserChange bit = 0,
 	@ModifiedBy int = 0
 )
-WITH ENCRYPTION
+
 AS
 
 SET NOCOUNT ON
@@ -1940,7 +1940,7 @@ ALTER PROCEDURE AdminPrivate_UpdateUserPW
 	@IsUserChange bit = 0,
 	@ModifiedBy int = 0
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -1980,7 +1980,7 @@ ALTER PROCEDURE dbo.Int_LogAuthChanges
 @AppID int,
 @ReleasedByUserID int = Null
 )
-WITH ENCRYPTION
+
 AS 
 
 If @GroupID Is Not Null
@@ -2007,7 +2007,7 @@ ALTER Procedure Int_UpdateUserDetailDataWithProfileData
 		@IDUser int,
 		@ModifiedBy int = 0
 	)
-WITH ENCRYPTION
+
 As
 DECLARE @LoginName nvarchar(20)
 	-- Result and Initializing
@@ -2061,7 +2061,7 @@ CREATE PROC [dbo].[IsAdministratorForAuthorizations]
 	@AdminUserID int,
 	@SecurityObjectID int
 )
-WITH ENCRYPTION
+
 AS 
 DECLARE @Result int
 select top 1 @Result = ID 
@@ -2092,7 +2092,7 @@ CREATE PROC [dbo].[IsAdministratorForMemberships]
 	@AdminUserID int,
 	@GroupID int
 )
-WITH ENCRYPTION
+
 AS 
 DECLARE @Result int
 select top 1 @Result = ID 
@@ -2133,7 +2133,7 @@ CREATE PROCEDURE dbo.LogMissingExternalUserAssignment
 	@Error ntext,
 	@Remove bit
 )
-WITH ENCRYPTION
+
 AS
 IF @Remove = 0
 	BEGIN
@@ -2165,7 +2165,7 @@ CREATE PROC dbo.LookupUserNameByScriptEngineSessionID
 	@ScriptEngineID int,
 	@ScriptEngineSessionID nvarchar(128)
 	)
-WITH ENCRYPTION
+
 AS
 SELECT Benutzer.LoginName
 FROM [System_WebAreasAuthorizedForSession] AS SSID
@@ -2203,7 +2203,7 @@ ALTER PROCEDURE dbo.Public_CreateUserAccount
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -2275,7 +2275,7 @@ ALTER Procedure Public_GetCompleteName
 (
 	@Username nvarchar(20)
 )
-WITH ENCRYPTION
+
 As
 DECLARE @Vorname nvarchar(30)
 DECLARE @Nachname nvarchar(30)
@@ -2300,7 +2300,7 @@ ALTER PROCEDURE dbo.Public_GetCurServerLogonList
 (
 @ServerIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS 
 
 DECLARE @LocationID int
@@ -2338,7 +2338,7 @@ GO
 -- dbo.Public_GetEMailAddressesOfAllSecurityAdmins
 ----------------------------------------------------
 ALTER Procedure dbo.Public_GetEMailAddressesOfAllSecurityAdmins
-WITH ENCRYPTION
+
 As
 	SELECT Benutzer.[E-MAIL], Benutzer.ID FROM dbo.Memberships LEFT OUTER JOIN dbo.Benutzer ON dbo.Memberships.ID_User = dbo.Benutzer.ID WHERE (dbo.Memberships.ID_Group = 7)
 	return 
@@ -2357,7 +2357,7 @@ ALTER PROCEDURE dbo.Public_GetLogonList
 	@ScriptEngine_ID int = NULL,
 	@ServerID int = NULL
 	)
-WITH ENCRYPTION
+
 AS
 
 IF NOT @ScriptEngine_ID IS NULL AND NOT @ScriptEngine_SessionID IS NULL AND NOT @ServerID IS NULL
@@ -2401,7 +2401,7 @@ CREATE Procedure [dbo].[Public_GetNavPointsOfGroup]
 	@LanguageID int,
 	@AnonymousAccess bit = 0,
 	@SearchForAlternativeLanguages bit = 1
-WITH ENCRYPTION
+
 As
 DECLARE @IsSecurityAdmin bit
 DECLARE @AllowedLocation int
@@ -2498,7 +2498,7 @@ ALTER Procedure dbo.Public_GetNavPointsOfUser
 	@AnonymousAccess bit = 0,
 	@SearchForAlternativeLanguages bit = 1
 )
-WITH ENCRYPTION
+
 As
 DECLARE @IsSecurityAdmin bit
 DECLARE @AllowedLocation int
@@ -2671,7 +2671,7 @@ ALTER PROCEDURE dbo.Public_GetServerConfig
 (
 @ServerIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS SELECT     dbo.System_ServerGroups.ServerGroup AS ServerGroupDescription, dbo.System_ServerGroups.ID_Group_Public, 
                       System_Servers_1.ServerProtocol AS MasterServerProtocol, System_Servers_1.ServerName AS MasterServerName, 
                       System_Servers_1.ServerPort AS MasterServerPort, System_Servers_2.ServerProtocol AS UserAdminServerProtocol, 
@@ -2704,7 +2704,7 @@ ALTER PROCEDURE dbo.Public_GetToDoLogonList
 	@ScriptEngine_ID int,
 	@ServerID int
 	)
-WITH ENCRYPTION
+
 AS
 
 -- GUIDs alter Sessions zurücksetzen
@@ -2749,7 +2749,7 @@ ALTER Procedure dbo.Public_GetUserDetailData
 		@IDUser int,
 		@Type varchar(50)
 	)
-WITH ENCRYPTION
+
 As
 
 If @Type = 'Sex'
@@ -2781,7 +2781,7 @@ ALTER Procedure dbo.Public_GetUserID
 (
 	@Username nvarchar(20)
 )
-WITH ENCRYPTION
+
 As
 declare @UserID int
 
@@ -2805,7 +2805,7 @@ CREATE PROCEDURE dbo.Public_GetUserNameForScriptEngineSessionID
 	@ScriptEngine_ID int,
 	@ServerID int
 )
-WITH ENCRYPTION
+
 AS
 select @UserName = dbo.Benutzer.LoginName
 from dbo.System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes 
@@ -2830,7 +2830,7 @@ ALTER PROCEDURE dbo.Public_Logout
 	@ScriptEngine_ID int = NULL,
 	@ScriptEngine_SessionID nvarchar(512) = NULL
 )
-WITH ENCRYPTION
+
 AS
 
 SET NOCOUNT ON
@@ -2946,7 +2946,7 @@ ALTER PROCEDURE dbo.Public_PreValidateUser
 	@ScriptEngine_ID int,
 	@ScriptEngine_SessionID nvarchar(512),
 	@MaxLoginFailures int = 7
-WITH ENCRYPTION
+
 AS
 -- Validates the user credentials, but doesn't log in
 -- BUT: invalid credentials increase the number of login failures
@@ -3193,7 +3193,7 @@ ALTER Procedure dbo.Public_RestorePassword
 		@Username nvarchar(20),
 		@eMail nvarchar(50)
 )
-WITH ENCRYPTION
+
 AS
 	SELECT Result = (SELECT SUBSTRING(LoginPW, 1, len(LoginPW)) FROM dbo.Benutzer WHERE Loginname = @Username And [e-mail] = @eMail)
 GO
@@ -3206,7 +3206,7 @@ ALTER PROCEDURE dbo.Public_ServerDebug
 	@ServerIP nvarchar(32),
 	@RemoteIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -3324,7 +3324,7 @@ ALTER Procedure dbo.Public_SetUserDetailData
 		@DoNotLogSuccess bit = 0,
 		@ModifiedBy int = 0
 	)
-WITH ENCRYPTION
+
 AS
 DECLARE @CountOfValuesInTable int
 
@@ -3379,7 +3379,7 @@ CREATE PROCEDURE dbo.Public_UpdateUserDetails
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -3470,7 +3470,7 @@ ALTER PROCEDURE dbo.Public_UpdateUserPW
 	@RemoteIP nvarchar(32),
 	@WebApplication varchar(4096)
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -3556,7 +3556,7 @@ ALTER PROCEDURE dbo.Public_UserIsAuthorizedForApp
 	@WebApplication varchar(255),
 	@ServerIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS 
 
 DECLARE @CurUserID int
@@ -3652,7 +3652,7 @@ ALTER PROCEDURE dbo.Public_ValidateDocument
 	@ScriptEngine_SessionID nvarchar(512),
 	@Reserved int = Null
 )
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -3981,7 +3981,7 @@ ALTER PROCEDURE dbo.Public_ValidateGUIDLogin
 	@ScriptEngine_ID int,
 	@ScriptEngine_SessionID nvarchar(512)
 )
-WITH ENCRYPTION
+
 AS
 
 DECLARE @CurUserID int
@@ -4029,7 +4029,7 @@ ALTER PROCEDURE dbo.Public_ValidateUser
 	@ScriptEngine_SessionID nvarchar(512),
 	@ForceLogin bit,
 	@MaxLoginFailures int = 7
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -4373,7 +4373,7 @@ CREATE PROCEDURE dbo.Redirects_LogAndGetURL
 	(
 		@IDRedirector int
 	)
-WITH ENCRYPTION
+
 AS 
 
 SET NOCOUNT ON
@@ -4620,7 +4620,7 @@ CREATE PROCEDURE dbo.ApplicationRights_CumulatedPerUserAndServerGroup
 	@ServerGroupID int,
 	@AuthorizedAppsCursor AS CURSOR VARYING OUTPUT 
 )
-WITH ENCRYPTION
+
 AS
  
 /*

@@ -6,7 +6,7 @@ CREATE PROC dbo.LookupUserNameByScriptEngineSessionID
 	@ScriptEngineID int,
 	@ScriptEngineSessionID nvarchar(128)
 	)
-WITH ENCRYPTION
+
 AS
 SELECT Benutzer.LoginName
 FROM [System_WebAreasAuthorizedForSession] AS SSID

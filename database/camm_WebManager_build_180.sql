@@ -150,7 +150,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Securi
 DROP VIEW [dbo].[SecurityObjects]
 GO
 CREATE VIEW [dbo].[SecurityObjects]
-WITH ENCRYPTION
+
 AS
 SELECT * 
 FROM dbo.SecurityObjects_CurrentAndInactiveOnes
@@ -161,7 +161,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Securi
 DROP VIEW [dbo].[SecurityObjects_CumulatedAuthsPerUser]
 GO
 CREATE VIEW [dbo].[SecurityObjects_CumulatedAuthsPerUser]
-WITH ENCRYPTION
+
 AS
 -- secobj 2 user
 select securityobjects.id AS ID_SecurityObject, dbo.SecurityObjects_AuthsByUser.ID_ServerGroup, dbo.SecurityObjects_AuthsByUser.ID_User

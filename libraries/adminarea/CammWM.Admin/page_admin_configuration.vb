@@ -172,7 +172,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #If NetFramework = "1_1" Then
             Return False
 #End If
-            Return Me.cammWebManager.System_Version_Ex().Build > 192 AndAlso Me.cammWebManager.System_SupportsMultiplePasswordAlgorithms()
+            Return Me.cammWebManager.System_Version_Ex().Build >= WMSystem.MilestoneAssembly_Build193 AndAlso Me.cammWebManager.System_SupportsMultiplePasswordAlgorithms()
         End Function
 
         Private Sub SetAlgoComboBox()

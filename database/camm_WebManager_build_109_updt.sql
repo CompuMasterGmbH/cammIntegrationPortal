@@ -9,7 +9,7 @@ ALTER Procedure dbo.Public_GetNavPointsOfUser
 	@AnonymousAccess bit = 0,
 	@SearchForAlternativeLanguages bit = 1
 )
-WITH ENCRYPTION
+
 As
 DECLARE @IsSecurityAdmin bit
 DECLARE @AllowedLocation int

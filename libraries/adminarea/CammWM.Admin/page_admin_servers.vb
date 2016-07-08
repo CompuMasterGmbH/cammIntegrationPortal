@@ -231,14 +231,19 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #Region "Page Events"
         Private Sub DeleteServerGroup_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
             If Request.QueryString("ID") <> "" AndAlso Request.QueryString("DEL") = "NOW" AndAlso Request.QueryString("token") = Session.SessionID Then
-                Dim sqlParams As SqlParameter() = {New SqlParameter("@ID_ServerGroup", CLng(Request.QueryString("ID")))}
-
-                Try
-                    CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_DeleteServerGroup", CommandType.StoredProcedure, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
-                    Response.Redirect("servers.aspx")
-                Catch ex As Exception
-                    lblErrMsg.Text = "Server group erasing failed! (" & Server.HtmlEncode(ex.Message) & ")"
-                End Try
+                If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
+                    'Older / without distributed deletion of foreign key table rows
+                    lblErrMsg.Text = "Server group erasing failed! (database build too old, please update first)"
+                Else
+                    'Newer / with distributed deletion of foreign key table rows
+                    Dim sqlParams As SqlParameter() = {New SqlParameter("@ID_ServerGroup", CLng(Request.QueryString("ID")))}
+                    Try
+                        CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_DeleteServerGroup", CommandType.StoredProcedure, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+                        Response.Redirect("servers.aspx")
+                    Catch ex As Exception
+                        lblErrMsg.Text = "Server group erasing failed! (" & Server.HtmlEncode(ex.Message) & ")"
+                    End Try
+                End If
             Else
                 Dim MyServerGroupInfo As New CompuMaster.camm.WebManager.WMSystem.ServerGroupInformation(CInt(Request.QueryString("ID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
                 lblServerGroupId.Text = Server.HtmlEncode(Request.QueryString("ID"))
@@ -833,13 +838,19 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim Field_ServerDescription As String
             Dim Field_ServerAddress As String
             If Request.QueryString("ID") <> "" And Request.QueryString("DEL") = "NOW" AndAlso Request.QueryString("token") = Session.SessionID Then
-                Dim sqlParam As SqlParameter() = {New SqlParameter("@ServerID", CLng(Request.QueryString("ID")))}
-                Try
-                    ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_DeleteServer", CommandType.StoredProcedure, sqlParam, Automations.AutoOpenAndCloseAndDisposeConnection)
-                    Response.Redirect("servers.aspx")
-                Catch
-                    lblErrMsg.Text = "Removing of server failed! "
-                End Try
+                If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
+                    'Older / without distributed deletion of foreign key table rows
+                    lblErrMsg.Text = "Server group erasing failed! (database build too old, please update first)"
+                Else
+                    'Newer / with distributed deletion of foreign key table rows
+                    Dim sqlParam As SqlParameter() = {New SqlParameter("@ServerID", CLng(Request.QueryString("ID")))}
+                    Try
+                        ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_DeleteServer", CommandType.StoredProcedure, sqlParam, Automations.AutoOpenAndCloseAndDisposeConnection)
+                        Response.Redirect("servers.aspx")
+                    Catch
+                        lblErrMsg.Text = "Removing of server failed! "
+                    End Try
+                End If
             Else
                 Dim MyServerInfo As New CompuMaster.camm.WebManager.WMSystem.ServerInformation(CInt(Request.QueryString("ID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
                 Field_ServerIP = MyServerInfo.IPAddressOrHostHeader

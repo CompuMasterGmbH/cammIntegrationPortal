@@ -7,7 +7,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_M
 drop view [dbo].[view_Memberships_DenyRulesOnly]
 GO
 CREATE VIEW [dbo].[view_Memberships_DenyRulesOnly]
-WITH ENCRYPTION, SCHEMABINDING
+WITH SCHEMABINDING
 AS
 	SELECT ID_Group, ID_User
 	FROM         dbo.Memberships
@@ -22,7 +22,7 @@ IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[view_Mem
 DROP VIEW [dbo].[view_Memberships_Effective_wo_PublicNAnonymous]
 GO
 CREATE VIEW [dbo].[view_Memberships_Effective_wo_PublicNAnonymous]
-WITH ENCRYPTION
+
 AS
 --------------------------------------------------------------------------------------
 -- Calculated effective memberships: 
@@ -44,7 +44,7 @@ IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[view_Mem
 DROP VIEW [dbo].[view_Memberships_Effective_with_PublicNAnonymous]
 GO
 CREATE VIEW [dbo].[view_Memberships_Effective_with_PublicNAnonymous]
-WITH ENCRYPTION
+
 AS
 --------------------------------------------------------------------------------------
 -- Calculated effective memberships: 
@@ -63,7 +63,7 @@ IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[Applicat
 DROP VIEW [dbo].[ApplicationsRightsByUser_RulesCumulative]
 GO
 CREATE VIEW [dbo].[ApplicationsRightsByUser_RulesCumulative]
-WITH ENCRYPTION
+
 AS
 ---------------------------------------------------------------------------------------------------
 -- OPTIONAL TODO: apprights von users nur für ihre erlaubten accesslevels	 
@@ -94,7 +94,7 @@ IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[Applicat
 DROP VIEW [dbo].[ApplicationsRightsByUser_RulesCumulativeWithInherition]
 GO
 CREATE VIEW [dbo].[ApplicationsRightsByUser_RulesCumulativeWithInherition]
-WITH ENCRYPTION
+
 AS
 ---------------------------------------------------------------------------------------------------
 -- cumulated for all registered users (incl. anonymous auths)
@@ -115,7 +115,7 @@ IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[Applicat
 DROP VIEW [dbo].[ApplicationsRightsByUser_EffectiveCumulative]
 GO
 CREATE VIEW [dbo].[ApplicationsRightsByUser_EffectiveCumulative]
-WITH ENCRYPTION
+
 AS
 ---------------------------------------------------------------------------------------------------
 -- cumulated for all registered users (incl. anonymous auths)
@@ -159,7 +159,7 @@ IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[Applicat
 DROP VIEW [dbo].[ApplicationsRightsByGroup_RulesCumulative]
 GO
 CREATE VIEW [dbo].[ApplicationsRightsByGroup_RulesCumulative]
-WITH ENCRYPTION
+
 AS
 ---------------------------------------------------------------------------------------------------
 --> cumulated for all registered users (incl. anonymous auths)
@@ -178,7 +178,7 @@ IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[Applicat
 DROP VIEW [dbo].[ApplicationsRightsByGroup_RulesCumulativeWithInherition]
 GO
 CREATE VIEW [dbo].[ApplicationsRightsByGroup_RulesCumulativeWithInherition]
-WITH ENCRYPTION
+
 AS
 ---------------------------------------------------------------------------------------------------
 -- cumulated for all registered users (incl. anonymous auths)
@@ -199,7 +199,7 @@ IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[Applicat
 DROP VIEW [dbo].[ApplicationsRightsByGroup_EffectiveCumulative]
 GO
 CREATE VIEW [dbo].[ApplicationsRightsByGroup_EffectiveCumulative]
-WITH ENCRYPTION
+
 AS
 ---------------------------------------------------------------------------------------------------
 -- cumulated for all registered users (incl. anonymous auths)
@@ -241,7 +241,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminP
 drop view [dbo].[AdminPrivate_ServerGroupAccessLevels]
 GO
 CREATE VIEW dbo.AdminPrivate_ServerGroupAccessLevels
-WITH ENCRYPTION
+
 AS
 SELECT 	dbo.System_ServerGroupsAndTheirUserAccessLevels.ID, 
 		dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup,
@@ -260,7 +260,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[AdminP
 drop view [dbo].[AdminPrivate_ServerRelations]
 GO
 CREATE VIEW dbo.AdminPrivate_ServerRelations
-WITH ENCRYPTION
+
 AS
 SELECT     dbo.System_ServerGroups.*, 
 	Gruppen_1.ID AS Group_Public_ID, Gruppen_1.Name AS Group_Public_Name, Gruppen_2.ID AS Group_Anonymous_ID,
@@ -294,7 +294,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Applic
 drop view [dbo].[Applications]
 GO
 CREATE VIEW dbo.Applications
-WITH ENCRYPTION
+
 AS
 SELECT     dbo.Applications_CurrentAndInactiveOnes.*
 FROM         dbo.Applications_CurrentAndInactiveOnes
@@ -302,14 +302,6 @@ WHERE     (AppDeleted = 0)
 GO
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[SecurityObjects]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
 DROP VIEW [dbo].[SecurityObjects]
-GO
-CREATE VIEW [dbo].[SecurityObjects]
-WITH ENCRYPTION
-AS
--- OBSOLETE VIEW or TO BE IN FUTURE RELEASE INSTEAD OF APPLICATIONS VIEW ?!?
-SELECT * 
-FROM dbo.SecurityObjects_CurrentAndInactiveOnes
-WHERE IsNull(Deleted, 0) = 0
 GO
 
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[SecurityObjects_CumulatedAuthsPerUser]') and OBJECTPROPERTY(object_id, N'IsView') = 1)
@@ -342,7 +334,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Langua
 drop view [dbo].[Languages]
 GO
 CREATE VIEW dbo.Languages
-WITH ENCRYPTION
+
 AS
 SELECT     ID, Abbreviation, Description_OwnLang, Description_English AS Description, IsActive, BrowserLanguageID, AlternativeLanguage
 FROM         dbo.System_Languages
@@ -354,7 +346,7 @@ drop view [dbo].[view_ApplicationRights]
 GO
 
 CREATE  VIEW dbo.view_ApplicationRights
-WITH ENCRYPTION
+
 AS
 SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(Applications.TitleAdminArea, '') 
                       = '' THEN Applications.Title ELSE Applications.TitleAdminArea END AS TitleAdminAreaDisplay, dbo.Applications.Level1Title, 
@@ -369,7 +361,8 @@ SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(App
 		      Gruppen.ID AS ID_Group, Gruppen.Name, Gruppen.Description, 1 AS ItemType, 
                       Applications.AppDisabled AS AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, NULL AS ThisAuthIsFromAppID, 
                       dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, dbo.Applications.AddLanguageID2URL, 
-                      SystemApp AS SystemApp, SystemAppType AS SystemAppType, IsNull(ApplicationsRightsByGroup.DevelopmentTeamMember, 0) AS DevelopmentTeamMember, IsNull(ApplicationsRightsByGroup.IsDenyRule, 0) AS IsDenyRule, Benutzer1.Company as CompanyName
+                      SystemApp AS SystemApp, SystemAppType AS SystemAppType, IsNull(ApplicationsRightsByGroup.DevelopmentTeamMember, 0) AS DevelopmentTeamMember, IsNull(ApplicationsRightsByGroup.IsDenyRule, 0) AS IsDenyRule, Benutzer1.Company as CompanyName,
+					  IsSupervisorAutoAccessRule, dbo.ApplicationsRightsByGroup.ID_ServerGroup
 FROM         dbo.Applications LEFT OUTER JOIN
                       dbo.ApplicationsRightsByGroup LEFT OUTER JOIN
                       dbo.Gruppen ON dbo.ApplicationsRightsByGroup.ID_GroupOrPerson = dbo.Gruppen.ID ON 
@@ -389,7 +382,8 @@ SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(App
 		      Gruppen.ID AS ID_Group, Gruppen.Name, Gruppen.Description, 1 AS ItemType, 
                       Applications.AppDisabled AS AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, Applications.AuthsAsAppID AS ThisAuthIsFromAppID, 
                       dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, dbo.Applications.AddLanguageID2URL, SystemApp, 
-                      SystemAppType, IsNull(ApplicationsRightsByGroup.DevelopmentTeamMember, 0), IsNull(ApplicationsRightsByGroup.IsDenyRule, 0), Benutzer1.Company 
+                      SystemAppType, IsNull(ApplicationsRightsByGroup.DevelopmentTeamMember, 0), IsNull(ApplicationsRightsByGroup.IsDenyRule, 0), Benutzer1.Company,
+					  IsSupervisorAutoAccessRule, dbo.ApplicationsRightsByGroup.ID_ServerGroup
 FROM         dbo.Applications LEFT OUTER JOIN
                       dbo.ApplicationsRightsByGroup LEFT OUTER JOIN
                       dbo.Gruppen ON dbo.ApplicationsRightsByGroup.ID_GroupOrPerson = dbo.Gruppen.ID ON 
@@ -407,7 +401,8 @@ SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(App
                       Benutzer.Vorname, Benutzer.Nachname,  ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname AS [Name1],
 		  NULL, NULL, NULL, 2, Applications.AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, NULL 
                       AS ThisAuthIsFromAppID, dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, 
-                      dbo.Applications.AddLanguageID2URL, SystemApp, SystemAppType, IsNull(dbo.ApplicationsRightsByUser.DevelopmentTeamMember, 0), IsNull(ApplicationsRightsByUser.IsDenyRule, 0), Benutzer1.Company 
+                      dbo.Applications.AddLanguageID2URL, SystemApp, SystemAppType, IsNull(dbo.ApplicationsRightsByUser.DevelopmentTeamMember, 0), IsNull(ApplicationsRightsByUser.IsDenyRule, 0), Benutzer1.Company, 
+					  0 AS IsSupervisorAutoAccessRule, dbo.ApplicationsRightsByUser.ID_ServerGroup
 FROM         dbo.Benutzer RIGHT OUTER JOIN
                       dbo.ApplicationsRightsByUser ON dbo.Benutzer.ID = dbo.ApplicationsRightsByUser.ID_GroupOrPerson RIGHT OUTER JOIN
                       dbo.Applications ON dbo.ApplicationsRightsByUser.ID_Application = dbo.Applications.ID LEFT OUTER JOIN
@@ -424,7 +419,8 @@ SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(App
                       Benutzer.Vorname, Benutzer.Nachname, ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname AS [Name1],
 		      NULL, NULL, NULL, 2, Applications.AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, 
                       Applications.AuthsAsAppID AS ThisAuthIsFromAppID, dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, 
-                      dbo.Applications.AddLanguageID2URL, SystemApp, SystemAppType, IsNull(dbo.ApplicationsRightsByUser.DevelopmentTeamMember, 0), IsNull(ApplicationsRightsByUser.IsDenyRule, 0), Benutzer1.Company 
+                      dbo.Applications.AddLanguageID2URL, SystemApp, SystemAppType, IsNull(dbo.ApplicationsRightsByUser.DevelopmentTeamMember, 0), IsNull(ApplicationsRightsByUser.IsDenyRule, 0), Benutzer1.Company, 
+					  0 AS IsSupervisorAutoAccessRule, dbo.ApplicationsRightsByUser.ID_ServerGroup
 FROM         dbo.Benutzer RIGHT OUTER JOIN
                       dbo.ApplicationsRightsByUser ON dbo.Benutzer.ID = dbo.ApplicationsRightsByUser.ID_GroupOrPerson RIGHT OUTER JOIN
                       dbo.Applications ON dbo.ApplicationsRightsByUser.ID_Application = dbo.Applications.AuthsAsAppID LEFT OUTER JOIN
@@ -448,7 +444,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_A
 drop view [dbo].[view_Applications]
 GO
 CREATE VIEW dbo.view_Applications
-WITH ENCRYPTION
+
 AS
 SELECT     dbo.Applications.ID, dbo.Applications.Title, dbo.Applications.ReleasedOn, dbo.Applications.ReleasedBy AS ReleasedByID,
 	Benutzer_2.Loginname AS ReleasedByLoginname, Benutzer_2.Vorname AS ReleasedByFirstName, Benutzer_2.Nachname AS ReleasedByLastName,
@@ -475,7 +471,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_e
 drop view [dbo].[view_eMailAccounts_of_Groups]
 GO
 CREATE VIEW dbo.view_eMailAccounts_of_Groups
-WITH ENCRYPTION
+
 AS
 SELECT dbo.view_Memberships_Effective_with_PublicNAnonymous.ID_Group, dbo.Benutzer.[E-MAIL]
 FROM dbo.view_Memberships_Effective_with_PublicNAnonymous 
@@ -490,7 +486,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_G
 drop view [dbo].[view_Groups]
 GO
 CREATE VIEW dbo.view_Groups
-WITH ENCRYPTION
+
 AS
 SELECT     dbo.Gruppen.ID, dbo.Gruppen.Name, dbo.Gruppen.Description, dbo.Gruppen.ReleasedOn, dbo.Gruppen.ReleasedBy AS ReleasedByID,
 	Benutzer_1.Loginname AS ReleasedByLoginname, Benutzer_1.Vorname AS ReleasedByFirstName, Benutzer_1.Nachname AS ReleasedByLastName,
@@ -509,7 +505,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_L
 drop view [dbo].[view_Languages]
 GO
 CREATE VIEW dbo.view_Languages
-WITH ENCRYPTION
+
 AS
 SELECT     dbo.Languages.*
 FROM         dbo.Languages
@@ -521,7 +517,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_L
 drop view [dbo].[view_Log_AccessStatistics_Complete - Pre1]
 GO
 CREATE VIEW dbo.[view_Log_AccessStatistics_Complete - Pre1]
-WITH ENCRYPTION
+
 AS
 SELECT     ServerGroup, Application, COUNT(1) AS [Count], LoginDate, UserID, YEAR(LoginDate) AS LoginYear, MONTH(LoginDate) AS LoginMonth, DAY(LoginDate) 
                       AS LoginDay
@@ -536,7 +532,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_L
 drop view [dbo].[view_Log_AccessStatistics_Complete - Pre2]
 GO
 CREATE VIEW dbo.[view_Log_AccessStatistics_Complete - Pre2]
-WITH ENCRYPTION
+
 AS
 SELECT     Min(dbo.system_ServerGroups.ServerGroup) as ServerGroup_Title, Application, SUM([Count]) AS Hits, CAST(LoginYear AS varchar(4)) 
                       + '-' + CASE WHEN LoginMonth < 10 THEN '0' ELSE '' END + CAST(LoginMonth AS varchar(4)) AS LoginDate
@@ -550,7 +546,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_L
 drop view [dbo].[view_Log_Base4Analysis]
 GO
 CREATE VIEW dbo.view_Log_Base4Analysis
-WITH ENCRYPTION
+
 AS
 SELECT dbo.[Log].*, 
 	CASE 
@@ -587,7 +583,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_L
 drop view [dbo].[view_Log_Statistics_By_Application_Complete]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_Application_Complete
-WITH ENCRYPTION
+
 AS
 SELECT     ApplicationID, COUNT(1) AS [Count]
 FROM         dbo.view_Log_Base4Analysis
@@ -601,7 +597,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_L
 drop view [dbo].[view_Log_Statistics_By_Application_CurrentMonth]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_Application_CurrentMonth
-WITH ENCRYPTION
+
 AS
 SELECT     ApplicationID, COUNT(1) AS [Count]
 FROM         dbo.view_Log_Base4Analysis
@@ -615,7 +611,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_L
 drop view [dbo].[view_Log_Statistics_By_ServerApplication_Complete]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_ServerApplication_Complete
-WITH ENCRYPTION
+
 AS
 SELECT     dbo.view_Log_Base4Analysis.ServerGroup As ServerGroupID, Application, COUNT(1) AS [Count]
 FROM         dbo.view_Log_Base4Analysis 
@@ -629,7 +625,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_L
 drop view [dbo].[view_Log_Statistics_By_ServerApplication_CurrentMonth]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_ServerApplication_CurrentMonth
-WITH ENCRYPTION
+
 AS
 SELECT     dbo.view_Log_Base4Analysis.ServerGroup As ServerGroupID, Application, COUNT(1) AS [Count]
 FROM         dbo.view_Log_Base4Analysis 
@@ -643,7 +639,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_L
 drop view [dbo].[view_Log_Statistics_By_User_Complete]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_User_Complete
-WITH ENCRYPTION
+
 AS
 SELECT     dbo.view_Log_Base4Analysis.UserID, ISNULL(dbo.Benutzer.Namenszusatz, '')
 + SPACE({ fn LENGTH(SUBSTRING(ISNULL(dbo.Benutzer.Namenszusatz, ''), 1, 1)) }) + dbo.Benutzer.Nachname + ', ' + dbo.Benutzer.Vorname AS Name,
@@ -662,7 +658,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_L
 drop view [dbo].[view_Log_Statistics_By_User_CurrentMonth]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_User_CurrentMonth
-WITH ENCRYPTION
+
 AS
 SELECT     dbo.view_Log_Base4Analysis.UserID, ISNULL(dbo.Benutzer.Namenszusatz, '')
 	+ SPACE({ fn LENGTH(SUBSTRING(ISNULL(dbo.Benutzer.Namenszusatz, ''), 1, 1)) }) + dbo.Benutzer.Nachname + ', ' + dbo.Benutzer.Vorname AS Name,
@@ -683,7 +679,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_U
 drop view [dbo].[view_UserList]
 GO
 CREATE VIEW dbo.view_UserList
-WITH ENCRYPTION
+
 AS
 SELECT     ID, Loginname, ISNULL(Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Namenszusatz, ''), 1, 1)) }) + Nachname + ', ' + Vorname AS Name,
 [E-MAIL]
@@ -696,7 +692,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_L
 drop view [dbo].[view_Log_Statistics_By_ServerUserApplication_Complete]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_ServerUserApplication_Complete
-WITH ENCRYPTION
+
 AS
 SELECT     dbo.view_Log_Base4Analysis.ServerGroup As ServerGroupID, dbo.view_Log_Base4Analysis.UserID, dbo.view_UserList.Name, dbo.view_Log_Base4Analysis.Application, 
                       COUNT(1) AS [Count], MAX(dbo.view_Log_Base4Analysis.LoginDate) AS LastAccessDate
@@ -712,7 +708,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_L
 drop view [dbo].[view_Log_Statistics_By_ServerUserApplication_CurrentMonth]
 GO
 CREATE VIEW dbo.view_Log_Statistics_By_ServerUserApplication_CurrentMonth
-WITH ENCRYPTION
+
 AS
 SELECT     dbo.view_Log_Base4Analysis.ServerGroup As ServerGroupID, dbo.view_Log_Base4Analysis.UserID, dbo.view_UserList.Name, dbo.view_Log_Base4Analysis.Application, 
                       COUNT(1) AS [Count], MAX(dbo.view_Log_Base4Analysis.LoginDate) AS LastAccessDate
@@ -728,7 +724,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_U
 drop view [dbo].[view_User_Statistics_LastLogonDates]
 GO
 CREATE VIEW dbo.view_User_Statistics_LastLogonDates
-WITH ENCRYPTION
+
 AS
 SELECT     dbo.Benutzer.LastLoginOn, dbo.view_UserList.ID, dbo.view_UserList.Loginname, dbo.view_UserList.Name, dbo.view_UserList.[E-MAIL]
 FROM         dbo.view_UserList INNER JOIN
@@ -741,7 +737,7 @@ drop view [dbo].[view_Memberships_CummulatedWithAnonymous]
 GO
 
 ALTER VIEW dbo.view_Memberships
-WITH ENCRYPTION
+
 AS
 
 -- SPECIAL VIEW FOR ADMINISTRATION PAGES/CONTROLS:
@@ -752,12 +748,12 @@ AS
 SELECT dbo.Memberships.ID AS ID_Membership, dbo.Memberships.IsDenyRule,
 	dbo.Gruppen.ID AS ID_Group, dbo.Gruppen.Name, dbo.Gruppen.Description, 
 	dbo.Memberships.ReleasedOn,
-	Benutzer1.ID AS ID_ReleasedBy, Benutzer1.Vorname AS ReleasedByFirstName, Benutzer1.Nachname AS ReleasedByLastName,
+	ReleasedByBenutzer.ID AS ID_ReleasedBy, ReleasedByBenutzer.Vorname AS ReleasedByFirstName, ReleasedByBenutzer.Nachname AS ReleasedByLastName,
 	dbo.Benutzer.ID AS ID_User, dbo.Benutzer.Loginname, dbo.Benutzer.Vorname, dbo.Benutzer.Nachname, dbo.Benutzer.LoginDisabled, dbo.Benutzer.Company ,
 	dbo.Memberships.IsCloneRule
 FROM dbo.Memberships 
-	LEFT OUTER JOIN dbo.Benutzer ON dbo.Memberships.ID_User = dbo.Benutzer.ID 
-	LEFT OUTER JOIN dbo.Benutzer Benutzer1 ON dbo.Memberships.ReleasedBy = Benutzer1.ID 
-	RIGHT OUTER JOIN dbo.Gruppen ON dbo.Memberships.ID_Group = dbo.Gruppen.ID
+	INNER JOIN dbo.Benutzer ON dbo.Memberships.ID_User = dbo.Benutzer.ID 
+	LEFT OUTER JOIN dbo.Benutzer ReleasedByBenutzer ON dbo.Memberships.ReleasedBy = ReleasedByBenutzer.ID 
+	INNER JOIN dbo.Gruppen ON dbo.Memberships.ID_Group = dbo.Gruppen.ID
 GO
 	

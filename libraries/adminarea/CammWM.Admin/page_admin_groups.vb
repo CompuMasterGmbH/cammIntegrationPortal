@@ -175,7 +175,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     CType(e.Item.FindControl("ancNavPreview"), HtmlAnchor).InnerHtml = "Nav. Preview"
                     'End If
 
-                    If cammWebManager.System_DBVersion_Ex.Build < 164 Then
+                    If cammWebManager.System_DBVersion_Ex.Build < WMSystem.MilestoneDBBuildNumber_Build164 Then
                         CType(e.Item.FindControl("ancNavPreview"), HtmlAnchor).Disabled = True
                         CType(e.Item.FindControl("ancNavPreview"), HtmlAnchor).HRef = "#"
                         CType(e.Item.FindControl("ancNavPreview"), HtmlAnchor).Title = "Available with CWM DB-Build 164 or higher - please update your database"
@@ -424,7 +424,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 If Not Page.IsPostBack Then
                     Dim dtGroupInfo As DataTable
                     Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CInt(Val(Request.QueryString("ID") & "")))}
-                    dtGroupInfo = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                    dtGroupInfo = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT * FROM dbo.view_groups WHERE ID=@ID", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                     Dim grpInfo As New WMSystem.GroupInformation(CInt(Val(Request.QueryString("ID"))), Me.cammWebManager)
                     If dtGroupInfo Is Nothing OrElse grpInfo.ID = 0 Then
@@ -449,7 +449,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                     Dim dtMembership As DataTable
                     Dim sqlParams1 As SqlParameter() = {New SqlParameter("@ID", CInt(Val(Request.QueryString("ID") & "")))}
-                    dtMembership = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                    dtMembership = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT * FROM dbo.view_eMailAccounts_of_Groups WHERE ID_Group=@ID", CommandType.Text, sqlParams1, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                     Dim MembersEMailList As String = ""
                     Dim iCount As Integer = 0

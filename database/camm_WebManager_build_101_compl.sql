@@ -2615,7 +2615,7 @@ ALTER PROCEDURE dbo.Public_ServerDebug
 	@ServerIP varchar(32),
 	@RemoteIP varchar(32)
 )
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -2729,7 +2729,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CloneApplication
 	@ReleasedByUserID int,
 	@AppID int,
 	@CloneType int
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 SET @CurUserID = (select ID from dbo.Benutzer where id = @ReleasedByUserID)
@@ -2796,7 +2796,7 @@ GO
 ALTER PROCEDURE dbo.AdminPrivate_CreateAccessLevel 
 	@ReleasedByUserID int,
 	@Title nvarchar(50)
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 SET @CurUserID = (select ID from dbo.Benutzer where id = @ReleasedByUserID)
@@ -2825,7 +2825,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateAdminServerNavPoints
 		@OldServerID int,
 		@ModifiedBy int
 	)
-WITH ENCRYPTION
+
 AS
 
 If @NewServerID = @OldServerID
@@ -2971,7 +2971,7 @@ GO
 ALTER PROCEDURE AdminPrivate_CreateApplication 
 	@ReleasedByUserID int,
 	@Title varchar(255)
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 SET @CurUserID = (select ID from dbo.Benutzer where id = @ReleasedByUserID)
@@ -2997,7 +2997,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateApplicationRightsByGroup
 	@ReleasedByUserID int,
 	@AppID int,
 	@GroupID int
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -3056,7 +3056,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateApplicationRightsByUser
 	@AppID int,
 	@UserID int,
 	@IsDevelopmentTeamMember bit
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -3133,7 +3133,7 @@ ALTER PROCEDURE AdminPrivate_CreateGroup
 	@ReleasedByUserID int,
 	@Name nvarchar(50),
 	@Description nvarchar(1024)
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 SELECT @CurUserID = (select ID from dbo.Benutzer where id = @ReleasedByUserID)
@@ -3162,7 +3162,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateMasterServerNavPoints
 		@OldServerID int,
 		@ModifiedBy int
 	)
-WITH ENCRYPTION
+
 AS
 
 If @NewServerID = @OldServerID
@@ -3208,7 +3208,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateMemberships
 	@ReleasedByUserID int,
 	@GroupID int,
 	@UserID int
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -3238,7 +3238,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateServer
 		@ServerIP varchar(32),
 		@ServerGroup int
 	)
-WITH ENCRYPTION
+
 AS
 
 declare @NewServerID int
@@ -3272,7 +3272,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateServerGroup
 @email_Developer nvarchar(255),
 @UserID_Creator int
 )
-WITH ENCRYPTION
+
 AS 
 
 DECLARE @ID_ServerGroup int
@@ -3392,7 +3392,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateUserAccount
 	@AccountAccessability tinyint,
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -3456,7 +3456,7 @@ GO
 ALTER PROCEDURE dbo.AdminPrivate_DeleteAccessLevel 
 	@ID int,
 	@JustAnotherAccessLevel int = Null
-WITH ENCRYPTION
+
 AS
 
 -- If no replacement ID is given then search for a random one
@@ -3482,7 +3482,7 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteServer
 	(
 		@ServerID int
 	)
-WITH ENCRYPTION
+
 AS
 
 -- Script engines of connected servers will be UNREGISTERED. 
@@ -3527,7 +3527,7 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteServerGroup
 (
 @ID_ServerGroup int
 )
-WITH ENCRYPTION
+
 AS 
 
 -- The corresponding public user group will be DELETED. 
@@ -3591,7 +3591,7 @@ ALTER Procedure dbo.AdminPrivate_GetCompleteUserInfo
 (
 	@UserID int
 )
-WITH ENCRYPTION
+
 As
 SELECT * FROM dbo.Benutzer WHERE ID = @UserID
 	/* set nocount on */
@@ -3605,7 +3605,7 @@ ALTER PROCEDURE dbo.AdminPrivate_GetScriptEnginesOfServer
 (
 @ServerID int
 )
-WITH ENCRYPTION
+
 AS 
 SELECT     (SELECT     WebEngine.ScriptEngine
                        FROM          System_WebAreaScriptEnginesAuthorization AS WebEngine
@@ -3624,7 +3624,7 @@ ALTER PROCEDURE dbo.AdminPrivate_ResetLoginLockedTill
 	(
 		@ID int
 	)
-WITH ENCRYPTION
+
 AS
 declare @AccountAccessability tinyint
 declare @LoginDisabled bit
@@ -3662,7 +3662,7 @@ ALTER PROCEDURE dbo.AdminPrivate_SetAuthorizationInherition
 @IDApp int, 
 @InheritsFrom int
 )
-WITH ENCRYPTION
+
 AS 
 SET NOCOUNT ON
 UPDATE    dbo.Applications
@@ -3693,7 +3693,7 @@ ALTER PROCEDURE dbo.AdminPrivate_SetScriptEngineActivation
 @Enabled bit,
 @CheckMinimalActivations bit = 0
 )
-WITH ENCRYPTION
+
 AS 
 
 declare @ID int
@@ -3750,7 +3750,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateAccessLevel
 	@Title nvarchar(50),
 	@Remarks ntext
 )
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 SET @CurUserID = (select ID from dbo.Benutzer where id = @ReleasedByUserID)
@@ -3805,7 +3805,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateApp
 @AddLanguageID2URL bit,
 @ID int
 )
-WITH ENCRYPTION
+
 AS 
 IF @LocationID < 0 
 	UPDATE    dbo.Applications
@@ -3852,7 +3852,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateServer
 @ServerPort int,
 @ID int
 )
-WITH ENCRYPTION
+
 AS
 
 DECLARE @CurServerIP nvarchar(32)
@@ -3918,7 +3918,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateServerGroup
 @ModifiedBy int,
 @AccessLevel_Default int
 )
-WITH ENCRYPTION
+
 AS
 
 DECLARE @OldAdminServer int
@@ -3952,7 +3952,7 @@ GO
 ALTER PROCEDURE dbo.AdminPrivate_UpdateStatusLoginDisabled 
 	@Username varchar(20),
 	@boolStatus bit
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -4000,7 +4000,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateUserDetails
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
 )
-WITH ENCRYPTION
+
 AS
 
 SET NOCOUNT ON
@@ -4025,7 +4025,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateUserPW
 	@Username varchar(20),
 	@NewPasscode varchar(4096)
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -4056,7 +4056,7 @@ ALTER PROCEDURE dbo.Int_LogAuthChanges
 @GroupID int = Null,
 @AppID int
 )
-WITH ENCRYPTION
+
 AS 
 
 If @GroupID Is Not Null
@@ -4080,7 +4080,7 @@ ALTER Procedure dbo.Int_UpdateUserDetailDataWithProfileData
 	(
 		@IDUser int
 	)
-WITH ENCRYPTION
+
 As
 DECLARE @LoginName varchar
 	-- Result and Initializing
@@ -4151,7 +4151,7 @@ ALTER PROCEDURE dbo.Public_CreateUserAccount
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -4223,7 +4223,7 @@ ALTER Procedure dbo.Public_GetCompleteAddresses
 (
 	@Username varchar(20)
 )
-WITH ENCRYPTION
+
 As
 DECLARE @Anrede nvarchar(20)
 DECLARE @Titel nvarchar(20)
@@ -4257,7 +4257,7 @@ ALTER Procedure dbo.Public_GetCompleteName
 (
 	@Username varchar(20)
 )
-WITH ENCRYPTION
+
 As
 DECLARE @Vorname nvarchar(30)
 DECLARE @Nachname nvarchar(30)
@@ -4282,7 +4282,7 @@ ALTER Procedure dbo.Public_GetCompleteUserInfo
 (
 		@Username varchar(20)
 )
-WITH ENCRYPTION
+
 As
 SELECT * FROM dbo.Benutzer WHERE loginname = @Username
 	/* set nocount on */
@@ -4295,7 +4295,7 @@ ALTER PROCEDURE dbo.Public_GetCurServerLogonList
 (
 @ServerIP varchar(32)
 )
-WITH ENCRYPTION
+
 AS 
 
 DECLARE @LocationID int
@@ -4333,7 +4333,7 @@ GO
 -- dbo.Public_GetEMailAddressesOfAllSecurityAdmins
 ----------------------------------------------------
 ALTER Procedure dbo.Public_GetEMailAddressesOfAllSecurityAdmins
-WITH ENCRYPTION
+
 As
 	SELECT Benutzer.[E-MAIL], Benutzer.ID FROM dbo.Memberships LEFT OUTER JOIN dbo.Benutzer ON dbo.Memberships.ID_User = dbo.Benutzer.ID WHERE (dbo.Memberships.ID_Group = 7)
 	return 
@@ -4348,7 +4348,7 @@ ALTER PROCEDURE dbo.Public_GetLogonList
 	(
 	@Username varchar(20)
 	)
-WITH ENCRYPTION
+
 AS
 
 -- Logon-ToDo-Liste übergeben
@@ -4375,7 +4375,7 @@ ALTER Procedure dbo.Public_GetNavPointsOfUser
 	@LanguageID int,
 	@AnonymousAccess bit = 0
 )
-WITH ENCRYPTION
+
 As
 DECLARE @IsSecurityAdmin bit
 DECLARE @AllowedLocation int
@@ -4530,7 +4530,7 @@ ALTER PROCEDURE dbo.Public_GetServerConfig
 (
 @ServerIP varchar(32)
 )
-WITH ENCRYPTION
+
 AS
 
 SELECT     dbo.System_ServerGroups.ServerGroup AS ServerGroupDescription, dbo.System_ServerGroups.ID_Group_Public, 
@@ -4563,7 +4563,7 @@ ALTER PROCEDURE dbo.Public_GetToDoLogonList
 	@ScriptEngine_SessionID nvarchar(512),
 	@ScriptEngine_ID int
 	)
-WITH ENCRYPTION
+
 AS
 
 -- GUIDs alter Sessions zurücksetzen
@@ -4604,7 +4604,7 @@ ALTER Procedure dbo.Public_GetUserDetailData
 		@IDUser int,
 		@Type varchar(50)
 	)
-WITH ENCRYPTION
+
 As
 
 If @Type = 'Sex'
@@ -4636,7 +4636,7 @@ ALTER Procedure dbo.Public_GetUserID
 (
 		@Username varchar(20)
 )
-WITH ENCRYPTION
+
 As
 declare @UserID int
 
@@ -4657,7 +4657,7 @@ ALTER PROCEDURE dbo.Public_Logout
 	@ServerIP varchar(32),
 	@RemoteIP varchar(32)
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -4693,7 +4693,7 @@ ALTER Procedure dbo.Public_RestorePassword
 		@Username varchar(20),
 		@eMail varchar(50)
 )
-WITH ENCRYPTION
+
 As
 SELECT Result = (SELECT SUBSTRING(LoginPW, 1, len(LoginPW)) FROM dbo.Benutzer WHERE Loginname = @Username And [e-mail] = @eMail)
 	/* set nocount on */
@@ -4711,7 +4711,7 @@ ALTER Procedure dbo.Public_SetUserDetailData
 		@Value nvarchar(255),
 		@DoNotLogSuccess bit = 0
 	)
-WITH ENCRYPTION
+
 As
 DECLARE @CountOfValuesInTable int
 
@@ -4761,7 +4761,7 @@ ALTER PROCEDURE dbo.Public_UpdateUserDetails
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -4852,7 +4852,7 @@ ALTER PROCEDURE dbo.Public_UpdateUserPW
 	@RemoteIP varchar(32),
 	@WebApplication varchar(4096)
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -4938,7 +4938,7 @@ ALTER PROCEDURE dbo.Public_UserIsAuthorizedForApp
 	@WebApplication varchar(255),
 	@ServerIP varchar(32)
 )
-WITH ENCRYPTION
+
 AS 
 
 DECLARE @CurUserID int
@@ -5350,7 +5350,7 @@ ALTER PROCEDURE dbo.Public_ValidateGUIDLogin
 	@ScriptEngine_ID int,
 	@ScriptEngine_SessionID nvarchar(512)
 )
-WITH ENCRYPTION
+
 AS
 
 DECLARE @CurUserID int
@@ -5398,7 +5398,7 @@ ALTER PROCEDURE dbo.Public_ValidateUser
 	@ScriptEngine_SessionID nvarchar(512),
 	@ForceLogin bit
 )
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -5682,7 +5682,7 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteUser
 	(
 		@UserID int
 	)
-WITH ENCRYPTION
+
 AS
 
 
@@ -5702,7 +5702,7 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteApplicationRightsByGroup
 @AuthID int,
 @ReleasedByUserID int
 )
-WITH ENCRYPTION
+
 AS 
 
 declare @groupID int
@@ -5720,7 +5720,7 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteApplicationRightsByUser
 	(
 		@AuthID int
 	)
-WITH ENCRYPTION
+
 AS
 declare @UserID int
 declare @AppID int

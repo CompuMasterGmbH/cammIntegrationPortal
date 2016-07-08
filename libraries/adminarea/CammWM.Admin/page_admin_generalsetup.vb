@@ -314,7 +314,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             For MyCounter As Integer = 0 To files.Length - 1
                 Try
                     Dim MyDBVersion As Version = cammWebManager.System_DBVersion_Ex
-                    ' If MyDBVersion.Build >= 147 Then
+                    ' If MyDBVersion.Build >= WMSystem.MilestoneDBBuildNumber_Build147 Then
                     If (files(MyCounter).Trim().EndsWith("/")) Then
                         System.IO.Directory.Delete(Server.MapPath(files(MyCounter)), True)
                     Else

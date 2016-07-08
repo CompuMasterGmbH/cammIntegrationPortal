@@ -186,7 +186,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         .Parameters.Add("@TablePrimaryIDValue", SqlDbType.Int).Value = CLng(Request.QueryString("ID"))
                         .Parameters.Add("@AuthorizationType", SqlDbType.NVarChar).Value = CType(Request.Form("AuthorizationType"), String)
                         .Parameters.Add("@UserID", SqlDbType.Int).Value = CLng(Request.Form("UserID"))
-                        If cammWebManager.System_DBVersion_Ex.Build >= 173 Then 'Newer
+                        If cammWebManager.System_DBVersion_Ex.Build >= WMSystem.MilestoneDBBuildNumber_Build173 Then 'Newer
                             .Parameters.Add("@ReleasedBy", SqlDbType.Int).Value = cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)
                         End If
                     End With
@@ -212,7 +212,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     MyCmd.Parameters.Add("@TableName", SqlDbType.NVarChar).Value = lblTableName.Text
                     MyCmd.Parameters.Add("@TablePrimaryIDValue", SqlDbType.Int).Value = CLng(Request.QueryString("ID"))
                     MyCmd.Parameters.Add("@AuthorizationType", SqlDbType.NVarChar).Value = CType(Request.QueryString("AuthorizationType"), String)
-                    If cammWebManager.System_DBVersion_Ex.Build >= 173 Then 'Newer
+                    If cammWebManager.System_DBVersion_Ex.Build >= WMSystem.MilestoneDBBuildNumber_Build173 Then 'Newer
                         MyCmd.Parameters.Add("@ReleasedBy", SqlDbType.Int).Value = cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)
                     End If
                     ExecuteNonQuery(MyCmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
@@ -257,7 +257,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim sqlParams As SqlParameter() = {New SqlParameter("@PrimID", CLng(Request.QueryString("ID"))), _
                     New SqlParameter("@TableName", lblTableName.Text)}
                 Dim sqlQuery As String = Nothing
-                If Me.cammWebManager.System_DBVersion_Ex.Build >= 173 Then
+                If Me.cammWebManager.System_DBVersion_Ex.Build >= WMSystem.MilestoneDBBuildNumber_Build173 Then
                     'ReleasedBy and ReleasedOn only in Database Build 173 or above
                     sqlQuery = "SELECT id, userid, authorizationtype, releasedby, releasedon FROM System_SubSecurityAdjustments WHERE TableName = @TableName AND TablePrimaryIDValue = @PrimID ORDER BY authorizationtype"
                 Else
@@ -482,7 +482,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     .Parameters.Add("@TablePrimaryIDValue", SqlDbType.Int).Value = CLng(Request.QueryString("ID"))
                     .Parameters.Add("@AuthorizationType", SqlDbType.NVarChar).Value = CType(cmbAuthorizationType.SelectedValue, String)
                     .Parameters.Add("@UserID", SqlDbType.Int).Value = CLng(cmbUser.SelectedValue)
-                    If cammWebManager.System_DBVersion_Ex.Build >= 173 Then 'Newer
+                    If cammWebManager.System_DBVersion_Ex.Build >= WMSystem.MilestoneDBBuildNumber_Build173 Then 'Newer
                         .Parameters.Add("@ReleasedBy", SqlDbType.Int).Value = cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)
                     End If
                 End With
@@ -540,7 +540,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Catch ex As Exception
                         lblSecurityAdmin.Text = Server.HtmlEncode("[?] (" & ex.Message & ")")
                     End Try
-                    If Me.cammWebManager.System_DBVersion_Ex.Build >= 173 AndAlso Not Utils.Nz(drCurrent("ReleasedBy")) Is Nothing Then
+                    If Me.cammWebManager.System_DBVersion_Ex.Build >= WMSystem.MilestoneDBBuildNumber_Build173 AndAlso Not Utils.Nz(drCurrent("ReleasedBy")) Is Nothing Then
                         Try
                             Dim UI As New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(Utils.Nz(drCurrent("ReleasedBy"))), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
                             lblReleasedBy.Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(UI.FirstName, UI.LastName, UI.LoginName, UI.IDLong))
@@ -550,7 +550,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Else
                         lblReleasedBy.Text = Nothing
                     End If
-                    If Me.cammWebManager.System_DBVersion_Ex.Build >= 173 AndAlso Not Utils.Nz(drCurrent("ReleasedOn")) Is Nothing Then
+                    If Me.cammWebManager.System_DBVersion_Ex.Build >= WMSystem.MilestoneDBBuildNumber_Build173 AndAlso Not Utils.Nz(drCurrent("ReleasedOn")) Is Nothing Then
                         lblReleasedOn.Text = Server.HtmlEncode(Utils.Nz(drCurrent("ReleasedOn"), String.Empty))
                     Else
                         lblReleasedOn.Text = Nothing

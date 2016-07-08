@@ -8,7 +8,7 @@ ALTER PROCEDURE dbo.AdminPrivate_SetScriptEngineActivation
 @Enabled bit,
 @CheckMinimalActivations bit = 0
 )
-WITH ENCRYPTION
+
 AS 
 
 declare @ID int
@@ -64,7 +64,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CloneApplication
 	@AppID int,
 	@CloneType int
 )
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 DECLARE @NewAppID int
@@ -141,7 +141,7 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteServerGroup
 (
 @ID_ServerGroup int
 )
-WITH ENCRYPTION
+
 AS 
 
 -- The corresponding public user group will be DELETED. And its items in the security admjustments table, too.
@@ -212,7 +212,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateServerGroup
 @email_Developer nvarchar(255),
 @UserID_Creator int
 )
-WITH ENCRYPTION
+
 AS 
 
 DECLARE @ID_ServerGroup int
@@ -319,7 +319,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateMemberships
 	@GroupID int,
 	@UserID int
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -360,7 +360,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateMasterServerNavPoints
 		@OldServerID int,
 		@ModifiedBy int
 	)
-WITH ENCRYPTION
+
 AS
 
 -- Removed functionality
@@ -393,7 +393,7 @@ ALTER PROCEDURE dbo.Public_ValidateUser
 	@ScriptEngine_SessionID nvarchar(512),
 	@ForceLogin bit
 )
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -681,7 +681,7 @@ ALTER PROCEDURE dbo.Public_ValidateDocument
 	@ScriptEngine_ID int,
 	@ScriptEngine_SessionID nvarchar(512),
 	@Reserved int = Null
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -1005,7 +1005,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateAdminServerNavPoints
 		@ModifiedBy int,
 		@ForceRewrite bit = 0
 	)
-WITH ENCRYPTION
+
 AS
 
 If @NewServerID = @OldServerID AND @ForceRewrite = 0

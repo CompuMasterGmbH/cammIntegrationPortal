@@ -32,7 +32,7 @@ ALTER PROCEDURE dbo.Public_UserIsAuthorizedForApp
 	@WebApplication varchar(255),
 	@ServerIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS 
 
 DECLARE @CurUserID int
@@ -230,7 +230,7 @@ ALTER PROCEDURE dbo.Public_ValidateGUIDLogin
 	@ScriptEngine_ID int,
 	@ScriptEngine_SessionID nvarchar(512)
 )
-WITH ENCRYPTION
+
 AS
 
 DECLARE @CurUserID int
@@ -277,7 +277,7 @@ ALTER PROCEDURE dbo.Public_UpdateUserPW
 	@RemoteIP nvarchar(32),
 	@WebApplication varchar(4096)
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -382,7 +382,7 @@ ALTER PROCEDURE dbo.Public_UpdateUserDetails
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -471,7 +471,7 @@ ALTER Procedure dbo.Public_SetUserDetailData
 		@Value nvarchar(255),
 		@DoNotLogSuccess bit = 0
 	)
-WITH ENCRYPTION
+
 AS
 DECLARE @CountOfValuesInTable int
 
@@ -502,7 +502,7 @@ ALTER PROCEDURE dbo.Public_ServerDebug
 	@ServerIP nvarchar(32),
 	@RemoteIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -617,7 +617,7 @@ ALTER Procedure dbo.Public_RestorePassword
 		@Username nvarchar(20),
 		@eMail nvarchar(50)
 )
-WITH ENCRYPTION
+
 AS
 	SELECT Result = (SELECT SUBSTRING(LoginPW, 1, len(LoginPW)) FROM dbo.Benutzer WHERE Loginname = @Username And [e-mail] = @eMail)
 GO
@@ -631,7 +631,7 @@ ALTER PROCEDURE dbo.Public_Logout
 	@ServerIP nvarchar(32),
 	@RemoteIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -666,7 +666,7 @@ ALTER Procedure dbo.Public_GetUserDetailData
 		@IDUser int,
 		@Type varchar(50)
 	)
-WITH ENCRYPTION
+
 As
 
 If @Type = 'Sex'
@@ -699,7 +699,7 @@ ALTER PROCEDURE dbo.Public_GetToDoLogonList
 	@ScriptEngine_SessionID nvarchar(512),
 	@ScriptEngine_ID int
 	)
-WITH ENCRYPTION
+
 AS
 
 -- GUIDs alter Sessions zurücksetzen
@@ -740,7 +740,7 @@ ALTER PROCEDURE dbo.Public_GetServerConfig
 (
 @ServerIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS SELECT     dbo.System_ServerGroups.ServerGroup AS ServerGroupDescription, dbo.System_ServerGroups.ID_Group_Public, 
                       System_Servers_1.ServerProtocol AS MasterServerProtocol, System_Servers_1.ServerName AS MasterServerName, 
                       System_Servers_1.ServerPort AS MasterServerPort, System_Servers_2.ServerProtocol AS UserAdminServerProtocol, 
@@ -770,7 +770,7 @@ ALTER PROCEDURE dbo.Public_GetLogonList
 	(
 	@Username nvarchar(20)
 	)
-WITH ENCRYPTION
+
 AS
 
 -- Logon-ToDo-Liste übergeben
@@ -794,7 +794,7 @@ ALTER PROCEDURE dbo.Public_GetCurServerLogonList
 (
 @ServerIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS 
 
 DECLARE @LocationID int
@@ -856,7 +856,7 @@ ALTER PROCEDURE dbo.Public_CreateUserAccount
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -927,7 +927,7 @@ ALTER Procedure Int_UpdateUserDetailDataWithProfileData
 	(
 		@IDUser int
 	)
-WITH ENCRYPTION
+
 As
 DECLARE @LoginName nvarchar(20)
 	-- Result and Initializing
@@ -980,7 +980,7 @@ ALTER PROCEDURE dbo.Int_LogAuthChanges
 @GroupID int = Null,
 @AppID int
 )
-WITH ENCRYPTION
+
 AS 
 
 If @GroupID Is Not Null
@@ -1004,7 +1004,7 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteServer
 	(
 		@ServerID int
 	)
-WITH ENCRYPTION
+
 AS
 
 -- Script engines of connected servers will be UNREGISTERED. 
@@ -1058,7 +1058,7 @@ ALTER PROCEDURE dbo.Public_UpdateUserDetails
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -1148,7 +1148,7 @@ ALTER PROCEDURE dbo.Public_UpdateUserPW
 	@RemoteIP nvarchar(32),
 	@WebApplication varchar(4096) -- dummy / reserved
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -1236,7 +1236,7 @@ ALTER PROCEDURE dbo.Public_Logout
 	@Username nvarchar(20),
 	@ServerIP nvarchar(32),
 	@RemoteIP nvarchar(32)
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -1298,7 +1298,7 @@ CREATE PROCEDURE dbo.Public_GetUserNameForScriptEngineSessionID
 	@ScriptEngine_ID int,
 	@ServerID int
 )
-WITH ENCRYPTION
+
 AS
 select @UserName = dbo.Benutzer.LoginName
 from dbo.System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes 
@@ -1339,7 +1339,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateUserDetails
 	@LoginLockedTill datetime,
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
-WITH ENCRYPTION
+
 AS
 
 SET NOCOUNT ON
@@ -1385,7 +1385,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateUserAccount
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int

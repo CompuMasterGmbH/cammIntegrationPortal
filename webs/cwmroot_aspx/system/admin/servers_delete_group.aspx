@@ -37,7 +37,16 @@
 					<TD colspan="2" bgcolor="#C1C1C1"><P><FONT face="Arial" size=2><b>ATTENTION!!!</b></FONT></P></TD>
 					</TR>
 					<TR>
-					<TD VAlign="Top" colspan="2"><P><FONT face="Arial" size=2>This step will modify all of the following objects:<br><br><ul><li>All currently connected <b>servers</b> will be <b>DELETED</b> permanently.</li><li>The corresponding <b>public user group</b> will be <b>DELETED</b>.</li><li>Relations between access levels and the server group will be DELETED.</li><li>Script engines of connected servers will be UNREGISTERED.</li><li>Related <b>logs</b> will be <b>DELETED</b> permanently.</li><li>Related <b>applications</b> and their <b>authorizations</b> will be <b>DELETED</b> permanently.</li></FONT></P></TD>
+					<TD VAlign="Top" colspan="2"><P><FONT face="Arial" size=2>This step will modify all of the following objects:<br><br>
+					<ul>
+						<li>All currently connected <b>servers</b> will be <b>DELETED</b> permanently.</li>
+						<li>The corresponding <b>public user group</b> will be <b>DELETED</b>.</li>
+						<li>Relations between access levels and the server group will be DELETED.</li>
+						<li>Script engines of connected servers will be UNREGISTERED.</li>
+						<li>Content of Web Editors of connected servers will <b>STAY</b> permanently (other servers might reference that content).</li>
+						<li>Related <b>applications</b> and their <b>authorizations</b> will be <b>DELETED</b> permanently.</li>
+					</ul>
+					</FONT></P></TD>
 					</TR>
 					<TR>
 					<TD VAlign="Top" Colspan="2"><P> &nbsp;</P></TD>

@@ -334,19 +334,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.MembershipsNew
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page to add new members to an existing group
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[zeutzheim]	15.03.2010	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class MembershipsNew
         Inherits Page
 
@@ -377,7 +367,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim GrpTable As DataTable
 
             Dim sqlParams As SqlParameter() = {New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))}
-            Dim sql As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            Dim sql As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT * FROM Gruppen WHERE [ID] Not In (Select id_group_public from system_servergroups) And  [ID] not in (Select id_group_anonymous from system_servergroups) And (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Groups", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR 0 in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Groups' AND AuthorizationType In ('SecurityMaster')) OR gruppen.id in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Groups' AND AuthorizationType In ('UpdateRelations','Owner'))) ORDER BY Name"
             GrpTable = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), sql, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
@@ -420,7 +410,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 If SearchWords.Replace("%", "") = String.Empty Then WhereClause = String.Empty
 
                 Dim sb As New System.Text.StringBuilder
-                sb.Append("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                sb.Append("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT " & TopClause & " System_AccessLevels.Title As AccessLevel_Title, Benutzer.*, ISNULL(Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Namenszusatz, ''), 1, 1)) }) + Nachname + ', ' + Vorname AS UserNameComplete FROM [Benutzer] LEFT JOIN System_AccessLevels ON Benutzer.AccountAccessability = System_AccessLevels.ID" & vbNewLine)
                 sb.Append(WhereClause & " ORDER BY Nachname, Vorname" & vbNewLine)
 
@@ -528,7 +518,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Dim MyDBVersion As Version = cammWebManager.System_DBVersion_Ex()
             Dim requiredFlags As String() = Nothing
-            If MyDBVersion.Build >= 147 Then
+            If MyDBVersion.Build >= WMSystem.MilestoneDBBuildNumber_Build147 Then
                 requiredFlags = dropDownGroupInfo.RequiredAdditionalFlags
             End If
 
@@ -563,7 +553,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Dim userInfo As WMSystem.UserInformation = cammWebManager.System_GetUserInfo(userId)
 
                     'Check for required flags
-                    If isDenyRule = False AndAlso MyDBVersion.Build >= 147 Then
+                    If isDenyRule = False AndAlso MyDBVersion.Build >= WMSystem.MilestoneDBBuildNumber_Build147 Then
                         Dim flagsUpdateLinks As String = String.Empty
                         If Not userInfo Is Nothing Then
                             Dim validationResults As CompuMaster.camm.WebManager.FlagValidation.FlagValidationResult() = CompuMaster.camm.WebManager.FlagValidation.ValidateRequiredFlags(userInfo, requiredFlags, True)

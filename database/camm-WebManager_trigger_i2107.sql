@@ -2,6 +2,9 @@
 IF OBJECT_ID ('dbo.IUD_Apps2SecObjAndNavItems', 'TR') IS NOT NULL
    DROP TRIGGER dbo.IUD_Apps2SecObjAndNavItems;
 GO
+-- =========================================================================================================
+-- ===== SUPERVISOR'S ALWAYS ACCESS RULE
+-- =========================================================================================================
 ------------------------------------------------------------------------------------------------------------
 -- TABLE [dbo].[Applications_CurrentAndInactiveOnes] - TRIGGER dbo.IUD_Apps2SecObjAndNavItems
 ------------------------------------------------------------------------------------------------------------
@@ -34,8 +37,8 @@ BEGIN
 				AND dbo.[ApplicationsRightsByGroup].ID_GroupOrPerson = 6
 				AND dbo.[ApplicationsRightsByGroup].DevelopmentTeamMember = 1
 				AND dbo.[ApplicationsRightsByGroup].IsDenyRule = 0;
-	INSERT INTO dbo.[ApplicationsRightsByGroup] (ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, ReleasedBy)
-	SELECT ID, 0, 6, 1, 0, IsNull(inserted.ModifiedBy, inserted.ReleasedBy)
+	INSERT INTO dbo.[ApplicationsRightsByGroup] (ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, ReleasedBy, [IsSupervisorAutoAccessRule])
+	SELECT ID, 0, 6, 1, 0, IsNull(inserted.ModifiedBy, inserted.ReleasedBy), 1
 	FROM inserted
 	WHERE AppDeleted = 0
 END' 
@@ -167,16 +170,36 @@ DECLARE @AFirstServerGroupID int
 SELECT TOP 1 @AFirstServerGroupID = ID FROM [dbo].[System_ServerGroups] WHERE ID NOT IN (SELECT ID FROM inserted)
 
 	SET NOCOUNT ON;
-	-- Drop all related app-rights: USERS
+	-- Drop all directly related app-rights: USERS
 	DELETE dbo.[ApplicationsRightsByUser]
 	FROM dbo.[ApplicationsRightsByUser]
 		INNER JOIN deleted
 			ON dbo.[ApplicationsRightsByUser].ID_ServerGroup = deleted.ID
-	-- Drop all related app-rights: GROUPS
+	-- Drop all directly related app-rights: GROUPS
 	DELETE dbo.[ApplicationsRightsByGroup]
 	FROM dbo.[ApplicationsRightsByGroup]
 		INNER JOIN deleted
 			ON dbo.[ApplicationsRightsByGroup].ID_ServerGroup = deleted.ID
+	-- Drop all indirectly related app-rights (ApplicationsRightsByUser_PreStagingForRealServerGroup): USERS
+	DELETE dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
+	FROM dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
+		INNER JOIN deleted
+			ON dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].ID_ServerGroup = deleted.ID
+	-- Drop all indirectly related app-rights (ApplicationsRightsByGroup_PreStagingForRealServerGroup): GROUPS
+	DELETE dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
+	FROM dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
+		INNER JOIN deleted
+			ON dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].ID_ServerGroup = deleted.ID
+	-- Drop public groups
+	DELETE dbo.[Gruppen]
+	FROM dbo.[Gruppen]
+		INNER JOIN deleted
+			ON dbo.[Gruppen].ID = deleted.ID_Group_Public
+	-- Drop anonymous groups
+	DELETE dbo.[Gruppen]
+	FROM dbo.[Gruppen]
+		INNER JOIN deleted
+			ON dbo.[Gruppen].ID = deleted.ID_Group_Anonymous
 	-- Insert required pre-staging data for inserted ServerGroup to complete pre-stage-data for CROSS JOIN for auths with ID_ServerGroup = 0
 	IF @AFirstServerGroupID IS NOT NULL
 		BEGIN
@@ -242,74 +265,6 @@ GO
 GO
 
 -- =========================================================================================================
--- ===== CONTINUEOUS DATA INTEGRITY: System_ServerGroupsAndTheirUserAccessLevels
--- =========================================================================================================
-------------------------------------------------------------------------------------------------------------
--- CLEAN UP TABLE System_ServerGroupsAndTheirUserAccessLevels ON DELETED FOREIGN KEYS
-------------------------------------------------------------------------------------------------------------
-IF OBJECT_ID ('dbo.D_System_AccessLevels_FK_Check', 'TR') IS NOT NULL
-   DROP TRIGGER dbo.D_System_AccessLevels_FK_Check;
-GO
-CREATE TRIGGER [dbo].[D_System_AccessLevels_FK_Check] 
-   ON  [dbo].[System_AccessLevels] 
-   FOR DELETE
-   -- FOR INSERT: NOT REQUIRED since there haven't been any relations, yet
-   -- FOR UPDATE: NOT REQUIRED since relations don't change in ID value
-AS 
-BEGIN
-	SET NOCOUNT ON;
-	-- removal prohibited as long as AcccessLevel is in use
-	DECLARE @FirstRelationEntry int;
-	SELECT TOP 1 @FirstRelationEntry  = ID
-	FROM dbo.[System_ServerGroups]
-	WHERE dbo.[System_ServerGroups].[AccessLevel_Default] IN (SELECT ID FROM deleted);
-	IF @FirstRelationEntry IS NOT NULL
-		BEGIN
-			RAISERROR ('Access level still referenced as default access level by 1 or more server groups', 16, 1)
-			ROLLBACK TRANSACTION 		
-			RETURN	
-		END	
-	SELECT TOP 1 @FirstRelationEntry  = NULL
-	SELECT TOP 1 @FirstRelationEntry  = ID
-	FROM dbo.System_ServerGroupsAndTheirUserAccessLevels
-	WHERE dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel IN (SELECT ID FROM deleted);
-	IF @FirstRelationEntry IS NOT NULL
-		BEGIN
-			RAISERROR ('Access level still referenced by 1 or more server groups', 16, 2)
-			ROLLBACK TRANSACTION 		
-			RETURN	
-		END	
-	SELECT TOP 1 @FirstRelationEntry  = NULL
-	SELECT TOP 1 @FirstRelationEntry 
-	FROM dbo.Benutzer
-	WHERE dbo.Benutzer.AccountAccessability IN (SELECT ID FROM deleted);
-	IF @FirstRelationEntry IS NOT NULL
-		BEGIN
-			RAISERROR ('Access level still referenced by 1 or more users', 16, 3)
-			ROLLBACK TRANSACTION 		
-			RETURN	
-		END	
-END
-GO
-IF OBJECT_ID ('dbo.D_System_ServerGroups_FK_ServerGroupsAndTheirUserAccessLevels', 'TR') IS NOT NULL
-   DROP TRIGGER dbo.D_System_ServerGroups_FK_ServerGroupsAndTheirUserAccessLevels;
-GO
-CREATE TRIGGER [dbo].[D_System_ServerGroups_FK_ServerGroupsAndTheirUserAccessLevels] 
-   ON  [dbo].[System_ServerGroups] 
-   FOR DELETE
-   -- FOR INSERT: NOT REQUIRED since there haven't been any relations, yet
-   -- FOR UPDATE: NOT REQUIRED since relations don't change in ID value
-AS 
-BEGIN
-	SET NOCOUNT ON;
-	-- reset all system rules (=rules for anonymous+public groups)
-	DELETE dbo.System_ServerGroupsAndTheirUserAccessLevels
-	FROM dbo.System_ServerGroupsAndTheirUserAccessLevels 
-		INNER JOIN deleted ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = deleted.ID
-	WHERE deleted.ID NOT IN (SELECT ID FROM inserted) -- only trigger deletion if there is no corresponding replacement row
-END
-GO
--- =========================================================================================================
 -- ===== MEMBERSHIPS TABLES - PRE-STAGED/PRE-CALCULATED, EFFECTIVE
 -- =========================================================================================================
 ------------------------------------------------------------------------------------------------------------
@@ -317,18 +272,7 @@ GO
 ------------------------------------------------------------------------------------------------------------
 IF OBJECT_ID ('dbo.D_BenutzerDefaultMemberships', 'TR') IS NOT NULL
    DROP TRIGGER dbo.D_BenutzerDefaultMemberships;
-GO
-CREATE TRIGGER [dbo].[D_BenutzerDefaultMemberships] 
-   ON  [dbo].[Benutzer] 
-   FOR DELETE
-AS 
-BEGIN
-	SET NOCOUNT ON;
-	-- reset all system rules (=rules for anonymous+public groups)
-	DELETE dbo.Memberships 
-	FROM dbo.Memberships 
-		INNER JOIN deleted ON dbo.Memberships.ID_User = deleted.ID
-END
+   -- job is already done at [Benutzer_PostUserDeletionTrigger]
 GO
 IF OBJECT_ID ('dbo.IU_BenutzerDefaultMemberships', 'TR') IS NOT NULL
    DROP TRIGGER dbo.IU_BenutzerDefaultMemberships;
@@ -488,7 +432,103 @@ BEGIN
 	GROUP BY [dbo].[System_ServerGroups].ID_Group_Anonymous, [dbo].[Benutzer].ID
 END
 GO
+-- =========================================================================================================
+-- ===== CONTINUEOUS DATA INTEGRITY: on DELETE, do the required cleanup on depending foreign key rows
+-- =========================================================================================================
 ------------------------------------------------------------------------------------------------------------
+-- CLEAN UP TABLE System_ServerGroupsAndTheirUserAccessLevels ON DELETED FOREIGN KEYS
+------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID ('dbo.D_System_AccessLevels_FK_Check', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.D_System_AccessLevels_FK_Check;
+GO
+CREATE TRIGGER [dbo].[D_System_AccessLevels_FK_Check] 
+   ON  [dbo].[System_AccessLevels] 
+   FOR DELETE
+   -- FOR INSERT: NOT REQUIRED since there haven't been any relations, yet
+   -- FOR UPDATE: NOT REQUIRED since relations don't change in ID value
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	-- removal prohibited as long as AcccessLevel is in use
+	DECLARE @FirstRelationEntry int;
+	SELECT TOP 1 @FirstRelationEntry  = ID
+	FROM dbo.[System_ServerGroups]
+	WHERE dbo.[System_ServerGroups].[AccessLevel_Default] IN (SELECT ID FROM deleted);
+	IF @FirstRelationEntry IS NOT NULL
+		BEGIN
+			RAISERROR ('Access level still referenced as default access level by 1 or more server groups', 16, 1)
+			ROLLBACK TRANSACTION 		
+			RETURN	
+		END	
+	SELECT TOP 1 @FirstRelationEntry  = NULL
+	SELECT TOP 1 @FirstRelationEntry  = ID
+	FROM dbo.System_ServerGroupsAndTheirUserAccessLevels
+	WHERE dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel IN (SELECT ID FROM deleted);
+	IF @FirstRelationEntry IS NOT NULL
+		BEGIN
+			RAISERROR ('Access level still referenced by 1 or more server groups', 16, 2)
+			ROLLBACK TRANSACTION 		
+			RETURN	
+		END	
+	SELECT TOP 1 @FirstRelationEntry  = NULL
+	SELECT TOP 1 @FirstRelationEntry 
+	FROM dbo.Benutzer
+	WHERE dbo.Benutzer.AccountAccessability IN (SELECT ID FROM deleted);
+	IF @FirstRelationEntry IS NOT NULL
+		BEGIN
+			RAISERROR ('Access level still referenced by 1 or more users', 16, 3)
+			ROLLBACK TRANSACTION 		
+			RETURN	
+		END	
+END
+GO
+
+IF OBJECT_ID ('dbo.D_System_ServerGroups_FK_ServerGroupsAndTheirUserAccessLevels', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.D_System_ServerGroups_FK_ServerGroupsAndTheirUserAccessLevels;
+GO
+IF OBJECT_ID ('dbo.D_System_ServerGroups_FKs', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.D_System_ServerGroups_FKs;
+GO
+CREATE TRIGGER [dbo].[D_System_ServerGroups_FKs] 
+   ON  [dbo].[System_ServerGroups] 
+   FOR DELETE
+   -- FOR INSERT: NOT REQUIRED since there haven't been any relations, yet
+   -- FOR UPDATE: NOT REQUIRED since relations don't change in ID value
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	-- drop all relations to access levels
+	DELETE dbo.System_ServerGroupsAndTheirUserAccessLevels
+	FROM dbo.System_ServerGroupsAndTheirUserAccessLevels 
+		INNER JOIN deleted ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = deleted.ID
+	-- drop all related servers
+	DELETE dbo.System_Servers
+	FROM dbo.System_Servers 
+		INNER JOIN deleted ON dbo.System_Servers.ServerGroup = deleted.ID
+END
+GO
+
+IF OBJECT_ID ('dbo.D_System_Servers_FKs', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.D_System_Servers_FKs;
+GO
+CREATE TRIGGER [dbo].[D_System_Servers_FKs] 
+   ON  [dbo].[System_Servers] 
+   FOR DELETE
+   -- FOR INSERT: NOT REQUIRED since there haven't been any relations, yet
+   -- FOR UPDATE: NOT REQUIRED since relations don't change in ID value
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	-- drop all related security objects/applications
+	DELETE dbo.Applications_CurrentAndInactiveOnes
+	FROM dbo.Applications_CurrentAndInactiveOnes 
+		INNER JOIN deleted ON dbo.Applications_CurrentAndInactiveOnes.LocationID = deleted.ID
+	-- drop all script engine relations 
+	DELETE System_WebAreaScriptEnginesAuthorization
+	FROM System_WebAreaScriptEnginesAuthorization 
+		INNER JOIN deleted ON dbo.System_WebAreaScriptEnginesAuthorization.Server = deleted.ID
+END
+GO
 
 IF OBJECT_ID ('dbo.IUD_AuthsUsers2SecObjAndNavItems', 'TR') IS NOT NULL
    DROP TRIGGER dbo.IUD_AuthsUsers2SecObjAndNavItems;
@@ -521,16 +561,18 @@ BEGIN
 	DELETE FROM dbo.System_UserSessions WHERE ID_USER IN ( SELECT ID FROM deleted ) 
 	DELETE FROM dbo.System_SubSecurityAdjustments WHERE UserID IN ( SELECT ID FROM deleted ) 
 
+	-- remove all extended user details ON USER REMOVAL where the detail type (field propertyname of table log_users) is declared as DELETE IMMEDIATELY ON USER REMOVAL
+	DELETE FROM dbo.Log_Users WHERE ID_User IN ( SELECT ID FROM deleted ) AND [Type] IN (SELECT ValueNVarChar FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LogTypeDeletionSetting' And ValueBoolean = 1)
+
 	--Log the fact that user has been deleted.
-	INSERT INTO dbo.Log_Users 
-	(ID_USER, Type, VALUE, ModifiedOn)
+	INSERT INTO dbo.Log_Users (ID_USER, Type, VALUE, ModifiedOn)
 	SELECT ID, 'DeletedOn', GetDate(), GETDATE() FROM deleted
 END
 GO
 IF OBJECT_ID ('dbo.Gruppen_PostUserDeletionTrigger', 'TR') IS NOT NULL
    DROP TRIGGER dbo.Gruppen_PostUserDeletionTrigger;
 GO
-IF OBJECT_ID ('dbo.Gruppen_PostUserDeletionTrigger', 'TR') IS NOT NULL
+IF OBJECT_ID ('dbo.Gruppen_PostGroupDeletionTrigger', 'TR') IS NOT NULL
    DROP TRIGGER dbo.Gruppen_PostGroupDeletionTrigger;
 GO
 CREATE TRIGGER dbo.Gruppen_PostGroupDeletionTrigger

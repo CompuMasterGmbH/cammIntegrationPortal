@@ -8,7 +8,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CloneApplication
 	@AppID int,
 	@CloneType int,
 	@CopyDelegates int
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 DECLARE @NewAppID int
@@ -96,7 +96,7 @@ GO
 ALTER PROCEDURE dbo.AdminPrivate_CreateAccessLevel 
 	@ReleasedByUserID int,
 	@Title nvarchar(50)
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 SET @CurUserID = (select ID from dbo.Benutzer where id = @ReleasedByUserID)
@@ -126,7 +126,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateAdminServerNavPoints
 		@ModifiedBy int,
 		@ForceRewrite bit = 0
 	)
-WITH ENCRYPTION
+
 AS
 
 If @NewServerID = @OldServerID AND @ForceRewrite = 0
@@ -707,7 +707,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateApplication
 	@ReleasedByUserID int,
 	@Title varchar(255)
 )
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 DECLARE @NewAppID int
@@ -740,7 +740,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateApplicationRightsByGroup
 	@ServerGroupID int = 0,
 	@IsDevelopmentTeamMember bit = 0,
 	@IsDenyRule bit = 0
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -805,7 +805,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateApplicationRightsByUser
 	@ServerGroupID int = 0,
 	@IsDevelopmentTeamMember bit = 0,
 	@IsDenyRule bit = 0
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -889,7 +889,7 @@ ALTER PROCEDURE [dbo].[AdminPrivate_DeleteApplicationRightsByGroup]
 	@AuthID int,
 	@ReleasedByUserID int
 )
-WITH ENCRYPTION
+
 AS 
 
 declare @groupID int
@@ -911,7 +911,7 @@ ALTER PROCEDURE [dbo].[AdminPrivate_DeleteApplicationRightsByUser]
 	@AuthID int,
 	@ReleasedByUserID int = NULL
 )
-WITH ENCRYPTION
+
 AS
 declare @UserID int
 declare @AppID int
@@ -937,7 +937,7 @@ CREATE PROCEDURE [dbo].[AdminPrivate_DeleteMemberships]
 	@UserID int,
 	@IsDenyRule bit = 0
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -973,7 +973,7 @@ ALTER PROCEDURE [dbo].[AdminPrivate_CreateGroup]
 	@Name nvarchar(100),
 	@Description nvarchar(1024)
 )
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 DECLARE @NewGroupID int
@@ -999,7 +999,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateMasterServerNavPoints
 		@OldServerID int,
 		@ModifiedBy int
 	)
-WITH ENCRYPTION
+
 AS
 
 -- Removed functionality
@@ -1015,7 +1015,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateMemberships
 	@GroupID int,
 	@UserID int,
 	@IsDenyRule bit = 0
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -1056,7 +1056,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateServer
 		@ServerIP varchar(32),
 		@ServerGroup int
 	)
-WITH ENCRYPTION
+
 AS
 
 declare @NewServerID int
@@ -1091,7 +1091,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateServerGroup
 @email_Developer nvarchar(255),
 @UserID_Creator int
 )
-WITH ENCRYPTION
+
 AS 
 
 DECLARE @ID_ServerGroup int
@@ -1229,7 +1229,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateUserAccount
 	@IsUserChange bit = 0,
 	@ModifiedBy int = 0
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -1305,7 +1305,7 @@ GO
 ALTER PROCEDURE dbo.AdminPrivate_DeleteAccessLevel 
 	@ID int,
 	@JustAnotherAccessLevel int = Null
-WITH ENCRYPTION
+
 AS
 
 -- If no replacement ID is given then search for a random one
@@ -1332,28 +1332,10 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteServer
 	(
 		@ServerID int
 	)
-WITH ENCRYPTION
+
 AS
 
--- Script engines of connected servers will be UNREGISTERED. 
-DELETE System_WebAreaScriptEnginesAuthorization
-FROM System_Servers INNER JOIN System_WebAreaScriptEnginesAuthorization ON System_Servers.ID = System_WebAreaScriptEnginesAuthorization.Server
-WHERE System_Servers.ID = @ServerID 
-
--- Related logs will be DELETED permanently. 
-DELETE Log
-FROM System_Servers INNER JOIN Log ON System_Servers.IP = Log.ServerIP
-WHERE System_Servers.ID = @ServerID 
-DELETE System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes
-FROM System_Servers INNER JOIN System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes ON System_Servers.ID = System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes.Server
-WHERE System_Servers.ID = @ServerID 
-
--- Script engine relations must be erased as well
-DELETE 
-FROM System_WebAreaScriptEnginesAuthorization
-WHERE Server = @ServerID
-
--- DELETE the server itself
+-- DELETE the server - all depending foreign key rows will be deleted by trigger
 DELETE 
 FROM dbo.System_Servers
 WHERE ID = @ServerID
@@ -1366,120 +1348,13 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteServerGroup
 (
 @ID_ServerGroup int
 )
-WITH ENCRYPTION
+
 AS 
 
--- The corresponding public user group will be DELETED. And its items in the security admjustments table, too.
-DELETE [dbo].[System_SubSecurityAdjustments]
-FROM System_ServerGroups 
-	INNER JOIN [dbo].[System_SubSecurityAdjustments]
-		ON System_ServerGroups.ID_Group_Public = [dbo].[System_SubSecurityAdjustments].TablePrimaryIDValue
-			AND [dbo].[System_SubSecurityAdjustments].TableName='Groups'
-WHERE System_ServerGroups.ID = @ID_ServerGroup
-DELETE Gruppen 
-FROM System_ServerGroups 
-	INNER JOIN Gruppen ON System_ServerGroups.ID_Group_Public = Gruppen.ID 
-WHERE System_ServerGroups.ID = @ID_ServerGroup
-
--- The corresponding public user group will be DELETED. And its items in the security admjustments table, too.
-DELETE [dbo].[System_SubSecurityAdjustments]
-FROM System_ServerGroups 
-	INNER JOIN [dbo].[System_SubSecurityAdjustments]
-		ON System_ServerGroups.ID_Group_Anonymous = [dbo].[System_SubSecurityAdjustments].TablePrimaryIDValue
-			AND [dbo].[System_SubSecurityAdjustments].TableName='Groups'
-WHERE System_ServerGroups.ID = @ID_ServerGroup AND System_ServerGroups.ID_Group_Anonymous <> 58 -- never remove the ID 58 group, here, because it might still be used by another server group)
-DELETE Gruppen 
-FROM System_ServerGroups 
-	INNER JOIN Gruppen ON System_ServerGroups.ID_Group_Anonymous = Gruppen.ID 
-WHERE System_ServerGroups.ID = @ID_ServerGroup AND Gruppen.ID <> 58 -- never remove the ID 58 group, here, because it might still be used by another server group)
-
--- Relations between access levels and the server group will be DELETED. 
-DELETE 
-FROM System_ServerGroupsAndTheirUserAccessLevels 
-WHERE ID_ServerGroup = @ID_ServerGroup
-
--- Script engines of connected servers will be UNREGISTERED. 
-DELETE System_WebAreaScriptEnginesAuthorization
-FROM System_ServerGroups 
-	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup 
-	INNER JOIN System_WebAreaScriptEnginesAuthorization ON System_Servers.ID = System_WebAreaScriptEnginesAuthorization.Server
-WHERE System_ServerGroups.ID = @ID_ServerGroup
-
--- Related logs will be DELETED permanently. 
-DELETE Log
-FROM System_ServerGroups 
-	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup 
-	INNER JOIN Log ON System_Servers.IP = Log.ServerIP
-WHERE System_ServerGroups.ID = @ID_ServerGroup
-DELETE System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes
-FROM System_ServerGroups 
-	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup 
-	INNER JOIN System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes ON System_Servers.ID = System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes.Server
-WHERE System_ServerGroups.ID = @ID_ServerGroup
-
--- Related applications and their authorizations will be DELETED permanently.
--- new relation structure: all auths related to this server group (apps remain untouched)
-DELETE ApplicationsRightsByGroup
-WHERE ID_GroupOrPerson IN 
-	(
-		SELECT ID_Group_Public 
-		FROM System_ServerGroups 
-		WHERE System_ServerGroups.ID = @ID_ServerGroup
-	)
-DELETE ApplicationsRightsByGroup
-WHERE ID_GroupOrPerson IN 
-	(
-		SELECT ID_Group_Anonymous 
-		FROM System_ServerGroups 
-		WHERE System_ServerGroups.ID = @ID_ServerGroup 
-			AND ID_Group_Anonymous <> 58 -- never remove the ID 58 group, here, because it might still be used by another server group)
-	) 
-DELETE ApplicationsRightsByGroup
-WHERE ID_ServerGroup = @ID_ServerGroup
--- old relation structure (apps+their auths)
-DELETE ApplicationsRightsByGroup
-FROM System_ServerGroups 
-	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup
-	INNER JOIN Applications_CurrentAndInactiveOnes ON System_Servers.ID = Applications_CurrentAndInactiveOnes.LocationID
-	INNER JOIN ApplicationsRightsByGroup ON Applications_CurrentAndInactiveOnes.ID = ApplicationsRightsByGroup.ID_Application
-WHERE System_ServerGroups.ID = @ID_ServerGroup
-DELETE ApplicationsRightsByUser
-FROM System_ServerGroups 
-	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup
-	INNER JOIN Applications_CurrentAndInactiveOnes ON System_Servers.ID = Applications_CurrentAndInactiveOnes.LocationID
-	INNER JOIN ApplicationsRightsByUser ON Applications_CurrentAndInactiveOnes.ID = ApplicationsRightsByUser.ID_Application
-WHERE System_ServerGroups.ID = @ID_ServerGroup
-DELETE Applications_CurrentAndInactiveOnes
-FROM System_ServerGroups 
-	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup 
-	INNER JOIN Applications_CurrentAndInactiveOnes ON System_Servers.ID = Applications_CurrentAndInactiveOnes.LocationID
-WHERE System_ServerGroups.ID = @ID_ServerGroup
-
--- All currently connected servers will be DELETED permanently. 
-DELETE System_Servers
-FROM System_ServerGroups 
-	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup
-WHERE System_ServerGroups.ID = @ID_ServerGroup
-
--- Script engine relations must be erased as well
-DELETE System_WebAreaScriptEnginesAuthorization
-FROM System_ServerGroups 
-	INNER JOIN System_Servers ON System_ServerGroups.ID = System_Servers.ServerGroup 
-	INNER JOIN System_WebAreaScriptEnginesAuthorization ON System_Servers.ID = System_WebAreaScriptEnginesAuthorization.Server
-WHERE System_ServerGroups.ID = @ID_ServerGroup
-
--- WebEditor/WCMS content must be purged
-DELETE 
-FROM [dbo].[WebManager_WebEditor]
-WHERE ServerID = @ID_ServerGroup
-
--- DELETE the server group itself
+-- DELETE the server group - all depending foreign key rows will be deleted by trigger
 DELETE 
 FROM System_ServerGroups
 WHERE System_ServerGroups.ID = @ID_ServerGroup
-
-
-SET NOCOUNT OFF
 
 GO
 
@@ -1491,16 +1366,13 @@ ALTER PROCEDURE dbo.AdminPrivate_DeleteUser
 		@UserID int,
 		@AdminUserID int = null
 	)
-WITH ENCRYPTION
+
 AS
 
-
+-- DELETE the user account 
+--     --> all depending foreign key rows will be deleted by trigger
+--     --> all data from log_users table will be deleted as defined by separate data protection rules
 DELETE FROM dbo.Benutzer WHERE ID=@UserID
-DELETE FROM dbo.ApplicationsRightsByUser WHERE ID_GroupOrPerson=@UserID
-DELETE FROM dbo.Memberships WHERE ID_User=@UserID
-
-DELETE FROM dbo.Log_Users WHERE ID_User = @UserID  AND [Type] IN (SELECT ValueNVarChar FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LogTypeDeletionSetting' And ValueBoolean = 1)
-
 
 -- Logging
 insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ConflictType, ConflictDescription) values (@UserID, GetDate(), '0.0.0.0', '0.0.0.0', -31, 'User deleted by admin ' + Cast(IsNull(@AdminUserID, '') as nvarchar(20)))
@@ -1513,7 +1385,7 @@ ALTER Procedure dbo.AdminPrivate_GetCompleteUserInfo
 (
 	@UserID int
 )
-WITH ENCRYPTION
+
 As
 SELECT * FROM dbo.Benutzer WHERE ID = @UserID
 	/* set nocount on */
@@ -1528,7 +1400,7 @@ ALTER PROCEDURE dbo.AdminPrivate_GetScriptEnginesOfServer
 (
 @ServerID int
 )
-WITH ENCRYPTION
+
 AS 
 SELECT     (SELECT     WebEngine.ScriptEngine
                        FROM          System_WebAreaScriptEnginesAuthorization AS WebEngine
@@ -1548,7 +1420,7 @@ ALTER PROCEDURE dbo.AdminPrivate_ResetLoginLockedTill
 	(
 		@ID int
 	)
-WITH ENCRYPTION
+
 AS
 declare @AccountAccessability tinyint
 declare @LoginDisabled bit
@@ -1578,7 +1450,7 @@ ALTER PROCEDURE dbo.AdminPrivate_SetAuthorizationInherition
 @IDApp int, 
 @InheritsFrom int
 )
-WITH ENCRYPTION
+
 AS 
 SET NOCOUNT ON
 UPDATE    dbo.Applications
@@ -1600,11 +1472,6 @@ SELECT Result = -1
 
 GO
 
--- fix the log items in the history
-UPDATE dbo.Log
-SET ConflictType = 31
-WHERE ConflictType = 1 AND ApplicationID IS NOT NULL
-GO
 ----------------------------------------------------
 -- dbo.AdminPrivate_SetScriptEngineActivation
 ----------------------------------------------------
@@ -1615,7 +1482,7 @@ ALTER PROCEDURE dbo.AdminPrivate_SetScriptEngineActivation
 @Enabled bit,
 @CheckMinimalActivations bit = 0
 )
-WITH ENCRYPTION
+
 AS 
 
 declare @ID int
@@ -1673,7 +1540,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateAccessLevel
 	@Title nvarchar(50),
 	@Remarks ntext
 )
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 SET @CurUserID = (select ID from dbo.Benutzer where id = @ReleasedByUserID)
@@ -1729,7 +1596,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateApp
 @AddLanguageID2URL bit,
 @ID int
 )
-WITH ENCRYPTION
+
 AS 
 IF @LocationID < 0 
 	UPDATE    dbo.Applications
@@ -1777,7 +1644,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateServer
 @ServerPort int,
 @ID int
 )
-WITH ENCRYPTION
+
 AS
 
 DECLARE @CurServerIP nvarchar(32)
@@ -1843,7 +1710,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateServerGroup
 @ModifiedBy int,
 @AccessLevel_Default int
 )
-WITH ENCRYPTION
+
 AS
 
 DECLARE @OldAdminServer int
@@ -1880,7 +1747,7 @@ ALTER PROCEDURE AdminPrivate_UpdateStatusLoginDisabled
 	@Username nvarchar(50),
 	@boolStatus bit
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -1909,7 +1776,7 @@ ALTER PROCEDURE [dbo].[AdminPrivate_UpdateSubSecurityAdjustment]
 	@AuthorizationType nvarchar(50),
 	@ReleasedBy int	
 )
-WITH ENCRYPTION
+
 AS
 DECLARE @CurrentPrimID int
 
@@ -1967,7 +1834,7 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateUserDetails
 	@IsUserChange bit = 0,
 	@ModifiedBy int = 0
 )
-WITH ENCRYPTION
+
 AS
 
 SET NOCOUNT ON
@@ -2007,7 +1874,7 @@ ALTER PROCEDURE [dbo].[AdminPrivate_UpdateUserPW]
 	@LoginPWAlgorithm int = 0,
 	@LoginPWNonceValue varbinary(4096) = 0x00 
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -2050,7 +1917,7 @@ ALTER PROCEDURE dbo.Int_LogAuthChanges
 @IsDenyRule int = NULL, 
 @ServerGroupID int = NULL
 )
-WITH ENCRYPTION
+
 AS 
 
 declare @FlagInfo nvarchar(20)
@@ -2088,7 +1955,7 @@ ALTER Procedure Int_UpdateUserDetailDataWithProfileData
 		@IDUser int,
 		@ModifiedBy int = 0
 	)
-WITH ENCRYPTION
+
 As
 DECLARE @LoginName nvarchar(50)
 	-- Result and Initializing
@@ -2142,7 +2009,7 @@ CREATE PROC [dbo].[IsAdministratorForAuthorizations]
 	@AdminUserID int,
 	@SecurityObjectID int
 )
-WITH ENCRYPTION
+
 AS 
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -2211,7 +2078,7 @@ CREATE PROC [dbo].[IsAdministratorForMemberships]
 	@AdminUserID int,
 	@GroupID int
 )
-WITH ENCRYPTION
+
 AS 
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -2255,7 +2122,7 @@ CREATE PROCEDURE dbo.LogMissingExternalUserAssignment
 	@Error ntext,
 	@Remove bit
 )
-WITH ENCRYPTION
+
 AS
 IF @Remove = 0
 	BEGIN
@@ -2287,7 +2154,7 @@ CREATE PROC dbo.LookupUserNameByScriptEngineSessionID
 	@ScriptEngineID int,
 	@ScriptEngineSessionID nvarchar(128)
 	)
-WITH ENCRYPTION
+
 AS
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -2328,7 +2195,7 @@ ALTER PROCEDURE dbo.Public_CreateUserAccount
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -2399,7 +2266,7 @@ ALTER Procedure Public_GetCompleteName
 (
 	@Username nvarchar(50)
 )
-WITH ENCRYPTION
+
 As
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -2427,7 +2294,7 @@ ALTER PROCEDURE dbo.Public_GetCurServerLogonList
 (
 @ServerIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS 
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -2467,7 +2334,7 @@ GO
 -- dbo.Public_GetEMailAddressesOfAllSecurityAdmins
 ----------------------------------------------------
 ALTER Procedure dbo.Public_GetEMailAddressesOfAllSecurityAdmins
-WITH ENCRYPTION
+
 AS
 
 SELECT Benutzer.[E-MAIL], Benutzer.ID 
@@ -2491,7 +2358,7 @@ ALTER PROCEDURE dbo.Public_GetLogonList
 	@ScriptEngine_ID int = NULL,
 	@ServerID int = NULL
 	)
-WITH ENCRYPTION
+
 AS
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -2538,7 +2405,7 @@ CREATE Procedure [dbo].[Public_GetNavPointsOfGroup]
 	@LanguageID int,
 	@AnonymousAccess bit = 0,
 	@SearchForAlternativeLanguages bit = 1
-WITH ENCRYPTION
+
 As
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -2733,7 +2600,7 @@ CREATE Procedure dbo.Public_GetNavPointsOfUser
 	@AnonymousAccess bit = 0,
 	@SearchForAlternativeLanguages bit = 1
 )
-WITH ENCRYPTION
+
 As
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -2919,7 +2786,7 @@ ALTER PROCEDURE dbo.Public_GetServerConfig
 (
 @ServerIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS 
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -2956,7 +2823,7 @@ ALTER PROCEDURE dbo.Public_GetToDoLogonList
 	@ScriptEngine_ID int,
 	@ServerID int
 	)
-WITH ENCRYPTION
+
 AS
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 --SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -3023,7 +2890,7 @@ ALTER Procedure dbo.Public_GetUserDetailData
 		@IDUser int,
 		@Type varchar(50)
 	)
-WITH ENCRYPTION
+
 As
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -3057,7 +2924,7 @@ ALTER Procedure dbo.Public_GetUserID
 (
 	@Username nvarchar(50)
 )
-WITH ENCRYPTION
+
 As
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -3084,7 +2951,7 @@ CREATE PROCEDURE dbo.Public_GetUserNameForScriptEngineSessionID
 	@ScriptEngine_ID int,
 	@ServerID int
 )
-WITH ENCRYPTION
+
 AS
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -3112,7 +2979,7 @@ ALTER PROCEDURE dbo.Public_Logout
 	@ScriptEngine_ID int = NULL,
 	@ScriptEngine_SessionID nvarchar(512) = NULL
 )
-WITH ENCRYPTION
+
 AS
 
 SET NOCOUNT ON
@@ -3201,7 +3068,7 @@ ALTER PROCEDURE dbo.Public_PreValidateUser
 	@ScriptEngine_ID int,
 	@ScriptEngine_SessionID nvarchar(512),
 	@MaxLoginFailures int = 7
-WITH ENCRYPTION
+
 AS
 -- Validates the user credentials, but doesn't log in
 -- BUT: invalid credentials increase the number of login failures
@@ -3413,7 +3280,7 @@ ALTER Procedure dbo.Public_RestorePassword
 		@Username nvarchar(50),
 		@eMail nvarchar(50)
 )
-WITH ENCRYPTION
+
 AS
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -3429,7 +3296,7 @@ ALTER PROCEDURE dbo.Public_ServerDebug
 	@ServerIP nvarchar(32),
 	@RemoteIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -3544,7 +3411,7 @@ ALTER Procedure dbo.Public_SetUserDetailData
 		@DoNotLogSuccess bit = 0,
 		@ModifiedBy int = 0
 	)
-WITH ENCRYPTION
+
 AS
 DECLARE @CountOfValuesInTable int
 
@@ -3599,7 +3466,7 @@ CREATE PROCEDURE dbo.Public_UpdateUserDetails
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -3691,7 +3558,7 @@ ALTER PROCEDURE [dbo].[Public_UpdateUserPW]
 	@LoginPWAlgorithm int = 0,
 	@LoginPWNonceValue varbinary(4096) = 0x00 
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -3780,7 +3647,7 @@ CREATE PROCEDURE dbo.Public_UserIsAuthorized
 	@SecurityObjectName varchar(255),
 	@ServerGroupID int
 )
-WITH ENCRYPTION
+
 AS 
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -3849,7 +3716,7 @@ CREATE PROCEDURE dbo.Public_UserIsAuthorizedForApp
 	@WebApplication varchar(255),
 	@ServerIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS 
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
@@ -3927,7 +3794,7 @@ ALTER PROCEDURE dbo.Public_ValidateDocument
 	@ScriptEngine_SessionID nvarchar(512),
 	@Reserved int = Null
 )
-WITH ENCRYPTION
+
 AS
 
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
@@ -4207,7 +4074,7 @@ ALTER PROCEDURE dbo.Public_ValidateGUIDLogin
 	@ScriptEngine_ID int,
 	@ScriptEngine_SessionID nvarchar(512)
 )
-WITH ENCRYPTION
+
 AS
 
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
@@ -4272,7 +4139,7 @@ ALTER PROCEDURE dbo.Public_ValidateUser
 	@ScriptEngine_SessionID nvarchar(512),
 	@ForceLogin bit,
 	@MaxLoginFailures int = 7
-WITH ENCRYPTION
+
 AS
 
 -- Keine Locks anderer Transactions berücksichtigen - immer mit dem letzten Stand arbeiten (egal ob committed oder nicht)
@@ -4570,7 +4437,7 @@ CREATE PROCEDURE dbo.Redirects_LogAndGetURL
 	(
 		@IDRedirector int
 	)
-WITH ENCRYPTION
+
 AS 
 
 SET NOCOUNT ON

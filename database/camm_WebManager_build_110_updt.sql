@@ -7,7 +7,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CloneApplication
 	@AppID int,
 	@CloneType int
 )
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 DECLARE @NewAppID int
@@ -87,7 +87,7 @@ ALTER PROCEDURE dbo.Public_Logout
 	@ServerIP nvarchar(32),
 	@RemoteIP nvarchar(32)
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -158,7 +158,7 @@ ALTER PROCEDURE dbo.Public_ValidateUser
 	@ScriptEngine_SessionID nvarchar(512),
 	@ForceLogin bit
 )
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -471,7 +471,7 @@ ALTER PROCEDURE dbo.Public_GetLogonList
 	@ScriptEngine_ID int = NULL,
 	@ServerID int = NULL
 	)
-WITH ENCRYPTION
+
 AS
 
 IF NOT @ScriptEngine_ID IS NULL AND NOT @ScriptEngine_SessionID IS NULL AND NOT @ServerID IS NULL
@@ -512,7 +512,7 @@ ALTER PROCEDURE dbo.Public_GetToDoLogonList
 	@ScriptEngine_ID int,
 	@ServerID int
 	)
-WITH ENCRYPTION
+
 AS
 
 -- GUIDs alter Sessions zurücksetzen
@@ -605,7 +605,7 @@ ALTER PROCEDURE dbo.Public_ValidateDocument
 	@ScriptEngine_SessionID nvarchar(512),
 	@Reserved int = Null
 )
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten

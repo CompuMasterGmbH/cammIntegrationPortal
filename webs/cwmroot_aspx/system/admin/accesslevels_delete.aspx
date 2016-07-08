@@ -37,6 +37,21 @@
 					<TD ColSpan="2" VAlign="Top"><P> &nbsp;</P></TD>
 					</TR>
 					<TR>
+					<TD colspan="2" bgcolor="#C1C1C1"><P><FONT face="Arial" size="2"><b>ATTENTION!!!</b></FONT></P></TD>
+					</TR>
+					<TR>
+					<TD VAlign="Top" colspan="2"><P><FONT face="Arial" size="2">This step will modify all of the following objects:<br><br>
+					<ul>
+						<li>Related <b>users</b> will be <b>MODIFIED</b> to use the alternative access level.</li>
+						<li>Content of Web Editors of this server will <b>STAY</b> permanently (other servers might reference that content).</li>
+						<li><b>Server groups</b> referencing this access level as default for new users will be <b>MODIFIED</b>. <b>Please check for suitable defaults after this change!</b></li>
+					</ul>
+					</FONT></P></TD>
+					</TR>
+					<TR>
+					<TD VAlign="Top" Colspan="2"><P> &nbsp;</P></TD>
+					</TR>
+					<TR>
 					<TD BGCOLOR="#C1C1C1" ColSpan="2"><P><FONT face="Arial" size="2"><b>Are you really sure?</b></FONT></P></TD>
 					</TR>
 					<TR>

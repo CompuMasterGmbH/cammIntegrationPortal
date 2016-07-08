@@ -28,7 +28,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CloneApplication
 	@AppID int,
 	@CloneType int,
 	@CopyDelegates int
-WITH ENCRYPTION
+
 AS
 DECLARE @CurUserID int
 DECLARE @NewAppID int

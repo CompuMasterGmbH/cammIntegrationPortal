@@ -1,4 +1,10 @@
-﻿<%IGNORE_ERRORS%>
+﻿-- fix the log items in the history
+UPDATE dbo.Log
+SET ConflictType = 31
+WHERE ConflictType = 1 AND ApplicationID IS NOT NULL
+GO
+
+<%IGNORE_ERRORS%>
 -- Add missing DevelopmentTeamMember column for consequency between auths for users and groups
 ALTER TABLE [dbo].[ApplicationsRightsByGroup]
 ADD DevelopmentTeamMember bit NOT NULL DEFAULT (0)
@@ -8,6 +14,12 @@ GO
 -- Add column IsDenyRule for allowing GRANT and DENY priviledges
 ALTER TABLE [dbo].[ApplicationsRightsByGroup]
 ADD IsDenyRule bit NOT NULL DEFAULT (0)
+GO
+
+<%IGNORE_ERRORS%>
+-- Add column IsDenyRule for allowing GRANT and DENY priviledges
+ALTER TABLE [dbo].[ApplicationsRightsByGroup]
+ADD IsSupervisorAutoAccessRule bit NOT NULL DEFAULT (0)
 GO
 
 <%IGNORE_ERRORS%>

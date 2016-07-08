@@ -296,7 +296,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Response.End()
             ElseIf Request.QueryString("ID") <> "" And Request.Form("CloneType") <> "" Then
                 Dim sqlParams As SqlParameter()
-                If cammWebManager.System_DBVersion_Ex.Build >= 185 Then
+                If cammWebManager.System_DBVersion_Ex.Build >= WMSystem.MilestoneDBBuildNumber_AdminSecurityDelegates Then
                     'Clone AdminSecurityDelegates - supported since DB-Build 185
                     sqlParams = New SqlParameter() {New SqlParameter("@ReleasedByUserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)), New SqlParameter("@AppID", CLng(Request.QueryString("ID"))), New SqlParameter("@CloneType", CLng(Request.Form("CloneType"))), New SqlParameter("@CopyDelegates", CLng(Utils.Nz(Request.Form("CopyAdminSecurityDelegates"), 0)))}
                 Else
@@ -412,7 +412,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         txtField_Sort.Text = Utils.Nz(dr("Sort"), String.Empty)
                         txtField_RequiredUserFlags.Text = Utils.Nz(dr("RequiredUserProfileFlags"), String.Empty)
                         txtField_GeneralRemarks.Text = Utils.Nz(dr("Remarks"), String.Empty)
-                        If cammWebManager.System_DBVersion_Ex.Build >= 185 Then
+                        If cammWebManager.System_DBVersion_Ex.Build >= WMSystem.MilestoneDBBuildNumber_AdminSecurityDelegates Then
                             txtField_RequiredUserFlagsRemarks.Text = Utils.Nz(dr("RequiredUserProfileFlagsRemarks"), String.Empty)
                         End If
 
@@ -590,7 +590,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_UpdateApp", CommandType.StoredProcedure, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
 
             Dim remarks As String = ""
-            If cammWebManager.System_DBVersion_Ex.Build >= 185 Then
+            If cammWebManager.System_DBVersion_Ex.Build >= WMSystem.MilestoneDBBuildNumber_AdminSecurityDelegates Then
                 remarks = ", RequiredUserProfileFlagsRemarks = @UserProfileFlagsRemarks"
             End If
 
@@ -598,7 +598,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             cmd3.Parameters.Add("@ID", SqlDbType.Int).Value = CType(lblField_ID.Text, Integer)
             cmd3.Parameters.Add("@RequiredFlags", SqlDbType.NVarChar).Value = Trim(txtField_RequiredUserFlags.Text)
             cmd3.Parameters.Add("@GeneralRemarks", SqlDbType.NVarChar).Value = txtField_GeneralRemarks.Text.Trim()
-            If cammWebManager.System_DBVersion_Ex.Build >= 185 Then
+            If cammWebManager.System_DBVersion_Ex.Build >= WMSystem.MilestoneDBBuildNumber_AdminSecurityDelegates Then
                 cmd3.Parameters.Add("@UserProfileFlagsRemarks", SqlDbType.NVarChar).Value = txtField_RequiredUserFlagsRemarks.Text.Trim()
             End If
             ExecuteNonQuery(cmd3, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
@@ -610,7 +610,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim invalidFlags As New ArrayList
 
                 Dim MyDBVersion As Version = cammWebManager.System_DBVersion_Ex()
-                If MyDBVersion.Build >= 147 Then
+                If MyDBVersion.Build >= WMSystem.MilestoneDBBuildNumber_Build147 Then
                     Dim requiredApplicationFlags() As String = txtField_RequiredUserFlags.Text.Split(CChar(","))
 
                     Dim cmd As SqlClient.SqlCommand
