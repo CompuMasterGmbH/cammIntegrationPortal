@@ -955,7 +955,7 @@ If @CurUserID Is Not Null
 		-- Rückgabewert
 		SELECT Result = -1
 		-- Record update
-		DELETE FROM dbo.Memberships WHERE ID_User=@UserID AND ID_Group=@GroupID AND IsDenyRule = @IsDenyRule
+		DELETE FROM dbo.Memberships WHERE ID_User=@UserID AND ID_Group=@GroupID AND IsDenyRule = @IsDenyRule AND IsSystemRule = 0
 		-- log group membership change
 		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription) 
 		values (@UserID, GetDate(), '0.0.0.0', '0.0.0.0', NULL, -12, cast(@GroupID as nvarchar(50)) + N'|' + cast(@IsDenyRule as nvarchar(5)))

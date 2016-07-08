@@ -1,5 +1,23 @@
 ﻿/* Contains all views cumulated in their latest version from build 204 up to latest */
 
+-------------------------------------------------------------------------------------------------
+-- INDEXED VIEW FOR PERFORMANCE REASONS: view_Memberships_DenyRulesOnly
+-------------------------------------------------------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Memberships_DenyRulesOnly]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
+drop view [dbo].[view_Memberships_DenyRulesOnly]
+GO
+CREATE VIEW [dbo].[view_Memberships_DenyRulesOnly]
+WITH ENCRYPTION, SCHEMABINDING
+AS
+	SELECT ID_Group, ID_User
+	FROM         dbo.Memberships
+	WHERE IsDenyRule <> 0
+GO
+
+CREATE UNIQUE CLUSTERED INDEX IXDVW_view_Memberships_DenyRulesOnly
+	ON dbo.view_Memberships_DenyRulesOnly(ID_Group, ID_User);
+GO
+
 IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[view_Memberships_Effective_wo_PublicNAnonymous]'))
 DROP VIEW [dbo].[view_Memberships_Effective_wo_PublicNAnonymous]
 GO
@@ -19,6 +37,7 @@ FROM         dbo.Memberships AS AllowEntries
 		) AS DenyEntries ON AllowEntries.ID_Group = DenyEntries.ID_Group AND AllowEntries.ID_User = DenyEntries.ID_User
 WHERE IsNull(AllowEntries.IsDenyRule, 0) = 0
 	AND DenyEntries.ID_Group IS NULL
+	AND AllowEntries.IsSystemRule = 0
 GO
 
 IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[view_Memberships_Effective_with_PublicNAnonymous]'))
@@ -34,30 +53,10 @@ AS
 --------------------------------------------------------------------------------------
 SELECT     AllowEntries.ID_Group, AllowEntries.ID_User
 FROM         dbo.Memberships AS AllowEntries
-	LEFT JOIN (
-		SELECT ID_Group, ID_User
-		FROM         dbo.Memberships
-		WHERE IsDenyRule <> 0
-		) AS DenyEntries ON AllowEntries.ID_Group = DenyEntries.ID_Group AND AllowEntries.ID_User = DenyEntries.ID_User
+	LEFT JOIN dbo.[view_Memberships_DenyRulesOnly] AS DenyEntries 
+		ON AllowEntries.ID_Group = DenyEntries.ID_Group AND AllowEntries.ID_User = DenyEntries.ID_User
 WHERE IsNull(AllowEntries.IsDenyRule, 0) = 0
 	AND DenyEntries.ID_Group IS NULL
-UNION ALL
--- PublicGroupMembers
-SELECT [dbo].[System_ServerGroups].ID_Group_Public, dbo.Benutzer.ID AS ID_User
-FROM dbo.System_ServerGroupsAndTheirUserAccessLevels
-	INNER JOIN dbo.Benutzer ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = dbo.Benutzer.AccountAccessability
-	INNER JOIN [dbo].[System_ServerGroups] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = [dbo].[System_ServerGroups].ID
-UNION ALL
--- AnonymousGroupMembers
-SELECT [dbo].[System_ServerGroups].ID_Group_Anonymous, dbo.Benutzer.ID AS ID_User
-FROM dbo.System_ServerGroupsAndTheirUserAccessLevels
-	INNER JOIN dbo.Benutzer ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = dbo.Benutzer.AccountAccessability
-	INNER JOIN [dbo].[System_ServerGroups] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = [dbo].[System_ServerGroups].ID
-UNION ALL
--- Anonymous "User"
-SELECT [dbo].[System_ServerGroups].ID_Group_Anonymous, -1 AS ID_User
-FROM [dbo].[System_ServerGroups] 
-
 GO
 
 IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[ApplicationsRightsByUser_RulesCumulative]'))
@@ -137,15 +136,20 @@ AS
                 AND AllowRules.ID_ServerGroup = DenyRules.ID_ServerGroup 
                 AND AllowRules.ID_User = DenyRules.ID_User
                 AND AllowRules.IsDevRule = DenyRules.IsDevRule
-		INNER JOIN dbo.Applications 
-			ON AllowRules.ID_SecurityObject = dbo.Applications.ID
+		INNER JOIN 
+			(
+				SELECT     ID, AppDisabled
+				FROM         dbo.Applications_CurrentAndInactiveOnes
+				WHERE     (AppDeleted = 0)
+			) AS Applications 
+			ON AllowRules.ID_SecurityObject = Applications.ID
     WHERE AllowRules.IsDenyRule = 0
         AND DenyRules.ID_SecurityObject IS NULL
 		AND 
 		(
 			(
 				AllowRules.IsDevRule = 0 
-				AND dbo.Applications.AppDisabled = 0
+				AND Applications.AppDisabled = 0
 			)
 			OR AllowRules.IsDevRule = 1
 		)
@@ -749,9 +753,11 @@ SELECT dbo.Memberships.ID AS ID_Membership, dbo.Memberships.IsDenyRule,
 	dbo.Gruppen.ID AS ID_Group, dbo.Gruppen.Name, dbo.Gruppen.Description, 
 	dbo.Memberships.ReleasedOn,
 	Benutzer1.ID AS ID_ReleasedBy, Benutzer1.Vorname AS ReleasedByFirstName, Benutzer1.Nachname AS ReleasedByLastName,
-	dbo.Benutzer.ID AS ID_User, dbo.Benutzer.Loginname, dbo.Benutzer.Vorname, dbo.Benutzer.Nachname, dbo.Benutzer.LoginDisabled, dbo.Benutzer.Company 
+	dbo.Benutzer.ID AS ID_User, dbo.Benutzer.Loginname, dbo.Benutzer.Vorname, dbo.Benutzer.Nachname, dbo.Benutzer.LoginDisabled, dbo.Benutzer.Company ,
+	dbo.Memberships.IsCloneRule
 FROM dbo.Memberships 
 	LEFT OUTER JOIN dbo.Benutzer ON dbo.Memberships.ID_User = dbo.Benutzer.ID 
 	LEFT OUTER JOIN dbo.Benutzer Benutzer1 ON dbo.Memberships.ReleasedBy = Benutzer1.ID 
 	RIGHT OUTER JOIN dbo.Gruppen ON dbo.Memberships.ID_Group = dbo.Gruppen.ID
 GO
+	

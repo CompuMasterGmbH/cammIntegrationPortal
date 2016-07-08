@@ -1681,10 +1681,12 @@ Namespace CompuMaster.camm.WebManager.Setup
                                             DBCmd = New SqlClient.SqlCommand
                                             DBCmd.Connection = DBConn
                                             If SqlServerVersion.ProductName = "Microsoft SQL Azure" Then
+                                                MyCmdExtProps.CommandText = MyCmdExtProps.CommandText.Replace("WITH ENCRYPTION,", "WITH ")
                                                 MyCmdExtProps.CommandText = MyCmdExtProps.CommandText.Replace("WITH ENCRYPTION", "")
                                             Else
 #If DEBUG Then
                                                 'Do not encrypt the stored procedures in debug mode
+                                                MyCmdExtProps.CommandText = MyCmdExtProps.CommandText.Replace("WITH ENCRYPTION,", "WITH ")
                                                 MyCmdExtProps.CommandText = MyCmdExtProps.CommandText.Replace("WITH ENCRYPTION", "")
 #End If
                                             End If

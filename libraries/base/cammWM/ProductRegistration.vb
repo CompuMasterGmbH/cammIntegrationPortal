@@ -283,10 +283,10 @@ Namespace CompuMaster.camm.WebManager.Registration
                 cmd.CommandText = "SELECT COUNT(ID) FROM [System_Languages] WHERE IsActive <> 0"
                 result.ActiveMarketsCount = GetIntegerResult(cmd)
 
-                cmd.CommandText = "SELECT COUNT(ID) FROM System_WebAreaScriptEnginesAuthorization" 'TODO
+                cmd.CommandText = "SELECT COUNT(ID) FROM System_WebAreaScriptEnginesAuthorization"
                 result.enginesCount = GetIntegerResult(cmd)
 
-                cmd.CommandText = "SELECT COUNT(ID) FROM dbo.SecurityObjects_CurrentAndInactiveOnes"
+                cmd.CommandText = "SELECT COUNT(ID) FROM dbo.[Applications_CurrentAndInactiveOnes]"
                 result.securityObjectsCount = GetLongResult(cmd)
 
                 cmd.CommandText = "SELECT COUNT(ID) FROM Gruppen"
@@ -661,27 +661,29 @@ Namespace CompuMaster.camm.WebManager.Registration
 
     Friend Class ContractExpirationNotifier
 
-        Public Delegate Sub RecpientNotifcationFunction(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date)
+        Public Delegate Sub RecpientNotifcationFunction(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date, instanceReference As String)
 
-        Private notificationFunction As RecpientNotifcationFunction
-        Private recipients As New ArrayList
-        Private expirationDate As DateTime
+        Private NotificationFunction As RecpientNotifcationFunction
+        Private Recipients As New ArrayList
+        Private ExpirationDate As DateTime
+        Private InstanceReference As String
 
         Private cammwebmanager As WMSystem
-        Public Sub New(ByVal cwm As WMSystem, ByVal expirationDate As DateTime, ByVal notificationType As ContractExpirationNotificationTypes)
+        Public Sub New(ByVal cwm As WMSystem, ByVal expirationDate As DateTime, ByVal notificationType As ContractExpirationNotificationTypes, instanceReference As String)
             Me.cammwebmanager = cwm
-            Me.expirationDate = expirationDate
+            Me.ExpirationDate = expirationDate
             SetDelegate(notificationType)
+            Me.InstanceReference = instanceReference
         End Sub
 
         Private Sub SetDelegate(ByVal notificationType As ContractExpirationNotificationTypes)
             Select Case notificationType
                 Case ContractExpirationNotificationTypes.Licence
-                    notificationFunction = New RecpientNotifcationFunction(AddressOf Me.cammwebmanager.Notifications.SendLicenceHasExpiredMessage)
+                    NotificationFunction = New RecpientNotifcationFunction(AddressOf Me.cammwebmanager.Notifications.SendLicenceHasExpiredMessage)
                 Case ContractExpirationNotificationTypes.SupportAndMaintananceContract
-                    notificationFunction = New RecpientNotifcationFunction(AddressOf Me.cammwebmanager.Notifications.SendSupportContractHasExpiredMessage)
+                    NotificationFunction = New RecpientNotifcationFunction(AddressOf Me.cammwebmanager.Notifications.SendSupportContractHasExpiredMessage)
                 Case ContractExpirationNotificationTypes.UpdateContract
-                    notificationFunction = New RecpientNotifcationFunction(AddressOf Me.cammwebmanager.Notifications.SendUpdateContractHasExpiredMessage)
+                    NotificationFunction = New RecpientNotifcationFunction(AddressOf Me.cammwebmanager.Notifications.SendUpdateContractHasExpiredMessage)
             End Select
         End Sub
 
@@ -690,7 +692,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' </summary>
         ''' <param name="recipient"></param>
         Public Sub AddRecipient(ByVal recipient As ContractExpirationRecipient)
-            Me.recipients.Add(recipient)
+            Me.Recipients.Add(recipient)
         End Sub
 
         ''' <summary>
@@ -719,8 +721,8 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' <param name="group"></param>
         Public Sub AddRecipient(ByVal group As WMSystem.SpecialGroups)
             Dim groupInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(group, cammwebmanager)
-            If Not groupInfo Is Nothing AndAlso Not groupInfo.MembersByRule.Effective Is Nothing Then
-                For Each user As WMSystem.UserInformation In groupInfo.MembersByRule.Effective
+            If Not groupInfo Is Nothing AndAlso Not groupInfo.MembersByRule(True).Effective Is Nothing Then
+                For Each user As WMSystem.UserInformation In groupInfo.MembersByRule(True).Effective
                     AddRecipient(user)
                 Next
             End If
@@ -731,11 +733,11 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' </summary>
         Public Sub Notify()
             Dim sentAlready As New ArrayList
-            For Each recipient As ContractExpirationRecipient In recipients
+            For Each recipient As ContractExpirationRecipient In Me.Recipients
                 Dim email As String = recipient.EMail.Trim()
                 Dim name As String = recipient.FullName.Trim()
                 If Not sentAlready.Contains(email) Then
-                    notificationFunction(name, email, Me.expirationDate)
+                    NotificationFunction(name, email, Me.ExpirationDate, Me.InstanceReference)
                     sentAlready.Add(email)
                 End If
             Next
@@ -751,28 +753,28 @@ Namespace CompuMaster.camm.WebManager.Registration
         Public Const CacheKeyServerIsDown As String = "RegistrationServerOffline"
         Private cammWebManger As WMSystem
 
-        Private UpdateRegistrationDataFromServerFailed As Boolean = False
+        Private UpdateRegistrationDataFromRemoteLicenseServerFailed As Boolean = False
 
         ''' <summary>
         ''' Contacts our "licence server" and fetches expiration data etc.
         ''' </summary>
-        Private Function FetchValidationDataFromServer(throwExceptions As Boolean) As InstanceValidationResult
+        Private Function FetchValidationDataFromRemoteLicenseServer(throwExceptions As Boolean) As InstanceValidationResult
             Dim installationInfo As InstanceValidationResult = Nothing
             Try
                 Dim factory As New CwmInstallationInfoFactory(Me.cammWebManger)
                 Dim client As New ProductRegistrationClient(factory.CollectInstallationInfo())
                 installationInfo = client.ValidateInstallationHttpsOrHttp()
-                UpdateRegistrationDataFromServerFailed = False
+                UpdateRegistrationDataFromRemoteLicenseServerFailed = False
             Catch ex As Exception
-                UpdateRegistrationDataFromServerFailed = True
+                UpdateRegistrationDataFromRemoteLicenseServerFailed = True
                 Me.cammWebManger.Log.Exception(ex, throwExceptions)
             End Try
             Return installationInfo
         End Function
 
         Private Sub UpdateExpirationMailSendingDateInGlobalPropertiesDbTable(ByVal key As String, ByVal dateSent As DateTime)
-            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @dateSent WHERE PropertyName = @key AND ValueNVarchar = 'camm WebManager'" & _
-                    "IF @@ROWCOUNT = 0 " & _
+            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @dateSent WHERE PropertyName = @key AND ValueNVarchar = 'camm WebManager'" &
+                    "IF @@ROWCOUNT = 0 " &
                     "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarchar, ValueDateTime) VALUES(@key, 'camm WebManager', @dateSent) "
 
             Dim cmd As New SqlClient.SqlCommand(sql)
@@ -808,12 +810,23 @@ Namespace CompuMaster.camm.WebManager.Registration
         End Function
 
 #Region "Mail distribution"
+
+        Private ReadOnly Property LicenseKeyShortened As String
+            Get
+                Static _Result As String
+                If _Result = Nothing Then
+                    _Result = Me.cammWebManger.Environment.LicenceKey.Substring(0, 5)
+                End If
+                Return _Result
+            End Get
+        End Property
+
         ''' <summary>
         ''' Notifies appropriate recipients when the support and maintanence contract has expired
         ''' </summary>
         Private Sub SendExpiredSupportContractNotificationMails(ByVal expirationDate As DateTime)
 
-            Dim notifier As New ContractExpirationNotifier(Me.cammWebManger, expirationDate, ContractExpirationNotificationTypes.SupportAndMaintananceContract)
+            Dim notifier As New ContractExpirationNotifier(Me.cammWebManger, expirationDate, ContractExpirationNotificationTypes.SupportAndMaintananceContract, Me.LicenseKeyShortened)
 
             Dim currentDate As DateTime = DateTime.Now.ToUniversalTime()
             Dim expiredSinceDays As Double = currentDate.Subtract(expirationDate).TotalDays
@@ -846,7 +859,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         End Sub
 
         Private Sub SendExpiredUpdateContractMail(ByVal expirationDate As DateTime)
-            Dim notifier As New ContractExpirationNotifier(Me.cammWebManger, expirationDate, ContractExpirationNotificationTypes.UpdateContract)
+            Dim notifier As New ContractExpirationNotifier(Me.cammWebManger, expirationDate, ContractExpirationNotificationTypes.UpdateContract, Me.LicenseKeyShortened)
 
             Dim currentDate As DateTime = DateTime.Now.ToUniversalTime()
             Dim expiredSinceDays As Double = currentDate.Subtract(expirationDate).TotalDays
@@ -865,7 +878,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         End Sub
 
         Private Sub SendExpiringLicenceNotificationMails(ByVal expirationDate As DateTime, ByVal daysTillExpiration As Double)
-            Dim notifier As New ContractExpirationNotifier(Me.cammWebManger, expirationDate, ContractExpirationNotificationTypes.Licence)
+            Dim notifier As New ContractExpirationNotifier(Me.cammWebManger, expirationDate, ContractExpirationNotificationTypes.Licence, Me.LicenseKeyShortened)
 
             If daysTillExpiration <= 14 Then
                 notifier.AddRecipient(WMSystem.SpecialGroups.Group_Supervisors)
@@ -885,7 +898,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' Returns whether the licence server is marked as being down 
         ''' </summary>
         ''' <returns></returns>
-        Private Function IsServerMarkedOffline() As Boolean
+        Private Function IsRemoteLicenseServerMarkedOffline() As Boolean
             Dim downDate As DateTime = Nothing
             Dim cacheValue As Object = HttpContext.Current.Cache.Item(CacheKeyServerIsDown)
             If Not cacheValue Is Nothing Then
@@ -899,7 +912,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' <summary>
         ''' Mark the server as currently down to try again later.
         ''' </summary>
-        Private Sub MarkLicenceServerOffline()
+        Private Sub MarkRemoteLicenseServerAsOffline()
             Dim currentDate As DateTime = DateTime.Now
             HttpContext.Current.Cache(CacheKeyServerIsDown) = currentDate
             SaveDate2GlobalPropertiesDbTable(CacheKeyServerIsDown, currentDate)
@@ -910,7 +923,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' </summary>
         ''' <param name="hours">specifies how many hours must have passed since the last check</param>
         ''' <returns></returns>
-        Friend Function IsRefreshFromServerRequired(ByVal hours As Integer) As Boolean
+        Friend Function IsRefreshFromRemoteLicenseServerRequired(ByVal hours As Integer) As Boolean
             Dim lastCheckDate As DateTime = CachedLastRefreshDate
             If lastCheckDate = Nothing Then
                 lastCheckDate = FetchDateFromGlobalPropertiesDbTable(CacheKeyLastRegistrationUpdate)
@@ -989,8 +1002,8 @@ Namespace CompuMaster.camm.WebManager.Registration
 
         Private Sub SaveDate2GlobalPropertiesDbTable(ByVal key As String, ByVal datevalue As DateTime)
 
-            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @date WHERE PropertyName = @propertyname AND ValueNVarchar = 'camm WebManager' " & _
-                    "IF @@ROWCOUNT = 0 " & _
+            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @date WHERE PropertyName = @propertyname AND ValueNVarchar = 'camm WebManager' " &
+                    "IF @@ROWCOUNT = 0 " &
                     "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarchar, ValueDateTime) VALUES(@propertyname, 'camm WebManager', @date) "
 
             Dim cmd As New SqlClient.SqlCommand(sql)
@@ -1026,14 +1039,14 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' <summary>
         ''' Fetches data from the licence server and saves it into SystemGlobalProperties database table
         ''' </summary>
-        Public Sub RefreshValidationDataFromServer(throwExceptions As Boolean)
-            Dim validationResult As InstanceValidationResult = FetchValidationDataFromServer(throwExceptions)
+        Public Sub RefreshValidationDataFromRemoteLicenseServer(throwExceptions As Boolean)
+            Dim validationResult As InstanceValidationResult = FetchValidationDataFromRemoteLicenseServer(throwExceptions)
             If Not validationResult Is Nothing Then
                 Dim validationDao As New InstanceValidationDao(Me.cammWebManger)
                 validationDao.Save(validationResult)
                 SaveLastRefreshDate(DateTime.Now)
             Else
-                MarkLicenceServerOffline()
+                MarkRemoteLicenseServerAsOffline()
             End If
         End Sub
 
@@ -1053,8 +1066,8 @@ Namespace CompuMaster.camm.WebManager.Registration
         Friend Sub CheckRegistration(throwExceptions As Boolean)
             Try
                 SyncLock CheckRegistrationLock
-                    If Not IsServerMarkedOffline() AndAlso IsRefreshFromServerRequired(24) Then
-                        RefreshValidationDataFromServer(throwExceptions)
+                    If Not IsRemoteLicenseServerMarkedOffline() AndAlso IsRefreshFromRemoteLicenseServerRequired(24) Then
+                        RefreshValidationDataFromRemoteLicenseServer(throwExceptions)
                     End If
 
                     Dim validationResult As InstanceValidationResult = GetCachedValidationResult()

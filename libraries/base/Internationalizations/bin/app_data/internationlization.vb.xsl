@@ -32,7 +32,7 @@ Public Class WMSettingsAndData
 
         Public User_Auth_Config_Paths_UserAuthSystem As String = "/"
         Public User_Auth_Config_Paths_Login As String = "/sysdata/login/"
-        Public User_Auth_Config_Paths_Administration As String = "/sysdata/admin/"
+        Public User_Auth_Config_Paths_Administration As String = "/sysdata/admin/" 
         Public User_Auth_Config_Paths_StandardIncludes As String = "/system/"
         Public User_Auth_Config_Paths_SystemData As String = "/sysdata/"
 
@@ -47,7 +47,8 @@ Public Class WMSettingsAndData
         Public User_Auth_Config_UserAuthMasterServer as string
         Public User_Auth_Config_CurServerURL as string
         Public OfficialServerGroup_URL As String
-        Public OfficialServerGroup_AdminURL As String
+        Public OfficialServerGroup_AdminURL As String 'default value, for navigation URLs and for redirections
+        Public OfficialServerGroup_AdminURL_SecurityAdminNotifications As String 'for e-mails for security administrators
         Public OfficialServerGroup_Title As String
         Public OfficialServerGroup_Company_FormerTitle As String
 #End Region

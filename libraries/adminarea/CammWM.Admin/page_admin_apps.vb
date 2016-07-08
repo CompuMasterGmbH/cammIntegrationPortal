@@ -200,13 +200,20 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     CType(e.Item.FindControl("hlnTitleAdminArea"), HyperLink).Text = ""
 
                     If Utils.Nz(.Item("TitleAdminArea"), "") <> "" Then CType(e.Item.FindControl("hlnTitleAdminArea"), HyperLink).Text = Server.HtmlEncode(Utils.Nz(.Item("TitleAdminArea"), "")) Else CType(e.Item.FindControl("hlnTitleAdminArea"), HyperLink).Text = Server.HtmlEncode(Utils.Nz(.Item("Title"), String.Empty))
-                    CType(e.Item.FindControl("hlnReleasedByLastName"), HyperLink).NavigateUrl = "users_update.aspx?ID=" & CInt(.Item("ReleasedByID"))
                     Dim userinfo As WMSystem.UserInformation
                     If camm.WebManager.WMSystem.SpecialUsers.User_Anonymous = CInt(.Item("ReleasedByID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_Code = CInt(.Item("ReleasedByID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_Invalid = CInt(.Item("ReleasedByID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_Public = CInt(.Item("ReleasedByID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_UpdateProcessor = CInt(.Item("ReleasedByID")) Then
                         userinfo = New WebManager.WMSystem.UserInformation(CType(.Item("ReleasedByID"), Int64), cammWebManager, False)
                         CType(e.Item.FindControl("hlnReleasedByLastName"), HyperLink).Text = Server.HtmlEncode(Utils.Nz(userinfo.FullName, ""))
+                        CType(e.Item.FindControl("hlnReleasedByLastName"), HyperLink).NavigateUrl = ""
                     Else
                         CType(e.Item.FindControl("hlnReleasedByLastName"), HyperLink).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(.Item("ReleasedByFirstName"), .Item("ReleasedByLastName"), CLng(Utils.Nz(.Item("ReleasedByID"), 0))))
+                        If Trim(CompuMaster.camm.WebManager.Utils.Nz(.Item("ReleasedByLoginName"), String.Empty)) = "" Then
+                            'user already deleted
+                            CType(e.Item.FindControl("hlnReleasedByLastName"), HyperLink).NavigateUrl = ""
+                        Else
+                            'existing user account
+                            CType(e.Item.FindControl("hlnReleasedByLastName"), HyperLink).NavigateUrl = "users_update.aspx?ID=" & CInt(.Item("ReleasedByID"))
+                        End If
                     End If
                     CType(e.Item.FindControl("lblReleasedOn"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item("ReleasedOn"), String.Empty))
 

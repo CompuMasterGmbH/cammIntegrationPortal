@@ -8,7 +8,6 @@
         </version>
         <updatedetails>
             <BuildFor>206</BuildFor>
-            <BuildFor>205</BuildFor>
         </updatedetails>
         <requires>
             <product>MSSQLServer</product>

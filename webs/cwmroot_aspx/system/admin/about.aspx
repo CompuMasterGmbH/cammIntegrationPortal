@@ -288,7 +288,7 @@
                             <td valign="Top" width="240">
                                 <p>
                                     <font face="Arial" size="2">
-                                        <%= cammWebManager.System_Licence %></font></p>
+                                        <%= Me.cammWebManger.Environment.LicenceKey %></font></p>
                             </td>
                         </tr>
 								<tr>

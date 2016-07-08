@@ -152,9 +152,9 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' -----------------------------------------------------------------------------
         Sub NotificationForUser_ActivationRequired(ByVal userInfo As UserInformation)
 
-        Sub SendSupportContractHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date)
-        Sub SendLicenceHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date)
-        Sub SendUpdateContractHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date)
+        Sub SendSupportContractHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date, instanceReference As String)
+        Sub SendLicenceHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date, instanceReference As String)
+        Sub SendUpdateContractHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date, instanceReference As String)
 
     End Interface
 
@@ -422,8 +422,8 @@ Namespace CompuMaster.camm.WebManager.Notifications
             Dim BackupOfCurrentLanguageID As Integer = cammWebManager.UI.MarketID
             'Creation of the e-mails for the security admins
             Dim MySecurityAdmins As New GroupInformation(WMSystem.SpecialGroups.Group_SecurityAdministrators, cammWebManager)
-            If Not MySecurityAdmins Is Nothing AndAlso Not MySecurityAdmins.MembersByRule.Effective Is Nothing Then
-                For Each MySecurityAdmin As UserInformation In MySecurityAdmins.MembersByRule.Effective
+            If Not MySecurityAdmins Is Nothing AndAlso Not MySecurityAdmins.MembersByRule(True).Effective Is Nothing Then
+                For Each MySecurityAdmin As UserInformation In MySecurityAdmins.MembersByRule(True).Effective
                     MailLanguage = cammWebManager.System_Get1stPreferredLanguageWhichIsSupportedByTheSystem(MySecurityAdmin)
                     cammWebManager.Internationalization.LoadLanguageStrings(MailLanguage)
                     'GetLanguageTitles
@@ -490,52 +490,52 @@ Namespace CompuMaster.camm.WebManager.Notifications
 
         Private alreadyNotifiedMailsExpiredContract As New ArrayList
 
-        Public Sub SendSupportContractHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date) Implements INotifications.SendSupportContractHasExpiredMessage
-            Dim body As String = "Dear Sirs," & ChrW(13) & ChrW(10) & _
-                ChrW(13) & ChrW(10) & _
-                "Your camm Web-Manager support and maintenance subscription expired on " & expirationDate.ToShortDateString() & "." & ChrW(13) & ChrW(10) & _
-                "Don't forget to renew your support and maintenance subscription at http://www.camm.biz/redir/?R=35" & ChrW(13) & ChrW(10) & _
-                ChrW(13) & ChrW(10) & _
-                "Some of your possible benefits:" & ChrW(13) & ChrW(10) & _
-                "- Always updated camm Web-Manager software available" & ChrW(13) & ChrW(10) & _
-                "- Support for your employees and developers by e-mail, ticket system and phone" & ChrW(13) & ChrW(10) & _
-                "- Support for your individual compliance requirements to match your local law" & ChrW(13) & ChrW(10) & _
-                "- You pay only for your actual needs - never be over-licensed" & ChrW(13) & ChrW(10) & _
-                "- Individually tailored licenses for efficient support - never be sub-license" & ChrW(13) & ChrW(10) & _
-                "- Fair conditions for your standard requirements as well as for your individual needs" & ChrW(13) & ChrW(10) & _
-                ChrW(13) & ChrW(10) & _
-                "Please note:" & ChrW(13) & ChrW(10) & _
-                "- You need an active subscription to receive support and maintenance. Using outdated software could be a risk to your server infrastructure in case of required security updates. " & ChrW(13) & ChrW(10) & _
-                "- Optional updates might contain important updates supporting your compliance with local law (e.g. data protection rules)." & ChrW(13) & ChrW(10) & _
-                "- Optional updates might contain important updates with support for latest browser platforms." & ChrW(13) & ChrW(10) & _
+        Public Sub SendSupportContractHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date, instanceReference As String) Implements INotifications.SendSupportContractHasExpiredMessage
+            Dim body As String = "Dear Sirs," & ChrW(13) & ChrW(10) &
+                ChrW(13) & ChrW(10) &
+                "Your camm Web-Manager support and maintenance subscription (" & instanceReference & ") expired on " & expirationDate.ToShortDateString() & "." & ChrW(13) & ChrW(10) &
+                "Don't forget to renew your support and maintenance subscription at http://www.camm.biz/redir/?R=35" & ChrW(13) & ChrW(10) &
+                ChrW(13) & ChrW(10) &
+                "Some of your possible benefits:" & ChrW(13) & ChrW(10) &
+                "- Always updated camm Web-Manager software available" & ChrW(13) & ChrW(10) &
+                "- Support for your employees and developers by e-mail, ticket system and phone" & ChrW(13) & ChrW(10) &
+                "- Support for your individual compliance requirements to match your local law" & ChrW(13) & ChrW(10) &
+                "- You pay only for your actual needs - never be over-licensed" & ChrW(13) & ChrW(10) &
+                "- Individually tailored licenses for efficient support - never be sub-license" & ChrW(13) & ChrW(10) &
+                "- Fair conditions for your standard requirements as well as for your individual needs" & ChrW(13) & ChrW(10) &
+                ChrW(13) & ChrW(10) &
+                "Please note:" & ChrW(13) & ChrW(10) &
+                "- You need an active subscription to receive support and maintenance. Using outdated software could be a risk to your server infrastructure in case of required security updates. " & ChrW(13) & ChrW(10) &
+                "- Optional updates might contain important updates supporting your compliance with local law (e.g. data protection rules)." & ChrW(13) & ChrW(10) &
+                "- Optional updates might contain important updates with support for latest browser platforms." & ChrW(13) & ChrW(10) &
                 "- A missing support and maintenance subscription could extend the waiting period for immediately needed support - System failures could result." & ChrW(13) & ChrW(10)
             cammWebManager.MessagingEMails.SendEMail(recipientName, recipientEmail, "Your camm Web-Manager support and maintenance contract expired", body, Nothing, "", "")
         End Sub
-        Public Sub SendLicenceHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date) Implements INotifications.SendLicenceHasExpiredMessage
-            Dim body As String = "Dear Sirs, " & ChrW(13) & ChrW(10) & _
-                ChrW(13) & ChrW(10) & _
-                "Your camm Web-Manager license expires on " & expirationDate.ToShortDateString() & "." & ChrW(13) & ChrW(10) & _
-                "Please renew your license on time to continue using your product without interruption." & ChrW(13) & ChrW(10) & _
-                "http://www.camm.biz/redir/?R=33" & ChrW(13) & ChrW(10) & _
-                 ChrW(13) & ChrW(10) & _
-                "Please note:" & ChrW(13) & ChrW(10) & _
-                "- When your license expires, your current license edition will be reset to the Demo License. Your current feature set will automatically be reduced to the standard feature set of the that license." & ChrW(13) & ChrW(10) & _
-                "- You need an active subscription to receive latest updates. Using outdated software could be a risk to your server infrastructure in case of required security updates." & ChrW(13) & ChrW(10) & _
-                "- Optional updates might contain important updates supporting you for your compliance with local law (e.g. data protection rules)." & ChrW(13) & ChrW(10) & _
+        Public Sub SendLicenceHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date, instanceReference As String) Implements INotifications.SendLicenceHasExpiredMessage
+            Dim body As String = "Dear Sirs, " & ChrW(13) & ChrW(10) &
+                ChrW(13) & ChrW(10) &
+                "Your camm Web-Manager license (" & instanceReference & ") expires on " & expirationDate.ToShortDateString() & "." & ChrW(13) & ChrW(10) &
+                "Please renew your license on time to continue using your product without interruption." & ChrW(13) & ChrW(10) &
+                "http://www.camm.biz/redir/?R=33" & ChrW(13) & ChrW(10) &
+                 ChrW(13) & ChrW(10) &
+                "Please note:" & ChrW(13) & ChrW(10) &
+                "- When your license expires, your current license edition will be reset to the Demo License. Your current feature set will automatically be reduced to the standard feature set of the that license." & ChrW(13) & ChrW(10) &
+                "- You need an active subscription to receive latest updates. Using outdated software could be a risk to your server infrastructure in case of required security updates." & ChrW(13) & ChrW(10) &
+                "- Optional updates might contain important updates supporting you for your compliance with local law (e.g. data protection rules)." & ChrW(13) & ChrW(10) &
                 "- Optional updates might contain important updates with support for latest browser platforms."
             cammWebManager.MessagingEMails.SendEMail(recipientName, recipientEmail, "Your camm Web-Manager license is about to expire", body, Nothing, "", "")
         End Sub
 
-        Public Sub SendUpdateContractHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date) Implements INotifications.SendUpdateContractHasExpiredMessage
-            Dim body As String = "Dear Sirs, " & ChrW(13) & ChrW(10) & _
-                ChrW(13) & ChrW(10) & _
-                "Your camm Web-Manager update subscription expired on " & expirationDate.ToShortDateString() & "." & ChrW(13) & ChrW(10) & _
-                "Please renew your update contract on time to be able to download the most current product version with latest patches and enhancements." & ChrW(13) & ChrW(10) & _
-                "http://www.camm.biz/redir/?R=34" & ChrW(13) & ChrW(10) & _
-                ChrW(13) & ChrW(10) & _
-                "Please note:" & ChrW(13) & ChrW(10) & _
-                "- You need an active subscription to receive latest updates. Using outdated software could be a risk to your server infrastructure in case of required security updates." & ChrW(13) & ChrW(10) & _
-                "- Optional updates might contain important updates supporting you for your compliance with local law (e.g. data protection rules)." & ChrW(13) & ChrW(10) & _
+        Public Sub SendUpdateContractHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date, instanceReference As String) Implements INotifications.SendUpdateContractHasExpiredMessage
+            Dim body As String = "Dear Sirs, " & ChrW(13) & ChrW(10) &
+                ChrW(13) & ChrW(10) &
+                "Your camm Web-Manager update subscription (" & instanceReference & ") expired on " & expirationDate.ToShortDateString() & "." & ChrW(13) & ChrW(10) &
+                "Please renew your update contract on time to be able to download the most current product version with latest patches and enhancements." & ChrW(13) & ChrW(10) &
+                "http://www.camm.biz/redir/?R=34" & ChrW(13) & ChrW(10) &
+                ChrW(13) & ChrW(10) &
+                "Please note:" & ChrW(13) & ChrW(10) &
+                "- You need an active subscription to receive latest updates. Using outdated software could be a risk to your server infrastructure in case of required security updates." & ChrW(13) & ChrW(10) &
+                "- Optional updates might contain important updates supporting you for your compliance with local law (e.g. data protection rules)." & ChrW(13) & ChrW(10) &
                 "- Optional updates might contain important updates with support for latest browser platforms."
             cammWebManager.MessagingEMails.SendEMail(recipientName, recipientEmail, "Your camm Web-Manager update contract expired", body, Nothing, "", "")
         End Sub
@@ -937,13 +937,13 @@ Namespace CompuMaster.camm.WebManager.Notifications
         Public Sub NotificationForUser_ActivationRequired(ByVal userInfo As WMSystem.UserInformation) Implements INotifications.NotificationForUser_ActivationRequired
         End Sub
 
-        Public Sub SendSupportContractHasExpiredMessage(recipientName As String, recipientEmail As String, expirationDate As Date) Implements INotifications.SendSupportContractHasExpiredMessage
+        Public Sub SendSupportContractHasExpiredMessage(recipientName As String, recipientEmail As String, expirationDate As Date, instanceReference As String) Implements INotifications.SendSupportContractHasExpiredMessage
         End Sub
 
-        Public Sub SendLicenceHasExpiredMessage(recipientName As String, recipientEmail As String, expirationDate As Date) Implements INotifications.SendLicenceHasExpiredMessage
+        Public Sub SendLicenceHasExpiredMessage(recipientName As String, recipientEmail As String, expirationDate As Date, instanceReference As String) Implements INotifications.SendLicenceHasExpiredMessage
         End Sub
 
-        Public Sub SendUpdateContractHasExpiredMessage(recipientName As String, recipientEmail As String, expirationDate As Date) Implements INotifications.SendUpdateContractHasExpiredMessage
+        Public Sub SendUpdateContractHasExpiredMessage(recipientName As String, recipientEmail As String, expirationDate As Date, instanceReference As String) Implements INotifications.SendUpdateContractHasExpiredMessage
         End Sub
     End Class
 

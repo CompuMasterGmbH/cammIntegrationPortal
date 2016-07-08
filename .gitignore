@@ -159,3 +159,7 @@
 /libraries/smarteditor/CommonMarkEditor/New-NuGetPackages
 /libraries/smarteditor/baseeditor/New-NuGetPackages
 /libraries/smarteditor/RadEditorExtension Uploads and idea PageAddRemove
+/libraries/base/Internationalizations/packages
+/libraries/base/Internationalizations/obj
+libraries/base/Internationalizations/bin/Internationalization.vshost.exe
+libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifest

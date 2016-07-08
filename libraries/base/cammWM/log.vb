@@ -170,7 +170,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")> _
         Public Sub ReportWarningViaEMail(ByVal exception As Exception, ByVal messageSubject As String)
             ReportWarningByEMail(exception, messageSubject)
         End Sub
@@ -211,7 +211,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")> _
         Public Sub ReportWarningViaEMail(ByVal plainText As String, ByVal htmlText As String, ByVal messageSubject As String)
             ReportWarningByEMail(plainText, htmlText, messageSubject)
         End Sub
@@ -247,7 +247,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")> _
         Public Sub ReportErrorViaEMail(ByVal exception As Exception, ByVal messageSubject As String)
             ReportErrorByEMail(exception, messageSubject)
         End Sub
@@ -311,7 +311,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")> _
         Public Sub ReportErrorViaEMail(ByVal plainText As String, ByVal htmlText As String, ByVal messageSubject As String)
             ReportErrorByEMail(plainText, htmlText, messageSubject)
         End Sub

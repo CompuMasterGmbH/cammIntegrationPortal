@@ -282,10 +282,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Dim SqlQuery As String
                         If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
                             'Older / without IsDenyRule column
-                            SqlQuery = "select ID_User,LoginDisabled,Nachname,Vorname,LoginName,Company,ID_Membership,0 AS IsDenyRule from [view_Memberships] where ID_Group=" & Utils.Nz(.Item("id_group"), 0) & " and id_user is not null order by Nachname, Vorname"
+                            SqlQuery = "select ID_User,LoginDisabled,Nachname,Vorname,LoginName,Company,ID_Membership,0 AS IsDenyRule, 0 AS IsCloneRule from [view_Memberships] where ID_Group=" & Utils.Nz(.Item("id_group"), 0) & " and id_user is not null order by Nachname, Vorname"
                         Else
                             'Newer / IsDenyRule column available
-                            SqlQuery = "select ID_User,LoginDisabled,Nachname,Vorname,LoginName,Company,ID_Membership,IsDenyRule from [view_Memberships] where ID_Group=" & Utils.Nz(.Item("id_group"), 0) & " and id_user is not null order by Nachname, Vorname"
+                            SqlQuery = "select ID_User,LoginDisabled,Nachname,Vorname,LoginName,Company,ID_Membership,IsDenyRule,IsCloneRule from [view_Memberships] where ID_Group=" & Utils.Nz(.Item("id_group"), 0) & " and id_user is not null order by Nachname, Vorname"
                         End If
 
                         UserData = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), SqlQuery, CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
@@ -312,7 +312,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 InsertHTML.Append("<TD WIDTH=""170""><P class=""normalFont""><a id=""ancUserName"" href=""users_update.aspx?ID=" & Utils.Nz(UserData.Rows(i).Item("ID_User"), 0).ToString & """>" & Server.HtmlEncode(CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(UserData.Rows(i).Item("Vorname"), UserData.Rows(i).Item("Nachname"))) & "</a>&nbsp;</P></TD>")
                                 InsertHTML.Append("<TD WIDTH=""150""><P class=""normalFont""><a id=""ancLoginName"" href=""users_update.aspx?ID=" & Utils.Nz(UserData.Rows(i).Item("ID_User"), 0).ToString & """>" & Server.HtmlEncode(Utils.Nz(UserData.Rows(i).Item("LoginName"), String.Empty)) & "</a>&nbsp;</P></TD>")
                                 InsertHTML.Append("<TD WIDTH=""200""><P class=""normalFont""><span id=""lblCompany"">" & Server.HtmlEncode(Utils.Nz(UserData.Rows(i).Item("Company"), String.Empty)) & "</span>&nbsp;</P></TD>")
-                                If Me.CurrentAdminIsPrivilegedForItemAdministration(AdministrationItemType.Groups, AuthorizationTypeEffective.UpdateRelations, CType(.Item("ID_Group"), Integer)) Then
+                                If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_MembershipsWithSupportForSystemAndCloneRule) >= 0 AndAlso CType(UserData.Rows(i).Item("IsCloneRule"), Boolean) = True Then 'Newer db build supporting IsCloneRule and IsCloneRule=true
+                                    InsertHTML.Append("<TD><P class=""normalFont""><em>Inherited</em></P></TD></TR>")
+                                ElseIf Me.CurrentAdminIsPrivilegedForItemAdministration(AdministrationItemType.Groups, AuthorizationTypeEffective.UpdateRelations, CType(.Item("ID_Group"), Integer)) Then
                                     InsertHTML.Append("<TD><P class=""normalFont""><a id=""ancDelete"" href=""memberships_delete.aspx?ID=" & Utils.Nz(UserData.Rows(i).Item("ID_Membership"), 0).ToString & """>")
                                     If Not IsDBNull(UserData.Rows(i).Item("ID_Membership")) Then InsertHTML.Append("Delete")
                                     InsertHTML.Append("</a>&nbsp;</P></TD></TR>")
@@ -638,7 +640,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Dim sqlParams1 As SqlParameter() = {New SqlParameter("@ID", Request.QueryString("ID")), _
                         New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)), _
                         New SqlParameter("@compare", CLng(cammWebManager.System_IsSecurityMaster("Groups", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))))}
-                    Dim mySqlQuery As String = "DELETE FROM dbo.Memberships WHERE ID=@ID and (0 <> @compare OR id_group in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid=@UserID AND TableName = 'Groups' AND AuthorizationType In ('UpdateRelations','Owner')))"
+                    Dim mySqlQuery As String
+                    If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_MembershipsWithSupportForSystemAndCloneRule) >= 0 Then 'Newer
+                        mySqlQuery = "DELETE FROM dbo.Memberships WHERE ID=@ID AND IsCloneRule = 0 AND (0 <> @compare OR id_group in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid=@UserID AND TableName = 'Groups' AND AuthorizationType In ('UpdateRelations','Owner')))"
+                    Else
+                        mySqlQuery = "DELETE FROM dbo.Memberships WHERE ID=@ID and (0 <> @compare OR id_group in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid=@UserID AND TableName = 'Groups' AND AuthorizationType In ('UpdateRelations','Owner')))"
+                    End If
                     ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), mySqlQuery, CommandType.Text, sqlParams1, Automations.AutoOpenAndCloseAndDisposeConnection)
                     Redirect2URL = "memberships.aspx?GROUPID=" & Request.QueryString("GROUPID")
                 Catch ex As Exception

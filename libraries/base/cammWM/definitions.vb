@@ -1139,6 +1139,7 @@ Namespace CompuMaster.camm.WebManager
         Friend Shared MilestoneDBBuildNumber_MailQueue As Integer = 122
         <Obsolete("ATTENTION INCOMPATIBILITY CWM-SecObj Milestone"), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects As New Version(4, 20)
         'Friend Shared MilestoneVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects As New Version(4, 20)
+        <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_MembershipsWithSupportForSystemAndCloneRule As New Version(4, 10, 203)
         <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_AuthsWithSupportForDenyRule As New Version(4, 12, 2000)
 
         ''' <summary>
@@ -1841,6 +1842,7 @@ Namespace CompuMaster.camm.WebManager
                     Me.Internationalization.User_Auth_Validation_CheckLoginURL = Me.Internationalization.User_Auth_Config_UserAuthMasterServer & Me.Internationalization.User_Auth_Config_Paths_Login & "checklogin.aspx"
                     Me.Internationalization.OfficialServerGroup_URL = Me.Internationalization.User_Auth_Config_UserAuthMasterServer & Me.Internationalization.User_Auth_Config_Paths_UserAuthSystem
                     Me.Internationalization.OfficialServerGroup_AdminURL = Me.System_GetUserAdminServer_SystemURL(CurrentServerIdentString)
+                    Me.Internationalization.OfficialServerGroup_AdminURL_SecurityAdminNotifications = Me.Internationalization.OfficialServerGroup_AdminURL
                     Me.Internationalization.OfficialServerGroup_Title = Me.System_GetServerGroupTitle(CurrentServerIdentString)
                     Me.Internationalization.OfficialServerGroup_Company_FormerTitle = CType(Me.System_GetServerConfig(CurrentServerIdentString, "AreaCompanyFormerTitle"), String)
                 Catch ex As Exception
@@ -2096,7 +2098,7 @@ Namespace CompuMaster.camm.WebManager
             If Configuration.SuppressProductRegistrationServiceConnection = False Then
                 Try
                     Dim registration As New Registration.ProductRegistration(Me)
-                    If registration.IsRefreshFromServerRequired(48) Then
+                    If registration.IsRefreshFromRemoteLicenseServerRequired(48) Then
                         registration.CheckRegistration(False)
                     End If
                 Catch ex As Exception
@@ -10302,11 +10304,11 @@ Namespace CompuMaster.camm.WebManager
                 NewUser.Save(newPassword)  'Intermediate save point
 
                 'Following actions take place at database directly
-                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule.AllowRule.Length - 1
-                    NewUser.AddMembership(TemplateUser.MembershipsByRule.AllowRule(MyCounter).ID, False)
+                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule(False).AllowRule.Length - 1
+                    NewUser.AddMembership(TemplateUser.MembershipsByRule(False).AllowRule(MyCounter).ID, False)
                 Next
-                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule.DenyRule.Length - 1
-                    NewUser.AddMembership(TemplateUser.MembershipsByRule.DenyRule(MyCounter).ID, True)
+                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule(False).DenyRule.Length - 1
+                    NewUser.AddMembership(TemplateUser.MembershipsByRule(False).DenyRule(MyCounter).ID, True)
                 Next
                 For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.AllowRuleDevelopers.Length - 1
                     Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.AllowRuleDevelopers(MyCounter)
@@ -11421,7 +11423,7 @@ Namespace CompuMaster.camm.WebManager
             ''' -----------------------------------------------------------------------------
             <Obsolete("Use MembershipsByRule instead")> Public ReadOnly Property Memberships() As CompuMaster.camm.WebManager.WMSystem.GroupInformation()
                 Get
-                    Return MembershipsByRule.Effective
+                    Return MembershipsByRule(True).Effective
                 End Get
             End Property
 
@@ -11430,19 +11432,29 @@ Namespace CompuMaster.camm.WebManager
             ''' Memberships of the current user by rule-set
             ''' </summary>
             ''' <returns></returns>
-            Public ReadOnly Property MembershipsByRule As Security.MembershipItemsByRule
+            Public ReadOnly Property MembershipsByRule(alsoClonedMemberships As Boolean) As Security.MembershipItemsByRule
                 Get
                     If _PartiallyLoadedDataCurrently Then
                         ReadCompleteUserInformation()
                     End If
                     If _MembershipsByRule Is Nothing Then
+                        Dim sqlClauseCloneRule As String
+                        If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_MembershipsWithSupportForSystemAndCloneRule) >= 0 Then 'Newer
+                            If alsoClonedMemberships Then
+                                sqlClauseCloneRule = ""
+                            Else
+                                sqlClauseCloneRule = " AND memberships.IsCloneRule = 0"
+                            End If
+                        Else
+                            sqlClauseCloneRule = ""
+                        End If
                         Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
                         Dim MyCmd As New SqlCommand("", MyConn)
                         MyCmd.CommandType = CommandType.Text
                         If Setup.DatabaseUtils.Version(WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                            MyCmd.CommandText = "select gruppen.*, IsNull(memberships.IsDenyRule, 0) AS IsDenyRule from memberships left join gruppen on memberships.id_group = gruppen.id where id_user = @ID and gruppen.id is not null"
+                            MyCmd.CommandText = "select gruppen.*, IsNull(memberships.IsDenyRule, 0) AS IsDenyRule from memberships inner join gruppen on memberships.id_group = gruppen.id where id_user = @ID " & sqlClauseCloneRule
                         Else
-                            MyCmd.CommandText = "select gruppen.*, CAST (0 AS bit) AS IsDenyRule from memberships left join gruppen on memberships.id_group = gruppen.id where id_user = @ID and gruppen.id is not null"
+                            MyCmd.CommandText = "select gruppen.*, CAST (0 AS bit) AS IsDenyRule from memberships inner join gruppen on memberships.id_group = gruppen.id where id_user = @ID"
                         End If
                         MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
                         Dim MemberGroups As DataTable = Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "MemberGroups")
@@ -11690,8 +11702,8 @@ Namespace CompuMaster.camm.WebManager
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Function IsMember(ByVal groupName As String) As Boolean
-                For MyCounter As Integer = 0 To Me.MembershipsByRule.Effective.Length - 1
-                    If LCase(Me.MembershipsByRule.Effective(MyCounter).Name) = LCase(groupName) Then
+                For MyCounter As Integer = 0 To Me.MembershipsByRule(True).Effective.Length - 1
+                    If LCase(Me.MembershipsByRule(True).Effective(MyCounter).Name) = LCase(groupName) Then
                         Return True
                     End If
                 Next
@@ -11710,8 +11722,8 @@ Namespace CompuMaster.camm.WebManager
             ''' </history>
             ''' -----------------------------------------------------------------------------
             Public Function IsMember(ByVal groupID As Integer) As Boolean
-                For MyCounter As Integer = 0 To Me.MembershipsByRule.Effective.Length - 1
-                    If Me.MembershipsByRule.Effective(MyCounter).ID = groupID Then
+                For MyCounter As Integer = 0 To Me.MembershipsByRule(True).Effective.Length - 1
+                    If Me.MembershipsByRule(True).Effective(MyCounter).ID = groupID Then
                         Return True
                     End If
                 Next
@@ -12696,7 +12708,7 @@ Namespace CompuMaster.camm.WebManager
             End Property
             ''' -----------------------------------------------------------------------------
             ''' <summary>
-            '''     Indicates wether this group is a system group (e. g. Security Administration)
+            '''     Indicates wether this group is a system group (e. g. Security Administration, Public Intranet, Anonymous Extranet)
             ''' </summary>
             ''' <value></value>
             ''' <remarks>
@@ -12712,6 +12724,39 @@ Namespace CompuMaster.camm.WebManager
                 Set(ByVal Value As Boolean)
                     _IsSystemGroup = Value
                 End Set
+            End Property
+
+            ''' <summary>
+            ''' Indicate if it is a system group because it's a public or anonymous group of a server group
+            ''' </summary>
+            ''' <returns></returns>
+            Public ReadOnly Property IsSystemGroupByServerGroup As Boolean
+                Get
+                    If _IsSystemGroup = False Then
+                        Return False
+                    Else
+                        Return Not IsSystemGroupBySpecialUsersGroup
+                    End If
+                End Get
+            End Property
+
+            ''' <summary>
+            ''' Indicate if it is a system group because it's one of the special groups for priviledged administration purposes
+            ''' </summary>
+            ''' <returns></returns>
+            Public ReadOnly Property IsSystemGroupBySpecialUsersGroup As Boolean
+                Get
+                    If _IsSystemGroup = False Then
+                        Return False
+                    Else
+                        Dim SpecialGroupsList As New ArrayList
+                        Dim SpecialGroups As Array = [Enum].GetValues(GetType(CompuMaster.camm.WebManager.WMSystem.SpecialGroups))
+                        For Each value As Object In SpecialGroups
+                            SpecialGroupsList.Add(CType(value, Integer))
+                        Next
+                        Return SpecialGroupsList.Contains(Me._ID)
+                    End If
+                End Get
             End Property
 
             ''' -----------------------------------------------------------------------------
@@ -12778,7 +12823,7 @@ Namespace CompuMaster.camm.WebManager
             ''' -----------------------------------------------------------------------------
             <Obsolete("Use MembersByRule instead")> Public ReadOnly Property Members() As CompuMaster.camm.WebManager.WMSystem.UserInformation()
                 Get
-                    Return MembersByRule.Effective
+                    Return MembersByRule(True).Effective
                 End Get
             End Property
 
@@ -12787,16 +12832,26 @@ Namespace CompuMaster.camm.WebManager
             ''' Memberships of the current user by rule-set
             ''' </summary>
             ''' <returns></returns>
-            Public ReadOnly Property MembersByRule As Security.MemberItemsByRule
+            Public ReadOnly Property MembersByRule(alsoClonedMembers As Boolean) As Security.MemberItemsByRule
                 Get
                     If _MembersByRule Is Nothing Then
+                        Dim sqlClauseCloneRule As String
+                        If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_MembershipsWithSupportForSystemAndCloneRule) >= 0 Then 'Newer
+                            If alsoClonedMembers Then
+                                sqlClauseCloneRule = ""
+                            Else
+                                sqlClauseCloneRule = " AND memberships.IsCloneRule = 0"
+                            End If
+                        Else
+                            sqlClauseCloneRule = ""
+                        End If
                         Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
                         Dim MyCmd As New SqlCommand("", MyConn)
                         MyCmd.CommandType = CommandType.Text
                         If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                            MyCmd.CommandText = "Select benutzer.*, memberships.IsDenyRule From memberships left Join benutzer On memberships.id_user = benutzer.id Where memberships.id_group = @ID and benutzer.id is not null"
+                            MyCmd.CommandText = "Select benutzer.*, memberships.IsDenyRule From memberships inner Join benutzer On memberships.id_user = benutzer.id Where memberships.id_group = @ID " & sqlClauseCloneRule
                         Else
-                            MyCmd.CommandText = "Select benutzer.*, CAST(0 AS bit) AS IsDenyRule From memberships left Join benutzer On memberships.id_user = benutzer.id Where memberships.id_group = @ID and benutzer.id is not null"
+                            MyCmd.CommandText = "Select benutzer.*, CAST(0 AS bit) AS IsDenyRule From memberships inner Join benutzer On memberships.id_user = benutzer.id Where memberships.id_group = @ID"
                         End If
                         MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
                         Dim MemberUsers As DataTable = Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "MemberUsers")

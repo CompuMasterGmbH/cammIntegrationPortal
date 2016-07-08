@@ -124,7 +124,7 @@ Namespace CompuMaster.camm.WebManager.Tools.IO
                                     Threading.Thread.Sleep((250 * TestCount))
                                     TestCount += 1
                                 Loop Until TestCount >= 5 OrElse System.IO.File.Exists(NewLinkLocation) = False
-                                If TestCount >= 5 Then DeletionCountOut = TriState.True
+                                If System.IO.File.Exists(NewLinkLocation) = True Then DeletionCountOut = TriState.True
                             End If
 
                             Dim Result As Boolean = _CreateNTFSHardLinkWin(NewLinkLocation, ExistingTargetLocation, Nothing)

@@ -424,28 +424,20 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 If Not Page.IsPostBack Then
                     Dim dtGroupInfo As DataTable
                     Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CInt(Val(Request.QueryString("ID") & "")))}
-                    dtGroupInfo = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                    dtGroupInfo = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT * FROM dbo.view_groups WHERE ID=@ID", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
-
-                    If dtGroupInfo Is Nothing Then
+                    Dim grpInfo As New WMSystem.GroupInformation(CInt(Val(Request.QueryString("ID"))), Me.cammWebManager)
+                    If dtGroupInfo Is Nothing OrElse grpInfo.ID = 0 Then
                         lblErrMsg.Text = "Group not found!"
                     Else
                         'if group is special like Supervisor etc. then groupname is not editable
-                        Select Case CBool(dtGroupInfo.Rows(0)("systemgroup"))
-                            Case True
-                                txtGroupName.Visible = False
-                                lblGroupName.Visible = True
-                                Select Case CInt(Request.QueryString("id"))
-                                    Case -7, 6, 7
-                                    Case Else
-                                        trMemberList.Style.Add("display", "none")
-                                        trMemberList2.Style.Add("display", "none")
-                                        trMemberList3.Style.Add("display", "none")
-                                End Select
-                            Case False
-                                txtGroupName.Visible = True
-                                lblGroupName.Visible = False
-                        End Select
+                        If grpInfo.IsSystemGroupByServerGroup Then
+                            trMemberList.Style.Add("display", "none")
+                            trMemberList2.Style.Add("display", "none")
+                            trMemberList3.Style.Add("display", "none")
+                        End If
+                        txtGroupName.Visible = True
+                        lblGroupName.Visible = False
 
                         lblCreationDate.Text = Server.HtmlEncode(Utils.Nz(dtGroupInfo.Rows(0)("ReleasedOn"), String.Empty))
                         lblModificationDate.Text = Server.HtmlEncode(Utils.Nz(dtGroupInfo.Rows(0)("ModifiedOn"), String.Empty))
@@ -457,7 +449,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                     Dim dtMembership As DataTable
                     Dim sqlParams1 As SqlParameter() = {New SqlParameter("@ID", CInt(Val(Request.QueryString("ID") & "")))}
-                    dtMembership = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                    dtMembership = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT * FROM dbo.view_eMailAccounts_of_Groups WHERE ID_Group=@ID", CommandType.Text, sqlParams1, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                     Dim MembersEMailList As String = ""
                     Dim iCount As Integer = 0

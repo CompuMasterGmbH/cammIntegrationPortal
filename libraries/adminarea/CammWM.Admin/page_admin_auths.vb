@@ -1585,8 +1585,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             For MyUserCounter As Integer = 0 To userAuths.Length - 1
                 Dim FoundInGroupAuth As WMSystem.SecurityObjectAuthorizationForGroup = Nothing
                 For MyGroupCounter As Integer = 0 To groupAuths.Length - 1
-                    For MyGroupMemberCounter As Integer = 0 To groupAuths(MyGroupCounter).GroupInfo.MembersByRule.Effective.Length - 1
-                        If userAuths(MyUserCounter).UserID = groupAuths(MyGroupCounter).GroupInfo.MembersByRule.Effective(MyGroupMemberCounter).IDLong AndAlso (userAuths(MyUserCounter).ServerGroupID = groupAuths(MyGroupCounter).ServerGroupID OrElse groupAuths(MyGroupCounter).ServerGroupID = 0) Then
+                    For MyGroupMemberCounter As Integer = 0 To groupAuths(MyGroupCounter).GroupInfo.MembersByRule(True).Effective.Length - 1
+                        If userAuths(MyUserCounter).UserID = groupAuths(MyGroupCounter).GroupInfo.MembersByRule(True).Effective(MyGroupMemberCounter).IDLong AndAlso (userAuths(MyUserCounter).ServerGroupID = groupAuths(MyGroupCounter).ServerGroupID OrElse groupAuths(MyGroupCounter).ServerGroupID = 0) Then
                             'UserID must be the same - but also the server group ID must be the same or at least the GroupAuth's server group ID must be 0 meaning "applying everywhere"
                             FoundInGroupAuth = groupAuths(MyGroupCounter)
                             Exit For

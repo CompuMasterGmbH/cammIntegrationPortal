@@ -14,7 +14,7 @@
 <h3>
 <font face="Arial">Administration - Data protection rules</font></h3>
 <asp:label runat="server" id="lblMsg" forecolor="green" />
-Choose the types that should be <b>deleted</b> in the log table after user deletion<br>
+Choose the additional flags and account data that should be <strong><em>deleted</em></strong> in the table of extended user details after user deletion<br>
 <asp:Placeholder runat="server" id="ltrlTypeList" />
 <br>	
 Delete deactivated users after<br>

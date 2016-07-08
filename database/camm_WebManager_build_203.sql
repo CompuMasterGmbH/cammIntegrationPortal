@@ -23,6 +23,18 @@ ADD IsDenyRule bit NOT NULL DEFAULT (0)
 GO
 
 <%IGNORE_ERRORS%>
+-- Add column IsSystemRule
+ALTER TABLE [dbo].[Memberships]
+ADD IsSystemRule bit NOT NULL DEFAULT (0)
+GO
+
+<%IGNORE_ERRORS%>
+-- Add column IsCloneRule
+ALTER TABLE [dbo].[Memberships]
+ADD IsCloneRule bit NOT NULL DEFAULT (0)
+GO
+
+<%IGNORE_ERRORS%>
 -- Add column ServerGroupID for later feature for SplitAppsIntoNav+SecObj milestone
 ALTER TABLE [dbo].[Log]
 ADD ServerGroupID int NULL
@@ -81,7 +93,8 @@ CREATE TABLE [dbo].[ApplicationsRightsByGroup_PreStagingForRealServerGroup](
 	[ID_ServerGroup] [int] NOT NULL,
 	[IsServerGroup0Rule] [bit] NOT NULL,
 	[IsDenyRule] [bit] NOT NULL,
-	[IsDevRule] [bit] NOT NULL
+	[IsDevRule] [bit] NOT NULL,
+	[DerivedFromAppRightsID] int NULL
  CONSTRAINT [PK_ApplicationsRightsByGroup_PreStagingForRealServerGroup] PRIMARY KEY CLUSTERED 
  (
 	[ID] ASC
@@ -100,7 +113,9 @@ CREATE TABLE [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup](
 	[ID_ServerGroup] [int] NOT NULL,
 	[IsServerGroup0Rule] [bit] NOT NULL,
 	[IsDenyRule] [bit] NOT NULL,
-	[IsDevRule] [bit] NOT NULL
+	[IsDevRule] [bit] NOT NULL,
+	[DerivedFromUserAppRightsID] int NULL,
+	[DerivedFromGroupAppRightsID] int NULL
  CONSTRAINT [PK_ApplicationsRightsByUser_PreStagingForRealServerGroup] PRIMARY KEY CLUSTERED 
  (
 	[ID] ASC

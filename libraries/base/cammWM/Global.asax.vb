@@ -414,7 +414,7 @@ Namespace CompuMaster.camm.WebManager.Application
             If Configuration.SuppressProductRegistrationServiceConnection = False Then
                 Try
                     Dim registration As New Registration.ProductRegistration(Me.cammWebManager)
-                    If registration.IsRefreshFromServerRequired(48) Then
+                    If registration.IsRefreshFromRemoteLicenseServerRequired(48) Then
                         Application.Lock()
                         Try
                             registration.CheckRegistration(False)

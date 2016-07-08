@@ -83,7 +83,7 @@
 									<TD runat="server" id="tdAddUserDetails" colspan="4"></TD>
 								</TR>
 							</TABLE>
-							<table BGCOLOR="#C1C1C1" CELLSPACING="0" CELLPADDING="2" border="0" style="margin:0px;display:inline;" Width="110">
+							<table BGCOLOR="#C1C1C1" CELLSPACING="0" CELLPADDING="2" border="0" style="margin:0px;display:inline;float:left;" width="110">
 								<tr>
 									<TD>
 										<P class="boldFont">

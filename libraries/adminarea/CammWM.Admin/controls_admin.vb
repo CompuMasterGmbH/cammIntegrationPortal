@@ -115,7 +115,20 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
         Public MyUserInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation
 
         Public Function SortAuthorizations(ByVal left As CompuMaster.camm.WebManager.WMSystem.Authorizations.UserAuthorizationInformation, ByVal right As CompuMaster.camm.WebManager.WMSystem.Authorizations.UserAuthorizationInformation) As Integer
-            Return left.SecurityObjectInfo.DisplayName.CompareTo(right.SecurityObjectInfo.DisplayName)
+            Dim DisplayNameLeft As String, DisplayNameRight As String
+            Try
+                'following statement might fail on invalid references to security objects (e.g. security object deleted in table, but authorization entry never deleted for some reasons)
+                DisplayNameLeft = left.SecurityObjectInfo.DisplayName
+            Catch
+                DisplayNameLeft = "{ERROR: Invalid ID " & left.SecurityObjectID & "}"
+            End Try
+            Try
+                'following statement might fail on invalid references to security objects (e.g. security object deleted in table, but authorization entry never deleted for some reasons)
+                DisplayNameRight = right.SecurityObjectInfo.DisplayName
+            Catch
+                DisplayNameRight = "{ERROR: Invalid ID " & right.SecurityObjectID & "}"
+            End Try
+            Return DisplayNameLeft.CompareTo(DisplayNameRight)
         End Function
 
         Public Function SortMemberships(ByVal left As CompuMaster.camm.WebManager.WMSystem.GroupInformation, ByVal right As CompuMaster.camm.WebManager.WMSystem.GroupInformation) As Integer
