@@ -449,19 +449,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Sub searchUserBtnClick(ByVal sender As Object, ByVal e As EventArgs) Handles searchUserBtn.Click
             ListOfUsers()
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Bind user data to the repeater control
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	15.03.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub rptUserListItemBound(ByVal sender As Object, ByVal e As RepeaterItemEventArgs) Handles rptUserList.ItemDataBound
             If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
                 With MyDt.Rows(e.Item.ItemIndex)
@@ -481,7 +473,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' </summary>
         ''' <param name="groupID"></param>
         ''' <param name="userId"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function IsAlreadyMember(ByVal groupId As Integer, ByVal userId As Long, denyRule As Boolean) As Boolean
             Dim commandText As String

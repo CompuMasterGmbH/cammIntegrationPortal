@@ -39,9 +39,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <summary>
         '''     Common routines to query data from a sql server database
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        <Obsolete("Use AnyIDataProvider instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use AnyIDataProvider instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Friend Class SqlClient
 
             ''' <summary>
@@ -63,7 +61,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="CommandText">The command text</param>
             ''' <param name="CommandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
-            ''' <returns></returns>
             Friend Shared Function ExecuteScalar(ByVal ConnectionString As String, ByVal CommandText As String, ByVal CommandType As System.Data.CommandType, ByVal sqlParameters As System.Data.SqlClient.SqlParameter()) As Object
                 Dim MyConn As New System.Data.SqlClient.SqlConnection(ConnectionString)
                 Return Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyConn, CommandText, CommandType, sqlParameters)
@@ -76,7 +73,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="CommandText">The command text</param>
             ''' <param name="CommandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
-            ''' <returns></returns>
             Friend Shared Function ExecuteReaderAndPutFirstColumnIntoArrayList(ByVal ConnectionString As String, ByVal CommandText As String, ByVal CommandType As System.Data.CommandType, ByVal sqlParameters As System.Data.SqlClient.SqlParameter()) As ArrayList
                 Dim MyConn As New System.Data.SqlClient.SqlConnection(ConnectionString)
                 Return Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoArrayList(MyConn, CommandText, CommandType, sqlParameters)
@@ -269,7 +265,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="commandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <param name="automations">Automation options for the connection</param>
-            ''' <returns></returns>
             Friend Shared Function ExecuteScalar(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations) As Object
                 Dim MyConn As IDbConnection = dbConnection
                 Dim MyCmd As IDbCommand = MyConn.CreateCommand
@@ -364,7 +359,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 '''     Convert the collection with all the parameters to a plain text string
                 ''' </summary>
                 ''' <param name="parameters">An IDataParameterCollection of a IDbCommand</param>
-                ''' <returns></returns>
                 Private Function ConvertParameterCollectionToString(ByVal parameters As System.Data.IDataParameterCollection) As String
                     Dim Result As String = Nothing
                     For MyCounter As Integer = 0 To parameters.Count - 1
@@ -393,7 +387,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
                 ''' <summary>
                 '''     The complete and detailed exception information inclusive the command text
                 ''' </summary>
-                ''' <returns></returns>
                 Public Overrides Function ToString() As String
                     Return MyBase.ToString & vbNewLine & vbNewLine & _commandText
                 End Function
@@ -407,7 +400,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="commandText">The command text</param>
             ''' <param name="commandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
-            ''' <returns></returns>
             Friend Shared Function ExecuteScalar(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter()) As Object
                 Return ExecuteScalar(dbConnection, commandText, commandType, sqlParameters, Automations.AutoOpenAndCloseAndDisposeConnection)
             End Function
@@ -420,7 +412,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="commandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <param name="automations">Automation options for the connection</param>
-            ''' <returns></returns>
             Friend Shared Function ExecuteReaderAndPutFirstColumnIntoArrayList(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations) As ArrayList
                 Dim MyConn As IDbConnection = dbConnection
                 Dim MyCmd As IDbCommand = MyConn.CreateCommand
@@ -439,7 +430,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' </summary>
             ''' <param name="dbCommand">The command object which shall be executed</param>
             ''' <param name="automations">Automation options for the connection</param>
-            ''' <returns></returns>
             Friend Shared Function ExecuteReaderAndPutFirstColumnIntoArrayList(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As ArrayList
                 Dim MyConn As IDbConnection = dbCommand.Connection
                 Dim MyCmd As IDbCommand = dbCommand
@@ -480,7 +470,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="commandText">The command text</param>
             ''' <param name="commandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
-            ''' <returns></returns>
             Friend Shared Function ExecuteReaderAndPutFirstColumnIntoArrayList(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter()) As ArrayList
                 Return ExecuteReaderAndPutFirstColumnIntoArrayList(dbConnection, commandText, commandType, sqlParameters, Automations.AutoOpenAndCloseAndDisposeConnection)
             End Function
@@ -695,7 +684,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <param name="automations">Automation options for the connection</param>
             ''' <param name="commandTimeout">A timeout value in seconds for the command object (negative values will be ignored and leave the timeout value on default)</param>
-            ''' <returns></returns>
             ''' <remarks>
             '''     Automations can only open a connection, but never close. This is because you have to close the connection by yourself AFTER you walked through the data reader.
             ''' </remarks>
@@ -741,7 +729,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="commandText">The command text</param>
             ''' <param name="commandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
-            ''' <returns></returns>
             Friend Shared Function ExecuteReader(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations) As IDataReader
 
                 Dim MyConn As IDbConnection = dbConnection
@@ -808,7 +795,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="dbCommand">The command object</param>
             ''' <param name="automations">Automation options for the connection</param>
             ''' <param name="tableName">The name for the new table</param>
-            ''' <returns></returns>
             Friend Shared Function FillDataTable(ByVal dbCommand As IDbCommand, ByVal automations As Automations, ByVal tableName As String) As System.Data.DataTable
                 Dim MyReader As IDataReader = Nothing
                 Dim Result As New System.Data.DataTable
@@ -853,7 +839,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="automations">Automation options for the connection</param>
             ''' <param name="tableName">The name for the new table</param>
             ''' <param name="commandTimeout">A timeout value in seconds for the command object (negative values will be ignored and leave the timeout value on default)</param>
-            ''' <returns></returns>
             Friend Shared Function FillDataTable(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations, ByVal tableName As String, ByVal commandTimeout As Integer) As System.Data.DataTable
                 Dim MyCmd As IDbCommand = dbConnection.CreateCommand
                 MyCmd.CommandType = commandType
@@ -878,7 +863,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <param name="automations">Automation options for the connection</param>
             ''' <param name="tableName">The name for the new table</param>
-            ''' <returns></returns>
             Friend Shared Function FillDataTable(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations, ByVal tableName As String) As System.Data.DataTable
                 Return FillDataTable(dbConnection, commandText, commandType, sqlParameters, automations, tableName, -1)
             End Function
@@ -891,7 +875,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' <param name="commandType">The command type</param>
             ''' <param name="sqlParameters">An optional list of SqlParameters</param>
             ''' <param name="automations">Automation options for the connection</param>
-            ''' <returns></returns>
             Friend Shared Function FillDataTable(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter(), ByVal automations As Automations) As System.Data.DataTable
                 Return FillDataTable(dbConnection, commandText, commandType, sqlParameters, automations, Nothing)
             End Function
@@ -901,7 +884,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' </summary>
             ''' <param name="dbCommand">The command object</param>
             ''' <param name="automations">Automation options for the connection</param>
-            ''' <returns></returns>
             Friend Shared Function FillDataTables(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As System.Data.DataTable()
                 Dim MyReader As IDataReader = Nothing
                 Dim Results As New ArrayList
@@ -1021,7 +1003,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' Return the column names of a data reader as a String array
             ''' </summary>
             ''' <param name="reader">A data reader object</param>
-            ''' <returns></returns>
             Public Shared Function ColumnNames(ByVal reader As IDataReader) As String()
                 If reader Is Nothing Then Return Nothing
                 Dim Result As New ArrayList
@@ -1035,7 +1016,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             ''' Return the column data types of a data reader as an array
             ''' </summary>
             ''' <param name="reader">A data reader object</param>
-            ''' <returns></returns>
             Public Shared Function DataTypes(ByVal reader As IDataReader) As Type()
                 If reader Is Nothing Then Return Nothing
                 Dim Result As New ArrayList
@@ -1057,7 +1037,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 #Region "Read data"
 
 #Region "Fixed columns"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read from a CSV table
         ''' </summary>
@@ -1065,13 +1044,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="includesColumnHeaders">Indicates wether column headers are present</param>
         ''' <param name="columnWidths">An array of column widths in their order</param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function ReadDataTableFromCsvReader(ByVal reader As StreamReader, ByVal includesColumnHeaders As Boolean, ByVal cultureFormatProvider As System.Globalization.CultureInfo, ByVal columnWidths As Integer(), Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             If cultureFormatProvider Is Nothing Then
@@ -1135,8 +1107,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read from a CSV file
         ''' </summary>
@@ -1145,13 +1115,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="columnWidths">An array of column widths in their order</param>
         ''' <param name="encoding">The text encoding of the file</param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ReadDataTableFromCsvFile(ByVal path As String, ByVal includesColumnHeaders As Boolean, ByVal columnWidths As Integer(), Optional ByVal encoding As String = "UTF-8", Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             Dim Result As New DataTable
@@ -1177,8 +1140,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read from a CSV file
         ''' </summary>
@@ -1188,13 +1149,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="encoding">The text encoding of the file</param>
         ''' <param name="cultureFormatProvider"></param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ReadDataTableFromCsvFile(ByVal path As String, ByVal includesColumnHeaders As Boolean, ByVal columnWidths As Integer(), ByVal encoding As System.Text.Encoding, ByVal cultureFormatProvider As System.Globalization.CultureInfo, Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             Dim Result As New DataTable
@@ -1220,8 +1174,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read from a CSV table
         ''' </summary>
@@ -1229,13 +1181,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="includesColumnHeaders">Indicates wether column headers are present</param>
         ''' <param name="columnWidths">An array of column widths in their order</param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ReadDataTableFromCsvString(ByVal data As String, ByVal includesColumnHeaders As Boolean, ByVal columnWidths As Integer(), Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             Dim Result As New DataTable
@@ -1252,8 +1197,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read from a CSV table
         ''' </summary>
@@ -1262,13 +1205,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="cultureFormatProvider"></param>
         ''' <param name="columnWidths">An array of column widths in their order</param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ReadDataTableFromCsvString(ByVal data As String, ByVal includesColumnHeaders As Boolean, ByVal cultureFormatProvider As System.Globalization.CultureInfo, ByVal columnWidths As Integer(), Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             Dim Result As New DataTable
@@ -1285,8 +1221,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Split a line content into separate column values and add them to the output list
         ''' </summary>
@@ -1294,12 +1228,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="outputList">An array list which shall hold the separated column values</param>
         ''' <param name="startPosition">The start position to which the columnWidhts are related to</param>
         ''' <param name="columnWidths">An array of column widths in their order</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Sub SplitFixedCsvLineIntoCellValues(ByRef lineContent As String, ByVal outputList As ArrayList, ByRef startposition As Integer, ByVal columnWidths As Integer())
 
             Dim CurrentColumnValue As System.Text.StringBuilder = Nothing
@@ -1342,8 +1270,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             startposition = CharPositionCounter + 1
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Calculate if the current position is the first position of a new column
         ''' </summary>
@@ -1351,12 +1277,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="startPosition">The start position to which the columnWidhts are related to</param>
         ''' <param name="columnWidths">An array containing the definitions of the column widths</param>
         ''' <returns>True if the current position identifies a new column value, otherwise False</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	07.03.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function SplitFixedCsvLineIntoCellValuesIsNewColumnPosition(ByVal currentPosition As Integer, ByVal startPosition As Integer, ByVal columnWidths As Integer()) As Boolean
             Dim positionDifference As Integer = currentPosition - startPosition
             For MyCounter As Integer = 0 To columnWidths.Length - 1
@@ -1379,7 +1299,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 #End Region
 
 #Region "Separator separation"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read from a CSV file
         ''' </summary>
@@ -1390,13 +1309,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="recognizeTextBy">A character indicating the start and end of text strings</param>
         ''' <param name="recognizeDoubledColumnSeparatorCharAsOne">Currently without purpose</param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ReadDataTableFromCsvFile(ByVal path As String, ByVal includesColumnHeaders As Boolean, Optional ByVal encoding As String = "UTF-8", Optional ByVal columnSeparator As Char = Nothing, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal recognizeDoubledColumnSeparatorCharAsOne As Boolean = True, Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             Dim Result As New DataTable
@@ -1422,8 +1334,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read from a CSV file
         ''' </summary>
@@ -1434,13 +1344,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="RecognizeTextBy">A character indicating the start and end of text strings</param>
         ''' <param name="recognizeDoubledColumnSeparatorCharAsOne">Currently without purpose</param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ReadDataTableFromCsvFile(ByVal path As String, ByVal includesColumnHeaders As Boolean, ByVal encoding As System.Text.Encoding, ByVal cultureFormatProvider As System.Globalization.CultureInfo, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal recognizeDoubledColumnSeparatorCharAsOne As Boolean = True, Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             Dim Result As New DataTable
@@ -1466,8 +1369,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read from a CSV table
         ''' </summary>
@@ -1477,13 +1378,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="recognizeTextBy">A character indicating the start and end of text strings</param>
         ''' <param name="recognizeDoubledColumnSeparatorCharAsOne">Currently without purpose</param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function ReadDataTableFromCsvReader(ByVal reader As StreamReader, ByVal includesColumnHeaders As Boolean, ByVal cultureFormatProvider As System.Globalization.CultureInfo, Optional ByVal columnSeparator As Char = Nothing, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal recognizeDoubledColumnSeparatorCharAsOne As Boolean = True, Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             If cultureFormatProvider Is Nothing Then
@@ -1549,8 +1443,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Split a line content into separate column values and add them to the output list
         ''' </summary>
@@ -1560,12 +1452,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="columnSeparator"></param>
         ''' <param name="recognizeTextBy"></param>
         ''' <param name="recognizeDoubledColumnSeparatorCharAsOne"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Sub SplitCsvLineIntoCellValues(ByRef lineContent As String, ByVal outputList As ArrayList, ByRef startposition As Integer, ByVal columnSeparator As Char, ByVal recognizeTextBy As Char, ByVal recognizeDoubledColumnSeparatorCharAsOne As Boolean)
 
             Dim CurrentColumnValue As New System.Text.StringBuilder
@@ -1649,8 +1535,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             startposition = CharPositionCounter + 1
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read from a CSV table
         ''' </summary>
@@ -1660,13 +1544,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="recognizeTextBy">A character indicating the start and end of text strings</param>
         ''' <param name="recognizeDoubledColumnSeparatorCharAsOne">Currently without purpose</param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ReadDataTableFromCsvString(ByVal data As String, ByVal includesColumnHeaders As Boolean, Optional ByVal columnSeparator As Char = Nothing, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal recognizeDoubledColumnSeparatorCharAsOne As Boolean = True, Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             Dim Result As New DataTable
@@ -1683,8 +1560,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read from a CSV table
         ''' </summary>
@@ -1694,13 +1569,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="RecognizeTextBy">A character indicating the start and end of text strings</param>
         ''' <param name="recognizeDoubledColumnSeparatorCharAsOne">Currently without purpose</param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	03.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ReadDataTableFromCsvString(ByVal data As String, ByVal includesColumnHeaders As Boolean, ByVal cultureFormatProvider As System.Globalization.CultureInfo, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal recognizeDoubledColumnSeparatorCharAsOne As Boolean = True, Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             Dim Result As New DataTable
@@ -1717,18 +1585,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert DBNull values to empty strings
         ''' </summary>
         ''' <param name="data">The data which might contain DBNull values</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	14.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Sub ConvertDBNullValuesToEmptyStrings(ByVal data As DataTable)
 
             'Parameter validation
@@ -1754,18 +1614,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Next
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert empty string values to DBNull
         ''' </summary>
         ''' <param name="data">The data which might contain empty strings</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	14.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Sub ConvertEmptyStringsToDBNullValue(ByVal data As DataTable)
 
             'Parameter validation
@@ -1833,21 +1685,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             End Try
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Trims a string to exactly the required fix size
         ''' </summary>
         ''' <param name="text"></param>
         ''' <param name="fixedLengthSize"></param>
         ''' <param name="alignedRight">Add additionally required spaces on the left (True) or on the right (False)</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.03.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function FixedLengthText(ByVal text As String, ByVal fixedLengthSize As Integer, ByVal alignedRight As Boolean) As String
             Dim Result As String = Mid(text, 1, fixedLengthSize)
             If Result.Length < fixedLengthSize Then
@@ -1860,8 +1703,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             End If
             Return Result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert the datatable to a string based, comma-separated format
         ''' </summary>
@@ -1869,13 +1710,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="includesColumnHeaders"></param>
         ''' <param name="cultureFormatProvider"></param>
         ''' <param name="columnWidths"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.03.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataTableToCsv(ByVal dataTable As System.Data.DataTable, ByVal includesColumnHeaders As Boolean, ByVal cultureFormatProvider As System.Globalization.CultureInfo, ByVal columnWidths As Integer()) As String
 
             If cultureFormatProvider Is Nothing Then
@@ -1939,8 +1773,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return writer.ToString
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert the datatable to a string based, comma-separated format
         ''' </summary>
@@ -1949,13 +1781,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="cultureFormatProvider"></param>
         ''' <param name="columnSeparator"></param>
         ''' <param name="recognizeTextBy"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.03.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ConvertDataTableToCsv(ByVal dataTable As System.Data.DataTable, ByVal includesColumnHeaders As Boolean, ByVal cultureFormatProvider As System.Globalization.CultureInfo, Optional ByVal columnSeparator As String = ","c, Optional ByVal recognizeTextBy As Char = """"c) As String
 
             If cultureFormatProvider Is Nothing Then
@@ -2021,8 +1846,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return writer.ToString
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Write to a CSV file
         ''' </summary>
@@ -2033,12 +1856,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="columnSeparator">Choose the required character for splitting the columns. Set to null (Nothing in VisualBasic) to enable fixed column widths mode</param>
         ''' <param name="recognizeTextBy">A character indicating the start and end of text strings</param>
         ''' <param name="decimalSeparator">A character indicating the decimal separator in the text string</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[Wezel]	19.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Sub WriteDataTableToCsvFile(ByVal path As String, ByVal dataTable As System.Data.DataTable, ByVal includesColumnHeaders As Boolean, Optional ByVal encoding As String = "UTF-8", Optional ByVal columnSeparator As String = ","c, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal decimalSeparator As Char = "."c)
 
             Dim cultureFormatProvider As New System.Globalization.CultureInfo("")
@@ -2109,8 +1926,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             End Try
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a CSV table
         ''' </summary>
@@ -2121,18 +1936,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="recognizeTextBy">A character indicating the start and end of text strings</param>
         ''' <param name="decimalSeparator"></param>
         ''' <returns>A string containing the CSV table</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	19.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function WriteDataTableToCsvString(ByVal dataTable As System.Data.DataTable, ByVal includesColumnHeaders As Boolean, Optional ByVal encoding As String = "UTF-8", Optional ByVal columnSeparator As Char = ","c, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal decimalSeparator As Char = "."c) As String
             Dim MyStream As MemoryStream = WriteDataTableToCsvMemoryStream(dataTable, includesColumnHeaders, System.Text.Encoding.Unicode.EncodingName, columnSeparator, recognizeTextBy, decimalSeparator)
             Return System.Text.Encoding.Unicode.GetString(MyStream.ToArray)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a CSV table
         ''' </summary>
@@ -2143,18 +1950,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="recognizeTextBy">A character indicating the start and end of text strings</param>
         ''' <param name="decimalSeparator"></param>
         ''' <returns>A string containing the CSV table</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	19.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function WriteDataTableToCsvBytes(ByVal dataTable As System.Data.DataTable, ByVal includesColumnHeaders As Boolean, Optional ByVal encoding As String = "UTF-8", Optional ByVal columnSeparator As Char = ","c, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal decimalSeparator As Char = "."c) As Byte()
             Dim MyStream As MemoryStream = WriteDataTableToCsvMemoryStream(dataTable, includesColumnHeaders, encoding, columnSeparator, recognizeTextBy, decimalSeparator)
             Return MyStream.ToArray
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a CSV table
         ''' </summary>
@@ -2165,18 +1964,10 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="columnSeparator">Choose the required character for splitting the columns. Set to null (Nothing in VisualBasic) to enable fixed column widths mode</param>
         ''' <param name="recognizeTextBy">A character indicating the start and end of text strings</param>
         ''' <returns>A string containing the CSV table</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	19.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function WriteDataTableToCsvBytes(ByVal dataTable As System.Data.DataTable, ByVal includesColumnHeaders As Boolean, ByVal encoding As System.Text.Encoding, ByVal cultureFormatProvider As System.Globalization.CultureInfo, Optional ByVal columnSeparator As Char = ","c, Optional ByVal recognizeTextBy As Char = """"c) As Byte()
             Dim MyStream As MemoryStream = WriteDataTableToCsvMemoryStream(dataTable, includesColumnHeaders, encoding, cultureFormatProvider, columnSeparator, recognizeTextBy)
             Return MyStream.ToArray
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a CSV table
         ''' </summary>
@@ -2187,12 +1978,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="recognizeTextBy">A character indicating the start and end of text strings</param>
         ''' <param name="decimalSeparator"></param>
         ''' <returns>A memory stream containing all texts as bytes in Unicode format</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	19.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function WriteDataTableToCsvMemoryStream(ByVal dataTable As System.Data.DataTable, ByVal includesColumnHeaders As Boolean, Optional ByVal encoding As String = "UTF-8", Optional ByVal columnSeparator As String = ","c, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal decimalSeparator As Char = "."c) As System.IO.MemoryStream
             Dim cultureFormatProvider As System.Globalization.CultureInfo = CType(System.Globalization.CultureInfo.InvariantCulture.Clone, System.Globalization.CultureInfo)
             cultureFormatProvider.NumberFormat.CurrencyDecimalSeparator = decimalSeparator
@@ -2200,8 +1985,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             cultureFormatProvider.NumberFormat.PercentDecimalSeparator = decimalSeparator
             Return WriteDataTableToCsvMemoryStream(dataTable, includesColumnHeaders, System.Text.Encoding.GetEncoding(encoding), cultureFormatProvider, columnSeparator, recognizeTextBy)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a CSV table
         ''' </summary>
@@ -2212,12 +1995,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="columnSeparator">Choose the required character for splitting the columns. Set to null (Nothing in VisualBasic) to enable fixed column widths mode</param>
         ''' <param name="recognizeTextBy">A character indicating the start and end of text strings</param>
         ''' <returns>A memory stream containing all texts as bytes in Unicode format</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	19.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function WriteDataTableToCsvMemoryStream(ByVal dataTable As System.Data.DataTable, ByVal includesColumnHeaders As Boolean, ByVal encoding As System.Text.Encoding, ByVal cultureFormatProvider As System.Globalization.CultureInfo, Optional ByVal columnSeparator As String = ","c, Optional ByVal recognizeTextBy As Char = """"c) As System.IO.MemoryStream
 
             If cultureFormatProvider Is Nothing Then
@@ -2294,20 +2071,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Encode a string into CSV encoding
         ''' </summary>
         ''' <param name="value">The unencoded text</param>
         ''' <param name="recognizeTextBy">The character to identify a string in the CSV file</param>
         ''' <returns>The encoded writing style of the given text</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function CsvEncode(ByVal value As String, ByVal recognizeTextBy As Char) As String
             Dim Result As String
             Result = Replace(value, recognizeTextBy, recognizeTextBy & recognizeTextBy)
@@ -2394,8 +2163,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             End Try
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Write to a CSV file
         ''' </summary>
@@ -2405,12 +2172,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="encoding">The text encoding of the file</param>
         ''' <param name="columnSeparator">Choose the required character for splitting the columns. Set to null (Nothing in VisualBasic) to enable fixed column widths mode</param>
         ''' <param name="recognizeTextBy">A character indicating the start and end of text strings</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[Wezel]	19.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Sub WriteDataViewToCsvFile(ByVal path As String, ByVal dataView As System.Data.DataView, ByVal includesColumnHeaders As Boolean, Optional ByVal encoding As String = "UTF-8", Optional ByVal columnSeparator As String = ","c, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal decimalSeparator As Char = "."c)
 
             Dim DataTable As System.Data.DataTable = dataView.Table
@@ -2672,7 +2433,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     Convert a dataset to an xml string with data and schema information
         ''' </summary>
         ''' <param name="dataset"></param>
-        ''' <returns></returns>
         Friend Shared Function ConvertDatasetToXml(ByVal dataset As DataSet) As String
             Dim sbuilder As New System.Text.StringBuilder
             Dim xmlSW As System.IO.StringWriter = New System.IO.StringWriter(sbuilder)
@@ -2685,7 +2445,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     Convert an xml string to a dataset
         ''' </summary>
         ''' <param name="xml"></param>
-        ''' <returns></returns>
         Friend Shared Function ConvertXmlToDataset(ByVal xml As String) As DataSet
             Dim reader As System.IO.StringReader = New System.IO.StringReader(xml)
             Dim DataSet As New DataSet
@@ -3081,7 +2840,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     Creates a clone of a dataview but as a new data table
         ''' </summary>
         ''' <param name="data">The data view to create the data table from</param>
-        ''' <returns></returns>
         Friend Shared Function ConvertDataViewToDataTable(ByVal data As DataView) As System.Data.DataTable
             Dim Result As DataTable = data.Table.Clone
             'Dim MyRows As DataRowView() = data.Item
@@ -3111,7 +2869,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     Convert a data table to an arraylist
         ''' </summary>
         ''' <param name="column">The column which shall be used to fill the arraylist</param>
-        ''' <returns></returns>
         Friend Shared Function ConvertDataTableToArrayList(ByVal column As DataColumn) As ArrayList
             Return ConvertDataTableToArrayList(column.Table, column.Ordinal)
         End Function
@@ -3120,7 +2877,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     Convert a data table to an arraylist
         ''' </summary>
         ''' <param name="data">The first column of this data table will be used</param>
-        ''' <returns></returns>
         Friend Shared Function ConvertDataTableToArrayList(ByVal data As DataTable) As ArrayList
             Return ConvertDataTableToArrayList(data, 0)
         End Function
@@ -3130,7 +2886,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' </summary>
         ''' <param name="data">The data table with the content</param>
         ''' <param name="selectedColumnIndex">The column which shall be used to fill the arraylist</param>
-        ''' <returns></returns>
         Friend Shared Function ConvertDataTableToArrayList(ByVal data As DataTable, ByVal selectedColumnIndex As Integer) As ArrayList
             Dim Result As New ArrayList
             For MyCounter As Integer = 0 To data.Rows.Count - 1
@@ -3144,7 +2899,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' </summary>
         ''' <param name="keyColumn">This is the key column from the data table and MUST BE UNIQUE</param>
         ''' <param name="valueColumn">A column which contains the values</param>
-        ''' <returns></returns>
         ''' <remarks>
         ''' ATTENTION: the very first column is used as key column and must be unique therefore
         ''' </remarks>
@@ -3159,7 +2913,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     Convert a data table to a hash table
         ''' </summary>
         ''' <param name="data">The first two columns of this data table will be used</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     ATTENTION: the very first column is used as key column and must be unique therefore
         ''' </remarks>
@@ -3173,7 +2926,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="data">The data table with the content</param>
         ''' <param name="keyColumnIndex">This is the key column from the data table and MUST BE UNIQUE (make it unique, first!)</param>
         ''' <param name="valueColumnIndex">A column which contains the values</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     ATTENTION: the very first column is used as key column and must be unique therefore
         ''' </remarks>
@@ -3192,7 +2944,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     Convert a data table to an array of dictionary entries
         ''' </summary>
         ''' <param name="data">The first two columns of this data table will be used</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     The very first column is used as key column, the second one as the value column
         ''' </remarks>
@@ -3205,7 +2956,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' </summary>
         ''' <param name="keyColumn">This is the key column from the data table</param>
         ''' <param name="valueColumn">A column which contains the values</param>
-        ''' <returns></returns>
         Friend Shared Function ConvertDataTableToDictionaryEntryArray(ByVal keyColumn As DataColumn, ByVal valueColumn As DataColumn) As DictionaryEntry()
             If Not keyColumn.Table Is valueColumn.Table Then
                 Throw New Exception("Key column and value column must be from the same table")
@@ -3219,7 +2969,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="data">The data table with the content</param>
         ''' <param name="keyColumnIndex">This is the key column from the data table</param>
         ''' <param name="valueColumnIndex">A column which contains the values</param>
-        ''' <returns></returns>
         Friend Shared Function ConvertDataTableToDictionaryEntryArray(ByVal data As DataTable, ByVal keyColumnIndex As Integer, ByVal valueColumnIndex As Integer) As DictionaryEntry()
             Dim Result As DictionaryEntry()
             ReDim Result(data.Rows.Count - 1)
@@ -3511,7 +3260,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''     Converts all line breaks into HTML line breaks (&quot;&lt;br&gt;&quot;)
         ''' </summary>
         ''' <param name="Text"></param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     Supported line breaks are linebreaks of Windows, MacOS as well as Linux/Unix.
         ''' </remarks>
@@ -3763,7 +3511,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="leftParentTable"></param>
         ''' <param name="rightChildTable"></param>
         ''' <param name="joinType">Inner or left join</param>
-        ''' <returns></returns>
         Friend Shared Function JoinTables(ByVal leftParentTable As DataTable, ByVal rightChildTable As DataTable, ByVal joinType As JoinTypes) As DataTable
 
             'Find the appropriate relation information
@@ -3786,7 +3533,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="rightChildTable">The right or child table</param>
         ''' <param name="relation">A data table relation which shall be used for the joining</param>
         ''' <param name="joinType">Inner or left join</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     The selected columns are: 
         '''     <list>
@@ -3842,7 +3588,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="rightChildTable">The right or child table</param>
         ''' <param name="rightTableColumnsToCopy">An array of columns to copy from the right table</param>
         ''' <param name="joinType">Inner or left join</param>
-        ''' <returns></returns>
         Friend Shared Function JoinTables(ByVal leftParentTable As DataTable, ByVal leftTableColumnsToCopy As DataColumn(), ByVal rightChildTable As DataTable, ByVal rightTableColumnsToCopy As DataColumn(), ByVal joinType As JoinTypes) As DataTable
 
             'Find the appropriate relation information
@@ -3885,7 +3630,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="rightChildTable">The right or child table</param>
         ''' <param name="indexesOfRightTableColumnsToCopy">An array of column indexes to copy from the right table</param>
         ''' <param name="joinType">Inner or left join</param>
-        ''' <returns></returns>
         Friend Shared Function JoinTables(ByVal leftParentTable As DataTable, ByVal indexesOfLeftTableColumnsToCopy As Integer(), ByVal rightChildTable As DataTable, ByVal indexesOfRightTableColumnsToCopy As Integer(), ByVal joinType As JoinTypes) As DataTable
 
             'Find the appropriate relation information
@@ -3910,7 +3654,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="indexesOfRightTableColumnsToCopy">An array of column indexes to copy from the right table</param>
         ''' <param name="relation">A data table relation which shall be used for the joining</param>
         ''' <param name="joinType">Inner or left join</param>
-        ''' <returns></returns>
         Friend Shared Function JoinTables(ByVal leftParentTable As DataTable, ByVal indexesOfLeftTableColumnsToCopy As Integer(), ByVal rightChildTable As DataTable, ByVal indexesOfRightTableColumnsToCopy As Integer(), ByVal relation As DataRelation, ByVal joinType As JoinTypes) As DataTable
 
             'Verify parameters
@@ -4033,7 +3776,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <param name="indexesOfLeftTableColumnsToCopy">An array of column indexes to copy from the left table</param>
         ''' <param name="rightTable">A second datatable</param>
         ''' <param name="indexesOfRightTableColumnsToCopy">An array of column indexes to copy from the right table</param>
-        ''' <returns></returns>
         Friend Shared Function CrossJoinTables(ByVal leftTable As DataTable, ByVal indexesOfLeftTableColumnsToCopy As Integer(), ByVal rightTable As DataTable, ByVal indexesOfRightTableColumnsToCopy As Integer()) As DataTable
 
             'Verify parameters
@@ -4295,20 +4037,12 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             End Property
 
         End Class
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Rearrange columns
         ''' </summary>
         ''' <param name="source">The source table with data</param>
         ''' <param name="columnsToCopy">An array of column names which shall be copied in the specified order from the source table</param>
         ''' <returns>A new and independent data table with copied data</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	07.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ReArrangeDataColumns(ByVal source As DataTable, ByVal columnsToCopy As String()) As DataTable
             Dim columns As New ArrayList
             For MyCounter As Integer = 0 To columnsToCopy.Length - 1
@@ -4316,8 +4050,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
             Next
             Return ReArrangeDataColumns(source, CType(columns.ToArray(GetType(System.Data.DataColumn)), System.Data.DataColumn()))
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Rearrange columns and also change their data types
         ''' </summary>
@@ -4332,15 +4064,9 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''         ReArrangeDataColumns(source, New System.Data.DataColumn() {New DataColumn("column1Name", GetType(String)), New DataColumn("column2Name", GetType(Integer))})
         '''     </code>
         ''' </example>
-        ''' <history>
-        ''' 	[wezel]	14.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ReArrangeDataColumns(ByVal source As DataTable, ByVal destinationColumnSet As DataColumn()) As DataTable
             Return ReArrangeDataColumns(source, destinationColumnSet, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Rearrange columns and also change their data types
         ''' </summary>
@@ -4356,10 +4082,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         '''         ReArrangeDataColumns(source, New System.Data.DataColumn() {New DataColumn("column1Name", GetType(String)), New DataColumn("column2Name", GetType(Integer))})
         '''     </code>
         ''' </example>
-        ''' <history>
-        ''' 	[wezel]	14.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ReArrangeDataColumns(ByVal source As DataTable, ByVal destinationColumnSet As DataColumn(), ByVal ignoreConversionExceptionAndLogThemHere As ArrayList) As DataTable
 
             'Parameter validation

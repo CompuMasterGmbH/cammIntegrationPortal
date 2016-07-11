@@ -24,20 +24,12 @@ Namespace CompuMaster.camm.WebManager.Messaging
     ''' <summary>
     '''     Messaging classes for e-mail, SMS, etc.
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Friend Class NamespaceDoc
     End Class
 
     ''' <summary>
     '''     Mail delivery methods
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[AdminSupport]	04.05.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class EMails
 
         Friend _MailSendingSystem As MailSendingSystem = MailSendingSystem.Auto
@@ -50,8 +42,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
             NetFramework = 3
             <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> EasyMail = 4
         End Enum
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The preferred system for sending e-mails
         ''' </summary>
@@ -59,10 +49,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     Please note: if the mail system in unavailable, camm Web-Manager tries to send the e-mail with other systems automatically.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property MailSystem() As MailSendingSystem
             Get
                 Return _MailSendingSystem
@@ -96,7 +82,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         End Sub
 
 #Region "SendEMail"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Send an e-mail
         ''' </summary>
@@ -111,16 +96,10 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function SendEMail(ByVal rcptName As String, ByVal rcptAddress As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String) As Boolean
             Dim attachment() As CompuMaster.camm.WebManager.Messaging.EMailAttachment = Nothing
             Return SendEMail(rcptName, rcptAddress, msgSubject, msgTextBody, msgHtmlBody, senderName, senderAddress, attachment, Messaging.EMails.Priority.Normal, Messaging.EMails.Sensitivity.Status_Normal, False, False, Nothing, Nothing, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Send an e-mail
         ''' </summary>
@@ -137,18 +116,12 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function SendEMail(ByVal rcptName As String, ByVal rcptAddress As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String) As Boolean
             Return SendEMail(rcptName, rcptAddress, msgSubject, msgTextBody, msgHtmlBody, senderName, senderAddress, replyToName, replyToAddress, CType(Nothing, CompuMaster.camm.WebManager.Messaging.EMailAttachment()), Nothing, Nothing, False, False, Nothing, Nothing, Nothing)
         End Function
         <Obsolete(), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function SendEMail(ByVal rcptName As String, ByVal rcptAddress As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String, ByVal attachments As CompuMaster.camm.WebManager.WMSystem.EMailAttachement(), Optional ByVal priority As CompuMaster.camm.WebManager.WMSystem.MailImportance = Nothing, Optional ByVal sensitivity As CompuMaster.camm.WebManager.WMSystem.MailSensitivity = Nothing, Optional ByVal requestTransmissionConfirmation As Boolean = False, Optional ByVal requestReadingConfirmation As Boolean = False, Optional ByVal additionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal msgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing) As Boolean
             Return SendEMail(rcptName, rcptAddress, msgSubject, msgTextBody, msgHtmlBody, senderName, senderAddress, ConvertWMSystemEMailAttachmentToMessagingEMailAttachment(attachments), CType(priority, CompuMaster.camm.WebManager.Messaging.EMails.Priority), CType(sensitivity, CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity), requestTransmissionConfirmation, requestReadingConfirmation, additionalHeaders, msgCharset, bufErrorDetails)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail
         ''' </summary>
@@ -171,10 +144,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function SendEMail(ByVal rcptName As String, ByVal rcptAddress As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String, ByVal attachments As CompuMaster.camm.WebManager.Messaging.EMailAttachment(), Optional ByVal priority As CompuMaster.camm.WebManager.Messaging.EMails.Priority = Nothing, Optional ByVal sensitivity As CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity = Nothing, Optional ByVal requestTransmissionConfirmation As Boolean = False, Optional ByVal requestReadingConfirmation As Boolean = False, Optional ByVal additionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal msgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing) As Boolean
             Log.WriteEventLogTrace("SendEMail:Begin")
             Dim Result As Boolean
@@ -249,8 +218,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
             Log.WriteEventLogTrace("SendEMail:End")
             Return Result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail
         ''' </summary>
@@ -275,15 +242,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete(), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function SendEMail(ByVal rcptName As String, ByVal rcptAddress As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String, ByVal attachments As WMSystem.EMailAttachement(), Optional ByVal priority As WMSystem.MailImportance = Nothing, Optional ByVal sensitivity As WMSystem.MailSensitivity = Nothing, Optional ByVal requestTransmissionConfirmation As Boolean = False, Optional ByVal requestReadingConfirmation As Boolean = False, Optional ByVal additionalHeaders As System.Collections.Specialized.NameValueCollection = Nothing, Optional ByVal msgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing) As Boolean
             Return SendEMail(rcptName, rcptAddress, msgSubject, msgTextBody, msgHtmlBody, senderName, senderAddress, replyToName, replyToAddress, ConvertWMSystemEMailAttachmentToMessagingEMailAttachment(attachments), CType(priority, Messaging.EMails.Priority), CType(sensitivity, Messaging.EMails.Sensitivity), requestTransmissionConfirmation, requestReadingConfirmation, additionalHeaders, msgCharset, bufErrorDetails)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail
         ''' </summary>
@@ -308,17 +269,11 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function SendEMail(ByVal rcptName As String, ByVal rcptAddress As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String, ByVal attachments As Messaging.EMailAttachment(), Optional ByVal priority As Messaging.EMails.Priority = Nothing, Optional ByVal sensitivity As Messaging.EMails.Sensitivity = Nothing, Optional ByVal requestTransmissionConfirmation As Boolean = False, Optional ByVal requestReadingConfirmation As Boolean = False, Optional ByVal additionalHeaders As System.Collections.Specialized.NameValueCollection = Nothing, Optional ByVal msgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing) As Boolean
             If additionalHeaders Is Nothing Then additionalHeaders = New System.Collections.Specialized.NameValueCollection
             additionalHeaders("Reply-To") = EMails.CreateReceipientString(replyToName, replyToAddress)
             Return SendEMail(rcptName, rcptAddress, msgSubject, msgTextBody, msgHtmlBody, senderName, senderAddress, attachments, priority, sensitivity, requestTransmissionConfirmation, requestReadingConfirmation, additionalHeaders, msgCharset, bufErrorDetails)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients
         ''' </summary>
@@ -335,15 +290,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function SendEMail(ByVal rcptAddresses_To As String, ByVal rcptAddresses_Cc As String, ByVal RcptAddresses_Bcc As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String) As Boolean
             Return SendEMail(rcptAddresses_To, rcptAddresses_Cc, RcptAddresses_Bcc, msgSubject, msgTextBody, msgHtmlBody, senderName, senderAddress, CType(Nothing, Messaging.EMailAttachment()), Nothing, Nothing, False, False, Nothing, Nothing, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients
         ''' </summary>
@@ -362,15 +311,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function SendEMail(ByVal rcptAddresses_To As String, ByVal rcptAddresses_Cc As String, ByVal RcptAddresses_Bcc As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHtmlBody As String, ByVal senderName As String, ByVal senderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String) As Boolean
             Return SendEMail(rcptAddresses_To, rcptAddresses_Cc, RcptAddresses_Bcc, msgSubject, msgTextBody, msgHtmlBody, senderName, senderAddress, replyToName, replyToAddress, Nothing, Nothing, Nothing, False, False, Nothing, Nothing, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients
         ''' </summary>
@@ -395,15 +338,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function SendEMail(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal Attachments As Messaging.EMailAttachment(), Optional ByVal Priority As Messaging.EMails.Priority = Nothing, Optional ByVal Sensitivity As Messaging.EMails.Sensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing) As Boolean
             Return SendEMail(True, RcptAddresses_To, RcptAddresses_CC, RcptAddresses_BCC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, Attachments, Priority, Sensitivity, RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders, MsgCharset, bufErrorDetails)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients
         ''' </summary>
@@ -428,16 +365,10 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete(), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete(), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function SendEMail(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal Attachments As WMSystem.EMailAttachement(), Optional ByVal Priority As WMSystem.MailImportance = Nothing, Optional ByVal Sensitivity As WMSystem.MailSensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing) As Boolean
             Return SendEMail(True, RcptAddresses_To, RcptAddresses_CC, RcptAddresses_BCC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, ConvertWMSystemEMailAttachmentToMessagingEMailAttachment(Attachments), CType(Priority, Messaging.EMails.Priority), CType(Sensitivity, Messaging.EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders, MsgCharset, bufErrorDetails)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients
         ''' </summary>
@@ -464,10 +395,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function SendEMail(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String, ByVal Attachments As Messaging.EMailAttachment(), Optional ByVal Priority As Messaging.EMails.Priority = Nothing, Optional ByVal Sensitivity As Messaging.EMails.Sensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing) As Boolean
             If AdditionalHeaders Is Nothing Then
                 AdditionalHeaders = New System.Collections.Specialized.NameValueCollection
@@ -482,8 +409,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
             End If
             Return SendEMail(True, RcptAddresses_To, RcptAddresses_CC, RcptAddresses_BCC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, Attachments, Priority, Sensitivity, RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders, MsgCharset, bufErrorDetails)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients
         ''' </summary>
@@ -509,10 +434,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Function SendEMail(ByVal allowQueuing As Boolean, ByVal rcptAddresses_To As String, ByVal rcptAddresses_Cc As String, ByVal rcptAddresses_Bcc As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal attachments As Messaging.EMailAttachment(), Optional ByVal priority As Messaging.EMails.Priority = Nothing, Optional ByVal sensitivity As Messaging.EMails.Sensitivity = Nothing, Optional ByVal requestTransmissionConfirmation As Boolean = False, Optional ByVal requestReadingConfirmation As Boolean = False, Optional ByVal additionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal msgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing) As Boolean
             Log.WriteEventLogTrace("SendEMail:Begin")
             Dim Result As Boolean
@@ -574,7 +495,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         End Function
 
 #Region "QueueEMail"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to the mail queue
         ''' </summary>
@@ -587,15 +507,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function QueueEMail(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String) As Boolean
             Return QueueEMail(RcptName, RcptAddress, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, CType(Nothing, CompuMaster.camm.WebManager.Messaging.EMailAttachment()), Nothing, Nothing, False, False, Nothing, Nothing, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to the mail queue
         ''' </summary>
@@ -610,15 +524,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function QueueEMail(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String) As Boolean
             Return QueueEMail(RcptName, RcptAddress, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, replyToName, replyToAddress, CType(Nothing, Messaging.EMailAttachment()), Nothing, Nothing, False, False, Nothing, Nothing, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to the mail queue
         ''' </summary>
@@ -641,10 +549,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete(), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function QueueEMail(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal Attachments As CompuMaster.camm.WebManager.WMSystem.EMailAttachement(), Optional ByVal Priority As CompuMaster.camm.WebManager.WMSystem.MailImportance = Nothing, Optional ByVal Sensitivity As CompuMaster.camm.WebManager.WMSystem.MailSensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal connection As IDbConnection = Nothing) As Boolean
 
             'Auto-complete sender information
@@ -663,7 +567,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
             Return SendViaQueue(RcptName, RcptAddress, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, connection, bufErrorDetails, ConvertWMSystemEMailAttachmentToMessagingEMailAttachment(Attachments), CType(Priority, CompuMaster.camm.WebManager.Messaging.EMails.Priority), CType(Sensitivity, CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
 
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to the mail queue
         ''' </summary>
@@ -686,10 +589,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	17.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function QueueEMail(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal Attachments As CompuMaster.camm.WebManager.Messaging.EMailAttachment(), Optional ByVal Priority As CompuMaster.camm.WebManager.Messaging.EMails.Priority = Nothing, Optional ByVal Sensitivity As CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal connection As IDbConnection = Nothing) As Boolean
             'Auto-complete sender information
             If SenderAddress = "" Then
@@ -707,8 +606,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
             Return SendViaQueue(RcptName, RcptAddress, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, connection, bufErrorDetails, Attachments, Priority, Sensitivity, RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to the mail queue
         ''' </summary>
@@ -733,10 +630,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete(), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function QueueEMail(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String, ByVal Attachments As CompuMaster.camm.WebManager.WMSystem.EMailAttachement(), Optional ByVal Priority As CompuMaster.camm.WebManager.WMSystem.MailImportance = Nothing, Optional ByVal Sensitivity As CompuMaster.camm.WebManager.WMSystem.MailSensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal connection As IDbConnection = Nothing) As Boolean
             If AdditionalHeaders Is Nothing Then
                 AdditionalHeaders = New System.Collections.Specialized.NameValueCollection
@@ -752,8 +645,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
             'Store the e-mail into the mail queue
             Return SendViaQueue(RcptName, RcptAddress, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, connection, bufErrorDetails, ConvertWMSystemEMailAttachmentToMessagingEMailAttachment(Attachments), CType(Priority, CompuMaster.camm.WebManager.Messaging.EMails.Priority), CType(Sensitivity, CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to the mail queue
         ''' </summary>
@@ -778,10 +669,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	17.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function QueueEMail(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String, ByVal Attachments As CompuMaster.camm.WebManager.Messaging.EMailAttachment(), Optional ByVal Priority As CompuMaster.camm.WebManager.Messaging.EMails.Priority = Nothing, Optional ByVal Sensitivity As CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal connection As IDbConnection = Nothing) As Boolean
             If AdditionalHeaders Is Nothing Then
                 AdditionalHeaders = New System.Collections.Specialized.NameValueCollection
@@ -797,8 +684,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
             'Store the e-mail into the mail queue
             Return SendViaQueue(RcptName, RcptAddress, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, connection, bufErrorDetails, Attachments, Priority, Sensitivity, RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients via the mail queue
         ''' </summary>
@@ -815,16 +700,10 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function QueueEMail(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String) As Boolean
             Dim attachments As CompuMaster.camm.WebManager.Messaging.EMailAttachment() = Nothing
             Return QueueEMail(RcptAddresses_To, RcptAddresses_CC, RcptAddresses_BCC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, attachments, Nothing, Nothing, False, False, Nothing, Nothing, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients via the mail queue
         ''' </summary>
@@ -843,16 +722,10 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function QueueEMail(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String) As Boolean
             Dim attachments As CompuMaster.camm.WebManager.Messaging.EMailAttachment() = Nothing
             Return QueueEMail(RcptAddresses_To, RcptAddresses_CC, RcptAddresses_BCC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, replyToName, replyToAddress, attachments, Nothing, Nothing, False, False, Nothing, Nothing, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients via the mail queue
         ''' </summary>
@@ -878,10 +751,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function QueueEMail(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal Attachments As CompuMaster.camm.WebManager.WMSystem.EMailAttachement(), Optional ByVal Priority As CompuMaster.camm.WebManager.WMSystem.MailImportance = Nothing, Optional ByVal Sensitivity As CompuMaster.camm.WebManager.WMSystem.MailSensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal connection As IDbConnection = Nothing) As Boolean
 
             'Auto-complete sender information
@@ -900,8 +769,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
             Return SendViaQueue(RcptAddresses_To, RcptAddresses_CC, RcptAddresses_BCC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, connection, bufErrorDetails, ConvertWMSystemEMailAttachmentToMessagingEMailAttachment(Attachments), CType(Priority, CompuMaster.camm.WebManager.Messaging.EMails.Priority), CType(Sensitivity, CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients via the mail queue
         ''' </summary>
@@ -927,10 +794,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function QueueEMail(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal Attachments As CompuMaster.camm.WebManager.Messaging.EMailAttachment(), Optional ByVal Priority As CompuMaster.camm.WebManager.WMSystem.MailImportance = Nothing, Optional ByVal Sensitivity As CompuMaster.camm.WebManager.WMSystem.MailSensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal connection As IDbConnection = Nothing) As Boolean
 
             'Auto-complete sender information
@@ -949,8 +812,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
             Return SendViaQueue(RcptAddresses_To, RcptAddresses_CC, RcptAddresses_BCC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, connection, bufErrorDetails, Attachments, CType(Priority, CompuMaster.camm.WebManager.Messaging.EMails.Priority), CType(Sensitivity, CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients via the mail queue
         ''' </summary>
@@ -978,10 +839,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function QueueEMail(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String, ByVal Attachments As CompuMaster.camm.WebManager.WMSystem.EMailAttachement(), Optional ByVal Priority As CompuMaster.camm.WebManager.WMSystem.MailImportance = Nothing, Optional ByVal Sensitivity As CompuMaster.camm.WebManager.WMSystem.MailSensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal connection As IDbConnection = Nothing) As Boolean
             If AdditionalHeaders Is Nothing Then
                 AdditionalHeaders = New System.Collections.Specialized.NameValueCollection
@@ -996,8 +853,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
             End If
             Return SendViaQueue(RcptAddresses_To, RcptAddresses_CC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, connection, bufErrorDetails, ConvertWMSystemEMailAttachmentToMessagingEMailAttachment(Attachments), CType(Priority, CompuMaster.camm.WebManager.Messaging.EMails.Priority), CType(Sensitivity, CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients via the mail queue
         ''' </summary>
@@ -1025,10 +880,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function QueueEMail(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal replyToName As String, ByVal replyToAddress As String, ByVal Attachments As CompuMaster.camm.WebManager.Messaging.EMailAttachment(), Optional ByVal Priority As CompuMaster.camm.WebManager.WMSystem.MailImportance = Nothing, Optional ByVal Sensitivity As CompuMaster.camm.WebManager.WMSystem.MailSensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal connection As IDbConnection = Nothing) As Boolean
             If AdditionalHeaders Is Nothing Then
                 AdditionalHeaders = New System.Collections.Specialized.NameValueCollection
@@ -1050,14 +901,11 @@ Namespace CompuMaster.camm.WebManager.Messaging
 #End Region
 
 #Region "Utils"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a valid receipient string for the address lists parameters of method SendEMail
         ''' </summary>
         ''' <param name="name">The name of the receipient</param>
         ''' <param name="address">The e-mail address of the receipient</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     <para>RFC-821 standard describes as following:</para>
         '''	    <para>&lt;special&gt; ::= "&lt;" | "&gt;" | "(" | ")" | "[" | "]" | "\" | "."
@@ -1065,10 +913,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''	              characters (ASCII codes 0 through 31 inclusive and
         '''	              127)</para>
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	09.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function CreateReceipientString(ByVal name As String, ByVal address As String) As String
             If name <> "" Then
                 name = name.Replace("\", "\\")
@@ -1084,29 +928,17 @@ Namespace CompuMaster.camm.WebManager.Messaging
             End If
             Return CType(IIf(name <> "", name & " ", ""), String) & "<" & address & ">"
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a valid receipient string for the address lists parameters of method SendEMail
         ''' </summary>
         ''' <param name="address">The e-mail address of the receipient</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	09.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function CreateReceipientString(ByVal address As String) As String
             Return CreateReceipientString(Nothing, address)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Extract e-mail addresses from a receipients list constructed by method CreateReceipientString or manually
         ''' </summary>
         ''' <param name="receipientsCommaSeparated"></param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     Valid parameter values are e. g. 
         ''' <list>
@@ -1115,10 +947,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <item>compumaster@web.de,jwezel@compumaster.de</item>
         ''' </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	09.05.2005	Created
-        ''' </history>
-        ''' ----------------------------------------------------------------------------- 
         Private Shared Function SplitEMailAddressesFromReceipientsList(ByVal receipientsCommaSeparated As String) As String()
             Dim Result As String() = Utils.SplitString(receipientsCommaSeparated, ","c, "\"c)
             For MyCounter As Integer = 0 To Result.Length - 1
@@ -1156,7 +984,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' Split an e-mail address in typical encoding for SMTP protocol into the two parts e-mail address and receipient name
         ''' </summary>
         ''' <param name="emailAddressInSmtpFormat"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Shared Function SplitEMailAddressesIntoAddressParts(ByVal emailAddressInSmtpFormat As String) As EMailReceipient
             Dim Receipient As New EMailReceipient
@@ -1182,7 +1009,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' Split an e-mail address list in typical encoding for SMTP protocol into the two parts e-mail address and receipient name
         ''' </summary>
         ''' <param name="emailAddressesInSmtpFormat"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Shared Function SplitEMailAddressesIntoEMailRecipientsFromReceipientsList(ByVal emailAddressesInSmtpFormat As String) As EMailReceipient()
             Dim Result As String() = Utils.SplitString(emailAddressesInSmtpFormat, ","c, "\"c)
@@ -1283,49 +1109,25 @@ Namespace CompuMaster.camm.WebManager.Messaging
 #Region "Mail Queue"
 
         Private QueueTransactionData As ArrayList
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Start a transaction for queuing mails
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	09.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub BeginQueueTransaction()
             If Not QueueTransactionData Is Nothing Then
                 RollbackQueueTransaction()
             End If
             QueueTransactionData = New ArrayList
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Commit all changes in the transaction
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	09.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub CommitQueueTransaction()
             CommitQueueTransaction(Nothing)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Commit all changes in the transaction
         ''' </summary>
         ''' <param name="connection">An open connection to the camm Web-Manager database</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	09.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub CommitQueueTransaction(ByVal connection As IDbConnection)
 
             Dim ReUseDBConnection As Boolean = True
@@ -1336,10 +1138,10 @@ Namespace CompuMaster.camm.WebManager.Messaging
 
             Dim MyCmd As New SqlCommand
             MyCmd.Connection = CType(connection, SqlConnection)
-            MyCmd.CommandText = _
-                    "CREATE TABLE #mqueuetransids (ID int)" & vbNewLine & _
-                    Me.QueueTransactionSqlRelatedIDs & vbNewLine & _
-                    "UPDATE dbo.Log_eMailMessages SET State = " & CType(QueueMonitoring.QueueStates.Queued, Byte).ToString & " FROM dbo.Log_eMailMessages INNER JOIN #mqueuetransids ON dbo.Log_eMailMessages.ID = #mqueuetransids.ID" & vbNewLine & _
+            MyCmd.CommandText =
+                    "CREATE TABLE #mqueuetransids (ID int)" & vbNewLine &
+                    Me.QueueTransactionSqlRelatedIDs & vbNewLine &
+                    "UPDATE dbo.Log_eMailMessages SET State = " & CType(QueueMonitoring.QueueStates.Queued, Byte).ToString & " FROM dbo.Log_eMailMessages INNER JOIN #mqueuetransids ON dbo.Log_eMailMessages.ID = #mqueuetransids.ID" & vbNewLine &
                     "DROP TABLE #mqueuetransids"
             MyCmd.CommandType = CommandType.Text
 
@@ -1350,32 +1152,16 @@ Namespace CompuMaster.camm.WebManager.Messaging
             End If
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Roll back all changes in the transaction
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	09.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub RollbackQueueTransaction()
             RollbackQueueTransaction(Nothing)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Roll back all changes in the transaction
         ''' </summary>
         ''' <param name="connection">An open connection to the camm Web-Manager database</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	09.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub RollbackQueueTransaction(ByVal connection As IDbConnection)
 
             Dim ReUseDBConnection As Boolean = True
@@ -1386,10 +1172,10 @@ Namespace CompuMaster.camm.WebManager.Messaging
 
             Dim MyCmd As New SqlCommand
             MyCmd.Connection = CType(connection, SqlConnection)
-            MyCmd.CommandText = _
-                    "CREATE TABLE #mqueuetransids (ID int)" & vbNewLine & _
-                    Me.QueueTransactionSqlRelatedIDs & vbNewLine & _
-                    "DELETE dbo.Log_eMailMessages FROM dbo.Log_eMailMessages INNER JOIN #mqueuetransids ON dbo.Log_eMailMessages.ID = #mqueuetransids.ID" & vbNewLine & _
+            MyCmd.CommandText =
+                    "CREATE TABLE #mqueuetransids (ID int)" & vbNewLine &
+                    Me.QueueTransactionSqlRelatedIDs & vbNewLine &
+                    "DELETE dbo.Log_eMailMessages FROM dbo.Log_eMailMessages INNER JOIN #mqueuetransids ON dbo.Log_eMailMessages.ID = #mqueuetransids.ID" & vbNewLine &
                     "DROP TABLE #mqueuetransids"
             MyCmd.CommandType = CommandType.Text
             If ReUseDBConnection = True Then
@@ -1399,18 +1185,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
             End If
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return a piece of sql code for accessing the related IDs to be used in commit or rollback commands
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	09.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function QueueTransactionSqlRelatedIDs() As String
             Dim Result As New System.Text.StringBuilder
             For MyCounter As Integer = 0 To Me.QueueTransactionData.Count - 1
@@ -1421,8 +1198,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
             Next
             Return Result.ToString
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Send an e-mail to the mail queue
         ''' </summary>
@@ -1443,17 +1218,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <param name="RequestReadingConfirmation">Request a reading confirmation</param>
         ''' <param name="AdditionalHeaders">Additional headers for the e-mail</param>
         ''' <returns>True if successfull, false for failures (also see bufErrorDetails)</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function SendViaQueue(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal MsgCharset As String, ByVal connection As IDbConnection, ByRef bufErrorDetails As String, ByVal Attachments() As CompuMaster.camm.WebManager.Messaging.EMailAttachment, ByVal Priority As CompuMaster.camm.WebManager.Messaging.EMails.Priority, ByVal Sensitivity As CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity, ByVal RequestTransmissionConfirmation As Boolean, ByVal RequestReadingConfirmation As Boolean, ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection) As Boolean
             Return SendViaQueue(CreateReceipientString(RcptName, RcptAddress), Nothing, Nothing, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, connection, bufErrorDetails, Attachments, Priority, Sensitivity, RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients via the mail queue
         ''' </summary>
@@ -1475,12 +1242,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <param name="requestReadingConfirmation">Request a reading confirmation</param>
         ''' <param name="additionalHeaders">Additional headers for the e-mail</param>
         ''' <returns>True if successfull, false for failures (also see bufErrorDetails)</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function SendViaQueue(ByVal rcptAddresses_To As String, ByVal rcptAddresses_CC As String, ByVal rcptAddresses_BCC As String, ByVal msgSubject As String, ByVal msgTextBody As String, ByVal msgHTMLBody As String, ByVal senderName As String, ByVal senderAddress As String, ByVal msgCharset As String, ByVal connection As IDbConnection, ByRef bufErrorDetails As String, ByVal attachments() As Messaging.EMailAttachment, ByVal priority As CompuMaster.camm.WebManager.Messaging.EMails.Priority, ByVal sensitivity As CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity, ByVal requestTransmissionConfirmation As Boolean, ByVal requestReadingConfirmation As Boolean, ByVal additionalHeaders As Collections.Specialized.NameValueCollection) As Boolean
             Try
                 FixHtmlContentIDs(msgHTMLBody, attachments)
@@ -1738,8 +1499,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <param name="RequestReadingConfirmation">Request a reading confirmation</param>
         ''' <param name="AdditionalHeaders">Additional headers for the e-mail</param>
         ''' <returns>True if successfull, false for failures (also see bufErrorDetails)</returns>
-        ''' <remarks>
-        ''' </remarks>
         Private Function System_SendEMail_MultipleRcpts_NetFramework2(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal Attachments As CompuMaster.camm.WebManager.Messaging.EMailAttachment() = Nothing, Optional ByVal Priority As CompuMaster.camm.WebManager.Messaging.EMails.Priority = Nothing, Optional ByVal Sensitivity As CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing) As Boolean
             Dim Result As Boolean
             Dim MyMail As New System.Net.Mail.MailMessage()
@@ -2057,8 +1816,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <param name="RequestReadingConfirmation">Request a reading confirmation</param>
         ''' <param name="AdditionalHeaders">Additional headers for the e-mail</param>
         ''' <returns>True if successfull, false for failures (also see bufErrorDetails)</returns>
-        ''' <remarks>
-        ''' </remarks>
         Private Function System_SendEMail_MultipleRcpts_NetFramework(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal Attachments As CompuMaster.camm.WebManager.Messaging.EMailAttachment() = Nothing, Optional ByVal Priority As CompuMaster.camm.WebManager.Messaging.EMails.Priority = Nothing, Optional ByVal Sensitivity As CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing) As Boolean
 #If NetFramework <> "1_1" Then
             Return System_SendEMail_MultipleRcpts_NetFramework2(RcptAddresses_To, RcptAddresses_CC, RcptAddresses_BCC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, bufErrorDetails, Attachments, Priority, Sensitivity, RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
@@ -2072,7 +1829,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
 #If VS2015OrHigher = True Then
 #Disable Warning BC40000 'disable obsolete warnings because this code must be compatible to .NET 1.1
 #End If
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Send an e-mail via the default e-mail handler of the .NET Framework
         ''' </summary>
@@ -2096,15 +1852,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     Requires the existance of the CDO.Message object on MS platforms, otherwise this method will fail
         '''     This component only allows to send the e-mail either in plain text or html code format
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function System_SendEMailEx_NetFramework1(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal Attachments As CompuMaster.camm.WebManager.Messaging.EMailAttachment() = Nothing, Optional ByVal Priority As CompuMaster.camm.WebManager.Messaging.EMails.Priority = Nothing, Optional ByVal Sensitivity As CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing) As Boolean
             Return System_SendEMail_MultipleRcpts_NetFramework1(EMails.CreateReceipientString(RcptName, RcptAddress), Nothing, Nothing, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, MsgCharset, bufErrorDetails, Attachments, CType(Priority, Messaging.EMails.Priority), CType(Sensitivity, Messaging.EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Send an e-mail to multiple receipents via the default e-mail handler of the .NET Framework
         ''' </summary>
@@ -2125,12 +1875,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <param name="RequestReadingConfirmation">Request a reading confirmation</param>
         ''' <param name="AdditionalHeaders">Additional headers for the e-mail</param>
         ''' <returns>True if successfull, false for failures (also see bufErrorDetails)</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function System_SendEMail_MultipleRcpts_NetFramework1(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal Attachments As CompuMaster.camm.WebManager.Messaging.EMailAttachment() = Nothing, Optional ByVal Priority As CompuMaster.camm.WebManager.Messaging.EMails.Priority = Nothing, Optional ByVal Sensitivity As CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing) As Boolean
             Dim MyMail As New System.Web.Mail.MailMessage
             Dim ErrorFound As String = Nothing
@@ -2434,10 +2178,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
     ''' <remarks>
     '''     ToDo: some fields are not yet use in queueing and queue send method, implement them everywhere
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	24.11.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class MailMessage
 
         Sub New(ByVal xml As String, ByVal webManager As WMSystem)
@@ -2684,17 +2424,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
 
     End Class
 #End Region
-
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     An e-mail attachment
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[AdminSupport]	04.05.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class EMailAttachment
         Public Sub New()
             'Do nothing
@@ -2717,16 +2449,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         End Sub
 
         Private _AttachmentData As Byte()
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Binary data for this attachment
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property RawData() As Byte()
             Get
                 Return _AttachmentData
@@ -2737,16 +2462,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         End Property
 
         Private _AttachmentData_Filename As String
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The filename for the binary data
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property RawDataFilename() As String
             Get
                 Return _AttachmentData_Filename
@@ -2757,16 +2475,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         End Property
 
         Private _AttachmentFile As String
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A path to a file which shall be included
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property FilePath() As String
             Get
                 Return _AttachmentFile
@@ -2777,17 +2488,12 @@ Namespace CompuMaster.camm.WebManager.Messaging
         End Property
 
         Private _PlaceholderInMHTML_ToReplaceWithCID As String ' <Obsolete("Use ContentID instead", False), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A placeholder string (without prefix "cid:") in the HTML code of the message (there it must be with prefix "cid:") which shall be replaced by the CID code of the attachment
         ''' </summary>
         ''' <remarks>
         ''' <para>Define the placeholder which shall be replaced by the Content-ID for the contents of a file to the email. Emails formatted in HTML can include images with this information and internally reference the image through a "cid" hyperlink.</para>
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property PlaceholderInMhtmlToBeReplacedByContentID() As String
             Get
                 Return _PlaceholderInMHTML_ToReplaceWithCID
@@ -2802,48 +2508,25 @@ Namespace CompuMaster.camm.WebManager.Messaging
     ''' <summary>
     '''     Methods for the mail queue manager
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[AdminSupport]	04.05.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class QueueMonitoring
 
         Private _WebManager As WMSystem
         Friend Sub New(ByVal cammWebManager As WMSystem)
             _WebManager = cammWebManager
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Number of mails in the mail queue
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	09.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function MailsInQueue() As Integer
             Dim Result As Object
-            Result = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(_WebManager.ConnectionString), _
+            Result = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(_WebManager.ConnectionString),
                             "SELECT COUNT(*) AS NumberOfItems FROM [dbo].[Log_eMailMessages] WHERE State = " & CType(QueueStates.Queued, Byte).ToString & " OR (State = " & CType(QueueStates.FailureAfter1Trial, Byte).ToString & " AND DATEDIFF (mi,[DateTime],GetDate()) > 15) OR (State IN (" & CType(QueueStates.FailureAfter2Trials, Byte) & "," & CType(QueueStates.Sending, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 1)", CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             SetLastActivityDate(New SqlConnection(_WebManager.ConnectionString), Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             Return Utils.Nz(Result, 0)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Process first mail in queue
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub ProcessOneMail()
 
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
@@ -2853,14 +2536,14 @@ Namespace CompuMaster.camm.WebManager.Messaging
             Dim MyReader As IDataReader = Nothing
             Dim MyMailID As Integer, MyMailData As String, MyMailState As QueueStates, MyMailDateTime As DateTime
             Try
-                MyReader = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReader( _
-                        MyConn, _
-                        "declare @ID int, @OriginState int" & vbNewLine & _
-                            "SELECT TOP 1 @ID = [ID], @OriginState = State FROM [dbo].[Log_eMailMessages] WHERE State = " & CType(QueueStates.Queued, Byte).ToString & " OR (State = " & CType(QueueStates.FailureAfter1Trial, Byte).ToString & " AND DATEDIFF (mi,[DateTime],GetDate()) > 15) OR (State IN (" & CType(QueueStates.FailureAfter2Trials, Byte) & "," & CType(QueueStates.Sending, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 1) ORDER BY State" & vbNewLine & _
-                            "UPDATE [dbo].[Log_eMailMessages] SET State = " & CType(QueueStates.Sending, Byte).ToString & ", [DateTime] = GETDATE() WHERE ID = @ID" & vbNewLine & _
-                            "SELECT [ID], [UserID], [data], [State], [DateTime], @OriginState As OriginState FROM [dbo].[Log_eMailMessages] WHERE ID = @ID", _
-                        CommandType.Text, _
-                        Nothing, _
+                MyReader = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReader(
+                        MyConn,
+                        "declare @ID int, @OriginState int" & vbNewLine &
+                            "SELECT TOP 1 @ID = [ID], @OriginState = State FROM [dbo].[Log_eMailMessages] WHERE State = " & CType(QueueStates.Queued, Byte).ToString & " OR (State = " & CType(QueueStates.FailureAfter1Trial, Byte).ToString & " AND DATEDIFF (mi,[DateTime],GetDate()) > 15) OR (State IN (" & CType(QueueStates.FailureAfter2Trials, Byte) & "," & CType(QueueStates.Sending, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 1) ORDER BY State" & vbNewLine &
+                            "UPDATE [dbo].[Log_eMailMessages] SET State = " & CType(QueueStates.Sending, Byte).ToString & ", [DateTime] = GETDATE() WHERE ID = @ID" & vbNewLine &
+                            "SELECT [ID], [UserID], [data], [State], [DateTime], @OriginState As OriginState FROM [dbo].[Log_eMailMessages] WHERE ID = @ID",
+                        CommandType.Text,
+                        Nothing,
                         Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenConnection)
                 'Read one data row
                 If Not MyReader.Read Then
@@ -2925,20 +2608,12 @@ Namespace CompuMaster.camm.WebManager.Messaging
             End Try
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Send the mail which has been serialized as XML data
         ''' </summary>
         ''' <param name="xml">The XML representation of the mail data</param>
         ''' <param name="mailQueueID">The ID of the item in the mail queue, required for logging purposes only</param>
         ''' <returns>True if successfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function SendMail(ByVal xml As String, ByVal mailQueueID As Integer, ByVal dbConnection As SqlClient.SqlConnection) As Boolean
 
             Dim MailData As New WebManager.Messaging.MailMessage(xml, _WebManager)
@@ -2959,19 +2634,11 @@ Namespace CompuMaster.camm.WebManager.Messaging
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Update the state of a queued item
         ''' </summary>
         ''' <param name="queuedItemID">ID of Log_emailMessage record</param>
         ''' <param name="state">State of an email</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub UpdateQueueState(ByVal queuedItemID As Integer, ByVal state As Messaging.QueueMonitoring.QueueStates)
             Dim dbConn As New System.Data.SqlClient.SqlConnection(Me._WebManager.ConnectionString)
             dbConn.Open()
@@ -2998,19 +2665,10 @@ Namespace CompuMaster.camm.WebManager.Messaging
                 End If
             End Try
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Log_eMailData for emailID
         ''' </summary>
         ''' <param name="queuedItemID">unique id of Log_eMailMessage record</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function LoadMailMessage(ByVal queuedItemID As Integer) As WebManager.Messaging.MailMessage
             Dim result As String
 
@@ -3043,132 +2701,55 @@ Namespace CompuMaster.camm.WebManager.Messaging
 
             Return New MailMessage(result, _WebManager)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Available states in the mail queue table
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Enum QueueStates As Byte
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The mail has been stored into the queue, but hasn't been allowed to be sent yet
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	04.05.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             WaitingForReleaseBeforeQueuing = 0
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Mail has been queued, sending will follow asap.
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	04.05.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Queued = 1
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The queue mailing system is currently engaged to send this mail
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	04.05.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Sending = 2
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Mail transmission has been cancelled by the sending user or the sending application
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	04.05.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Cancelled = 3
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Mail has been delivered without errors
             ''' </summary>
             ''' <remarks>
             '''     This doesn't say that (all of) the receipients have got the mail, it only says that there was no error while sending it
             ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	04.05.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Successfull = 4
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Delivery of the mail has been failed one time
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	04.05.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             FailureAfter1Trial = 5
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Delivery of the mail has been failed two times
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	04.05.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             FailureAfter2Trials = 6
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The transfer will not be repeated, the delivery of the mail has been failed three times
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	04.05.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             FailureAfterLastTrial = 7
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The three time failure is accepted by moderator
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[patil]	24.11.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             FailureAccepted = 8
         End Enum
 
 #Region "Trigger/register the availability of the queuing mechanism"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Set the last error information by the mail queue processor
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[Zeutzheim]	06.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub SetLastErrorDetails(ByVal errorDetails As String, ByVal mailQueueID As Integer, ByVal connection As SqlConnection, ByVal automations As CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations)
             Dim _DBBuildNo As Integer = Setup.DatabaseUtils.Version(Me._WebManager, True).Build
             If _DBBuildNo >= 155 Then
@@ -3185,63 +2766,47 @@ Namespace CompuMaster.camm.WebManager.Messaging
                 End Try
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Set the last activity information by the mail queue processor
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub SetLastActivityDate(ByVal connection As SqlConnection, ByVal automations As CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations)
             Try
-                CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery( _
-                        connection, _
-                        "DECLARE @RowNumber int" & vbNewLine & _
-                            "SELECT @RowNumber = COUNT(*)" & vbNewLine & _
-                            "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
-                            "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing'" & vbNewLine & _
-                            "SELECT @RowNumber" & vbNewLine & _
-                            vbNewLine & _
-                            "IF @RowNumber = 0 " & vbNewLine & _
-                            "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
-                            "		(ValueNVarChar, PropertyName, ValueDateTime)" & vbNewLine & _
-                            "	VALUES (N'camm WebManager', N'LastMailQueueProcessing', GetDate())" & vbNewLine & _
-                            "ELSE" & vbNewLine & _
-                            "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
-                            "	SET ValueDateTime = GetDate()" & vbNewLine & _
-                            "	WHERE ValueNVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing'" & vbNewLine, _
-                        CommandType.Text, _
-                        Nothing, _
+                CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(
+                        connection,
+                        "DECLARE @RowNumber int" & vbNewLine &
+                            "SELECT @RowNumber = COUNT(*)" & vbNewLine &
+                            "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
+                            "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing'" & vbNewLine &
+                            "SELECT @RowNumber" & vbNewLine &
+                            vbNewLine &
+                            "IF @RowNumber = 0 " & vbNewLine &
+                            "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine &
+                            "		(ValueNVarChar, PropertyName, ValueDateTime)" & vbNewLine &
+                            "	VALUES (N'camm WebManager', N'LastMailQueueProcessing', GetDate())" & vbNewLine &
+                            "ELSE" & vbNewLine &
+                            "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine &
+                            "	SET ValueDateTime = GetDate()" & vbNewLine &
+                            "	WHERE ValueNVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing'" & vbNewLine,
+                        CommandType.Text,
+                        Nothing,
                         automations)
             Catch
             End Try
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Has the monitor been active in the last 30 minutes?
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Function MonitorIsActive() As Boolean
 
             Dim Result As Integer
             Try
-                Result = CType(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar( _
-                        New SqlConnection(_WebManager.ConnectionString), _
-                            "SELECT COUNT(*)" & vbNewLine & _
-                            "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
-                            "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing' AND DATEDIFF (mi,[ValueDateTime],GetDate()) < 30", _
-                        CommandType.Text, _
-                        Nothing, _
+                Result = CType(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(
+                        New SqlConnection(_WebManager.ConnectionString),
+                            "SELECT COUNT(*)" & vbNewLine &
+                            "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
+                            "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing' AND DATEDIFF (mi,[ValueDateTime],GetDate()) < 30",
+                        CommandType.Text,
+                        Nothing,
                         Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
             Catch
                 Result = 0
@@ -3285,22 +2850,16 @@ Namespace CompuMaster.camm.WebManager.Messaging
             End If
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Remove old lines from the mail queue which are older than 14 days
         ''' </summary>
         ''' <remarks>
         '''     An additional new log entry will be created to log the truncation
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub CleanUpOldQueueElements(ByVal connection As SqlConnection)
-            CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery( _
-                        connection, _
-                        "DELETE [dbo].[Log_eMailMessages] FROM (SELECT ID FROM [dbo].[Log_eMailMessages] WHERE State IN (" & CType(QueueStates.Cancelled, Byte) & "," & CType(QueueStates.Successfull, Byte) & "," & CType(QueueStates.FailureAfterLastTrial, Byte) & "," & CType(QueueStates.FailureAccepted, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 90) AS toremove WHERE dbo.Log_eMailMessages.ID = toremove.ID", _
+            CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(
+                        connection,
+                        "DELETE [dbo].[Log_eMailMessages] FROM (SELECT ID FROM [dbo].[Log_eMailMessages] WHERE State IN (" & CType(QueueStates.Cancelled, Byte) & "," & CType(QueueStates.Successfull, Byte) & "," & CType(QueueStates.FailureAfterLastTrial, Byte) & "," & CType(QueueStates.FailureAccepted, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 90) AS toremove WHERE dbo.Log_eMailMessages.ID = toremove.ID",
                         CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.None, 300)
         End Sub
 #End Region

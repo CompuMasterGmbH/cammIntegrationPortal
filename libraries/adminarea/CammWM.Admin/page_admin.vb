@@ -28,8 +28,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''' <summary>
     '''     The base page for all administration page of camm Web-Manager
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public MustInherit Class Page
         Inherits CompuMaster.camm.WebManager.Pages.ProtectedPage
 
@@ -47,7 +45,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <summary>
         ''' Is the current user a security operator?
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>Result is cached</remarks>
         Public Function CurrentAdminIsSecurityOperator() As Boolean
             If _CurrentAdminIsSecurityOperator = TriState.UseDefault Then
@@ -68,7 +65,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <summary>
         ''' Is the current user a supervisor?
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>Result is cached</remarks>
         Public Function CurrentAdminIsSupervisor() As Boolean
             If _CurrentAdminIsSupervisor = TriState.UseDefault Then
@@ -94,7 +90,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <summary>
         ''' Is the current user a SecurityMaster?
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>Result is cached</remarks>
         Public Function CurrentAdminIsSecurityMaster(securityMasterType As AdministrationItemType) As Boolean
             Select Case securityMasterType

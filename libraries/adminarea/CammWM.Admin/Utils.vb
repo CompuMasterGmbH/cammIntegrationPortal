@@ -164,7 +164,6 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' </summary>
         ''' <param name="text">text</param>
         ''' <param name="strToKill">last occurance of this string which should be removed</param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Friend Shared Function RemoveLastOf(ByVal text As String, ByVal strToKill As String) As String
             Dim position As Integer = text.LastIndexOf(strToKill)
@@ -178,7 +177,6 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' Generates a token to guard against CSRF attacks
         ''' </summary>
         ''' <param name="additionalInput">string to pass to the hash function </param>
-        ''' <returns></returns>
         Friend Shared Function GetCsrfToken(ByVal additionalInput As String) As String
             Dim token As String = additionalInput
             If Not HttpContext.Current Is Nothing Then

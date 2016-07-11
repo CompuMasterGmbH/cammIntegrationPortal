@@ -27,8 +27,6 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
     ''' <summary>
     '''     The floating menu on the right bottom which allows navigation to top of the current page or a history go back
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks> 
     Public Class FloatingMenu
         Inherits System.Web.UI.UserControl
 

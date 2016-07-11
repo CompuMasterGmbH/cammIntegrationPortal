@@ -23,12 +23,6 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
     ''' <summary>
     '''     Processes action events show email text, resend email, accept failure.
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[patil]	25.11.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class MailQueueMonitorActionControl
         Inherits CompuMaster.camm.WebManager.Controls.UserControl
 
@@ -93,17 +87,10 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
         End Sub
 
         Private _EmailID As Integer
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Unique ID of email analysis record
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend WriteOnly Property EmailID() As Integer
             Set(ByVal Value As Integer)
                 Me._EmailID = Value
@@ -111,17 +98,10 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
         End Property
 
         Private _QueueState As Messaging.QueueMonitoring.QueueStates
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Email queue state
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend WriteOnly Property QueueState() As Messaging.QueueMonitoring.QueueStates
             Set(ByVal Value As Messaging.QueueMonitoring.QueueStates)
                 Me._QueueState = Value
@@ -129,17 +109,10 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
         End Property
 
         Private _IsAuthorisedToSeeEmailText As Boolean
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is user authorised to view/moderate this email
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend WriteOnly Property IsAuthorisedToSeeEmailText() As Boolean
             Set(ByVal Value As Boolean)
                 Me._IsAuthorisedToSeeEmailText = Value
@@ -154,19 +127,11 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
         End Property
 
         Friend ResultPage As Pages.Administration.MailQueueMonitor
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Event to resend the email
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub LinkbuttonResend_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles LinkbuttonResend.Click
 
             Dim d As New Pages.Administration.MailQueueMonitor.DataService
@@ -175,45 +140,31 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
 
             Me.ResultPage.LoadData(cammWebManager.ConnectionString)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Accecpts email failure and updates record in database
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub LinkbuttonFailure_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles LinkbuttonFailure.Click
             Me.cammWebManager.MessagingQueueMonitoring.UpdateQueueState(Me._EmailID, Messaging.QueueMonitoring.QueueStates.FailureAccepted)
             Me.ResultPage.LoadData(cammWebManager.ConnectionString)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends this email to the Supervisor.
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	05.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub LinkbuttonSendThisEmailToMe_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles LinkbuttonSendThisEmailToMe.Click
             Dim Mail As Messaging.MailMessage = Me.cammWebManager.MessagingQueueMonitoring.LoadMailMessage(Me._EmailID)
 
             Dim userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation = Me.cammWebManager.CurrentUserInfo
 
-            Me.cammWebManager.MessagingEMails.QueueEMail(userInfo.FullName, _
-                userInfo.EMailAddress, _
-                Mail.Subject, _
-                Mail.BodyPlainText, _
-                Mail.BodyHtml, _
-                userInfo.FullName, _
+            Me.cammWebManager.MessagingEMails.QueueEMail(userInfo.FullName,
+                userInfo.EMailAddress,
+                Mail.Subject,
+                Mail.BodyPlainText,
+                Mail.BodyHtml,
+                userInfo.FullName,
                 userInfo.EMailAddress)
 
             'set status to Failure accepted
@@ -234,8 +185,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''' <summary>
     '''     Used to choose date
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Class MailQueueMonitorDatePicker
         Inherits CompuMaster.camm.WebManager.Pages.Administration.Page
 
@@ -264,18 +213,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End If
             ButtonOK.Attributes.Add("onClick", "javascript:window.close();")
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     displays date choosen by user in text box
         ''' </summary>
         ''' <param name="s"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub Calendar_SelectionChanged(ByVal s As Object, ByVal e As EventArgs) Handles CalendarDatePicker.SelectionChanged
             TextDate.Text = CalendarDatePicker.SelectedDate.ToShortDateString
         End Sub
@@ -287,14 +229,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''' <summary>
     '''     Displays email content
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[patil]	25.11.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class MailQueueMonitorShowEmail
-        Inherits CompuMaster.camm.WebManager.pages.Administration.Page
+        Inherits CompuMaster.camm.WebManager.Pages.Administration.Page
 
         Protected LabelTitle As System.Web.UI.WebControls.Label
         Protected LabelEmailText As System.Web.UI.WebControls.Label
@@ -338,8 +274,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End Try
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for current user authorization to see email body
         ''' </summary>
@@ -348,12 +282,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="cc">receipients address in CC</param>
         ''' <param name="bcc">receipients address Bcc</param>
         ''' <returns>Returns True if user is authorised</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function IsAuthorisedToSeeEmailText(ByVal fromAddress As String, ByVal toAddress As String, ByVal cc As String, ByVal bcc As String) As Boolean
             Dim result As Boolean = False
 
@@ -395,12 +323,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''' <summary>
     '''     This page allows the supervisors to view the activity of the e-mail queue and to restart a mail item when there were some problems
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	21.11.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class MailQueueMonitor
         Inherits CompuMaster.camm.WebManager.Pages.Administration.Page
 
@@ -442,89 +364,57 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private boolFaliureStatus As Boolean
 
 #Region " Sub PageOnLoad "
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Controls on web page are initialized 
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub PageOnLoad(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-                Me.ButtonFilterNow.Attributes.Add("onclick", "javascript:return checkFilterNowValidity();")
-                Me.InitializeControls()
-                data.ConnectionString = cammWebManager.ConnectionString
+            Me.ButtonFilterNow.Attributes.Add("onclick", "javascript:return checkFilterNowValidity();")
+            Me.InitializeControls()
+            data.ConnectionString = cammWebManager.ConnectionString
 
-                If Not Page.IsPostBack Then
-                    _LoadData(cammWebManager.ConnectionString)
-                    LoadData(cammWebManager.ConnectionString)
+            If Not Page.IsPostBack Then
+                _LoadData(cammWebManager.ConnectionString)
+                LoadData(cammWebManager.ConnectionString)
+            Else
+                If Not CachedDataFromViewState Is Nothing Then
+                    Dim plain As String = CompuMaster.camm.WebManager.Administration.Tools.Data.DataTables.ConvertToPlainTextTable(CachedDataFromViewState)
+                    Me.AddAnalysis(CachedDataFromViewState)
+                    'Else
+                    '    _LoadData()
+                    '    LoadData()
+                End If
+            End If
+
+            If CheckBoxListState.Items.Count > 0 Then
+                boolFaliureStatus = CheckFaliureStatus()
+                If Not boolFaliureStatus Then
+                    TableAnalysis.Rows(0).Cells(8).Visible = False
                 Else
-                    If Not CachedDataFromViewState Is Nothing Then
-                        Dim plain As String = CompuMaster.camm.WebManager.Administration.Tools.Data.DataTables.ConvertToPlainTextTable(CachedDataFromViewState)
-                        Me.AddAnalysis(CachedDataFromViewState)
-                        'Else
-                        '    _LoadData()
-                        '    LoadData()
-                    End If
+                    TableAnalysis.Rows(0).Cells(8).Visible = True
                 End If
-
-                If CheckBoxListState.Items.Count > 0 Then
-                    boolFaliureStatus = CheckFaliureStatus()
-                    If Not boolFaliureStatus Then
-                        TableAnalysis.Rows(0).Cells(8).Visible = False
-                    Else
-                        TableAnalysis.Rows(0).Cells(8).Visible = True
-                    End If
-                End If
+            End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Email analysis done and added to page
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub PageOnPreRender(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.PreRender
-                LoadData(cammWebManager.ConnectionString)
-                TextboxFrom.Text = Trim(HttpContext.Current.Request.Form("TextboxFrom"))
-                TextboxTo.Text = Trim(HttpContext.Current.Request.Form("TextboxTo"))
+            LoadData(cammWebManager.ConnectionString)
+            TextboxFrom.Text = Trim(HttpContext.Current.Request.Form("TextboxFrom"))
+            TextboxTo.Text = Trim(HttpContext.Current.Request.Form("TextboxTo"))
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The ClientID of the server form to access it with JavaScript
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Function ServerFormClientID() As String
             Return Me.LookupServerForm().ClientID
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load the data
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	29.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub _LoadData(ByVal ConnectionString As String)
             Dim analysis As DataTable
             If Page.IsPostBack OrElse CachedDataFromViewState Is Nothing Then
@@ -536,16 +426,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Me.AddAnalysis(analysis)
             CachedDataFromViewState = analysis
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load the data from the database when it hasn't already been loaded
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	29.11.2005	Created
-        ''' </history>
         ''' ---------------------------------------------------------------------------
         Friend Sub LoadData(ByVal ConnectionString As String)
             Static DataAlreadyLoaded As Boolean
@@ -554,24 +437,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 DataAlreadyLoaded = True
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Cache the output data from the old request for the new post-back-request
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	29.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Property CachedDataFromViewState() As DataTable
             Get
-                If viewstate("DataSet") Is Nothing Then
+                If ViewState("DataSet") Is Nothing Then
                     Return Nothing
                 Else
-                    Dim ds As DataSet = viewstate("DataSet")
+                    Dim ds As DataSet = ViewState("DataSet")
                     If ds.Tables.Count = 1 Then
                         Return ds.Tables(0)
                     Else
@@ -582,22 +457,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Set(ByVal Value As DataTable)
                 Dim ds As New DataSet
                 ds.Tables.Add(Value)
-                viewstate("DataSet") = ds
+                ViewState("DataSet") = ds
             End Set
         End Property
 
 #Region " Authorization "
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Security roles in Mail Queue Monitor
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	25.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Enum SecurityRoles As Byte
             Supervisor = 11
             SecurityOperator = 12
@@ -605,18 +472,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Enum
 
         Private _SecurityRole As SecurityRoles
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Security role of current user
         ''' </summary>
         ''' <param name="cammWebManager"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	25.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Function SecurityRole(ByVal cammWebManager As CompuMaster.camm.WebManager.WMSystem) As SecurityRoles
             Dim result As SecurityRoles
 
@@ -636,16 +495,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Function
 
 #End Region
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Initializes controls on web page
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	25.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub InitializeControls()
             If Not Me.Page.IsPostBack Then
                 Me.AddListItem(Me.CheckBoxListState, Messaging.QueueMonitoring.QueueStates.WaitingForReleaseBeforeQueuing.ToString, CByte(Messaging.QueueMonitoring.QueueStates.WaitingForReleaseBeforeQueuing).ToString, False)
@@ -671,7 +523,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 HyperlinkCalendarFrom.Attributes("onClick") = "window.open('mailqueue_monitor_datepicker.aspx?tbn=" & Me.TextboxFrom.ClientID & "', 'mainqueue_monitor_datepicker_from', 'alwaysRaised=yes, left=200, top=200, screenX=200, screenY= 200, width=200, height=195, resizable=no scrollbars=no').focus(); return (false);"
             End If
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checkboxlist add item
         ''' </summary>
@@ -679,12 +530,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="text">text of item</param>
         ''' <param name="value">value of item</param>
         ''' <param name="checked">denotes whether item is selected or not</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub AddListItem(ByVal ctrl As ListControl, ByVal text As String, ByVal value As String, ByVal checked As Boolean)
             Dim item As ListItem = New ListItem
             item.Text = text
@@ -693,7 +538,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             item.Selected = checked
             ctrl.Items.Add(item)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Default analysis as Data table
         ''' </summary>
@@ -815,25 +659,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim bcc As String = Server.HtmlEncode(Utils.Nz(dRow("Bcc"), ""))
                 Dim ToType As ToType = dRow("ToType")
 
-                myCounter = Me.AddRowToAnalysisTable(AddHiddenArea, ToAddressCount, Counter, EMailID, Subject, _
+                myCounter = Me.AddRowToAnalysisTable(AddHiddenArea, ToAddressCount, Counter, EMailID, Subject,
                    State, Sender, ToAddress, SentTime, fromAddress, cc, bcc, ToType)
             Next
         End Sub
-
-
-
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Filtered analysis as data table
         ''' </summary>
         ''' <returns>DataTable with filtered analysis data</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function FilteredAnalysisDataTable(ByVal ConnectionString As String) As DataTable
             Dim result As New DataTable
             With result.Columns
@@ -923,18 +756,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Return result
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     If current email data fits in filtering condition then returns true else false.
         ''' </summary>
         ''' <param name="mail">object of Type Mail</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function IsAddRowToFilteredTable(ByVal mail As Messaging.MailMessage) As Boolean
             Dim result As Boolean = True
 
@@ -970,17 +795,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Return result
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sort string for sorting purpose
         ''' </summary>
         ''' <returns>String to sort analysis</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function SortString() As String
             Dim result As String
 
@@ -1011,27 +829,18 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Return result
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Defines current sorting id
         ''' </summary>
         ''' <returns>Sorting ID</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Property CurrentSortID() As MailQueueMonitor.Sorting
             Get
-                Return CType(viewstate("CurrentSortID"), MailQueueMonitor.Sorting)
+                Return CType(ViewState("CurrentSortID"), MailQueueMonitor.Sorting)
             End Get
             Set(ByVal Value As MailQueueMonitor.Sorting)
-                viewstate("CurrentSortID") = Value
+                ViewState("CurrentSortID") = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Adds TableRow to Analysis table on web page
         ''' </summary>
@@ -1049,12 +858,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="bcc">receipient address as Bcc</param>
         ''' <param name="toType">receipient type defined for filter purpose</param>
         ''' <returns>Return integer - next row location to be added in Analysis table at webpage</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function AddRowToAnalysisTable(ByVal addHiddenArea As Boolean, ByVal toAddressCount As Integer, ByVal counter As Integer, ByVal emailID As Integer, ByVal subject As String, ByVal state As Messaging.QueueMonitoring.QueueStates, ByVal sender As String, ByVal toAddress As String, ByVal sentTime As DateTime, ByVal fromAddress As String, ByVal cc As String, ByVal bcc As String, ByVal toType As MailQueueMonitor.ToType) As Integer
             Dim result As Integer
 
@@ -1074,10 +877,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     myToAddress = Nothing
                 Else
                 End If
-                If toType = toType.To AndAlso toAddressCount <= 1 Then
+                If toType = ToType.To AndAlso toAddressCount <= 1 Then
                     Me.TableAnalysis.Rows.AddAt(myCounter, New AnalysisRow(cammWebManager.ConnectionString, emailID, subject, state.ToString, sender, myToAddress, fromAddress, cc, bcc, sentTime, action, False, boolFaliureStatus))
                 Else
-                    If toType = toType.All Then
+                    If toType = ToType.All Then
                         Me.TableAnalysis.Rows.AddAt(myCounter, New AnalysisRow(cammWebManager.ConnectionString, emailID, subject, state.ToString, sender, myToAddress, fromAddress, cc, bcc, sentTime, action, , boolFaliureStatus))
                     Else
                         Me.TableAnalysis.Rows.AddAt(myCounter, New AnalysisRow(cammWebManager.ConnectionString, emailID, subject, state.ToString, sender, Nothing, fromAddress, cc, bcc, sentTime, action, , boolFaliureStatus))
@@ -1085,13 +888,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
 
                 Select Case toType
-                    Case toType.To
+                    Case ToType.To
                         Me.TableAnalysis.Rows.AddAt(myCounter + 1, New HideDisplayRow(emailID, Nothing, Nothing, toAddress))
-                    Case toType.Cc
+                    Case ToType.Cc
                         Me.TableAnalysis.Rows.AddAt(myCounter + 1, New HideDisplayRow(emailID, cc, Nothing, Nothing))
-                    Case toType.Bcc
+                    Case ToType.Bcc
                         Me.TableAnalysis.Rows.AddAt(myCounter + 1, New HideDisplayRow(emailID, Nothing, bcc, Nothing))
-                    Case toType.All
+                    Case ToType.All
                         Me.TableAnalysis.Rows.AddAt(myCounter + 1, New HideDisplayRow(emailID, cc, bcc, toAddress))
                 End Select
 
@@ -1099,7 +902,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                 result = myCounter + 3
             Else
-                If toType = toType.Cc Or toType = toType.Bcc Then
+                If toType = ToType.Cc Or toType = ToType.Bcc Then
                     Me.TableAnalysis.Rows.AddAt(myCounter, New AnalysisRow(cammWebManager.ConnectionString, emailID, subject, state.ToString, sender, fromAddress, cc, bcc, Nothing, sentTime, action, False, boolFaliureStatus))
                 Else
                     Me.TableAnalysis.Rows.AddAt(myCounter, New AnalysisRow(cammWebManager.ConnectionString, emailID, subject, state.ToString, sender, toAddress, fromAddress, cc, bcc, sentTime, action, False, boolFaliureStatus))
@@ -1111,7 +914,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Return result
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for current user authorization to see email body
         ''' </summary>
@@ -1120,12 +922,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="cc">receipients address in CC</param>
         ''' <param name="bcc">receipients address Bcc</param>
         ''' <returns>Returns True if user is authorised</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function IsAuthorisedToSeeEmailText(ByVal fromAddress As String, ByVal toAddress As String, ByVal cc As String, ByVal bcc As String) As Boolean
             Dim result As Boolean = False
 
@@ -1159,7 +955,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Return result
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     does Log_e-mail message listed for current user
         ''' </summary>
@@ -1168,12 +963,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="cc">receipients address in CC</param>
         ''' <param name="bcc">receipients address Bcc</param>
         ''' <returns>Returns True if user is authorised</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function DoesLog_eMailMessageToBeListedForCurrentUser(ByVal fromAddress As String, ByVal toAddress As String, ByVal cc As String, ByVal bcc As String) As Boolean
             Dim result As Boolean = False
             Select Case Me.SecurityRole(MyBase.cammWebManager)
@@ -1205,7 +994,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End Select
             Return result
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns all selected states from web page, to filter purpose
         ''' </summary>
@@ -1213,10 +1001,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <remarks>
         '''     States as a string separated with comma used in database query e.g. state in (1, 2)
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	25.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function SelectedStatesToFilter() As String
             Dim result As String = ""
 
@@ -1266,17 +1050,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region " Functions "
-            ''' -----------------------------------------------------------------------------
-            ''' <summary>
-            '''     Default analysis to for CSV file
-            ''' </summary>
-            ''' <returns>Datatable with default analysis data</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[patil]	25.11.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Default analysis to for CSV file
+        ''' </summary>
+        ''' <returns>Datatable with default analysis data</returns>
         Private Function GetDefaultAnalysis(ByVal ConnString As String) As DataTable
             Dim result As New DataTable
             With result.Columns
@@ -1347,17 +1124,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Return result
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Filtered analysis for CSV file
         ''' </summary>
         ''' <returns>Datatable with filtered analysis data</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	25.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetFilteredAnalysis(ByVal ConnString As String) As DataTable
             Dim result As New DataTable
             With result.Columns
@@ -1442,33 +1212,18 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Function
 
 #End Region
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     email receipient type
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Enum ToType As Byte
             [To] = 1
             Cc = 2
             Bcc = 3
             All = 4
         End Enum
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     ID to use sort by
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Enum Sorting As Byte
             StateASC = 1
             StateDESC = 2
@@ -1484,17 +1239,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 #Region " Properties "
         Private _DataToFilter As DataToFilterClass
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Property to hold Data to filter in session.
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	25.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Property DataToFilter() As DataToFilterClass
             Get
                 Return _DataToFilter
@@ -1506,17 +1254,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region " Events "
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Retrives data entered by user from webpage
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetDataToFilterFromWebPage() As DataToFilterClass
             Dim result As New DataToFilterClass
             If CStr(Trim(HttpContext.Current.Request.Form("TextBoxID"))) <> String.Empty Then
@@ -1531,7 +1271,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             'Else
             '    result.State.WaitingForReleaseBeforeQueuing = False
             'End If
-          
+
 
             'If HttpContext.Current.Request.Form("CheckBoxListState:1") = "on" Then
             '    result.State.Queued = True
@@ -1656,46 +1396,32 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Return result
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Reset controls
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub ButtonReset_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles ButtonReset.Click
             HttpContext.Current.Response.Redirect(Utils.ScriptNameWithoutPath)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Export email analysis as CSV file
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub ButtonExportReport_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles ButtonExportReport.Click
             Dim data As DataTable
             Me.DataToFilter = Me.GetDataToFilterFromWebPage
             If Me.DataToFilter Is Nothing Then
                 data = Me.GetDefaultAnalysis(cammWebManager.ConnectionString)
             Else
-                If Me.DataToFilter.EmailID = Nothing AndAlso _
-                     Me.DataToFilter.FromAddress = Nothing AndAlso _
-                     Me.DataToFilter.FromDate = Nothing AndAlso _
-                     Me.DataToFilter.Subject = Nothing AndAlso _
-                     Me.DataToFilter.ToAddress = Nothing AndAlso _
-                     Me.DataToFilter.ToDate = Nothing AndAlso _
-                     Me.DataToFilter.ToType = ToType.All AndAlso _
+                If Me.DataToFilter.EmailID = Nothing AndAlso
+                     Me.DataToFilter.FromAddress = Nothing AndAlso
+                     Me.DataToFilter.FromDate = Nothing AndAlso
+                     Me.DataToFilter.Subject = Nothing AndAlso
+                     Me.DataToFilter.ToAddress = Nothing AndAlso
+                     Me.DataToFilter.ToDate = Nothing AndAlso
+                     Me.DataToFilter.ToType = ToType.All AndAlso
                      Me.DataToFilter.State Is Nothing Then
 
                     data = Me.GetDefaultAnalysis(cammWebManager.ConnectionString)
@@ -1708,18 +1434,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 CompuMaster.camm.WebManager.Administration.Export.SendExportFileAsCsv(MyBase.cammWebManager, data, "UTF-8", "MailQueue")
             End If
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sort email analysis by State 
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub LinkButtonState_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles LinkButtonState.Click
             Dim sortID As MailQueueMonitor.Sorting = Sorting.StateASC
             Select Case Me.CurrentSortID
@@ -1731,18 +1450,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Me.CurrentSortID = sortID
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sort email analysis by Sender
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub LinkButtonSender_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles LinkButtonSender.Click
             Dim sortID As MailQueueMonitor.Sorting = Sorting.SenderASC
             Select Case Me.CurrentSortID
@@ -1754,18 +1466,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Me.CurrentSortID = sortID
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Sorts email analysis by Subject
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub LinkButtonSubject_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles LinkButtonSubject.Click
             Dim sortID As MailQueueMonitor.Sorting = Sorting.SubjectASC
             Select Case Me.CurrentSortID
@@ -1777,18 +1482,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Me.CurrentSortID = sortID
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sorts email analysis by email id
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub LinkButtonID_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles LinkButtonID.Click
             Dim sortID As MailQueueMonitor.Sorting = Sorting.EmailIDASC
             Select Case Me.CurrentSortID
@@ -1800,18 +1498,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Me.CurrentSortID = sortID
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sorts email analysis by Sent time
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub LinkButtonSentTime_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles LinkButtonSentTime.Click
             Dim sortID As MailQueueMonitor.Sorting = Sorting.SentTimeASC
             Select Case Me.CurrentSortID
@@ -1830,12 +1521,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <summary>
         '''     To hold data to filter
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	25.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Class DataToFilterClass
             Public EmailID As Integer
             Public State As States
@@ -1852,12 +1537,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ''' <summary>
             '''     Used to hold the status of State for filter purpose
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[patil]	25.11.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Class States
                 Public WaitingForReleaseBeforeQueuing As Boolean
                 Public Queued As Boolean
@@ -1878,15 +1557,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <summary>
         ''' To display filtered data in tablerow format
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	28.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Class AnalysisRow
             Inherits System.Web.UI.WebControls.TableRow
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             ''' 
             ''' </summary>
@@ -1898,12 +1570,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ''' <param name="sentTime">email sent time</param>
             ''' <param name="action">action Control </param>
             ''' <param name="addHideDisplayButton">add hide dislplay button or not</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[patil]	28.11.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Sub New(ByVal ConnString As String, ByVal emailID As Integer, ByVal subject As String, ByVal state As String, ByVal fromAddress As String, ByVal toAddress As String, ByVal fromEmailId As String, ByVal cc As String, ByVal bcc As String, ByVal sentTime As String, Optional ByVal action As Controls.Administration.MailQueueMonitorActionControl = Nothing, Optional ByVal addHideDisplayButton As Boolean = True, Optional ByVal FaliureStatus As Boolean = True)
                 Me.VerticalAlign = System.Web.UI.WebControls.VerticalAlign.Top
 
@@ -2003,15 +1669,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <summary>
         '''     To display filtered data in tablerow format.
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	25.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Class HideDisplayRow
             Inherits System.Web.UI.WebControls.TableRow
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             ''' 
             ''' </summary>
@@ -2019,12 +1678,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ''' <param name="cc">receipient address as CC</param>
             ''' <param name="bcc">receipient address as Bcc</param>
             ''' <param name="toAddress"></param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[patil]	28.11.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Sub New(ByVal emailID As Integer, ByVal cc As String, ByVal bcc As String, Optional ByVal toAddress As String = Nothing)
                 Me.AddCell() '1
                 Me.AddCell() '2
@@ -2130,12 +1783,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <summary>
         '''     Adds row as a line
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	25.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Class AddLine
             Inherits System.Web.UI.WebControls.TableRow
 
@@ -2155,12 +1802,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <summary>
         '''     Data layer class
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	25.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Class DataService
             Private _ConnectionString As String
             Public Property ConnectionString() As String
@@ -2187,41 +1828,23 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     _ConnectionString = Value
                 End Set
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Load the mail messages from the database
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[patil]	28.11.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Function LoadMailMessages(ByVal ConnectionString As String) As DataTable
                 Dim query As String
                 query = "SELECT Top 100 [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] "
 
                 Return CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New System.Data.SqlClient.SqlCommand(query, New System.Data.SqlClient.SqlConnection(ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             End Function
-
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Load the mail messages from the database
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[patil]	28.11.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Function LoadErroDetails(ByVal ConnString As String, ByVal emailid As String) As String
                 Dim query As String
                 query = "SELECT IsNull(ErrorDetails,'') FROM [Log_eMailMessages] Where ID = " + emailid.ToString
                 Return Trim(CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New System.Data.SqlClient.SqlCommand(query, New System.Data.SqlClient.SqlConnection(ConnString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
             End Function
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Load the mail messages from the database
             ''' </summary>
@@ -2229,16 +1852,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ''' <param name="statesToFilter">state to filter as string</param>
             ''' <param name="fromDate">date from which emails to be filtered</param>
             ''' <param name="toDate">date to which emails to be filtered</param>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[patil]	28.11.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Function LoadMailMessages(ByVal ConnectionString As String, ByVal emailID As Integer, ByVal statesToFilter As String, ByVal fromDate As DateTime, ByVal toDate As DateTime) As DataTable
                 Dim query As String
-                query = "SELECT [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine & _
+                query = "SELECT [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine &
                        ""
                 If emailID <> Nothing Then
                     If query.IndexOf("where") > 0 Then
@@ -2296,7 +1912,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Public Function LoadMailMessages(ByVal ConnString As String, ByVal emailID As Integer, ByVal statesToFilter As String, ByVal fromDate As DateTime, ByVal toDate As DateTime, ByVal iTop As Integer) As DataTable
                 Dim query As String
-                query = "SELECT Top 100 [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine & _
+                query = "SELECT Top 100 [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine &
                        ""
                 If emailID <> Nothing Then
                     If query.IndexOf("where") > 0 Then
@@ -2350,7 +1966,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 'Return CompuMaster.CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New System.Data.SqlClient.SqlCommand(query, New System.Data.SqlClient.SqlConnection(Me.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
             End Function
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Load the mail messages from the database
             ''' </summary>
@@ -2358,16 +1973,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ''' <param name="state">state of an email</param>
             ''' <param name="fromDate">date from which email to be filtered</param>
             ''' <param name="toDate">data to which email to be filtered</param>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[patil]	28.11.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Function LoadMailMessages(ByVal ConnString As String, ByVal emailID As Integer, ByVal state As Byte, ByVal fromDate As DateTime, ByVal toDate As DateTime) As DataTable
                 Dim query As String
-                query = "SELECT [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine & _
+                query = "SELECT [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine &
                        ""
                 If emailID <> Nothing Then
                     If query.IndexOf("where") > 0 Then
@@ -2432,12 +2040,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''' <summary>
     '''     This page displays text 
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	21.11.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class DisplayText
         Inherits CompuMaster.camm.WebManager.Pages.Administration.Page
 

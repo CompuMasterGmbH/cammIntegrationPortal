@@ -28,33 +28,17 @@ Namespace CompuMaster.camm.WebManager.Controls
     <System.Runtime.InteropServices.ComVisible(False), ToolboxData("<{0}:WebManager ID=""cammWebManager"" runat=""server"" SecurityObject=""""></{0}:WebManager>")> Public MustInherit Class cammWebManager
 #End If
         Inherits CompuMaster.camm.WebManager.WMSystem
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a new instance of the camm Web-Manager
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("You should not create a camm Web-Manager instance by yourself in web applications, use the cammWebManager property or cammWebManager object created in the aspx page itself")> _
+        <Obsolete("You should not create a camm Web-Manager instance by yourself in web applications, use the cammWebManager property or cammWebManager object created in the aspx page itself")>
         Public Sub New()
             MyBase.New("")
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a new instance of the camm Web-Manager
         ''' </summary>
         ''' <param name="databaseConnectionString">The connection string to the database</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	24.02.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal databaseConnectionString As String)
             MyBase.New(databaseConnectionString)
         End Sub
@@ -62,8 +46,6 @@ Namespace CompuMaster.camm.WebManager.Controls
         Friend Sub New(ByVal databaseConnectionString As String, ignoreCheckCompatibilityToDatabaseByBuildNumber As Boolean)
             MyBase.New(databaseConnectionString, ignoreCheckCompatibilityToDatabaseByBuildNumber)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the value of the public field with the specified name, defined inside the obj object
         ''' </summary>
@@ -74,10 +56,6 @@ Namespace CompuMaster.camm.WebManager.Controls
         ''' <remarks>
         '''     This method enumerates 1st the fields and 2nd the properties for a searched object
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	09.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetField(ByVal obj As Object, ByVal fieldName As String, ByVal defaultValue As Object) As Object
 
             '1st step: search a field with requested fieldName
@@ -114,74 +92,34 @@ Namespace CompuMaster.camm.WebManager.Controls
 
         Friend IsAlreadyInitialized As Boolean = False
         Friend IsLanguageDataLoaded As Boolean = False
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load configuration (for internal purposes only)
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Overridable Sub _LoadConfiguration()
             LoadConfiguration()
             Me.IsConfigurationLoaded = True
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load the configuration, mostly in /sysdata/config.vb
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        '''         ''' 	[adminsupport]	23.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected MustOverride Sub LoadConfiguration()
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load customized language/market strings (for internal purposes only)
         ''' </summary>
         ''' <param name="LanguageID">The market which shall be used</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub _LoadLanguageData(ByVal LanguageID As Integer) Handles MyBase.LanguageDataLoaded
             LoadLanguageData(LanguageID)
             Me.IsLanguageDataLoaded = True
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load customized language/market strings
         ''' </summary>
         ''' <param name="LanguageID">The market which shall be used</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	23.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub LoadLanguageData(ByVal LanguageID As Integer)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Initializes the webmanager inclusive loading of configuration and customized strings for the markets
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	23.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub System_Init()
 
             If IsAlreadyInitialized = False Then
@@ -224,34 +162,18 @@ Namespace CompuMaster.camm.WebManager.Controls
 
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Fires when the camm Web-Manager has been initialized
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	02.03.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Event InitializedWebManager()
 
         Private Sub OnWebManagerInit() Handles MyBase.InitLoadConfiguration
             System_Init()
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This OnLoad method executes an automatic databinding if not disabled
         ''' </summary>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	02.03.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overrides Sub OnLoad(ByVal e As EventArgs)
             MyBase.OnLoad(e)
             If DataBindAutomaticallyWhilePageOnLoad = True Then
@@ -265,17 +187,10 @@ Namespace CompuMaster.camm.WebManager.Controls
         End Sub
 
         Private _DataBindAutomaticallyWhilePageOnLoad As TriState = TriState.UseDefault
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Automatically bind data to bind cammWebManager instances to sub controls 
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property DataBindAutomaticallyWhilePageOnLoad() As Boolean
             Get
                 If _DataBindAutomaticallyWhilePageOnLoad = TriState.UseDefault Then
@@ -287,19 +202,11 @@ Namespace CompuMaster.camm.WebManager.Controls
                 _DataBindAutomaticallyWhilePageOnLoad = Utils.BooleanToTristate(Value)
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Some debug output for trace
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.07.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub cammWebManager_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.PreRender
             If Me.DebugLevel >= WMSystem.DebugLevels.Low_WarningMessagesOnAccessError_AdditionalDetails Then
                 Me.Trace.Write("camm WebManager", "DebugLevel: " & CType(Me.DebugLevel, Byte).ToString & " (" & Me.DebugLevel.ToString & ")")
@@ -396,18 +303,10 @@ Namespace CompuMaster.camm.WebManager.Controls
                 Return CType(Me, System.Web.UI.Control)
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search for the server form in the list of parent controls
         ''' </summary>
         ''' <returns>The control of the server form if it's existant</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function LookupParentServerForm() As System.Web.UI.HtmlControls.HtmlForm
             Static Result As System.Web.UI.HtmlControls.HtmlForm
             If Result Is Nothing Then
@@ -461,18 +360,10 @@ Namespace CompuMaster.camm.WebManager.Controls
                 Return CType(Me, System.Web.UI.Control)
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search for the server form in the list of parent controls
         ''' </summary>
         ''' <returns>The control of the server form if it's existant</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function LookupParentServerForm() As System.Web.UI.HtmlControls.HtmlForm
             Static Result As System.Web.UI.HtmlControls.HtmlForm
             If Result Is Nothing Then
@@ -526,18 +417,10 @@ Namespace CompuMaster.camm.WebManager.Controls
                 Return CType(Me, System.Web.UI.Control)
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search for the server form in the list of parent controls
         ''' </summary>
         ''' <returns>The control of the server form if it's existant</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function LookupParentServerForm() As System.Web.UI.HtmlControls.HtmlForm
             Static Result As System.Web.UI.HtmlControls.HtmlForm
             If Result Is Nothing Then
@@ -591,18 +474,10 @@ Namespace CompuMaster.camm.WebManager.Controls
                 Return CType(Me, System.Web.UI.Control)
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search for the server form in the list of parent controls
         ''' </summary>
         ''' <returns>The control of the server form if it's existant</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function LookupParentServerForm() As System.Web.UI.HtmlControls.HtmlForm
             Static Result As System.Web.UI.HtmlControls.HtmlForm
             If Result Is Nothing Then
@@ -656,18 +531,10 @@ Namespace CompuMaster.camm.WebManager.Controls
                 Return CType(Me, System.Web.UI.Control)
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search for the server form in the list of parent controls
         ''' </summary>
         ''' <returns>The control of the server form if it's existant</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function LookupParentServerForm() As System.Web.UI.HtmlControls.HtmlForm
             Static Result As System.Web.UI.HtmlControls.HtmlForm
             If Result Is Nothing Then
@@ -729,18 +596,10 @@ Namespace CompuMaster.camm.WebManager.Controls
                 Return CType(Me, System.Web.UI.Control)
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search for the server form in the list of parent controls
         ''' </summary>
         ''' <returns>The control of the server form if it's existant</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function LookupParentServerForm() As System.Web.UI.HtmlControls.HtmlForm
             Static Result As System.Web.UI.HtmlControls.HtmlForm
             If Result Is Nothing Then
@@ -862,18 +721,10 @@ Namespace CompuMaster.camm.WebManager.Controls
                     Return CType(Me, System.Web.UI.Control)
                 End Get
             End Property
-
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Search for the server form in the list of parent controls
             ''' </summary>
             ''' <returns>The control of the server form if it's existant</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	22.02.2006	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Function LookupParentServerForm() As System.Web.UI.HtmlControls.HtmlForm
                 Static Result As System.Web.UI.HtmlControls.HtmlForm
                 If Result Is Nothing Then
@@ -921,18 +772,10 @@ Namespace CompuMaster.camm.WebManager.Controls
                     Return CType(Me, System.Web.UI.Control)
                 End Get
             End Property
-
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Search for the server form in the list of parent controls
             ''' </summary>
             ''' <returns>The control of the server form if it's existant</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	22.02.2006	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Function LookupParentServerForm() As System.Web.UI.HtmlControls.HtmlForm
                 Static Result As System.Web.UI.HtmlControls.HtmlForm
                 If Result Is Nothing Then
@@ -958,7 +801,6 @@ Namespace CompuMaster.camm.WebManager.Controls
             ''' <summary>
             ''' A security object for the positive default rule to switch the content of this control to visible mode if the current user has got access to the specified security object
             ''' </summary>
-            ''' <returns></returns>
             Public Property SecurityObject As String
                 Get
                     Return _SecurityObject
@@ -972,7 +814,6 @@ Namespace CompuMaster.camm.WebManager.Controls
             ''' <summary>
             ''' A security object for the negative default rule to switch the content of this control to visible mode if the current user has NOT got access to the specified security object
             ''' </summary>
-            ''' <returns></returns>
             Public Property NotSecurityObject As String
                 Get
                     Return _NotSecurityObject
@@ -986,7 +827,6 @@ Namespace CompuMaster.camm.WebManager.Controls
             ''' <summary>
             ''' A security object which is allowed to see the content regardless of the default rules (e.g. always visible for website editors)
             ''' </summary>
-            ''' <returns></returns>
             Public Property AlwaysVisibleSecurityObject As String
                 Get
                     Return _AlwaysVisibleSecurityObject

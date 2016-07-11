@@ -28,8 +28,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''' <summary>
     '''     Reset the user's password
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Class ResetUserPassword
         Inherits Page
 
@@ -78,12 +76,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''' <summary>
     '''     The users overview administration page
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[AdminSupport]	27.08.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class UsersOverview
         Inherits Page
 
@@ -298,12 +290,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 #Region "Control Events"
         Private Sub btnSubmitClick(ByVal sender As Object, ByVal e As EventArgs) Handles btnSubmit.Click
-            If txtLoginName.Text <> "" AndAlso _
-               txtPassword1.Text <> "" AndAlso _
-               txtPassword2.Text <> "" AndAlso _
-               txtPassword1.Text = txtPassword2.Text AndAlso _
-               txtemail.Text <> "" AndAlso _
-               cmbFirstPreferredLanguage.SelectedItem.Text <> "Please Select!" AndAlso _
+            If txtLoginName.Text <> "" AndAlso
+               txtPassword1.Text <> "" AndAlso
+               txtPassword2.Text <> "" AndAlso
+               txtPassword1.Text = txtPassword2.Text AndAlso
+               txtemail.Text <> "" AndAlso
+               cmbFirstPreferredLanguage.SelectedItem.Text <> "Please Select!" AndAlso
                cmbAccountAccessability.SelectedItem.Text <> "Please Select!" Then
 
                 If Me.cmbAnrede.SelectedValue = "1" Then
@@ -332,10 +324,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Try
                             Dim dt As DataTable
                             Dim sqlParams As SqlParameter() = {New SqlParameter("@Loginname", Trim(txtLoginName.Text))}
-                            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "select count(*) from Benutzer where Loginname=@Loginname", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                             Dim sqlParamsNew As SqlParameter() = {New SqlParameter("@Loginname", Trim(txtLoginName.Text))}
-                            MyCount = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                            MyCount = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "select count(*) from Benutzer where Loginname=@Loginname", CommandType.Text, sqlParamsNew, Automations.AutoOpenAndCloseAndDisposeConnection)
 
                             If Utils.Nz(MyCount, 0) > 0 Then
@@ -423,26 +415,26 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Field_AccountAccessable = Utils.Nz(cmbAccountAccessability.SelectedValue, 0)
                 End If
 
-                If Not txtLoginName.Text = "" AndAlso _
-                  txtPassword1.Text = "" AndAlso _
-                  txtPassword2.Text = "" AndAlso _
-                  txtCompany.Text = "" AndAlso _
-                  cmbAnrede.SelectedItem.Text = "" AndAlso _
-                  txtTitle.Text = "" AndAlso _
-                  txtVorname.Text = "" AndAlso _
-                  txtNachname.Text = "" AndAlso _
-                  txtNamenszusatz.Text = "" AndAlso _
-                  txtemail.Text = "" AndAlso _
-                  txtStrasse.Text = "" AndAlso _
-                  txtPLZ.Text = "" AndAlso _
-                  txtOrt.Text = "" AndAlso _
-                  txtState.Text = "" AndAlso _
-                  txtLand.Text = "" AndAlso _
-                  cmbFirstPreferredLanguage.SelectedItem.Text = "" AndAlso _
-                  cmbSecondPreferredLanguage.SelectedItem.Text = "" AndAlso _
-                  cmbThirdPreferredLanguage.SelectedItem.Text = "" AndAlso _
-                  cmbAccountAccessability.SelectedItem.Text = "" AndAlso _
-                  txtPassword1.Text = "" AndAlso _
+                If Not txtLoginName.Text = "" AndAlso
+                  txtPassword1.Text = "" AndAlso
+                  txtPassword2.Text = "" AndAlso
+                  txtCompany.Text = "" AndAlso
+                  cmbAnrede.SelectedItem.Text = "" AndAlso
+                  txtTitle.Text = "" AndAlso
+                  txtVorname.Text = "" AndAlso
+                  txtNachname.Text = "" AndAlso
+                  txtNamenszusatz.Text = "" AndAlso
+                  txtemail.Text = "" AndAlso
+                  txtStrasse.Text = "" AndAlso
+                  txtPLZ.Text = "" AndAlso
+                  txtOrt.Text = "" AndAlso
+                  txtState.Text = "" AndAlso
+                  txtLand.Text = "" AndAlso
+                  cmbFirstPreferredLanguage.SelectedItem.Text = "" AndAlso
+                  cmbSecondPreferredLanguage.SelectedItem.Text = "" AndAlso
+                  cmbThirdPreferredLanguage.SelectedItem.Text = "" AndAlso
+                  cmbAccountAccessability.SelectedItem.Text = "" AndAlso
+                  txtPassword1.Text = "" AndAlso
                   txtPassword2.Text = "" Then
                     If ErrMsg = "" Then ErrMsg = "Please specify a unique logon name, the password inclusive the confirmation, the complete name and address and at least one language preference to proceed!"
                 End If
@@ -582,7 +574,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
 
             Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CInt(Request.QueryString("ID")))}
-            Dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            Dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT * FROM [Benutzer] WHERE ID=@ID", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             MyUserInfo = cammWebManager.System_GetUserInfo(CType(Request.QueryString("ID"), Long))
             If MyUserInfo Is Nothing Then
@@ -765,19 +757,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region "User-Defined Methods"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Checks whether username is already in use
         ''' </summary>
         ''' <param name="source"></param>
         ''' <param name="args"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	09.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub ValidatorNewUserLoginName_ServerValidate(ByVal source As Object, ByVal args As System.Web.UI.WebControls.ServerValidateEventArgs)
             If args.Value.Length > 20 Then
                 args.IsValid = False
@@ -793,17 +777,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Sub
 
 #Region " Collection of not copied data "
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Initialize Datatable. Contains data that was not copied e.g. protected flags
         ''' Does NOT contain values that are manually unchecked
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	09.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub initNotCopiedDataDatatable()
             If Session("cwmCloneUserNotCopiedDataDt") Is Nothing Then
                 notCopiedData = New DataTable("NotCopiedData")
@@ -812,35 +789,19 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Session("cwmCloneUserNotCopiedDataDt") = notCopiedData
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Enumeration of data types which automatically cannot be copied
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	09.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Enum notCopiedDataEnum As Integer
             AdditionalFlag = 1
             Membership = 2
             Authorization = 3
         End Enum
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Add a new entry that automatically cannot be copied
         ''' </summary>
         ''' <param name="dataType">Type of data, e.g. AdditionalFlag</param>
         ''' <param name="value">The value, e.g. value of additional flag or name of membership</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	09.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub AddNotCopiedData(ByVal dataType As notCopiedDataEnum, ByVal value As String)
             notCopiedData = CType(Session("cwmCloneUserNotCopiedDataDt"), DataTable)
             If notCopiedData.Select("Key = '" & dataType.ToString() & "' and Value = '" & value & "'").Length <= 0 Then
@@ -851,20 +812,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
             Session("cwmCloneUserNotCopiedDataDt") = notCopiedData
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Removes an entry, e.g. authorization has required flags, but its a protected flag
         ''' Handles check or uncheck the authorization-checkbox
         ''' </summary>
         ''' <param name="dataType"></param>
         ''' <param name="value"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	09.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub RemoveNotCopiedData(ByVal dataType As notCopiedDataEnum, ByVal value As String)
             notCopiedData = CType(Session("cwmCloneUserNotCopiedDataDt"), DataTable)
             If Not value = "" Then
@@ -877,52 +830,30 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Sub
 
 #End Region
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     ID and (English) title of all available languages (markets) + the currently selected language (when it is different)
         ''' </summary>
         ''' <param name="alwaysIncludeThisLanguage">The currently selected language should always appear</param>
-        ''' <returns></returns>
         ''' <remarks>Intended for the preferred languages dropdown boxes
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	06.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function AvailableLanguages(ByVal alwaysIncludeThisLanguage As Integer) As DictionaryEntry()
-            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT ID, Description_English FROM System_Languages WHERE (IsActive = 1 AND NOT ID = 10000) OR ID = " & alwaysIncludeThisLanguage & " ORDER BY Description_English", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     ID and title of the available access levels
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>Intended for the preferred languages dropdown boxes
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	06.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function AvailableAccessLevels() As DictionaryEntry()
-            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT ID, Title FROM System_AccessLevels ORDER BY Title", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
 
 #Region " Assign data to form "
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Assigns the source user information to the webform
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	09.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub AssignUserInfoDataToForm()
             'Start with source user
             lbl_ID.Text = Server.HtmlEncode(UserInfo.IDLong.ToString)
@@ -965,17 +896,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Assigns the additional flags information of the source user to the webform
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	09.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub AssignAdditionalFlagsToPnl()
             If UserInfo.AdditionalFlags.Count > 0 Then
                 Dim lit As Literal
@@ -1047,34 +970,17 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Check whether it's allowed to copy the additional flag
         ''' Customizing in /sysdata/users_clone.aspx
         ''' </summary>
         ''' <param name="flagName"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	08.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Function AdditionalFlagAllowCopy(ByVal flagName As String) As Boolean
             Return True
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Assigns the membership information of the source user to the webform
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	09.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub AssignMembershipsToPnl()
             Dim MyGroupInfosAllowRule As CompuMaster.camm.WebManager.WMSystem.GroupInformation() = UserInfo.MembershipsByRule(False).AllowRule
             Dim MyGroupInfosDenyRule As CompuMaster.camm.WebManager.WMSystem.GroupInformation() = UserInfo.MembershipsByRule(False).AllowRule
@@ -1142,18 +1048,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 PnlGroupsInformation.Controls.Add(lit)
             Next
         End Sub
-
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Assigns the authorization information of the source user to the webform
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	09.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub AssignAuthToPnl()
             Dim Auths As CompuMaster.camm.WebManager.WMSystem.Authorizations
             Auths = New CompuMaster.camm.WebManager.WMSystem.Authorizations(Nothing, cammWebManager, Nothing, Nothing, UserInfo.IDLong)
@@ -1271,19 +1168,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Next
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Handles the checkbox check changed event to control required flags
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	09.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub OnCheckboxCheckChanged(ByVal sender As Object, ByVal e As EventArgs)
             Dim chk As CheckBox = CType(sender, CheckBox)
             'Get the required flags for the current authorization
@@ -1322,22 +1211,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 
 #End Region
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Get required flags for given securityobject
         ''' </summary>
         ''' <param name="SecurityObjectID"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	08.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function getRequiredFlags(ByVal SecurityObjectID As Integer) As String()
             'Get required flags
-            Dim cmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            Dim cmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "Select RequiredUserProfileFlags From Applications_CurrentAndInactiveOnes Where ID = @ID", New SqlConnection(cammWebManager.ConnectionString))
             cmd.Parameters.Add("@ID", SqlDbType.Int).Value = SecurityObjectID
             Dim al As ArrayList = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoArrayList(cmd, Automations.AutoOpenAndCloseAndDisposeConnection)
@@ -1595,36 +1475,23 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region "User-Defined Methods"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     ID and (English) title of all available languages (markets) + the currently selected language (when it is different)
         ''' </summary>
         ''' <param name="alwaysIncludeThisLanguage">The currently selected language should always appear</param>
-        ''' <returns></returns>
         ''' <remarks>Intended for the preferred languages dropdown boxes
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	06.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function AvailableLanguages(ByVal alwaysIncludeThisLanguage As Integer) As DictionaryEntry()
-            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT ID, Description_English FROM System_Languages WHERE (IsActive = 1 AND NOT ID = 10000) OR ID = " & alwaysIncludeThisLanguage & " ORDER BY Description_English", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     ID and title of the available access levels
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>Intended for the preferred languages dropdown boxes
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	06.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function AvailableAccessLevels() As DictionaryEntry()
-            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT ID, Title FROM System_AccessLevels ORDER BY Title", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
 
@@ -1841,16 +1708,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 SaveChanges()
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' This method saves the changes
         ''' </summary>
         ''' <remarks>This save method is called by the form's submit button</remarks>
-        ''' <history>
-        ''' 	[wezel]	29.01.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub SaveChanges()
             Dim type As String = txtType.Text.Trim()
 
@@ -2339,7 +2200,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="LangId"></param>
         ''' <param name="Mydt"></param>
         ''' <param name="userid"></param>
-        ''' <returns></returns>
         Private Function IsAccessibleToLang(ByVal LangId As Integer, ByVal Mydt As DataTable, ByVal userid As Long) As Boolean
             For iCount As Integer = 0 To Mydt.Rows.Count - 1
                 If (CInt(Mydt.Rows(iCount)("LanguageId")) = LangId AndAlso Not Mydt.Rows(iCount)("AppDisabled") Is DBNull.Value AndAlso CInt(Mydt.Rows(iCount)("AppDisabled")) = 0) Then

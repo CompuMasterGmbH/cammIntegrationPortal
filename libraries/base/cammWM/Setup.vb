@@ -27,26 +27,14 @@ Namespace CompuMaster.camm.WebManager.Setup
         ''' Lookup the database version
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance to query a database</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
         Public Shared Function Version(ByVal webManager As IWebManager) As Version
             Return Version(webManager, True)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Lookup the database version
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance to query a database</param>
         ''' <param name="allowCaching">True allows usage of a cached value, False forces a direct query to the database</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	07.08.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function Version(ByVal webManager As IWebManager, ByVal allowCaching As Boolean) As Version
             Static _System_DBVersion_Ex As Version
             Const cacheItemKey As String = "WebManager.Version.Database"
@@ -184,18 +172,10 @@ Namespace CompuMaster.camm.WebManager.Setup
     End Class
 
     Public Class ApplicationUtils
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get the version information from the current camm Web-Manager library (cammWM.dll)
         ''' </summary>
         ''' <returns>The version of the executing camm Web-Manager library</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function Version() As Version
 
             Return New Version(Setup.AssemblyVersion.Version)
@@ -218,7 +198,7 @@ Namespace CompuMaster.camm.WebManager.Setup
 
     Namespace Pages
 
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("use Webservice to install the camm Web-Manager database", True)> _
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("use Webservice to install the camm Web-Manager database", True)>
         Public Class Install
             Inherits CompuMaster.camm.WebManager.Pages.Page
 
@@ -259,13 +239,13 @@ Namespace CompuMaster.camm.WebManager.Setup
                 ' This simple function tells us, if any data has been entered into the form. Sometimes this
                 ' information could be really useful, if you don't want to get stuck with validation controls
                 Return _
-                 TextBoxDBServer.Text <> "" Or TextBoxDBCatalog.Text <> "" Or _
-                 TextBoxAuthUser.Text <> "" Or TextBoxAuthPassword.Text <> "" Or _
-                 TextBoxServerIP.Text <> "" Or TextBoxProtocol.Text <> "" Or _
-                 TextBoxServerName.Text <> "" Or TextBoxPort.Text <> "" Or _
-                 TextBoxServerIP.Text <> "" Or TextBoxSGroupTitle.Text <> "" Or _
-                 TextBoxSGroupNavTitle.Text <> "" Or TextBoxCompanyURL.Text <> "" Or _
-                 TextBoxSGroupContact.Text <> "" Or TextBoxCompanyName.Text <> "" Or _
+                 TextBoxDBServer.Text <> "" Or TextBoxDBCatalog.Text <> "" Or
+                 TextBoxAuthUser.Text <> "" Or TextBoxAuthPassword.Text <> "" Or
+                 TextBoxServerIP.Text <> "" Or TextBoxProtocol.Text <> "" Or
+                 TextBoxServerName.Text <> "" Or TextBoxPort.Text <> "" Or
+                 TextBoxServerIP.Text <> "" Or TextBoxSGroupTitle.Text <> "" Or
+                 TextBoxSGroupNavTitle.Text <> "" Or TextBoxCompanyURL.Text <> "" Or
+                 TextBoxSGroupContact.Text <> "" Or TextBoxCompanyName.Text <> "" Or
                  TextBoxCompanyFormerName.Text <> ""
             End Function
 
@@ -413,10 +393,10 @@ Namespace CompuMaster.camm.WebManager.Setup
             End Function
 
             Private Function ConnectionStringServerAdministration() As String
-                Return ( _
-                 "SERVER=" & Me.TextBoxDBServer.Text & ";" & _
-                 "PWD=" & Me.TextBoxAuthPassword.Text & ";" & _
-                 "UID=" & Me.TextBoxAuthUser.Text & ";" & _
+                Return (
+                 "SERVER=" & Me.TextBoxDBServer.Text & ";" &
+                 "PWD=" & Me.TextBoxAuthPassword.Text & ";" &
+                 "UID=" & Me.TextBoxAuthUser.Text & ";" &
                  "Pooling=false;")
             End Function
 
@@ -426,10 +406,10 @@ Namespace CompuMaster.camm.WebManager.Setup
 
             Private Function ConnectionStringServerAdministrationSA() As String
                 If TextBoxAuthUserAdmin.Text <> "" And TextBoxAuthPasswordAdmin.Text <> "" Then
-                    Return ( _
-                     "SERVER=" & Me.TextBoxDBServer.Text & ";" & _
-                     "PWD=" & Me.TextBoxAuthPasswordAdmin.Text & ";" & _
-                     "UID=" & Me.TextBoxAuthUserAdmin.Text & ";" & _
+                    Return (
+                     "SERVER=" & Me.TextBoxDBServer.Text & ";" &
+                     "PWD=" & Me.TextBoxAuthPasswordAdmin.Text & ";" &
+                     "UID=" & Me.TextBoxAuthUserAdmin.Text & ";" &
                      "Pooling=false;")
                 Else
                     Return ""
@@ -442,11 +422,11 @@ Namespace CompuMaster.camm.WebManager.Setup
             End Function
 
             Private Function ConnectionString() As String
-                Return ( _
-                 "SERVER=" & Me.TextBoxDBServer.Text & ";" & _
-                 "PWD=" & Me.TextBoxAuthPassword.Text & ";" & _
-                 "UID=" & Me.TextBoxAuthUser.Text & ";" & _
-                 "DATABASE=" & Me.TextBoxDBCatalog.Text & ";" & _
+                Return (
+                 "SERVER=" & Me.TextBoxDBServer.Text & ";" &
+                 "PWD=" & Me.TextBoxAuthPassword.Text & ";" &
+                 "UID=" & Me.TextBoxAuthUser.Text & ";" &
+                 "DATABASE=" & Me.TextBoxDBCatalog.Text & ";" &
                  "Pooling=false;")
             End Function
 
@@ -524,12 +504,6 @@ Namespace CompuMaster.camm.WebManager.Setup
         ''' <summary>
         '''     Database update page (accessable via About page)
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	25.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <System.Runtime.InteropServices.ComVisible(False)> Public Class Update
             Inherits CompuMaster.camm.WebManager.Pages.Page
 
@@ -608,32 +582,15 @@ Namespace CompuMaster.camm.WebManager.Setup
                     End If
                 End If
             End Sub
-
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             ''' Load the list of reported camm Web-Manager instances accessing the database since the last update
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	21.09.2007	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Private Function LoadCwmInstancesList() As DataTable
                 Return CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlClient.SqlConnection(Me.cammWebManager.ConnectionString), "SELECT ValueNText AS [Instance location], ValueInt As [Assembly Build No], Cast (ValueDecimal as int) As [Application compatible with build no], ValueDateTime As [Reported on] FROM System_GlobalProperties WHERE PropertyName LIKE 'AppInstance_%' ORDER BY ValueDecimal DESC", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             End Function
-
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             ''' Reset the list of camm Web-Manager instances
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	21.09.2007	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Private Sub ResetCwmInstancesList()
                 CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(New SqlClient.SqlConnection(Me.cammWebManager.ConnectionString), "DELETE FROM System_GlobalProperties WHERE PropertyName LIKE 'AppInstance_%'", CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             End Sub
@@ -1017,18 +974,10 @@ Namespace CompuMaster.camm.WebManager.Setup
 
         Private _UpdatesOnly As Boolean = False
         Private _UpdatesOnlyDirty As Boolean = False
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Are only updates or also creation of the databases allowed 
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	29.09.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property UpdatesOnly() As Boolean
             Get
                 If _UpdatesOnlyDirty = False AndAlso Not System.Web.HttpContext.Current Is Nothing Then
@@ -1399,16 +1348,16 @@ Namespace CompuMaster.camm.WebManager.Setup
             Return Myresult
         End Function
 
-        Public Function CreateDatabase( _
-         ByVal ConnectionStringToDatabase As String, _
-         ByVal ConnectionStringServerAdministration As String, _
-         ByVal DatabaseName As String, _
-         ByVal doNotDropAndReCreateSqlDatabase As Boolean, _
-         ByVal TruncateDatabaseTransactionLog As Boolean, _
-         Optional ByVal ConnectionStringServerAdministration_sa As String = "", _
-         Optional ByVal UserName As String = "", _
-         Optional ByVal UserPassword As String = "", _
-         Optional ByVal AdminUserName As String = "", _
+        Public Function CreateDatabase(
+         ByVal ConnectionStringToDatabase As String,
+         ByVal ConnectionStringServerAdministration As String,
+         ByVal DatabaseName As String,
+         ByVal doNotDropAndReCreateSqlDatabase As Boolean,
+         ByVal TruncateDatabaseTransactionLog As Boolean,
+         Optional ByVal ConnectionStringServerAdministration_sa As String = "",
+         Optional ByVal UserName As String = "",
+         Optional ByVal UserPassword As String = "",
+         Optional ByVal AdminUserName As String = "",
          Optional ByVal AdminPassword As String = "") As Boolean
 
             If UpdatesOnly Then Throw New Exception("Creation of databases forbidden; only maintenance updates allowed")
@@ -1659,7 +1608,7 @@ Namespace CompuMaster.camm.WebManager.Setup
 
                                     'Status field update
                                     MyStepCounter += 1
-                                    SwitchToStep("Applying patch " & fileSQLCommands & "..." & ControlChars.NewLine & _
+                                    SwitchToStep("Applying patch " & fileSQLCommands & "..." & ControlChars.NewLine &
                                       "Current step: " & MyStepCounter & " / " & MyCurSQLCmdCollection.Count)
                                     UpdateProgressOfSteps("Current step:", MyStepCounter, MyCurSQLCmdCollection.Count)
 
@@ -1708,10 +1657,10 @@ Namespace CompuMaster.camm.WebManager.Setup
                                                  & CType(IIf(DebugLevel >= 3, "SQL BEGIN ==>" & ControlChars.NewLine & MyCurSQLCmdText & ControlChars.NewLine & ControlChars.NewLine & "<== SQL END" & ControlChars.NewLine, ""), String) _
                                                  & ControlChars.NewLine
                                             Next i
-                                            WriteToLog("==============================================" & ControlChars.NewLine & _
-                                             Now() & ControlChars.NewLine & _
-                                             "==============================================" & ControlChars.NewLine & _
-                                             ControlChars.NewLine & _
+                                            WriteToLog("==============================================" & ControlChars.NewLine &
+                                             Now() & ControlChars.NewLine &
+                                             "==============================================" & ControlChars.NewLine &
+                                             ControlChars.NewLine &
                                              errorMessages)
                                             If SqlServerVersion.ProductName = "" Then
                                                 WriteToLog(vbNewLine & vbNewLine & "==============================================" & vbNewLine & "FULL SQL AZURE STATEMENTS" & "========================================" & vbNewLine & MySQLCmdText & vbNewLine & vbNewLine)
@@ -1751,10 +1700,10 @@ Namespace CompuMaster.camm.WebManager.Setup
                                                 errorMessages += "Message: " & e.GetBaseException.ToString _
                                                  & ControlChars.NewLine
                                             Next i
-                                            WriteToLog("==============================================" & ControlChars.NewLine & _
-                                             Now() & ControlChars.NewLine & _
-                                             "==============================================" & ControlChars.NewLine & _
-                                             ControlChars.NewLine & _
+                                            WriteToLog("==============================================" & ControlChars.NewLine &
+                                             Now() & ControlChars.NewLine &
+                                             "==============================================" & ControlChars.NewLine &
+                                             ControlChars.NewLine &
                                              errorMessages)
                                             If Me._LogFileEnabled Then
                                                 RaiseWarning("Error #68 found - please check the log file " & _LogFile & "!")
@@ -1787,7 +1736,7 @@ Namespace CompuMaster.camm.WebManager.Setup
                                     For Each MySQLExecCmdText In MyCurSQLExecCmdCollection
                                         'Status field update
                                         MyExecStepCounter += 1
-                                        SwitchToStep("Configure database..." & ControlChars.NewLine & _
+                                        SwitchToStep("Configure database..." & ControlChars.NewLine &
                                           "Current step: " & MyExecStepCounter & " / " & MyCurSQLExecCmdCollection.Count)
                                         UpdateProgressOfSteps("Configure database...", MyExecStepCounter, MyCurSQLExecCmdCollection.Count)
 
@@ -1817,10 +1766,10 @@ Namespace CompuMaster.camm.WebManager.Setup
                                             '"Current task: " & Me.ProgressOfTasks.CurrentStepTitle & vbNewLine & _
                                             '"Current sub task: " & Me.ProgressOfSteps.CurrentStepTitle & vbNewLine & _
                                             '"Current step description: " & Me.CurrentStepTitle & vbNewLine & _
-                                            WriteToLog("==============================================" & ControlChars.NewLine & _
-                                             Now() & ControlChars.NewLine & _
-                                             "==============================================" & ControlChars.NewLine & _
-                                             ControlChars.NewLine & _
+                                            WriteToLog("==============================================" & ControlChars.NewLine &
+                                             Now() & ControlChars.NewLine &
+                                             "==============================================" & ControlChars.NewLine &
+                                             ControlChars.NewLine &
                                              errorMessages)
                                             If Me._LogFileEnabled Then
                                                 RaiseWarning("Error #69 found - please check the log file " & _LogFile & "!")
@@ -1841,19 +1790,19 @@ Namespace CompuMaster.camm.WebManager.Setup
 
                                 'Update DB build status
                                 Dim FinishDBUpdateStepSQLCmdText As String
-                                FinishDBUpdateStepSQLCmdText = "-----------------------------------------------------------" & vbNewLine & _
-                                 "-- Update table content to match new definition " & vbNewLine & _
-                                 "-- (to allow multiple camm products in one database)" & vbNewLine & _
-                                 "-----------------------------------------------------------" & vbNewLine & _
-                                 "UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
-                                 "SET [ValueNVarChar] = (SELECT TOP 1 ValueNVarChar FROM [dbo].[System_GlobalProperties] WHERE PropertyName = N'DBProductName')" & vbNewLine & _
-                                 "WHERE ID in (1, 2, 3) AND ValueNVarChar Is Null And PropertyName like N'DBVersion_%'" & vbNewLine & _
-                                 vbNewLine & _
-                                 "-----------------------------------------------------------" & vbNewLine & _
-                                 "-- Update data in dbo.System_GlobalProperties" & vbNewLine & _
-                                 "-----------------------------------------------------------" & vbNewLine & _
-                                 "UPDATE [dbo].[System_GlobalProperties] SET [ValueInt] = " & SQLCodeMajorVer & " WHERE PropertyName = N'DBVersion_Major' AND ValueNVarChar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine & _
-                                 "UPDATE [dbo].[System_GlobalProperties] SET [ValueInt] = " & SQLCodeMinorVer & " WHERE PropertyName = N'DBVersion_Minor' AND ValueNVarChar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine & _
+                                FinishDBUpdateStepSQLCmdText = "-----------------------------------------------------------" & vbNewLine &
+                                 "-- Update table content to match new definition " & vbNewLine &
+                                 "-- (to allow multiple camm products in one database)" & vbNewLine &
+                                 "-----------------------------------------------------------" & vbNewLine &
+                                 "UPDATE [dbo].[System_GlobalProperties]" & vbNewLine &
+                                 "SET [ValueNVarChar] = (SELECT TOP 1 ValueNVarChar FROM [dbo].[System_GlobalProperties] WHERE PropertyName = N'DBProductName')" & vbNewLine &
+                                 "WHERE ID in (1, 2, 3) AND ValueNVarChar Is Null And PropertyName like N'DBVersion_%'" & vbNewLine &
+                                 vbNewLine &
+                                 "-----------------------------------------------------------" & vbNewLine &
+                                 "-- Update data in dbo.System_GlobalProperties" & vbNewLine &
+                                 "-----------------------------------------------------------" & vbNewLine &
+                                 "UPDATE [dbo].[System_GlobalProperties] SET [ValueInt] = " & SQLCodeMajorVer & " WHERE PropertyName = N'DBVersion_Major' AND ValueNVarChar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine &
+                                 "UPDATE [dbo].[System_GlobalProperties] SET [ValueInt] = " & SQLCodeMinorVer & " WHERE PropertyName = N'DBVersion_Minor' AND ValueNVarChar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine &
                                  "UPDATE [dbo].[System_GlobalProperties] SET [ValueInt] = " & SQLCodeBuildNo & " WHERE PropertyName = N'DBVersion_Build' AND ValueNVarChar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine
                                 Try
                                     DBCmd = New SqlClient.SqlCommand
@@ -1878,10 +1827,10 @@ Namespace CompuMaster.camm.WebManager.Setup
                                          & CType(IIf(DebugLevel >= 3, "SQL BEGIN ==>" & ControlChars.NewLine & FinishDBUpdateStepSQLCmdText & ControlChars.NewLine & ControlChars.NewLine & "<== SQL END" & ControlChars.NewLine, ""), String) _
                                          & ControlChars.NewLine
                                     Next i
-                                    WriteToLog("==============================================" & ControlChars.NewLine & _
-                                     Now() & ControlChars.NewLine & _
-                                     "==============================================" & ControlChars.NewLine & _
-                                     ControlChars.NewLine & _
+                                    WriteToLog("==============================================" & ControlChars.NewLine &
+                                     Now() & ControlChars.NewLine &
+                                     "==============================================" & ControlChars.NewLine &
+                                     ControlChars.NewLine &
                                      errorMessages)
                                     If Me._LogFileEnabled Then
                                         RaiseWarning("Error #67 found - please check the log file " & _LogFile & "!")
@@ -2031,7 +1980,6 @@ Namespace CompuMaster.camm.WebManager.Setup
         ''' camm Web-Manager database build no.
         ''' </summary>
         ''' <param name="ConnectionString"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function GetCurrentDBBuildNo(ByVal ConnectionString As String) As Integer
             Dim Result As Integer
@@ -2051,37 +1999,36 @@ Namespace CompuMaster.camm.WebManager.Setup
         ''' </summary>
         ''' <param name="DBConnection"></param>
         ''' <param name="DebugLevel"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function GetCurrentDBBuildNo(ByVal DBConnection As SqlClient.SqlConnection, ByVal DebugLevel As Integer) As Integer
-            Dim sqlGetDBVersion As String = "declare @dbversion_major int" & vbNewLine & _
-             "declare @dbversion_minor int" & vbNewLine & _
-             "declare @dbversion_build int" & vbNewLine & _
-             "declare @dbproductname nvarchar(256)" & vbNewLine & _
-             vbNewLine & _
-             "SET NOCOUNT ON" & vbNewLine & _
-             vbNewLine & _
-             "select @dbversion_major = valueint from system_globalproperties where propertyname = N'DBVersion_Major' and valuenvarchar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine & _
-             "if @dbversion_major is null " & vbNewLine & _
-             "   select @dbversion_major = valueint from system_globalproperties where propertyname = N'DBVersion_Major'" & _
-             vbNewLine & _
-             "select @dbversion_minor = valueint from system_globalproperties where propertyname = N'DBVersion_Minor' and valuenvarchar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine & _
-             "if @dbversion_minor is null " & vbNewLine & _
-             "   select @dbversion_minor = valueint from system_globalproperties where propertyname = N'DBVersion_Minor'" & _
-             vbNewLine & _
-             "select @dbversion_build = valueint from system_globalproperties where propertyname = N'DBVersion_Build' and valuenvarchar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine & _
-             "if @dbversion_build is null " & vbNewLine & _
-             "   select @dbversion_build = valueint from system_globalproperties where propertyname = N'DBVersion_Build'" & _
-             vbNewLine & _
-             "select @dbversion_build = valueint from system_globalproperties where propertyname = N'DBVersion_Build'" & vbNewLine & _
-             vbNewLine & _
-             "select @dbproductname = valuenvarchar from system_globalproperties where propertyname = N'DBProductName'" & vbNewLine & _
-             vbNewLine & _
-             "SET NOCOUNT OFF" & vbNewLine & _
-             vbNewLine & _
-             "SELECT DBProductName = @dbproductname, " & vbNewLine & _
-             "   DBVersion_Major = @dbversion_major, " & vbNewLine & _
-             "	DBVersion_Minor = @dbversion_minor, " & vbNewLine & _
+            Dim sqlGetDBVersion As String = "declare @dbversion_major int" & vbNewLine &
+             "declare @dbversion_minor int" & vbNewLine &
+             "declare @dbversion_build int" & vbNewLine &
+             "declare @dbproductname nvarchar(256)" & vbNewLine &
+             vbNewLine &
+             "SET NOCOUNT ON" & vbNewLine &
+             vbNewLine &
+             "select @dbversion_major = valueint from system_globalproperties where propertyname = N'DBVersion_Major' and valuenvarchar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine &
+             "if @dbversion_major is null " & vbNewLine &
+             "   select @dbversion_major = valueint from system_globalproperties where propertyname = N'DBVersion_Major'" &
+             vbNewLine &
+             "select @dbversion_minor = valueint from system_globalproperties where propertyname = N'DBVersion_Minor' and valuenvarchar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine &
+             "if @dbversion_minor is null " & vbNewLine &
+             "   select @dbversion_minor = valueint from system_globalproperties where propertyname = N'DBVersion_Minor'" &
+             vbNewLine &
+             "select @dbversion_build = valueint from system_globalproperties where propertyname = N'DBVersion_Build' and valuenvarchar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine &
+             "if @dbversion_build is null " & vbNewLine &
+             "   select @dbversion_build = valueint from system_globalproperties where propertyname = N'DBVersion_Build'" &
+             vbNewLine &
+             "select @dbversion_build = valueint from system_globalproperties where propertyname = N'DBVersion_Build'" & vbNewLine &
+             vbNewLine &
+             "select @dbproductname = valuenvarchar from system_globalproperties where propertyname = N'DBProductName'" & vbNewLine &
+             vbNewLine &
+             "SET NOCOUNT OFF" & vbNewLine &
+             vbNewLine &
+             "SELECT DBProductName = @dbproductname, " & vbNewLine &
+             "   DBVersion_Major = @dbversion_major, " & vbNewLine &
+             "	DBVersion_Minor = @dbversion_minor, " & vbNewLine &
              "	DBVersion_Build = @dbversion_build"
             Dim DBCmd As SqlCommand = Nothing
             Dim MyRecSet As SqlClient.SqlDataReader = Nothing
@@ -2116,10 +2063,10 @@ Namespace CompuMaster.camm.WebManager.Setup
                        & CType(IIf(DebugLevel >= 3, "SQL BEGIN ==>" & ControlChars.NewLine & sqlGetDBVersion & ControlChars.NewLine & ControlChars.NewLine & "<== SQL END" & ControlChars.NewLine, ""), String) _
                        & ControlChars.NewLine
                 Next i
-                WriteToLog("==============================================" & ControlChars.NewLine & _
-                 Now() & ControlChars.NewLine & _
-                 "==============================================" & ControlChars.NewLine & _
-                 ControlChars.NewLine & _
+                WriteToLog("==============================================" & ControlChars.NewLine &
+                 Now() & ControlChars.NewLine &
+                 "==============================================" & ControlChars.NewLine &
+                 ControlChars.NewLine &
                  errorMessages)
                 Throw New Exception("Error #34 found - please check the log file " & _LogFile & "!")
             Finally
@@ -2160,7 +2107,6 @@ Namespace CompuMaster.camm.WebManager.Setup
         ''' Evaluate the version of the connected sql server instance
         ''' </summary>
         ''' <param name="DBConnectionString"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function GetSQLServerVersion(ByVal DBConnectionString As String) As DBServerVersion
             Dim DBConn As New SqlConnection(DBConnectionString & ";DATABASE=;")
@@ -2279,12 +2225,6 @@ Namespace CompuMaster.camm.WebManager.Setup
     ''' <summary>
     '''     Update the configuration files in the file system
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	19.11.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <CLSCompliant(False)> Public Class Configuration
         Inherits SetupBase
 
@@ -2293,72 +2233,39 @@ Namespace CompuMaster.camm.WebManager.Setup
         Public Sub New(ByVal ProductName As String)
             MyBase.New(ProductName)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Find all configuration files which require an update
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Sub FindConfigFilesInCurrentWebRootAndSubFolders()
             'ToDo: Implement
             Throw New NotImplementedException("to be done...")
         End Sub
-
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Open all config files and update the connectionstring
         ''' </summary>
         ''' <param name="ConnectionString"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub SaveDatabaseConnectionString(ByVal ConnectionString As String)
             FindConfigFilesInCurrentWebRootAndSubFolders()
             'ToDo: Open all config files and update the connectionstring
             'ToDo: if errors/warning occure then log them!
             WriteToLog("Not yet implemented")
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Open all config files and update the connectionstring
         ''' </summary>
         ''' <param name="Name"></param>
         ''' <param name="Value"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub SaveConfiguration(ByVal Name As String, ByVal Value As String)
             FindConfigFilesInCurrentWebRootAndSubFolders()
             'ToDo: Open all config files and update the name/value
             'ToDo: if errors/warning occure then log them!
             WriteToLog("Not yet implemented")
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Open all config files and update the connectionstring
         ''' </summary>
         ''' <param name="Name"></param>
         ''' <param name="Value"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub SaveConfiguration(ByVal Name As String, ByVal Value As Long)
             FindConfigFilesInCurrentWebRootAndSubFolders()
             'ToDo: Open all config files and update the name/value

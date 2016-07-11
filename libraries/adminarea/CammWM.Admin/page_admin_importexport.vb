@@ -28,91 +28,40 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''' <summary>
     '''     Import
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Class ImportBase
         Inherits Page
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Available action types
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	19.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Enum ImportActions
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Insert users which haven't existed yet as well as update users which already exist
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	02.09.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             InsertOrUpdate = 4
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Only insert items which haven't existed
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	02.09.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             InsertOnly = 2
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Only update users which already exist
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	02.09.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             UpdateOnly = 3
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Remove all items specified in the import file
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	02.09.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Remove = 1
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Memberships/authorization shall be set exactly as defined in the import file
             ''' </summary>
             ''' <remarks>
             '''     Items will be inserted or removed as needed to fit the requirements
             ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	02.09.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             FitExact = 5
         End Enum
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The selected import action
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Property ImportAction() As ImportActions
             Get
                 Return CType(Session("WebManager.Administration.Import.UserList.ImportAction"), ImportActions)
@@ -121,18 +70,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Session("WebManager.Administration.Import.UserList.ImportAction") = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The selected import action for memberships
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Property ImportActionMemberships() As ImportActions
             Get
                 Return CType(Session("WebManager.Administration.Import.UserList.ImportActionMemberships"), ImportActions)
@@ -144,18 +85,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Session("WebManager.Administration.Import.UserList.ImportActionMemberships") = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The selected import action for authorizations
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Property ImportActionAuthorizations() As ImportActions
             Get
                 Return CType(Session("WebManager.Administration.Import.UserList.ImportActionAuthorizations"), ImportActions)
@@ -171,7 +104,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <summary>
         ''' Overwrite user profiles with empty values when the import file provides empty cells OR overwrite user profiles only with existing values from import files while ignoring overwriting of filled user profile fields with empty values from import file
         ''' </summary>
-        ''' <returns></returns>
         Protected Property ImportOverwriteWithEmptyCellValues() As Boolean
             Get
                 Return CType(Session("WebManager.Administration.Import.UserList.ImportOverwriteWithEmptyCellValues"), Boolean)
@@ -180,18 +112,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Session("WebManager.Administration.Import.UserList.ImportOverwriteWithEmptyCellValues") = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Messages logged by the import process
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Property MessagesLog() As String
             Get
                 Return CType(Session("WebManager.Administration.Import.UserList.MessagesLog"), String)
@@ -200,18 +124,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Session("WebManager.Administration.Import.UserList.MessagesLog") = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The import table with the user information
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	30.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Property ImportTable() As DataTable
             Get
                 Return CType(Session("WebManager.Administration.Import.UserList.DataTable"), DataTable)
@@ -220,18 +136,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Session("WebManager.Administration.Import.UserList.DataTable") = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The import table with the user information
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	30.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Property SuppressNotificationMails() As Boolean
             Get
                 Return CType(Session("WebManager.Administration.Import.UserList.SuppressNotificationMails"), Boolean)
@@ -240,18 +148,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Session("WebManager.Administration.Import.UserList.SuppressNotificationMails") = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The culture of the import file (required to correctly convert all strings back to their origin data type, e. g. date values)
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Property ImportFileCulture() As System.Globalization.CultureInfo
             Get
                 If Session("WebManager.Administration.Import.UserList.SelectedCulture") Is Nothing Then
@@ -277,10 +177,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     '''     Step 4: Processing
     '''     Step 5: Finish - view the log
     ''' </remarks>
-    ''' <history>
-    ''' 	[AdminSupport]	26.08.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class ImportUsers
         Inherits ImportBase
 
@@ -338,18 +234,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             DatagridStep3ColumnsCheck.HeaderStyle.Font.Bold = True
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Switch the form to the desired step
         ''' </summary>
         ''' <param name="stepNumber"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	26.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Sub SwitchStep(ByVal stepNumber As Integer)
             If stepNumber < 1 Or stepNumber > 5 Then
                 Throw New ArgumentException("Invalid step number")
@@ -380,38 +268,22 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The current step number
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Property CurrentStepNumber() As Integer
             Get
-                Return Utils.Nz(viewstate("StepNumber"), 0)
+                Return Utils.Nz(ViewState("StepNumber"), 0)
             End Get
             Set(ByVal Value As Integer)
-                viewstate("StepNumber") = Value
+                ViewState("StepNumber") = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The temporary filename of the location of the uploaded file
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Property ImportFile() As String
             Get
                 Return CType(Session("WebManager.Administration.Import.UserList.RawFileData"), String)
@@ -654,11 +526,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     End If
                 End If
                 'Verify that column "User_Authorizations_*Rule_IsDe*/SrvGroupID" has got array length or 0 (zero) or same length as User_Authorizations_*Rule_AppIDs array
-                If Result = True AndAlso (Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDevRule") OrElse _
-                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDenyRule") OrElse _
-                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_SrvGroupID") OrElse _
-                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDevRule") OrElse _
-                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDenyRule") OrElse _
+                If Result = True AndAlso (Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDevRule") OrElse
+                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDenyRule") OrElse
+                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_SrvGroupID") OrElse
+                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDevRule") OrElse
+                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDenyRule") OrElse
                                 Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_SrvGroupID")) Then
                     'TODO: further implementation required for import with columns User_Authorizations_*Rule_IsDe*/SrvGroupID
                     LabelStep3Errors.Text = "Error: column support not yet implemented for ""User_Authorizations_*Rule_IsDevRule"", ""User_Authorizations_*Rule_IsDenyRule"", ""User_Authorizations_*Rule_SrvGroupID""<br>"
@@ -835,8 +707,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             MyRow(2) = noteHtmlData
             checkTable.Rows.Add(MyRow)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Verify the existance and the datatype of a column with its requirements
         ''' </summary>
@@ -852,12 +722,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="forbiddenChars">An optional list of forbidden chars</param>
         ''' <param name="warningChars">An optional list of chars causing warnings</param>
         ''' <returns>True on validation success, False on errors</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function PrepareStep4ValidateImportColumn(ByVal checkTable As DataTable, ByVal importTable As DataTable, ByVal culture As System.Globalization.CultureInfo, ByVal columnName As String, ByVal destinationType As Type, ByVal requiredColumnForUpdate As Boolean, ByVal requiredColumnForInsert As Boolean, ByVal requiredColumnForRemove As Boolean, ByVal allowDBNull As Boolean, ByVal allowEmptyString As Boolean, Optional forbiddenChars As Char() = Nothing, Optional warningChars As Char() = Nothing) As Boolean
             Dim TestResultsWithErrors As New Generic.List(Of DataRow)
             Dim TestResultsWithWarnings As New Generic.List(Of DataRow)
@@ -1144,18 +1008,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''' <summary>
     '''     A helper page which processes the import in fact
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[AdminSupport]	31.08.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class ImportUsersProcessing
         Inherits ImportBase
 
         Protected WithEvents LiteralStep4ProcessingMessageLog As Label
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     How many user accounts shall be imported at once?
         ''' </summary>
@@ -1163,10 +1019,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <remarks>
         '''     Web requests are regulary limited to 30 seconds. So we're not allowed to import all user accounts in one request. We have to split the processing of the whole list into multiple requests if we don't want the request to stop unexpectedly.
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	30.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable ReadOnly Property NumberOfUsersToImportInOneRoundTrip() As Integer
             Get
                 Return 5
@@ -1178,17 +1030,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Sub
 
         Private _TotalRecords As Integer
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The number of total records in the import table
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected ReadOnly Property TotalRecords() As Integer
             Get
                 Return _TotalRecords
@@ -1196,33 +1041,18 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Property
 
         Private _ProgressState As Integer
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The number of already processed records from the import table
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected ReadOnly Property ProgressState() As Integer
             Get
                 Return _ProgressState
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Calculate the values for the output to the user
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	30.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Sub CalculateProgressState()
 
             _TotalRecords = ImportTable.Rows.Count
@@ -1236,17 +1066,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Next
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Manage the import of several user accounts (while this page request)
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub ExecuteImport()
             Try
                 If ImportTable Is Nothing Then
@@ -1280,19 +1102,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End Try
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Import some user details defined by the given datarow of user data
         ''' </summary>
         ''' <param name="userData">A datarow from the import table</param>
         ''' <param name="rowID">An ID to identify the row by the user in case of errors</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Sub ImportUser(ByVal userData As DataRow, ByVal rowID As Integer)
 
             Try
@@ -1408,8 +1222,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End Try
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Assign the user profile information from the datarow to the user object
         ''' </summary>
@@ -1419,10 +1231,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <remarks>
         '''     All profile information will be copied here except loginname and password
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub ApplyUserProfileData(ByRef user As WMSystem.UserInformation, ByVal userData As DataRow, ByVal culture As System.Globalization.CultureInfo)
 
             'User account data
@@ -1535,8 +1343,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 userInfoField = newValue
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Assign the memberships and authorizations to a user's account
         ''' </summary>
@@ -1545,12 +1351,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="culture">The culture of the import data (when a string has to be converted to a datetime, etc.)</param>
         ''' <param name="importActionMemberships">The type of the import</param>
         ''' <param name="importActionAuthorizations">The type of the import</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	12.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub ApplyMembershipsAndAuthorizations(ByVal user As WMSystem.UserInformation, ByVal userData As DataRow, ByVal culture As System.Globalization.CultureInfo, ByVal importActionMemberships As ImportActions, ByVal importActionAuthorizations As ImportActions)
 
             If Not (importActionMemberships = 0 OrElse importActionMemberships = ImportBase.ImportActions.InsertOnly OrElse importActionMemberships = ImportBase.ImportActions.FitExact) Then
@@ -1773,7 +1573,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     'Evaluate if missing authorization
                     Dim AlreadyExist As Boolean = False
                     For MyCounterIsCurrently As Integer = 0 To CurrentAuthorizations.Length - 1
-                        If RequiredSecObjID = CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID AndAlso _
+                        If RequiredSecObjID = CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID AndAlso
                                     RequiredSrvGroupID = CurrentAuthorizations(MyCounterIsCurrently).ServerGroupID Then
                             AlreadyExist = True
                         End If
@@ -1802,8 +1602,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Dim SrvGroupID As Integer = CurrentAuthorizations(MyCounterIsCurrently).ServerGroupID
                     Dim ShallBeThere As Boolean = False
                     For MyCounterShallBe As Integer = 0 To RequiredSecurityObjects.Length - 1
-                        If RequiredSecurityObjects(MyCounterShallBe) = CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID AndAlso _
-                                    RequiredSecurityObjects_SrvGroupIDs(MyCounterShallBe) = SrvGroupID AndAlso _
+                        If RequiredSecurityObjects(MyCounterShallBe) = CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID AndAlso
+                                    RequiredSecurityObjects_SrvGroupIDs(MyCounterShallBe) = SrvGroupID AndAlso
                                     RequiredSecurityObjects_IsDevRule(MyCounterShallBe) = isDevRule Then
                             ShallBeThere = True
                         End If
@@ -1815,8 +1615,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
             Next
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Error handler for unexpected page errors
         ''' </summary>
@@ -1825,10 +1623,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <remarks>
         '''     Show the error message on the page output in the IFrame
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	31.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub PageOnError(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Error
             Response.Clear()
             Response.Write(Server.GetLastError.ToString.Replace(vbNewLine, "<br>"))

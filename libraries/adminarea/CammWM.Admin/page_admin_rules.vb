@@ -28,8 +28,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''' <summary>
     '''     A page to select user-field and display a list of users per field
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Class RulesUserFields
         Inherits Page
 
@@ -77,7 +75,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
         Private Function GetListOfUsersByField(ByVal strSearchValue As String) As DataTable
             Dim sqlParams As SqlParameter() = {New SqlParameter("@FieldName", Trim(dropFieldSelection.SelectedValue)), New SqlParameter("@searchvalue", strSearchValue.Trim)}
-            Dim sqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            Dim sqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "select lu.id_user from log_users lu inner join benutzer b on b.id=lu.id_user where lu.type=@FieldName and lu.value=@searchvalue"
             Return FillDataTable(New SqlConnection(cammWebManager.ConnectionString), sqlQuery, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
         End Function
@@ -89,13 +87,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim sqlQuery As String = String.Empty
 
             If Trim(dropFieldSelection.SelectedValue) = "title" Then
-                sqlQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                sqlQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "select isnull(titel,'') as value,count(id) counts from benutzer group by isnull(titel,'') order by value"
             ElseIf Trim(dropFieldSelection.SelectedValue) = "country" Then
-                sqlQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                sqlQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "select isnull(land,'') as value,count(id) counts from benutzer group by isnull(land,'') order by value"
             Else
-                sqlQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                sqlQuery = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "select isnull(" & Trim(dropFieldSelection.SelectedValue) & ",'') as value,count(id) counts from benutzer group by isnull(" & Trim(dropFieldSelection.SelectedValue) & ",'') order by value"
                 'sqlQuery = "select isnull(value,'') value,count(lu.id) counts from log_users lu inner join benutzer b on lu.id_user=b.id where type=@fieldid group by isnull(value,'') order by value"
             End If

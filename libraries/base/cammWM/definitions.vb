@@ -133,18 +133,15 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' camm Web-Manager assembly/library version
         ''' </summary>
-        ''' <returns></returns>
         Function VersionAssembly() As Version
         ''' <summary>
         ''' camm Web-Manager database version
         ''' </summary>
-        ''' <returns></returns>
         Function VersionDatabase() As Version
         ''' <summary>
         ''' camm Web-Manager database version
         ''' </summary>
         ''' <param name="allowCaching">True to allow reading from cache</param>
-        ''' <returns></returns>
         Function VersionDatabase(allowCaching As Boolean) As Version
 
     End Interface
@@ -155,9 +152,6 @@ Namespace CompuMaster.camm.WebManager
     ''' <remarks>
     '''     <p>This is the base class of camm Web-Manager. Instantiate this one in your ASP.NET pages by using ~/system/cammWebManager.ascx</p>
     ''' </remarks>
-    ''' <history>
-    ''' 	[wezel]	29.01.2005	Created
-    ''' </history>
     <System.Runtime.InteropServices.ComVisible(False)> Public Class WMSystem
         Inherits System.Web.UI.UserControl
         Implements IWebManager
@@ -168,11 +162,6 @@ Namespace CompuMaster.camm.WebManager
         '''     User interface related properties and methods
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	01.03.2006	Created
-        ''' </history>
         Public ReadOnly Property UI() As CompuMaster.camm.WebManager.UserInterface Implements IWebManager.UI
             Get
                 Static _UI As CompuMaster.camm.WebManager.UserInterface
@@ -187,11 +176,6 @@ Namespace CompuMaster.camm.WebManager
         '''     The download handler provides a secure, powerfull and resource saving possibility for sending files or data to a client
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	13.07.2004	Created
-        ''' </history>
         Public ReadOnly Property DownloadHandler() As DownloadHandler
             Get
                 Static _DownloadHandler As DownloadHandler
@@ -224,7 +208,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Environmental information, e. g. product details, licence
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public ReadOnly Property Environment() As CompuMaster.camm.WebManager.Environment
             Get
@@ -238,11 +221,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Licence details of the camm Web-Manager instance
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	11.05.2005	Created
-        ''' </history>
         <Obsolete("Use Environment.Licence")> Public ReadOnly Property Licence() As Licence
             Get
                 Return Environment.Licence
@@ -658,11 +636,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Sets up an user name for the SMTP server
         ''' </summary>
         ''' <value>The user name</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	31.08.2004	Created
-        ''' </history>
         Public Property SMTPUserName() As String
             Get
                 If _SMTPUserName = Nothing Then
@@ -679,11 +652,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Sets up a password for the SMTP server
         ''' </summary>
         ''' <value>The password</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	31.08.2004	Created
-        ''' </history>
         Public Property SMTPPassword() As String
             Get
                 If _SMTPPassword = Nothing Then
@@ -700,11 +668,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Configures the authentication methods for the SMTP server
         ''' </summary>
         ''' <value>The authentification type, possible values are "" or "NONE", "LOGIN", "PLAIN", "CRAM-MD5", or "NTLM"</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	31.08.2004	Created
-        ''' </history>
         Public Property SMTPAuthType() As String
             Get
                 If _SMTPAuthType = Nothing Then
@@ -725,9 +688,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     This method shouldn't be used by your application. Please use Logout() instead.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	16.07.2004	Created
-        ''' </history>
         Public Overridable Sub ResetUserLoginName()
             If HttpContext.Current Is Nothing Then
                 'Console/Windows application
@@ -745,11 +705,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Set up the username in the environment/session
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	16.07.2004	Created
-        ''' </history>
         Friend Overridable Sub SetUserLoginName(ByVal loginName As String)
             If loginName = "" Then
                 Throw New ArgumentException("loginName mustn't be empty")
@@ -808,11 +763,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="scriptEngineID">The ID of the script engine which is related to the SessionID</param>
         ''' <param name="scriptEngineSessionID">A SessionID string of the script engine which is registered for a special user session</param>
         ''' <returns>The loginname of the registered user or Nothing if no user is registered for the specified browser session</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	09.02.2007	Created
-        ''' </history>
         Friend Function LookupUserNameByScriptEngineSessionID(ByVal serverID As Integer, ByVal scriptEngineID As CompuMaster.camm.WebManager.WMSystem.ScriptEngines, ByVal scriptEngineSessionID As String) As String
             Dim MyCmd As SqlCommand
             Dim _DBBuildNo As Integer = Setup.DatabaseUtils.Version(Me, True).Build
@@ -842,11 +792,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="scriptEngineID">The ID of the script engine which is related to the SessionID</param>
         ''' <param name="scriptEngineSessionID">A SessionID string of the script engine which is registered for a special user session</param>
         ''' <returns>The loginname of the registered user or Nothing if no user is registered for the specified browser session</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	09.02.2007	Created
-        ''' </history>
         Friend Function LookupUserNameByScriptEngineSessionID(ByVal scriptEngineID As CompuMaster.camm.WebManager.WMSystem.ScriptEngines, ByVal scriptEngineSessionID As String) As String
             Dim MyCmd As SqlCommand
             Const sql As String = "SELECT Benutzer.LoginName" & vbNewLine &
@@ -869,11 +814,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="scriptEngineID">The ID of the script engine which is related to the SessionID</param>
         ''' <param name="scriptEngineSessionID">A SessionID string of the script engine which is registered for a special user session</param>
         ''' <returns>The session ID in camm Web-Manager for the specified browser session or zero value (0) if no one can be found</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	09.02.2007	Created
-        ''' </history>
         Private Function LookupUserSessionIDByScriptEngineSessionID(ByVal serverID As Integer, ByVal scriptEngineID As CompuMaster.camm.WebManager.WMSystem.ScriptEngines, ByVal scriptEngineSessionID As String) As Long
             Const sql As String = "SELECT SSID.SessionID" & vbNewLine &
                 "FROM [System_WebAreasAuthorizedForSession] As SSID" & vbNewLine &
@@ -897,9 +837,6 @@ Namespace CompuMaster.camm.WebManager
         ''' May throw an exception in web environments if no session ID can be looked up from cookie or ASP.NET session handler
         ''' In windows or console applications, there will be returned a self-created session ID
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	23.04.2005	Created
-        ''' </history>
         Public Overridable ReadOnly Property CurrentScriptEngineSessionID() As String
             Get
                 If HttpContext.Current Is Nothing Then
@@ -1166,135 +1103,62 @@ Namespace CompuMaster.camm.WebManager
         '''     kein Record    -->	    nicht definiert! --> Fehler!
         '''     DBNull	        -->     nicht definiert! --> Fehler!
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.06.2005	Created
-        ''' </history>
         Public Enum ReturnValues_UserValidation As Integer
             ''' <summary>
             '''     Unknown error without any detailed message
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             UnknownError = 1
             ''' <summary>
             '''     Angegebener Server nicht gefunden oder deaktiviert
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             ServerNotFound = -10
             ''' <summary>
             '''     Benutzer hat (keine) Anmeldeerlaubnis auf diesem Server (oder unvollständige Parameterliste)
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             NoLoginRightForThisServer = -9
             ''' <summary>
             '''     Keine Berechtigung für angeforderte Anwendung, Login jedoch erfolgreich
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             ValidationSuccessfull_ButNoAuthorizationForRequiredSecurityObject = -5
             ''' <summary>
             '''     Bereits angemeldet
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             AlreadyLoggedIn = -4
             ''' <summary>
             '''     Access denied (Benutzer fehlt Recht)
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             AccessDenied = -3
             ''' <summary>
             '''     Login zu oft fehlgeschlagen! Konto gesperrt!
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             TooManyLoginFailures = -2
             ''' <summary>
             '''     Validierung erfolgreich
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             ValidationSuccessfull = -1
             ''' <summary>
             '''     User oder Passwort oder beides konnten nicht authentifiziert werden oder Konto gesperrt oder Anmeldung auf Server verweigert
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             UserOrPasswortMisstyped_OR_AccountLocked_OR_LoginDeniedAtThisServerGroup = 0
             ''' <summary>
             '''     CurUserAccountAccessability Is Null --> User nicht gefunden
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             UserNotFound_BecauseOf_UserAccountAccessability = 43
             ''' <summary>
             '''     Benutzerkonto gesperrt
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             UserAccountLocked = 44
             ''' <summary>
             '''     Reauthentifizierung fehlgeschlagen (Login von einer anderen Station)
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             LoginFromAnotherWorkstation = 57
             ''' <summary>
             '''     Login ausstehend und erforderlich
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             LoginRequired = 58
             ''' <summary>
             '''     The lookup process for an external account name hasn't found a matching user
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             UserForDemandedExternalAccountNotFound = -67
         End Enum
 
@@ -1304,36 +1168,18 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Attached servers like SAP, DocWare are using SystemAppTypes IDs smaller than zero.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.06.2005	Created
-        ''' </history>
         Private Enum SystemAppTypes As Integer
             ''' <summary>
             '''     Default item
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             UserDefined = 0
             ''' <summary>
             '''     Master server items are subject of changes while reconfiguration of master server setup
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             LoginServer = 1
             '''             ''' <summary>
             '''     Admin server items are subject of changes while reconfiguration of admin server setup
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.06.2005	Created
-            ''' </history>
             AdminServer = 2
         End Enum
 #End Region
@@ -1345,11 +1191,6 @@ Namespace CompuMaster.camm.WebManager
         '''     The name of a security object that has been successfully checked for authorization
         ''' </summary>
         ''' <value>The name of the security object</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Friend ReadOnly Property SecurityObjectSuccessfullyTested() As String
             Get
                 Return _SecurityObjectSuccessfullyTested
@@ -1361,11 +1202,6 @@ Namespace CompuMaster.camm.WebManager
         '''     The name of a security object to be automatically checked for authorization when the page loads
         ''' </summary>
         ''' <value>The name of the security object</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <System.ComponentModel.DefaultValue("")> Public Property SecurityObject() As String
             Get
                 Return _SecurityObject
@@ -1446,11 +1282,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get the META information for placing it into the HTML head area.
         ''' </summary>
         ''' <returns>A string with some META information for the current page</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetHtmlMetaBlock() As String
 
             System_PreFill_MetaInfo() 'Load defaults if not yet loaded / overwrite Generator tag to ensure the correct content
@@ -1472,11 +1303,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="MyLoginName">Login name of the user</param>
         ''' <param name="MyEMailAddress">The user's e-mail address</param>
         ''' <returns>The demanded password</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetUserPassword(ByVal MyLoginName As String, ByVal MyEMailAddress As String) As String
             Dim MyDBConn As New SqlConnection
             Dim MyRecSet As SqlDataReader = Nothing
@@ -1551,9 +1377,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Used from property ConnectionString only
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.01.2005	Created
-        ''' </history>
         Private Property DatabaseIsNewerBuildThanWebManagerApplication() As TripleState
             Get
                 If HttpContext.Current Is Nothing Then
@@ -1576,11 +1399,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Collection of strings to be replaced in hyperlinks
         ''' </summary>
         ''' <value>The new collection</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Property URLReplacements() As Collections.Specialized.NameValueCollection
             Get
                 Return _URLReplacements
@@ -1604,8 +1422,6 @@ Namespace CompuMaster.camm.WebManager
         '''     The server identification string of the current server
         ''' </summary>
         ''' <value>A server identification string</value>
-        ''' <remarks>
-        ''' </remarks>
         Public Property CurrentServerIdentString() As String
             Get
                 If _CurrentServerIdentString = Nothing Then
@@ -1630,11 +1446,6 @@ Namespace CompuMaster.camm.WebManager
         '''     The server information object of the current server
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.04.2005	Created
-        ''' </history>
         Public ReadOnly Property CurrentServerInfo() As ServerInformation
             Get
                 Static _CurrentServerInfo As ServerInformation
@@ -1649,11 +1460,6 @@ Namespace CompuMaster.camm.WebManager
         '''     The address of the client accessing the camm Web-Manager system
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	16.07.2004	Created
-        ''' </history>
         Public ReadOnly Property CurrentRemoteClientAddress() As String
             Get
                 If HttpContext.Current Is Nothing Then
@@ -1669,11 +1475,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Safe mode is for error page to allow ignoring of exceptions while loading the custom configuration
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.02.2005	Created
-        ''' </history>
         Friend Property SafeMode() As Boolean
             Get
                 Return _SafeMode OrElse (Not HttpContext.Current Is Nothing AndAlso HttpContext.Current.Request.ServerVariables("SCRIPT_NAME").ToLower(System.Globalization.CultureInfo.InvariantCulture) = "/sysdata/access_error.aspx")
@@ -1782,22 +1583,12 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Track initialization state because a repeated initalization would lead to an override of LogonScriptUrls and others which might be customized (e. g. in cookieless scenarios)
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	23.04.2005	Created
-        ''' </history>
         Private Initialized As Boolean = False
 
         ''' <summary>
         '''     The connection string to the camm Web-Manager database
         ''' </summary>
         ''' <value>A string containing all information required to successfully establish a connection to the database</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Property ConnectionString() As String Implements IWebManager.ConnectionString
             Get
                 If _ConnectionString = Nothing Then
@@ -1825,11 +1616,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Represents a state with 3 possible values: True, False and Undefined (default)
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.01.2005	Created
-        ''' </history>
         Friend Enum TripleState As Byte
             Undefined = 0
             [True] = 1
@@ -1842,9 +1628,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Throws an exception if the database is newer than this application. This is to prevent data corruption by old methods.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.01.2005	Created
-        ''' </history>
         Private Sub CheckCompatibilityToDatabaseByBuildNumber()
             WebManager.Log.WriteEventLogTrace("CheckCompatibilityToDatabaseByBuildNumber:Begin")
             If Me.DatabaseIsNewerBuildThanWebManagerApplication = TripleState.Undefined Then
@@ -1864,7 +1647,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' A unique assembly location for each logical (IIS) web application
         ''' </summary>
-        ''' <returns></returns>
         Private Function CurrentWebAppAssemblyLocation() As String
             Dim AssemblyLocation As String
             Dim AssemblyBuildNo As Integer = Setup.ApplicationUtils.Version.Build
@@ -1913,7 +1695,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' A unique hash ID for each logical (IIS) web application
         ''' </summary>
-        ''' <returns></returns>
         Friend Function CurrentWebAppInstanceID() As String
             Return Utils.ComputeHash(CurrentWebAppAssemblyLocation)
         End Function
@@ -1924,9 +1705,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' This feature assists the website administrator to review potential breakdowns before he updates the database build no. A newer database version than the CWM assembly version which would lead to an application break-down.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	19.09.2007	Created
-        ''' </history>
         Private Sub LogAssemblyVersionToDatabaseOnce()
             WebManager.Log.WriteEventLogTrace("LogAssemblyVersionToDatabaseOnce:Begin")
             Dim DoLogging As Boolean = False
@@ -2030,18 +1808,18 @@ Namespace CompuMaster.camm.WebManager
                 For Each MyAttribute As String In Me.Attributes.Keys
 
                     Select Case MyAttribute.ToLower(System.Globalization.CultureInfo.InvariantCulture)
-                        Case "securityobject", "pageadditionalheaders", _
+                        Case "securityobject", "pageadditionalheaders",
                             "pagetitle", "pagep3pcompactpolicy"
                             'OK
-                        Case "connectionstring", "currentserveridentstring", _
-                            "smtpserverport", "smtpservername", _
-                            "technicalserviceemailaccountaddress", "technicalserviceemailaccountname", _
-                            "standardemailaccountaddress", "standardemailaccountname", _
+                        Case "connectionstring", "currentserveridentstring",
+                            "smtpserverport", "smtpservername",
+                            "technicalserviceemailaccountaddress", "technicalserviceemailaccountname",
+                            "standardemailaccountaddress", "standardemailaccountname",
                             "developmentemailaccountaddress"
                             'Shouldn't be configured here, but okay for debugging and development
                             'you should use config.vb instead
                             ControlAttributes_WarningsIfNotInDebugMode &= ", " & MyAttribute
-                        Case "user_auth_config_cursmtpserver_port", _
+                        Case "user_auth_config_cursmtpserver_port",
                             "user_auth_config_cursmtpserver", "additionalbodytags"
                             'Upgrade warning
                             ControlAttributes_UpgradeWarnings &= ", " & MyAttribute
@@ -2091,11 +1869,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Enumeration of available behaviours for property AutoSecurityCheckLogsPageAccess
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	30.05.2008	Created
-        ''' </history>
         Public Enum AutoSecurityCheckLogsPageHit As Byte
             OnEveryRequest = 0
             NotOnPostBack = 1
@@ -2111,9 +1884,6 @@ Namespace CompuMaster.camm.WebManager
         ''' As soon as you set up a value for property SecurityObject, camm Web-Manager automatically checks if the current user is really authorized to access this security object.
         ''' By default, all security validations will be handled as a page access in the log analysis. In some cases, it may be useful to not log every access as a hit. For this, you can setup the required behaviour regarding the logging of hits.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	30.05.2008	Created
-        ''' </history>
         Public Property AutoSecurityCheckLogsPageAccess() As AutoSecurityCheckLogsPageHit
             Get
                 Return _AutoSecurityCheckLogsPageAccess
@@ -2134,11 +1904,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Creates a new instance of the camm Web-Manager
         ''' </summary>
         ''' <param name="databaseConnectionString">The connection string to the database</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub New(ByVal databaseConnectionString As String)
             Me.New(databaseConnectionString, False)
         End Sub
@@ -2169,7 +1934,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Additional configuration values setup from e.g. global.asax in MS Azure cloud service environments
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks>Config values are considered if the configuration value hasn't been found in web.config (missing or empty value)</remarks>
         Public Shared ReadOnly Property AdditionalConfiguration As System.Collections.Specialized.NameValueCollection
             Get
@@ -2180,11 +1944,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Creates a new instance of the camm Web-Manager
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("You should not create a camm Web-Manager instance by yourself in web applications, use the cammWebManager property or cammWebManager object created in the aspx page itself")>
         Public Sub New()
             MyBase.New()
@@ -2199,11 +1958,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Creates a new instance of the camm Web-Manager - internal version to prevent the obsoletion warning
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Friend Sub New(ByVal dummy As System.Type)
             MyBase.New()
             If HttpContext.Current Is Nothing Then
@@ -2221,9 +1975,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="serverID">The server this URL shall target to</param>
         ''' <param name="scriptEngineID">The script engine ID in charge</param>
         ''' <param name="pathFromRootDirectory">The path to the requested file on the server</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
         ''' <history>
         ''' 	[adminsupport]	23.04.2005	Created
         '''
@@ -2267,12 +2018,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="scriptEngineID">The script engine ID in charge</param>
         ''' <param name="urlPartForSessionIDOfScriptEngine">The session ID string as it can be inserted into the URL inclusive a leading path separator</param>
         ''' <param name="pathFromRootDirectory">The path to the requested file on the server</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	23.04.2005	Created
-        ''' </history>
         Protected Overridable Function CalculateUrlConstructor(ByVal serverUrlWithoutTrailingSlash As String, ByVal scriptEngineID As Integer, ByVal urlPartForSessionIDOfScriptEngine As String, ByVal pathFromRootDirectory As String) As String
             If Configuration.CookieLess AndAlso urlPartForSessionIDOfScriptEngine <> "" Then
                 Return serverUrlWithoutTrailingSlash & urlPartForSessionIDOfScriptEngine & pathFromRootDirectory
@@ -2285,11 +2030,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Methods for fast data querying
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	23.10.2008	Created
-        ''' </history>
         Public ReadOnly Property PerformanceMethods() As PerformanceMethods Implements IWebManager.PerformanceMethods
             Get
                 Static _PerformanceMethods As CompuMaster.camm.WebManager.PerformanceMethods
@@ -2303,11 +2043,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="LoginNameOfUser">Login name of the user</param>
         ''' <returns>A URL where to redirect to</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetNextLogonURI(ByVal LoginNameOfUser As String) As String
             Dim MyBuffer As String
             Dim MyDBConn As New SqlConnection
@@ -2390,7 +2125,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Checks whether database schema supports multiple password algorithms. Older versions don't.
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function System_SupportsMultiplePasswordAlgorithms() As Boolean
             Return Setup.DatabaseUtils.Version(Me, True).Build >= 195
@@ -2399,7 +2133,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Fetches the default algorithm selected by the admin
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function System_GetDefaultPasswordAlgorithm() As PasswordAlgorithm
             If Not System_SupportsMultiplePasswordAlgorithms() Then
@@ -2443,7 +2176,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Returns the behavior chosen for password recovery by the administrator
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function System_GetPasswordRecoveryBehavior() As PasswordRecoveryBehavior
             If Not System_SupportsMultiplePasswordAlgorithms() Then
@@ -2481,7 +2213,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Returns the crypted password of a user
         ''' </summary>
         ''' <param name="username">user who's crypted password should be returned.</param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function System_GetCryptedUserPassword(ByVal username As String) As String
             Dim MyCmd As New SqlClient.SqlCommand
@@ -2553,11 +2284,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="LoginNameOfUser">The login name to be checked</param>
         ''' <returns>True when the session has ended</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_IsSessionTerminated(ByVal LoginNameOfUser As String) As Boolean
             Dim MyDBConn As New SqlConnection
             Dim MyRecSet As SqlDataReader = Nothing
@@ -2627,9 +2353,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Only for internal use; this method is not intended for execution by your applications
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	16.07.2004	Created
-        ''' </history>
         Friend Sub TryToRetrieveUserNameFromScriptEngineSessionID()
             Try
                 Dim FoundUsername As String = System_GetUserNameByScriptEngineSessionID()
@@ -2645,11 +2368,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get the next relogon address to make the roundtrip to all web servers and their script engines and to enable/refresh the session state
         ''' </summary>
         ''' <returns>A URL where to redirect to</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetNextLogonURIOfUserAnonymous() As String
             Dim MyBuffer As String
             Dim MyDBConn As New SqlConnection
@@ -2728,11 +2446,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="ServerIP">The server identification string to get the URL from</param>
         ''' <returns>A URL like https://www.yourcompany.com without a trailing slash</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetServerURL(ByVal ServerIP As String) As String
             Dim ServerURLs As System.Collections.Specialized.NameValueCollection
             If Not HttpContext.Current Is Nothing AndAlso Not HttpContext.Current.Application("WebManager.ServerURLs") Is Nothing Then
@@ -2811,11 +2524,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="ServerIP">The server identification string to get the master server URL from</param>
         ''' <returns>A URL like https://www.yourcompany.com without a trailing slash</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetMasterServerURL(ByVal ServerIP As String) As String
             Dim MasterServerProtocol As String = CType(System_GetServerConfig(ServerIP, "MasterServerProtocol"), String)
             Dim MasterServerName As String = CType(System_GetServerConfig(ServerIP, "MasterServerName"), String)
@@ -2839,9 +2547,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     The returned URL also contains the session ID in cookie-less environments
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetUserAdminServer_SystemURL(ByVal ServerIP As String) As String
             If Configuration.CookieLess = False AndAlso Not HttpContext.Current Is Nothing AndAlso Not HttpContext.Current.Application("WebManager.AdminServerURL") Is Nothing AndAlso Not HttpContext.Current.Application("WebManager.AdminServerURL_ServerIP") Is Nothing AndAlso CType(HttpContext.Current.Application("WebManager.AdminServerURL_ServerIP"), String) = ServerIP Then
                 Return CType(HttpContext.Current.Application("WebManager.AdminServerURL"), String)
@@ -2872,11 +2577,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="ServerIP">A server identification string</param>
         ''' <returns>The requested server group title</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetServerGroupTitle(ByVal ServerIP As String) As String
             Return CType(System_GetServerConfig(ServerIP, "ServerGroupDescription"), String)
         End Function
@@ -2886,11 +2586,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="ServerIP">A server identification string</param>
         ''' <returns>An URL to the requested server group logo</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetServerGroupImageSmallAddr(ByVal ServerIP As String) As String
             Return CType(System_GetServerConfig(ServerIP, "ServerGroupImageSmall"), String)
         End Function
@@ -2900,11 +2595,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="ServerIP">A server identification string</param>
         ''' <returns>An URL to the requested server group logo</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetServerGroupImageBigAddr(ByVal ServerIP As String) As String
             Return CType(System_GetServerConfig(ServerIP, "ServerGroupImageBig"), String)
         End Function
@@ -2914,11 +2604,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="ServerIP">A server identification string, if missing this will be the current server</param>
         ''' <returns>A server ID</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetServerID(Optional ByVal ServerIP As String = Nothing) As Integer
 
             If ServerIP Is Nothing Then
@@ -2966,11 +2651,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="ServerIP">A server identification string, if missing this is the current server</param>
         ''' <returns>A ServerInformation object with detailled data</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetServerInfo(Optional ByVal ServerIP As String = Nothing) As ServerInformation
 
             If ServerIP Is Nothing Then
@@ -3025,9 +2705,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Once the server information has been queried, it will be cached in the application context for the next request
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetServerConfig(ByVal ServerIP As String, ByVal PropertyName As String) As Object
 
             Dim MyCurServerInfo As ServerInformation = Nothing
@@ -3202,11 +2879,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="SecurityObjectName">A name of a security object</param>
         ''' <returns>True if the current user is authorized for that security object at the current server</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function IsUserAuthorized(ByVal SecurityObjectName As String) As Boolean
             Return _IsUserAuthorized(SecurityObjectName, CType(Nothing, String), True, True)
         End Function
@@ -3217,11 +2889,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="SecurityObjectName">A name of a security object</param>
         ''' <param name="ServerName">The server identification string where the security object should be validated</param>
         ''' <returns>True if the current user is authorized for that security object at the required server</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function IsUserAuthorized(ByVal SecurityObjectName As String, ByVal ServerName As String) As Boolean
             Return _IsUserAuthorized(SecurityObjectName, ServerName, True, True)
         End Function
@@ -3233,11 +2900,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="AllowSecurityCache_Read">Allow to read this information from the cache</param>
         ''' <param name="AllowSecurityCache_Write">Allow to write this information to the cache</param>
         ''' <returns>True if the current user is authorized for that security object at the required server</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function IsUserAuthorized(ByVal SecurityObjectName As String, ByVal AllowSecurityCache_Read As Boolean, ByVal AllowSecurityCache_Write As Boolean) As Boolean
             Return _IsUserAuthorized(SecurityObjectName, CType(Nothing, String), AllowSecurityCache_Read, AllowSecurityCache_Write)
         End Function
@@ -3250,11 +2912,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="AllowSecurityCache_Read">Allow to read this information from the cache</param>
         ''' <param name="AllowSecurityCache_Write">Allow to write this information to the cache</param>
         ''' <returns>True if the current user is authorized for that security object at the required server</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function IsUserAuthorized(ByVal SecurityObjectName As String, ByVal ServerName As String, ByVal AllowSecurityCache_Read As Boolean, ByVal AllowSecurityCache_Write As Boolean) As Boolean
             Return _IsUserAuthorized(SecurityObjectName, ServerName, AllowSecurityCache_Read, AllowSecurityCache_Write)
         End Function
@@ -3348,11 +3005,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="AllowSecurityCache_Read">Allow to read this information from the cache</param>
         ''' <param name="AllowSecurityCache_Write">Allow to write this information to the cache</param>
         ''' <returns>True if the current user is authorized for that security object at the required server</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use IsUserAuthorized instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_IsUserAuthorizedForApp(ByVal SecurityObjectName As String, Optional ByVal ServerName As String = Nothing, Optional ByVal AllowSecurityCache_Read As Boolean = False, Optional ByVal AllowSecurityCache_Write As Boolean = False) As Boolean
             Return _IsUserAuthorized(SecurityObjectName, ServerName, AllowSecurityCache_Read, AllowSecurityCache_Write)
@@ -3366,11 +3018,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="AllowSecurityCache_Read">Allow to read this information from the cache</param>
         ''' <param name="AllowSecurityCache_Write">Allow to write this information to the cache</param>
         ''' <returns>True if the current user is authorized for that security object at the required server</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Private Function _IsUserAuthorized(ByVal SecurityObjectName As String, ByVal ServerName As String, ByVal AllowSecurityCache_Read As Boolean, AllowSecurityCache_Write As Boolean) As Boolean
             Dim UserName As String
             If Not Me.IsLoggedOn Then
@@ -3387,8 +3034,8 @@ Namespace CompuMaster.camm.WebManager
             If serverGroupID = Nothing Then Throw New ArgumentNullException("serverGroupID")
 
             Dim MyBuffer As Integer
-                Dim MyDBConn As New SqlConnection
-                Dim MyCmd As New SqlCommand
+            Dim MyDBConn As New SqlConnection
+            Dim MyCmd As New SqlCommand
 
             If LCase(securityObjectName) = "@@anonymous" OrElse LCase(securityObjectName) = "@@public" Then
                 'Anonymous or Public access allowed, no page view/access logging 
@@ -3397,10 +3044,10 @@ Namespace CompuMaster.camm.WebManager
             ElseIf (LCase(securityObjectName) = "@@supervisor" OrElse LCase(securityObjectName) = "@@supervisors") AndAlso Me.IsLoggedOn AndAlso Me.System_IsSuperVisor(userID) Then
                 'Supervisor are always allowed to access
                 Return True
-            ElseIf Mid(securityObjectName, 1, 2) = "@@" AndAlso securityObjectName.Length > 2 AndAlso Me.IsLoggedOn AndAlso System_IsMember(userid, Mid(securityObjectName, 3)) Then
+            ElseIf Mid(securityObjectName, 1, 2) = "@@" AndAlso securityObjectName.Length > 2 AndAlso Me.IsLoggedOn AndAlso System_IsMember(userID, Mid(securityObjectName, 3)) Then
                 'Check for membership resulted with true
                 Return True
-                End If
+            End If
 
             'TODO: Implementation of required _LoadAuthorizationStatusFromCache overload in following code block
             'If AllowSecurityCache_Read = True Then
@@ -3455,16 +3102,16 @@ Namespace CompuMaster.camm.WebManager
                 End If
             Finally
                 If Not MyCmd Is Nothing Then
-                        MyCmd.Dispose()
+                    MyCmd.Dispose()
+                End If
+                If Not MyDBConn Is Nothing Then
+                    If MyDBConn.State <> ConnectionState.Closed Then
+                        MyDBConn.Close()
                     End If
-                    If Not MyDBConn Is Nothing Then
-                        If MyDBConn.State <> ConnectionState.Closed Then
-                            MyDBConn.Close()
-                        End If
-                        MyDBConn.Dispose()
-                    End If
-                End Try
-                Return Result
+                    MyDBConn.Dispose()
+                End If
+            End Try
+            Return Result
         End Function
 
         ''' <summary>
@@ -3577,11 +3224,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="LanguageID">The ID to be verified</param>
         ''' <returns>True if it's activated</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_IsValidLanguageID(ByVal LanguageID As Integer) As Boolean
             Dim MyDBConn As New SqlConnection
             Dim MyRecSet As SqlDataReader = Nothing
@@ -3632,11 +3274,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="SettingName">The name of the value</param>
         ''' <returns>The requested value (can be DBNull)</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetSessionValue(ByVal SettingName As String) As Object
             Dim Result As Object = Nothing
 
@@ -3705,11 +3342,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="SettingName">The name of the variable where to save the value</param>
         ''' <param name="SettingValue">The value to be saved</param>
         ''' <returns>A boolean value which indicates a successfull write operation</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_SetSessionValue(ByVal SettingName As String, ByVal SettingValue As Object) As Object
             Dim Result As Boolean
             Dim MyDBConn As New SqlConnection
@@ -3879,9 +3511,6 @@ Namespace CompuMaster.camm.WebManager
         '''     The browsers will be asked for its preferred language, but is that language offered by the camm Web-Manager system?
         '''     Per default, camm Web-Manager provides all activated languages, but you can also provide a custom value by the configuration file.
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	19.10.2005	Created
-        ''' </history>
         Private Property ActiveMarkets() As Integer()
             Get
                 If HttpContext.Current Is Nothing Then
@@ -3937,9 +3566,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' If the application defines any supported languages in the configuration file, this list of market IDs will be used for checking, otherwise the general list of activated markets will be loaded from the database.
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	19.10.2005	Created
-        ''' </history>
         Private Function IsMarketActivated(ByVal marketID As Integer) As Boolean
             Dim availableMarkets As Integer() = ActiveMarkets
             For MyCounter As Integer = 0 To availableMarkets.Length - 1
@@ -3954,11 +3580,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Detect the favorite browser language which is supported by the currently configured instance of camm Web-Manager
         ''' </summary>
         ''' <returns>The language ID which matches best; if nothing matches, the result is 1 (English)</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function GetBrowserPreferredLanguage() As Integer
 
             Dim PreferedLanguage() As String = Nothing
@@ -3991,12 +3612,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Auto-detect the best match for the current market/language
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	19.10.2005	Created
-        ''' </history>
         Private Function LookupCurrentMarket() As Integer
             Dim ResultValue As Integer = Configuration.GlobalizationDefaultMarket
             'Default-Sprache setzen
@@ -4088,11 +3703,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="ForceLanguageForThisPage">Force this language ID for this page only</param>
         ''' <returns>The current language ID</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use UIMarket instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Overloads Function CurLanguage(ByVal ForceLanguageForThisPage As Integer) As Integer
             Return UIMarket(ForceLanguageForThisPage)
         End Function
@@ -4101,11 +3711,6 @@ Namespace CompuMaster.camm.WebManager
         '''     The current market
         ''' </summary>
         ''' <returns>The current market ID</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use UIMarket instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Overloads Function CurLanguage() As Integer
             Return (UIMarket(0))
         End Function
@@ -4115,11 +3720,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="ForceLanguageForThisPage">Force this market ID for this page only</param>
         ''' <returns>The current market ID</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use UIMarket instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Overloads Function CurLanguage(ByVal ForceLanguageForThisPage As LanguageInformation) As Integer
             Return (UIMarket(ForceLanguageForThisPage.ID))
         End Function
@@ -4131,9 +3731,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Requires a database connection
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use UIMarket instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Overloads Function CurLanguageInfo() As LanguageInformation
             Return UIMarketInfo(UI.MarketID)
         End Function
@@ -4146,9 +3743,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Requires a database connection
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use UIMarket instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Overloads Function CurLanguageInfo(ByVal ForceLanguageForThisPage As LanguageInformation) As LanguageInformation
             Return UIMarketInfo(ForceLanguageForThisPage)
         End Function
@@ -4161,9 +3755,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Requires a database connection
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use UIMarket instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Overloads Function CurLanguageInfo(ByVal ForceLanguageForThisPage As Integer) As LanguageInformation
             Return UIMarketInfo(ForceLanguageForThisPage)
         End Function
@@ -4175,9 +3766,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     This is the value you receive when you ask for the alternative language of a market/language.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	11.01.2005	Created
-        ''' </history>
         <Obsolete("Use UI.LanguageID instead")> Public Function UILanguage() As Integer
             Return Me.Internationalization.GetAlternativelySupportedLanguageID(UI.MarketID)
         End Function
@@ -4186,11 +3774,6 @@ Namespace CompuMaster.camm.WebManager
         '''     The ID value of the current market
         ''' </summary>
         ''' <returns>An integer value with the ID of the current market</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	11.01.2005	Created
-        ''' </history>
         <Obsolete("Use UI.MarketID instead")> Public Function UIMarket() As Integer
             Return UIMarket(0)
         End Function
@@ -4200,11 +3783,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="forceMarketLanguageForThisPage">Force this market ID for this page only</param>
         ''' <returns>An integer value with the ID of the current market</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	11.01.2005	Created
-        ''' </history>
         Public Function UIMarket(ByVal forceMarketLanguageForThisPage As Integer) As Integer
             If forceMarketLanguageForThisPage <> 0 Then
                 'Use the forced market ID - but only for this single page request
@@ -4239,11 +3817,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="forceMarketLanguageForThisPage">Force this market for this page only</param>
         ''' <returns>An language information object with meta data on the current market</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	11.01.2005	Created
-        ''' </history>
         Public Function UIMarket(ByVal forceMarketLanguageForThisPage As LanguageInformation) As Integer
             Return UIMarket(forceMarketLanguageForThisPage.ID)
         End Function
@@ -4255,9 +3828,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Requires a database connection
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Overloads Function UIMarketInfo() As LanguageInformation
             Return New LanguageInformation(UI.MarketID, Me)
         End Function
@@ -4270,9 +3840,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Requires a database connection
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Overloads Function UIMarketInfo(ByVal ForceMarketForThisPage As LanguageInformation) As LanguageInformation
             Return New LanguageInformation(UIMarket(ForceMarketForThisPage), Me)
         End Function
@@ -4285,9 +3852,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Requires a database connection
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Overloads Function UIMarketInfo(ByVal ForceMarketForThisPage As Integer) As LanguageInformation
             Return New LanguageInformation(UIMarket(ForceMarketForThisPage), Me)
         End Function
@@ -4300,9 +3864,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     If no user has logged in, this function throws an exception
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use CurrentUserID instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_GetCurUserID() As Integer
             If Not HttpContext.Current Is Nothing AndAlso Me.IsLoggedOn = False Then
                 Dim Message As String = "No user logged in - cannot get a user ID"
@@ -4321,9 +3882,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     If no user has logged in, this function aborts, throws a runtime exception and redirect the browser to an error page
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function CurrentUserInfo() As UserInformation
             Dim LoadThisUser As Long = CurrentUserID(SpecialUsers.User_Anonymous)
             If LoadThisUser <> SpecialUsers.User_Anonymous Then
@@ -4345,9 +3903,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     If no user has logged in, this function aborts, throws a runtime exception and redirect the browser to an error page
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function CurrentUserInfo(ByVal alternativeUserIDIfNotDetectable As CompuMaster.camm.WebManager.WMSystem.SpecialUsers) As UserInformation
             Dim LoadThisUser As Long = CurrentUserID(alternativeUserIDIfNotDetectable)
             If _CurrentUserInfo_Result Is Nothing OrElse _CurrentUserInfo_Result.IDLong <> LoadThisUser Then
@@ -4366,10 +3921,6 @@ Namespace CompuMaster.camm.WebManager
         '''     If no user has logged in, this function aborts, throws a runtime exception and redirect the browser to an error page
         ''' </remarks>
         ''' <exception cref="Exception">May throw an Exception when no user is logged on</exception>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-
         Friend Function InternalCurrentUserID() As Long
             If HttpContext.Current Is Nothing Then
                 If Not Me.IsLoggedOn Then
@@ -4398,9 +3949,6 @@ Namespace CompuMaster.camm.WebManager
         '''     If no user has logged in, this function aborts, throws a runtime exception and redirect the browser to an error page
         ''' </remarks>
         ''' <exception cref="Exception">May throw an Exception when no user is logged on</exception>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Better use an overloaded alternative because this method may throw an Exception without a valid user logon")> Public Function CurrentUserID() As Long
             Return InternalCurrentUserID()
         End Function
@@ -4408,11 +3956,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get the current user ID or SpecialUsers.User_Anonymous when no user has logged on or an alternative ID when the current context is not in an HTTP application
         ''' </summary>
         ''' <returns>The ID of the current user</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use CurrentUserID instead")> Public Function System_GetCurUserID(ByVal AlternativeUserIDIfNotDetectable As SpecialUsers) As Integer
             Return CInt(CurrentUserID(AlternativeUserIDIfNotDetectable))
         End Function
@@ -4421,11 +3964,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="AlternativeUserIDIfNotDetectable"></param>
         ''' <returns>The ID of the current user</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function CurrentUserID(ByVal AlternativeUserIDIfNotDetectable As SpecialUsers) As Long
 
             If HttpContext.Current Is Nothing Then
@@ -4449,11 +3987,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="externalAccountName">The name of the external account</param>
         ''' <returns>The user's ID or Nothing if no valid data has been found</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	20.04.2007	Created
-        ''' </history>
         Friend Function LookupUserIDOfExternalUserAccount(ByVal externalAccountName As String) As Long
             If externalAccountName = Nothing Then
                 Throw New ArgumentNullException("externalAccountName")
@@ -4487,21 +4020,11 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             '''     The name of a user property which shall be investigated
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	14.04.2005	Created
-            ''' </history>
             Public PropertyName As String
 
             ''' <summary>
             '''     Available search methods for filtering of users by their defined properties
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	14.04.2005	Created
-            ''' </history>
             Public Enum SearchMethods
                 ''' <summary>
                 '''     No filtering
@@ -4509,74 +4032,36 @@ Namespace CompuMaster.camm.WebManager
                 ''' <remarks>
                 '''     Only add this property to the list of queried properties to allow returnage or sorting on this value
                 ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	15.04.2005	Created
-                ''' </history>
                 All = 0
                 ''' <summary>
                 '''     Value must exist (not DBNull)
                 ''' </summary>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	15.04.2005	Created
-                ''' </history>
                 Exist = 10
                 ''' <summary>
                 '''     Value is DBNull, respecitvely in case of a string it must be empty
                 ''' </summary>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	15.04.2005	Created
-                ''' </history>
                 IsEmpty = 20
                 ''' <summary>
                 '''     Value is equal to the searched string (regulary case in-sensitive)
                 ''' </summary>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	15.04.2005	Created
-                ''' </history>
                 MatchExactly = 30
                 ''' <summary>
                 '''     Value begins with the searched string (LIKE search)
                 ''' </summary>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	15.04.2005	Created
-                ''' </history>
                 MatchAtTheBeginning = 40
                 ''' <summary>
                 '''     Value isn't allowed to exist (is DBNull)
                 ''' </summary>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	15.04.2005	Created
-                ''' </history>
                 NotExist = 50
                 ''' <summary>
                 '''     All users which haven't got any of these strings
                 ''' </summary>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	15.04.2005	Created
-                ''' </history>
                 NoMatch = 60
             End Enum
 
             ''' <summary>
             '''     The search method
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	14.04.2005	Created
-            ''' </history>
             Public SearchMethod As SearchMethods
 
             ''' <summary>
@@ -4585,9 +4070,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             '''     The elements of this list will be queried by a logical OR
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	14.04.2005	Created
-            ''' </history>
             Public MatchExpressions As String()
 
             ''' <summary>
@@ -4596,18 +4078,10 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             '''     Keep it empty to search in table Log_Users
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.04.2005	Created
-            ''' </history>
             Friend UsersTableColumnName As String
             ''' <summary>
             '''     The data type in the users table if it's not a string
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.04.2005	Created
-            ''' </history>
             Friend UsersTableColumnType As String
 
         End Class
@@ -4633,21 +4107,11 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             '''     The name of the column which shall be sorted
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.04.2005	Created
-            ''' </history>
             Public ColumnName As String
 
             ''' <summary>
             '''     ASC or DESC
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	15.04.2005	Created
-            ''' </history>
             Public Direction As String
         End Class
 
@@ -4656,7 +4120,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="userFilter">An array of filter settings</param>
         ''' <param name="sortByPropertyName">The name of the properties to sort the resulting users by</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     <para>The property names will be either recognized as a system property or used for search in the list of additional flags.</para>
         '''     <para>Property names of system properties of user profiles</para>
@@ -4682,9 +4145,6 @@ Namespace CompuMaster.camm.WebManager
         '''     <item>accesslevelid</item>
         '''     </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.04.2005	Created
-        ''' </history>
         Public Function SearchUsers(ByVal userFilter As UserFilter(), ByVal sortByPropertyName As UserSortArgument()) As Long()
             Dim Users As DataTable = SearchUserData(Nothing, userFilter, sortByPropertyName)
             Return CType(CompuMaster.camm.WebManager.Tools.Data.DataTables.ConvertDataTableToArrayList(Users.Columns("ID")).ToArray(GetType(Long)), Long())
@@ -4695,7 +4155,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="userFilter">An array of filter settings</param>
         ''' <param name="sortByPropertyName">The name of the properties to sort the resulting users by</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     <para>Always returned is the ID value of the user</para>
         '''     <para>The property names will be either recognized as a system property or used for search in the list of additional flags.</para>
@@ -4722,9 +4181,6 @@ Namespace CompuMaster.camm.WebManager
         '''     <item>accesslevelid</item>
         '''     </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.04.2005	Created
-        ''' </history>
         Public Function SearchUserData(ByVal userFilter As UserFilter(), ByVal sortByPropertyName As UserSortArgument()) As DataTable
             Dim selects As New ArrayList
             If Not userFilter Is Nothing Then
@@ -4741,7 +4197,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="returnedProperties">An array of property names which shall be returned</param>
         ''' <param name="userFilter">An array of filter settings</param>
         ''' <param name="sortByPropertyName">The name of the properties to sort the resulting users by</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     <para>Always returned is the ID value of the user</para>
         '''     <para>The property names will be either recognized as a system property or used for search in the list of additional flags.</para>
@@ -4769,9 +4224,6 @@ Namespace CompuMaster.camm.WebManager
         '''     <item>accesslevelid</item>
         '''     </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.04.2005	Created
-        ''' </history>
         Public Function SearchUserData(ByVal returnedProperties As String(), ByVal userFilter As UserFilter(), ByVal sortByPropertyName As UserSortArgument()) As DataTable
 
             'Parameter check
@@ -5139,12 +4591,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Load the list of all user IDs
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.04.2005	Created
-        ''' </history>
         Public Function System_GetUserIDs() As Long()
             Dim Users As DataTable = Me.SearchUserData(New UserFilter() {New UserFilter("LastName", UserFilter.SearchMethods.All), New UserFilter("FirstName", UserFilter.SearchMethods.All)}, New UserSortArgument() {New UserSortArgument("LastName"), New UserSortArgument("FirstName")})
             Return CType(CompuMaster.camm.WebManager.Tools.Data.DataTables.ConvertDataTableToArrayList(Users.Columns("ID")).ToArray(GetType(Long)), Long())
@@ -5217,13 +4663,9 @@ Namespace CompuMaster.camm.WebManager
         ''' Check if a given user is a special user account to camm Web-Manager
         ''' </summary>
         ''' <param name="UserID">An ID of an user account</param>
-        ''' <returns></returns>
         ''' <remarks>
         ''' camm Web-Manager knows some special user accounts like User_Anonymous, User_Code, User_Public, User_UpdateProcessor
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	07.08.2007	Created
-        ''' </history>
         <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared Function IsSystemUser(ByVal UserID As Long) As Boolean
             Select Case UserID
                 Case SpecialUsers.User_Anonymous, SpecialUsers.User_Code, SpecialUsers.User_Public, SpecialUsers.User_UpdateProcessor
@@ -5244,7 +4686,7 @@ Namespace CompuMaster.camm.WebManager
         '
         'Return     : Bei Erfolg True, ansonsten False
         '--------------------------------------------------------------------------------------
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_SetUserDetail(ByVal MyUserID As Integer, ByVal MyProperty As String, ByVal MyNewValue As Object, Optional ByVal DoNotLogSuccess As Boolean = False) As Object
             Return DataLayer.Current.SetUserDetail(Me, Nothing, CLng(MyUserID), MyProperty, Utils.Nz(MyNewValue, CType(Nothing, String)), DoNotLogSuccess)
         End Function
@@ -5257,19 +4699,13 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="MyProperty"></param>
         ''' <param name="MyNewValue"></param>
         ''' <param name="DoNotLogSuccess"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	27.04.2005	Created
-        ''' </history>
         <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_SetUserDetail(ByVal dbConnection As SqlConnection, ByVal MyUserID As Long, ByVal MyProperty As String, ByVal MyNewValue As Object, Optional ByVal DoNotLogSuccess As Boolean = False) As Boolean
             Return DataLayer.Current.SetUserDetail(Me, dbConnection, MyUserID, MyProperty, Utils.Nz(MyNewValue, CType(Nothing, String)), DoNotLogSuccess)
         End Function
 
         ' TODO: change result type to boolean
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_SetUserDetail(ByVal MyUserID As Long, ByVal MyProperty As String, ByVal MyNewValue As Object, Optional ByVal DoNotLogSuccess As Boolean = False) As Object
             Return DataLayer.Current.SetUserDetail(Me, Nothing, MyUserID, MyProperty, Utils.Nz(MyNewValue, CType(Nothing, String)), DoNotLogSuccess)
         End Function
@@ -5284,7 +4720,7 @@ Namespace CompuMaster.camm.WebManager
         '
         'Return     : Liefert das Ergebnis als String/Null zurück
         '--------------------------------------------------------------------------------------
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetUserDetail(ByVal MyUserID As Object, ByVal MyProperty As Object) As Object
             If IsDBNull(MyUserID) Then
                 Return DBNull.Value
@@ -5297,7 +4733,7 @@ Namespace CompuMaster.camm.WebManager
             End If
         End Function
 
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetUserDetail(ByVal MyUserID As Long, ByVal MyProperty As String) As Object
             Dim Result As String = CompuMaster.camm.WebManager.DataLayer.Current.GetUserDetail(Me, MyUserID, MyProperty)
             If Result = Nothing Then
@@ -5312,11 +4748,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="MyUserID">A user ID</param>
         ''' <returns>The language ID which matches best</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	23.03.2001	Created
-        ''' </history>
         <Obsolete("Use overloaded method"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_Get1stPreferredLanguageWhichIsSupportedByTheSystem(ByVal MyUserID As Integer) As Integer
             Return System_Get1stPreferredLanguageWhichIsSupportedByTheSystem(CLng(MyUserID))
         End Function
@@ -5325,11 +4756,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="MyUserID">A user ID</param>
         ''' <returns>The language ID which matches best</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	23.06.2004	Created
-        ''' </history>
         Public Function System_Get1stPreferredLanguageWhichIsSupportedByTheSystem(ByVal MyUserID As Long) As Integer
             Return System_Get1stPreferredLanguageWhichIsSupportedByTheSystem(New CompuMaster.camm.WebManager.WMSystem.UserInformation(MyUserID, Me))
         End Function
@@ -5338,12 +4764,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserInfo">A user information object</param>
         ''' <returns>The language ID which matches best</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	23.03.2001	Created
-        ''' </history>
-
         Public Function System_Get1stPreferredLanguageWhichIsSupportedByTheSystem(ByVal UserInfo As UserInformation) As Integer
             Dim BufferedValue As Integer
             Try
@@ -5378,16 +4798,11 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="MyUserID">A user ID</param>
         ''' <returns>Returns "Mr." respectively "Ms." in the current language</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	23.03.2001	Created
-        ''' </history>
         <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetUserAddresses(ByVal MyUserID As Integer) As String
             Return System_GetUserAddresses_Internal(CLng(MyUserID))
         End Function
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Private Function System_GetUserAddresses_Internal(ByVal MyUserID As Long) As String
             Dim BufferedValue As String
 
@@ -5412,11 +4827,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="MyUserID">A user ID</param>
         ''' <returns>Returns "Mr." respectively "Ms." in the current language</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	23.06.2004	Created
-        ''' </history>
         <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetUserAddresses(ByVal MyUserID As Long) As String
             Return System_GetUserAddresses_Internal(MyUserID)
@@ -5426,11 +4836,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserInfo">A user information object</param>
         ''' <returns>Returns "Mr." respectively "Ms." in the current language</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	23.06.2004	Created
-        ''' </history>
         <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetUserAddresses(ByVal UserInfo As UserInformation) As String
             If UserInfo.Gender = Sex.Feminin Then
@@ -5447,11 +4852,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="MyUserID">A user ID</param>
         ''' <returns>Returns "Dear Mr." respectively "Dear Ms." in the current language</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	23.03.2001	Created
-        ''' </history>
         <Obsolete("use UserInfo.Salutation* functions to retrieve the complete salutation string"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetUserFormOfAddress(ByVal MyUserID As Integer) As String
             Dim BufferedValue As String
@@ -5472,11 +4872,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="MyUserID">A user ID</param>
         ''' <returns>Returns "Dear Mr." respectively "Dear Ms." in the current language</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	23.06.2004	Created
-        ''' </history>
         <Obsolete("use UserInfo.Salutation* functions to retrieve the complete salutation string"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetUserFormOfAddress(ByVal MyUserID As Long) As String
             Dim BufferedValue As String
@@ -5500,11 +4895,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserInfo">A user information object</param>
         ''' <returns>Returns "Dear Mr." respectively "Dear Ms." in the current language</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	23.06.2004	Created
-        ''' </history>
         <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetUserFormOfAddress(ByVal UserInfo As UserInformation) As String
             If UserInfo.Gender = Sex.Feminin Then
@@ -5522,11 +4912,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get the complete name of a user with academic title, first name, last name
         ''' </summary>
         ''' <returns>The complete name of the current user, for example "Dr. Paul van Kampen" or DBNull if the user doesn't exist</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	17.01.2003	Created
-        ''' </history>
         <Obsolete("Use CurrentUserInfo.FullName instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_GetCurUserCompleteName() As Object
             Try
                 Return Me.System_GetCurUserInfo.FullName
@@ -5544,9 +4929,6 @@ Namespace CompuMaster.camm.WebManager
         '''     If there is only 1 server group available, the returned string contains only the simply URL of the master server of this server group.
         '''     Are there 2 or more server groups available then each URL of the corresponding master server is followed by the server group title in parenthesis.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetUserLogonServers(ByVal userID As Object) As String
             Return CompuMaster.camm.WebManager.DataLayer.Current.GetUserLogonServers(Me, CType(userID, Long))
@@ -5559,11 +4941,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	17.01.2003	Created
-        ''' </history>
         <Obsolete("Use Utils.Nz instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Shared Function System_Nz(ByVal CheckValueIfDBNull As Object, Optional ByVal ReplaceWithThis As Object = Nothing) As Object
             Return Utils.Nz(CheckValueIfDBNull, ReplaceWithThis)
@@ -5575,11 +4952,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="LanguageID">The ID of the requested language</param>
         ''' <param name="DescriptionType">The type of the returned value: "Abbreviation", "Description_OwnLanguage", "Description_English", "Description_German", "BrowserLanguageID", "AlternativeLanguage", "IsActive"</param>
         ''' <returns>The requested value of the requested language</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	26.06.2003	Created
-        ''' </history>
         <Obsolete("Use System_GetLanguagesInfo instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_GetLanguageTitle(ByVal LanguageID As Integer, ByVal DescriptionType As String) As Object
             Dim MyDBConn As New SqlConnection
             Dim MyRecSet As SqlDataReader = Nothing
@@ -5634,11 +5006,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="marketID"></param>
         ''' <param name="activated"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	29.04.2005	Created
-        ''' </history>
         Public Sub System_SetLanguageState(ByVal marketID As Integer, ByVal activated As Boolean)
             Dim MyCmd As New SqlCommand("UPDATE dbo.System_Languages SET IsActive = @Value WHERE ID = @ID", New SqlConnection(Me.ConnectionString))
             MyCmd.Parameters.Add("@Value", SqlDbType.Bit).Value = activated
@@ -5650,11 +5017,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Queries for all existing server groups
         ''' </summary>
         ''' <returns>A hashtable with ID and name of all server groups</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	26.06.2003	Created
-        ''' </history>
         Public Function System_GetServerGroups() As Hashtable
             Dim MyDBConn As New SqlConnection
             Dim MyRecSet As SqlDataReader = Nothing
@@ -5708,9 +5070,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Tries to retrieve the user login name by the current script engine session ID of the current web server
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	03.07.2004	Created
-        ''' </history>
         Public Function System_GetUserNameByScriptEngineSessionID() As String
             If ConnectionString = "" OrElse Me.CurrentServerIdentString = "" Then
                 'WebManager hasn't been correctly initialized; it is only a fake installation, currently
@@ -5807,11 +5166,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="allowSecurityCache_Read">Allow to read the security settings from a cache, recommended for lower security issues where performance is more important</param>
         ''' <param name="allowSecurityCache_Write">Allow to write the security to a cache, recommended for lower security issues where performance is more important</param>
         ''' <returns>The value with detailled information on successfull or unsuccessfull validation</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_CheckForAccessAuthorization_NoRedirect(ByVal securityObjectName As String, Optional ByVal intReserved As Object = Nothing, Optional ByVal serverIP As String = Nothing, Optional ByVal allowSecurityCache_Read As Boolean = False, Optional ByVal allowSecurityCache_Write As Boolean = False) As System_AccessAuthorizationChecks_DBResults
             If Not Utils.Nz(intReserved) Is Nothing AndAlso Utils.TryCInt(intReserved) <> 0 Then
                 Return System_CheckForAccessAuthorization_NoRedirect(securityObjectName, Nothing, True, serverIP, allowSecurityCache_Read, allowSecurityCache_Write)
@@ -5833,9 +5187,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''    Caution: if cache validation is used and if it is also successful, page hits will not be logged for log analysis
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	03.07.2004	Created
-        ''' </history>
         Private Function System_CheckForAccessAuthorization_NoRedirect(ByVal securityObjectName As String, ByRef redirect2URL As String, ByVal loggingSuccessDisabled As Boolean, Optional ByVal serverIP As String = Nothing, Optional ByVal allowSecurityCache_Read As Boolean = False, Optional ByVal allowSecurityCache_Write As Boolean = False) As System_AccessAuthorizationChecks_DBResults
             Dim Result As System_AccessAuthorizationChecks_DBResults = _System_CheckForAccessAuthorization_NoRedirect(securityObjectName, redirect2URL, loggingSuccessDisabled, serverIP, allowSecurityCache_Read, allowSecurityCache_Write)
 
@@ -5860,9 +5211,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''    Caution: if cache validation is used and if it is also successful, page hits will not be logged for log analysis
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	03.07.2004	Created
-        ''' </history>
         Private Function _System_CheckForAccessAuthorization_NoRedirect(ByVal securityObjectName As String, ByRef redirect2URL As String, ByVal loggingSuccessDisabled As Boolean, Optional ByVal serverIP As String = Nothing, Optional ByVal allowSecurityCache_Read As Boolean = False, Optional ByVal allowSecurityCache_Write As Boolean = False) As System_AccessAuthorizationChecks_DBResults
             Dim Result As System_AccessAuthorizationChecks_DBResults
 
@@ -6019,11 +5367,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="DebugDetailsOnRedirectionCause">Additional information usefull for debugging purposes</param>
         ''' <param name="DebugDetailsOnRequest">Additional information usefull for debugging purposes</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub RedirectToLogonPage(ByVal DebugDetailsOnRedirectionCause As String, ByVal DebugDetailsOnRequest As Collections.Specialized.NameValueCollection)
             Dim Redirect2URL As String
             Redirect2URL = Internationalization.User_Auth_Validation_LogonScriptURL
@@ -6036,11 +5379,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="ErrorType">The cause why the user gets redirected to the logon page</param>
         ''' <param name="DebugDetailsOnRedirectionCause">Additional information usefull for debugging purposes</param>
         ''' <param name="DebugDetailsOnRequest">Additional information usefull for debugging purposes</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub RedirectToLogonPage(ByVal ErrorType As WMSystem.System_AccessAuthorizationChecks_LoginPageForwarderIDs, ByVal DebugDetailsOnRedirectionCause As String, ByVal DebugDetailsOnRequest As Collections.Specialized.NameValueCollection)
             Dim Redirect2URL As String
             Redirect2URL = Internationalization.User_Auth_Validation_LogonScriptURL
@@ -6059,11 +5397,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="Redirect2ThisUrlAfterSuccessfullLogon">Redirect to this URL after a successfull login</param>
         ''' <param name="DebugDetailsOnRedirectionCause">Additional information usefull for debugging purposes</param>
         ''' <param name="DebugDetailsOnRequest">Additional information usefull for debugging purposes</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub RedirectToLogonPage(ByVal Redirect2ThisUrlAfterSuccessfullLogon As String, ByVal DebugDetailsOnRedirectionCause As String, ByVal DebugDetailsOnRequest As Collections.Specialized.NameValueCollection)
             Dim Redirect2URL As String
             Redirect2URL = Internationalization.User_Auth_Validation_LogonScriptURL
@@ -6085,11 +5418,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="ru"></param>
         ''' <param name="DebugDetailsOnRedirectionCause">Additional information usefull for debugging purposes</param>
         ''' <param name="DebugDetailsOnRequest">Additional information usefull for debugging purposes</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub RedirectToLogonPage(ByVal su As String, ByVal ru As String, ByVal DebugDetailsOnRedirectionCause As String, ByVal DebugDetailsOnRequest As Collections.Specialized.NameValueCollection)
             Dim Redirect2URL As String
             Redirect2URL = Internationalization.User_Auth_Validation_LogonScriptURL
@@ -6109,11 +5437,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="errorDetails">The cause (free details) why the user gets redirected to the error page</param>
         ''' <param name="debugDetailsOnRedirectionCause">Additional information usefull for debugging purposes</param>
         ''' <param name="debugDetailsOnRequest">Additional information usefull for debugging purposes</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub RedirectToErrorPage(ByVal errorDetails As String, ByVal debugDetailsOnRedirectionCause As String, ByVal debugDetailsOnRequest As Collections.Specialized.NameValueCollection)
             RedirectToErrorPage(Nothing, errorDetails, debugDetailsOnRedirectionCause, debugDetailsOnRequest)
         End Sub
@@ -6123,11 +5446,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="errorType">The cause why the user gets redirected to the error page</param>
         ''' <param name="debugDetailsOnRedirectionCause">Additional information usefull for debugging purposes</param>
         ''' <param name="debugDetailsOnRequest">Additional information usefull for debugging purposes</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub RedirectToErrorPage(ByVal errorType As WMSystem.System_AccessAuthorizationChecks_ErrorPageForwarderIDs, ByVal debugDetailsOnRedirectionCause As String, ByVal debugDetailsOnRequest As Collections.Specialized.NameValueCollection)
             RedirectToErrorPage(errorType, Nothing, debugDetailsOnRedirectionCause, debugDetailsOnRequest)
         End Sub
@@ -6139,11 +5457,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="debugDetailsOnRedirectionCause">Additional information usefull for debugging purposes</param>
         ''' <param name="debugDetailsOnRequest">Additional information usefull for debugging purposes</param>
         ''' <param name="displayFrameSet"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	15.08.2006	Created
-        ''' </history>
         Public Sub RedirectToErrorPage(ByVal errorType As WMSystem.System_AccessAuthorizationChecks_ErrorPageForwarderIDs, ByVal errorDetails As String, ByVal debugDetailsOnRedirectionCause As String, ByVal debugDetailsOnRequest As Collections.Specialized.NameValueCollection, Optional ByVal displayFrameSet As Boolean = True)
             RedirectToErrorPage(errorType, errorDetails, debugDetailsOnRedirectionCause, debugDetailsOnRequest, Nothing, Nothing, displayFrameSet)
         End Sub
@@ -6157,11 +5470,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="userName">The username which is related to the current exception (depends on SendPassword page only)</param>
         ''' <param name="eMailAddress">The e-mail address related to the current exception (depends on SendPassword page only)</param>
         ''' <param name="displayFrameSet"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub RedirectToErrorPage(ByVal ErrorType As WMSystem.System_AccessAuthorizationChecks_ErrorPageForwarderIDs, ByVal ErrorDetails As String, ByVal DebugDetailsOnRedirectionCause As String, ByVal DebugDetailsOnRequest As Collections.Specialized.NameValueCollection, ByVal userName As String, ByVal emailAddress As String, Optional ByVal DisplayFrameSet As Boolean = True)
             Dim Redirect2URL As String = Nothing
             If DisplayFrameSet = False Then
@@ -6194,11 +5502,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="RedirectToURL">The address of the new URL</param>
         ''' <param name="DebugDetailsOnRedirectionCause">Additional information usefull for debugging purposes</param>
         ''' <param name="DebugDetailsOnRequest">Additional information usefull for debugging purposes</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub RedirectTo(ByVal redirectToURL As String, ByVal debugDetailsOnRedirectionCause As String, ByVal debugDetailsOnRequest As Collections.Specialized.NameValueCollection)
             If System_DebugLevel >= DebugLevels.Max_RedirectPageRequestsManually Then
                 If debugDetailsOnRedirectionCause = "" Then
@@ -6278,11 +5581,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Redirects to another URL
         ''' </summary>
         ''' <param name="RedirectToURL">The address of the new URL</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub RedirectTo(ByVal redirectToURL As String)
             RedirectTo(redirectToURL, Nothing, Nothing)
         End Sub
@@ -6291,11 +5589,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="RedirectToURL">The address of the new URL</param>
         ''' <param name="DebugDetailsOnRedirectionCause">Additional information usefull for debugging purposes</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub RedirectTo(ByVal redirectToURL As String, ByVal debugDetailsOnRedirectionCause As String)
             RedirectTo(redirectToURL, Nothing, Nothing)
         End Sub
@@ -6305,11 +5598,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="RedirectToURL">The address of the new URL</param>
         ''' <param name="DebugDetailsOnRedirectionCause">Additional information usefull for debugging purposes</param>
         ''' <param name="DebugDetailsOnRequest">Additional information usefull for debugging purposes</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub RedirectWithPostDataTo(ByVal redirectToURL As String, ByVal postData As Collections.Specialized.NameValueCollection, ByVal debugDetailsOnRedirectionCause As String, ByVal debugDetailsOnRequest As Collections.Specialized.NameValueCollection)
             If System_DebugLevel >= DebugLevels.Max_RedirectPageRequestsManually Then
                 If debugDetailsOnRedirectionCause = "" Then
@@ -6390,9 +5678,6 @@ Namespace CompuMaster.camm.WebManager
         '''     This method is applicable for web applications, only, otherwise it will throw an exception respectively redirect to the logon page
         '''     Authentication caching is not activated for this method
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub AuthorizeDocumentAccess(ByVal securityObjectName As String)
             AuthorizeDocumentAccess(securityObjectName, Nothing, False, True) 'writing cache is okay, but not reading
         End Sub
@@ -6406,9 +5691,6 @@ Namespace CompuMaster.camm.WebManager
         '''    This method is applicable for web applications, only, otherwise it will throw an exception respectively redirect to the logon page
         '''    Authentication caching is not activated for this method
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub AuthorizeDocumentAccess(ByVal securityObjectName As String, ByVal serverIdentificationString As String)
             AuthorizeDocumentAccess(securityObjectName, serverIdentificationString, False, True) 'writing cache is okay, but not reading
         End Sub
@@ -6423,9 +5705,6 @@ Namespace CompuMaster.camm.WebManager
         '''    This method is applicable for web applications, only, otherwise it will throw an exception respectively redirect to the logon page
         '''    Caution: if cache validation is used and if it is also successful, page hits will not be logged for log analysis
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub AuthorizeDocumentAccess(ByVal securityObjectName As String, ByVal allowSecurityCacheRead As Boolean, ByVal allowSecurityCacheWrite As Boolean)
             AuthorizeDocumentAccess(securityObjectName, Nothing, allowSecurityCacheRead, allowSecurityCacheWrite)
         End Sub
@@ -6441,9 +5720,6 @@ Namespace CompuMaster.camm.WebManager
         '''    This method is applicable for web applications, only, otherwise it will throw an exception respectively redirect to the logon page
         '''    Caution: if cache validation is used and if it is also successful, page hits will not be logged for log analysis
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub AuthorizeDocumentAccess(ByVal securityObjectName As String, ByVal serverIdentificationString As String, ByVal allowSecurityCacheRead As Boolean, ByVal allowSecurityCacheWrite As Boolean)
             AuthorizeDocumentAccess(securityObjectName, serverIdentificationString, allowSecurityCacheRead, allowSecurityCacheWrite, True)
         End Sub
@@ -6460,31 +5736,18 @@ Namespace CompuMaster.camm.WebManager
         '''    This method is applicable for web applications, only, otherwise it will throw an exception respectively redirect to the logon page
         '''    Caution: if cache validation is used and if it is also successful, page hits will not be logged for log analysis
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Sub AuthorizeDocumentAccess(ByVal securityObjectName As String, ByVal serverIdentificationString As String, ByVal allowSecurityCacheRead As Boolean, ByVal allowSecurityCacheWrite As Boolean, ByVal logPageHit As Boolean)
             _System_CheckForAccessAuthorization(securityObjectName, Not logPageHit, serverIdentificationString, allowSecurityCacheRead, allowSecurityCacheWrite)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Redirect to the logon page when the document authorization check resulted with a login required state
         ''' </summary>
         ''' <param name="defaultLogonUrl">The default URL for the logon page as it has been suggested by the method AuthorizeDocumentAccess</param>
         ''' <param name="redirectionCause">A short description why the redirect has happened</param>
         ''' <param name="requestDetails">More information on the requested redirection</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub AuthorizeDocumentAccessRedirectToLogonPageBecauseLoginIsRequired(ByVal defaultLogonUrl As String, ByVal redirectionCause As String, ByVal requestDetails As Collections.Specialized.NameValueCollection)
             RedirectToLogonPage(defaultLogonUrl, redirectionCause, requestDetails)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for authorization of the current user for the given security object name and creates a log entry for a page view
         ''' </summary>
@@ -6497,10 +5760,6 @@ Namespace CompuMaster.camm.WebManager
         '''    This method is applicable for web applications, only, otherwise it will throw an exception respectively redirect to the logon page
         '''    Caution: if cache validation is used and if it is also successful, page hits will not be logged for log analysis
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete("Use AuthorizeDocumentAccess instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub System_CheckForAccessAuthorization(ByVal securityObjectName As String, Optional ByVal intReserved As Object = Nothing, Optional ByVal serverIP As String = Nothing, Optional ByVal allowSecurityCache_Read As Boolean = False, Optional ByVal allowSecurityCache_Write As Boolean = False)
             If Not Utils.Nz(intReserved) Is Nothing AndAlso Utils.TryCInt(intReserved) <> 0 Then
                 _System_CheckForAccessAuthorization(securityObjectName, True, serverIP, allowSecurityCache_Read, allowSecurityCache_Write)
@@ -6508,8 +5767,6 @@ Namespace CompuMaster.camm.WebManager
                 _System_CheckForAccessAuthorization(securityObjectName, False, serverIP, allowSecurityCache_Read, allowSecurityCache_Write)
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for authorization of the current user for the given security object name and creates a log entry for a page view
         ''' </summary>
@@ -6522,10 +5779,6 @@ Namespace CompuMaster.camm.WebManager
         '''    This method is applicable for web applications, only, otherwise it will throw an exception respectively redirect to the logon page
         '''    Caution: if cache validation is used and if it is also successful, page hits will not be logged for log analysis
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub _System_CheckForAccessAuthorization(ByVal securityObjectName As String, ByVal loggingSuccessDisabled As Boolean, Optional ByVal serverIP As String = Nothing, Optional ByVal allowSecurityCache_Read As Boolean = False, Optional ByVal allowSecurityCache_Write As Boolean = False)
 
             If HttpContext.Current Is Nothing Then
@@ -6634,19 +5887,12 @@ Namespace CompuMaster.camm.WebManager
             End If
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The server address as it shall be/has been used by the client
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>
         '''     In most cases, this Uri is the same as in HttpContext.Current.Request.Url, but there might be some situations, where it's different. When you use a forwarding proxy (e. g. with Apache), the proxy might be configured to the IP address instead of the origin server name because the origin server name has been resolved to your forwarding proxy server. This situation is sometimes used for Intranets, when your firewall configuration doesn't allow a direct access to the genuine webserver. So, this method replaces the host name by the value provided by the HTTP_X_FORWARDED_HOST server variable which will be added by the forwarding proxy server.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	23.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Function RemoteHostUrl() As System.Uri
             Try
                 'Use URL path as used by client, but use server address as configured
@@ -6668,8 +5914,6 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Try
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Login with login name and password
         ''' </summary>
@@ -6677,17 +5921,9 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="Password">The password of this user</param>
         ''' <param name="ForceLogin">Force the login even if the user has already logged on at another work station</param>
         ''' <returns>A result value telling some details on successfull or unsuccessfull login</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete("Use Login instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_LoginAsUser(ByVal LoginName As String, ByVal Password As String, Optional ByVal ForceLogin As Boolean = False) As ReturnValues_UserValidation
             Return ExecuteLogin(LoginName, Password, ForceLogin)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Login with login name and password
         ''' </summary>
@@ -6698,10 +5934,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Web applications require to login/logout to multiple servers, that's why there will be initiated some redirections 
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function Login(ByVal loginName As String, ByVal password As String, Optional ByVal forceLogin As Boolean = False) As ReturnValues_UserValidation
 
             If HttpContext.Current Is Nothing Then
@@ -6718,8 +5950,6 @@ Namespace CompuMaster.camm.WebManager
             End If
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Login with the account which corresponds to the name of the given, external account
         ''' </summary>
@@ -6728,10 +5958,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Do not use this method in your web applications since this method doesn't support server groups. It's intended for offline applications only.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ExecuteLoginWithExternalAccountInfo(ByVal externalAccountName As String, ByVal forceLogin As Boolean) As ReturnValues_UserValidation
 
             If CurrentServerIdentString = "" Then
@@ -6764,8 +5990,6 @@ Namespace CompuMaster.camm.WebManager
                 Return ReturnValues_UserValidation.ValidationSuccessfull
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Login with login name and password
         ''' </summary>
@@ -6773,12 +5997,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="password">The password of this user</param>
         ''' <param name="forceLogin">Force the login even if the user has already logged on at another work station</param>
         ''' <returns>A result value telling some details on successfull or unsuccessfull login</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ExecuteLogin(ByVal loginName As String, ByVal password As String, Optional ByVal forceLogin As Boolean = False) As ReturnValues_UserValidation
             If CurrentServerIdentString = "" Then
                 Dim Message As String = "Login can't be processed since this server hasn't been configured with a proper server ID"
@@ -6789,8 +6007,6 @@ Namespace CompuMaster.camm.WebManager
             End If
             Return _ExecuteLogin(loginName, password, forceLogin)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Login with login name and password
         ''' </summary>
@@ -6798,12 +6014,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="password">The password of this user</param>
         ''' <param name="forceLogin">Force the login even if the user has already logged on at another work station</param>
         ''' <returns>A result value telling some details on successfull or unsuccessfull login</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function _ExecuteLogin(ByVal loginName As String, ByVal password As String, ByVal forceLogin As Boolean) As ReturnValues_UserValidation
 
             If CurrentServerIdentString = "" Then
@@ -6900,7 +6110,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="loginName">The login name of a user</param>
         ''' <param name="password">The password of this user</param>
         ''' <param name="ignoreCurrentlyLoggedOnState">If True, a currently logged in user will successfully validate, if False it will return with a AlreadyLoggedIn value</param>
-        ''' <returns></returns>
         ''' <remarks>In case of mistypings, the login failure number will be increased anyway.</remarks>
         Public Function PreValidateLoginCredentials(ByVal loginName As String, ByVal password As String, ByVal ignoreCurrentlyLoggedOnState As Boolean) As ReturnValues_UserValidation
 
@@ -6973,20 +6182,12 @@ Namespace CompuMaster.camm.WebManager
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Validate a user name and its password
         ''' </summary>
         ''' <param name="loginName">The username</param>
         ''' <param name="password">The password to check</param>
         ''' <returns>True if successful else False if not matching</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	13.07.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete("Not used yet", True)> Private Function ValidateLoginCredentials(ByVal loginName As String, ByVal password As String) As Boolean
 
             If loginName = "" Or password = "" Then
@@ -7020,35 +6221,21 @@ Namespace CompuMaster.camm.WebManager
             End If
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Login with login name and password
         ''' </summary>
         ''' <param name="loginName">The login name of a user</param>
         ''' <param name="forceLogin">Force the login even if the user has already logged on at another work station</param>
         ''' <returns>A result value telling some details on successfull or unsuccessfull login</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Function ExecuteLogin(ByVal loginName As String, ByVal forceLogin As Boolean) As ReturnValues_UserValidation
             Return _ExecuteLogin(loginName, Nothing, forceLogin)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Logout and perform some clean ups
         ''' </summary>
         ''' <remarks>
         '''     Web applications require to login/logout to multiple servers, that's why there will be initiated some redirections 
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	28.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Logout()
             If HttpContext.Current Is Nothing Then
                 ExecuteLogout()
@@ -7063,31 +6250,15 @@ Namespace CompuMaster.camm.WebManager
                 Me.RedirectTo(LogoutUrl)
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Logout and perform some clean-ups
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	28.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub ExecuteLogout()
             _ExecuteLogout(True)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Logout and perform some clean-ups
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	28.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub _ExecuteLogout(ByVal publishLogoutStatusToAllRelatedServers As Boolean)
 
             'Profile zurücksetzen
@@ -7209,17 +6380,9 @@ Namespace CompuMaster.camm.WebManager
             End If
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Reset the complete authorization cache
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub System_ResetAuthorizationStatusCache()
             HttpContext.Current.Session.Remove("CWM_Security_Cache_ExpiresOn")
             HttpContext.Current.Session.Remove("CWM_Security_Cache_Data")
@@ -7392,8 +6555,6 @@ Namespace CompuMaster.camm.WebManager
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get all navigation items in a datatable (old result style)
         ''' </summary>
@@ -7404,18 +6565,10 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="AllowCacheRead">Allow to read from a cache</param>
         ''' <param name="AllowCacheWrite">Allow to save the navigation items to a cache</param>
         ''' <returns>A datatable with all navigation items</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use System_GetUserNavigationElements instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use System_GetUserNavigationElements instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetNavItems(ByVal UserID As Integer, Optional ByVal LanguageID As Integer = Nothing, Optional ByVal ServerIdentString As String = Nothing, Optional ByVal AutoAddLogonLinks As Boolean = True, Optional ByVal AllowCacheRead As Boolean = True, Optional ByVal AllowCacheWrite As Boolean = True) As DataTable
             Return _System_GetNavItems(CLng(UserID), CType(Nothing, Integer), LanguageID, ServerIdentString, AutoAddLogonLinks, AllowCacheRead, AllowCacheWrite)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get all navigation items in a datatable (old result style)
         ''' </summary>
@@ -7426,18 +6579,10 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="AllowCacheRead">Allow to read from a cache</param>
         ''' <param name="AllowCacheWrite">Allow to save the navigation items to a cache</param>
         ''' <returns>A datatable with all navigation items</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use System_GetUserNavigationElements instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use System_GetUserNavigationElements instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetNavItems(ByVal UserID As Long, Optional ByVal LanguageID As Integer = Nothing, Optional ByVal ServerIdentString As String = Nothing, Optional ByVal AutoAddLogonLinks As Boolean = True, Optional ByVal AllowCacheRead As Boolean = True, Optional ByVal AllowCacheWrite As Boolean = True) As DataTable
             Return _System_GetNavItems(UserID, CType(Nothing, Integer), LanguageID, ServerIdentString, AutoAddLogonLinks, AllowCacheRead, AllowCacheWrite)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get all navigation items in a datatable (old result style)
         ''' </summary>
@@ -7448,13 +6593,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="AllowCacheRead">Allow to read from a cache</param>
         ''' <param name="AllowCacheWrite">Allow to save the navigation items to a cache</param>
         ''' <returns>A datatable with all navigation items</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Private Function _System_GetNavItems(ByVal userID As Long, ByVal groupID As Integer, Optional ByVal LanguageID As Integer = Nothing, Optional ByVal ServerIdentString As String = Nothing, Optional ByVal AutoAddLogonLinks As Boolean = True, Optional ByVal AllowCacheRead As Boolean = True, Optional ByVal AllowCacheWrite As Boolean = True) As DataTable
 
             If Not (userID = Nothing Xor groupID = Nothing) Then
@@ -7782,11 +6921,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="allowCacheRead">Allow to read from a cache</param>
         ''' <param name="allowCacheWrite">Allow to save the navigation items to a cache</param>
         ''' <returns>A datatable with all navigation items</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	10.08.2009	Created
-        ''' </history>
         Public Function System_GetGroupNavigationElements(ByVal groupID As Long, Optional ByVal languageId As Integer = Nothing, Optional ByVal serverIdentString As String = Nothing, Optional ByVal autoAddLogonLinks As Boolean = True, Optional ByVal allowCacheRead As Boolean = True, Optional ByVal allowCacheWrite As Boolean = True) As DataTable
             If Setup.DatabaseUtils.Version(Me, True).Build < 164 Then
                 Throw New NotImplementedException("System_GetGroupNavigationElements is not implemented in build no. " & Setup.DatabaseUtils.Version(Me, True).Build & ". Please upgrade your database to build 164 or higher to use this feature.")
@@ -7805,11 +6939,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="allowCacheRead">Allow to read from a cache</param>
         ''' <param name="allowCacheWrite">Allow to save the navigation items to a cache</param>
         ''' <returns>A datatable with all navigation items</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	10.08.2009	Created
-        ''' </history>
         Public Function System_GetUserNavigationElements(ByVal userID As Long, Optional ByVal languageId As Integer = Nothing, Optional ByVal serverIdentString As String = Nothing, Optional ByVal autoAddLogonLinks As Boolean = True, Optional ByVal allowCacheRead As Boolean = True, Optional ByVal allowCacheWrite As Boolean = True) As DataTable
             Dim _DBVersion As Version = Setup.DatabaseUtils.Version(Me, True)
             If _DBVersion.CompareTo(MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
@@ -7818,8 +6947,6 @@ Namespace CompuMaster.camm.WebManager
                 Return _System_GetGroupOrUserNavigationElements(userID, True, languageId, serverIdentString, autoAddLogonLinks, allowCacheRead, allowCacheWrite)
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get all navigation items in a datatable
         ''' </summary>
@@ -7831,12 +6958,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="allowCacheRead">Allow to read from a cache</param>
         ''' <param name="allowCacheWrite">Allow to save the navigation items to a cache</param>
         ''' <returns>A datatable with all navigation items</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	16.10.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function _System_GetGroupOrUserNavigationElements(ByVal ID As Long, ByVal IsUser As Boolean, Optional ByVal languageID As Integer = Nothing, Optional ByVal serverIdentString As String = Nothing, Optional ByVal autoAddLogonLinks As Boolean = True, Optional ByVal allowCacheRead As Boolean = True, Optional ByVal allowCacheWrite As Boolean = True) As DataTable
             Dim MyNavItemsOldStyle As DataTable
             If IsUser Then
@@ -7892,8 +7013,6 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return MyNavItems
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Modify a navigation link
         ''' </summary>
@@ -7904,10 +7023,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Following substrings get replaced: "[MASTERSERVER]", "[MASTERURL]", "[LOGONPAGE]", "[LOGOFFPAGE]", "[ADMINURL]", "[SESSIONID:????]", "[SAP:????]", "[NAVID]"
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function System_ModifyNavLink(ByVal NavID As Integer, ByVal TableValue As Object, ByVal CompatibilityLevel As Integer) As String
             Dim Buffer As String = Trim(Utils.Nz(TableValue, ""))
             If Internationalization.User_Auth_Config_UserAuthMasterServer = Nothing Then Throw New Exception("Missing value for MASTERSERVER")
@@ -8066,21 +7181,21 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="currentScriptEngineSessionID">The browser session ID for the current session</param>
         ''' <returns>The browser session ID on the requested target or Nothing (null) if session hasn't been found</returns>
         Private Function LookupBrowserSessionIDForAnotherServerOrScriptEngineTarget(ByVal userName As String, ByVal requiredServerID As Integer, requiredScriptEngineID As Integer, currentServerID As Integer, currentScriptEngineID As ScriptEngines, currentScriptEngineSessionID As String) As String
-            Const Sql As String = "    DECLARE @CurrentSessionID int" & vbNewLine & _
-                "    SELECT @CurrentSessionID = SessionID" & vbNewLine & _
-                "          from benutzer " & vbNewLine & _
-                "            inner join System_UserSessions on benutzer.id = System_UserSessions.id_user" & vbNewLine & _
-                "            inner join System_WebAreasAuthorizedForSession on System_WebAreasAuthorizedForSession.SessionID = System_UserSessions.ID_Session" & vbNewLine & _
-                "		WHERE benutzer.loginname = @Username" & vbNewLine & _
-                "            and ScriptEngine_SessionID = @CurrentScriptEngineSessionID " & vbNewLine & _
-                "			AND ScriptEngine_ID = @CurrentScriptEngineID" & vbNewLine & _
-                "			AND Server = @CurrentServerID" & vbNewLine & _
-                "    If @CurrentSessionID IS NOT NULL" & vbNewLine & _
-                "		-- gewünschten Session ID Wert ausliefern" & vbNewLine & _
-                "        select System_WebAreasAuthorizedForSession.ScriptEngine_SessionID" & vbNewLine & _
-                "  		FROM System_WebAreasAuthorizedForSession " & vbNewLine & _
-                "          where System_WebAreasAuthorizedForSession.Server = @RequiredServerID" & vbNewLine & _
-                "            and System_WebAreasAuthorizedForSession.ScriptEngine_ID = @RequiredScriptEngineID" & vbNewLine & _
+            Const Sql As String = "    DECLARE @CurrentSessionID int" & vbNewLine &
+                "    SELECT @CurrentSessionID = SessionID" & vbNewLine &
+                "          from benutzer " & vbNewLine &
+                "            inner join System_UserSessions on benutzer.id = System_UserSessions.id_user" & vbNewLine &
+                "            inner join System_WebAreasAuthorizedForSession on System_WebAreasAuthorizedForSession.SessionID = System_UserSessions.ID_Session" & vbNewLine &
+                "		WHERE benutzer.loginname = @Username" & vbNewLine &
+                "            and ScriptEngine_SessionID = @CurrentScriptEngineSessionID " & vbNewLine &
+                "			AND ScriptEngine_ID = @CurrentScriptEngineID" & vbNewLine &
+                "			AND Server = @CurrentServerID" & vbNewLine &
+                "    If @CurrentSessionID IS NOT NULL" & vbNewLine &
+                "		-- gewünschten Session ID Wert ausliefern" & vbNewLine &
+                "        select System_WebAreasAuthorizedForSession.ScriptEngine_SessionID" & vbNewLine &
+                "  		FROM System_WebAreasAuthorizedForSession " & vbNewLine &
+                "          where System_WebAreasAuthorizedForSession.Server = @RequiredServerID" & vbNewLine &
+                "            and System_WebAreasAuthorizedForSession.ScriptEngine_ID = @RequiredScriptEngineID" & vbNewLine &
                 "            and System_WebAreasAuthorizedForSession.SessionID = @CurrentSessionID"
             Dim MyCmd As New SqlCommand(Sql, New SqlConnection(ConnectionString))
             With MyCmd
@@ -8096,20 +7211,12 @@ Namespace CompuMaster.camm.WebManager
             End With
             Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), "")
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get the server ID from a navigation item ID
         ''' </summary>
         ''' <param name="NavID">A navigation item ID</param>
         ''' <param name="CompatibilityLevel">The compatiblity level for this method, &lt;=2 for old data style, &gt;=4 for new data style since MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects</param>
         ''' <returns>A server ID</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function System_GetServerIDOfNavID(ByVal NavID As Integer, ByVal CompatibilityLevel As Integer) As Integer
             Dim User_Auth_Validation_DBConn As New SqlConnection
             Dim User_Auth_Validation_RecSet As SqlDataReader = Nothing
@@ -8173,46 +7280,27 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Structure EMailAttachement
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
             Dim AttachmentData As Byte()
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The filename for the binary data
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	04.05.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
             Dim AttachmentData_Filename As String
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A path to a file which shall be included
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	04.05.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
             Dim AttachmentFile As String
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
             Dim AttachmentFile_Charset As String
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A placeholder string in the HTML code of the message which shall be replaced by the CID code of the attachment
             ''' </summary>
             ''' <remarks>
             '''     Define the placeholder which shall be replaced by the Content-ID for the contents of a file to the email. Emails formatted in HTML can include images with this information and internally reference the image through a "cid" hyperlink.
             ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	04.05.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
             Dim PlaceholderInMHTML_ToReplaceWithCID As String
             '''' -----------------------------------------------------------------------------
             '''' <summary>
@@ -8229,7 +7317,7 @@ Namespace CompuMaster.camm.WebManager
         End Structure
 
         '<Obsolete("Use Messaging.EMails.Priority instead"), _
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Enum MailImportance As Byte
             High = 1
             Normal = 3
@@ -8237,7 +7325,7 @@ Namespace CompuMaster.camm.WebManager
         End Enum
 
         '<Obsolete("Use Messaging.EMails.Sensitivity instead"), _
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Enum MailSensitivity As Byte
             Status_Normal = 1
             Status_Personal = 2
@@ -8255,8 +7343,6 @@ Namespace CompuMaster.camm.WebManager
             NetFramework = 3
             <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> EasyMail = 4
         End Enum
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The preferred system for sending e-mails
         ''' </summary>
@@ -8264,10 +7350,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Please note: if the mail system in unavailable, camm Web-Manager tries to send the e-mail with other systems automatically.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete("Use MessagingEMails.MailSystem instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Property MailSystem() As MailSendingSystem
             Get
                 Return CType(Me.MessagingEMails.MailSystem, MailSendingSystem)
@@ -8276,18 +7358,10 @@ Namespace CompuMaster.camm.WebManager
                 Me.MessagingEMails.MailSystem = CType(Value, Messaging.EMails.MailSendingSystem)
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The messaging methods for e-mail distribution
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property MessagingEMails() As Messaging.EMails ''<Obsolete("Use CompuMaster.camm.WebManager.Messaging instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
             Get
                 Static _MessagingEMails As Messaging.EMails
@@ -8297,18 +7371,10 @@ Namespace CompuMaster.camm.WebManager
                 Return _MessagingEMails
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The queue monitoring methods for message distribution
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public ReadOnly Property MessagingQueueMonitoring() As Messaging.QueueMonitoring '<Obsolete("Use Messaging.QueueMonitoring instead"), _
             Get
                 Static _MessagingQueueMonitoring As Messaging.QueueMonitoring
@@ -8318,8 +7384,6 @@ Namespace CompuMaster.camm.WebManager
                 Return _MessagingQueueMonitoring
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail
         ''' </summary>
@@ -8334,16 +7398,10 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use MessagingEMails.SendEMail() instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use MessagingEMails.SendEMail() instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_SendEMail(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal Priority As MailImportance = Nothing) As Boolean
             Return Me.MessagingEMails.SendEMail(RcptName, RcptAddress, MsgSubject, MsgBody, "", SenderName, SenderAddress, CType(Nothing, Messaging.EMailAttachment()), CType(Priority, Messaging.EMails.Priority), Nothing, False, False, Nothing, Nothing, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail
         ''' </summary>
@@ -8366,16 +7424,10 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use MessagingEMails.SendEMail() instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use MessagingEMails.SendEMail() instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_SendEMailEx(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal MsgCharset As Object = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal Attachments As EMailAttachement() = Nothing, Optional ByVal Priority As MailImportance = Nothing, Optional ByVal Sensitivity As MailSensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing) As Boolean
             Return MessagingEMails.SendEMail(RcptName, RcptAddress, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, Messaging.EMails.ConvertWMSystemEMailAttachmentToMessagingEMailAttachment(Attachments), CType(Priority, Messaging.EMails.Priority), CType(Sensitivity, Messaging.EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders, CType(MsgCharset, String), bufErrorDetails)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sends an e-mail to multiple receipients
         ''' </summary>
@@ -8399,11 +7451,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use MessagingEMails.SendEMail() instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use MessagingEMails.SendEMail() instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_SendEMail_MultipleRcpts(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal Attachments As EMailAttachement() = Nothing, Optional ByVal Priority As MailImportance = Nothing, Optional ByVal Sensitivity As MailSensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing) As Boolean
             Return MessagingEMails.SendEMail(RcptAddresses_To, RcptAddresses_CC, RcptAddresses_BCC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, Messaging.EMails.ConvertWMSystemEMailAttachmentToMessagingEMailAttachment(Attachments), CType(Priority, Messaging.EMails.Priority), CType(Sensitivity, Messaging.EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders, MsgCharset, bufErrorDetails)
         End Function
@@ -8411,15 +7459,9 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Logs and Statistics"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Event log of camm Web-Manager
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.02.2005	Created
-        ''' </history>
         Public Log As New WMLog(Me)
 
         ''' <summary>
@@ -8451,11 +7493,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="message">The trace message to identify the location or the intended purpose</param>
         ''' <param name="RequiredDebugLevel">The required debug level of camm Web-Manager</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Friend Sub System_DebugTraceWrite(ByVal message As String, Optional ByVal RequiredDebugLevel As DebugLevels = DebugLevels.Medium_LoggingOfDebugInformation)
             If System_DebugLevel >= RequiredDebugLevel Then
                 If Not HttpContext.Current Is Nothing AndAlso Not HttpContext.Current.Trace Is Nothing Then
@@ -8468,11 +7505,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="message">The trace message to identify the location or the intended purpose</param>
         ''' <param name="RequiredDebugLevel">The required debug level of camm Web-Manager</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Friend Sub System_DebugTraceWarn(ByVal message As String, Optional ByVal RequiredDebugLevel As DebugLevels = DebugLevels.NoDebug)
             If System_DebugLevel >= RequiredDebugLevel Then
                 If Not HttpContext.Current Is Nothing AndAlso Not HttpContext.Current.Trace Is Nothing Then
@@ -8491,11 +7523,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Checks the connectivity and minimal configuration of a server
         ''' </summary>
         ''' <returns>An HTML string containing detailed information on the status of the current server</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_DebugServerConnectivity() As String
             Dim ErrLog As String = Nothing
             Dim ApplicationName As String
@@ -8600,11 +7627,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="removeParameters">Remove all values with this name form the query string</param>
         ''' <returns>A new string with all query string information without the starting questionmark character</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use Utils.QueryStringWithoutSpecifiedParameters instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_GetRequestQueryStringComplete(Optional ByVal removeParameters As String() = Nothing) As String
             Return Utils.QueryStringWithoutSpecifiedParameters(removeParameters)
         End Function
@@ -8613,11 +7635,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get the ID of the public group
         ''' </summary>
         ''' <returns>A group ID for the public user group</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use CurrentServerInfo object instead"), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_GetPublicGroupIDOfCurServer() As Integer
             Return CType(Me.System_GetServerConfig(Me.CurrentServerIdentString, "ID_Group_Public"), Integer)
         End Function
@@ -8626,11 +7643,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get the ID of the anonymous group
         ''' </summary>
         ''' <returns>A group ID for the anonymous user group</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use CurrentServerInfo object instead"), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_GetAnonymousGroupIDOfCurServer() As Integer
             Return CType(Me.System_GetServerConfig(Me.CurrentServerIdentString, "ID_Group_Anonymous"), Integer)
         End Function
@@ -8642,11 +7654,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get the version information from the current camm Web-Manager library (cammWM.dll)
         ''' </summary>
         ''' <returns>The version of the executing camm Web-Manager library</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_Version_Ex() As Version Implements IWebManager.VersionAssembly
             Return Setup.ApplicationUtils.Version
         End Function
@@ -8655,11 +7662,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get the version information from the current camm Web-Manager library (cammWM.dll)
         ''' </summary>
         ''' <returns>A string with the major and minor version of the executing camm Web-Manager library</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_Version() As String
             Dim MyVersion As Version = System_Version_Ex()
             Return MyVersion.Major & "." & MyVersion.Minor.ToString("00")
@@ -8669,11 +7671,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get the version information from the current camm Web-Manager library (cammWM.dll)
         ''' </summary>
         ''' <returns>A string with the build version of the executing camm Web-Manager library</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_Build() As String
             Dim MyVersion As Version = System_Version_Ex()
             Return MyVersion.Build.ToString
@@ -8683,11 +7680,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get the version information from the current camm Web-Manager database
         ''' </summary>
         ''' <returns>The version of the connected camm Web-Manager database</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_DBVersion_Ex() As Version Implements IWebManager.VersionDatabase
             Return Setup.DatabaseUtils.Version(Me, False)
         End Function
@@ -8697,8 +7689,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="allowCaching">True to allow reading from cache</param>
         ''' <returns>The version of the connected camm Web-Manager database</returns>
-        ''' <remarks>
-        ''' </remarks>
         Public Function System_DBVersion_Ex(allowCaching As Boolean) As Version Implements IWebManager.VersionDatabase
             Return Setup.DatabaseUtils.Version(Me, allowCaching)
         End Function
@@ -8709,29 +7699,14 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     camm Web-Manager initialization states
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.02.2006	Created
-        ''' </history>
         Friend Enum InitializationStates
             ''' <summary>
             '''     camm Web-Manager instance can't provide any services; the database connection is not available
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	17.02.2006	Created
-            ''' </history>
             None = 0
             ''' <summary>
             '''     Database access is available, basic logging is available
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	17.02.2006	Created
-            ''' </history>
             DatabaseAccessAvailable = 10
             ''' <summary>
             '''     All features are available, but all settings are with manufacturer's default
@@ -8739,9 +7714,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             '''     Loading and saving of user profiles, server environment, etc. is available
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	17.02.2006	Created
-            ''' </history>
             ServerCommunicationAvailable = 20
         End Enum
         ''' <summary>
@@ -8751,9 +7723,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     There
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	02.01.2006	Created
-        ''' </history>
         Friend ReadOnly Property InitializationState() As InitializationStates
             Get
                 If Me.ConnectionString <> Nothing AndAlso Me.CurrentServerIdentString <> Nothing Then
@@ -8773,9 +7742,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     This property will be used typically to detect if the automatic cleanup procedures in HttpApplication can work
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	02.01.2006	Created
-        ''' </history>
         Friend ReadOnly Property IsInitializedInHttpApplication() As Boolean
             Get
                 Return CType(HttpContext.Current.Application("WebManager.Application.InitiatedByCwmHttpApplication"), Boolean)
@@ -8800,9 +7766,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     This class contains all information of a user profile as well as all important methods for handling of that account
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         ''' <attention>
         '''     When the list of properties changes, you might also update the import and export methods to match the new, extended set of fields
         ''' </attention>
@@ -8881,11 +7844,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="WebManager">The current instance of camm Web-Manager</param>
             ''' <param name="ExternalAccount">An external account relation for single-sign-on purposes</param>
             ''' <param name="AdditionalFlags">A collection of additional flags which are saved in the user's profile</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	07.07.2004	Created
-            ''' </history>
             <Obsolete("UserIDs should be Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub New(ByVal UserID As Integer, ByVal LoginName As String, ByVal EMailAddress As String, ByVal Company As String, ByVal Sex As Sex, ByVal NameAddition As String, ByVal FirstName As String, ByVal LastName As String, ByVal AcademicTitle As String, ByVal Street As String, ByVal ZipCode As String, ByVal City As String, ByVal State As String, ByVal Country As String, ByVal PreferredLanguage1ID As Integer, ByVal PreferredLanguage2ID As Integer, ByVal PreferredLanguage3ID As Integer, ByVal LoginDisabled As Boolean, ByVal LoginLockedTemporary As Boolean, ByVal LoginDeleted As Boolean, ByVal AccessLevelID As Integer, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, ByVal ExternalAccount As String, Optional ByVal AdditionalFlags As Collections.Specialized.NameValueCollection = Nothing)
                 If UserID = SpecialUsers.User_Anonymous Or UserID = SpecialUsers.User_Code Or UserID = SpecialUsers.User_Public Or UserID = SpecialUsers.User_UpdateProcessor Then
                     Throw New InvalidOperationException("Can't assign user details to this special system user")
@@ -8952,11 +7910,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="__reserved">Obsolete parameter</param>
             ''' <param name="WebManager">The current instance of camm Web-Manager</param>
             ''' <param name="AdditionalFlags">A collection of additional flags which are saved in the user's profile</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	07.07.2004	Created
-            ''' </history>
             <Obsolete("UserID should be of type Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub New(ByVal UserID As Integer, ByVal LoginName As String, ByVal EMailAddress As String, ByVal Company As String, ByVal Sex As Sex, ByVal NameAddition As String, ByVal FirstName As String, ByVal LastName As String, ByVal AcademicTitle As String, ByVal Street As String, ByVal ZipCode As String, ByVal City As String, ByVal State As String, ByVal Country As String, ByVal PreferredLanguage1ID As Integer, ByVal PreferredLanguage2ID As Integer, ByVal PreferredLanguage3ID As Integer, ByVal LoginDisabled As Boolean, ByVal LoginLockedTemporary As Boolean, ByVal LoginDeleted As Boolean, ByVal AccessLevelID As Integer, ByVal __reserved As Boolean, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, Optional ByVal AdditionalFlags As Collections.Specialized.NameValueCollection = Nothing)
                 Me.New(CType(UserID, Long), LoginName, EMailAddress, False, Company, Sex, NameAddition, FirstName, LastName, AcademicTitle, Street, ZipCode, City, State, Country, PreferredLanguage1ID, PreferredLanguage2ID, PreferredLanguage3ID, LoginDisabled, LoginLockedTemporary, LoginDeleted, AccessLevelID, WebManager, Nothing, AdditionalFlags)
             End Sub
@@ -8974,9 +7927,6 @@ Namespace CompuMaster.camm.WebManager
             '''         <item>LoginLockedTemporary</item>
             '''     </list>
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	07.07.2004	Created
-            ''' </history>
             <Obsolete("UserID should be of type Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub New(ByVal UserID As Integer, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, Optional ByVal SearchForDeletedAccountsAsWell As Boolean = False)
                 Me.New(CType(UserID, Long), WebManager, SearchForDeletedAccountsAsWell)
             End Sub
@@ -9008,11 +7958,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="WebManager">The current instance of camm Web-Manager</param>
             ''' <param name="ExternalAccount">An external account relation for single-sign-on purposes</param>
             ''' <param name="AdditionalFlags">A collection of additional flags which are saved in the user's profile</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	07.07.2004	Created
-            ''' </history>
             Public Sub New(ByVal UserID As Long, ByVal LoginName As String, ByVal EMailAddress As String, ByVal AutomaticLogonAllowedByMachineToMachineCommunication As Boolean, ByVal Company As String, ByVal Sex As Sex, ByVal NameAddition As String, ByVal FirstName As String, ByVal LastName As String, ByVal AcademicTitle As String, ByVal Street As String, ByVal ZipCode As String, ByVal City As String, ByVal State As String, ByVal Country As String, ByVal PreferredLanguage1ID As Integer, ByVal PreferredLanguage2ID As Integer, ByVal PreferredLanguage3ID As Integer, ByVal LoginDisabled As Boolean, ByVal LoginLockedTemporary As Boolean, ByVal LoginDeleted As Boolean, ByVal AccessLevelID As Integer, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, ByVal ExternalAccount As String, Optional ByVal AdditionalFlags As Collections.Specialized.NameValueCollection = Nothing)
                 If UserID = SpecialUsers.User_Anonymous Or UserID = SpecialUsers.User_Code Or UserID = SpecialUsers.User_Public Or UserID = SpecialUsers.User_UpdateProcessor Then
                     Throw New InvalidOperationException("Can't assign user details to this special system user")
@@ -9066,9 +8011,6 @@ Namespace CompuMaster.camm.WebManager
             '''         <item>LoginLockedTemporary</item>
             '''     </list>
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	07.07.2004	Created
-            ''' </history>
             Public Sub New(ByVal UserID As Long, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, Optional ByVal SearchForDeletedAccountsAsWell As Boolean = False)
                 If UserID = Nothing Then
                     Throw New ArgumentNullException("userID")
@@ -9084,7 +8026,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Returns a value from the database which indicates whether the authorizations for this user have already been set
             ''' </summary>
-            ''' <returns></returns>
             ''' <remarks></remarks>
             Private Function ReadInitAuthorizationsDoneValue() As Boolean
                 Dim result As Boolean = False
@@ -9098,7 +8039,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="dbConnection"></param>
             ''' <param name="userID"></param>
-            ''' <returns></returns>
             Friend Shared Function ReadInitAuthorizationsDoneValue(dbConnection As SqlConnection, userID As Long) As Boolean
                 Dim result As Boolean = False
                 Dim cmd As New SqlCommand("SELECT [ID_User],[Type],[Value] FROM Log_Users WHERE Type='InitAuthorizationsDone' AND ID_User = @ID", dbConnection)
@@ -9130,11 +8070,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <value></value>
             ''' <seealso cref="CompuMaster.camm.WebManager.WMSystem.SpecialUsers" />
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public ReadOnly Property IsSystemUser() As Boolean
                 Get
                     Return CompuMaster.camm.WebManager.WMSystem.IsSystemUser(_ID)
@@ -9145,11 +8080,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Suggest some login names for a new user account based on the already given data
             ''' </summary>
             ''' <returns>An array of free and available loginnames with at least 1 possible loginname</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	13.07.2005	Created
-            ''' </history>
             Public Function SuggestedFreeLoginNames() As String()
                 Return SuggestedFreeLoginNames(Nothing)
             End Function
@@ -9159,11 +8089,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="favorites">Favorites for suggested file names</param>
             ''' <returns>An array of free and available loginnames with at least 1 possible loginname</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	13.10.2005	Created
-            ''' </history>
             Public Function SuggestedFreeLoginNames(ByVal favorites As String()) As String()
 
                 Dim Result As New ArrayList
@@ -9208,11 +8133,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="list">The result list where the validated value shall be added</param>
             ''' <param name="name">A loginname suggestion</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	13.07.2005	Created
-            ''' </history>
             Private Sub SuggestedFreeLoginNamesValidation(ByVal list As ArrayList, ByVal name As String)
                 name = Mid(Trim(name), 1, 20)
                 If name.Length < 2 OrElse name.StartsWith(".") OrElse name.EndsWith(".") OrElse name.StartsWith("_") OrElse name.EndsWith("_") OrElse name.StartsWith("-") OrElse name.EndsWith("-") Then
@@ -9238,11 +8158,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Is an automated logon procedure allowed for this account
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property AutomaticLogonAllowedByMachineToMachineCommunication() As Boolean
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -9269,9 +8184,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             '''     If you loaded multiple user information objects with method System_GetUserInfos, it is recommended to first reload the data before starting update (because that method does a quick-load and the reload will be triggered internally, but may be after you already changed first fields; so your changes would be lost)
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	17.06.2006	Created
-            ''' </history>
             Public Sub ReloadFullUserData()
                 ReadCompleteUserInformation()
             End Sub
@@ -9282,11 +8194,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Read all the account data from database
             ''' </summary>
             ''' <param name="SearchForDeletedAccountsAsWell">Also load data of users who have been deleted in the past</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Private Sub ReadCompleteUserInformation(Optional ByVal SearchForDeletedAccountsAsWell As Boolean = False)
                 If _ID = Nothing Then
                     Dim Message As String = "Cannot read user profile data with an empty ID value"
@@ -9470,11 +8377,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Verify if a given value matches the current password
             ''' </summary>
             ''' <param name="password">A password which shall be verified</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	12.11.2004	Created
-            ''' </history>
             Public Function ValidatePassword(ByVal password As String) As Boolean
 
                 password = Trim(password)
@@ -9500,11 +8402,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The account ID
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public ReadOnly Property IDLong() As Long Implements IUserInformation.ID
                 Get
                     Return _ID
@@ -9514,11 +8411,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The account ID
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public ReadOnly Property ID() As Integer
                 Get
                     Return CType(_ID, Integer)
@@ -9528,11 +8420,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Set the user ID for a new registered user
             ''' </summary>
             ''' <param name="ID"></param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Friend Sub SetNewUserID(ByVal ID As Long)
                 _ID = ID
             End Sub
@@ -9540,11 +8427,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The login name of the user
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property LoginName() As String Implements IUserInformation.LoginName
                 Get
                     Return Trim(_LoginName)
@@ -9560,11 +8442,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Indicate wether the user has already got an e-mail notification that he has got his first priviledges and/or memberships assigned
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property AccountAuthorizationsAlreadySet() As Boolean
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -9583,11 +8460,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The required e-mail address where all important messages will be sent to
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property EMailAddress() As String Implements IUserInformation.EMailAddress
                 Get
                     Return _EMailAddress
@@ -9600,11 +8472,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The fax number
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property FaxNumber() As String Implements IUserInformation.FaxNumber
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -9623,11 +8490,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The phone number
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property PhoneNumber() As String Implements IUserInformation.PhoneNumber
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -9646,11 +8508,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The mobile number
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property MobileNumber() As String Implements IUserInformation.MobileNumber
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -9669,11 +8526,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The position in the company the user is working for
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Position() As String Implements IUserInformation.Position
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -9692,11 +8544,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The user's first name
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property FirstName() As String Implements IUserInformation.FirstName
                 Get
                     Return _FirstName
@@ -9709,11 +8556,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The company title 
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Company() As String Implements IUserInformation.Company
                 Get
                     Return _Company
@@ -9726,11 +8568,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The surname of the user
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property LastName() As String Implements IUserInformation.LastName
                 Get
                     Return _LastName
@@ -9743,12 +8580,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             '''     The full name of an user, e. g. "Dr. Adam van Vrede")
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	14.12.2004	Created
-            ''' </history>
             Public Function FullName() As String
                 Return CType(IIf(_AcademicTitle = "", "", _AcademicTitle & " "), String) &
                     _FirstName & " " &
@@ -9764,14 +8595,10 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             '''     The salutation name, e. g. "Dr. van Vrede" or "Vrede"
             ''' </summary>
-            ''' <returns></returns>
             ''' <remarks>
             ''' If the last name is not available, this function returns null (Nothing in VisualBasic).
             ''' This method doesn't rely on gender information.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	14.12.2004	Created
-            ''' </history>
             Public Function SalutationNameOnly() As String
                 If Me.LastName = Nothing Then
                     Return ""
@@ -9802,9 +8629,6 @@ Namespace CompuMaster.camm.WebManager
             ''' The password will be auto-generated.
             ''' Exceptions may be thrown e. g. in case of already existing login name or invalid password (strength)
             ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	13.05.2009	Created
-            ''' </history>
             Public Function Clone(ByVal newLoginName As String, ByVal newGender As Sex, ByVal newAcademicTitle As String, ByVal newFirstName As String, ByVal newNameAddition As String, ByVal newLastName As String, ByVal newEmailAddress As String) As UserInformation
                 Return Me.Clone(newLoginName, newGender, newAcademicTitle, newFirstName, newNameAddition, newLastName, newEmailAddress, CType(Nothing, String))
             End Function
@@ -9824,9 +8648,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' Exceptions may be thrown e. g. in case of already existing login name or invalid password (strength)
             ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	13.05.2009	Created
-            ''' </history>
             Public Function Clone(ByVal newLoginName As String, ByVal newGender As Sex, ByVal newAcademicTitle As String, ByVal newFirstName As String, ByVal newNameAddition As String, ByVal newLastName As String, ByVal newEmailAddress As String, ByVal newPassword As String) As UserInformation
 
                 'TODO: outgoing email is missing yet
@@ -9886,9 +8707,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Sub Save()
                 Save(_WebManager.Notifications)
             End Sub
@@ -9899,9 +8717,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Sub Save(ByVal notifications As CompuMaster.camm.WebManager.Notifications.INotifications)
                 Save(notifications, Nothing)
             End Sub
@@ -9912,9 +8727,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Sub Save(ByVal notifications As CompuMaster.camm.WebManager.WMNotifications)
                 Save(notifications, Nothing)
             End Sub
@@ -9926,9 +8738,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Sub Save(ByVal notifications As CompuMaster.camm.WebManager.WMNotifications, ByVal newPassword As String)
                 Save(notifications, newPassword, False)
             End Sub
@@ -9941,9 +8750,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Private Sub Save(ByVal notifications As CompuMaster.camm.WebManager.WMNotifications, ByVal newPassword As String, ByVal suppressAllNotifications As Boolean)
                 Save(notifications, newPassword, suppressAllNotifications, suppressAllNotifications)
             End Sub
@@ -9957,9 +8763,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Private Sub Save(ByVal notifications As CompuMaster.camm.WebManager.WMNotifications, ByVal newPassword As String, ByVal suppressUserNotifications As Boolean, ByVal suppressSecurityAdminNotifications As Boolean)
                 _WebManager.System_SetUserInfo(Me, newPassword, notifications, suppressUserNotifications, suppressSecurityAdminNotifications)
             End Sub
@@ -9971,9 +8774,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Sub Save(ByVal notifications As CompuMaster.camm.WebManager.Notifications.INotifications, ByVal newPassword As String)
                 Save(notifications, newPassword, False)
             End Sub
@@ -9986,9 +8786,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Private Sub Save(ByVal notifications As CompuMaster.camm.WebManager.Notifications.INotifications, ByVal newPassword As String, ByVal suppressAllNotifications As Boolean)
                 Save(notifications, newPassword, suppressAllNotifications, suppressAllNotifications)
             End Sub
@@ -10002,9 +8799,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Private Sub Save(ByVal notifications As CompuMaster.camm.WebManager.Notifications.INotifications, ByVal newPassword As String, ByVal suppressUserNotifications As Boolean, ByVal suppressSecurityAdminNotifications As Boolean)
                 _WebManager.System_SetUserInfo(Me, newPassword, notifications, suppressUserNotifications, suppressSecurityAdminNotifications)
             End Sub
@@ -10015,9 +8809,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Sub Save(ByVal newPassword As String)
                 Save(_WebManager.Notifications, newPassword)
             End Sub
@@ -10029,9 +8820,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	19.04.2005	Created
-            ''' </history>
             Public Sub Save(ByVal suppressAllNotifications As Boolean)
                 Save(_WebManager.Notifications, Nothing, suppressAllNotifications)
             End Sub
@@ -10044,9 +8832,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	19.04.2005	Created
-            ''' </history>
             Public Sub Save(ByVal suppressUserNotifications As Boolean, ByVal suppressSecurityAdminNotifications As Boolean)
                 Save(_WebManager.Notifications, Nothing, suppressUserNotifications, suppressSecurityAdminNotifications)
             End Sub
@@ -10059,9 +8844,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	19.04.2005	Created
-            ''' </history>
             Public Sub Save(ByVal newPassword As String, ByVal suppressNotifications As Boolean)
                 Save(_WebManager.Notifications, newPassword, suppressNotifications)
             End Sub
@@ -10075,9 +8857,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	19.04.2005	Created
-            ''' </history>
             Public Sub Save(ByVal newPassword As String, ByVal suppressUserNotifications As Boolean, ByVal suppressSecurityAdminNotifications As Boolean)
                 Save(_WebManager.Notifications, newPassword, suppressUserNotifications, suppressSecurityAdminNotifications)
             End Sub
@@ -10086,11 +8865,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Set a new password for an user account and sends required notification messages
             ''' </summary>
             ''' <param name="newPassword">A new password</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	12.11.2004	Created
-            ''' </history>
             Public Sub SetPassword(ByVal newPassword As String)
                 SetPassword(newPassword, _WebManager.Notifications)
             End Sub
@@ -10100,11 +8874,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="newPassword">A new password</param>
             ''' <param name="notificationProvider">An instance of a NotificationProvider class which handles the distribution of all required mails</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	12.11.2004	Created
-            ''' </history>
             Public Sub SetPassword(ByVal newPassword As String, ByVal notificationProvider As Notifications.INotifications)
                 _WebManager.System_SetUserPassword(Me, newPassword, notificationProvider)
             End Sub
@@ -10114,11 +8883,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="newPassword">A new password</param>
             ''' <param name="suppressNotifications">True disables all mail transfer, false sends the configured notification message</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	12.11.2004	Created
-            ''' </history>
             Public Sub SetPassword(ByVal newPassword As String, ByVal suppressNotifications As Boolean)
                 If suppressNotifications Then
                     SetPassword(newPassword, New CompuMaster.camm.WebManager.Notifications.NoNotifications(_WebManager))
@@ -10132,11 +8896,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The general salutation for a person, e. g. "Mr. Bell" or "Ms. Dr. van Vrede" or (if gender is undefined) "Jonathan Taylor" or (if gender is a group) an empty string
             ''' </summary>
             ''' <returns>Empty string in case of gender type group of persons</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	14.12.2004	Created
-            ''' </history>
             Public Function Salutation() As String
                 'SalutationFeminin = "{SalutationFeminin}{SalutationNameOnly}"
                 'SalutationMasculin = "{SalutationMasculin}{SalutationNameOnly}"
@@ -10175,12 +8934,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             '''     The simple salutation for a person, "Mr. " or "Ms. "
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	17.11.2006	Created
-            ''' </history>
             Public Function SalutationMrOrMs() As String
                 Select Case Me.Gender
                     Case WMSystem.Sex.Feminine
@@ -10195,12 +8948,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             '''     The salutation for mail purposes, e. g. "Dear Mr. van Vrede, " or "Dear Mr. Dr. van Vrede, " or (if gender is undefined) "Dear Dr. Heribert van Vrede, " or (if gender is a group) "Dear Sirs, "
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	14.12.2004	Created
-            ''' </history>
             Public Function SalutationInMails() As String
                 'UserManagementSalutationInMailsFeminin = "{SalutationInMailsFeminin}{SalutationNameOnly}, "
                 'UserManagementSalutationInMailsMasculin = "{SalutationInMailsMasculin}{SalutationNameOnly}, "
@@ -10241,12 +8988,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             '''     The salutation for mail purposes, e. g. "Hello Mr. Bell, " or "Hello Ms. Dr. van Vrede, " or (if gender is undefined) "Hello Dr. Heribert van Vrede, " or (if gender is group) "Hello together, "
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	14.12.2004	Created
-            ''' </history>
             Public Function SalutationUnformal() As String
                 'SalutationUnformalFeminin = "{SalutationUnformalFeminin}{SalutationFeminin}{SalutationNameOnly}, "
                 'SalutationUnformalMasculin = "{SalutationUnformalMasculin}{SalutationMasculin}{SalutationNameOnly}, "
@@ -10285,12 +9026,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             '''     The salutation for mail purposes, e. g. "Hello Roger, " or "Hello Claire, " or (if gender is group) "Hello together, "
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	14.12.2004	Created
-            ''' </history>
             Public Function SalutationUnformalWithFirstName() As String
                 'SalutationUnformalWithFirstNameFeminin = "{SalutationUnformalFeminin}{FirstName}, "
                 'SalutationUnformalWithFirstNameMasculin = "{SalutationUnformalMasculin}{FirstName}, "
@@ -10331,11 +9066,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="text">A text module which may contain some other text modules</param>
             ''' <returns>The finally resolved text</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	22.07.2008	Created
-            ''' </history>
             Private Function ResolveSalutationTextModule(ByVal text As String) As String
                 If text Is Nothing OrElse text.IndexOf("{"c) < 0 Then
                     Return text
@@ -10368,12 +9098,6 @@ Namespace CompuMaster.camm.WebManager
             ''' Is the first name required by the text module for this salutation formula for the replace engine in method ResolveSalutationTextModule?
             ''' </summary>
             ''' <param name="text"></param>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	20.10.2009	Created
-            ''' </history>
             Private Function SalutationTextModuleRequiresFirstName(ByVal text As String) As Boolean
                 If text.IndexOf("{FirstName}") >= 0 Then
                     'Hit found - first name is required
@@ -10390,12 +9114,6 @@ Namespace CompuMaster.camm.WebManager
             ''' Is the last name required by the text module for this salutation formula for the replace engine in method ResolveSalutationTextModule?
             ''' </summary>
             ''' <param name="text"></param>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	20.10.2009	Created
-            ''' </history>
             Private Function SalutationTextModuleRequiresLastName(ByVal text As String) As Boolean
                 If text.IndexOf("{LastName}") >= 0 Then
                     'Hit found - last name is required
@@ -10415,11 +9133,6 @@ Namespace CompuMaster.camm.WebManager
             '''     An optional academic title, typically 'Prof.' or 'Dr.'
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property AcademicTitle() As String Implements IUserInformation.AcademicTitle
                 Get
                     Return _AcademicTitle
@@ -10432,11 +9145,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The street
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Street() As String Implements IUserInformation.Street
                 Get
                     Return _Street
@@ -10449,11 +9157,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The zip code
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property ZipCode() As String Implements IUserInformation.ZipCode
                 Get
                     Return _ZipCode
@@ -10466,11 +9169,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The location or city
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Location() As String Implements IUserInformation.Location
                 Get
                     Return _City
@@ -10483,11 +9181,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The state in the country
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property State() As String Implements IUserInformation.State
                 Get
                     Return _State
@@ -10500,11 +9193,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The country name 
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Country() As String Implements IUserInformation.Country
                 Get
                     Return _Country
@@ -10517,11 +9205,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The primary preferred language or market
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property PreferredLanguage1() As LanguageInformation
                 Get
                     If _PreferredLanguage1 Is Nothing Then
@@ -10538,11 +9221,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The second preferred language or market
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property PreferredLanguage2() As LanguageInformation
                 Get
                     If _PreferredLanguage2 Is Nothing Then
@@ -10559,11 +9237,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The third preferred language or market
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property PreferredLanguage3() As LanguageInformation
                 Get
                     If _PreferredLanguage3 Is Nothing Then
@@ -10580,11 +9253,6 @@ Namespace CompuMaster.camm.WebManager
             '''     An additional pre-name, e. g. 'de' in the name 'Jean-Claude de Verheugen'
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property NameAddition() As String Implements IUserInformation.NameAddition
                 Get
                     Return _NameAddition
@@ -10597,11 +9265,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The gender of the user
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Gender() As Sex
                 Get
                     If _Sex = WMSystem.Sex.MissingNameOrGroupOfPersons OrElse _Sex = WMSystem.Sex.Undefined Then
@@ -10646,11 +9309,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Login has been disabled
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property LoginDisabled() As Boolean
                 Get
                     Return _LoginDisabled
@@ -10663,11 +9321,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Get/set the temporary lock state
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property LoginLockedTemporary() As Boolean
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -10693,11 +9346,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Login has been temporary locked till this date
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Property LoginLockedTemporaryTill() As DateTime
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -10724,11 +9372,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The number of logins since the account has been created
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	06.10.2005	Created
-            ''' </history>
             Public ReadOnly Property AccountSuccessfullLogins() As Integer
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -10743,11 +9386,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The number of failed logins (this number will be resetted after every successfull login)
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	06.10.2005	Created
-            ''' </history>
             Public ReadOnly Property AccountLoginFailures() As Integer
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -10762,11 +9400,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The date and time when the user account has been created
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	06.10.2005	Created
-            ''' </history>
             Public ReadOnly Property AccountCreatedOn() As DateTime
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -10781,11 +9414,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The date and time when the account has been updated the last time
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	06.10.2005	Created
-            ''' </history>
             Public ReadOnly Property AccountModifiedOn() As DateTime
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -10800,11 +9428,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The date and time when the user logged in on the last time
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	06.10.2005	Created
-            ''' </history>
             Public ReadOnly Property AccountLastLoginOn() As DateTime
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -10819,11 +9442,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The last login address of the remote client
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	06.10.2005	Created
-            ''' </history>
             Public ReadOnly Property AccountLastLoginFromAddress() As String
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -10837,11 +9455,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Login has been deleted
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property LoginDeleted() As Boolean
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -10861,11 +9474,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The groups list where the user is member of
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Use MembershipsByRule instead")> Public ReadOnly Property Memberships() As CompuMaster.camm.WebManager.WMSystem.GroupInformation()
                 Get
                     Return MembershipsByRule(True).Effective
@@ -10876,7 +9484,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Memberships of the current user by rule-set
             ''' </summary>
-            ''' <returns></returns>
             Public ReadOnly Property MembershipsByRule(alsoClonedMemberships As Boolean) As Security.MembershipItemsByRule
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -10928,9 +9535,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' This action will be done immediately without the need for saving
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Better use overloaded method which implements INotifications"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
             Public Sub AddMembership(ByVal groupID As Integer, ByVal notifications As WMNotifications)
                 AddMembership(groupID, CType(notifications, Notifications.INotifications))
@@ -10944,9 +9548,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' This action will be done immediately without the need for saving. If the membership already exists, it won't be created for a 2nd time.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Better use overloaded method with isDenyRule parameter")> Public Sub AddMembership(ByVal groupID As Integer, Optional ByVal notifications As Notifications.INotifications = Nothing)
                 AddMembership(groupID, False, notifications)
             End Sub
@@ -11076,9 +9677,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' This action will be done immediately without the need for saving
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Better use overloaded method with isDenyRule parameter")> Public Sub RemoveMembership(ByVal GroupID As Integer)
                 RemoveMembership(GroupID, False)
             End Sub
@@ -11133,11 +9731,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="groupName">The name of the group which shall be checked</param>
             ''' <returns>True if the user is a member, otherwise False</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	20.03.2007	Created
-            ''' </history>
             Public Function IsMember(ByVal groupName As String) As Boolean
                 For MyCounter As Integer = 0 To Me.MembershipsByRule(True).Effective.Length - 1
                     If LCase(Me.MembershipsByRule(True).Effective(MyCounter).Name) = LCase(groupName) Then
@@ -11151,11 +9744,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="groupID">The ID of the group which shall be checked</param>
             ''' <returns>True if the user is a member, otherwise False</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	20.03.2007	Created
-            ''' </history>
             Public Function IsMember(ByVal groupID As Integer) As Boolean
                 For MyCounter As Integer = 0 To Me.MembershipsByRule(True).Effective.Length - 1
                     If Me.MembershipsByRule(True).Effective(MyCounter).ID = groupID Then
@@ -11200,9 +9788,6 @@ Namespace CompuMaster.camm.WebManager
             '''     <item><code>ZipCode</code></item>
             ''' </list>
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property AdditionalFlags() As Collections.Specialized.NameValueCollection Implements IUserInformation.AdditionalFlags
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -11222,11 +9807,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The access level role of the user
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property AccessLevel() As AccessLevelInformation
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -11253,11 +9833,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Indicates if the e-mail address has already been validated
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property AccountProfileValidatedByEMailTest() As Boolean
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -11277,8 +9852,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The list of authorizations for standard access by the current user (AllowDevelopment - DenyDevelopment + AllowStandard - DenyStandard)
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             <Obsolete("Use AuthorizationsByRule instead")> Public ReadOnly Property Authorizations() As SecurityObjectAuthorizationForUser()
                 Get
                     Return AuthorizationsByRule.EffectiveByDenyRuleStandard()
@@ -11289,7 +9862,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Authorizations of the current user by rule-set
             ''' </summary>
-            ''' <returns></returns>
             Public ReadOnly Property AuthorizationsByRule As Security.UserAuthorizationItemsByRuleForUsers
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -11378,9 +9950,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' This action will be done immediately without the need for saving
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Use overloaded method with parameter serverGroupID"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub AddAuthorization(ByVal securityObjectID As Integer, Optional ByVal notifications As Notifications.INotifications = Nothing)
                 AddAuthorization(securityObjectID, 0, notifications)
             End Sub
@@ -11456,9 +10025,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' This action will be done immediately without the need for saving
             ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	02.09.2005	Created
-            ''' </history>
             <Obsolete("Use overloaded method with parameter serverGroupID"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub AddAuthorization(ByVal securityObjectID As Integer, ByVal developerAuthorization As Boolean, Optional ByVal notifications As Notifications.INotifications = Nothing)
                 AddAuthorization(securityObjectID, 0, developerAuthorization, notifications)
             End Sub
@@ -11508,9 +10074,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' This action will be done immediately without the need for saving
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Use overloaded method with parameter serverGroupID"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub RemoveAuthorization(ByVal securityObjectID As Integer)
                 Me.RemoveAuthorization(securityObjectID, 0)
             End Sub
@@ -11519,11 +10082,6 @@ Namespace CompuMaster.camm.WebManager
             '''     An external account relation
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property ExternalAccount() As String Implements IUserInformation.ExternalAccount
                 Get
                     If _PartiallyLoadedDataCurrently Then
@@ -11544,11 +10102,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Language details
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Class LanguageInformation
             Implements ILanguageInformation
 
@@ -11612,11 +10165,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The market/language ID
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public ReadOnly Property ID() As Integer
                 Get
                     Return _ID
@@ -11626,11 +10174,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The name of the market/language in English language
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property LanguageName_English() As String
                 Get
                     Return _LanguageName_English
@@ -11643,11 +10186,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The name of the market/language in its own language
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property LanguageName_OwnLanguage() As String
                 Get
                     Return _LanguageName_OwnLanguage
@@ -11660,11 +10198,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Market/language has been activated for use in camm Web-Manager
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property IsActive() As Boolean
                 Get
                     Return _IsActive
@@ -11677,11 +10210,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Defines the writing direction, either left-to-right or right-to-left
             ''' </summary>
             ''' <value>A string &quot;ltr&quot; or &quot;rtl&quot;</value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Direction() As String
                 Get
                     Return _Direction
@@ -11700,11 +10228,6 @@ Namespace CompuMaster.camm.WebManager
             '''     An optional browser ID for the culture
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property BrowserLanguageID() As String
                 Get
                     Return _BrowserLanguageID
@@ -11717,11 +10240,6 @@ Namespace CompuMaster.camm.WebManager
             '''     An optional abbreviation name for the language
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Abbreviation() As String
                 Get
                     Return _Abbreviation
@@ -11740,9 +10258,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <example>
             '''     For 'English (US)' as well as 'English (GB)', there is the alternative language 'English'.
             ''' </example>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public ReadOnly Property AlternativeLanguageInfo() As LanguageInformation
                 Get
                     Return New LanguageInformation(_WebManager.Internationalization.GetAlternativelySupportedLanguageID(_ID), _WebManager)
@@ -11756,9 +10271,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Access levels are user roles defining the availability of the existant server groups for the user
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Class AccessLevelInformation
             Dim _WebManager As WMSystem
             Dim _ID As Integer
@@ -11799,11 +10311,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The ID value for this access level role
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public ReadOnly Property ID() As Integer
                 Get
                     Return _ID
@@ -11813,11 +10320,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The title for this access level role
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Title() As String
                 Get
                     Return _Title
@@ -11830,11 +10332,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Some optional remarks on this role
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Remarks() As String
                 Get
                     Return _Remarks
@@ -11847,11 +10344,6 @@ Namespace CompuMaster.camm.WebManager
             '''     A list of server groups which are accessable by this role
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property ServerGroups() As ServerGroupInformation()
                 Get
                     If _ServerGroups Is Nothing Then
@@ -11868,11 +10360,6 @@ Namespace CompuMaster.camm.WebManager
             '''     A list of users which are assigned to this role
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public ReadOnly Property UserIDs() As Long()
                 Get
                     Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
@@ -11892,11 +10379,6 @@ Namespace CompuMaster.camm.WebManager
             '''     A list of users which are assigned to this role
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Users() As UserInformation()
                 Get
                     If _Users Is Nothing Then
@@ -11954,11 +10436,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Group information
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Class GroupInformation
             Implements IGroupInformation
 
@@ -11984,9 +10461,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             '''     If the group ID doesn't exist in the database, you'll get an object but it's empty and invalid since the ID is a zero value.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	12.08.2005	Created
-            ''' </history>
             Public Sub New(ByVal GroupID As Integer, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem)
                 _WebManager = WebManager
                 Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
@@ -12022,11 +10496,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The ID value for this group
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public ReadOnly Property ID() As Integer
                 Get
                     Return _ID
@@ -12045,11 +10514,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The title for this user group
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Name() As String
                 Get
                     Return _Name
@@ -12063,11 +10527,6 @@ Namespace CompuMaster.camm.WebManager
             '''     An optional description 
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Description() As String
                 Get
                     Return _Description
@@ -12081,11 +10540,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Indicates wether this group is a system group (e. g. Security Administration, Public Intranet, Anonymous Extranet)
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property IsSystemGroup() As Boolean
                 Get
                     Return _IsSystemGroup
@@ -12098,7 +10552,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Indicate if it is a system group because it's a public or anonymous group of a server group
             ''' </summary>
-            ''' <returns></returns>
             Public ReadOnly Property IsSystemGroupByServerGroup As Boolean
                 Get
                     If _IsSystemGroup = False Then
@@ -12112,7 +10565,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Indicate if it is a system group because it's one of the special groups for priviledged administration purposes
             ''' </summary>
-            ''' <returns></returns>
             Public ReadOnly Property IsSystemGroupBySpecialUsersGroup As Boolean
                 Get
                     If _IsSystemGroup = False Then
@@ -12132,11 +10584,6 @@ Namespace CompuMaster.camm.WebManager
             '''     A list of user IDs of all members
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	28.04.2005	Created
-            ''' </history>
             <Obsolete("Use MembersByRule instead")> Public ReadOnly Property MemberUserIDs() As Long()
                 Get
                     Return MemberUserIDsByRule.Effective
@@ -12147,7 +10594,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Memberships of the current user by rule-set
             ''' </summary>
-            ''' <returns></returns>
             Public ReadOnly Property MemberUserIDsByRule As Security.MemberIDsByRule
                 Get
                     If _MemberIDsByRule Is Nothing Then
@@ -12181,11 +10627,6 @@ Namespace CompuMaster.camm.WebManager
             '''     A list of members
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Use MembersByRule instead")> Public ReadOnly Property Members() As CompuMaster.camm.WebManager.WMSystem.UserInformation()
                 Get
                     Return MembersByRule(True).Effective
@@ -12196,7 +10637,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Memberships of the current user by rule-set
             ''' </summary>
-            ''' <returns></returns>
             Public ReadOnly Property MembersByRule(alsoClonedMembers As Boolean) As Security.MemberItemsByRule
                 Get
                     If _MembersByRule Is Nothing Then
@@ -12265,11 +10705,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="UserInfo">The new user</param>
             ''' <param name="Notifications">A notification class which can be user for sending messages to the user</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Better use overloaded method with isDenyRule parameter")> Public Sub AddMember(ByRef UserInfo As UserInformation, Optional ByVal Notifications As WMNotifications = Nothing)
                 AddMember(UserInfo, False, Notifications)
             End Sub
@@ -12279,8 +10714,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="UserInfo">The new user</param>
             ''' <param name="Notifications">A notification class which can be user for sending messages to the user</param>
-            ''' <remarks>
-            ''' </remarks>
             Public Sub AddMember(ByRef UserInfo As UserInformation, IsDenyRule As Boolean, Optional ByVal Notifications As CompuMaster.camm.WebManager.Notifications.INotifications = Nothing)
 
                 If UserInfo.ID = SpecialUsers.User_Anonymous OrElse UserInfo.ID = SpecialUsers.User_Public OrElse UserInfo.ID = SpecialUsers.User_UpdateProcessor OrElse UserInfo.ID = SpecialUsers.User_Code Then
@@ -12344,11 +10777,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="UserID">The ID value of the new user</param>
             ''' <param name="Notifications">A notification class which can be user for sending messages to the user</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("UserID should be of type Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub AddMember(ByVal UserID As Integer, Optional ByVal Notifications As WMNotifications = Nothing)
                 AddMember(CLng(UserID), Notifications)
             End Sub
@@ -12358,11 +10786,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="UserID">The ID value of the new user</param>
             ''' <param name="Notifications">A notification class which can be user for sending messages to the user</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Better use overloaded method with isDenyRule parameter")> Public Sub AddMember(ByVal UserID As Long, Optional ByVal Notifications As WMNotifications = Nothing)
                 AddMember(UserID, False, Notifications)
             End Sub
@@ -12372,8 +10795,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="UserID">The ID value of the new user</param>
             ''' <param name="Notifications">A notification class which can be user for sending messages to the user</param>
-            ''' <remarks>
-            ''' </remarks>
             Public Sub AddMember(ByVal UserID As Long, IsDenyRule As Boolean, Optional ByVal Notifications As CompuMaster.camm.WebManager.Notifications.INotifications = Nothing)
                 If UserID = SpecialUsers.User_Anonymous OrElse UserID = SpecialUsers.User_Public OrElse UserID = SpecialUsers.User_Code OrElse UserID = SpecialUsers.User_UpdateProcessor Then
                     Dim Message As String = "An 'anonymous' user or a 'public' user never can be a member of another group"
@@ -12390,11 +10811,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="userID">A user ID which shall be tested for membership</param>
             ''' <returns>True if it is a member, otherwise False</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	20.03.2007	Created
-            ''' </history>
             Public Function HasMember(ByVal userID As Long) As Boolean
                 For MyCounter As Integer = 0 To MemberUserIDsByRule.Effective.Length - 1
                     If MemberUserIDsByRule.Effective(MyCounter) = userID Then
@@ -12409,11 +10825,6 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ''' <param name="userLoginName">A loginname which shall be tested for membership</param>
             ''' <returns>True if it is a member, otherwise False</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	20.03.2007	Created
-            ''' </history>
             Public Function HasMember(ByVal userLoginName As String) As Boolean
                 Dim userID As Long
                 userID = CType(Me._WebManager.System_GetUserID(userLoginName, True), Long)
@@ -12427,11 +10838,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Remove a user from the list of members
             ''' </summary>
             ''' <param name="UserID">The ID value of the user</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("UserID should by of type Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub RemoveMember(ByVal UserID As Integer)
                 RemoveMember(CLng(UserID))
             End Sub
@@ -12440,11 +10846,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Remove a user from the list of members
             ''' </summary>
             ''' <param name="UserID">The ID value of the user</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Better use overloaded method with isDenyRule parameter")> Public Sub RemoveMember(ByVal UserID As Long)
                 RemoveMember(UserID, False)
             End Sub
@@ -12453,8 +10854,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Remove a user from the list of members
             ''' </summary>
             ''' <param name="userInfo">The ID value of the user</param>
-            ''' <remarks>
-            ''' </remarks>
             Public Sub RemoveMember(ByVal userInfo As UserInformation, isDenyRule As Boolean)
                 RemoveMember(userInfo.IDLong, isDenyRule)
                 userInfo.ResetMembershipsCache()
@@ -12464,8 +10863,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Remove a user from the list of members
             ''' </summary>
             ''' <param name="userID">The ID value of the user</param>
-            ''' <remarks>
-            ''' </remarks>
             Public Sub RemoveMember(ByVal userID As Long, isDenyRule As Boolean)
 
 
@@ -12577,9 +10974,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' This action will be done immediately without the need for saving
             ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	02.09.2005	Created
-            ''' </history>
             <Obsolete("Use overloaded method with parameter serverGroupID"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub AddAuthorization(ByVal securityObjectID As Integer)
                 Me.AddAuthorization(securityObjectID, 0)
             End Sub
@@ -12642,9 +11036,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' This action will be done immediately without the need for saving
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Use overloaded method with parameter serverGroupID"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Sub RemoveAuthorization(ByVal securityObjectID As Integer)
                 Me.RemoveAuthorization(securityObjectID, 0)
             End Sub
@@ -12653,8 +11044,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The authorizations list where the group is authorized for
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             <Obsolete("Use MembersByRule instead")> Public ReadOnly Property Authorizations() As SecurityObjectAuthorizationForGroup()
                 Get
                     Return AuthorizationsByRule.EffectiveByDenyRuleStandard()
@@ -12665,7 +11054,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Authorizations of the current user by rule-set
             ''' </summary>
-            ''' <returns></returns>
             Public ReadOnly Property AuthorizationsByRule As Security.GroupAuthorizationItemsByRuleForGroups
                 Get
                     If _AuthorizationsByRule Is Nothing Then
@@ -13168,11 +11556,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Server group information
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Class ServerGroupInformation
             Implements IServerGroupInformation
 
@@ -13297,11 +11680,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The ID value of this server group
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public ReadOnly Property ID() As Integer
                 Get
                     Return _ID
@@ -13312,11 +11690,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The common title of this server group
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Title() As String
                 Get
                     Return _Title
@@ -13330,11 +11703,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The title of this server group in a shorter name, often used for the navigation bars
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property NavTitle() As String
                 Get
                     If _NavTitle <> "" Then
@@ -13352,11 +11720,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The official website title of the company, typically used for the link/logo from the extranet to the internet website
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property OfficialCompanyWebSiteTitle() As String
                 Get
                     Return _OfficialCompanyWebSiteTitle
@@ -13370,11 +11733,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The official website address of the company, typically used for the link/logo from the extranet to the internet website
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property OfficialCompanyWebSiteURL() As String
                 Get
                     Return _OfficialCompanyWebSiteURL
@@ -13388,11 +11746,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The company title, e. g. 'YourCompany'
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property CompanyTitle() As String
                 Get
                     Return _CompanyTitle
@@ -13406,11 +11759,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The official company title, e. g. 'YourCompany Ltd.'
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property CompanyFormerTitle() As String
                 Get
                     Return _CompanyFormerTitle
@@ -13424,11 +11772,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The ID value for the group of registered users
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property GroupPublic() As CompuMaster.camm.WebManager.WMSystem.GroupInformation
                 Get
                     If _GroupPublic Is Nothing Then
@@ -13446,11 +11789,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The ID value for the group of unregistered users
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property GroupAnonymous() As CompuMaster.camm.WebManager.WMSystem.GroupInformation
                 Get
                     If _GroupAnonymous Is Nothing Then
@@ -13468,11 +11806,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The master server which is the primary handler for all login requests
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property MasterServer() As ServerInformation
                 Get
                     If _MasterServer Is Nothing Then
@@ -13493,9 +11826,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             '''     This administration server can be part of another servergroup. This allows you to remove any administration possibilities from your untrusted extranet and to only allow user administration on a server in your intranet.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property AdminServer() As ServerInformation
                 Get
                     If _AdminServer Is Nothing Then
@@ -13513,11 +11843,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The default access level role for all users who register themselves in this server group
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property AccessLevelDefault() As AccessLevelInformation
                 Get
                     If _AccessLevelDefault Is Nothing Then
@@ -13535,11 +11860,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The access level roles which are allowed to access this server group
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public ReadOnly Property AccessLevels() As AccessLevelInformation()
                 Get
                     Static _AccessLevels As AccessLevelInformation()
@@ -13554,11 +11874,6 @@ Namespace CompuMaster.camm.WebManager
             '''     A list of attached servers to this server group
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Servers() As ServerInformation()
                 Get
                     If _Servers Is Nothing Then
@@ -13648,11 +11963,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Server information
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Class ServerInformation
             Implements IServerInformation
 
@@ -13696,11 +12006,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Load server information from database
             ''' </summary>
             ''' <param name="ServerID">A server ID</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Private Sub LoadServerInfoFromDatabase(ByVal ServerID As Integer)
                 Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
                 Dim MyCmd As New SqlCommand("select * from system_servers where id = @ID", MyConn)
@@ -13741,11 +12046,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The ID value of this server
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public ReadOnly Property ID() As Integer
                 Get
                     Return _ID
@@ -13759,9 +12059,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             '''     Typically, this is either an IP address or a host header name. This value can hold any ID, you only have to ensure that the server tries to login with that server identification string again. This can be set up in the web.config file or in /sysdata/config.*
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property IPAddressOrHostHeader() As String
                 Get
                     Return _IP_Or_HostHeader
@@ -13775,11 +12072,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The protocol name for the server, http or https
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property URL_Protocol() As String
                 Get
                     Return _URL_Protocol
@@ -13793,11 +12085,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The domain name this server is available at
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property URL_DomainName() As String
                 Get
                     Return _URL_DomainName
@@ -13811,11 +12098,6 @@ Namespace CompuMaster.camm.WebManager
             '''     An optional port information if it's not the default port
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property URL_Port() As String
                 Get
                     Return _URL_Port
@@ -13828,12 +12110,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             '''     The server URL without trailing slash, e. g. http://www.yourcompany:8080
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Function ServerURL() As String
                 Dim Field_ServerAddress As String
                 Field_ServerAddress = _URL_Protocol & "://" & _URL_DomainName
@@ -13847,11 +12123,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Is this server activated?
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Enabled() As Boolean
                 Get
                     Return _Enabled
@@ -13865,11 +12136,6 @@ Namespace CompuMaster.camm.WebManager
             '''     An optional description for this server
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Description() As String
                 Get
                     Return _Description
@@ -13893,11 +12159,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The parent server group where this server is assigned to
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property ParentServerGroup() As ServerGroupInformation
                 Get
                     If _ParentServerGroup Is Nothing Then
@@ -13915,11 +12176,6 @@ Namespace CompuMaster.camm.WebManager
             '''     A session timeout value
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property ServerSessionTimeout() As Integer
                 Get
                     Return _ServerSessionTimeout
@@ -13933,11 +12189,6 @@ Namespace CompuMaster.camm.WebManager
             '''     A timeout value how fast temporary locked users can logon again
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property ServerUserlockingsTimeout() As Integer
                 Get
                     Return _ServerUserlockingsTimeout
@@ -13951,11 +12202,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Authorizations
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Class Authorizations
             Implements IAuthorizationInformation
 
@@ -13968,11 +12214,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             '''     An authorization for an user group
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Class GroupAuthorizationInformation
                 Implements IGroupAuthorizationInformation
 
@@ -14003,11 +12244,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     The ID value for this authorization item
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public Property ID() As Integer
                     Get
                         Return _ID
@@ -14021,11 +12257,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     The security object which is pointed by this authorization
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public ReadOnly Property SecurityObjectInfo() As SecurityObjectInformation
                     Get
                         If _SecurityObjectInfo Is Nothing Then
@@ -14039,11 +12270,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     A user group which has been authorized
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public ReadOnly Property GroupInfo() As CompuMaster.camm.WebManager.WMSystem.GroupInformation
                     Get
                         If _GroupInfo Is Nothing Then
@@ -14057,11 +12283,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     A server group where this authorization shall take effect
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public ReadOnly Property ServerGroupInfo() As ServerGroupInformation
                     Get
                         If _ServerGroupInfo Is Nothing Then
@@ -14075,11 +12296,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     The ID value of the user group
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public ReadOnly Property GroupID() As Integer
                     Get
                         Return _GroupID
@@ -14090,11 +12306,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     The ID value of the targetted security object
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public ReadOnly Property SecurityObjectID() As Integer
                     Get
                         Return _SecurityObjectID
@@ -14105,11 +12316,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     The ID value of the effected server group
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public ReadOnly Property ServerGroupID() As Integer
                     Get
                         Return _ServerGroupID
@@ -14134,7 +12340,6 @@ Namespace CompuMaster.camm.WebManager
                 ''' <summary>
                 ''' Allow-rules GRANT access, Deny-rules DENY the access
                 ''' </summary>
-                ''' <returns></returns>
                 Public Property IsDenyRule() As Boolean
                     Get
                         Return _IsDenyRule
@@ -14147,7 +12352,6 @@ Namespace CompuMaster.camm.WebManager
                 ''' <summary>
                 ''' Allow-rules GRANT access, Deny-rules DENY the access
                 ''' </summary>
-                ''' <returns></returns>
                 Public Property IsDevRule() As Boolean
                     Get
                         Return _IsDevRule
@@ -14206,11 +12410,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             '''     An authorization for an user
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Class UserAuthorizationInformation
                 Implements IUserAuthorizationInformation
 
@@ -14241,11 +12440,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     The ID value for this authorization item
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public Property ID() As Integer
                     Get
                         Return _ID
@@ -14262,9 +12456,6 @@ Namespace CompuMaster.camm.WebManager
                 ''' <remarks>
                 '''     Often, developers need access to test their new applcations before they can go live
                 ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public Property AlsoVisibleIfDisabled() As Boolean
                     Get
                         Return _AlsoVisibleIfDisabled
@@ -14276,7 +12467,6 @@ Namespace CompuMaster.camm.WebManager
                 ''' <summary>
                 ''' Allow-rules GRANT access, Deny-rules DENY the access
                 ''' </summary>
-                ''' <returns></returns>
                 Public Property IsDenyRule() As Boolean
                     Get
                         Return _IsDenyRule
@@ -14290,11 +12480,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     A security object which is pointed by this authorization 
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public ReadOnly Property SecurityObjectInfo() As SecurityObjectInformation
                     Get
                         If _SecurityObjectInfo Is Nothing Then
@@ -14308,11 +12493,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     The user which has got the authorization
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public ReadOnly Property UserInfo() As UserInformation
                     Get
                         If _UserInfo Is Nothing Then
@@ -14326,11 +12506,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     The server group where this authorization shall take effect
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public ReadOnly Property ServerGroupInfo() As ServerGroupInformation
                     Get
                         If _ServerGroupInfo Is Nothing Then
@@ -14344,11 +12519,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     The user which has got the authorization
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public ReadOnly Property UserID() As Integer
                     Get
                         Return CType(_UserID, Integer)
@@ -14359,11 +12529,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     A security object which is pointed by this authorization 
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public ReadOnly Property SecurityObjectID() As Integer
                     Get
                         Return _SecurityObjectID
@@ -14374,11 +12539,6 @@ Namespace CompuMaster.camm.WebManager
                 '''     The server group where this authorization shall take effect
                 ''' </summary>
                 ''' <value></value>
-                ''' <remarks>
-                ''' </remarks>
-                ''' <history>
-                ''' 	[adminsupport]	18.02.2005	Created
-                ''' </history>
                 Public ReadOnly Property ServerGroupID() As Integer
                     Get
                         Return _ServerGroupID
@@ -14489,11 +12649,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="SecurityObjectID">When not null (Nothing in VisualBasic) then filter for this security object else don't filter for this value</param>
             ''' <param name="WebManager">The instance of a camm Web-Manager</param>
             ''' <param name="ServerGroupID">When not null (Nothing in VisualBasic) then filter for this server group else don't filter for this value</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	05.08.2005	Created
-            ''' </history>
             Public Sub New(ByVal SecurityObjectID As Integer, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, Optional ByVal ServerGroupID As Integer = Nothing)
                 Me.New(SecurityObjectID, WebManager, ServerGroupID, Nothing, Nothing)
             End Sub
@@ -14506,11 +12661,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="serverGroupID">When not null (Nothing in VisualBasic) then filter for this server group else don't filter for this value</param>
             ''' <param name="userGroupID">When not null (Nothing in VisualBasic) then filter for this user group else don't filter for this value</param>
             ''' <param name="userID">When not null (Nothing in VisualBasic) then filter for this user else don't filter for this value</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	05.08.2005	Created
-            ''' </history>
             Public Sub New(ByVal webManager As CompuMaster.camm.WebManager.WMSystem, ByVal securityObjectID As Integer, ByVal serverGroupID As Integer, ByVal userGroupID As Integer, ByVal userID As Long)
                 Me.New(securityObjectID, webManager, serverGroupID, userGroupID, userID)
             End Sub
@@ -14523,11 +12673,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="serverGroupID">When not null (Nothing in VisualBasic) then filter for this server group else don't filter for this value</param>
             ''' <param name="userGroupID">When not null (Nothing in VisualBasic) then filter for this user group else don't filter for this value</param>
             ''' <param name="userID">When not null (Nothing in VisualBasic) then filter for this user else don't filter for this value</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	05.08.2005	Created
-            ''' </history>
             Public Sub New(ByVal securityObjectID As Integer, ByRef webManager As CompuMaster.camm.WebManager.WMSystem, ByVal serverGroupID As Integer, ByVal userGroupID As Integer, ByVal userID As Long)
                 _WebManager = webManager
                 _SecurityObjectID = securityObjectID
@@ -15212,11 +13357,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Security object information
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Class SecurityObjectInformation
             Implements ISecurityObjectInformation
 
@@ -15386,11 +13526,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The ID value for this security object
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public ReadOnly Property ID() As Integer
                 Get
                     Return _ID
@@ -15405,11 +13540,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The name of this security object
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Name() As String
                 Get
                     Return _Name
@@ -15430,11 +13560,6 @@ Namespace CompuMaster.camm.WebManager
             '''     A display title for this security object in the administration forms
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property DisplayName() As String
                 Get
                     If _DisplayName = "" Then
@@ -15473,7 +13598,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Comma-separated list of reqired flags/definitions
             ''' </summary>
-            ''' <returns></returns>
             Public Property RequiredFlags() As String
                 Get
                     Return _RequiredFlags
@@ -15486,7 +13610,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' User comments on required flags
             ''' </summary>
-            ''' <returns></returns>
             Public Property RequiredFlagsRemarks() As String
                 Get
                     Return _RequiredFlagsRemarks
@@ -15500,11 +13623,6 @@ Namespace CompuMaster.camm.WebManager
             '''     A type value for system purposes as well as for custom purposes (0 for normal items, 1 for master server items, 2 for administration server items, negative values for custom values)
             ''' </summary>
             ''' <value>0 for normal items, 1 for master server items, 2 for administration server items, negative values for custom values</value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property SystemType() As Integer
                 Get
                     Return _SystemType
@@ -15518,11 +13636,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Is this an inactive security object?
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Disabled() As Boolean
                 Get
                     Return _Disabled
@@ -15536,11 +13649,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Has this security object been deleted?
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Deleted() As Boolean
                 Get
                     Return _Deleted
@@ -15554,11 +13662,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Authorizations are inherited by another security object
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Use InheritFrom_SecurityObjectIDs instead - property is subject to be dropped in future")> Public Property InheritFrom_SecurityObjectID() As Integer
                 Get
                     Return _InheritFrom_SecurityObjectID
@@ -15571,7 +13674,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Authorizations are inherited by other security objects
             ''' </summary>
-            ''' <returns></returns>
             Public Property InheritFrom_SecurityObjectIDs() As Integer()
                 Get
                     If _InheritFrom_SecurityObjectID = Nothing Then
@@ -15597,11 +13699,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Authorizations are inherited by another security object
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             <Obsolete("Use InheritFrom_SecurityObjectInfos instead - property is subject to be dropped in future")> Public Property InheritFrom_SecurityObjectInfo() As SecurityObjectInformation
                 Get
                     If _InheritFrom_SecurityObjectInfo Is Nothing AndAlso _InheritFrom_SecurityObjectID <> Nothing Then
@@ -15617,7 +13714,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Authorizations are inherited by other security objects
             ''' </summary>
-            ''' <returns></returns>
             Public Property InheritFrom_SecurityObjectInfos() As SecurityObjectInformation()
                 Get
                     If _InheritFrom_SecurityObjectInfo Is Nothing AndAlso _InheritFrom_SecurityObjectID <> Nothing Then
@@ -15648,11 +13744,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Last modification by this user
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property ModifiedBy_UserID() As Integer
                 Get
                     Return CType(_ModifiedBy_UserID, Integer)
@@ -15667,11 +13758,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Last modification by this user
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property ModifiedBy_UserInfo() As UserInformation
                 Get
                     If _ModifiedBy_UserInfo Is Nothing Then
@@ -15689,11 +13775,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The date and time of the last modification
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property ModifiedOn() As DateTime
                 Get
                     Return _ModifiedOn
@@ -15708,11 +13789,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The release has been done by this user
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property ReleasedBy_UserID() As Integer
                 Get
                     Return CType(_ReleasedBy_UserID, Integer)
@@ -15727,11 +13803,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The release has been done by this user
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property ReleasedBy_UserInfo() As UserInformation
                 Get
                     If _ReleasedBy_UserInfo Is Nothing Then
@@ -15749,11 +13820,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The release has been done on this date/time
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property ReleasedOn() As DateTime
                 Get
                     Return _ReleasedOn
@@ -15767,11 +13833,6 @@ Namespace CompuMaster.camm.WebManager
             '''     Comments to this security object
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
             Public Property Remarks() As String
                 Get
                     Return _Remarks
@@ -15795,7 +13856,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Authorizations of the current user by rule-set
             ''' </summary>
-            ''' <returns></returns>
             Public ReadOnly Property AuthorizationsForGroupsByRule As Security.GroupAuthorizationItemsByRuleForSecurityObjects
                 Get
                     If _AuthorizationsForGroupsByRule Is Nothing Then
@@ -15848,7 +13908,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Authorizations of the current user by rule-set
             ''' </summary>
-            ''' <returns></returns>
             Public ReadOnly Property AuthorizationsForUsersByRule As Security.UserAuthorizationItemsByRuleForSecurityObjects
                 Get
                     If _AuthorizationsForUsersByRule Is Nothing Then
@@ -15901,8 +13960,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The authorizations list which users are authorized for this security object
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             <Obsolete("Use AuthorizationsForUsersByRule instead")> Public ReadOnly Property AuthorizationsForUsers() As SecurityObjectAuthorizationForUser()
                 Get
                     Return AuthorizationsForUsersByRule.EffectiveByDenyRuleStandard()
@@ -15913,8 +13970,6 @@ Namespace CompuMaster.camm.WebManager
             '''     The authorizations list which groups are authorized for this security object
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             <Obsolete("Use AuthorizationsForGroupsByRule instead")> Public ReadOnly Property AuthorizationsForGroups() As SecurityObjectAuthorizationForGroup()
                 Get
                     Return AuthorizationsForGroupsByRule.EffectiveByDenyRuleStandard()
@@ -16167,11 +14222,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="alsoFindInactiveLanguages">Find inactive languages, too</param>
         ''' <returns>An array of language information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetLanguagesInfo(Optional ByVal alsoFindInactiveLanguages As Boolean = False) As LanguageInformation()
             Static cachedResult As LanguageInformation()
             If cachedResult Is Nothing Then
@@ -16186,11 +14236,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="marketIDs">An array of some market/language IDs</param>
         ''' <param name="alsoFindInactiveLanguages">Find inactive languages, too</param>
         ''' <returns>An array of language information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	29.04.2005	Created
-        ''' </history>
         Public Function System_GetLanguagesInfo(ByVal marketIDs As Integer(), ByVal alsoFindInactiveLanguages As Boolean) As LanguageInformation()
             Return System_GetLanguagesInfo(marketIDs, alsoFindInactiveLanguages, True)
         End Function
@@ -16202,11 +14247,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="alsoFindInactiveLanguages">Find inactive languages, too</param>
         ''' <param name="allowReadCache">Find inactive languages, too</param>
         ''' <returns>An array of language information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	29.04.2005	Created
-        ''' </history>
         <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_GetLanguagesInfo(ByVal marketIDs As Integer(), ByVal alsoFindInactiveLanguages As Boolean, ByVal allowReadCache As Boolean) As LanguageInformation()
             Dim cacheItemKey As String
             Dim cacheItemSubKeyMarketIDs As String
@@ -16310,8 +14350,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get all server group information
         ''' </summary>
         ''' <returns>An array of server group information</returns>
-        ''' <remarks>
-        ''' </remarks>
         Public Function System_GetServerGroupsInfo() As ServerGroupInformation()
             Return System_GetServerGroupsInfo(-1)
         End Function
@@ -16321,11 +14359,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="AccessLevelID">Only retrieve servergroups available for this access level ID; use -1 if you need information on all available server groups</param>
         ''' <returns>An array of server group information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetServerGroupsInfo(ByVal AccessLevelID As Integer) As ServerGroupInformation()
             'TODO in next major release: convert result type to non-array-value
             Dim _WebManager As WMSystem = Me
@@ -16396,11 +14429,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get all access level information 
         ''' </summary>
         ''' <returns>An array of access level information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Friend Function System_GetAccessLevelInfos(ByVal serverGroupID As Integer) As AccessLevelInformation()
             Dim MyConn As New SqlConnection(ConnectionString)
             Dim MyCmd As New SqlCommand("select system_accesslevels.* from system_accesslevels inner join System_ServerGroupsAndTheirUserAccessLevels on system_accesslevels.id = System_ServerGroupsAndTheirUserAccessLevels.id_accesslevel where System_ServerGroupsAndTheirUserAccessLevels.id_servergroup = @ID ORDER BY Title", MyConn)
@@ -16427,11 +14455,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get all access level information 
         ''' </summary>
         ''' <returns>An array of access level information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetAccessLevelInfos() As AccessLevelInformation()
             If _AllAccessLevelInfos Is Nothing Then
                 Dim MyConn As New SqlConnection(ConnectionString)
@@ -16461,9 +14484,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     No caching of any data
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetServersInfo(Optional ByVal ServerGroupID As Integer = Nothing) As ServerInformation()
             Dim _WebManager As WMSystem = Me
             Dim _Servers As ServerInformation()
@@ -16507,9 +14527,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Throws an exception if there is no user logged on 
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetCurUserInfo() As UserInformation
             Dim UserID As Long = CurrentUserID(SpecialUsers.User_Anonymous)
             If UserID = SpecialUsers.User_Anonymous Then
@@ -16531,11 +14548,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="groupName">The new group name</param>
         ''' <param name="changedByUserID">Who shall be tracked as modifier?</param>
         ''' <param name="groupDescription"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	27.04.2006	Created
-        ''' </history>
         Public Sub System_CreateGroup(ByVal groupName As String, ByVal changedByUserID As Long, Optional ByVal groupDescription As String = Nothing)
             Me.System_CreateNewGroup(groupName, changedByUserID, groupDescription)
         End Sub
@@ -16572,11 +14584,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="groupInfo">The group information object which shall be saved</param>
         ''' <param name="changedByUserID">Who shall be tracked as modifier?</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	27.04.2006	Created
-        ''' </history>
         Public Sub System_UpdateGroup(ByVal groupInfo As GroupInformation, ByVal changedByUserID As Long)
 
             ' Open command object with one parameter.
@@ -16600,11 +14607,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Drop the group with the given ID
         ''' </summary>
         ''' <param name="groupID">The ID of a group</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	27.04.2006	Created
-        ''' </history>
         Public Sub System_RemoveGroup(ByVal groupID As Integer)
             'TODO: Use GroupInformation object instead + verify for SecOperator-Auths
 
@@ -16633,9 +14635,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_SetUserInfo(ByRef UserInfo As UserInformation, Optional ByRef NewPassword As String = Nothing, Optional ByVal Notifications As WMNotifications = Nothing) As Integer
             Return System_SetUserInfo(UserInfo, NewPassword, Notifications, False)
         End Function
@@ -16651,9 +14650,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.04.2005	Created
-        ''' </history>
         Public Function System_SetUserInfo(ByRef userInfo As UserInformation, ByRef newPassword As String, ByVal notifications As WMNotifications, ByVal suppressNotifications As Boolean) As Integer
             Return System_SetUserInfo(userInfo, newPassword, CType(notifications, Notifications.INotifications), suppressNotifications)
         End Function
@@ -16670,9 +14666,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	19.04.2005	Created
-        ''' </history>
         Public Function System_SetUserInfo(ByRef userInfo As UserInformation, ByRef newPassword As String, ByVal notifications As Notifications.INotifications, ByVal suppressAllNotifications As Boolean) As Integer
             Return CType(System_SetUserInfo(userInfo, newPassword, notifications, suppressAllNotifications, suppressAllNotifications), Integer)
         End Function
@@ -17021,11 +15014,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserID">A user ID</param>
         ''' <returns>A user information object</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("UserID should be of type Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_GetUserInfo(ByVal UserID As Integer) As UserInformation
             Dim UserInfos As UserInformation() = System_GetUserInfos(New Int64() {UserID})
             If UserInfos Is Nothing OrElse UserInfos.Length = 0 Then
@@ -17040,11 +15028,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserID">A user ID</param>
         ''' <returns>A user information object</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetUserInfo(ByVal UserID As Long) As UserInformation
             Dim UserInfos As UserInformation() = System_GetUserInfos(New Int64() {UserID})
             If UserInfos Is Nothing OrElse UserInfos.Length = 0 Then
@@ -17059,11 +15042,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserIDs">An arraylist of user IDs</param>
         ''' <returns>An array of user information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("use instead: System_GetUserInfos(ByVal UserIDs As Long()) As UserInformation())"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetUserInfos(ByVal UserIDs As ArrayList) As UserInformation()
             If UserIDs Is Nothing OrElse UserIDs.Count = 0 Then
@@ -17084,11 +15062,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserIDs">An array of user IDs</param>
         ''' <returns>An array of user information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("use instead: System_GetUserInfos(ByVal UserIDs As Long()) As UserInformation())"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_GetUserInfos(ByVal UserIDs As Integer()) As UserInformation()
             Dim UserLongIDs As Long() = Nothing
@@ -17106,11 +15079,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserIDs">An array of user IDs (special user IDs won't be processed)</param>
         ''' <returns>An array of user information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetUserInfos(ByVal UserIDs As Long()) As UserInformation()
             If UserIDs Is Nothing Then
                 Return Nothing
@@ -17144,11 +15112,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get all user information objects
         ''' </summary>
         ''' <returns>An array of user information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	28.04.2005	Created
-        ''' </history>
         Public Function System_GetUserInfos() As UserInformation()
             'Prepare the sql statement
             Dim SqlCommand As String = "select * from benutzer"
@@ -17164,11 +15127,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="dbCommand">A database command which returns some lines from table "Benutzer"</param>
         ''' <returns>An array of user information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	28.04.2005	Created
-        ''' </history>
         Private Function System_GetUserInfos(ByVal dbCommand As IDbCommand) As UserInformation()
 
             Dim _WebManager As WMSystem = Me
@@ -17220,11 +15178,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="SQLStatement">An SQL statement</param>
         ''' <returns>An array of group information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Private Function _System_GetGroupInfos(ByVal SQLStatement As String) As GroupInformation()
             Dim _WebManager As WMSystem = Me
             Dim _GroupInfos As GroupInformation()
@@ -17267,11 +15220,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Return all groups
         ''' </summary>
         ''' <returns>An array of group information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetGroupInfos() As GroupInformation()
             Return _System_GetGroupInfos("select * from gruppen")
         End Function
@@ -17281,11 +15229,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="GroupIDs">An arraylist of group IDs</param>
         ''' <returns>An array of group information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetGroupInfos(ByVal GroupIDs As ArrayList) As GroupInformation()
             If GroupIDs Is Nothing OrElse GroupIDs.Count = 0 Then
                 'Where nothing is, there can only be returned nothing ;-)
@@ -17305,11 +15248,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="GroupIDs">An array of group IDs</param>
         ''' <returns>An array of group information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetGroupInfos(ByVal GroupIDs As Integer()) As GroupInformation()
             'only search for server groups allowed for the current user
             Dim ListOfGroups As New System.Text.StringBuilder
@@ -17329,11 +15267,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="groupName">A name of a group (case insensitive)</param>
         ''' <returns>A group information object or Nothing if the group can't be found</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetGroupInfo(ByVal groupName As String) As GroupInformation
             If groupName = Nothing Then
                 Throw New ArgumentNullException("groupName", "Value must contain a valid group name")
@@ -17371,11 +15304,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Get all security object information
         ''' </summary>
         ''' <returns>An array of security object information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetSecurityObjectInformations() As SecurityObjectInformation()
             Dim MyCmd As SqlCommand
             MyCmd = New SqlCommand("SELECT * FROM [dbo].[Applications_CurrentAndInactiveOnes] WHERE AppDeleted = 0")
@@ -17387,11 +15315,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="SecurityObjectName">A name of a security object</param>
         ''' <returns>The requested security object information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Function System_GetSecurityObjectInformations(ByVal SecurityObjectName As String) As SecurityObjectInformation()
             Dim MyCmd As SqlCommand
             If SecurityObjectName <> Nothing Then
@@ -17434,69 +15357,69 @@ Namespace CompuMaster.camm.WebManager
                 End If
                 While MyReader.Read
                     Dim secObj As SecurityObjectInformation
-                    Dim navItem As New Security.NavigationInformation( _
-                            0, _
-                            Nothing, _
-                            Utils.Nz(MyReader("Level1Title"), String.Empty), _
-                            Utils.Nz(MyReader("Level2Title"), String.Empty), _
-                            Utils.Nz(MyReader("Level3Title"), String.Empty), _
-                            Utils.Nz(MyReader("Level4Title"), String.Empty), _
-                            Utils.Nz(MyReader("Level5Title"), String.Empty), _
-                            Utils.Nz(MyReader("Level6Title"), String.Empty), _
-                            Utils.Nz(MyReader("Level1TitleIsHtmlCoded"), False), _
-                            Utils.Nz(MyReader("Level2TitleIsHtmlCoded"), False), _
-                            Utils.Nz(MyReader("Level3TitleIsHtmlCoded"), False), _
-                            Utils.Nz(MyReader("Level4TitleIsHtmlCoded"), False), _
-                            Utils.Nz(MyReader("Level5TitleIsHtmlCoded"), False), _
-                            Utils.Nz(MyReader("Level6TitleIsHtmlCoded"), False), _
-                            Utils.Nz(MyReader("NavURL"), String.Empty), _
-                            Utils.Nz(MyReader("NavFrame"), String.Empty), _
-                            Utils.Nz(MyReader("NavTooltipText"), String.Empty), _
-                            Utils.Nz(MyReader("AddLanguageID2URL"), False), _
-                            Utils.Nz(MyReader("LanguageID"), 0), _
-                            Utils.Nz(MyReader("LocationID"), 0), _
-                            Utils.Nz(MyReader("Sort"), 0), _
-                            Utils.Nz(MyReader("IsNew"), False), _
-                            Utils.Nz(MyReader("IsUpdated"), False), _
-                            Utils.Nz(MyReader("ResetIsNewUpdatedStatusOn"), DateTime.MinValue), _
-                            Utils.Nz(MyReader("OnMouseOver"), String.Empty), _
-                            Utils.Nz(MyReader("OnMouseOut"), String.Empty), _
+                    Dim navItem As New Security.NavigationInformation(
+                            0,
+                            Nothing,
+                            Utils.Nz(MyReader("Level1Title"), String.Empty),
+                            Utils.Nz(MyReader("Level2Title"), String.Empty),
+                            Utils.Nz(MyReader("Level3Title"), String.Empty),
+                            Utils.Nz(MyReader("Level4Title"), String.Empty),
+                            Utils.Nz(MyReader("Level5Title"), String.Empty),
+                            Utils.Nz(MyReader("Level6Title"), String.Empty),
+                            Utils.Nz(MyReader("Level1TitleIsHtmlCoded"), False),
+                            Utils.Nz(MyReader("Level2TitleIsHtmlCoded"), False),
+                            Utils.Nz(MyReader("Level3TitleIsHtmlCoded"), False),
+                            Utils.Nz(MyReader("Level4TitleIsHtmlCoded"), False),
+                            Utils.Nz(MyReader("Level5TitleIsHtmlCoded"), False),
+                            Utils.Nz(MyReader("Level6TitleIsHtmlCoded"), False),
+                            Utils.Nz(MyReader("NavURL"), String.Empty),
+                            Utils.Nz(MyReader("NavFrame"), String.Empty),
+                            Utils.Nz(MyReader("NavTooltipText"), String.Empty),
+                            Utils.Nz(MyReader("AddLanguageID2URL"), False),
+                            Utils.Nz(MyReader("LanguageID"), 0),
+                            Utils.Nz(MyReader("LocationID"), 0),
+                            Utils.Nz(MyReader("Sort"), 0),
+                            Utils.Nz(MyReader("IsNew"), False),
+                            Utils.Nz(MyReader("IsUpdated"), False),
+                            Utils.Nz(MyReader("ResetIsNewUpdatedStatusOn"), DateTime.MinValue),
+                            Utils.Nz(MyReader("OnMouseOver"), String.Empty),
+                            Utils.Nz(MyReader("OnMouseOut"), String.Empty),
                             Utils.Nz(MyReader("OnClick"), String.Empty))
                     If RequiredFlagsSupported Then
-                        secObj = New SecurityObjectInformation( _
-                                    Utils.Nz(MyReader("ID"), 0), _
-                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)), _
-                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)), _
-                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)), _
-                                    Utils.Nz(MyReader("ModifiedBy"), 0&), _
-                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)), _
-                                    Utils.Nz(MyReader("ReleasedBy"), 0&), _
-                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)), _
-                                    Utils.Nz(MyReader("AppDisabled"), False), _
-                                    Utils.Nz(MyReader("AppDeleted"), False), _
-                                    Utils.Nz(MyReader("AuthsAsAppID"), 0), _
-                                    Utils.Nz(MyReader("SystemAppType"), 0), _
-                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""), _
-                                    Utils.Nz(MyReader("RequiredUserProfileFlagsRemarks"), ""), _
-                                    navItem, _
+                        secObj = New SecurityObjectInformation(
+                                    Utils.Nz(MyReader("ID"), 0),
+                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)),
+                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)),
+                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)),
+                                    Utils.Nz(MyReader("ModifiedBy"), 0&),
+                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)),
+                                    Utils.Nz(MyReader("ReleasedBy"), 0&),
+                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)),
+                                    Utils.Nz(MyReader("AppDisabled"), False),
+                                    Utils.Nz(MyReader("AppDeleted"), False),
+                                    Utils.Nz(MyReader("AuthsAsAppID"), 0),
+                                    Utils.Nz(MyReader("SystemAppType"), 0),
+                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""),
+                                    Utils.Nz(MyReader("RequiredUserProfileFlagsRemarks"), ""),
+                                    navItem,
                                     Me)
                     Else
-                        secObj = New SecurityObjectInformation( _
-                                    Utils.Nz(MyReader("ID"), 0), _
-                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)), _
-                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)), _
-                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)), _
-                                    Utils.Nz(MyReader("ModifiedBy"), 0&), _
-                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)), _
-                                    Utils.Nz(MyReader("ReleasedBy"), 0&), _
-                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)), _
-                                    Utils.Nz(MyReader("AppDisabled"), False), _
-                                    Utils.Nz(MyReader("AppDeleted"), False), _
-                                    Utils.Nz(MyReader("AuthsAsAppID"), 0), _
-                                    Utils.Nz(MyReader("SystemAppType"), 0), _
-                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""), _
-                                    "", _
-                                    navItem, _
+                        secObj = New SecurityObjectInformation(
+                                    Utils.Nz(MyReader("ID"), 0),
+                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)),
+                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)),
+                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)),
+                                    Utils.Nz(MyReader("ModifiedBy"), 0&),
+                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)),
+                                    Utils.Nz(MyReader("ReleasedBy"), 0&),
+                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)),
+                                    Utils.Nz(MyReader("AppDisabled"), False),
+                                    Utils.Nz(MyReader("AppDeleted"), False),
+                                    Utils.Nz(MyReader("AuthsAsAppID"), 0),
+                                    Utils.Nz(MyReader("SystemAppType"), 0),
+                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""),
+                                    "",
+                                    navItem,
                                     Me)
                     End If
                     MyTempCollection.Add(secObj)
@@ -17561,10 +15484,10 @@ Namespace CompuMaster.camm.WebManager
 
             For Each MySGInfo As ServerGroupInformation In UserAccessableServerGroups
                 For Each MyLangInfo As LanguageInformation In AvailableLanguages
-                    Result &= "<a href=""#"" onClick=""OpenNavDemo(" & MyLangInfo.ID & ", '" & System.Web.HttpUtility.UrlEncode(MySGInfo.MasterServer.IPAddressOrHostHeader) & "', '" & UserID & "');"">" & _
-                        MySGInfo.Title & _
-                        ", " & _
-                        MyLangInfo.LanguageName_English & _
+                    Result &= "<a href=""#"" onClick=""OpenNavDemo(" & MyLangInfo.ID & ", '" & System.Web.HttpUtility.UrlEncode(MySGInfo.MasterServer.IPAddressOrHostHeader) & "', '" & UserID & "');"">" &
+                        MySGInfo.Title &
+                        ", " &
+                        MyLangInfo.LanguageName_English &
                         "</a><br>"
                 Next
             Next
@@ -17668,12 +15591,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="TablePrimID"></param>
         ''' <param name="UserID"></param>
         ''' <param name="RequiredAuth"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.07.2004	Created
-        ''' </history>
         Public Function System_GetSubAuthorizationStatus(ByVal TableName As String, ByVal TablePrimID As Integer, ByVal UserID As Long, ByVal RequiredAuth As String) As Boolean
 
             If AdminPrivate_GetSubAuthorizationStatus_TableName = TableName And
@@ -17766,12 +15683,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="TableName">Either 'Groups' or 'Applications'</param>
         ''' <param name="UserID">The user ID</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
         <Obsolete("UserID should be of type Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_IsSecurityMaster(ByVal TableName As String, ByVal UserID As Integer) As Boolean
             Return System_IsSecurityMaster(TableName, CLng(UserID))
         End Function
@@ -17781,12 +15692,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="TableName">Either 'Groups' or 'Applications'</param>
         ''' <param name="UserID">The user ID</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
         Public Function System_IsSecurityMaster(ByVal TableName As String, ByVal UserID As Long) As Boolean
             Dim MyDBConn As New SqlConnection
             Dim MyCmd As New SqlCommand
@@ -17869,12 +15774,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Is an user a supervisor?
         ''' </summary>
         ''' <param name="UserID"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
         <Obsolete("UserID should be of type Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_IsSuperVisor(ByVal UserID As Integer) As Boolean
             Return System_IsSuperVisor(CLng(UserID))
         End Function
@@ -17883,12 +15782,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Is an user a supervisor?
         ''' </summary>
         ''' <param name="UserID"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
         Public Function System_IsSuperVisor(ByVal UserID As Long) As Boolean
 
             If AdminPrivate_IsSuperVisor_UserID = UserID And AdminPrivate_IsSuperVisor_Result = 1 Then
@@ -17924,11 +15817,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="userID">The ID of the user account which shall be analyzed</param>
         ''' <param name="groupName">The name of the group where the user shall be a member</param>
         ''' <returns>True if the user is a member, otherwise false</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	09.03.2007	Created
-        ''' </history>
         Public Function System_IsMember(ByVal userID As Long, ByVal groupName As String) As Boolean
             If groupName = Nothing Then
                 Throw New ArgumentNullException("groupName")
@@ -17972,13 +15860,9 @@ Namespace CompuMaster.camm.WebManager
         '''     Is an user a security operator which has got some administration priviledges?
         ''' </summary>
         ''' <param name="UserID"></param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     The difference to a security master is that an operator has no priviledges, first. And a security master has got all priviledges to do all things regarding his master role.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
         <Obsolete("UserID should be of type Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function System_IsSecurityOperator(ByVal UserID As Integer) As Boolean
             Return System_IsSecurityOperator(CLng(UserID))
         End Function
@@ -17991,9 +15875,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     <para>The difference to a security master is that an operator has no priviledges, first. And a security master has got all priviledges to do all things regarding his master role.</para>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
         Public Function System_IsSecurityOperator(ByVal UserID As Long) As Boolean
 
             If AdminPrivate_IsSecurityOperator_UserID = UserID And AdminPrivate_IsSecurityOperator_Result = 1 Then
@@ -18028,11 +15909,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="userInfo">The user information object which shall get a new password</param>
         ''' <param name="newPassword">A new password</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	12.11.2004	Created
-        ''' </history>
         Private Sub _System_SetUserPassword(ByVal userInfo As UserInformation, ByVal newPassword As String, ByVal doNotLogSuccess As Boolean)
 
             Select Case userInfo.IDLong
@@ -18097,11 +15973,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="userInfo">The user information object which shall get a new password</param>
         ''' <param name="newPassword">A new password</param>
         ''' <param name="notificationProvider">An instance of a notification class which handles the distribution of all required mails</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	12.11.2004	Created
-        ''' </history>
         Public Sub System_SetUserPassword(ByVal userInfo As UserInformation, ByVal newPassword As String, Optional ByVal notificationProvider As WMNotifications = Nothing)
             System_SetUserPassword(userInfo, newPassword, CType(notificationProvider, Notifications.INotifications))
         End Sub
@@ -18112,11 +15983,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="userInfo">The user information object which shall get a new password</param>
         ''' <param name="newPassword">A new password</param>
         ''' <param name="notificationProvider">An instance of a NotificationProvider class which handles the distribution of all required mails</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	12.11.2004	Created
-        ''' </history>
         Public Sub System_SetUserPassword(ByVal userInfo As UserInformation, ByVal newPassword As String, ByVal notificationProvider As Notifications.INotifications)
 
             If IsSystemUser(userInfo.ID) Then
@@ -18165,9 +16031,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     To ensure the correct localization of the user interface, all important text switches should perform when this event gets fired.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         Public Event LanguageDataLoaded(ByVal LanguageID As Integer)
         Private Sub _LanguageDataLoaded(ByVal LanguageID As Integer) Handles _Internationalization.LanguageDataLoaded
             RaiseEvent LanguageDataLoaded(LanguageID)
@@ -18213,9 +16076,6 @@ Namespace CompuMaster.camm.WebManager
         '''     <para>Supported special character combinations are <code>\t</code>, <code>\r</code>, <code>\n</code>, <code>\\</code>, <code>\[</code></para>
         '''     <para>Supported placeholders are <code>[*]</code>, <code>[n:1..9]</code></para>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
         <Obsolete("Use Utils.sprintf instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Function sprintf(ByVal message As String, ByVal ParamArray values() As Object) As String
             Return CompuMaster.camm.WebManager.Utils.sprintf(message, values)
         End Function
@@ -18225,11 +16085,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Configuration settings read from web.config/app.config
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
         Friend Class Configuration
             Inherits CompuMaster.camm.WebManager.Configuration
         End Class
@@ -18242,9 +16097,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Without warranty or promised purpose for anything - use at your own risk!
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	09.10.2004	Created
-        ''' </history>
         Public Const CompactPolicyFullRights As String = "ALL CUR ADMa DEVa TAIa PSAa PSDa IVAa IVDa CONa HISa TELa OTPa OUR DELa SAMa UNRa PUBa OTRa IND PHY ONL UNI PUR FIN COM NAV INT DEM CNT STA POL HEA PRE GOV LOC"
         Private _CompactPolicyHeader As String
 
@@ -18252,11 +16104,6 @@ Namespace CompuMaster.camm.WebManager
         '''     A compact policy header to be sent to the client
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	09.10.2004	Created
-        ''' </history>
         Public Property CompactPolicyHeader() As String
             Get
                 If _CompactPolicyHeader Is Nothing Then
@@ -18348,11 +16195,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="loginName">A login name</param>
         ''' <returns>True if it exists, otherwise false</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	23.10.2008	Created
-        ''' </history>
         Public Function IsUserExisting(ByVal loginName As String) As Boolean
             Return IsUserExisting(_WebManager, loginName)
         End Function
@@ -18370,12 +16212,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Query a list of existing user IDs
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	23.10.2008	Created
-        ''' </history>
         Function ActiveUsers() As Long()
             Return WebManager.DataLayer.Current.ActiveUsers(_WebManager)
         End Function
@@ -18384,11 +16220,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Query a list of user IDs from existing plus deleted users
         ''' </summary>
         ''' <returns>A hashtable containing the user ID as key field (Int64) and the status &quot;Deleted&quot; as a boolean value in the hashtable's value field (true indicates a deleted user)</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	23.10.2008	Created
-        ''' </history>
         Function ActiveAndDeletedUsers() As Hashtable
             Return CompuMaster.camm.WebManager.DataLayer.Current.ActiveAndDeletedUsers(_WebManager)
         End Function

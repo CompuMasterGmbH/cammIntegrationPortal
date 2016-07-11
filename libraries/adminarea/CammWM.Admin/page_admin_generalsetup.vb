@@ -307,7 +307,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' Delete the unwanted files and directories 
         ''' </summary> 
         ''' <returns>A NameValueCollection containing all occured errors where Key is the filename and Value is the exception message</returns>
-        ''' ----------------------------------------------------------------------------- 
         Public Function DropFilesToBeRemoved() As Collections.Specialized.NameValueCollection
             Dim files As String() = FindFilesToBeRemoved()
             Dim errors As New Collections.Specialized.NameValueCollection
@@ -376,18 +375,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Inherits Page
 
         Protected Markets As DataGrid
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The market which shall be changed
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	29.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected ReadOnly Property Market() As Integer
             Get
                 If Request.QueryString("Market") <> "" Then
@@ -397,18 +388,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Shall the market be activated?
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	29.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected ReadOnly Property MarketActivated() As Boolean
             Get
                 If Request.QueryString("MarketActivated") <> "" Then

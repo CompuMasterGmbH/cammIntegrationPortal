@@ -28,8 +28,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''' <summary>
     '''     A page to view the list of servers
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Class ServerList
         Inherits Page
 
@@ -58,7 +56,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Try
                 CurServerGroup = cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "ID_ServerGroup")
                 FirstServerLine = True
-                MyDt = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                MyDt = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT AdminPrivate_ServerRelations.* FROM [AdminPrivate_ServerRelations] ORDER BY ServerGroup, MemberServer_ServerDescription, MemberServer_IP", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                 If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then
@@ -117,7 +115,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                         Try
                             Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CLng(.Item("ID").ToString))}
-                            dt = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                            dt = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT * FROM AdminPrivate_ServerGroupAccessLevels WHERE ID_ServerGroup = @ID ORDER BY AccessLevels_Title", CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                             If Not dt Is Nothing AndAlso dt.Rows.Count > 0 Then

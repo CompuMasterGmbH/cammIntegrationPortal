@@ -28,8 +28,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''' <summary>
     '''     The security objects overview page
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Class AuthorizationsOverview
         Inherits Page
 
@@ -146,10 +144,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             TopClause = ""
 
-            strQuery = _
-                "select " & TopClause & " ID_Application,AppDisabled,AuthsAsAppID,TitleAdminArea,Title,AppReleasedByVorname,AppReleasedByID," & _
-                "AppReleasedByNachname,AppReleasedOn,NavURL,(select top 1 Description from Languages l where l.ID=view_ApplicationRights.LanguageID) As Abbreviation,(select top 1 ServerDescription from System_Servers s where s.ID=view_ApplicationRights.LocationID) as ServerDescription " & _
-                ",(SELECT top 1 AuthsAsAppID FROM Applications a WHERE a.ID = view_ApplicationRights.[AuthsAsAppID]) as NextAuthsAsAppID from [view_ApplicationRights] " & WhereClause.ToString & " group by ID_Application,AppDisabled,AuthsAsAppID,TitleAdminArea,Title,AppReleasedByVorname," & _
+            strQuery =
+                "select " & TopClause & " ID_Application,AppDisabled,AuthsAsAppID,TitleAdminArea,Title,AppReleasedByVorname,AppReleasedByID," &
+                "AppReleasedByNachname,AppReleasedOn,NavURL,(select top 1 Description from Languages l where l.ID=view_ApplicationRights.LanguageID) As Abbreviation,(select top 1 ServerDescription from System_Servers s where s.ID=view_ApplicationRights.LocationID) as ServerDescription " &
+                ",(SELECT top 1 AuthsAsAppID FROM Applications a WHERE a.ID = view_ApplicationRights.[AuthsAsAppID]) as NextAuthsAsAppID from [view_ApplicationRights] " & WhereClause.ToString & " group by ID_Application,AppDisabled,AuthsAsAppID,TitleAdminArea,Title,AppReleasedByVorname," &
                 "AppReleasedByID,AppReleasedByNachname,AppReleasedOn,NavURL,languageid,LocationID,TitleAdminAreaDisplay order by TitleAdminAreaDisplay,LocationID,id_application"
 
             Dim cmd As New SqlCommand(strQuery, New SqlConnection(cammWebManager.ConnectionString))
@@ -653,17 +651,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 MyDt.Dispose()
             End Try
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' List all available applications and bind them on the DropDownList. PreSelect application where user comes from.
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	25.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub ListApps()
             Dim sqlParams As SqlParameter() = {New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))}
             Dim WhereClause As String = "WHERE (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR Applications.ID in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND Applications.ID in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND AuthorizationType In ('UpdateRelations','Owner')))) "
@@ -692,7 +682,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' Is a checkbox checked or unchecked/missing?
         ''' </summary>
         ''' <param name="control"></param>
-        ''' <returns></returns>
         Private Function IsChecked(control As CheckBox) As Boolean
             If control Is Nothing Then
                 Return False
@@ -708,19 +697,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Sub top50ChkCheckChanged(ByVal sender As Object, ByVal e As EventArgs) Handles CheckBoxTop50Results.CheckedChanged
             ListOfUsers(CInt(drp_App.SelectedValue))
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Bind user data to the repeater control
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	25.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub rptUserListItemBound(ByVal sender As Object, ByVal e As RepeaterItemEventArgs) Handles rptUserList.ItemDataBound
             If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
                 With MyDt.Rows(e.Item.ItemIndex)
@@ -734,19 +715,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End With
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Load new user data if selected application changes
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	25.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub drpAppsSelectedAppChanged(ByVal sender As Object, ByVal e As EventArgs) Handles drp_App.SelectedIndexChanged
             ListOfUsers(CInt(CType(sender, DropDownList).SelectedValue))
         End Sub
@@ -946,17 +919,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Me.drp_groups.DataBind()
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' List all available applications and bind them on the DropDownList. PreSelect application where user comes from.
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	25.02.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub ListApps()
             Dim sqlParams As SqlParameter() = {New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))}
             Dim WhereClause As String = "WHERE (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR Applications.ID in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND Applications.ID in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND AuthorizationType In ('UpdateRelations','Owner')))) "
@@ -984,7 +949,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' </summary>
         ''' <param name="groupId"></param>
         ''' <param name="applicationId"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function IsGroupAuthorizedForApplication(ByVal groupId As Integer, ByVal applicationId As Integer) As Boolean
             If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
@@ -1004,7 +968,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' </summary>
         ''' <param name="groupId"></param>
         ''' <param name="applicationId"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function IsGroupAuthorizedForApplication(ByVal groupID As Integer, ByVal applicationID As Integer, isDev As Boolean, isDenyRule As Boolean) As Boolean
             If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
@@ -1040,7 +1003,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' Is a checkbox checked or unchecked/missing?
         ''' </summary>
         ''' <param name="control"></param>
-        ''' <returns></returns>
         Private Function IsChecked(control As CheckBox) As Boolean
             If control Is Nothing Then
                 Return False
@@ -1192,7 +1154,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Field_Description = ""
 
                 Dim sqlParams2 As SqlParameter() = {New SqlParameter("@ID", CInt(Val(Field_GroupID & "")))}
-                MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), _
+                MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString),
                                     "SELECT * FROM dbo.Gruppen Where ID=@ID", CommandType.Text, sqlParams2, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                 If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then
@@ -1273,7 +1235,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim MyDt As New DataTable
 
                 Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", Field_UserID)}
-                MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), _
+                MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString),
                                     "SELECT * FROM dbo.view_UserList WHERE ID = @ID", CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                 If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then
@@ -1355,7 +1317,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
 
             Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", MyAppID)}
-            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), _
+            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString),
                                     "SELECT Applications.*, System_Servers.ServerDescription, Languages.Description FROM (Applications LEFT JOIN Languages ON Applications.LanguageID = Languages.ID) LEFT JOIN System_Servers ON Applications.LocationID = System_Servers.ID WHERE Applications.ID <> @ID ORDER BY Title", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
             If Not dt Is Nothing AndAlso dt.Rows.Count > 0 Then
@@ -1450,10 +1412,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End Try
                 If Success AndAlso Request.QueryString("CopyAuths") = "1" Then
                     Try
-                        Dim Sql As String = "-- Add Group Authorizations" & vbNewLine & _
-                                            "INSERT INTO dbo.ApplicationsRightsByGroup (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])" & vbNewLine & _
-                                            "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application" & vbNewLine & _
-                                            "FROM         dbo.ApplicationsRightsByGroup" & vbNewLine & _
+                        Dim Sql As String = "-- Add Group Authorizations" & vbNewLine &
+                                            "INSERT INTO dbo.ApplicationsRightsByGroup (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])" & vbNewLine &
+                                            "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application" & vbNewLine &
+                                            "FROM         dbo.ApplicationsRightsByGroup" & vbNewLine &
                                             "WHERE     (ID_Application = @SourceAppID)"
                         Dim MyCmd As New System.Data.SqlClient.SqlCommand(Sql, New SqlConnection(cammWebManager.ConnectionString))
                         MyCmd.CommandType = CommandType.Text
@@ -1477,7 +1439,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim strBuilder As New Text.StringBuilder
                 Dim dtResult As DataTable
                 Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CLng(Request.QueryString("ID")))}
-                dtResult = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), _
+                dtResult = FillDataTable(New SqlConnection(cammWebManager.ConnectionString),
                                      "SELECT Applications.*, Languages.Description FROM Applications LEFT JOIN Languages ON Applications.LanguageID = Languages.ID WHERE Applications.ID = @ID ORDER BY Applications.Title", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                 Dim iCount As Integer = 0
                 While iCount < dtResult.Rows.Count
@@ -1682,8 +1644,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
         Private Sub CleanUpAuthorization(ByVal sender As Object, ByVal e As EventArgs) Handles cleanUpBtn.Click
 
             Try

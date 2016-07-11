@@ -162,19 +162,11 @@ Namespace CompuMaster.camm.WebManager
 #Region "in-memory-mirror of WebManager objects"
 
     Friend Class InformationClassTools
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Are there no invalid entries because of the content in the unique fields?
         ''' </summary>
         ''' <param name="userInfo">A user information object</param>
         ''' <returns>True if no conflicts, otherwise false</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	07.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function IsValidContentOfUniqueFields(ByVal userInfo As CompuMaster.camm.WebManager.IUserInformation) As Boolean
 
             Dim MyConn As New SqlConnection(userInfo.WebManager.ConnectionString)
@@ -295,10 +287,6 @@ Namespace CompuMaster.camm.WebManager
     ''' <remarks>
     '''     This class contains all information of a user profile as well as all important methods for handling of that account
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class UserInformation
         implements CompuMaster.camm.WebManager.IUserInformation
         Private _WebManager As WMSystem
@@ -335,8 +323,6 @@ Namespace CompuMaster.camm.WebManager
         Private _AccountProfileValidatedByEMailTest As Boolean
         Private _AutomaticLogonAllowedByMachineToMachineCommunication As Boolean
         Private _ExternalAccount As String
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a new user profile
         ''' </summary>
@@ -364,12 +350,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="WebManager">The current instance of camm Web-Manager</param>
         ''' <param name="ExternalAccount">An external account relation for single-sign-on purposes</param>
         ''' <param name="AdditionalFlags">A collection of additional flags which are saved in the user's profile</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	07.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete()> Public Sub New(ByVal UserID As Integer, ByVal LoginName As String, ByVal EMailAddress As String, ByVal Company As String, ByVal Sex As Sex, ByVal NameAddition As String, ByVal FirstName As String, ByVal LastName As String, ByVal AcademicTitle As String, ByVal Street As String, ByVal ZipCode As String, ByVal City As String, ByVal State As String, ByVal Country As String, ByVal PreferredLanguage1ID As Integer, ByVal PreferredLanguage2ID As Integer, ByVal PreferredLanguage3ID As Integer, ByVal LoginDisabled As Boolean, ByVal LoginLockedTemporary As Boolean, ByVal LoginDeleted As Boolean, ByVal AccessLevelID As Integer, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, ByVal ExternalAccount As String, Optional ByVal AdditionalFlags As Collections.Specialized.NameValueCollection = Nothing)
             If UserID = SpecialUsers.User_Anonymous Or UserID = SpecialUsers.User_Code Or UserID = SpecialUsers.User_Public Or UserID = SpecialUsers.User_UpdateProcessor Then
                 Throw New InvalidOperationException("Can't assign user details to this special system user")
@@ -407,8 +387,6 @@ Namespace CompuMaster.camm.WebManager
                 'Else 'Data for a new user
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a new user profile
         ''' </summary>
@@ -436,16 +414,9 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="__reserved">Obsolete parameter</param>
         ''' <param name="WebManager">The current instance of camm Web-Manager</param>
         ''' <param name="AdditionalFlags">A collection of additional flags which are saved in the user's profile</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	07.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete("use overloaded method instead")> Public Sub New(ByVal UserID As Integer, ByVal LoginName As String, ByVal EMailAddress As String, ByVal Company As String, ByVal Sex As Sex, ByVal NameAddition As String, ByVal FirstName As String, ByVal LastName As String, ByVal AcademicTitle As String, ByVal Street As String, ByVal ZipCode As String, ByVal City As String, ByVal State As String, ByVal Country As String, ByVal PreferredLanguage1ID As Integer, ByVal PreferredLanguage2ID As Integer, ByVal PreferredLanguage3ID As Integer, ByVal LoginDisabled As Boolean, ByVal LoginLockedTemporary As Boolean, ByVal LoginDeleted As Boolean, ByVal AccessLevelID As Integer, ByVal __reserved As Boolean, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, Optional ByVal AdditionalFlags As Collections.Specialized.NameValueCollection = Nothing)
             Me.New(CLng(UserID), LoginName, EMailAddress, False, Company, Sex, NameAddition, FirstName, LastName, AcademicTitle, Street, ZipCode, City, State, Country, PreferredLanguage1ID, PreferredLanguage2ID, PreferredLanguage3ID, LoginDisabled, LoginLockedTemporary, LoginDeleted, AccessLevelID, WebManager, Nothing, AdditionalFlags)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load a user profile from the system database
         ''' </summary>
@@ -460,16 +431,11 @@ Namespace CompuMaster.camm.WebManager
         '''         <item>LoginLockedTemporary</item>
         '''     </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	07.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete()> Public Sub New(ByVal UserID As Integer, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, Optional ByVal SearchForDeletedAccountsAsWell As Boolean = False)
             _ID = CLng(UserID)
             _WebManager = WebManager
             ReadCompleteUserInformation(SearchForDeletedAccountsAsWell)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a new user profile
         ''' </summary>
@@ -498,12 +464,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="WebManager">The current instance of camm Web-Manager</param>
         ''' <param name="ExternalAccount">An external account relation for single-sign-on purposes</param>
         ''' <param name="AdditionalFlags">A collection of additional flags which are saved in the user's profile</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	07.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal UserID As Long, ByVal LoginName As String, ByVal EMailAddress As String, ByVal AutomaticLogonAllowedByMachineToMachineCommunication As Boolean, ByVal Company As String, ByVal Sex As Sex, ByVal NameAddition As String, ByVal FirstName As String, ByVal LastName As String, ByVal AcademicTitle As String, ByVal Street As String, ByVal ZipCode As String, ByVal City As String, ByVal State As String, ByVal Country As String, ByVal PreferredLanguage1ID As Integer, ByVal PreferredLanguage2ID As Integer, ByVal PreferredLanguage3ID As Integer, ByVal LoginDisabled As Boolean, ByVal LoginLockedTemporary As Boolean, ByVal LoginDeleted As Boolean, ByVal AccessLevelID As Integer, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, ByVal ExternalAccount As String, Optional ByVal AdditionalFlags As Collections.Specialized.NameValueCollection = Nothing)
             If UserID = SpecialUsers.User_Anonymous Or UserID = SpecialUsers.User_Code Or UserID = SpecialUsers.User_Public Or UserID = SpecialUsers.User_UpdateProcessor Then
                 Throw New InvalidOperationException("Can't assign user details to this special system user")
@@ -542,7 +502,6 @@ Namespace CompuMaster.camm.WebManager
                 'Else 'Data for a new user
             End If
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load a user profile from the system database
         ''' </summary>
@@ -557,45 +516,25 @@ Namespace CompuMaster.camm.WebManager
         '''         <item>LoginLockedTemporary</item>
         '''     </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	07.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal UserID As Long, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, Optional ByVal SearchForDeletedAccountsAsWell As Boolean = False)
             _ID = UserID
             _WebManager = WebManager
             ReadCompleteUserInformation(SearchForDeletedAccountsAsWell)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is this user a system user (anonymous, public, etc.)
         ''' </summary>
         ''' <value></value>
         ''' <seealso cref="CompuMaster.camm.WebManager.WMSystem.SpecialUsers" />
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property IsSystemUser() As Boolean
             Get
                 Return CompuMaster.camm.WebManager.WMSystem.IsSystemUser(_ID)
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is an automated logon procedure allowed for this account
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property AutomaticLogonAllowedByMachineToMachineCommunication() As Boolean
             Get
                 Return False
@@ -615,18 +554,10 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read all the account data from database
         ''' </summary>
         ''' <param name="SearchForDeletedAccountsAsWell">Also load data of users who have been deleted in the past</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub ReadCompleteUserInformation(Optional ByVal SearchForDeletedAccountsAsWell As Boolean = False)
             If _ID = Nothing Then
                 Dim Message As String = "Cannot read user profile data with an empty ID value"
@@ -800,64 +731,35 @@ Namespace CompuMaster.camm.WebManager
                 _WebManager.Log.RuntimeException(Message)
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The account ID
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property IDLong() As Long
             Get
                 Return _ID
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The account ID
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property ID() As Integer
             Get
                 Return _ID
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Set the user ID for a new registered user
         ''' </summary>
         ''' <param name="ID"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub SetNewUserID(ByVal ID As Long)
             _ID = ID
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The login name of the user
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property LoginName() As String
             Get
                 Return _LoginName
@@ -869,17 +771,10 @@ Namespace CompuMaster.camm.WebManager
                 _LoginName = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Indicate wether the user has already got an e-mail notification that he has got his first priviledges and/or memberships assigned
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property AccountAuthorizationsAlreadySet() As Boolean
             Get
                 Return _System_InitOfAuthorizationsDone
@@ -888,17 +783,10 @@ Namespace CompuMaster.camm.WebManager
                 _System_InitOfAuthorizationsDone = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The required e-mail address where all important messages will be sent to
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property EMailAddress() As String
             Get
                 Return _EMailAddress
@@ -907,17 +795,10 @@ Namespace CompuMaster.camm.WebManager
                 _EMailAddress = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The fax number
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property FaxNumber() As String
             Get
                 Return AdditionalFlags("Fax")
@@ -926,17 +807,10 @@ Namespace CompuMaster.camm.WebManager
                 _AdditionalFlags("Fax") = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The phone number
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property PhoneNumber() As String
             Get
                 Return AdditionalFlags("Phone")
@@ -945,17 +819,10 @@ Namespace CompuMaster.camm.WebManager
                 _AdditionalFlags("Phone") = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The mobile number
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property MobileNumber() As String
             Get
                 Return AdditionalFlags("Mobile")
@@ -964,17 +831,10 @@ Namespace CompuMaster.camm.WebManager
                 _AdditionalFlags("Mobile") = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The position in the company the user is working for
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Position() As String
             Get
                 Return AdditionalFlags("Position")
@@ -983,17 +843,10 @@ Namespace CompuMaster.camm.WebManager
                 _AdditionalFlags("Position") = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The user's first name
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property FirstName() As String
             Get
                 Return _FirstName
@@ -1002,17 +855,10 @@ Namespace CompuMaster.camm.WebManager
                 _FirstName = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The company title 
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Company() As String
             Get
                 Return _Company
@@ -1021,17 +867,10 @@ Namespace CompuMaster.camm.WebManager
                 _Company = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The surname of the user
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property LastName() As String
             Get
                 Return _LastName
@@ -1040,18 +879,9 @@ Namespace CompuMaster.camm.WebManager
                 _LastName = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The full name of an user, e. g. "Adam van Vrede")
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function FullName() As String
             Return IIf(_AcademicTitle = "", "", _AcademicTitle & " ") & _
                 _FirstName & " " & _
@@ -1063,18 +893,9 @@ Namespace CompuMaster.camm.WebManager
                 Return FullName()
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The salutation name, e. g. "Dr. van Vrede"
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function SalutationNameOnly() As String
             Return IIf(_AcademicTitle = "", "", _AcademicTitle & " ") & _
                 IIf(_NameAddition = "", "", _NameAddition & " ") & _
@@ -1085,75 +906,37 @@ Namespace CompuMaster.camm.WebManager
                 Return SalutationNameOnly()
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Save this user information object with the default notifications
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Save()
             Save(_WebManager.DefaultNotifications)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Save this user information object
         ''' </summary>
         ''' <param name="Notifications">A notifications class which shall be used for messages to the user</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Save(ByVal Notifications As CompuMaster.camm.WebManager.WMNotifications)
             Save(Notifications, Nothing)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Save this user information object
         ''' </summary>
         ''' <param name="Notifications">A notifications class which shall be used for messages to the user</param>
         ''' <param name="NewPassword">The new password for the user</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Save(ByVal Notifications As CompuMaster.camm.WebManager.WMNotifications, ByVal NewPassword As String)
             _WebManager.System_SetUserInfo(Me, NewPassword, Notifications)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Save this user information object with the default notifications
         ''' </summary>
         ''' <param name="NewPassword">The new password for the user</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Save(ByVal NewPassword As String)
             Save(_WebManager.DefaultNotifications, NewPassword)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The general salutation for a person, e. g. "Mr. Bell" or "Dr. van Vrede"
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function Salutation() As String
             If _AcademicTitle = "" Then
                 'Ms./Mr. required
@@ -1172,18 +955,9 @@ Namespace CompuMaster.camm.WebManager
                 Return SalutationNameOnly()
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The salutation for mail purposes, e. g. "Dear Mr. van Vrede, " or "Dear Dr. van Vrede, "
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function SalutationInMails() As String
             If _AcademicTitle = "" Then
                 'Ms./Mr. required
@@ -1212,18 +986,9 @@ Namespace CompuMaster.camm.WebManager
                 End Select
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The salutation for mail purposes, e. g. "Hello Mr. Bell, " or "Hello Dr. van Vrede, "
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function SalutationUnformal() As String
             Select Case Me.Gender
                 Case Gender.Feminin
@@ -1236,18 +1001,10 @@ Namespace CompuMaster.camm.WebManager
                     return me._webmanager.internationalization.usermanagementsalutationunformalGroup & ", "
             End Select
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An optional academic title, typically 'Prof.' or 'Dr.'
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property AcademicTitle() As String
             Get
                 Return _AcademicTitle
@@ -1256,17 +1013,10 @@ Namespace CompuMaster.camm.WebManager
                 _AcademicTitle = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The street
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Street() As String
             Get
                 Return _Street
@@ -1275,17 +1025,10 @@ Namespace CompuMaster.camm.WebManager
                 _Street = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The zip code
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ZipCode() As String
             Get
                 Return _ZipCode
@@ -1294,17 +1037,10 @@ Namespace CompuMaster.camm.WebManager
                 _ZipCode = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The location or city
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Location() As String
             Get
                 Return _City
@@ -1313,17 +1049,10 @@ Namespace CompuMaster.camm.WebManager
                 _City = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The state in the country
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property State() As String
             Get
                 Return _State
@@ -1332,17 +1061,10 @@ Namespace CompuMaster.camm.WebManager
                 _State = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The country name 
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Country() As String
             Get
                 Return _Country
@@ -1351,17 +1073,10 @@ Namespace CompuMaster.camm.WebManager
                 _Country = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The primary preferred language or market
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property PreferredLanguage1() As LanguageInformation
             Get
                 If _PreferredLanguage1 Is Nothing Then
@@ -1374,17 +1089,10 @@ Namespace CompuMaster.camm.WebManager
                 _PreferredLanguage1ID = Value.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The second preferred language or market
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property PreferredLanguage2() As LanguageInformation
             Get
                 If _PreferredLanguage2 Is Nothing Then
@@ -1397,17 +1105,10 @@ Namespace CompuMaster.camm.WebManager
                 _PreferredLanguage2ID = Value.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The third preferred language or market
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property PreferredLanguage3() As LanguageInformation
             Get
                 If _PreferredLanguage3 Is Nothing Then
@@ -1420,17 +1121,10 @@ Namespace CompuMaster.camm.WebManager
                 _PreferredLanguage3ID = Value.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An additional pre-name, e. g. 'de' in the name 'Jean-Claude de Verheugen'
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property NameAddition() As String
             Get
                 Return _NameAddition
@@ -1439,17 +1133,10 @@ Namespace CompuMaster.camm.WebManager
                 _NameAddition = Utils.StringNotNothingOrEmpty(Value)
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The gender of the user
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Gender() As Sex
             Get
                     If _Sex = Sex.MissingNameOrGroupOfPersons OrElse _Sex = Sex.Undefined Then
@@ -1482,17 +1169,10 @@ Namespace CompuMaster.camm.WebManager
                 _Sex = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Login has been disabled
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property LoginDisabled() As Boolean
             Get
                 Return _LoginDisabled
@@ -1501,17 +1181,10 @@ Namespace CompuMaster.camm.WebManager
                 _LoginDisabled = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get/set the temporary lock state
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property LoginLockedTemporary() As Boolean
             Get
                 Return _LoginLockedTemporary
@@ -1530,33 +1203,19 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Login has been temporary locked till this date
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend ReadOnly Property LoginLockedTemporaryTill() As DateTime
             Get
                 Return _LoginLockedTemporaryTill
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Login has been deleted
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property LoginDeleted() As Boolean
             Get
                 Return _LoginDeleted
@@ -1565,17 +1224,10 @@ Namespace CompuMaster.camm.WebManager
                 _LoginDeleted = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The groups list where the user is member of
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Memberships() As CompuMaster.camm.WebManager.WMSystem.GroupInformation()
             Get
                 If _Memberships Is Nothing Then
@@ -1621,7 +1273,6 @@ Namespace CompuMaster.camm.WebManager
                 _Memberships = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Additional, optional flags
         ''' </summary>
@@ -1629,10 +1280,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Additional flags are typically used by applications which have to store some data in the user's profile
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property AdditionalFlags() As Collections.Specialized.NameValueCollection
             Get
                 If _PartiallyLoadedDataCurrently Then
@@ -1644,17 +1291,10 @@ Namespace CompuMaster.camm.WebManager
                 _AdditionalFlags = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The access level role of the user
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property AccessLevel() As AccessLevelInformation
             Get
                 If _AccessLevel Is Nothing Then
@@ -1667,17 +1307,10 @@ Namespace CompuMaster.camm.WebManager
                 _AccessLevelID = Value.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Indicates if the e-mail address has already been validated
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property AccountProfileValidatedByEMailTest() As Boolean
             Get
                 If _PartiallyLoadedDataCurrently Then
@@ -1692,18 +1325,11 @@ Namespace CompuMaster.camm.WebManager
                 _AccountProfileValidatedByEMailTest = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Add a membership to a user group
         ''' </summary>
         ''' <param name="GroupID">The group ID</param>
         ''' <param name="Notifications">A notification class which contains the e-mail templates which might be sent</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub AddMembership(ByVal GroupID As Integer, Optional ByVal Notifications As WMNotifications = Nothing)
 
             If _ID = SpecialUsers.User_Anonymous OrElse _ID = SpecialUsers.User_Public OrElse _ID = SpecialUsers.User_Code OrElse _ID = SpecialUsers.User_UpdateProcessor Then
@@ -1765,17 +1391,10 @@ Namespace CompuMaster.camm.WebManager
             _Memberships = Nothing
 
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Remove a membership
         ''' </summary>
         ''' <param name="GroupID">The group ID the user shall not be member of any more</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub RemoveMembership(ByVal GroupID As Integer)
 
             If _ID = SpecialUsers.User_Anonymous OrElse _ID = SpecialUsers.User_Public OrElse _ID = SpecialUsers.User_Code OrElse _ID = SpecialUsers.User_UpdateProcessor Then
@@ -1809,18 +1428,10 @@ Namespace CompuMaster.camm.WebManager
             _Memberships = Nothing
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An external account relation
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ExternalAccount() As String
             Get
                 Return _ExternalAccount
@@ -1834,12 +1445,6 @@ Namespace CompuMaster.camm.WebManager
     ''' <summary>
     '''     Language details
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class LanguageInformation
         Dim _WebManager As WMSystem
         Dim _ID As Integer
@@ -1889,33 +1494,19 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Try
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The market/language ID
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property ID() As Integer
             Get
                 Return _ID
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The name of the market/language in English language
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property LanguageName_English() As String
             Get
                 Return _LanguageName_English
@@ -1924,17 +1515,10 @@ Namespace CompuMaster.camm.WebManager
                 _LanguageName_English = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The name of the market/language in its own language
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property LanguageName_OwnLanguage() As String
             Get
                 Return _LanguageName_OwnLanguage
@@ -1943,17 +1527,10 @@ Namespace CompuMaster.camm.WebManager
                 _LanguageName_OwnLanguage = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Market/language has been activated for use in camm Web-Manager
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property IsActive() As Boolean
             Get
                 Return _IsActive
@@ -1962,17 +1539,10 @@ Namespace CompuMaster.camm.WebManager
                 _IsActive = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An optional browser ID for the culture
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property BrowserLanguageID() As String
             Get
                 Return _BrowserLanguageID
@@ -1981,17 +1551,10 @@ Namespace CompuMaster.camm.WebManager
                 _BrowserLanguageID = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An optional abbreviation name for the language
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Abbreviation() As String
             Get
                 Return _Abbreviation
@@ -2000,7 +1563,6 @@ Namespace CompuMaster.camm.WebManager
                 _Abbreviation = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An optional alternative language, regulary present for market identifiers
         ''' </summary>
@@ -2011,10 +1573,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <example>
         '''     For 'English (US)' as well as 'English (GB)', there is the alternative language 'English'.
         ''' </example>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property AlternativeLanguageInfo() As LanguageInformation
             Get
                 Return New LanguageInformation(_WebManager.Internationalization.GetAlternativelySupportedLanguageID(_ID), _WebManager)
@@ -2028,10 +1586,6 @@ Namespace CompuMaster.camm.WebManager
     ''' <remarks>
     '''     Access levels are user roles defining the availability of the existant server groups for the user
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class AccessLevelInformation
         Dim _WebManager As WMSystem
         Dim _ID As Integer
@@ -2068,33 +1622,19 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Try
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The ID value for this access level role
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property ID() As Integer
             Get
                 Return _ID
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The title for this access level role
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Title() As String
             Get
                 Return _Title
@@ -2103,17 +1643,10 @@ Namespace CompuMaster.camm.WebManager
                 _Title = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Some optional remarks on this role
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Remarks() As String
             Get
                 Return _Remarks
@@ -2122,17 +1655,10 @@ Namespace CompuMaster.camm.WebManager
                 _Remarks = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A list of server groups which are accessable by this role
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ServerGroups() As ServerGroupInformation()
             Get
                 If _ServerGroups Is Nothing Then
@@ -2144,17 +1670,10 @@ Namespace CompuMaster.camm.WebManager
                 _ServerGroups = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A list of users which are assigned to this role
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Users() As UserInformation()
             Get
                 If _Users Is Nothing Then
@@ -2225,12 +1744,6 @@ Namespace CompuMaster.camm.WebManager
     ''' <summary>
     '''     Group information
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class GroupInformation
         Dim _WebManager As WMSystem
         Dim _ID As Integer
@@ -2275,17 +1788,10 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Try
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The ID value for this group
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property ID() As Integer
             Get
                 Return _ID
@@ -2299,17 +1805,10 @@ Namespace CompuMaster.camm.WebManager
                 _Name = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The title for this user group
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Name() As String
             Get
                 Return _Name
@@ -2318,17 +1817,10 @@ Namespace CompuMaster.camm.WebManager
                 _Name = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An optional description 
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Description() As String
             Get
                 Return _Description
@@ -2337,17 +1829,10 @@ Namespace CompuMaster.camm.WebManager
                 _Description = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Indicates wether this group is a system group (e. g. Security Administration)
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property IsSystemGroup() As Boolean
             Get
                 Return _IsSystemGroup
@@ -2356,17 +1841,10 @@ Namespace CompuMaster.camm.WebManager
                 _IsSystemGroup = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A list of members
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Members() As CompuMaster.camm.WebManager.WMSystem.UserInformation()
             Get
                 If _Members Is Nothing Then
@@ -2432,18 +1910,11 @@ Namespace CompuMaster.camm.WebManager
                 _Members = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Add a new user to the list of members
         ''' </summary>
         ''' <param name="UserInfo">The new user</param>
         ''' <param name="Notifications">A notification class which can be user for sending messages to the user</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub AddMember(ByRef UserInfo As UserInformation, Optional ByVal Notifications As WMNotifications = Nothing)
 
             If UserInfo.ID = SpecialUsers.User_Anonymous OrElse UserInfo.ID = SpecialUsers.User_Public OrElse UserInfo.ID = SpecialUsers.User_UpdateProcessor OrElse UserInfo.ID = SpecialUsers.User_Code Then
@@ -2504,33 +1975,19 @@ Namespace CompuMaster.camm.WebManager
             _Members = Nothing
 
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Add a new user to the list of members
         ''' </summary>
         ''' <param name="UserID">The ID value of the new user</param>
         ''' <param name="Notifications">A notification class which can be user for sending messages to the user</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete()> Public Sub AddMember(ByVal UserID As Integer, Optional ByVal Notifications As WMNotifications = Nothing)
             AddMember(CLng(UserID), Notifications)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Add a new user to the list of members
         ''' </summary>
         ''' <param name="UserID">The ID value of the new user</param>
         ''' <param name="Notifications">A notification class which can be user for sending messages to the user</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub AddMember(ByVal UserID As Long, Optional ByVal Notifications As WMNotifications = Nothing)
 
             If UserID = SpecialUsers.User_Anonymous OrElse UserID = SpecialUsers.User_Public OrElse UserID = SpecialUsers.User_Code OrElse UserID = SpecialUsers.User_UpdateProcessor Then
@@ -2543,31 +2000,17 @@ Namespace CompuMaster.camm.WebManager
             AddMember(New CompuMaster.camm.WebManager.WMSystem.UserInformation(UserID, _WebManager), Notifications)
 
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Remove a user from the list of members
         ''' </summary>
         ''' <param name="UserID">The ID value of the user</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete()> Public Sub RemoveMember(ByVal UserID As Integer)
             RemoveMember(CLng(UserID))
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Remove a user from the list of members
         ''' </summary>
         ''' <param name="UserID">The ID value of the user</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub RemoveMember(ByVal UserID As Long)
 
             If UserID = SpecialUsers.User_Anonymous OrElse UserID = SpecialUsers.User_Public OrElse UserID = SpecialUsers.User_Code OrElse UserID = SpecialUsers.User_UpdateProcessor Then
@@ -2606,12 +2049,6 @@ Namespace CompuMaster.camm.WebManager
     ''' <summary>
     '''     Server group information
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class ServerGroupInformation
         Dim _WebManager As WMSystem
         Dim _ID As Integer
@@ -2690,28 +2127,15 @@ Namespace CompuMaster.camm.WebManager
         '''     The ID value of this server group
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property ID() As Integer
             Get
                 Return _ID
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The common title of this server group
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Title() As String
             Get
                 Return _Title
@@ -2720,17 +2144,10 @@ Namespace CompuMaster.camm.WebManager
                 _Title = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The title of this server group in a shorter name, often used for the navigation bars
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property NavTitle() As String
             Get
                 If _NavTitle <> "" Then
@@ -2743,17 +2160,10 @@ Namespace CompuMaster.camm.WebManager
                 _NavTitle = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The official website title of the company, typically used for the link/logo from the extranet to the internet website
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property OfficialCompanyWebSiteTitle() As String
             Get
                 Return _OfficialCompanyWebSiteTitle
@@ -2762,17 +2172,10 @@ Namespace CompuMaster.camm.WebManager
                 _OfficialCompanyWebSiteTitle = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The official website address of the company, typically used for the link/logo from the extranet to the internet website
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property OfficialCompanyWebSiteURL() As String
             Get
                 Return _OfficialCompanyWebSiteURL
@@ -2781,17 +2184,10 @@ Namespace CompuMaster.camm.WebManager
                 _OfficialCompanyWebSiteURL = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The company title, e. g. 'YourCompany'
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property CompanyTitle() As String
             Get
                 Return _CompanyTitle
@@ -2800,17 +2196,10 @@ Namespace CompuMaster.camm.WebManager
                 _CompanyTitle = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The official company title, e. g. 'YourCompany Ltd.'
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property CompanyFormerTitle() As String
             Get
                 Return _CompanyFormerTitle
@@ -2819,17 +2208,10 @@ Namespace CompuMaster.camm.WebManager
                 _CompanyFormerTitle = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The ID value for the group of registered users
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property GroupPublic() As CompuMaster.camm.WebManager.WMSystem.GroupInformation
             Get
                 If _GroupPublic Is Nothing Then
@@ -2842,17 +2224,10 @@ Namespace CompuMaster.camm.WebManager
                 _GroupPublicID = Value.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The ID value for the group of unregistered users
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property GroupAnonymous() As CompuMaster.camm.WebManager.WMSystem.GroupInformation
             Get
                 If _GroupAnonymous Is Nothing Then
@@ -2865,17 +2240,10 @@ Namespace CompuMaster.camm.WebManager
                 _GroupAnonymousID = Value.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The master server which is the primary handler for all login requests
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property MasterServer() As ServerInformation
             Get
                 If _MasterServer Is Nothing Then
@@ -2888,7 +2256,6 @@ Namespace CompuMaster.camm.WebManager
                 _MasterServerID = Value.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A reference to an administration server
         ''' </summary>
@@ -2896,10 +2263,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     This administration server can be part of another servergroup. This allows you to remove any administration possibilities from your untrusted extranet and to only allow user administration on a server in your intranet.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property AdminServer() As ServerInformation
             Get
                 If _AdminServer Is Nothing Then
@@ -2912,17 +2275,10 @@ Namespace CompuMaster.camm.WebManager
                 _AdminServerID = Value.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The default access level role for all users who register themselves in this server group
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property AccessLevelDefault() As AccessLevelInformation
             Get
                 If _AccessLevelDefault Is Nothing Then
@@ -2935,17 +2291,10 @@ Namespace CompuMaster.camm.WebManager
                 _AccessLevelDefaultID = Value.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A list of attached servers to this server group
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Servers() As ServerInformation()
             Get
                 If _Servers Is Nothing Then
@@ -2962,12 +2311,6 @@ Namespace CompuMaster.camm.WebManager
     ''' <summary>
     '''     Server information
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class ServerInformation
         Dim _WebManager As WMSystem
         Dim _ID As Integer
@@ -3004,17 +2347,10 @@ Namespace CompuMaster.camm.WebManager
             Dim ServerID As Integer = _WebManager.System_GetServerID(ServerIP)
             LoadServerInfoFromDatabase(ServerID)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load server information from database
         ''' </summary>
         ''' <param name="ServerID">A server ID</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub LoadServerInfoFromDatabase(ByVal ServerID As Integer)
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As New SqlCommand("select * from system_servers where id = @ID", MyConn)
@@ -3050,23 +2386,15 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Try
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The ID value of this server
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property ID() As Integer
             Get
                 Return _ID
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The server identification string
         ''' </summary>
@@ -3074,10 +2402,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Typically, this is either an IP address or a host header name. This value can hold any ID, you only have to ensure that the server tries to login with that server identification string again. This can be set up in the web.config file or in /sysdata/config.*
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property IPAddressOrHostHeader() As String
             Get
                 Return _IP_Or_HostHeader
@@ -3086,17 +2410,10 @@ Namespace CompuMaster.camm.WebManager
                 _IP_Or_HostHeader = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The protocol name for the server, http or https
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property URL_Protocol() As String
             Get
                 Return _URL_Protocol
@@ -3105,17 +2422,10 @@ Namespace CompuMaster.camm.WebManager
                 _URL_Protocol = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The domain name this server is available at
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property URL_DomainName() As String
             Get
                 Return _URL_DomainName
@@ -3124,17 +2434,10 @@ Namespace CompuMaster.camm.WebManager
                 _URL_DomainName = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An optional port information if it's not the default port
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property URL_Port() As String
             Get
                 Return _URL_Port
@@ -3143,17 +2446,9 @@ Namespace CompuMaster.camm.WebManager
                 _URL_Port = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The server URL without trailing slash, e. g. http://www.yourcompany:8080
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ServerURL() As String
             Dim Field_ServerAddress As String
             Field_ServerAddress = _URL_Protocol & "://" & _URL_DomainName
@@ -3162,17 +2457,10 @@ Namespace CompuMaster.camm.WebManager
             End If
             Return Field_ServerAddress
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is this server activated?
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Enabled() As Boolean
             Get
                 Return _Enabled
@@ -3181,17 +2469,10 @@ Namespace CompuMaster.camm.WebManager
                 _Enabled = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An optional description for this server
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Description() As String
             Get
                 Return _Description
@@ -3200,17 +2481,10 @@ Namespace CompuMaster.camm.WebManager
                 _Description = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The parent server group where this server is assigned to
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ParentServerGroup() As ServerGroupInformation
             Get
                 If _ParentServerGroup Is Nothing Then
@@ -3223,17 +2497,10 @@ Namespace CompuMaster.camm.WebManager
                 _ParentServerGroupID = Value.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A session timeout value
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ServerSessionTimeout() As Integer
             Get
                 Return _ServerSessionTimeout
@@ -3242,17 +2509,10 @@ Namespace CompuMaster.camm.WebManager
                 _ServerSessionTimeout = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A timeout value how fast temporary locked users can logon again
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ServerUserlockingsTimeout() As Integer
             Get
                 Return _ServerUserlockingsTimeout
@@ -3266,12 +2526,6 @@ Namespace CompuMaster.camm.WebManager
     ''' <summary>
     '''     Authorizations
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class Authorizations
         Dim _WebManager As WMSystem
         Dim _SecurityObjectID As Integer
@@ -3280,12 +2534,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     An authorization for an user group
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class GroupAuthorizationInformation
             Dim _WebManager As WMSystem
             Dim _ID As Integer
@@ -3302,17 +2550,10 @@ Namespace CompuMaster.camm.WebManager
                 _GroupID = GroupID
                 _ServerGroupID = ServerGroupID
             End Sub
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The ID value for this authorization item
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property ID() As Integer
                 Get
                     Return _ID
@@ -3321,17 +2562,10 @@ Namespace CompuMaster.camm.WebManager
                     _ID = Value
                 End Set
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The security object which is pointed by this authorization
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property SecurityObjectInfo() As SecurityObjectInformation
                 Get
                     If _SecurityObjectInfo Is Nothing Then
@@ -3340,17 +2574,10 @@ Namespace CompuMaster.camm.WebManager
                     Return _SecurityObjectInfo
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A user group which has been authorized
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property GroupInfo() As CompuMaster.camm.WebManager.WMSystem.GroupInformation
                 Get
                     If _GroupInfo Is Nothing Then
@@ -3359,17 +2586,10 @@ Namespace CompuMaster.camm.WebManager
                     Return _GroupInfo
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A server group where this authorization shall take effect
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property ServerGroupInfo() As ServerGroupInformation
                 Get
                     If _ServerGroupInfo Is Nothing Then
@@ -3383,44 +2603,24 @@ Namespace CompuMaster.camm.WebManager
             '''     The ID value of the user group
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property GroupID() As Integer
                 Get
                     Return _GroupID
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The ID value of the targetted security object
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property SecurityObjectID() As Integer
                 Get
                     Return _SecurityObjectID
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The ID value of the effected server group
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property ServerGroupID() As Integer
                 Get
                     Return _ServerGroupID
@@ -3445,12 +2645,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     An authorization for an user
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class UserAuthorizationInformation
             Dim _WebManager As WMSystem
             Dim _ID As Integer
@@ -3469,17 +2663,10 @@ Namespace CompuMaster.camm.WebManager
                 _ServerGroupID = ServerGroupID
                 _AlsoVisibleIfDisabled = AlsoVisibleIfDisabled
             End Sub
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The ID value for this authorization item
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property ID() As Integer
                 Get
                     Return _ID
@@ -3488,7 +2675,6 @@ Namespace CompuMaster.camm.WebManager
                     _ID = Value
                 End Set
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Is the user allowed to see and access the link to this security object application even if the security object hasn't been activated?
             ''' </summary>
@@ -3496,10 +2682,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             '''     Often, developers need access to test their new applcations before they can go live
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property AlsoVisibleIfDisabled() As Boolean
                 Get
                     Return _AlsoVisibleIfDisabled
@@ -3508,17 +2690,10 @@ Namespace CompuMaster.camm.WebManager
                     _AlsoVisibleIfDisabled = Value
                 End Set
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A security object which is pointed by this authorization 
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property SecurityObjectInfo() As SecurityObjectInformation
                 Get
                     If _SecurityObjectInfo Is Nothing Then
@@ -3527,17 +2702,10 @@ Namespace CompuMaster.camm.WebManager
                     Return _SecurityObjectInfo
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The user which has got the authorization
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property UserInfo() As UserInformation
                 Get
                     If _UserInfo Is Nothing Then
@@ -3546,17 +2714,10 @@ Namespace CompuMaster.camm.WebManager
                     Return _UserInfo
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The server group where this authorization shall take effect
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property ServerGroupInfo() As ServerGroupInformation
                 Get
                     If _ServerGroupInfo Is Nothing Then
@@ -3565,49 +2726,28 @@ Namespace CompuMaster.camm.WebManager
                     Return _ServerGroupInfo
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The user which has got the authorization
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property UserID() As Integer
                 Get
                     Return _UserID
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A security object which is pointed by this authorization 
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property SecurityObjectID() As Integer
                 Get
                     Return _SecurityObjectID
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The server group where this authorization shall take effect
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property ServerGroupID() As Integer
                 Get
                     Return _ServerGroupID
@@ -4219,12 +3359,6 @@ Namespace CompuMaster.camm.WebManager
     ''' <summary>
     '''     Security object information
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class SecurityObjectInformation
         Dim _WebManager As WMSystem
         Dim _ID As Integer
@@ -4316,34 +3450,19 @@ Namespace CompuMaster.camm.WebManager
             _Remarks = Remarks
             _SystemType = SystemType
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The ID value for this security object
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property ID() As Integer
             Get
                 Return _ID
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The name of this security object
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Name() As String
             Get
                 Return _Name
@@ -4352,17 +3471,10 @@ Namespace CompuMaster.camm.WebManager
                 _Name = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A display title for this security object in the administration forms
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property DisplayName() As String
             Get
                 If _DisplayName = "" Then
@@ -4380,17 +3492,10 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A system type value, not set in standard scenarios
         ''' </summary>
         ''' <value>Nothing for normal items, 1 for master server items, 2 for administration server items, negative values for custom values</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property SystemType() As Integer
             Get
                 Return _SystemType
@@ -4399,17 +3504,10 @@ Namespace CompuMaster.camm.WebManager
                 _SystemType = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is this an inactive security object?
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Disabled() As Boolean
             Get
                 Return _Disabled
@@ -4418,17 +3516,10 @@ Namespace CompuMaster.camm.WebManager
                 _Disabled = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Has this security object been deleted?
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Deleted() As Boolean
             Get
                 Return _Deleted
@@ -4437,17 +3528,10 @@ Namespace CompuMaster.camm.WebManager
                 _Deleted = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Authorizations are inherited by another security object
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property InheritFrom_SecurityObjectID() As Integer
             Get
                 Return _InheritFrom_SecurityObjectID
@@ -4457,17 +3541,10 @@ Namespace CompuMaster.camm.WebManager
                 _InheritFrom_SecurityObjectInfo = Nothing
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Authorizations are inherited by another security object
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property InheritFrom_SecurityObjectInfo() As SecurityObjectInformation
             Get
                 If _InheritFrom_SecurityObjectInfo Is Nothing Then
@@ -4480,17 +3557,10 @@ Namespace CompuMaster.camm.WebManager
                 _InheritFrom_SecurityObjectID = _InheritFrom_SecurityObjectInfo.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Last modification by this user
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ModifiedBy_UserID() As Integer
             Get
                 Return _ModifiedBy_UserID
@@ -4500,17 +3570,10 @@ Namespace CompuMaster.camm.WebManager
                 _ModifiedBy_UserInfo = Nothing
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Last modification by this user
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ModifiedBy_UserInfo() As UserInformation
             Get
                 If _ModifiedBy_UserInfo Is Nothing Then
@@ -4523,17 +3586,10 @@ Namespace CompuMaster.camm.WebManager
                 _ModifiedBy_UserID = _ModifiedBy_UserInfo.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The date and time of the last modification
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ModifiedOn() As DateTime
             Get
                 Return _ModifiedOn
@@ -4542,17 +3598,10 @@ Namespace CompuMaster.camm.WebManager
                 _ModifiedOn = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The release has been done by this user
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ReleasedBy_UserID() As Integer
             Get
                 Return _ReleasedBy_UserID
@@ -4562,17 +3611,10 @@ Namespace CompuMaster.camm.WebManager
                 _ReleasedBy_UserInfo = Nothing
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The release has been done by this user
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ReleasedBy_UserInfo() As UserInformation
             Get
                 If _ReleasedBy_UserInfo Is Nothing Then
@@ -4585,17 +3627,10 @@ Namespace CompuMaster.camm.WebManager
                 _ReleasedBy_UserID = _ReleasedBy_UserInfo.ID
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The release has been done on this date/time
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ReleasedOn() As DateTime
             Get
                 Return _ReleasedOn
@@ -4604,17 +3639,10 @@ Namespace CompuMaster.camm.WebManager
                 _ReleasedOn = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Comments to this security object
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Remarks() As String
             Get
                 Return _Remarks
@@ -4639,12 +3667,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Server group information
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class ServerGroupInformation
             Inherits CompuMaster.camm.WebManager.ServerGroupInformation
 
@@ -4659,12 +3681,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Server information
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class ServerInformation
             Inherits CompuMaster.camm.WebManager.ServerInformation
 
@@ -4683,12 +3699,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Authorizations
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class Authorizations
             Inherits CompuMaster.camm.WebManager.Authorizations
 
@@ -4701,12 +3711,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Security object information
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class SecurityObjectInformation
             Inherits CompuMaster.camm.WebManager.SecurityObjectInformation
 
@@ -4725,14 +3729,8 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     This class contains all information of a user profile as well as all important methods for handling of that account
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class UserInformation
             Inherits CompuMaster.camm.WebManager.UserInformation
-
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Create a new user profile
             ''' </summary>
@@ -4760,17 +3758,9 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="WebManager">The current instance of camm Web-Manager</param>
             ''' <param name="ExternalAccount">An external account relation for single-sign-on purposes</param>
             ''' <param name="AdditionalFlags">A collection of additional flags which are saved in the user's profile</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	07.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             <Obsolete()> Public Sub New(ByVal UserID As Integer, ByVal LoginName As String, ByVal EMailAddress As String, ByVal Company As String, ByVal Sex As Sex, ByVal NameAddition As String, ByVal FirstName As String, ByVal LastName As String, ByVal AcademicTitle As String, ByVal Street As String, ByVal ZipCode As String, ByVal City As String, ByVal State As String, ByVal Country As String, ByVal PreferredLanguage1ID As Integer, ByVal PreferredLanguage2ID As Integer, ByVal PreferredLanguage3ID As Integer, ByVal LoginDisabled As Boolean, ByVal LoginLockedTemporary As Boolean, ByVal LoginDeleted As Boolean, ByVal AccessLevelID As Integer, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, ByVal ExternalAccount As String, Optional ByVal AdditionalFlags As Collections.Specialized.NameValueCollection = Nothing)
                 MyBase.New(CLng(UserID), LoginName, EMailAddress, False, Company, Sex, NameAddition, FirstName, LastName, AcademicTitle, Street, ZipCode, City, State, Country, PreferredLanguage1ID, PreferredLanguage2ID, PreferredLanguage3ID, LoginDisabled, LoginLockedTemporary, LoginDeleted, AccessLevelID, WebManager, ExternalAccount, AdditionalFlags)
             End Sub
-
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Create a new user profile
             ''' </summary>
@@ -4798,16 +3788,9 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="__reserved">Obsolete parameter</param>
             ''' <param name="WebManager">The current instance of camm Web-Manager</param>
             ''' <param name="AdditionalFlags">A collection of additional flags which are saved in the user's profile</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	07.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             <Obsolete("use overloaded method instead")> Public Sub New(ByVal UserID As Integer, ByVal LoginName As String, ByVal EMailAddress As String, ByVal Company As String, ByVal Sex As Sex, ByVal NameAddition As String, ByVal FirstName As String, ByVal LastName As String, ByVal AcademicTitle As String, ByVal Street As String, ByVal ZipCode As String, ByVal City As String, ByVal State As String, ByVal Country As String, ByVal PreferredLanguage1ID As Integer, ByVal PreferredLanguage2ID As Integer, ByVal PreferredLanguage3ID As Integer, ByVal LoginDisabled As Boolean, ByVal LoginLockedTemporary As Boolean, ByVal LoginDeleted As Boolean, ByVal AccessLevelID As Integer, ByVal __reserved As Boolean, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, Optional ByVal AdditionalFlags As Collections.Specialized.NameValueCollection = Nothing)
                 Me.New(CLng(UserID), LoginName, EMailAddress, False, Company, Sex, NameAddition, FirstName, LastName, AcademicTitle, Street, ZipCode, City, State, Country, PreferredLanguage1ID, PreferredLanguage2ID, PreferredLanguage3ID, LoginDisabled, LoginLockedTemporary, LoginDeleted, AccessLevelID, WebManager, Nothing, AdditionalFlags)
             End Sub
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Load a user profile from the system database
             ''' </summary>
@@ -4822,14 +3805,9 @@ Namespace CompuMaster.camm.WebManager
             '''         <item>LoginLockedTemporary</item>
             '''     </list>
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	07.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             <Obsolete()> Public Sub New(ByVal UserID As Integer, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, Optional ByVal SearchForDeletedAccountsAsWell As Boolean = False)
                 MyBase.New(CLng(UserID), WebManager, SearchForDeletedAccountsAsWell)
             End Sub
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Create a new user profile
             ''' </summary>
@@ -4858,16 +3836,9 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="WebManager">The current instance of camm Web-Manager</param>
             ''' <param name="ExternalAccount">An external account relation for single-sign-on purposes</param>
             ''' <param name="AdditionalFlags">A collection of additional flags which are saved in the user's profile</param>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	07.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Sub New(ByVal UserID As Long, ByVal LoginName As String, ByVal EMailAddress As String, ByVal AutomaticLogonAllowedByMachineToMachineCommunication As Boolean, ByVal Company As String, ByVal Sex As Sex, ByVal NameAddition As String, ByVal FirstName As String, ByVal LastName As String, ByVal AcademicTitle As String, ByVal Street As String, ByVal ZipCode As String, ByVal City As String, ByVal State As String, ByVal Country As String, ByVal PreferredLanguage1ID As Integer, ByVal PreferredLanguage2ID As Integer, ByVal PreferredLanguage3ID As Integer, ByVal LoginDisabled As Boolean, ByVal LoginLockedTemporary As Boolean, ByVal LoginDeleted As Boolean, ByVal AccessLevelID As Integer, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, ByVal ExternalAccount As String, Optional ByVal AdditionalFlags As Collections.Specialized.NameValueCollection = Nothing)
                 MyBase.New(UserID, LoginName, EMailAddress, AutomaticLogonAllowedByMachineToMachineCommunication, Company, Sex, NameAddition, FirstName, LastName, AcademicTitle, Street, ZipCode, City, State, Country, PreferredLanguage1ID, PreferredLanguage2ID, PreferredLanguage3ID, LoginDisabled, LoginLockedTemporary, LoginDeleted, AccessLevelID, WebManager, ExternalAccount, AdditionalFlags)
             End Sub
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Load a user profile from the system database
             ''' </summary>
@@ -4882,10 +3853,6 @@ Namespace CompuMaster.camm.WebManager
             '''         <item>LoginLockedTemporary</item>
             '''     </list>
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminwezel]	07.07.2004	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Sub New(ByVal UserID As Long, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem, Optional ByVal SearchForDeletedAccountsAsWell As Boolean = False)
                 MyBase.New(UserID, WebManager, SearchForDeletedAccountsAsWell)
             End Sub
@@ -4895,12 +3862,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Language details
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class LanguageInformation
             Inherits CompuMaster.camm.WebManager.LanguageInformation
 
@@ -4918,10 +3879,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Access levels are user roles defining the availability of the existant server groups for the user
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class AccessLevelInformation
             Dim _WebManager As WMSystem
             Dim _ID As Integer
@@ -4958,33 +3915,19 @@ Namespace CompuMaster.camm.WebManager
                     End If
                 End Try
             End Sub
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The ID value for this access level role
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public ReadOnly Property ID() As Integer
                 Get
                     Return _ID
                 End Get
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     The title for this access level role
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property Title() As String
                 Get
                     Return _Title
@@ -4993,17 +3936,10 @@ Namespace CompuMaster.camm.WebManager
                     _Title = Value
                 End Set
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Some optional remarks on this role
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property Remarks() As String
                 Get
                     Return _Remarks
@@ -5012,17 +3948,10 @@ Namespace CompuMaster.camm.WebManager
                     _Remarks = Value
                 End Set
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A list of server groups which are accessable by this role
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property ServerGroups() As ServerGroupInformation()
                 Get
                     If _ServerGroups Is Nothing Then
@@ -5034,17 +3963,10 @@ Namespace CompuMaster.camm.WebManager
                     _ServerGroups = Value
                 End Set
             End Property
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A list of users which are assigned to this role
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	18.02.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property Users() As UserInformation()
                 Get
                     If _Users Is Nothing Then
@@ -5115,12 +4037,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Group information
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class GroupInformation
             Inherits CompuMaster.camm.WebManager.GroupInformation
 

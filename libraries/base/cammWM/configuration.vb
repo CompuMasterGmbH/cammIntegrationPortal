@@ -566,7 +566,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Maximum download size for a file collection (e. g. several single files delivered in a ZIP archive)
         ''' </summary>
         ''' <value>Defaults to 4 MB or at least the same value as DownloadHandlerMaxFileSize</value>
-        ''' <returns></returns>
         ''' <remarks>
         ''' <para>The collection size has got a maximum value, too. This ensures that ZIP archives (which are created on the fly for delivering several single files in 1 download) aren't without size limits.</para>
         ''' <seealso cref="DownloadHandlerMaxFileSize" />
@@ -581,7 +580,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Maximum file download size 
         ''' </summary>
         ''' <value>Defaults to 4 MB</value>
-        ''' <returns></returns>
         ''' <remarks>This value ensures that downloads aren't without any size limits. A typical value for most cases is 4 MB, but you can increase/decrease the value for your requirements.
         ''' <seealso cref="DownloadHandlerMaxFileCollectionSize" />
         ''' </remarks>

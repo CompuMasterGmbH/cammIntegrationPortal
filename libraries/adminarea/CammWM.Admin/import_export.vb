@@ -17,8 +17,6 @@ Namespace CompuMaster.camm.WebManager.Administration
     ''' <summary>
     '''     Export of data
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Class Export
 
         Public Shared Sub SendExportFileAsCsv(ByVal webmanager As WMSystem, ByVal data As DataTable)
@@ -50,19 +48,12 @@ Namespace CompuMaster.camm.WebManager.Administration
         End Sub
 
 #Region "Memberships"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A table with all group memberships of the requested user
         ''' </summary>
         ''' <param name="webmanager">An instance of a valid camm Web-Manager</param>
         ''' <param name="userID">The requested user ID</param>
         ''' <returns>A data table containing groups and users information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function MembershipsOfUser(ByVal webmanager As WMSystem, ByVal userID As Long) As DataTable
 
             Dim uInfo As New CompuMaster.camm.WebManager.WMSystem.UserInformation(userID, webmanager)
@@ -78,40 +69,23 @@ Namespace CompuMaster.camm.WebManager.Administration
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A table with all users of the requested user group
         ''' </summary>
         ''' <param name="webmanager">An instance of a valid camm Web-Manager</param>
         ''' <param name="groupID">The requested user group ID</param>
         ''' <returns>A data table containing groups and users information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function MembersOfGroup(ByVal webmanager As WMSystem, ByVal groupID As Integer) As DataTable
 
             Return MembersOfGroup(webmanager, groupID, True)
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A table with active/ all users of the requested user group
         ''' </summary>
         ''' <param name="webmanager"></param>
         ''' <param name="groupID"></param>
         ''' <param name="includeDisabledUsers"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	24.05.2012	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function MembersOfGroup(ByVal webmanager As WMSystem, ByVal groupID As Integer, ByVal includeDisabledUsers As Boolean) As DataTable
 
             Dim gInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(groupID, webmanager)
@@ -137,20 +111,12 @@ Namespace CompuMaster.camm.WebManager.Administration
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Attach one line to the output table
         ''' </summary>
         ''' <param name="memberships">The output table</param>
         ''' <param name="groupInfo">One group information object</param>
         ''' <param name="userInfo">One user information object</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Sub MembershipsTableAddRow(ByVal memberships As DataTable, ByVal groupInfo As CompuMaster.camm.WebManager.WMSystem.GroupInformation, ByVal userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation, isDenyRule As Boolean)
 
             'parameter validation
@@ -209,19 +175,10 @@ Namespace CompuMaster.camm.WebManager.Administration
             memberships.Rows.Add(newRow)
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create an empty datatable for output
         ''' </summary>
         ''' <param name="tableName"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function MembershipsTableCreate(ByVal tableName As String) As DataTable
 
             Dim Result As New DataTable(tableName)
@@ -277,20 +234,11 @@ Namespace CompuMaster.camm.WebManager.Administration
         Public Shared Function AuthorizationsOfGroup(ByVal webmanager As WMSystem, ByVal groupID As Integer) As DataTable
             Throw New NotImplementedException("ToDo: implementatation of AuthorizationsOfGroup")
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load the list of directly and inherited authorizations for a security object
         ''' </summary>
         ''' <param name="webmanager"></param>
         ''' <param name="securityObjectID"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function AuthorizedGroupsAndPersons(ByVal webmanager As WMSystem, ByVal securityObjectID As Integer, ByVal alsoQueryInheritedAuthorizations As Boolean) As DataTable
 
             'Dim soInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(securityObjectID, webmanager)
@@ -363,8 +311,6 @@ Namespace CompuMaster.camm.WebManager.Administration
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Attach one line to the output table
         ''' </summary>
@@ -374,12 +320,6 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' <param name="userInfo">One user information object</param>
         ''' <param name="serverGroupInfo"></param>
         ''' <param name="isInherited"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Sub AuthorizationsTableAddRow(ByVal authorizations As DataTable, ByVal securityObjectInfo As WMSystem.SecurityObjectInformation, ByVal groupInfo As CompuMaster.camm.WebManager.WMSystem.GroupInformation, ByVal userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation, ByVal serverGroupInfo As CompuMaster.camm.WebManager.WMSystem.ServerGroupInformation, ByVal isInherited As Boolean)
 
             'parameter validation
@@ -451,19 +391,10 @@ Namespace CompuMaster.camm.WebManager.Administration
             authorizations.Rows.Add(newRow)
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create an empty datatable for output
         ''' </summary>
         ''' <param name="tableName"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function AuthorizationsTableCreate(ByVal tableName As String) As DataTable
 
             Dim Result As New DataTable(tableName)
@@ -519,40 +450,23 @@ Namespace CompuMaster.camm.WebManager.Administration
 #End Region
 
 #Region "Users"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A table with all users of the requested user group
         ''' </summary>
         ''' <param name="webmanager">An instance of a valid camm Web-Manager</param>
         ''' <param name="userInfos">The requested users</param>
         ''' <returns>A data table containing groups and users information</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function Users(ByVal webmanager As WMSystem, ByVal userInfos As CompuMaster.camm.WebManager.WMSystem.UserInformation()) As DataTable
 
             Return Users(webmanager, userInfos, True)
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A table with active/ all users of the requested user group
         ''' </summary>
         ''' <param name="webmanager"></param>
         ''' <param name="userInfos"></param>
         ''' <param name="includeDisabledUsers"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	24.05.2012	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function Users(ByVal webmanager As WMSystem, ByVal userInfos As CompuMaster.camm.WebManager.WMSystem.UserInformation(), ByVal includeDisabledUsers As Boolean) As DataTable
 
             Dim Result As DataTable = UsersTableCreate("members")
@@ -571,19 +485,11 @@ Namespace CompuMaster.camm.WebManager.Administration
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Attach one line to the output table
         ''' </summary>
         ''' <param name="users">The output table</param>
         ''' <param name="userInfo">One user information object</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Sub UsersTableAddRow(ByVal users As DataTable, ByVal userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation)
 
             'parameter validation
@@ -632,19 +538,10 @@ Namespace CompuMaster.camm.WebManager.Administration
             users.Rows.Add(newRow)
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create an empty datatable for output
         ''' </summary>
         ''' <param name="tableName"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.08.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function UsersTableCreate(ByVal tableName As String) As DataTable
 
             Dim Result As New DataTable(tableName)

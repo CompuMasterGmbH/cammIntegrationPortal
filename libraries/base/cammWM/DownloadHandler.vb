@@ -57,7 +57,6 @@ Namespace CompuMaster.camm.WebManager
         ''' A relative or absolute file location on disc for temporary files
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private ReadOnly Property SystemDownloadFolderForTemporaryFiles() As String
             Get
@@ -75,7 +74,6 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Misc Functions"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns value indicating whether a file exists.
         ''' </summary>
@@ -84,17 +82,9 @@ Namespace CompuMaster.camm.WebManager
         '''     This parameter defines the path in download location. 
         ''' </param>
         ''' <param name="fileName">Name of file</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function DownloadFileAlreadyExists(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal fileName As String) As Boolean
             Return DownloadFileAlreadyExists(downloadLocation, pathInDownloadLocation, Nothing, fileName)
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns value indicating whether a file exists.
         ''' </summary>
@@ -105,12 +95,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="folderInVirtualDownloadLocation">Describes the virtual path to be added in download location. e.g. "foo/machines/images"</param>
         ''' <param name="fileName">Name of file</param>
         ''' <returns>True if file exists</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function DownloadFileAlreadyExists(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal folderInVirtualDownloadLocation As String, ByVal fileName As String) As Boolean
             Dim DownloadFullPath As String = Me.DownloadFolderFullPath & Me.ResolveSubFolderFromDownloadLocation(downloadLocation) & System.IO.Path.DirectorySeparatorChar & pathInDownloadLocation
 
@@ -136,18 +120,12 @@ Namespace CompuMaster.camm.WebManager
 
 
         Private _IsFullyFeatured As TriState = TriState.UseDefault
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns value whether download folder has write access.
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>
         '''     This functions check for download folder access writes, like write access, to create new file, can execute zip archive utility.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	13.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function IsFullyFeatured() As Boolean
             'Find cached value if existing
             If Me.IsWebApplication Then
@@ -223,17 +201,10 @@ Namespace CompuMaster.camm.WebManager
 
             Return returnBoolean
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Test write access to download folder by creating test.txt file, _
         '''     on success no exception, on failure throws exception 
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	09.05.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub TestFileCreation()
             Dim fi As New FileInfo(Me.DownloadFolderFullPath & "test.txt")
             If Not fi.Directory.Exists Then
@@ -254,68 +225,37 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Try
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' This function return an encrypted, file-system-safe value for the parameter value
         ''' </summary>
         ''' <param name="value">A string value which shall be hashed</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[Wezel]	13.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function GetEncryptedValue(ByVal value As String) As String
             'Return the new string with file system compatible naming standard (windows, linux, mac)
             Return FileSystemCompatibleString(Utils.ComputeHash(value))
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Computes a hashed filename compatible with the file system without hashing the path parts
         ''' </summary>
         ''' <param name="filePath">A filename with a leading path information</param>
         ''' <returns>A valid, hashed string which only contains characters that are compatible to the local file system</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	04.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ComputeHashedFilenameFromLongFilename(ByVal filePath As String) As String
             Dim fileName As String = System.IO.Path.GetFileName(filePath)
             Dim parentPath As String = Mid(filePath, 1, InStrRev(filePath, fileName, , CompareMethod.Binary))
             Return parentPath & FileSystemCompatibleString(GetEncryptedValue(System.IO.Path.GetFileNameWithoutExtension(fileName))) & System.IO.Path.GetExtension(fileName)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Computes a unique encrypted file system compatible string from very long folder path.
         ''' </summary>
         ''' <param name="path">The piece of a path that shall be hashed</param>
         ''' <returns>A valid, hashed string which only contains characters that are compatible to the local file system</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	22.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ComputeHashedPathFromLongPath(ByVal path As String) As String
             Return FileSystemCompatibleString(GetEncryptedValue(path))
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a string with invalid characters of a suggested file name to a string with compatible naming for file systems
         ''' </summary>
         ''' <param name="filename">A filename without path information</param>
         ''' <returns>A string which can be used to create file and folder names</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[Wezel]	13.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function FileSystemCompatibleString(ByVal filename As String) As String
 #If VS2015OrHigher = True Then
 #Disable Warning BC40000 'disable obsolete warnings because this code must be compatible to .NET 1.1
@@ -338,26 +278,15 @@ Namespace CompuMaster.camm.WebManager
             Dim utf8encoder As New System.Text.UTF8Encoding
             Return utf8encoder.GetBytes(text)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a download link without taking any actions
         ''' </summary>
         ''' <param name="downloadLocation">download location</param>
         ''' <param name="pathInDownloadLocation">path in download location</param>
         ''' <param name="fileName">Name of file</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	13.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function CreateDownloadLink(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal fileName As String) As String
             Return CreateDownloadLink(downloadLocation, pathInDownloadLocation, Nothing, fileName)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a download link without taking any actions
         ''' </summary>
@@ -365,7 +294,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="pathInDownloadLocation">path in download location</param>
         ''' <param name="folderInVirtualDownloadLocation">Describes the virtual path to be added in download location. e.g. "foo/machines/images"</param>
         ''' <param name="fileName"></param>
-        ''' <returns></returns>
         ''' <remarks>
         ''' This function check for download location, if the value is "PublicCache", it returns a download link with query string parameter "file"
         ''' (=files virtual path). If download location is not "PublicCache", return download link with query string parameter "fileID".
@@ -375,10 +303,6 @@ Namespace CompuMaster.camm.WebManager
         ''' else
         ''' return "%temp%\filepath"
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	13.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function CreateDownloadLink(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal folderInVirtualDownloadLocation As String, ByVal fileName As String) As String
             Dim downloadFullPath As String = Me.DownloadFolderFullPath & Me.ResolveSubFolderFromDownloadLocation(downloadLocation) & "/" & pathInDownloadLocation
             downloadFullPath = downloadFullPath.Replace("//", "/").Replace("//", "/")
@@ -406,26 +330,15 @@ Namespace CompuMaster.camm.WebManager
             End If
             Return downloadLink
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a download link without taking any actions
         ''' </summary>
         ''' <param name="downloadLocation">download location</param>
         ''' <param name="pathInDownloadLocation">path in download location</param>
         ''' <param name="fileName">Name of file</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	13.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function CreatePlainDownloadLink(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal fileName As String) As String
             Return CreatePlainDownloadLink(downloadLocation, pathInDownloadLocation, Nothing, fileName)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a download link without taking any actions
         ''' </summary>
@@ -433,7 +346,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="pathInDownloadLocation">path in download location</param>
         ''' <param name="folderInVirtualDownloadLocation">Describes the virtual path to be added in download location. e.g. "foo/machines/images"</param>
         ''' <param name="fileName"></param>
-        ''' <returns></returns>
         ''' <remarks>
         ''' This function check for download location, if the value is "PublicCache", it returns a download link with query string parameter "file"
         ''' (=files virtual path). If download location is not "PublicCache", return download link with query string parameter "fileID".
@@ -447,7 +359,6 @@ Namespace CompuMaster.camm.WebManager
         ''' 	[patil]	13.01.2005	Created
         '''     [zeutzheim] 01.02.2010 Modified
         ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function CreatePlainDownloadLink(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal folderInVirtualDownloadLocation As String, ByVal fileName As String) As String
             Dim downloadFullPath As String = Me.DownloadFolderFullPath & Me.ResolveSubFolderFromDownloadLocation(downloadLocation) & "/" & pathInDownloadLocation
             downloadFullPath = downloadFullPath.Replace("//", "/"c)
@@ -487,16 +398,9 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         Public Structure FileData
             Dim Type As FileDataType
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     File system full path
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[patil]	01.03.2006	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Dim FilePath As String
             Dim FolderVirtualPath As String
             Dim NewFileName As String
@@ -506,16 +410,9 @@ Namespace CompuMaster.camm.WebManager
             Dim RawDataFile As RawDataSingleFile
             Dim RawDataCollection As RawDataCollectionMember
         End Structure
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''         This structure is used to identify the file type in "FileData" in the Download collection.
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Enum FileDataType As Byte
             FilePath = 0
             FileInfo = 1
@@ -523,22 +420,14 @@ Namespace CompuMaster.camm.WebManager
             RawFile = 3
             RawCollection = 4
         End Enum
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This Add method is used to add single file in Download collection.
         ''' </summary>
         ''' <param name="pathOnDisc">Describes the full path of file to be added in collection. e.g. "d:\temp\MyFolder"</param>
         ''' <param name="folderInVirtualDownloadLocation">Describes the virtual path to be added in download location. e.g. "foo/machines/images"</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Add(ByVal pathOnDisc As String, ByVal folderInVirtualDownloadLocation As String)
             Me.Add(pathOnDisc, folderInVirtualDownloadLocation, Nothing)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This Add method is used to add single file in Download collection.
         ''' </summary>
@@ -553,10 +442,6 @@ Namespace CompuMaster.camm.WebManager
         '''         <item>..</item>
         '''     </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Add(ByVal pathOnDisc As String, ByVal folderInVirtualDownloadLocation As String, ByVal newFilename As String)
             Dim fData As New FileData
             fData.Type = FileDataType.FilePath
@@ -573,28 +458,18 @@ Namespace CompuMaster.camm.WebManager
         '''     This Add method is used to add single file in Download collection.
         ''' </summary>
         ''' <param name="file">A temporary file</param>
-        ''' <remarks>
-        ''' </remarks>
         Public Sub Add(ByVal file As SingleFileInDownloadLocation)
             If System.IO.File.Exists(file.PhysicalPath) = False Then Throw New FileNotFoundException("SingleFileInDownloadLocation doesn't exist on disc", file.PhysicalPath)
             Me.Add(New System.IO.FileInfo(file.PhysicalPath), file.DirectoryName, Nothing)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This Add method is used to add single file in Download collection.
         ''' </summary>
         ''' <param name="fileInfo">Describes the file to be added in Download collection. fileInfo is of type "System.IO.FileInfo"</param>
         ''' <param name="folderInVirtualDownloadLocation">Describes the virtual path to be added in download location. e.g. "foo/machines/images"</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Add(ByVal fileInfo As System.IO.FileInfo, ByVal folderInVirtualDownloadLocation As String)
             Me.Add(fileInfo, folderInVirtualDownloadLocation, Nothing)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This Add method is used to add single file in Download collection.
         ''' </summary>
@@ -609,10 +484,6 @@ Namespace CompuMaster.camm.WebManager
         '''         <item>..</item>
         '''     </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Add(ByVal fileInfo As System.IO.FileInfo, ByVal folderInVirtualDownloadLocation As String, ByVal newFilename As String)
             Dim fData As New FileData
             fData.Type = FileDataType.FileInfo
@@ -625,7 +496,6 @@ Namespace CompuMaster.camm.WebManager
             End If
             Me.InnerList.Add(fData)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This Add method is used to add directory in Download collection.
         ''' </summary>
@@ -634,10 +504,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     The directory is archived into zip format during download process.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Add(ByVal directoryInfo As System.IO.DirectoryInfo, ByVal folderInVirtualDownloadLocation As String)
             Dim fData As New FileData
             fData.Type = FileDataType.Directory
@@ -667,22 +533,14 @@ Namespace CompuMaster.camm.WebManager
             Dim Filename As String
             Dim Data As Byte()
         End Structure
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This Add method is used to add file of type "RawDataSingleFile" in Download collection.
         ''' </summary>
         ''' <param name="file">This parameter is of type "RawDataSingleFile"</param>
         ''' <param name="folderInVirtualDownloadLocation">Describes the virtual path to be added in download location. e.g. "foo/machines/images"</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Add(ByVal file As RawDataSingleFile, ByVal folderInVirtualDownloadLocation As String)
             Me.Add(file, folderInVirtualDownloadLocation, Nothing)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This Add method is used to add file of type "RawDataSingleFile" in Download collection.
         ''' </summary>
@@ -697,10 +555,6 @@ Namespace CompuMaster.camm.WebManager
         '''         <item>..</item>
         '''     </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Add(ByVal file As RawDataSingleFile, ByVal folderInVirtualDownloadLocation As String, ByVal newFilename As String)
             Dim fData As New FileData
             fData.Type = FileDataType.RawFile
@@ -711,22 +565,14 @@ Namespace CompuMaster.camm.WebManager
             End If
             Me.InnerList.Add(fData)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This Add method is used to add file of type "RawDataCollectionMemeber" in Download collection.
         ''' </summary>
         ''' <param name="file">This parameter is of type "RawDataCollectionMember"</param>
         ''' <param name="folderInVirtualDownloadLocation">Describes the virtual path to be added in download location. e.g. "foo/machines/images"</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Add(ByVal file As RawDataCollectionMember, ByVal folderInVirtualDownloadLocation As String)
             Me.Add(file, folderInVirtualDownloadLocation, Nothing)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This Add method is used to add file of type "RawDataCollectionMember" in Download collection.
         ''' </summary>
@@ -741,10 +587,6 @@ Namespace CompuMaster.camm.WebManager
         '''         <item>..</item>
         '''     </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Add(ByVal file As RawDataCollectionMember, ByVal folderInVirtualDownloadLocation As String, ByVal newFilename As String)
             Dim fData As New FileData
             fData.Type = FileDataType.RawCollection
@@ -768,25 +610,18 @@ Namespace CompuMaster.camm.WebManager
             _WebManager = webManager
             Me.CheckExistanceOfTempDownloadFolder()
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''          The download location is defined by this enumeration.
         ''' </summary>
         ''' <remarks>
         '''     
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Enum DownloadLocations As Byte
             WebServerSession = 1
             WebManagerUserSession = 2
             WebManagerSecurityObjectName = 3
             PublicCache = 4
         End Enum
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create a temporary file path (not a file!) which is managed by Download-Handler
         ''' </summary>
@@ -799,11 +634,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Download-Handler will automatically remove the file as soon as the regular timeout for the file has been reached.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	25.06.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Never implemented", True), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Never implemented", True), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function GetTempFileVirtualPath(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal fileName As String) As String
             'TODO: implementation of DownloadHandler.GetTempFileName
             Throw New NotImplementedException
@@ -818,8 +649,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="pathInDownloadLocation">This parameter defines the path in download location.</param>
         ''' <param name="fileName">The file name which shall be created</param>
         ''' <returns>The virtual path of the temp file (which can be mapped to a physical file name in a 2nd step)</returns>
-        ''' <remarks>
-        ''' </remarks>
         Public Function GetTempFile(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal fileName As String) As SingleFileInDownloadLocation
             If Me.IsFullyFeatured = True Then
                 Dim downloadFullPath As String = Me.DownloadFolderFullPath & Me.ResolveSubFolderFromDownloadLocation(downloadLocation) & "/" & pathInDownloadLocation
@@ -910,8 +739,6 @@ Namespace CompuMaster.camm.WebManager
                 End Get
             End Property
         End Class
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This function used to get download location in string format. 
         ''' </summary>
@@ -920,10 +747,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     The download handler creates the download file at download location returned by this function.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function ResolveSubFolderFromDownloadLocation(ByVal downloadLocation As DownloadLocations) As String
             Select Case downloadLocation
                 Case DownloadLocations.PublicCache
@@ -955,7 +778,6 @@ Namespace CompuMaster.camm.WebManager
                     Throw New ArgumentOutOfRangeException("downloadLocation", "Invalid value")
             End Select
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection. 
         '''     And immediately sends file to client browser.
@@ -968,14 +790,9 @@ Namespace CompuMaster.camm.WebManager
         '''     The download handler creates processed download file at location defined by parameter "downloadLocation".
         '''     This method throws exception, if occured.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub ProcessDownload(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String)
             Me.ProcessDownload(downloadLocation, pathInDownloadLocation, False, New TimeSpan(0), False, "", False)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection. 
         '''     And immediately sends file to client browser.
@@ -985,16 +802,9 @@ Namespace CompuMaster.camm.WebManager
         '''     This parameter defines the path in download location. 
         ''' </param>
         ''' <param name="overwrite">If true overwrites the file in download location</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub ProcessDownload(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal overwrite As Boolean)
             Me.ProcessDownload(downloadLocation, pathInDownloadLocation, overwrite, New TimeSpan(0), False, "", False)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection. 
         '''     And immediately sends file to client browser.
@@ -1005,16 +815,9 @@ Namespace CompuMaster.camm.WebManager
         ''' </param>
         ''' <param name="overwrite">If true overwrites the file in download location</param>
         ''' <param name="liveTime">Defines time for download file to be available for download</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub ProcessDownload(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal overwrite As Boolean, ByVal liveTime As TimeSpan)
             Me.ProcessDownload(downloadLocation, pathInDownloadLocation, overwrite, liveTime, False, "", False)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection. 
         '''     And immediately sends file to client browser.
@@ -1030,24 +833,13 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     This method throws exception, if occured.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub ProcessDownload(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal overwrite As Boolean, ByVal liveTime As TimeSpan, ByVal zipFilesFirst As Boolean, ByVal zipArchiveName As String)
             Me.ProcessDownload(downloadLocation, pathInDownloadLocation, overwrite, liveTime, zipFilesFirst, zipArchiveName, False)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection. 
         '''     And immediately sends file to client browser.
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub ProcessDownload(ByVal file As SingleFileInDownloadLocation)
             If Not IsWebApplication Then
                 Throw New Exception("ProcessDownload is not possible in non-web applications, use ProcessAndGetDownloadLink instead")
@@ -1092,7 +884,6 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End If
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection. 
         '''     And immediately sends file to client browser.
@@ -1106,12 +897,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="zipFilesFirst">If true then download handler enforces the download collection in zip archive even it it is a single file.</param>
         ''' <param name="zipArchiveName">Defines the zip archive name. Otherwise default zip archive name is created by Download handler.</param>
         ''' <param name="enforceDownload">If true, then download handler enforces client browser to download file.</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub ProcessDownload(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal overwrite As Boolean, ByVal liveTime As TimeSpan, ByVal zipFilesFirst As Boolean, ByVal zipArchiveName As String, ByVal enforceDownload As Boolean)
             If Not IsWebApplication Then
                 Throw New Exception("ProcessDownload is not possible in non-web applications, use ProcessAndGetDownloadLink instead")
@@ -1173,7 +958,6 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End If
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection and returns the download link
         ''' </summary>
@@ -1189,14 +973,9 @@ Namespace CompuMaster.camm.WebManager
         ''' 
         '''     The download handler creates processed download file at location defined by parameter "downloadLocation".
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ProcessAndGetDownloadLink(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String) As String
             Return Me.ProcessAndGetDownloadLink(downloadLocation, pathInDownloadLocation, False, Nothing, False, "")
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection and returns the download link
         ''' </summary>
@@ -1205,7 +984,6 @@ Namespace CompuMaster.camm.WebManager
         '''     This parameter defines the path in download location. 
         ''' </param>
         ''' <param name="overwrite">If true overwrites the file in download location</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     <p>This method throws exception, if occured.</p>
         '''     If this is not the WebApplication, then Download handler creates download file in "%temp%"
@@ -1213,14 +991,9 @@ Namespace CompuMaster.camm.WebManager
         ''' 
         '''     The download handler creates processed download file at location defined by parameter "downloadLocation".
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ProcessAndGetDownloadLink(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal overwrite As Boolean) As String
             Return Me.ProcessAndGetDownloadLink(downloadLocation, pathInDownloadLocation, overwrite, Nothing, False, "")
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection and returns the download link
         ''' </summary>
@@ -1230,7 +1003,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </param>
         ''' <param name="overwrite">If true overwrites the file in download location</param>
         ''' <param name="liveTime">Defines time, the download file to be available for download.</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     <p>This method throws exception, if occured.</p>
         '''     If this is not the WebApplication, then Download handler creates download file in "%temp%"
@@ -1238,14 +1010,9 @@ Namespace CompuMaster.camm.WebManager
         ''' 
         '''     The download handler creates processed download file at location defined by parameter "downloadLocation".
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ProcessAndGetDownloadLink(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal overwrite As Boolean, ByVal liveTime As TimeSpan) As String
             Return Me.ProcessAndGetDownloadLink(downloadLocation, pathInDownloadLocation, overwrite, liveTime, False, "")
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection and returns the download link
         ''' </summary>
@@ -1257,7 +1024,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="liveTime">Defines time, the download file to be available for download.</param>
         ''' <param name="alwaysZipFiles">If true then download handler enforces the download collection in zip archive even it it is a single file.</param>
         ''' <param name="zipArchiveName">Defines the zip archive name. Otherwise default zip archive name is created by Download handler.</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     <p>This method throws exception, if occured.</p>
         '''     If this is not the WebApplication, then Download handler creates download file in "%temp%"
@@ -1265,10 +1031,6 @@ Namespace CompuMaster.camm.WebManager
         ''' 
         '''     The download handler creates processed download file at location defined by parameter "downloadLocation".
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ProcessAndGetDownloadLink(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal overwrite As Boolean, ByVal liveTime As TimeSpan, ByVal alwaysZipFiles As Boolean, ByVal zipArchiveName As String) As String
             'Some performance counters
 #If DEBUG Then
@@ -1340,7 +1102,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     This method processes the download collection and returns the download link
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>
         '''     <p>This method throws exception, if occured.</p>
         ''' </remarks>
@@ -1399,8 +1160,6 @@ Namespace CompuMaster.camm.WebManager
 
             Return downloadPath
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection and returns the download link as direct target to the file
         ''' </summary>
@@ -1416,14 +1175,9 @@ Namespace CompuMaster.camm.WebManager
         ''' 
         '''     The download handler creates processed download file at location defined by parameter "downloadLocation".
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ProcessAndGetPlainDownloadLink(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String) As String
             Return Me.ProcessAndGetPlainDownloadLink(downloadLocation, pathInDownloadLocation, False, Nothing, False, "")
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection and returns the download link as direct target to the file
         ''' </summary>
@@ -1432,7 +1186,6 @@ Namespace CompuMaster.camm.WebManager
         '''     This parameter defines the path in download location. 
         ''' </param>
         ''' <param name="overwrite">If true overwrites the file in download location</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     <p>This method throws exception, if occured.</p>
         '''     If this is not the WebApplication, then Download handler creates download file in "%temp%"
@@ -1440,14 +1193,9 @@ Namespace CompuMaster.camm.WebManager
         ''' 
         '''     The download handler creates processed download file at location defined by parameter "downloadLocation".
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ProcessAndGetPlainDownloadLink(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal overwrite As Boolean) As String
             Return Me.ProcessAndGetPlainDownloadLink(downloadLocation, pathInDownloadLocation, overwrite, Nothing, False, "")
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection and returns the download link as direct target to the file
         ''' </summary>
@@ -1457,7 +1205,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </param>
         ''' <param name="overwrite">If true overwrites the file in download location</param>
         ''' <param name="liveTime">Defines time, the download file to be available for download.</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     <p>This method throws exception, if occured.</p>
         '''     If this is not the WebApplication, then Download handler creates download file in "%temp%"
@@ -1465,14 +1212,9 @@ Namespace CompuMaster.camm.WebManager
         ''' 
         '''     The download handler creates processed download file at location defined by parameter "downloadLocation".
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ProcessAndGetPlainDownloadLink(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal overwrite As Boolean, ByVal liveTime As TimeSpan) As String
             Return Me.ProcessAndGetPlainDownloadLink(downloadLocation, pathInDownloadLocation, overwrite, liveTime, False, "")
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method processes the download collection and returns the download link as direct target to the file
         ''' </summary>
@@ -1484,7 +1226,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="liveTime">Defines time, the download file to be available for download.</param>
         ''' <param name="zipFilesFirst">If true then download handler enforces the download collection in zip archive even it it is a single file.</param>
         ''' <param name="zipArchiveName">Defines the zip archive name. Otherwise default zip archive name is created by Download handler.</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     <p>This method throws exception, if occured.</p>
         '''     If this is not the WebApplication, then Download handler creates download file in "%temp%"
@@ -1492,10 +1233,6 @@ Namespace CompuMaster.camm.WebManager
         ''' 
         '''     The download handler creates processed download file at location defined by parameter "downloadLocation".
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ProcessAndGetPlainDownloadLink(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal overwrite As Boolean, ByVal liveTime As TimeSpan, ByVal zipFilesFirst As Boolean, ByVal zipArchiveName As String) As String
 
             'Some performance counters
@@ -1565,8 +1302,6 @@ Namespace CompuMaster.camm.WebManager
 
             Return downloadPath
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Processes download and returns data to record in structure type DataToProcessDownload.
         ''' </summary>
@@ -1576,13 +1311,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="zipFilesFirst">If true then download handler enforces the download collection in zip archive even it it is a single file.</param>
         ''' <param name="zipArchiveName">Defines the zip archive name. Otherwise default zip archive name is created by Download handler.</param>
         ''' <param name="enforceDownload">If true, then download handler enforces client browser to download file.</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetDataToRecordAndProcess(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal overwrite As Boolean, ByVal zipFilesFirst As Boolean, ByVal zipArchiveName As String, ByVal enforceDownload As Boolean) As DataToProcessDownload
 
             'check if download size is in the limits
@@ -1919,18 +1647,10 @@ Namespace CompuMaster.camm.WebManager
             Dim SendToCurrentRequest As Boolean
             Dim RawFile As RawDataSingleFile
         End Structure
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns virtual path
         ''' </summary>
         ''' <param name="fileFullPath">The physical full path of a file</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetDownloadFileVirtualPath(ByVal fileFullPath As String) As String
             Dim fPath As String = fileFullPath
             fPath = fPath.Replace("\"c, "/"c)
@@ -1947,8 +1667,6 @@ Namespace CompuMaster.camm.WebManager
             End Try
             Return fPath
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method creates file including parent directory if not exists 
         ''' </summary>
@@ -1959,10 +1677,6 @@ Namespace CompuMaster.camm.WebManager
         '''     This method also looks for the parent directory of the file defined by "fileFullPath".
         '''     And also creates the parent directory/directories, if they do not exist. 
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	27.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function CreateFile(ByVal fileFullPath As String) As ManagedFileStream
             Dim fi As New FileInfo(fileFullPath)
             If Not fi.Directory.Exists Then
@@ -1980,33 +1694,19 @@ Namespace CompuMaster.camm.WebManager
             End Try
             Return fs
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Send a file inside the current request
         ''' </summary>
         ''' <param name="fileFullPath">Defines the files virtual path.</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	27.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub SendDownloadFileToCurrentRequest(ByVal fileFullPath As String)
             Me.SendDownloadFileToCurrentRequest(fileFullPath, False, Nothing)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Send a file inside the current request
         ''' </summary>
         ''' <param name="fileFullPath">Defines files virtual path.</param>
         ''' <param name="enforceDownload">If true, download handler enforces client browswer to download the file.</param>
         ''' <param name="mimeType">Defines the mime type of the file.</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	27.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub SendDownloadFileToCurrentRequest(ByVal fileFullPath As String, ByVal enforceDownload As Boolean, ByVal mimeType As String)
             Dim fi As New FileInfo(fileFullPath)
             If Not fi.Exists Then
@@ -2033,33 +1733,19 @@ Namespace CompuMaster.camm.WebManager
 
             HttpContext.Current.Response.WriteFile(fi.FullName)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Send a raw file inside the current request
         ''' </summary>
         ''' <param name="rawDataFile"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub SendDownloadFileToCurrentRequest(ByVal rawDataFile As RawDataCollectionMember)
             HttpContext.Current.Response.AddHeader("Content-disposition", "filename=" & rawDataFile.Filename)
             HttpContext.Current.Response.ContentType = Me.GetMimeType(System.IO.Path.GetExtension(rawDataFile.Filename))
             HttpContext.Current.Response.BinaryWrite(rawDataFile.Data)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Send a raw file inside the current request
         ''' </summary>
         ''' <param name="rawDataFile"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub SendDownloadFileToCurrentRequest(ByVal rawDataFile As RawDataSingleFile)
             HttpContext.Current.Response.AddHeader("Content-disposition", "filename=" & rawDataFile.Filename)
             If rawDataFile.MimeType = "" Then
@@ -2069,32 +1755,18 @@ Namespace CompuMaster.camm.WebManager
             End If
             HttpContext.Current.Response.BinaryWrite(rawDataFile.Data)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Redirects file to browser
         ''' </summary>
         ''' <param name="fileFullPath">File full path</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub RedirectFileToBrowser(ByVal fileFullPath As String)
             Me.RedirectFileToBrowser(fileFullPath, Nothing)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Redirects file to browser
         ''' </summary>
         ''' <param name="fileFullPath">Defines files virtual path.</param>
         ''' <param name="mimeType"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub RedirectFileToBrowser(ByVal fileFullPath As String, ByVal mimeType As String)
             Log.WriteEventLogTrace("DH RedirectFileToBrowser Start")
             Dim fi As New FileInfo(fileFullPath)
@@ -2126,48 +1798,26 @@ Namespace CompuMaster.camm.WebManager
             Utils.RedirectTemporary(HttpContext.Current, fPath)
             Log.WriteEventLogTrace("DH RedirectFileToBrowser End")
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns mime type for file extension type.
         ''' </summary>
         ''' <param name="extension">e.g. ".pdf"</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetMimeType(ByVal extension As String) As String
             Return CompuMaster.camm.WebManager.MimeTypes.MimeTypeByFileExtension(extension)
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Redirect the requested file to the browser
         ''' </summary>
         ''' <param name="UniqueCrypticID">Defines the unique identifier, of the requested download file.</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	27.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub DownloadFileByID(ByVal UniqueCrypticID As String)
             Dim FileOnDisc As String = Me.GetFileFullPath(UniqueCrypticID)
             Me._WebManager.Trace.Write("CWM DH", "FileOnDisc=" & FileOnDisc)
             Me.RedirectFileToBrowser(FileOnDisc)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Redirect the requested file to the browser
         ''' </summary>
         ''' <param name="fileVirtualPath">Defines the virtual file path of the requested download file.</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	27.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub DownloadFileByPath(ByVal fileVirtualPath As String)
             'check for malicious fileVirtualPath.
             Dim fFullPath As String = HttpContext.Current.Server.MapPath(Me.SystemDownloadFolderForTemporaryFiles & EncryptedValueCurrentServerIdentString & "/" & fileVirtualPath)
@@ -2190,20 +1840,12 @@ Namespace CompuMaster.camm.WebManager
 
             Me.RedirectFileToBrowser(Me.DownloadFolderFullPath & fileVirtualPath)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A cached value for the encrypted server identification string of the current server
         '''     This value is cached because the encryption process is time expensive.
         '''     But in web-version we must cache it in a namevaluecollection because its key can differ during runtime by each request.
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private ReadOnly Property EncryptedValueCurrentServerIdentString() As String
             Get
                 If HttpContext.Current Is Nothing Then
@@ -2227,7 +1869,6 @@ Namespace CompuMaster.camm.WebManager
         ''' A cached NameValueCollection of encrypted serveridentstrings.
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Shared ReadOnly Property CachedEncryptedCurrentServerIdentString() As Collections.Specialized.NameValueCollection
             Get
@@ -2247,17 +1888,9 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''      Verifies that the download location exists, otherwise creates it
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub CheckExistanceOfTempDownloadFolder()
             'Read cache
             If Not HttpContext.Current Is Nothing Then
@@ -2281,19 +1914,12 @@ Namespace CompuMaster.camm.WebManager
                 HttpContext.Current.Application("WebManager.DownloadHandler.CheckExistanceOfTempDownloadFolder") = True
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Calculates the size of the file/directory collection
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>
         '''     This is the raw size of the collection before compression takes effect
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetDownloadCollectionSize() As Int64
             Dim size As Int64 = 0
             For Each fData As FileData In Me.InnerList
@@ -2313,19 +1939,11 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return size
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Calculate the size of a complete directory structure.
         ''' </summary>
         ''' <param name="directory">Denotes the directory structure of type System.IO.DirectoryInfo, whose size is to be calculated.</param>
         ''' <returns>Returns size of complete directory structure as "Long"</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetDirectorySize(ByVal directory As System.IO.DirectoryInfo) As Int64
             Dim size As Int64 = 0
             For Each d As System.IO.DirectoryInfo In directory.GetDirectories
@@ -2336,19 +1954,10 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return size
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns file full path from file's unique identifier.
         ''' </summary>
         ''' <param name="UniqueCrypticID"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetFileFullPath(ByVal UniqueCrypticID As String) As String
             If UniqueCrypticID = Nothing Then Throw New Exception("Empty UniqueCrypticID")
             Dim VirtuDownLoc As String = Me.GetVirtualDownloadLocation(UniqueCrypticID)
@@ -2363,19 +1972,11 @@ Namespace CompuMaster.camm.WebManager
             Log.WriteEventLogTrace("Downloadfilepath: " & fileFullPath, Diagnostics.EventLogEntryType.Information)
             Return fileFullPath
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a physical file name to a virtual one by truncating first chars
         ''' </summary>
         ''' <param name="fullPath">A physical file name</param>
         ''' <returns>The virtual path</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[Harish Patil]	17.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetPathFromSystemFolder(ByVal fullPath As String) As String
             Dim myPath As String
             myPath = fullPath.Replace("\", "/")
@@ -2690,8 +2291,6 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "ZipMethods"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method archives the files defined by parameter "files()" in zip format.
         ''' </summary>
@@ -2703,10 +2302,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Throws execption if occured.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub zipFiles(ByVal files() As String, ByVal targetZipfilePath As String)
             Dim zos As New ZipOutputStream(File.Create(targetZipfilePath))
 
@@ -2732,7 +2327,6 @@ Namespace CompuMaster.camm.WebManager
                 End Try
             Next
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method adds complete directory structure defined by "directoryPath", into 
         '''     zip archive defined by "zos" which is of type "ICSharpCode.SharpZipLib.Zip.ZipOutputStream".
@@ -2758,10 +2352,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Throws exception, if occured.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	27.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub zipDir(ByVal zos As ZipOutputStream, ByVal fPathToIncludeInZip As String, ByVal rootPath As String, ByVal directoryPath As String)
             Dim d As String
             Dim f As String
@@ -2801,7 +2391,6 @@ Namespace CompuMaster.camm.WebManager
             End Try
 
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method adds file defined by "fileInfo", into 
         '''     zip archive defined by "zos" which is of type "ICSharpCode.SharpZipLib.Zip.ZipOutputStream".
@@ -2817,12 +2406,6 @@ Namespace CompuMaster.camm.WebManager
         '''     </example>
         ''' </param>
         ''' <param name="fileInfo">Defines the file object of type "System.IO.FileInfo" to be added in zip archive.</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	27.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub writeFileToZipOutputStream(ByVal zos As ZipOutputStream, ByVal fPathToIncludeInZip As String, ByVal fileInfo As FileInfo)
             'crc-disabled since this is a problem in 7-zip and causes a invalid zip 
             'Dim crc As New ICSharpCode.SharpZipLib.Checksums.Crc32
@@ -2846,7 +2429,6 @@ Namespace CompuMaster.camm.WebManager
             zos.Write(buf, 0, buf.Length)
 
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method adds directory defined by "directoryPath", into 
         '''     zip archive defined by "zos" of type "ICSharpCode.SharpZipLib.Zip.ZipOutputStream".
@@ -2862,10 +2444,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Throws exception if occured.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	27.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub writeDirectoryToZipOutputStream(ByVal zos As ZipOutputStream, ByVal fPathToIncludeInZip As String, ByVal directoryPath As String)
             Dim dName As String = ""
             Dim rootPath As String = ""
@@ -2881,7 +2459,6 @@ Namespace CompuMaster.camm.WebManager
                 Throw New Exception("Inside writeDirectoryToZipOutputStream. " & ex.Message)
             End Try
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method adds the file in byte array format to zip archive defined by object
         '''     "zos" of type "ICSharpCode.SharpZipLib.Zip.ZipOutputStream".
@@ -2891,12 +2468,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Defines the full file name for the file defined by byte array "buffer".
         ''' </param>
         ''' <param name="buffer">Defines the file in byte array format.</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub writeByteArrayToZipOutputStream(ByVal zos As ZipOutputStream, ByVal fileNameWithVirtualPathToIncludeInZip As String, ByVal buffer() As Byte)
             'crc-disabled since this is a problem in 7-zip and causes a invalid zip 
             'Dim crc As New ICSharpCode.SharpZipLib.Checksums.Crc32
@@ -2924,26 +2495,14 @@ Namespace CompuMaster.camm.WebManager
         'VirtualDownloadLocation nvarchar(1800)
         'ServerID int
         'TimeOfRemoval datetime
-
-
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method returns the Database connection string.
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function getConnectString() As String
             Dim connectString As String
             connectString = _WebManager.ConnectionString
             Return connectString
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This method create unique identifier for each record to be added in database
         '''     table. And returns it as a string.
@@ -2955,10 +2514,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Throws exception, if occured.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	27.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function AddDownloadFileRecord(ByVal targetFileFullPath As String, ByVal serverID As Integer, ByVal ts As TimeSpan) As String
             Dim returnString As String = System.Guid.NewGuid.ToString
 
@@ -2970,18 +2525,11 @@ Namespace CompuMaster.camm.WebManager
 
             Return returnString
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Adds record to database table.
         ''' </summary>
         ''' <param name="location">location should be virtual filepath with file Name</param>
         ''' <param name="ts"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub AddDownloadFileRecordToDB(ByVal UniqueCrypticID As String, ByVal location As String, ByVal ts As TimeSpan)
             Dim hour As Integer = ts.Hours
             Dim day As Integer = ts.Days
@@ -2997,18 +2545,12 @@ Namespace CompuMaster.camm.WebManager
             Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(SqlCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
 
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns list of "VirtualDownloadLocation" for all registered files in the database.
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>
         '''     Throws exception if occured.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetAllFileRecordInDB() As System.Collections.Specialized.StringCollection
             Dim returnList As New System.Collections.Specialized.StringCollection
 
@@ -3040,56 +2582,35 @@ Namespace CompuMaster.camm.WebManager
             End Try
             Return returnList
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns "VirtualDownloadLocation" of the record with unique identifier as "UniqueCrypticID" at current server.
         ''' </summary>
         ''' <param name="UniqueCrypticID">Defines UniqueCrypticID which record to be found</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     Throws exception if occured.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	27.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetVirtualDownloadLocation(ByVal UniqueCrypticID As String) As String
             If UniqueCrypticID = Nothing Then Throw New ArgumentNullException("UniqueCrypticID")
             Dim dbConn As New SqlConnection(Me.getConnectString)
             Dim selectQuery As String = "SELECT [VirtualDownloadLocation] FROM [dbo].[WebManager_DownloadHandler_Files] where [UniqueCrypticID] = N'" & Replace(UniqueCrypticID, "'", "''") & "' and [ServerID] = " & Me.ServerID
             Return CType(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(dbConn, selectQuery, CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), String)
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Look for the record for location value "VirtualDownloadLocation". And returns unique identifier.
         ''' </summary>
         ''' <param name="VirtualDownloadLocation"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetUniqueCrypticID(ByVal VirtualDownloadLocation As String) As String
             Dim returnString As String = ""
             Dim dbConn As New SqlConnection(Me.getConnectString)
             Dim selectQuery As String = "SELECT [UniqueCrypticID] FROM [dbo].[WebManager_DownloadHandler_Files] where [VirtualDownloadLocation] = N'" & VirtualDownloadLocation.Replace("'", "''") & "' and [ServerID] = " & Me.ServerID
             Return CType(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(dbConn, selectQuery, CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), String)
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Update file record with new TimeOfRemoval
         ''' </summary>
         ''' <param name="virtualDownloadLocation"></param>
         ''' <param name="timeOfRemoval"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("the file shall continue with its timeout even if the file has been reused")> _
+        <Obsolete("the file shall continue with its timeout even if the file has been reused")>
         Private Sub UpdateDownloadFileRecord(ByVal virtualDownloadLocation As String, ByVal timeOfRemoval As TimeSpan)
             Dim hour As Integer = timeOfRemoval.Hours
             Dim day As Integer = timeOfRemoval.Days
@@ -3107,18 +2628,10 @@ Namespace CompuMaster.camm.WebManager
             End With
             Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmdUpdate, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns collection of "VirtualDownloadLocation" as current server and deletes those records.
         ''' </summary>
         ''' <param name="regardlessToTheirTimeout">Parameter indicates record search.</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetTimedout_VirtualDownloadLocationCollectionAndCleanupRecordsInDB(ByVal regardlessToTheirTimeout As Boolean) As System.Collections.Specialized.StringCollection
             'always remove only files from the current server
             Dim returnCollection As New System.Collections.Specialized.StringCollection
@@ -3168,16 +2681,9 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region " CleanUp "
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Look up for files in the database whose time has run out and deletes them.
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub CleanUp()
             If Me.IsFullyFeatured Then
                 If Me.IsWebApplication Then
@@ -3187,17 +2693,9 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Look up for files in the database and deletes them.
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub CleanUpAllRegisteredFiles()
             'Clean up all registered files regardless to their timeouts
             If Me.IsFullyFeatured Then
@@ -3208,17 +2706,9 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Gets called by the camm Web-Manager administration forms when a supervisor demands it manually
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function CleanUpUnregisteredFiles() As System.Collections.Specialized.StringCollection
             If Me.IsFullyFeatured Then
                 'Look up for files in the download folder which aren't registered in the database and delete them immediately
@@ -3232,18 +2722,10 @@ Namespace CompuMaster.camm.WebManager
                 Return New System.Collections.Specialized.StringCollection
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Removes files from current server disc.
         ''' </summary>
         ''' <param name="fileVirtualPathCollection"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub RemoveFilesFromDownloadFolder(ByVal fileVirtualPathCollection As System.Collections.Specialized.StringCollection)
             If fileVirtualPathCollection Is Nothing Then
                 Exit Sub
@@ -3265,16 +2747,9 @@ Namespace CompuMaster.camm.WebManager
                 End If
             Next
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Removes unregistered files from current server disc.
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function RemoveFilesNotRegisteredInDatabase() As System.Collections.Specialized.StringCollection
             Dim returnCollection As New System.Collections.Specialized.StringCollection
             Dim dbList As System.Collections.Specialized.StringCollection = Me.GetAllFileRecordInDB
@@ -3327,18 +2802,9 @@ Namespace CompuMaster.camm.WebManager
 
             Return returnCollection
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns list of available servers identification string.
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function GetListOfAvailableServersIdentString() As System.Collections.Specialized.StringCollection
             Dim result As New System.Collections.Specialized.StringCollection
 
@@ -3353,23 +2819,15 @@ Namespace CompuMaster.camm.WebManager
         Private Sub CleanUpFilesInDownloadFolderManually()
             Me.RemoveFilesNotRegisteredInDatabase()
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Removes cached file
         ''' </summary>
         ''' <param name="downloadLocation">Defines download location</param>
         ''' <param name="pathInDownloadLocation">Path in download location</param>
         ''' <param name="fileName">File name in cache to be removed</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	14.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub RemoveDownloadFileFromCache(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal fileName As String)
             Me.RemoveDownloadFileFromCache(downloadLocation, pathInDownloadLocation, Nothing, fileName)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''  Removes cached file
         ''' </summary>
@@ -3377,12 +2835,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="pathInDownloadLocation">path in download location</param>
         ''' <param name="folderInVirtualDownloadLocation">folder/s in virtual download location</param>
         ''' <param name="fileName">File name in cache to be removed</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	14.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub RemoveDownloadFileFromCache(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal folderInVirtualDownloadLocation As String, ByVal fileName As String)
             If Me.IsFullyFeatured Then
                 Select Case downloadLocation
@@ -3416,7 +2868,6 @@ Namespace CompuMaster.camm.WebManager
                 End Select
             End If
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Removes download files from cache. This is a recursive method, it traverse through all inner directories.
         ''' </summary>
@@ -3427,10 +2878,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Removes download files from cache i.e. from downloadlocation 
         '''     WebServerSession, WebManagerUserSession and WebManagerSecurityObjectName.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub RemoveFileFromDownloadLocations(ByVal directoryInfo As DirectoryInfo, ByVal filePath As String, ByVal rootPath As String)
             For Each di As DirectoryInfo In directoryInfo.GetDirectories
                 Me.RemoveFileFromDownloadLocations(di, filePath, rootPath)
@@ -3506,18 +2953,10 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region " Properties "
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns the physical download folder path.
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	13.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private ReadOnly Property DownloadFolderFullPath() As String
             Get
                 Dim returnPath As String
@@ -3533,17 +2972,10 @@ Namespace CompuMaster.camm.WebManager
                 Return returnPath
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Returns value indicating whether calling application is Web.
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend ReadOnly Property IsWebApplication() As Boolean
             Get
                 If HttpContext.Current Is Nothing Then
@@ -3553,17 +2985,10 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The current server identification string of camm Web-Manager or otherwise the name of the current host
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	02.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private ReadOnly Property CurrentServerIdentString() As String
             Get
                 Dim Result As String
@@ -3584,18 +3009,10 @@ Namespace CompuMaster.camm.WebManager
                 Return Result
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A server ID reported by camm Web-Manager or otherwise a virtual, negative ID value calculated on the letters of the host name
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	02.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private ReadOnly Property ServerID() As Integer
             Get
                 If Me._WebManager.CurrentServerIdentString <> Nothing Then
@@ -3613,17 +3030,10 @@ Namespace CompuMaster.camm.WebManager
         End Property
 
         Private _MaxDownloadCollectionSize As Long = WMSystem.Configuration.DownloadHandlerMaxFileCollectionSize
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Defines maximum download collection size allowed in bytes.
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property MaxDownloadCollectionSize() As Long
             Get
                 Return Me._MaxDownloadCollectionSize
@@ -3634,16 +3044,9 @@ Namespace CompuMaster.camm.WebManager
         End Property
 
         Private _MaxDownloadSize As Long = WMSystem.Configuration.DownloadHandlerMaxFileSize
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Defines maximum download size(in bytes) allowed.
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property MaxDownloadSize() As Long
             Get
                 Return Me._MaxDownloadSize
@@ -3654,16 +3057,9 @@ Namespace CompuMaster.camm.WebManager
         End Property
 
         Private _GeneralTimeLimitForFiles As TimeSpan = New TimeSpan(1, 0, 0, 0)
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Default live time for the download collection.
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property GeneralTimeLimitForFiles() As TimeSpan
             Get
                 Return Me._GeneralTimeLimitForFiles
@@ -3675,17 +3071,10 @@ Namespace CompuMaster.camm.WebManager
 
 
         Private _TimeLimitForPublicCache As TimeSpan = New TimeSpan(90, 0, 0, 0)
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Default live time for the public cache.
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property TimeLimitForPublicCache() As TimeSpan
             Get
                 Return Me._TimeLimitForPublicCache
@@ -3796,16 +3185,9 @@ Namespace CompuMaster.camm.WebManager
         Public Sub New()
             MyBase.New("Maximum collection size to download is exceeded.")
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Message to get more infromation
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	29.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal currentMaxCollectionSize As Long, ByVal collectionSizeTriedToDownload As Long)
             MyBase.New("Maximum collection size to download is exceeded. " &
                         "Current MaxCollectionSize = " & currentMaxCollectionSize &
