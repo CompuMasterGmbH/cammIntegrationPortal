@@ -449,7 +449,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         MyDt = New DataTable
                         tempStr = New Text.StringBuilder
                         Dim sqlParams1 As SqlParameter() = {New SqlParameter("@AppID", NewAppID)}
-                        If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
+                        If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsAdminViewWithCompanyField) < 0 Then
+                            'Older / without IsDenyRule column
+                            strQuery = "select '' as companyname,name1,LoginDisabled,DevelopmentTeamMember,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_User,Nachname,Vorname,LoginName, CAST (0 AS bit) AS IsDenyRule,CAST(0 AS int) AS ID_ServerGroup from [view_ApplicationRights] where id_application=@AppID and isnull(ID_User,0)<>0 order by Nachname, CompanyName, IsDenyRule"
+                        ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
                             'Older / without IsDenyRule column
                             strQuery = "select companyname,name1,LoginDisabled,DevelopmentTeamMember,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_User,Nachname,Vorname,LoginName, IsDenyRule,CAST(0 AS int) AS ID_ServerGroup from [view_ApplicationRights] where id_application=@AppID and isnull(ID_User,0)<>0 order by Nachname, CompanyName, IsDenyRule"
                         Else

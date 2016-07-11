@@ -133,8 +133,6 @@ Namespace CompuMaster.camm.WebManager.Registration
                 'Always accept all data
                 info.usersCountPerServerGroup = New Integer() {}
 #If NetFrameWork <> "1_1" Then
-            ElseIf info.version >= New Version(4, 10, 206) AndAlso info.AuthsDirectlyCount = 0 Then 'can never be 0 even in fresh setup instances since supervisors are already present and authoirized
-                If ValidationLevel = 0 Then Throw New Exception("Missing AuthsDirectlyCount") Else Return False
             ElseIf info.version >= New Version(4, 10, 206) AndAlso info.AuthsIndirectlyCount = 0 Then 'can never be 0 even in fresh setup instances since supervisors are already present and authoirized
                 If ValidationLevel = 0 Then Throw New Exception("Missing AuthsIndirectlyCount") Else Return False
             ElseIf info.version >= New Version(4, 10, 206) AndAlso info.GroupAuthsDirectlyCount = 0 Then 'can never be 0 even in fresh setup instances since supervisors are already present and authoirized

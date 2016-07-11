@@ -34,13 +34,17 @@ BEGIN
 		INNER JOIN deleted
 			ON dbo.[ApplicationsRightsByGroup].ID_Application = deleted.ID
 				AND dbo.[ApplicationsRightsByGroup].ID_ServerGroup = 0
-				AND dbo.[ApplicationsRightsByGroup].ID_GroupOrPerson = 6
+				AND dbo.[ApplicationsRightsByGroup].ID_GroupOrPerson IN (-6, 6)
 				AND dbo.[ApplicationsRightsByGroup].DevelopmentTeamMember = 1
 				AND dbo.[ApplicationsRightsByGroup].IsDenyRule = 0;
 	INSERT INTO dbo.[ApplicationsRightsByGroup] (ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, ReleasedBy, [IsSupervisorAutoAccessRule])
 	SELECT ID, 0, 6, 1, 0, IsNull(inserted.ModifiedBy, inserted.ReleasedBy), 1
 	FROM inserted
-	WHERE AppDeleted = 0
+	WHERE AppDeleted = 0;
+	INSERT INTO dbo.[ApplicationsRightsByGroup] (ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, ReleasedBy, [IsSupervisorAutoAccessRule])
+	SELECT ID, 0, -6, 1, 0, IsNull(inserted.ModifiedBy, inserted.ReleasedBy), 1
+	FROM inserted
+	WHERE AppDeleted = 0;
 END' 
 GO
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationsRights_Inheriting]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)

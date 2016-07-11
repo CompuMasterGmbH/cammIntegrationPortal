@@ -1007,6 +1007,10 @@ Namespace CompuMaster.camm.WebManager
             ''' Users who are responsible for data protection compliance and rules
             ''' </summary>
             Group_DataProtectionCoordinators = -5
+            ''' <summary>
+            ''' Users who are allowed to access all applications/security objects, but without supervisor priviledges for administration
+            ''' </summary>
+            Group_SecurityAccessEverything = -6
         End Enum
 
         ''' <summary>
@@ -1046,6 +1050,7 @@ Namespace CompuMaster.camm.WebManager
         <Obsolete("ATTENTION INCOMPATIBILITY CWM-SecObj Milestone"), ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects As New Version(4, 20)
         'Friend Shared MilestoneVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects As New Version(4, 20)
         <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_MembershipsWithSupportForSystemAndCloneRule As New Version(4, 10, 203)
+        <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_AuthsAdminViewWithCompanyField As New Version(4, 10, 204)
         <ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public Shared MilestoneDBVersion_AuthsWithSupportForDenyRule As New Version(4, 12, 2000) 'also with this build: distributed deletion of foreign keys by triggers
 
         ''' <summary>

@@ -797,6 +797,10 @@ Namespace CompuMaster.camm.WebManager.Controls
 
             Inherits Controls.Control
 
+            Public Sub New()
+                'Me.Visible = False 'Default to invisible if nothing else has been specified by code or tag declaration
+            End Sub
+
             Private _SecurityObject As String
             ''' <summary>
             ''' A security object for the positive default rule to switch the content of this control to visible mode if the current user has got access to the specified security object
@@ -836,8 +840,8 @@ Namespace CompuMaster.camm.WebManager.Controls
                 End Set
             End Property
 
-            Protected Overrides Sub OnPreRender(e As EventArgs)
-                MyBase.OnPreRender(e)
+            Private Sub CheckForVisibility()
+                TraceWriteToPage("CheckForVisibility Begin")
                 If Me.cammWebManager Is Nothing Then
                     Throw New NullReferenceException("ConditionalContent control hasn't got a reference to a camm Web-Manager instance, but it is required")
                 ElseIf Trim(Me.SecurityObject) = Nothing AndAlso Trim(Me.NotSecurityObject) = Nothing Then
@@ -846,19 +850,56 @@ Namespace CompuMaster.camm.WebManager.Controls
                 Else
                     'either positive or negative rule must match - or both in case parameters for both rules are present
                     Dim ShowContentByPermissionRule As Boolean = False
-                    If Trim(Me.SecurityObject) = Nothing OrElse (Trim(Me.SecurityObject) <> Nothing AndAlso cammWebManager.IsUserAuthorized(Me.SecurityObject)) Then
+                    If Trim(Me.SecurityObject) = Nothing OrElse cammWebManager.IsUserAuthorized(Me.SecurityObject) Then
                         ShowContentByPermissionRule = True
+                        TraceWriteToPage("ShowContentByPermissionRule(" & Me.SecurityObject & ")=" & ShowContentByPermissionRule)
                     End If
                     Dim ShowContentByMissingPermissionRule As Boolean = False
-                    If Trim(Me.NotSecurityObject) = Nothing OrElse (Trim(Me.NotSecurityObject) <> Nothing AndAlso cammWebManager.IsUserAuthorized(Me.NotSecurityObject) = False) Then
+                    If Trim(Me.NotSecurityObject) = Nothing OrElse cammWebManager.IsUserAuthorized(Me.NotSecurityObject) = False Then
                         ShowContentByMissingPermissionRule = True
+                        TraceWriteToPage("ShowContentByMissingPermissionRule(" & Me.NotSecurityObject & ")=" & ShowContentByMissingPermissionRule)
                     End If
                     Dim ShowContentByAlwaysPermissionRule As Boolean = False
-                    If Trim(Me.AlwaysVisibleSecurityObject) = Nothing OrElse (Trim(Me.AlwaysVisibleSecurityObject) <> Nothing AndAlso cammWebManager.IsUserAuthorized(Me.AlwaysVisibleSecurityObject) = False) Then
+                    If Trim(Me.AlwaysVisibleSecurityObject) <> Nothing AndAlso cammWebManager.IsUserAuthorized(Me.AlwaysVisibleSecurityObject) = False Then
                         ShowContentByAlwaysPermissionRule = True
+                        TraceWriteToPage("ShowContentByAlwaysPermissionRule(" & Me.AlwaysVisibleSecurityObject & ")=" & ShowContentByAlwaysPermissionRule)
                     End If
                     Me.Visible = ShowContentByAlwaysPermissionRule OrElse (ShowContentByPermissionRule And ShowContentByMissingPermissionRule)
+                    TraceWriteToPage("Visible=" & Me.Visible)
                 End If
+            End Sub
+
+            Private Sub TraceWriteToPage(message As String)
+                Me.TraceWriteToPageWithCategory(message, "ConditionalContent:" & Me.UniqueID)
+            End Sub
+            Private Sub TraceWriteToPageWithCategory(message As String, category As String)
+                If Me.cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                    Me.Page.Response.Write("<li>" & category & " | " & message & "</li>")
+                End If
+                If Me.Page.Trace.IsEnabled Then
+                    Trace.Write(message, category)
+                End If
+            End Sub
+
+            Protected Overrides Sub OnPreRender(e As EventArgs)
+                TraceWriteToPage("OnPreRender Begin @ Visible=" & Me.Visible.ToString)
+                MyBase.OnPreRender(e)
+                TraceWriteToPage("OnPreRender visibility check start")
+                Me.CheckForVisibility()
+                TraceWriteToPage("OnPreRender visibility check completed")
+            End Sub
+
+            Protected Overrides Sub OnLoad(e As EventArgs)
+                TraceWriteToPage("OnLoad Begin")
+                TraceWriteToPage("Tracing enabled: " & Me.Page.Trace.IsEnabled.ToString)
+                TraceWriteToPage("OnLoad begin")
+                Trace.Write("OnLoad begin", "ConditionalContent:" & Me.ID)
+                MyBase.OnLoad(e)
+                'TraceWriteToPage("OnLoad visibility check start")
+                'Trace.Write("OnLoad visibility check start", "ConditionalContent:" & Me.ID)
+                'Me.CheckForVisibility(Nothing, e)
+                'TraceWriteToPage("OnLoad visibility check completed")
+                'Trace.Write("OnLoad visibility check completed", "ConditionalContent:" & Me.ID)
             End Sub
 
         End Class

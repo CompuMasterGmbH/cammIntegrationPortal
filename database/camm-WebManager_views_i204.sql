@@ -358,10 +358,11 @@ SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(App
                       Benutzer1.ID AS AppReleasedByID, Benutzer1.Vorname AS AppReleasedByVorname, Benutzer1.Nachname AS AppReleasedByNachname, 
                       Applications.ReleasedOn AS AppReleasedOn, ApplicationsRightsByGroup.ID AS ID_AppRight, NULL AS ID_User, NULL AS LoginDisabled, NULL 
                       AS Loginname, NULL AS Vorname, NULL AS Nachname,null AS [Name1],
-		      Gruppen.ID AS ID_Group, Gruppen.Name, Gruppen.Description, 1 AS ItemType, 
+                      Gruppen.ID AS ID_Group, Gruppen.Name, Gruppen.Description, 1 AS ItemType, 
                       Applications.AppDisabled AS AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, NULL AS ThisAuthIsFromAppID, 
                       dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, dbo.Applications.AddLanguageID2URL, 
-                      SystemApp AS SystemApp, SystemAppType AS SystemAppType, IsNull(ApplicationsRightsByGroup.DevelopmentTeamMember, 0) AS DevelopmentTeamMember, IsNull(ApplicationsRightsByGroup.IsDenyRule, 0) AS IsDenyRule, Benutzer1.Company as CompanyName,
+                      SystemApp AS SystemApp, SystemAppType AS SystemAppType, IsNull(ApplicationsRightsByGroup.DevelopmentTeamMember, 0) AS DevelopmentTeamMember, 
+					  IsNull(ApplicationsRightsByGroup.IsDenyRule, 0) AS IsDenyRule, Benutzer1.Company as CompanyName,
 					  IsSupervisorAutoAccessRule, dbo.ApplicationsRightsByGroup.ID_ServerGroup
 FROM         dbo.Applications LEFT OUTER JOIN
                       dbo.ApplicationsRightsByGroup LEFT OUTER JOIN
@@ -379,7 +380,7 @@ SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(App
                       Benutzer1.ID AS AppReleasedByID, Benutzer1.Vorname AS AppReleasedByVorname, Benutzer1.Nachname AS AppReleasedByNachname, 
                       Applications.ReleasedOn AS AppReleasedOn, ApplicationsRightsByGroup.ID AS ID_AppRight, NULL AS ID_User, NULL AS LoginDisabled, NULL 
                       AS Loginname, NULL AS Vorname, NULL AS Nachname, null AS [Name1], 
-		      Gruppen.ID AS ID_Group, Gruppen.Name, Gruppen.Description, 1 AS ItemType, 
+                      Gruppen.ID AS ID_Group, Gruppen.Name, Gruppen.Description, 1 AS ItemType, 
                       Applications.AppDisabled AS AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, Applications.AuthsAsAppID AS ThisAuthIsFromAppID, 
                       dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, dbo.Applications.AddLanguageID2URL, SystemApp, 
                       SystemAppType, IsNull(ApplicationsRightsByGroup.DevelopmentTeamMember, 0), IsNull(ApplicationsRightsByGroup.IsDenyRule, 0), Benutzer1.Company,
@@ -398,10 +399,12 @@ SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(App
                       dbo.Applications.NavURL, dbo.Applications.Sort, dbo.Applications.NavFrame, dbo.Applications.IsNew, dbo.Applications.IsUpdated, 
                       dbo.Applications.NavToolTipText, Applications.LocationID, Applications.LanguageID, Applications.ID, Benutzer1.ID, Benutzer1.Vorname, 
                       Benutzer1.Nachname, Applications.ReleasedOn, ApplicationsRightsByUser.ID, Benutzer.ID, Benutzer.LoginDisabled, Benutzer.Loginname, 
-                      Benutzer.Vorname, Benutzer.Nachname,  ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname AS [Name1],
-		  NULL, NULL, NULL, 2, Applications.AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, NULL 
+                      Benutzer.Vorname, Benutzer.Nachname,  
+					  ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname AS [Name1],
+                      NULL, NULL, NULL, 2, Applications.AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, NULL 
                       AS ThisAuthIsFromAppID, dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, 
-                      dbo.Applications.AddLanguageID2URL, SystemApp, SystemAppType, IsNull(dbo.ApplicationsRightsByUser.DevelopmentTeamMember, 0), IsNull(ApplicationsRightsByUser.IsDenyRule, 0), Benutzer1.Company, 
+                      dbo.Applications.AddLanguageID2URL, SystemApp, SystemAppType, IsNull(dbo.ApplicationsRightsByUser.DevelopmentTeamMember, 0), 
+					  IsNull(ApplicationsRightsByUser.IsDenyRule, 0), Benutzer1.Company, 
 					  0 AS IsSupervisorAutoAccessRule, dbo.ApplicationsRightsByUser.ID_ServerGroup
 FROM         dbo.Benutzer RIGHT OUTER JOIN
                       dbo.ApplicationsRightsByUser ON dbo.Benutzer.ID = dbo.ApplicationsRightsByUser.ID_GroupOrPerson RIGHT OUTER JOIN
@@ -416,10 +419,12 @@ SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(App
                       dbo.Applications.NavURL, dbo.Applications.Sort, dbo.Applications.NavFrame, dbo.Applications.IsNew, dbo.Applications.IsUpdated, 
                       dbo.Applications.NavToolTipText, Applications.LocationID, Applications.LanguageID, Applications.ID, Benutzer1.ID, Benutzer1.Vorname, 
                       Benutzer1.Nachname, Applications.ReleasedOn, ApplicationsRightsByUser.ID, Benutzer.ID, Benutzer.LoginDisabled, Benutzer.Loginname, 
-                      Benutzer.Vorname, Benutzer.Nachname, ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname AS [Name1],
-		      NULL, NULL, NULL, 2, Applications.AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, 
+                      Benutzer.Vorname, Benutzer.Nachname, 
+					  ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname AS [Name1],
+                      NULL, NULL, NULL, 2, Applications.AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, 
                       Applications.AuthsAsAppID AS ThisAuthIsFromAppID, dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, 
-                      dbo.Applications.AddLanguageID2URL, SystemApp, SystemAppType, IsNull(dbo.ApplicationsRightsByUser.DevelopmentTeamMember, 0), IsNull(ApplicationsRightsByUser.IsDenyRule, 0), Benutzer1.Company, 
+                      dbo.Applications.AddLanguageID2URL, SystemApp, SystemAppType, IsNull(dbo.ApplicationsRightsByUser.DevelopmentTeamMember, 0), 
+					  IsNull(ApplicationsRightsByUser.IsDenyRule, 0), Benutzer1.Company, 
 					  0 AS IsSupervisorAutoAccessRule, dbo.ApplicationsRightsByUser.ID_ServerGroup
 FROM         dbo.Benutzer RIGHT OUTER JOIN
                       dbo.ApplicationsRightsByUser ON dbo.Benutzer.ID = dbo.ApplicationsRightsByUser.ID_GroupOrPerson RIGHT OUTER JOIN

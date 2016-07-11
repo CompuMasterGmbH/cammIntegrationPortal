@@ -1,4 +1,11 @@
-﻿-- fix the log items in the history
+﻿-- add security access everything group (but without supervisor priviledges to do aministration)
+IF NOT EXISTS (SELECT ID FROM Gruppen WHERE ID = -5)
+BEGIN
+INSERT INTO Gruppen (ID, Name, Description, ReleasedOn, ReleasedBy, SystemGroup, ModifiedOn, ModifiedBy) 
+VALUES(-6, 'Security Access Everything', 'System group: allowed to access all applications', GETDATE(), 1, 1, GETDATE(), 1) 
+END
+
+-- fix the log items in the history
 UPDATE dbo.Log
 SET ConflictType = 31
 WHERE ConflictType = 1 AND ApplicationID IS NOT NULL
