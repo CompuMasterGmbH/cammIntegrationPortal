@@ -20,23 +20,14 @@ Namespace CompuMaster.camm.WebManager.WebServices
     ''' <summary>
     '''     The base web service which implements the cammWebManager property
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class BaseWebService
         Inherits System.Web.Services.WebService
 
         Private WithEvents _WebManager As CompuMaster.camm.WebManager.WMSystem
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The current instance of camm Web-Manager
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property cammWebManager() As CompuMaster.camm.WebManager.WMSystem
             Get
                 If _WebManager Is Nothing Then
@@ -50,18 +41,9 @@ Namespace CompuMaster.camm.WebManager.WebServices
                 _WebManager = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a camm Web-Manager instance on the fly
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Function OnWebManagerJustInTimeCreation() As WMSystem
             Dim Result As WMSystem
             Result = New WMSystem(Me.GetType)
@@ -80,15 +62,9 @@ Namespace CompuMaster.camm.WebManager.WebServices
     ''' <summary>
     '''     camm Web-Manager core web service
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[AdminSupport]	10.05.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
-    <Web.Services.WebService(name:="camm Web-Manager core web services", _
-                description:="Core camm Web-Manager service for event triggering of queued or scheduled tasks", _
-                [namespace]:="http://www.camm.biz/webmanager/core/"), System.Runtime.InteropServices.ComVisible(False)> _
+    <Web.Services.WebService(Name:="camm Web-Manager core web services",
+                Description:="Core camm Web-Manager service for event triggering of queued or scheduled tasks",
+                [Namespace]:="http://www.camm.biz/webmanager/core/"), System.Runtime.InteropServices.ComVisible(False)>
     Public Class Core
         Inherits BaseWebService
 
@@ -104,8 +80,6 @@ Namespace CompuMaster.camm.WebManager.WebServices
         ''' <summary>
         ''' Execute several processes which are timed asynchronously
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
         <Web.Services.WebMethod()> Public Sub ExecutePendingProcesses()
 
             Dim start As DateTime = Now
@@ -115,7 +89,7 @@ Namespace CompuMaster.camm.WebManager.WebServices
             Try
                 dataProtectionSettings = New CompuMaster.camm.WebManager.DataProtectionSettings(Me.cammWebManager.ConnectionString)
             Catch ex As Exception
-                If FoundException Is Nothing Then FoundException = ex 
+                If FoundException Is Nothing Then FoundException = ex
             End Try
 
             Try

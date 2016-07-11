@@ -24,8 +24,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
     ''' <summary>
     '''     Logon distribution
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     <System.Runtime.InteropServices.ComVisible(False)> Public Class LDirect
         Inherits Page
 
@@ -143,25 +141,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
     '''     When the user went to a document which required a logon, the document's address might be saved in the user session for later redirecting again. When this Referer has been saved, the user shall be redirected back to this URL again, otherwise he shall be redirected to the address of the regular start page.
     '''     Please note: this page executes always on the master server of the server group which is responsable for starting and finishing the logon procedure.
     ''' </remarks>
-    ''' <history>
-    ''' 	[AdminSupport]	29.09.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class LoginProcedureFinished
         Inherits Page
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Redirect either to the referer or the start address
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub PageOnLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
 
             If Request.QueryString("redirectto") <> Nothing Then
@@ -213,35 +199,19 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
             Response.End()
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     When no special referer has been set up, then the redirect will go to the normal start page
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable ReadOnly Property StartPageUrl() As String
             Get
                 Return cammWebManager.Internationalization.User_Auth_Validation_NoRefererURL
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     When the user went to a document which required a logon, the document's address might be saved in the user session for later redirecting again. This property returns this value and removes the referer item from the session objects (to prevent an additional "going back").
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable ReadOnly Property Referer() As String
             Get
                 Dim Result As String = Nothing
@@ -266,8 +236,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
 
         ''' <summary>Reload within frames after the login has completed</summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
         Protected Overridable ReadOnly Property ReloadInTopFrameBeforeRedirect() As Boolean
             Get
                 Return True
@@ -275,17 +243,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
         End Property
 
     End Class
-
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Login utils
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[AdminSupport]	13.05.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Module Utils
 
         Friend Function CryptedPassword(ByVal password As String) As String
@@ -301,20 +261,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
             Return System.Text.Encoding.Unicode.GetString(MyPasswordBytes)
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Does the configuration allows a general login possibility via the query string data or else is it specially allowed for the specified user?
         ''' </summary>
         ''' <param name="username">Does this user has got login authorization via the HTTP GET method?</param>
         ''' <param name="cammWebManager">A camm Web-Manager instance</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function IsLoginAllowedViaQueryStringData(ByVal username As String, ByVal cammWebManager As WMSystem) As Boolean
 
             Dim AutomaticLogonAllowedByMachineToMachineCommunication As Boolean
@@ -331,8 +282,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
             Return AutomaticLogonAllowedByMachineToMachineCommunication
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     To complete the logon process, all the other servers in the same server group have to know the user, too
         ''' </summary>
@@ -340,10 +289,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
         ''' <remarks>
         '''     This method will only be triggered on the master server (=the logon server) of a server group
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub LogonToAllOtherServers(ByVal cammWebManager As WMSystem, ByVal javaScriptCodeWhenLoginFailed As String)
 
             'WebAreas Login vervollständigen
@@ -474,20 +419,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
             HttpContext.Current.Response.End()
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Execute the logon to the current master server
         ''' </summary>
         ''' <param name="cammWebManager"></param>
         ''' <param name="usercredentials"></param>
         ''' <returns>An URL where the browser should be redirected to</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Function LogonToCurrentMasterServer(ByVal cammWebManager As WMSystem, ByVal userCredentials As LogonCredentials, ByVal redirectionTargets As System.Collections.Specialized.NameValueCollection) As String
             Dim Result As String = Nothing
             If userCredentials Is Nothing OrElse userCredentials.Username = Nothing Then
@@ -556,12 +493,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
         ''' <summary>
         '''     Logon data
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Class LogonCredentials
             Public Username As String
             Public Password As String
@@ -573,16 +504,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
     ''' <summary>
     '''     Validate the authorization credentials and start the login process when possible
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	05.08.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class CheckLogin
         Inherits Page
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The login information which shall be used for the logon
         ''' </summary>
@@ -590,10 +513,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
         ''' <remarks>
         '''     Please note: the return value must be null (Nothing in VisualBasic) when the login credentials are incomplete
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable ReadOnly Property LoginCredentials() As LogonCredentials
             Get
                 Dim Result As New LogonCredentials
@@ -632,8 +551,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
             End If
             ValidateUserCredentialsAndLogon()
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Are any login credentials available? In single-sign-on scenarios, the user might be logged on with an external user account or anonymously.
         ''' </summary>
@@ -641,10 +558,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
         ''' <remarks>
         '''     This property helps to find out why the LoginCredentials property was empty: either the external login information hasbn't been there or else the login information had been there but without an assigned, valid webmanager account
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	11.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable ReadOnly Property IsAuthenticated() As Boolean
             Get
                 If LoginCredentials Is Nothing Then
@@ -654,17 +567,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
                 End If
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Validate the login data from the login form and then login on the current (master) server
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub ValidateUserCredentialsAndLogon()
 
             Session.Timeout = 240 '4 h
@@ -705,64 +610,30 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
             LogonToAllOtherServers()
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The actions which shall be made if an external login has been detected but there is not user account in CWM for it
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub OnMissingAssignmentOfExternalAccount()
             Throw New Exception("External account not assigned to a camm Web-Manager user account, and no redirection URL defined")
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The actions which shall be made if an external login has been detected but there is not user account in CWM for it
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub OnMissingAuthentication()
             Me.cammWebManager.RedirectToLogonPage(WMSystem.System_AccessAuthorizationChecks_LoginPageForwarderIDs.ErrorUserOrPasswordWrong, "Correct user credentials are required", Nothing)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     To complete the logon process, all the other servers in the same server group have to know the user, too
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub LogonToAllOtherServers()
             Me.LogonToAllOtherServers(Nothing)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     To complete the logon process, all the other servers in the same server group have to know the user, too
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub LogonToAllOtherServers(ByVal javaScriptCodeWhenLoginFailed As String)
             Utils.LogonToAllOtherServers(Me.cammWebManager, javaScriptCodeWhenLoginFailed)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Redirection target overwritings for the different authentication return values
         ''' </summary>
@@ -770,10 +641,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
         ''' <remarks>
         '''     The key string in this collection is the expected return value, the value is the URL where the browser shall be redirected to
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable ReadOnly Property RedirectionTargets() As System.Collections.Specialized.NameValueCollection
             Get
                 Return Nothing
@@ -785,12 +652,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
     ''' <summary>
     '''     A page which asks to really process the pending login when there is already a login from another workstation
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	19.07.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class ForceLogin
         Inherits Page
 
@@ -809,27 +670,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
     ''' <summary>
     '''     The regular login page
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	19.07.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class LoginForm
         Inherits Page
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create an URL to load the frameset and the original path in the main frame of the frameset
         ''' </summary>
         ''' <param name="path">The original URL of the referer page</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	30.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Function ApplyRefererUrlToFramesetUrl(ByVal path As String) As String
             If path = Nothing Then
                 'When there is no referer, keep it empty
@@ -845,17 +691,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
                 Return cammWebManager.Internationalization.User_Auth_Validation_NoRefererURL & "&ref=" & Server.UrlEncode(path)
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Render a page which looks up wether the current page is running in a frame window or if it's running as the top window
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	30.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub RenderPageLookupIfTheCurrentWindowIsTheTopWindow()
 
             Response.Clear()

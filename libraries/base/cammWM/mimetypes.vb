@@ -28,56 +28,32 @@ Namespace CompuMaster.camm.WebManager
     ''' <summary>
     '''     MIME type resolutions required for downloads to the browser
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Class MimeTypes
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The content-type of a full mime type information
         ''' </summary>
         ''' <param name="mimeType"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
         ''' <example>
         '''     A mime type with &quot;image/jpeg&quot; has got a content-type &quot;image&quot; which will be returned
         ''' </example>
-        ''' <history>
-        ''' 	[adminsupport]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ContentType(ByVal mimeType As String) As String
             Return mimeType.Substring(0, mimeType.LastIndexOf("/"))
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The sub-type of a full mime type information
         ''' </summary>
         ''' <param name="mimeType"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
         ''' <example>
         '''     A mime type with &quot;image/jpeg&quot; has got a sub-type &quot;jpeg&quot; which will be returned
         ''' </example>
-        ''' <history>
-        ''' 	[adminsupport]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function SubType(ByVal mimeType As String) As String
             Return mimeType.Substring(mimeType.LastIndexOf("/") + 1)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Resolve the MIME type by a file extension
         ''' </summary>
         ''' <param name="fileExtension">The extension which leads to the returned MIME type</param>
         ''' <returns>A MIME type</returns>
-        ''' <remarks>
-        ''' </remarks>
         ''' <example>
         '''     <list>
         '''     <item>.jpg leads to &quot;image/jpeg&quot;</item>
@@ -89,10 +65,6 @@ Namespace CompuMaster.camm.WebManager
         '''     <item>.ppt leads to &quot;application/mspowerpoint&quot;</item>
         '''     </list>
         ''' </example>
-        ''' <history>
-        ''' 	[swiercz]	05.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function MimeTypeByFileExtension(ByVal fileExtension As String) As String
 
             If Mid(fileExtension, 1, 1) = "." Then
@@ -268,19 +240,11 @@ Namespace CompuMaster.camm.WebManager
 
             End Select
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Query the windows registry for a MIME type of an extension
         ''' </summary>
         ''' <param name="extension">The file name extension with a leading dot (&quot;.&quot;)</param>
         ''' <returns>A MIME type like &quot;image/jpeg&quot;</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function ResolveMimeTypeByLocalPlatform(ByVal extension As String) As String
 #If Not Linux Then
             Select Case System.Environment.OSVersion.Platform
@@ -316,15 +280,11 @@ Namespace CompuMaster.camm.WebManager
             Return "application/octet-stream"
 #End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Resolve the MIME type by a file name
         ''' </summary>
         ''' <param name="fileName"></param>
         ''' <returns>A MIME type</returns>
-        ''' <remarks>
-        ''' </remarks>
         ''' <example>
         '''     <list>
         '''     <item>.jpg leads to &quot;image/jpeg&quot;</item>
@@ -336,10 +296,6 @@ Namespace CompuMaster.camm.WebManager
         '''     <item>.ppt leads to &quot;application/mspowerpoint&quot;</item>
         '''     </list>
         ''' </example>
-        ''' <history>
-        ''' 	[swiercz]	05.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function MimeTypeByFileName(ByVal fileName As String) As String
             Return MimeTypeByFileExtension(System.IO.Path.GetExtension(fileName))
         End Function

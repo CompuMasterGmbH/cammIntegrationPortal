@@ -35,17 +35,9 @@ Namespace CompuMaster.camm.WebManager
                 _BaseWebManager = value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create an instance of camm Web-Manager client
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	20.03.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New()
             If Not System.Web.HttpContext.Current Is Nothing Then
                 Throw New Exception("WindowsWebManager can't be used in HTTP contexts, please use it in windows or console applications only")
@@ -56,34 +48,18 @@ Namespace CompuMaster.camm.WebManager
         Friend Sub New(ByVal type As System.Type)
             BaseWebManager = New WMSystemEmbedded()
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create an instance of camm Web-Manager client
         ''' </summary>
         ''' <param name="connectionString">The connection string to the camm Web-Manager database</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	20.03.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal connectionString As String)
             Me.New()
             Me.ConnectionString = connectionString
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The connection string to the camm Web-Manager database
         ''' </summary>
         ''' <value>A string containing all information required to successfully establish a connection to the database</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ConnectionString() As String Implements IWebManager.ConnectionString
             Get
                 Return BaseWebManager.ConnectionString
@@ -97,7 +73,6 @@ Namespace CompuMaster.camm.WebManager
         ''' The server identification string for the current server
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Property ServerIdentString() As String
             Get
@@ -121,8 +96,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="loginName">The login name of a user</param>
         ''' <param name="password">The password of this user</param>
         ''' <exception cref="System.Exception">If the login fails, this exception will be thrown</exception>
-        ''' <remarks>
-        ''' </remarks>
         Public Sub Login(ByVal loginName As String, ByVal password As String)
             If Me.ServerIdentString = Nothing Then Throw New Exception("Before a login, the server identitification string must be set")
             If Me.ConnectionString = Nothing Then Throw New Exception("Before a login, the databae connection string must be set")
@@ -139,8 +112,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Logout and perform some clean-ups
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
         Public Sub Logout()
             Me.BaseWebManager.ExecuteLogout()
         End Sub
@@ -148,7 +119,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' camm Web-Manager database version
         ''' </summary>
-        ''' <returns></returns>
         Public Function VersionDatabase() As Version Implements IWebManager.VersionDatabase
             Return Me.BaseWebManager.System_DBVersion_Ex
         End Function
@@ -157,7 +127,6 @@ Namespace CompuMaster.camm.WebManager
         ''' camm Web-Manager database version
         ''' </summary>
         ''' <param name="allowCaching">True to allow reading from cache</param>
-        ''' <returns></returns>
         Public Function VersionDatabase(allowCaching As Boolean) As Version Implements IWebManager.VersionDatabase
             Return Me.BaseWebManager.System_DBVersion_Ex(allowCaching)
         End Function
@@ -165,39 +134,22 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' camm Web-Manager assembly/library version
         ''' </summary>
-        ''' <returns></returns>
         Public Function VersionAssembly() As Version Implements IWebManager.VersionAssembly
             Return Me.BaseWebManager.System_Version_Ex
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     User interface related properties and methods
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	01.03.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property UI() As CompuMaster.camm.WebManager.UserInterface Implements IWebManager.UI
             Get
                 Return BaseWebManager.UI
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Methods for fast data querying
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	23.10.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property PerformanceMethods() As PerformanceMethods Implements IWebManager.PerformanceMethods
             Get
                 Static _PerformanceMethods As CompuMaster.camm.WebManager.PerformanceMethods
@@ -207,17 +159,10 @@ Namespace CompuMaster.camm.WebManager
         End Property
 
 #If ImplementedSubClassesWithIWebManagerInterface Then
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The messaging methods for e-mail distribution
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property MessagingEMails() As Messaging.EMails Implements IWebManager.MessagingEMails
             Get
                 Static _MessagingEMails As Messaging.EMails
@@ -253,17 +198,9 @@ Namespace CompuMaster.camm.WebManager
     ''' <remarks></remarks>
     Public Class NetClient
         Inherits WindowsClient
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create an instance of camm Web-Manager client
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	20.03.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New()
             MyBase.New(CType(Nothing, System.Type))
         End Sub
@@ -272,7 +209,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Provides access to the inner WMSystem object because several instantiations require it, currently
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         <Obsolete("Property will be removed in a later version")> Public ReadOnly Property WebManager() As WMSystem
             Get

@@ -26,7 +26,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Key for the symmetric algorithm
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks>Varies for different algorithms and must be overriden thus</remarks>
         Protected MustOverride ReadOnly Property AlgorithmKey As Byte()
 
@@ -35,7 +34,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Specifies which algorithm the subclass implements
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Protected MustOverride ReadOnly Property ImplementedAlgorithm As PasswordAlgorithm
 
@@ -129,7 +127,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Generates and returns an IV suitable for the algorithm
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function CreateIV() As Byte()
             algorithm.GenerateIV()

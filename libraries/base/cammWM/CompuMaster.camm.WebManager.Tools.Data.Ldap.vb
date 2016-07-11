@@ -22,8 +22,6 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
     ''' <summary>
     '''     LDAP access to retrieve data
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Friend Class Ldap
 
         ''' <summary>

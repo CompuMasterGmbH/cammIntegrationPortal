@@ -52,7 +52,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="propertyName">The key name of the flag</param>
         ''' <param name="value">The new value of the flag</param>
         ''' <param name="doNotLogSuccess">False will lead to an informational log entry in the database after the value has been saved; in case of True there won't be created a log entry</param>
-        ''' <returns></returns>
         Function SetUserDetail(ByVal webManager As IWebManager, ByVal dbConnection As IDbConnection, ByVal userID As Long, ByVal propertyName As String, ByVal value As String, Optional ByVal doNotLogSuccess As Boolean = False) As Boolean
 
         ''' <summary>
@@ -102,14 +101,12 @@ Namespace CompuMaster.camm.WebManager
         ''' Get the list of additional flags which are required by the security objects
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
-        ''' <returns></returns>
         Function ListOfAddtionalFlagsRequiredBySecurityObjects(ByVal webmanager As IWebManager) As String()
 
         ''' <summary>
         ''' Get the list of additional flags which are not required by the security objects
         ''' </summary>
         ''' <param name="webmanager"></param>
-        ''' <returns></returns>
         Function ListOfAdditionalFlagsInUseByUserProfilesNotRequiredBySecurityObjects(ByVal webmanager As IWebManager) As String()
 
         ''' <summary>
@@ -146,7 +143,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Query a list of existing user IDs
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
-        ''' <returns></returns>
         Function ActiveUsers(ByVal webmanager As IWebManager) As Long()
 
         ''' <summary>
@@ -203,8 +199,8 @@ Namespace CompuMaster.camm.WebManager
                     MyConn = CType(dbConnection, SqlClient.SqlConnection)
                 End If
 
-                Dim sql As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDateTime=GetDate(), ValueNText = @VersionString WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager' " & vbNewLine & _
-                    "IF @@ROWCOUNT = 0 " & vbNewLine & _
+                Dim sql As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDateTime=GetDate(), ValueNText = @VersionString WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager' " & vbNewLine &
+                    "IF @@ROWCOUNT = 0 " & vbNewLine &
                     "INSERT INTO [dbo].[System_GlobalProperties] (PropertyName, ValueNVarChar, ValueNText, ValueDateTime) VALUES ('LastWebServiceExecutionDate', 'camm WebManager', @VersionString, GetDate()) "
                 Dim cmd As New System.Data.SqlClient.SqlCommand(sql, MyConn)
                 cmd.CommandType = CommandType.Text
@@ -457,9 +453,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="propertyName">The key name of the flag</param>
         ''' <param name="value">The new value of the flag</param>
         ''' <param name="doNotLogSuccess">False will lead to an informational log entry in the database after the value has been saved; in case of True there won't be created a log entry</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
         Public Function SetUserDetail(ByVal webManager As IWebManager, ByVal dbConnection As IDbConnection, ByVal userID As Long, ByVal propertyName As String, ByVal value As String, Optional ByVal doNotLogSuccess As Boolean = False) As Boolean Implements IDataLayer.SetUserDetail
 
             'User ID cannot be nothing
@@ -519,8 +512,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="userID">The user ID</param>
         ''' <param name="propertyName">The requested property name</param>
         ''' <returns>The resulting value as a String</returns>
-        ''' <remarks>
-        ''' </remarks>
         Public Function GetUserDetail(ByVal webManager As IWebManager, ByVal userID As Long, ByVal propertyName As String) As String Implements IDataLayer.GetUserDetail
             Dim MyCmd As New SqlClient.SqlCommand
             MyCmd.Connection = New SqlClient.SqlConnection(webManager.ConnectionString)
@@ -530,8 +521,6 @@ Namespace CompuMaster.camm.WebManager
             MyCmd.Parameters.Add("@Type", SqlDbType.NVarChar).Value = Trim(propertyName)
             Return Utils.Nz(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, String))
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get a string with all logon servers for a user 
         ''' </summary>
@@ -542,10 +531,6 @@ Namespace CompuMaster.camm.WebManager
         '''     If there is only 1 server group available, the returned string contains only the simply URL of the master server of this server group.
         '''     Are there 2 or more server groups available then each URL of the corresponding master server is followed by the server group title in parenthesis.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function GetUserLogonServers(ByVal webManager As IWebManager, ByVal userID As Long) As String Implements IDataLayer.GetUserLogonServers
             Dim MyUserID As Long = CType(userID, Long)
             Dim MyDBConn As New SqlClient.SqlConnection
@@ -659,9 +644,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="webmanager"></param>
         ''' <returns>All userIDs by additional flag</returns>
         ''' <remarks></remarks>
-        ''' <history>
-        '''     [zeutzheim] 17.08.2009 Created
-        ''' </history>
         Public Function ListOfUsersByAdditionalFlag(ByVal flagName As String, ByVal webmanager As IWebManager) As Long() Implements IDataLayer.ListOfUsersByAdditionalFlag
             Dim sqlStr As String = "SELECT [ID_User] FROM [dbo].[Log_Users] INNER JOIN Benutzer ON Benutzer.ID = dbo.Log_Users.ID_User where Type = @FlagName"
             Dim cmd As New SqlClient.SqlCommand(sqlStr, New SqlClient.SqlConnection(webmanager.ConnectionString))
@@ -673,20 +655,15 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return CType(Result.ToArray(GetType(Long)), Long())
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Get the list of additional flags which are in use by at least one user profile
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
         ''' <returns>All flag names which are used in the user profiles</returns>
-        ''' <remarks>
-        ''' </remarks>
         ''' <history>
         ''' 	[wezel]	07.05.2008	Created
         '''     [zeutzheim] 03.07.2009 Modified
         ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ListOfAdditionalFlagsInUseByUserProfiles(ByVal webmanager As IWebManager) As String() Implements IDataLayer.ListOfAdditionalFlagsInUseByUserProfiles
             Const sql As String = "SELECT [Type] FROM [dbo].[Log_Users] INNER JOIN Benutzer ON Benutzer.ID = dbo.Log_Users.ID_User GROUP BY [Type] ORDER BY [Type]"
             Dim list As ArrayList
@@ -704,20 +681,15 @@ Namespace CompuMaster.camm.WebManager
 
             Return CType(list.ToArray(GetType(String)), String())
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Get the list of additional flags which are in use by at least one user profile
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
         ''' <returns>A hashlist with the flag name as key and the count of occurances as the value</returns>
-        ''' <remarks>
-        ''' </remarks>
         ''' <history>
         ''' 	[wezel]	07.05.2008	Created
         '''     [zeutzheim] 03.07.2009 Modified
         ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ListOfAdditionalFlagsInUseByUserProfilesWithCount(ByVal webmanager As IWebManager) As Hashtable Implements IDataLayer.ListOfAdditionalFlagsInUseByUserProfilesWithCount
             Const sql As String = "SELECT [Type], Count(*) As [Count] FROM [dbo].[Log_Users] INNER JOIN Benutzer ON Benutzer.ID = dbo.Log_Users.ID_User GROUP BY [Type] ORDER BY [Type]"
 
@@ -741,21 +713,15 @@ Namespace CompuMaster.camm.WebManager
 
             Return list
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Get the list of additional flags which are required by the security objects
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
         ''' <history>
         ''' 	[wezel]	    07.05.2008	Created
         '''     [zeutzheim] 02.07.2009 Modified
         '''     [zeutzheim] 09.07.2009 Modified
         ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ListOfAdditionalFlagsRequiredBySecurityObjects(ByVal webmanager As IWebManager) As String() Implements IDataLayer.ListOfAddtionalFlagsRequiredBySecurityObjects
             Const sql As String = "SELECT [RequiredUserProfileFlags] FROM [dbo].[Applications_CurrentAndInactiveOnes] where not [RequiredUserProfileFlags] is null AND not [RequiredUserProfileFlags] = '' Group By [RequiredUserProfileFlags] order by [RequiredUserProfileFlags]"
             Dim cmd As New SqlClient.SqlCommand(sql, New SqlClient.SqlConnection(webmanager.ConnectionString))
@@ -810,19 +776,10 @@ Namespace CompuMaster.camm.WebManager
             Return FlagList
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Get the list of additional flags which are not required by the security objects
         ''' </summary>
         ''' <param name="webmanager"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	09.07.2009	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ListOfAdditionalFlagsInUseByUserProfilesNotRequiredBySecurityObjects(ByVal webmanager As IWebManager) As String() Implements IDataLayer.ListOfAdditionalFlagsInUseByUserProfilesNotRequiredBySecurityObjects
             Dim flagListByUserProfiles As String() = Me.ListOfAdditionalFlagsInUseByUserProfiles(webmanager)
             Dim flagListBySecurityObjects As String() = Me.ListOfAdditionalFlagsRequiredBySecurityObjects(webmanager)
@@ -841,8 +798,6 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return CType(resultAL.ToArray(GetType(System.String)), String())
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Copy authorizations from one security object to another one (without creating duplicates if they already exist)
         ''' </summary>
@@ -852,10 +807,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Only missing authorizations will be copied to the destination security object.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	27.05.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub CopyAuthorizations(ByVal webmanager As IWebManager, ByVal sourceSecurityObjectID As Integer, ByVal destinationSecurityObjectID As Integer) Implements IDataLayer.CopyAuthorizations
             'Environment check
             Dim _DBVersion As Version = Setup.DatabaseUtils.Version(webmanager, True)
@@ -863,94 +814,94 @@ Namespace CompuMaster.camm.WebManager
                 Throw New NotImplementedException("Support for database version " & _DBVersion.ToString & " is currently not supported. Please update the camm WebManager software, first!")
             End If
 
-            Const sqlTillDbBuild_4_11 As String = _
-                "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                "-- Copy missing user authorizations --" & vbNewLine & _
-                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
-                "           ([ID_Application]" & vbNewLine & _
-                "           ,[ID_GroupOrPerson]" & vbNewLine & _
-                "           ,[ReleasedOn]" & vbNewLine & _
-                "           ,[ReleasedBy]" & vbNewLine & _
-                "           ,[DevelopmentTeamMember])" & vbNewLine & _
-                "SELECT @DestinationSecObjID" & vbNewLine & _
-                "      ,[ID_GroupOrPerson]" & vbNewLine & _
-                "      ,[ReleasedOn]" & vbNewLine & _
-                "      ,[ReleasedBy]" & vbNewLine & _
-                "      ,[DevelopmentTeamMember]" & vbNewLine & _
-                "  FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
-                "where [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine & _
-                "	(" & vbNewLine & _
-                "	SELECT [ID_GroupOrPerson]" & vbNewLine & _
-                "	FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
-                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine & _
-                "	)" & vbNewLine & _
-                "" & vbNewLine & _
-                "-- Copy missing group authorizations --" & vbNewLine & _
-                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
-                "           ([ID_Application]" & vbNewLine & _
-                "           ,[ID_GroupOrPerson]" & vbNewLine & _
-                "           ,[ReleasedOn]" & vbNewLine & _
-                "           ,[ReleasedBy])" & vbNewLine & _
-                "SELECT @DestinationSecObjID" & vbNewLine & _
-                "      ,[ID_GroupOrPerson]" & vbNewLine & _
-                "      ,[ReleasedOn]" & vbNewLine & _
-                "      ,[ReleasedBy]" & vbNewLine & _
-                "  FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
-                "where [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine & _
-                "	(" & vbNewLine & _
-                "	SELECT [ID_GroupOrPerson]" & vbNewLine & _
-                "	FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
-                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine & _
+            Const sqlTillDbBuild_4_11 As String =
+                "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                "-- Copy missing user authorizations --" & vbNewLine &
+                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine &
+                "           ([ID_Application]" & vbNewLine &
+                "           ,[ID_GroupOrPerson]" & vbNewLine &
+                "           ,[ReleasedOn]" & vbNewLine &
+                "           ,[ReleasedBy]" & vbNewLine &
+                "           ,[DevelopmentTeamMember])" & vbNewLine &
+                "SELECT @DestinationSecObjID" & vbNewLine &
+                "      ,[ID_GroupOrPerson]" & vbNewLine &
+                "      ,[ReleasedOn]" & vbNewLine &
+                "      ,[ReleasedBy]" & vbNewLine &
+                "      ,[DevelopmentTeamMember]" & vbNewLine &
+                "  FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine &
+                "where [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine &
+                "	(" & vbNewLine &
+                "	SELECT [ID_GroupOrPerson]" & vbNewLine &
+                "	FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine &
+                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine &
+                "	)" & vbNewLine &
+                "" & vbNewLine &
+                "-- Copy missing group authorizations --" & vbNewLine &
+                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
+                "           ([ID_Application]" & vbNewLine &
+                "           ,[ID_GroupOrPerson]" & vbNewLine &
+                "           ,[ReleasedOn]" & vbNewLine &
+                "           ,[ReleasedBy])" & vbNewLine &
+                "SELECT @DestinationSecObjID" & vbNewLine &
+                "      ,[ID_GroupOrPerson]" & vbNewLine &
+                "      ,[ReleasedOn]" & vbNewLine &
+                "      ,[ReleasedBy]" & vbNewLine &
+                "  FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
+                "where [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine &
+                "	(" & vbNewLine &
+                "	SELECT [ID_GroupOrPerson]" & vbNewLine &
+                "	FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
+                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine &
                 "	)"
 
-            Const sqlSinceDbBuild_4_12 As String = _
-                "Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                "-- Copy missing user authorizations --" & vbNewLine & _
-                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
-                "           ([ID_Application]" & vbNewLine & _
-                "           ,[ID_GroupOrPerson]" & vbNewLine & _
-                "           ,[ID_ServerGroup]" & vbNewLine & _
-                "           ,[ReleasedOn]" & vbNewLine & _
-                "           ,[ReleasedBy]" & vbNewLine & _
-                "           ,[DevelopmentTeamMember]" & vbNewLine & _
-                "           ,[IsDenyRule])" & vbNewLine & _
-                "SELECT @DestinationSecObjID" & vbNewLine & _
-                "      ,[ID_GroupOrPerson]" & vbNewLine & _
-                "      ,[ID_ServerGroup]" & vbNewLine & _
-                "      ,[ReleasedOn]" & vbNewLine & _
-                "      ,[ReleasedBy]" & vbNewLine & _
-                "      ,[DevelopmentTeamMember]" & vbNewLine & _
-                "      ,[IsDenyRule]" & vbNewLine & _
-                "FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
-                "WHERE [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine & _
-                "	(" & vbNewLine & _
-                "	SELECT [ID_GroupOrPerson]" & vbNewLine & _
-                "	FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
-                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine & _
-                "	)" & vbNewLine & _
-                "" & vbNewLine & _
-                "-- Copy missing group authorizations --" & vbNewLine & _
-                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
-                "           ([ID_Application]" & vbNewLine & _
-                "           ,[ID_GroupOrPerson]" & vbNewLine & _
-                "           ,[ID_ServerGroup]" & vbNewLine & _
-                "           ,[ReleasedOn]" & vbNewLine & _
-                "           ,[ReleasedBy]" & vbNewLine & _
-                "           ,[DevelopmentTeamMember]" & vbNewLine & _
-                "           ,[IsDenyRule])" & vbNewLine & _
-                "SELECT @DestinationSecObjID" & vbNewLine & _
-                "      ,[ID_GroupOrPerson]" & vbNewLine & _
-                "      ,[ID_ServerGroup]" & vbNewLine & _
-                "      ,[ReleasedOn]" & vbNewLine & _
-                "      ,[ReleasedBy]" & vbNewLine & _
-                "      ,[DevelopmentTeamMember]" & vbNewLine & _
-                "      ,[IsDenyRule]" & vbNewLine & _
-                "FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
-                "WHERE [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine & _
-                "	(" & vbNewLine & _
-                "	SELECT [ID_GroupOrPerson]" & vbNewLine & _
-                "	FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
-                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine & _
+            Const sqlSinceDbBuild_4_12 As String =
+                "Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                "-- Copy missing user authorizations --" & vbNewLine &
+                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine &
+                "           ([ID_Application]" & vbNewLine &
+                "           ,[ID_GroupOrPerson]" & vbNewLine &
+                "           ,[ID_ServerGroup]" & vbNewLine &
+                "           ,[ReleasedOn]" & vbNewLine &
+                "           ,[ReleasedBy]" & vbNewLine &
+                "           ,[DevelopmentTeamMember]" & vbNewLine &
+                "           ,[IsDenyRule])" & vbNewLine &
+                "SELECT @DestinationSecObjID" & vbNewLine &
+                "      ,[ID_GroupOrPerson]" & vbNewLine &
+                "      ,[ID_ServerGroup]" & vbNewLine &
+                "      ,[ReleasedOn]" & vbNewLine &
+                "      ,[ReleasedBy]" & vbNewLine &
+                "      ,[DevelopmentTeamMember]" & vbNewLine &
+                "      ,[IsDenyRule]" & vbNewLine &
+                "FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine &
+                "WHERE [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine &
+                "	(" & vbNewLine &
+                "	SELECT [ID_GroupOrPerson]" & vbNewLine &
+                "	FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine &
+                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine &
+                "	)" & vbNewLine &
+                "" & vbNewLine &
+                "-- Copy missing group authorizations --" & vbNewLine &
+                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
+                "           ([ID_Application]" & vbNewLine &
+                "           ,[ID_GroupOrPerson]" & vbNewLine &
+                "           ,[ID_ServerGroup]" & vbNewLine &
+                "           ,[ReleasedOn]" & vbNewLine &
+                "           ,[ReleasedBy]" & vbNewLine &
+                "           ,[DevelopmentTeamMember]" & vbNewLine &
+                "           ,[IsDenyRule])" & vbNewLine &
+                "SELECT @DestinationSecObjID" & vbNewLine &
+                "      ,[ID_GroupOrPerson]" & vbNewLine &
+                "      ,[ID_ServerGroup]" & vbNewLine &
+                "      ,[ReleasedOn]" & vbNewLine &
+                "      ,[ReleasedBy]" & vbNewLine &
+                "      ,[DevelopmentTeamMember]" & vbNewLine &
+                "      ,[IsDenyRule]" & vbNewLine &
+                "FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
+                "WHERE [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine &
+                "	(" & vbNewLine &
+                "	SELECT [ID_GroupOrPerson]" & vbNewLine &
+                "	FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
+                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine &
                 "	)"
 
             Dim sql As String
@@ -1011,7 +962,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Query a list of existing user IDs
         ''' </summary>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
-        ''' <returns></returns>
         Public Function ActiveUsers(ByVal webmanager As IWebManager) As Long() Implements IDataLayer.ActiveUsers
             Const sql As String = "SELECT ID FROM Benutzer"
             Dim cmd As New SqlClient.SqlCommand(sql, New SqlClient.SqlConnection(webmanager.ConnectionString))

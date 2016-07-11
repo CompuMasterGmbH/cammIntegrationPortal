@@ -111,7 +111,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Counts how many passwords can/must be converted to the new algorithm
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function CountConvertable() As Integer
             Dim MyCmd As New SqlClient.SqlCommand
@@ -150,7 +149,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Converts (up to) the specified amount of passwords into the new algorithm
         ''' </summary>
         ''' <param name="amount"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function ConvertPasswords(ByVal amount As Integer) As Integer
             Dim MyCmd As New SqlClient.SqlCommand

@@ -21,8 +21,6 @@ Namespace CompuMaster.camm.WebManager
     ''' <summary>
     '''     Provide the cammWebManager.UI elements
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Class UserInterface
 
         Private _webManager As CompuMaster.camm.WebManager.WMSystem
@@ -47,8 +45,6 @@ Namespace CompuMaster.camm.WebManager
                 Return _TextModules
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load a text module
         ''' </summary>
@@ -57,32 +53,18 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     By default, the requested websitAreaID is empty.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	10.01.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function TextModule(ByVal key As String) As String
             Return TextModules.Load(key)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load a text module
         ''' </summary>
         ''' <param name="key">The name of the key which uniquely identifies the required value</param>
         ''' <param name="websitAreaID">An array of strings with unique IDs of the website area, e. g. {"Shop", "default", ""} - the order defines the priority</param>
         ''' <returns>A plain text string or HTML code (defined by the variable type) with the complete value of the text</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	10.01.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function TextModule(ByVal key As String, ByVal websitAreaID() As String) As String
             Return TextModules.Load(key, websitAreaID)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load a text module
         ''' </summary>
@@ -91,12 +73,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="marketID">The queried and returned data must match to this market or its alternative language or a neutral culture</param>
         ''' <param name="serverGroupID">The server group for which the requested text module must be available (e. g. Extranet might contain a different editorial than the Intranet area)</param>
         ''' <returns>A plain text string or HTML code (defined by the variable type) with the complete value of the text</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	10.01.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function TextModule(ByVal key As String, ByVal websitAreaID() As String, ByVal marketID As Integer, ByVal serverGroupID As Integer) As String
             Return TextModules.Load(key, websitAreaID, marketID, serverGroupID)
         End Function

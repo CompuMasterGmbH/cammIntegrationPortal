@@ -46,7 +46,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Returns a URL the user can open in order to reset his password. 
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function CreateResetUrl() As String
             GenerateToken()
@@ -77,7 +76,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Checks whether the passed stoken is valid for the user
         ''' </summary>
         ''' <param name="token"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function TokenIsValid(ByVal token As String) As Boolean
             Dim tokenDate As DateTime = GetTokenCreationDate(token)

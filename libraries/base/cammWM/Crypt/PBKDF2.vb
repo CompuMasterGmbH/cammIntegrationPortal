@@ -40,7 +40,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Generates the nonce. Format: [rounds (PBKDF2 iteraetions) as ascii bytes]-[salt bytes]
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>Not exactly only the nonce in this case, but we must prepend it with the nr. of rounds.</remarks>
         Public Function GenerateAlgorithmNonce() As Byte() Implements IWMPasswordTransformation.GenerateAlgorithmNonce
             Dim salt As Byte() = GenerateSalt()
@@ -80,7 +79,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="roundsSaltParam">[rounds (PBKDF2 iteraetions) as ascii bytes]-[salt bytes]</param>
         ''' <param name="dashPosition">0-based index of the dash which seperates rounds and salt</param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function ExtractRoundsFromParam(ByVal roundsSaltParam As Byte(), ByVal dashPosition As Integer) As Integer
             Dim roundsByte As Byte() = New Byte(dashPosition - 1) {}
@@ -95,7 +93,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="roundsSaltParam">[rounds (PBKDF2 iteraetions) as ascii bytes]-[salt bytes]</param>
         ''' <param name="dashPosition">0-based index of the dash which seperates rounds and salt</param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function ExtractSaltFromParam(ByVal roundsSaltParam As Byte(), ByVal dashPosition As Integer) As Byte()
             Dim salt As Byte() = New Byte(SaltSize - 1) {}

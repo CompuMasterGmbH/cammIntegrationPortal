@@ -59,7 +59,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' After a successfull account creation and login, the user lands on this URL
         ''' </summary>
         ''' <param name="user">The user account that has been created</param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Overridable Function UrlAfterLogin(ByVal user As IUserInformation) As String
             Return cammWebManager.Internationalization.User_Auth_Validation_NoRefererURL & "?ref=/sysdata/userjustcreated.aspx&Lang=" & cammWebManager.System_Get1stPreferredLanguageWhichIsSupportedByTheSystem(user.ID)
@@ -94,7 +93,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' Force the user login - also in case that the user already logged on at another terminal
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Protected Property ForceLogin() As Boolean
             Get
@@ -134,21 +132,12 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' <summary>
         ''' Create an IUserInformation object based on provided data from user
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Protected MustOverride Function CreateUserInfo() As WebManager.IUserInformation
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Overridable method for customized actions after the new user account has been written
         ''' </summary>
         ''' <param name="userInfo">The created user account</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	31.08.2009	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub AfterUserCreation(ByVal userInfo As WebManager.IUserInformation)
         End Sub
 
@@ -156,7 +145,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' Pointing to the textbox with the new password which shall be used for the new user account
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Protected MustOverride Property NewUserPassword() As String
 
@@ -164,7 +152,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' Finally write the user account
         ''' </summary>
         ''' <param name="userInfo"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Protected Overridable Function WriteUserAccount(ByVal userInfo As WebManager.IUserInformation) As Boolean
 
@@ -202,31 +189,14 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' <param name="message"></param>
         ''' <remarks></remarks>
         Protected MustOverride Sub ShowErrorMessage(ByVal message As String)
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Prohibited password parts for password complexity check
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	12.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected MustOverride Function PasswordSeverityCheckStrings() As String()
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Fill the user profile with the new data which shall be saved
         ''' </summary>
         ''' <param name="userInfo">The current user profile which shall be created</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	13.06.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected MustOverride Sub FillUserAccount(ByVal userInfo As WebManager.IUserInformation)
 
     End Class
@@ -279,18 +249,9 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
                 Me.TextboxPassword1.Text = value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Prohibited password parts for password complexity check
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	12.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overrides Function PasswordSeverityCheckStrings() As String()
             Dim MyString(2) As String
             MyString(0) = Mid(Me.TextboxLoginName.Text, 1, 4)
@@ -298,19 +259,10 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
             MyString(2) = Mid(Me.TextboxLastName.Text, 1, 4)
             Return MyString
         End Function
-
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Fill the user profile with the new data which shall be saved
         ''' </summary>
         ''' <param name="userInfo">The current user profile which shall be created</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	13.06.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overrides Sub FillUserAccount(ByVal userInfo As WebManager.IUserInformation)
 
             'Already prefilled values
@@ -381,30 +333,30 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
 
         Protected Overrides Function CreateUserInfo() As WebManager.IUserInformation
 
-            Dim MyUserInfo As New WMSystem.UserInformation(0&, _
-                Trim(Mid(Trim(Me.TextboxLoginName.Text), 1, 20)), _
-                Trim(Me.TextboxEMail.Text), _
-                False, _
-                Trim(Me.TextboxCompany.Text), _
-                CType(IIf(Me.DropdownSalutation.SelectedValue = "Ms.", WMSystem.Sex.Feminine, IIf(Me.DropdownSalutation.SelectedValue = "Mr.", WMSystem.Sex.Masculine, WMSystem.Sex.Undefined)), WMSystem.Sex), _
-                Trim(Me.TextboxNameAffix.Text), _
-                Trim(Me.TextboxFirstName.Text), _
-                Trim(Me.TextboxLastName.Text), _
-                Trim(Me.TextboxAcademicTitle.Text), _
-                Trim(Me.TextboxStreet.Text), _
-                Trim(Me.TextboxZipCode.Text), _
-                Trim(Me.TextboxLocation.Text), _
-                Trim(Me.TextboxState.Text), _
-                Trim(Me.TextboxCountry.Text), _
-                CInt(Me.Dropdown1stPreferredLanguage.SelectedValue), _
-                Utils.TryCInt(Me.Dropdown2ndPreferredLanguage.SelectedValue), _
-                Utils.TryCInt(Me.Dropdown3rdPreferredLanguage.SelectedValue), _
-                False, _
-                False, _
-                False, _
-                Me.AccessLevelDefault, _
-                CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem), _
-                CType(Nothing, String), _
+            Dim MyUserInfo As New WMSystem.UserInformation(0&,
+                Trim(Mid(Trim(Me.TextboxLoginName.Text), 1, 20)),
+                Trim(Me.TextboxEMail.Text),
+                False,
+                Trim(Me.TextboxCompany.Text),
+                CType(IIf(Me.DropdownSalutation.SelectedValue = "Ms.", WMSystem.Sex.Feminine, IIf(Me.DropdownSalutation.SelectedValue = "Mr.", WMSystem.Sex.Masculine, WMSystem.Sex.Undefined)), WMSystem.Sex),
+                Trim(Me.TextboxNameAffix.Text),
+                Trim(Me.TextboxFirstName.Text),
+                Trim(Me.TextboxLastName.Text),
+                Trim(Me.TextboxAcademicTitle.Text),
+                Trim(Me.TextboxStreet.Text),
+                Trim(Me.TextboxZipCode.Text),
+                Trim(Me.TextboxLocation.Text),
+                Trim(Me.TextboxState.Text),
+                Trim(Me.TextboxCountry.Text),
+                CInt(Me.Dropdown1stPreferredLanguage.SelectedValue),
+                Utils.TryCInt(Me.Dropdown2ndPreferredLanguage.SelectedValue),
+                Utils.TryCInt(Me.Dropdown3rdPreferredLanguage.SelectedValue),
+                False,
+                False,
+                False,
+                Me.AccessLevelDefault,
+                CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem),
+                CType(Nothing, String),
                 New Collections.Specialized.NameValueCollection)
             Return MyUserInfo
 
@@ -427,18 +379,10 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
             Me.Validators.Add(New DummyValidatorForAppearanceInValidationSummary(message))
             Page.Validate()
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create a string with OPTION tags for all activated languages for embedding into the SELECT tag
         ''' </summary>
         ''' <param name="languageDropdownList">A dropdownlist control which shall be filled</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	12.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Sub FillMarketsList(ByVal languageDropdownList As System.Web.UI.WebControls.DropDownList)
 
             Dim MarketList As WMSystem.LanguageInformation() = cammWebManager.System_GetLanguagesInfo(False)
@@ -710,32 +654,16 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         Protected ShowMissingFieldsListInErrorMessage As Boolean = False
         Protected CheckboxListMotivation As System.Web.UI.WebControls.CheckBoxList
         Protected MotivationOtherText As System.Web.UI.WebControls.TextBox
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Clear the list of missing fields
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.06.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Sub ResetMissingFieldItems()
             MissingFields = Nothing
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Add an additional element to the list of missing fields
         ''' </summary>
         ''' <param name="name"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.06.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Sub AddMissingFieldItem(ByVal name As String)
             If MissingFields = Nothing Then
                 MissingFields = name
@@ -743,18 +671,9 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
                 MissingFields &= ", " & name
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Validate the form data to be complete
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.06.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Function RequiredFormDataAvailable() As Boolean
             'Validate field by field
             If Request.Form("Company") = "" Then
@@ -922,18 +841,10 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
             End Try
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Fill the user profile with the new data which shall be saved
         ''' </summary>
         ''' <param name="userInfo">The current user profile which shall be updated</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	13.06.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub UpdateProfileData(ByVal userInfo As WMSystem.UserInformation)
             userInfo.Gender = CType(IIf(CStr(Request.Form("Anrede")) = "Ms.", WMSystem.Sex.Feminin, IIf(CStr(Request.Form("Anrede")) = "Mr.", WMSystem.Sex.Masculin, WMSystem.Sex.Undefined)), WMSystem.Sex)
             userInfo.PreferredLanguage1 = New WMSystem.LanguageInformation(CType(Request.Form("1stPreferredLanguage"), Integer), cammWebManager)
@@ -957,19 +868,10 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
             userInfo.AdditionalFlags("Motivation") = CollectMotivationDetails()
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create a string with OPTION tags for all activated languages for embedding into the SELECT tag
         ''' </summary>
         ''' <param name="preferredLanguageLevelID">1 for 1st language, 2 for the 2nd one, 3 for the 3rd one</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	12.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Function MarketsListOptions(ByVal preferredLanguageLevelID As Integer) As String
 
             Dim Result As New Text.StringBuilder
@@ -1031,7 +933,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' Pointing to the textbox with the confirmation password which shall be used for verification of the user
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Protected MustOverride Property ConfirmationUserPassword() As String
 
@@ -1064,7 +965,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' <summary>
         ''' Fill an IUserInformation object based on current user info and provided basic data from user
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Protected MustOverride Function UpdateBasicUserInfoOfCurrentUser() As WebManager.IUserInformation
 
@@ -1072,8 +972,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' Overridable method for customized actions after the new user account has been written
         ''' </summary>
         ''' <param name="userInfo">The updated user account</param>
-        ''' <remarks>
-        ''' </remarks>
         Protected Overridable Sub AfterUserUpdate(ByVal userInfo As WebManager.IUserInformation)
         End Sub
 
@@ -1081,7 +979,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' Finally write the user account
         ''' </summary>
         ''' <param name="userInfo"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Protected Overridable Function WriteUserAccount(ByVal userInfo As WebManager.IUserInformation) As Boolean
             Try
@@ -1117,8 +1014,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         '''     Fill the user profile with the new data which shall be saved
         ''' </summary>
         ''' <param name="userInfo">The current user profile which shall be updated</param>
-        ''' <remarks>
-        ''' </remarks>
         Protected MustOverride Sub FillUserAccount(ByVal userInfo As WebManager.IUserInformation)
 
     End Class
@@ -1172,8 +1067,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         '''     Fill the user profile with the new data which shall be saved
         ''' </summary>
         ''' <param name="userInfo">The current user profile which shall be updated</param>
-        ''' <remarks>
-        ''' </remarks>
         Protected Overrides Sub FillUserAccount(ByVal userInfo As WebManager.IUserInformation)
 
             'Already prefilled values
@@ -1285,8 +1178,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' Create a string with OPTION tags for all activated languages for embedding into the SELECT tag
         ''' </summary>
         ''' <param name="languageDropdownList">A dropdownlist control which shall be filled</param>
-        ''' <remarks>
-        ''' </remarks>
         Protected Sub FillMarketsList(ByVal languageDropdownList As System.Web.UI.WebControls.DropDownList)
 
             Dim MarketList As WMSystem.LanguageInformation() = cammWebManager.System_GetLanguagesInfo(False)

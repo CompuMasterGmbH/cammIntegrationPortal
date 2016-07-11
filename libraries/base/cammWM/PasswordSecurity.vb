@@ -29,17 +29,10 @@ Namespace CompuMaster.camm.WebManager
     ''' </remarks>
     Public Class WMPasswordSecurity
         Inherits CompuMaster.camm.WebManager.PasswordSecurity
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a new WMPasswordSecurity class
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance this class shall work with</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal webManager As WMSystem)
             MyBase.New(webManager)
         End Sub
@@ -51,40 +44,21 @@ Namespace CompuMaster.camm.WebManager
     ''' <remarks>
     '''     Defines a set of rules to validate and generate user passwords
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class WMPasswordSecurityInspectionSeverity
         Inherits CompuMaster.camm.WebManager.PasswordSecurityInspectionSeverity
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a new WMPasswordSecurityInspectionSeverity class
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance this class shall work with</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal webManager As WMSystem)
             MyBase.New(webManager)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a new WMPasswordSecurityInspectionSeverity class
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance this class shall work with</param>
         ''' <param name="requiredPasswordLength">The required password length</param>
         ''' <param name="requiredComplexityPoints">A number of required complexity points for a successfull validation</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal webmanager As WMSystem, ByVal requiredPasswordLength As Integer, ByVal requiredComplexityPoints As Integer)
             MyBase.New(webmanager, requiredPasswordLength, requiredComplexityPoints)
         End Sub
@@ -97,39 +71,21 @@ Namespace CompuMaster.camm.WebManager
     ''' <remarks>
     '''     Defines a set of rules to validate and generate user passwords
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class PasswordSecurity
         Private _webManager As WMSystem
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a new WMPasswordSecurity class
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance this class shall work with</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByRef webManager As WMSystem)
             _webManager = webManager
         End Sub
         Dim _InspectionSeverities As PasswordSecurityInspectionSeverity()
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A WMPasswordSecurityInspectionSeverity for the selected access level
         ''' </summary>
         ''' <param name="accessLevelID">An access level ID</param>
         ''' <value>A new WMPasswordSecurityInspectionSeverity which shall be assigned</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Default Public Property InspectionSeverities(ByVal accessLevelID As Integer) As WMPasswordSecurityInspectionSeverity
             Get
                 If _InspectionSeverities Is Nothing OrElse UBound(_InspectionSeverities) < accessLevelID Then
@@ -155,10 +111,6 @@ Namespace CompuMaster.camm.WebManager
     ''' <remarks>
     '''     Defines a set of rules to validate and generate user passwords
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class PasswordSecurityInspectionSeverity
         Dim _RequiredComplexityPoints As Integer = 1
         Dim _RequiredPasswordLength As Integer = 3
@@ -166,52 +118,29 @@ Namespace CompuMaster.camm.WebManager
         Dim _RecommendedPasswordLength As Integer = 8
         Dim _WebManager As WMSystem
         Dim _ErrorMessageComplexityPoints As New Collections.SortedList
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a new WMPasswordSecurityInspectionSeverity class
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance this class shall work with</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal webManager As WMSystem)
             _WebManager = webManager
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a new WMPasswordSecurityInspectionSeverity class
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance this class shall work with</param>
         ''' <param name="requiredPasswordLength">The required password length</param>
         ''' <param name="requiredComplexityPoints">A number of required complexity points for a successfull validation</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal webManager As WMSystem, ByVal requiredPasswordLength As Integer, ByVal requiredComplexityPoints As Integer)
             _RequiredPasswordLength = requiredPasswordLength
             _RequiredComplexityPoints = requiredComplexityPoints
             _WebManager = webManager
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The error message for the selected language when the required complexity points haven't been reached
         ''' </summary>
         ''' <param name="marketID">The language of the error message</param>
         ''' <value>The new error message</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property ErrorMessageComplexityPoints(ByVal marketID As Integer) As String
             Get
                 If Not _ErrorMessageComplexityPoints.Item(marketID) Is Nothing Then
@@ -226,18 +155,10 @@ Namespace CompuMaster.camm.WebManager
                 _ErrorMessageComplexityPoints.Item(marketID) = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The number of characters needed to successfully build or validate a password 
         ''' </summary>
         ''' <value>The number of required characters</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property RequiredPasswordLength() As Integer
             Get
                 Return _RequiredPasswordLength
@@ -246,17 +167,10 @@ Namespace CompuMaster.camm.WebManager
                 _RequiredPasswordLength = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The maximum number of characters allowed to successfully build or validate a password 
         ''' </summary>
         ''' <value>The maximum number of characters</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property RequiredMaximumPasswordLength() As Integer
             Get
                 Return _RequiredMaximumPasswordLength
@@ -265,17 +179,10 @@ Namespace CompuMaster.camm.WebManager
                 _RequiredMaximumPasswordLength = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The number of complexity points to successfully build or validate a password 
         ''' </summary>
         ''' <value>The number of required complexity points</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property RequiredComplexityPoints() As Integer
             Get
                 Return _RequiredComplexityPoints
@@ -284,17 +191,10 @@ Namespace CompuMaster.camm.WebManager
                 _RequiredComplexityPoints = Value
             End Set
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The number of recommended characters to successfully generate a secure password 
         ''' </summary>
         ''' <value>The number of characters for randomly generated passwords</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property RecommendedPasswordLength() As Integer
             Get
                 Return _RecommendedPasswordLength
@@ -303,19 +203,11 @@ Namespace CompuMaster.camm.WebManager
                 _RecommendedPasswordLength = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a random, secure password
         ''' </summary>
         ''' <param name="length">The length of the new password</param>
         ''' <returns>The new generated password</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Function CreateRandomSecurePassword(Optional ByVal length As Integer = Nothing) As String
             Dim Result As String
             Dim _Length As Integer
@@ -340,22 +232,14 @@ Namespace CompuMaster.camm.WebManager
             Loop Until ValidatePasswordComplexity(Result) = PasswordComplexityValidationResult.Success
             Return Result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create a random, secure password with the given length
         ''' </summary>
         ''' <param name="length">The desired length for the new password</param>
         ''' <returns>A string with a strong typed password</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	30.11.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Function CreateRandomPassword(ByVal length As Integer) As String
             Const specchars As String = "@#$?!.+~%=;:()_-\/*&"
-            Const alphabetnumbers As String = _
+            Const alphabetnumbers As String =
                 "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
             Dim _Length As Integer
@@ -442,8 +326,6 @@ Namespace CompuMaster.camm.WebManager
             Failure_HigherPasswordComplexityRequired = 3
             Failure_NotAllowed_PartOfProfileInformation = 4
         End Enum
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Validates the complexity of a password with the user information
         ''' </summary>
@@ -454,10 +336,6 @@ Namespace CompuMaster.camm.WebManager
         '''     A password should never contain parts of the user name or other things often used by hackers.
         '''     To prevent a user from creating those lazy passwords, there is the need to validate it against the data of his user profile.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Function ValidatePasswordComplexity(ByVal password As String, ByVal userInformation As CompuMaster.camm.WebManager.WMSystem.UserInformation) As PasswordComplexityValidationResult
             Dim MyString As New ArrayList
             If userInformation.LoginName <> Nothing Then MyString.Add(Mid(userInformation.LoginName, 1, 4))
@@ -465,7 +343,6 @@ Namespace CompuMaster.camm.WebManager
             If userInformation.LastName <> Nothing Then MyString.Add(Mid(userInformation.LastName, 1, 4))
             Return ValidatePasswordComplexity(password, CType(MyString.ToArray(GetType(String)), String()))
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Validates the complexity of a password with the user information
         ''' </summary>
@@ -476,14 +353,9 @@ Namespace CompuMaster.camm.WebManager
         '''     A password should never contain parts of the user name or other things often used by hackers.
         '''     To prevent a user from creating those lazy passwords, there is the need to validate it against the data of his user profile.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Function ValidatePasswordComplexity(ByVal password As String, ByVal userID As Long) As PasswordComplexityValidationResult
             Return ValidatePasswordComplexity(password, New UserInformation(userID, _WebManager))
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Validates the complexity of a password
         ''' </summary>
@@ -493,14 +365,9 @@ Namespace CompuMaster.camm.WebManager
         '''     A password should never contain parts of the user name or other things often used by hackers.
         '''     To prevent a user from creating those lazy passwords, there is the need to validate it against the data of his user profile.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Function ValidatePasswordComplexity(ByVal password As String) As PasswordComplexityValidationResult
             Return ValidatePasswordComplexity(password, New String() {})
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Validates the complexity of a password
         ''' </summary>
@@ -511,10 +378,6 @@ Namespace CompuMaster.camm.WebManager
         '''     A password should never contain parts of the user name or other things often used by hackers.
         '''     To prevent a user from creating those lazy passwords, there is the need to validate it against the data of his user profile.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Function ValidatePasswordComplexity(ByVal password As String, ByVal textExcludes As String()) As PasswordComplexityValidationResult
             Const specchars As String = "@#$?!,.+~%=;:()_-\/*&"
             Const specchars_increasingsecurity As String = " ‰ˆ¸ƒ÷‹ﬂß{}[]¥`^∞ÈÛÌ˙·‡ÚÏ˘ËÍÓÙ˚‚|'""µÄ≤≥"
@@ -578,11 +441,11 @@ Namespace CompuMaster.camm.WebManager
             End If
 
             'Summarize the complexity points
-            CollectedComplexityPoints = CollectedComplexityPoints_Numbers + _
-                CollectedComplexityPoints_CharsEqualOrGreaterThanAscW + _
-                CollectedComplexityPoints_LargeLetters + _
-                CollectedComplexityPoints_SmallLetters + _
-                CollectedComplexityPoints_SpecChars + _
+            CollectedComplexityPoints = CollectedComplexityPoints_Numbers +
+                CollectedComplexityPoints_CharsEqualOrGreaterThanAscW +
+                CollectedComplexityPoints_LargeLetters +
+                CollectedComplexityPoints_SmallLetters +
+                CollectedComplexityPoints_SpecChars +
                 CollectedComplexityPoints_IncreaseingSecurity + CollectedComplexityPoints
 
             'Result of complexity points comparison

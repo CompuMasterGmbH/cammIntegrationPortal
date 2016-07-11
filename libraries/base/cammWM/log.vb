@@ -24,8 +24,6 @@ Namespace CompuMaster.camm.WebManager
     ''' <summary>
     '''     Event log methods of camm Web-Manager
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Class Log
         Private _WebManager As WMSystem
         Sub New(ByVal webManager As WMSystem)
@@ -33,19 +31,12 @@ Namespace CompuMaster.camm.WebManager
         End Sub
 
 #Region "EventLog"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Write a log entry into the sytem's event log in case tracing is enabled in configuration
         ''' </summary>
         ''' <param name="data">The event details</param>
         ''' <param name="type">Default type is Information</param>
         ''' <param name="writeAlwaysIndependentlyFromConfig">Write this entry always independently from the configured web.config setting WebManager.EventLogTrace</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	27.05.2009	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Sub WriteEventLogTrace(ByVal data As String, Optional ByVal type As System.Diagnostics.EventLogEntryType = Diagnostics.EventLogEntryType.Information, Optional ByVal writeAlwaysIndependentlyFromConfig As Boolean = False)
             Static _ConfigSettingEventLogTrace As TripleState
             If _ConfigSettingEventLogTrace = TripleState.Undefined Then
@@ -69,7 +60,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Collect and write error data into the error log file on webserver disk (see app_data directory)
         ''' </summary>
-        <Obsolete("The preferred log mechanism should be to database or e-mail")> _
+        <Obsolete("The preferred log mechanism should be to database or e-mail")>
         Friend Shared Sub LogToFileError(exception As Exception)
             Dim filePath As String = System.Web.HttpContext.Current.Server.MapPath("~/app_data/error.log")
             Dim basePath As String = System.IO.Path.GetDirectoryName(filePath)
@@ -100,7 +91,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Collect and write warning data into the warning log file on webserver disk (see app_data directory)
         ''' </summary>
-        <Obsolete("The preferred log mechanism should be to database or e-mail")> _
+        <Obsolete("The preferred log mechanism should be to database or e-mail")>
         Friend Shared Sub LogToFileWarning(exception As Exception)
             Dim filePath As String = System.Web.HttpContext.Current.Server.MapPath("~/app_data/warning.log")
             Dim basePath As String = System.IO.Path.GetDirectoryName(filePath)
@@ -131,7 +122,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Collect and write debug data into the debug log file on webserver disk (see app_data directory)
         ''' </summary>
-        <Obsolete("The preferred log mechanism should be to database or e-mail")> _
+        <Obsolete("The preferred log mechanism should be to database or e-mail")>
         Friend Shared Sub LogToFileDebugInfo(logData As String)
             Dim filePath As String = System.Web.HttpContext.Current.Server.MapPath("~/app_data/debug.log")
             Dim basePath As String = System.IO.Path.GetDirectoryName(filePath)
@@ -170,7 +161,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")> _
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")>
         Public Sub ReportWarningViaEMail(ByVal exception As Exception, ByVal messageSubject As String)
             ReportWarningByEMail(exception, messageSubject)
         End Sub
@@ -211,7 +202,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")> _
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")>
         Public Sub ReportWarningViaEMail(ByVal plainText As String, ByVal htmlText As String, ByVal messageSubject As String)
             ReportWarningByEMail(plainText, htmlText, messageSubject)
         End Sub
@@ -247,7 +238,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")> _
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")>
         Public Sub ReportErrorViaEMail(ByVal exception As Exception, ByVal messageSubject As String)
             ReportErrorByEMail(exception, messageSubject)
         End Sub
@@ -279,7 +270,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Step through the exception tree and collection additional data
         ''' </summary>
         ''' <param name="ex"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Friend Shared Function AdditionalDataOfException(ex As Exception) As String
             Dim Result As String = Nothing
@@ -311,7 +301,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")> _
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")>
         Public Sub ReportErrorViaEMail(ByVal plainText As String, ByVal htmlText As String, ByVal messageSubject As String)
             ReportErrorByEMail(plainText, htmlText, messageSubject)
         End Sub
@@ -363,7 +353,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' The location of the executed code/assembly, typically somewhere in the parent or grand parent directory
         ''' </summary>
-        ''' <returns></returns>
         Private Shared Function GetCodeLocation() As String
             Dim result As String = ""
             Try
@@ -437,9 +426,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="exceptionDetails"></param>
         ''' <param name="exceptionIdentifier"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
         Friend Shared Function BuildPlainMessage(ByVal exceptionDetails As String, ByVal exceptionIdentifier As String, exceptionGuid As String, ByVal request As System.Web.HttpRequest, ByVal context As System.Web.HttpContext, ByVal user As System.Security.Principal.IPrincipal, ByVal webManager As WebManager.WMSystem, errorCounter As Integer) As String
 
             Dim ContextRequest As HttpRequest = Nothing
@@ -706,9 +692,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="exceptionDetailsAsHtml">Details on the exception in valid HTML code (and without body or script tags or similar)</param>
         ''' <param name="exceptionIdentifier"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
         Friend Shared Function BuildHtmlMessage(ByVal exceptionDetailsAsHtml As String, ByVal exceptionIdentifier As String, exceptionGuid As String, ByVal request As System.Web.HttpRequest, ByVal context As System.Web.HttpContext, ByVal user As System.Security.Principal.IPrincipal, ByVal webManager As WebManager.WMSystem, errorCounter As Integer) As String
 
             Dim ContextRequest As HttpRequest = Nothing
@@ -1093,7 +1076,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Classifies the user agent types based on crawler/potential machine agent information
         ''' </summary>
         ''' <param name="request"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Shared Function UserAgentClassification(ByVal request As HttpRequest) As String
             Return UserAgentClassification(Utils.IsRequestFromCrawlerAgent(request), Utils.IsRequestFromCrawlerOrPotentialMachineAgent(request))
@@ -1104,7 +1086,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="isCrawler"></param>
         ''' <param name="potentiallyIsCrawler"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Shared Function UserAgentClassification(ByVal isCrawler As Boolean, ByVal potentiallyIsCrawler As Boolean) As String
             If isCrawler Then
@@ -1119,49 +1100,26 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Methods for applications"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create an information log entry in camm Web-Manager's event log
         ''' </summary>
         ''' <param name="message">An message which shall be logged</param>
         ''' <param name="requiredDebugLevel">The required debug level before this message gets logged</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Write(ByVal message As String, Optional ByVal requiredDebugLevel As CompuMaster.camm.WebManager.WMSystem.DebugLevels = DebugLevels.NoDebug)
             WriteLogItem(message, Logging_ConflictTypes.ApplicationInformation, requiredDebugLevel)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a warning log entry in camm Web-Manager's event log
         ''' </summary>
         ''' <param name="message">An message which shall be logged</param>
         ''' <param name="requiredDebugLevel">The required debug level before this message gets logged</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Warn(ByVal message As String, Optional ByVal requiredDebugLevel As CompuMaster.camm.WebManager.WMSystem.DebugLevels = DebugLevels.NoDebug)
             WriteLogItem(message, Logging_ConflictTypes.ApplicationWarning, requiredDebugLevel)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a warning log entry in camm Web-Manager's event log and do not throw the exception
         ''' </summary>
         ''' <param name="exception"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Warn(ByVal exception As Exception)
             Dim ExDetails As String = exception.ToString
 
@@ -1173,24 +1131,14 @@ Namespace CompuMaster.camm.WebManager
 
             WriteLogItem(ExDetails, Logging_ConflictTypes.ApplicationException, DebugLevels.NoDebug, False)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a warning log entry in camm Web-Manager's event log and do not throw the exception
         ''' </summary>
         ''' <param name="message">An message which shall be logged</param>
         ''' <param name="stackTrace">A stacktrace for tracking the error or Nothing for auto-generation of StackTrace</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	07.08.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Warn(ByVal message As String, ByVal stackTrace As String)
             Me.Warn(message, stackTrace, DebugLevels.NoDebug, False, False)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a warning log entry in camm Web-Manager's event log and do not throw the exception
         ''' </summary>
@@ -1198,12 +1146,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="stackTrace">A stacktrace for tracking the error or Nothing for auto-generation of StackTrace</param>
         ''' <param name="neverSendWarningMails"></param>
         ''' <param name="abortRequest"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	07.08.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub Warn(ByVal message As String, ByVal stackTrace As String, ByVal requiredDebugLevel As CompuMaster.camm.WebManager.WMSystem.DebugLevels, ByVal neverSendWarningMails As Boolean, ByVal abortRequest As Boolean)
             If stackTrace Is Nothing Then
                 'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class
@@ -1229,19 +1171,11 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create an error log entry in camm Web-Manager's event log and optionally throw it
         ''' </summary>
         ''' <param name="exception">An exception which shall be logged</param>
         ''' <param name="throwException">Throw the exception or ignore it</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Exception(ByVal exception As Exception, Optional ByVal throwException As Boolean = True)
             Dim ExDetails As String = exception.ToString
 
@@ -1256,19 +1190,11 @@ Namespace CompuMaster.camm.WebManager
                 Throw New SystemException("Exception logged by camm Web-Manager", exception)
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create an error log entry in camm Web-Manager's event log and optionally throw it
         ''' </summary>
         ''' <param name="message">An message which shall be logged</param>
         ''' <param name="throwException">Throw the exception or ignore it</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub Exception(ByVal message As String, Optional ByVal throwException As Boolean = True)
             'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class
             Dim WorkaroundEx As New Exception("")
@@ -1289,38 +1215,23 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Runtime methods"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create an error log entry in camm Web-Manager's event log and do not throw it
         ''' </summary>
         ''' <param name="message">The message which has to be logged</param>
         ''' <param name="requiredDebugLevel">Logging will happen if this debug level is set.</param>
         ''' <param name="neverSendWarningMails">If set to false, there will be an e-mail notification to the TechnicalService contact</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	10.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub RuntimeInformation(ByVal message As String, Optional ByVal requiredDebugLevel As CompuMaster.camm.WebManager.WMSystem.DebugLevels = DebugLevels.NoDebug, Optional ByVal neverSendWarningMails As Boolean = False)
             WriteLogItem(message, Logging_ConflictTypes.RuntimeInformation, requiredDebugLevel, neverSendWarningMails)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create an error log entry in camm Web-Manager's event log and do not throw it
         ''' </summary>
         ''' <param name="Message">The message which has to be logged</param>
         ''' <param name="stackTrace">The exception StackTrace or System.Environment.StackTrace</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	10.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub RuntimeWarning(ByVal message As String, ByVal stackTrace As String)
             Me.RuntimeWarning(message, stackTrace, DebugLevels.NoDebug, False, False)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create an error log entry in camm Web-Manager's event log and throw it
         ''' </summary>
@@ -1329,12 +1240,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="requiredDebugLevel">Logging will happen if this debug level is set.</param>
         ''' <param name="neverSendWarningMails">If set to false, there will be an e-mail notification to the TechnicalService contact</param>
         ''' <param name="abortRequest"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	10.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub RuntimeWarning(ByVal message As String, ByVal stackTrace As String, ByVal requiredDebugLevel As CompuMaster.camm.WebManager.WMSystem.DebugLevels, ByVal neverSendWarningMails As Boolean, ByVal abortRequest As Boolean)
             If stackTrace Is Nothing Then
                 'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class
@@ -1360,18 +1265,11 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End If
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create an error log entry in camm Web-Manager's event log and do not throw it
         ''' </summary>
         ''' <param name="Exception"></param>
         ''' <param name="neverSendWarningMails"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	10.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub RuntimeWarning(ByVal Exception As Exception, Optional ByVal neverSendWarningMails As Boolean = False)
             Dim ExDetails As String = Exception.ToString
 
@@ -1383,8 +1281,6 @@ Namespace CompuMaster.camm.WebManager
 
             WriteLogItem(ExDetails, Logging_ConflictTypes.RuntimeWarning, DebugLevels.NoDebug, neverSendWarningMails)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create an error log entry in camm Web-Manager's event log and do not throw it
         ''' </summary>
@@ -1392,12 +1288,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="neverSendWarningMails">If set to false, there will be an e-mail notification to the TechnicalService contact</param>
         ''' <param name="throwException">True will throw the exception after logging, with false it will return to the calling method</param>
         ''' <param name="requiredDebugLevelBeforeLogging">Logging will happen if this debug level is set. (But throwing the exception will always happen)</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	10.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub RuntimeException(ByVal exception As Exception, ByVal neverSendWarningMails As Boolean, ByVal throwException As Boolean, ByVal requiredDebugLevelBeforeLogging As DebugLevels)
             Dim ExDetails As String = exception.ToString
 
@@ -1412,19 +1302,12 @@ Namespace CompuMaster.camm.WebManager
                 Throw exception
             End If
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create an error log entry in camm Web-Manager's event log and throw it
         ''' </summary>
         ''' <param name="exception">An exception which shall be logged</param>
         ''' <param name="neverSendWarningMails">If set to false, there will be an e-mail notification to the TechnicalService contact</param>
         ''' <param name="abortRequestAndRedirectToAnErrorPage">Redirect the user to an error page</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	10.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub RuntimeException(ByVal exception As Exception, ByVal neverSendWarningMails As Boolean, ByVal abortRequestAndRedirectToAnErrorPage As Boolean)
             Dim ExDetails As String = exception.ToString
 
@@ -1446,19 +1329,12 @@ Namespace CompuMaster.camm.WebManager
                 Throw exception
             End If
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create an error log entry in camm Web-Manager's event log and throw it
         ''' </summary>
         ''' <param name="message">A message which shall be logged</param>
         ''' <param name="neverSendWarningMails">If set to false, there will be an e-mail notification to the TechnicalService contact</param>
         ''' <param name="abortRequestAndRedirectToAnErrorPage">Redirect the user to an error page</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	10.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub RuntimeException(ByVal message As String, Optional ByVal neverSendWarningMails As Boolean = False, Optional ByVal abortRequestAndRedirectToAnErrorPage As Boolean = False)
             WriteLogItem(message, Logging_ConflictTypes.RuntimeException, DebugLevels.NoDebug, neverSendWarningMails)
             If abortRequestAndRedirectToAnErrorPage = True Then
@@ -1477,7 +1353,6 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End If
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create an error log entry in camm Web-Manager's event log and throw it
         ''' </summary>
@@ -1485,12 +1360,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="logMessage">A message which shall be logged</param>
         ''' <param name="neverSendWarningMails">If set to false, there will be an e-mail notification to the TechnicalService contact</param>
         ''' <param name="abortRequestAndRedirectToAnErrorPage"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[zeutzheim]	10.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub RuntimeException(ByVal displayMessage As String, ByVal logMessage As String, Optional ByVal neverSendWarningMails As Boolean = False, Optional ByVal abortRequestAndRedirectToAnErrorPage As Boolean = False)
             'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class
             Dim WorkaroundEx As New Exception("")
@@ -1522,8 +1391,6 @@ Namespace CompuMaster.camm.WebManager
 
 #Region "Write the log item"
         Private WrittenLogsSinceCwmInstanceStart As Integer = 0
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Write a log entry to the database
         ''' </summary>
@@ -1531,12 +1398,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="conflictType">The type of the message to get protocolled</param>
         ''' <param name="requiredDebugLevel">The required debug level before this message gets logged</param>
         ''' <param name="neverSendWarningMails">Never send warning mails even if an exception gets thrown</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub WriteLogItem(ByVal message As String, ByVal conflictType As CompuMaster.camm.WebManager.WMSystem.Logging_ConflictTypes, ByVal requiredDebugLevel As CompuMaster.camm.WebManager.WMSystem.DebugLevels, Optional ByVal neverSendWarningMails As Boolean = False)
             Dim Url As String = Nothing
             Try
@@ -1548,7 +1409,6 @@ Namespace CompuMaster.camm.WebManager
             End Try
             Me.WriteLogItem(message, conflictType, requiredDebugLevel, neverSendWarningMails, Url)
         End Sub
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Write a log entry to the database
         ''' </summary>
@@ -1557,12 +1417,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="requiredDebugLevel">The required debug level before this message gets logged</param>
         ''' <param name="neverSendWarningMails">Never send warning mails even if an exception gets thrown</param>
         ''' <param name="address">The address/URL which is related to this log item</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	02.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Sub WriteLogItem(ByVal message As String, ByVal conflictType As CompuMaster.camm.WebManager.WMSystem.Logging_ConflictTypes, ByVal requiredDebugLevel As CompuMaster.camm.WebManager.WMSystem.DebugLevels, ByVal neverSendWarningMails As Boolean, ByVal address As String)
             Log.WriteEventLogTrace("WriteLogItem:MessageData:" & vbNewLine & message)
             Try
@@ -1595,7 +1449,7 @@ Namespace CompuMaster.camm.WebManager
 
                                 'Get parameter value and append parameter
                                 With MyCmd
-                                    .CommandText = "INSERT INTO [dbo].[Log] ([UserID], [LoginDate], [RemoteIP], [ServerIP], [ApplicationID], [URL], [ConflictType], [ConflictDescription]) " & _
+                                    .CommandText = "INSERT INTO [dbo].[Log] ([UserID], [LoginDate], [RemoteIP], [ServerIP], [ApplicationID], [URL], [ConflictType], [ConflictDescription]) " &
                                         "VALUES (@UserID, GetDate(), @RemoteIP, @ServerIP, @ApplicationID, @URL, @ConflictType, @ConflictDescription)"
                                     .CommandType = CommandType.Text
 
@@ -1710,18 +1564,10 @@ Namespace CompuMaster.camm.WebManager
         Private Const SqlPropertyNameMaxRetentionDays As String = "MaxRetentionDays"
         Private Const SqlPropertyNameMaxLogItems As String = "MaxLogItems"
         Private Const SqlPropertyNameConflictTypesLifeTimes As String = "ConflictTypeAge"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The current approximate number of log entries in the event log
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property RowsInLogTable() As Long
             Get
                 Dim cache As Object = GetCacheItem(CacheKeyRowsInLogTable)
@@ -1755,7 +1601,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Amount of days logs should be retained
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Property MaxRetentionDays() As Integer
             Get
@@ -1778,9 +1623,6 @@ Namespace CompuMaster.camm.WebManager
                 _RetentionDays = Value
             End Set
         End Property
-
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The number of maximum rows in the event log before older logs get truncated
         ''' </summary>
@@ -1788,10 +1630,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     A zero value leads to infinite log entries.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property MaxRowsInLogTable() As Integer
             Get
                 If _MaxRowsInLogTable = Nothing Then
@@ -1840,7 +1678,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Returns an item from the cache
         ''' </summary>
         ''' <param name="key"></param>
-        ''' <returns></returns>
         Private Function GetCacheItem(ByVal key As String) As Object
             If Not HttpContext.Current Is Nothing Then
                 Return HttpContext.Current.Cache(key)
@@ -1869,19 +1706,19 @@ Namespace CompuMaster.camm.WebManager
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand()
             MyCmd.Connection = MyConn
-            MyCmd.CommandText = "DECLARE @RowNumber int" & vbNewLine & _
-                        "SELECT @RowNumber = COUNT(*)" & vbNewLine & _
-                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = @key" & vbNewLine & _
-                        "SELECT @RowNumber" & vbNewLine & _
-                        vbNewLine & _
-                        "IF @RowNumber = 0 " & vbNewLine & _
-                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "		(ValueNVarChar, PropertyName, ValueInt)" & vbNewLine & _
-                        "	VALUES (N'camm WebManager', @key, @ValueInt)" & vbNewLine & _
-                        "ELSE" & vbNewLine & _
-                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "	SET ValueInt = @ValueInt" & vbNewLine & _
+            MyCmd.CommandText = "DECLARE @RowNumber int" & vbNewLine &
+                        "SELECT @RowNumber = COUNT(*)" & vbNewLine &
+                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = @key" & vbNewLine &
+                        "SELECT @RowNumber" & vbNewLine &
+                        vbNewLine &
+                        "IF @RowNumber = 0 " & vbNewLine &
+                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "		(ValueNVarChar, PropertyName, ValueInt)" & vbNewLine &
+                        "	VALUES (N'camm WebManager', @key, @ValueInt)" & vbNewLine &
+                        "ELSE" & vbNewLine &
+                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "	SET ValueInt = @ValueInt" & vbNewLine &
                         "	WHERE ValueNVarChar = N'camm WebManager' AND PropertyName = @key" & vbNewLine
             MyCmd.Parameters.Add(New SqlParameter("@key", SqlDbType.VarChar)).Value = key
             MyCmd.Parameters.Add(New SqlParameter("@ValueInt", SqlDbType.Int)).Value = value
@@ -1891,7 +1728,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Returns a hashtable containing the lifetime of a conflict type in days
         ''' </summary>
-        ''' <returns></returns>
         Private Function GetConflictTypeLifetimes() As Hashtable
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim cmd As New SqlCommand("SELECT ValueInt, ValueDecimal FROM [dbo].[System_GlobalProperties] WHERE ValueNVarChar = N'camm WebManager' AND PropertyName= @propertyname")
@@ -1918,8 +1754,8 @@ Namespace CompuMaster.camm.WebManager
         Public Sub SetConflictTypesLifetime(ByVal hashTable As Hashtable)
             Dim MyCmd As SqlCommand = Nothing
             Dim MyConn As SqlConnection = Nothing
-            Dim message As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDecimal = @value WHERE ValueNVarChar = N'camm WebManager' AND PropertyName= @propertyname AND ValueInt = @key " & _
-                "IF @@ROWCOUNT = 0 " & _
+            Dim message As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDecimal = @value WHERE ValueNVarChar = N'camm WebManager' AND PropertyName= @propertyname AND ValueInt = @key " &
+                "IF @@ROWCOUNT = 0 " &
                 "INSERT INTO [dbo].[System_GlobalProperties] (ValueNVarChar, PropertyName, ValueInt, ValueDecimal) VALUES ('camm WebManager', @propertyname, @key, @value)"
             Try
                 MyCmd = New SqlCommand(message)
@@ -1952,7 +1788,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Read configuration value
         ''' </summary>
         ''' <param name="key"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function GetIntegerConfigEntry(ByVal key As String) As Integer
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
@@ -1967,7 +1802,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Query the current row number of logs from database
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function CountRowsInLogTable() As Long
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
@@ -1986,7 +1820,7 @@ Namespace CompuMaster.camm.WebManager
             Dim connection As SqlConnection = Nothing
             Try
                 connection = New SqlConnection(_WebManager.ConnectionString)
-                cmd = New SqlCommand("INSERT INTO [dbo].[Log] ([UserID], [LoginDate], [RemoteIP], [ServerIP], [ApplicationID], [URL], [ConflictType], [ConflictDescription]) " & _
+                cmd = New SqlCommand("INSERT INTO [dbo].[Log] ([UserID], [LoginDate], [RemoteIP], [ServerIP], [ApplicationID], [URL], [ConflictType], [ConflictDescription]) " &
                         "VALUES (@UserID, GetDate(), @RemoteIP, @ServerIP, @ApplicationID, @URL, @ConflictType, @ConflictDescription)", connection)
 
                 With cmd
@@ -2038,14 +1872,14 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks></remarks>
         Private Function DeleteExpiredEntries(maxNumberOfDeletedRows As Integer) As Integer
             Dim connection As New SqlConnection(_WebManager.ConnectionString)
-            Dim Sql As String = "DELETE FROM [dbo].[Log] WHERE ID IN " & vbNewLine & _
-                "    (" & vbNewLine & _
-                "        SELECT TOP " & maxNumberOfDeletedRows & " ID " & vbNewLine & _
-                "        FROM dbo.Log" & vbNewLine & _
-                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine & _
-                "                ON Log.ConflictType = RetentionConfig.ConflictTypeID" & vbNewLine & _
-                "        WHERE LoginDate < DateAdd(dd, -COALESCE(RetentionDays, @DefaultRetentionDays), GETDATE())" & vbNewLine & _
-                "    )" & vbNewLine & _
+            Dim Sql As String = "DELETE FROM [dbo].[Log] WHERE ID IN " & vbNewLine &
+                "    (" & vbNewLine &
+                "        SELECT TOP " & maxNumberOfDeletedRows & " ID " & vbNewLine &
+                "        FROM dbo.Log" & vbNewLine &
+                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine &
+                "                ON Log.ConflictType = RetentionConfig.ConflictTypeID" & vbNewLine &
+                "        WHERE LoginDate < DateAdd(dd, -COALESCE(RetentionDays, @DefaultRetentionDays), GETDATE())" & vbNewLine &
+                "    )" & vbNewLine &
                 "SELECT @@ROWCOUNT"
             Dim cmd As New SqlCommand(Sql, connection)
             cmd.CommandType = CommandType.Text
@@ -2057,15 +1891,12 @@ Namespace CompuMaster.camm.WebManager
 
         Private Shared locker As Object = New Object()
         Private Shared IsCleanUpLogTableRunning As Boolean
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Remove old lines from the log to save memory in database
         ''' </summary>
         Public Sub CleanUpLogTable()
             CleanUpLogTableInternal()
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Remove old lines from the log to save memory in database
         ''' </summary>

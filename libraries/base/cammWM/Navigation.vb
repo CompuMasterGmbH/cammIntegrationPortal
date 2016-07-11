@@ -20,15 +20,12 @@ Namespace CompuMaster.camm.WebManager.Navigation
     ''' <summary>
     '''     Common utilities for creation of a navigation menu
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Module Utils
 
         ''' <summary>
         ''' Render an SEO optimized navigation inside of a noscript tag
         ''' </summary>
         ''' <param name="navitems">The navigation items</param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function SeoNavigation(ByVal navitems As System.Data.DataTable) As String
             Dim BasicNav As New System.Text.StringBuilder()
@@ -64,7 +61,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
         ''' Lookup the last title level from a back-slash-separated title hierarchy
         ''' </summary>
         ''' <param name="fullTitleHierarchy"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function TitleLastLevel(ByVal fullTitleHierarchy As String) As String
             If fullTitleHierarchy = Nothing Then
@@ -94,8 +90,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
                 Return -1
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create an empty data table which can contain navigation items
         ''' </summary>
@@ -110,10 +104,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
         '''     <item>Tooltip: the tooltip text of an element of the navigation</item>
         ''' </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	26.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function CreateEmptyDataTable() As DataTable
             Dim Result As New DataTable
             Result.Columns.Add(New DataColumn("ID", GetType(System.String)))
@@ -145,8 +135,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
 
             Return Result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Verify the data to contain nothing invalid or duplicates and add required intermediate levels
         ''' </summary>
@@ -154,10 +142,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
         ''' <remarks>
         '''     Other checked things are e. g. no singles back-slashes in category or that the URLAutoCompleted contains at least the URLPreDefinition value
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.03.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub VerifyDataAndFillMissingElements(ByVal navData As DataTable)
             Dim ColumnIndexTitle As Integer = navData.Columns("Title").Ordinal
 
@@ -167,19 +151,11 @@ Namespace CompuMaster.camm.WebManager.Navigation
             VerifyDataAndFillMissingElementsRemoveDuplicates(navData, ColumnIndexTitle)
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Fix title contents
         ''' </summary>
         ''' <param name="navdata"></param>
         ''' <param name="columnIndexTitle"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub VerifyDataAndFillMissingElementsFixTitleContent(ByVal navdata As DataTable, ByVal columnIndexTitle As Integer)
 
             'Fix title content by truncating trailing backslashes, etc.
@@ -205,19 +181,11 @@ Namespace CompuMaster.camm.WebManager.Navigation
             Next
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Add missing hierarchy levels
         ''' </summary>
         ''' <param name="navData"></param>
         ''' <param name="columnIndexTitle"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub VerifyDataAndFillMissingElementsAddMissingHierarchyLevels(ByVal navData As DataTable, ByVal columnIndexTitle As Integer)
 
             Dim ColumnIndexID As Integer = navData.Columns("ID").Ordinal
@@ -254,19 +222,10 @@ Namespace CompuMaster.camm.WebManager.Navigation
             ht = Nothing
 
         End Sub
-
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Copy missing values from base navigation URL to auto-completed URL field
         ''' </summary>
         ''' <param name="navdata"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub VerifyDataAndFillMissingAutoCompletedURLs(ByVal navdata As DataTable)
 
             Dim MyRows As DataRow() = navdata.Select("", "Title ASC")
@@ -281,19 +240,11 @@ Namespace CompuMaster.camm.WebManager.Navigation
             Next
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Remove any doubled rows
         ''' </summary>
         ''' <param name="navData"></param>
         ''' <param name="columnIndexTitle"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub VerifyDataAndFillMissingElementsRemoveDuplicates(ByVal navData As DataTable, ByVal columnIndexTitle As Integer)
             'Remove now all duplicates found 
             Dim MyRows As DataRow() = navData.Select("", "Title ASC")
@@ -327,8 +278,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
                 End If
             Next
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is a searched category member of another list of categories at a defined sub level?
         ''' </summary>
@@ -336,12 +285,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
         ''' <param name="listOfCategories">The semi-colon separated list of categories</param>
         ''' <param name="searchWithinSubelements">The path of the sub level where the searched category shall be found</param>
         ''' <returns>True if the searched category is already there</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.03.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function IsCategoryInListOfCategories(ByVal searchForCategory As String, ByVal listOfCategories As String, ByVal searchWithinSubelements As Boolean) As Boolean
             Dim CurCategory As String
             If Trim(listOfCategories) = "" Then
@@ -385,19 +328,11 @@ Namespace CompuMaster.camm.WebManager.Navigation
             Next
             Return False
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A list of category paths for all possibilities levels
         ''' </summary>
         ''' <param name="CategoryPath">The category to split</param>
         ''' <returns>A sorted list of category paths for all possibilities levels</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function CategoryPathElements(ByVal CategoryPath As String) As SortedList
             CategoryPath = ValidNavigationPath(CategoryPath)
             If CategoryPath = "\" Then
@@ -420,20 +355,12 @@ Namespace CompuMaster.camm.WebManager.Navigation
             Next
             Return Categories
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Retrieve all rows of the data table which are direct sub elements of a specified base level
         ''' </summary>
         ''' <param name="NavData">The data table containing all navigation data</param>
         ''' <param name="CurrentBaseLevel">The base level where to search for child elements</param>
         ''' <returns>All child rows which match the specified base level</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function SubCategories(ByVal NavData As DataTable, ByVal CurrentBaseLevel As String) As DataTable
             CurrentBaseLevel = ValidNavigationPath(CurrentBaseLevel)
             If CurrentBaseLevel = "\" Then
@@ -487,8 +414,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
             'Next
             Return Result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Looks up for a value in a defined column of a data table
         ''' </summary>
@@ -496,12 +421,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
         ''' <param name="ColumnName">The column of the data table where to search in</param>
         ''' <param name="Value">The value to search for</param>
         ''' <returns>True if the value already exists in the list of active rows</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Function ValueAlreadyExistsInDataTable(ByVal DataTable As DataTable, ByVal ColumnName As String, ByVal Value As Long) As Boolean
             Dim MyRows As DataRow() = DataTable.Select("[" & ColumnName.Replace("]", "[]") & "]=" & Value)
             If MyRows.Length = 0 Then
@@ -510,8 +429,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
                 Return True
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Looks up for a value in a defined column of a data table
         ''' </summary>
@@ -519,12 +436,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
         ''' <param name="ColumnName">The column of the data table where to search in</param>
         ''' <param name="Value">The value to search for</param>
         ''' <returns>True if the value already exists in the list of active rows</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Function ValueAlreadyExistsInDataTable(ByVal DataTable As DataTable, ByVal ColumnName As String, ByVal Value As String) As Boolean
             Dim MyRows As DataRow() = DataTable.Select("[" & ColumnName.Replace("]", "[]") & "]='" & Value.Replace("'", "''") & "'")
             If MyRows.Length = 0 Then
@@ -533,8 +444,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
                 Return True
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Looks up for a value in a defined column of a data table
         ''' </summary>
@@ -542,12 +451,6 @@ Namespace CompuMaster.camm.WebManager.Navigation
         ''' <param name="ColumnName">The column of the data table where to search in</param>
         ''' <param name="Value">The value to search for</param>
         ''' <returns>True if the value already exists in the list of active rows</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Function ValueAlreadyExistsInDataTable(ByVal DataTable As DataTable, ByVal ColumnName As String, ByVal Value As DBNull) As Boolean
             Dim MyRows As DataRow() = DataTable.Select("[" & ColumnName.Replace("]", "[]") & "]=NULL")
             If MyRows.Length = 0 Then
@@ -556,19 +459,11 @@ Namespace CompuMaster.camm.WebManager.Navigation
                 Return True
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the upper level of a category path
         ''' </summary>
         ''' <param name="category">A category path</param>
         ''' <returns>The parent category or a backslash for the root value</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ParentCategory(ByVal category As String) As String
 
             If category = "" OrElse category = "\" Then
@@ -587,19 +482,11 @@ Namespace CompuMaster.camm.WebManager.Navigation
             Return NextCategoryLevelName
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Validates a correct construction of a category title
         ''' </summary>
         ''' <param name="path">The path to be validated</param>
         ''' <returns>The path without starting or trailing back slashes or one backslash in case of the root level</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function ValidNavigationPath(ByVal path As String) As String
 
             Dim Result As String = Trim(path)
@@ -621,20 +508,12 @@ Namespace CompuMaster.camm.WebManager.Navigation
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Retrieves the sub categories
         ''' </summary>
         ''' <param name="basePath">A string containing the path which should be removed</param>
         ''' <param name="completePath">The complete path of a category</param>
         ''' <returns>The relative sub path between the basePath and the completePath. Empty if the basePath is not part of the completePath.</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	05.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function RelativeCategory(ByVal basePath As String, ByVal completePath As String) As String
             If Mid(basePath, 1, 1) = "\" Then
                 'remove starting back slahes

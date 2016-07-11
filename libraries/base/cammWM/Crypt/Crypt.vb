@@ -29,7 +29,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Generates a nonce (number used once or number once) which the algorithm needs to work (properly) with, e. g. IV or Salt
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Function GenerateAlgorithmNonce() As Byte()
 
@@ -38,7 +37,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="plaintext"></param>
         ''' <param name="noncevalue"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Function Transform(ByVal plainText As Byte(), ByVal noncevalue As Byte()) As Byte()
 
@@ -47,7 +45,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="plainText"></param>
         ''' <param name="noncevalue"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Function TransformString(ByVal plainText As String, ByVal noncevalue As Byte()) As String
 
@@ -55,7 +52,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Encrypts/Hashes the string. Will generate IV/salt.
         ''' </summary>
         ''' <param name="plainText"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Function TransformString(ByVal plainText As String) As CryptoTransformationResult
 
@@ -68,7 +64,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="plaintext"></param>
         ''' <param name="noncevalue"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Function TransformBack(ByVal plaintext As Byte(), ByVal noncevalue As Byte()) As Byte()
 
@@ -77,7 +72,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="encryptedString"></param>
         ''' <param name="noncevalue"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Function TransformStringBack(ByVal encryptedString As String, ByVal noncevalue As Byte()) As String
     End Interface
@@ -116,7 +110,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Produces the proper algorithm
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function ProduceCryptographicTransformer(ByVal algorithm As PasswordAlgorithm) As IWMPasswordTransformation
             Dim result As IWMPasswordTransformation

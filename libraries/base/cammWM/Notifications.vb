@@ -23,8 +23,6 @@ Namespace CompuMaster.camm.WebManager.Notifications
     ''' <summary>
     '''     The common interface for all notification providers
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Interface INotifications
 
         '/// will be called by System_SetUserInfo method
@@ -39,7 +37,6 @@ Namespace CompuMaster.camm.WebManager.Notifications
         Sub NotificationForUser_Welcome_UserRegisteredByHimself(ByVal userInfo As UserInformation, ByVal password As String)
 
         '/// will be called by System_SetUserInfo method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Welcome notification e-mail for the self registered user 
         ''' </summary>
@@ -47,14 +44,9 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' <remarks>
         '''     This method will be called by the standard mechanisms of camm Web-Manager
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub NotificationForUser_Welcome_UserRegisteredByHimself(ByVal userInfo As UserInformation)
 
         '/// will be called by System_SetUserInfo method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Welcome notification e-mail for the user created by a security administrator with mention of the password 
         ''' </summary>
@@ -63,29 +55,17 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' <remarks>
         '''     This method will be called by the standard mechanisms of camm Web-Manager
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub NotificationForUser_Welcome_UserHasBeenCreated(ByVal userInfo As UserInformation, ByVal password As String)
 
         '/// will be called by System_SetUserInfo method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for every security administrator to review and authorize a new user account
         ''' </summary>
         ''' <param name="userInfoToBeReviewed">The user information object to be reviewed</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub NotificationForSecurityAdministration_ReviewNewUserAccount(ByVal userInfoToBeReviewed As UserInformation)
 
 
         '/// will be called by System_SetUserPassword method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for the user with mention of the password when the password has been changed by a security administrator
         ''' </summary>
@@ -94,25 +74,14 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' <remarks>
         '''     This method will be called by the standard mechanisms of camm Web-Manager
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub NotificationForUser_ResettedPassword(ByVal userInfo As UserInformation, ByVal newPassword As String)
 
 
         '/// will be called by the appropriate formular
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for the user who has forgotten his password
         ''' </summary>
         ''' <param name="userInfo">The user information object</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub NotificationForUser_ForgottenPassword(ByVal userInfo As UserInformation)
 
         ''' <summary>
@@ -125,31 +94,17 @@ Namespace CompuMaster.camm.WebManager.Notifications
 
 
         '/// will be called by the appropriate admin formular
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for the user that he has got his first authorizations and that it makes sense now to revisit us again
         ''' </summary>
         ''' <param name="userInfo"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub NotificationForUser_AuthorizationsSet(ByVal userInfo As UserInformation)
 
         '/// will be called by the appropriate admin formular
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for the user that he has to activate his account
         ''' </summary>
         ''' <param name="userInfo"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub NotificationForUser_ActivationRequired(ByVal userInfo As UserInformation)
 
         Sub SendSupportContractHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date, instanceReference As String)
@@ -166,26 +121,14 @@ Namespace CompuMaster.camm.WebManager.Notifications
     ''' <remarks>
     '''     Use this class to modify/customize the e-mails to all your users
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class DefaultNotifications
         Implements INotifications
 
         Protected cammWebManager As WMSystem
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a new WMNotifications class
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance this class shall work with</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal webManager As WMSystem)
             cammWebManager = webManager
         End Sub
@@ -193,8 +136,6 @@ Namespace CompuMaster.camm.WebManager.Notifications
         Protected Overridable Function UserSalutation(ByVal userInfo As WMSystem.UserInformation) As String
             Return userInfo.SalutationInMails
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get a string with all logon servers for a user
         ''' </summary>
@@ -205,26 +146,15 @@ Namespace CompuMaster.camm.WebManager.Notifications
         '''     If there is only 1 server group available, the returned string contains only the simply URL of the master server of this server group.
         '''     Are there 2 or more server groups available then each URL of the corresponding master server is followed by the server group title in parenthesis.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Function GetUserLogonServers(ByVal webManager As IWebManager, ByVal userID As Long) As String
             Return CompuMaster.camm.WebManager.DataLayer.Current.GetUserLogonServers(webManager, userID)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' The HTML tag with correct left-to-right or right-to-left direction
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>
         ''' Arabic, hebrew and some other languages require a right-to-left writing instead of the default left-to-right. This method creates an HTML tag based on the current UI culture.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	12.12.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function HtmlTagOpener() As String
             If Utils.IsRightToLeftCulture(System.Globalization.CultureInfo.CurrentUICulture) Then
                 Return "<html dir=""rtl"">"
@@ -234,7 +164,6 @@ Namespace CompuMaster.camm.WebManager.Notifications
         End Function
 
         '/// will be called by System_SetUserInfo method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Welcome notification e-mail for the self registered user with mention of the password 
         ''' </summary>
@@ -243,10 +172,6 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' <remarks>
         '''     This method will be called by the standard mechanisms of camm Web-Manager
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Overloads Sub NotificationForUser_Welcome_UserRegisteredByHimself(ByVal userInfo As UserInformation, ByVal password As String) Implements INotifications.NotificationForUser_Welcome_UserRegisteredByHimself
 
             'Backup current language ID
@@ -258,17 +183,17 @@ Namespace CompuMaster.camm.WebManager.Notifications
 
             Dim MainSubject As String, eMailBody As String, eMailHTMLBody As String
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
-            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome_WithPassword, userInfo.LoginName, password, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
+            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome_WithPassword, userInfo.LoginName, password, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome_WithPassword, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(password) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" & _
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome_WithPassword, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(password) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" &
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"
 
             If cammWebManager.MessagingEMails.SendEMail(userInfo.FullName, userInfo.EMailAddress, MainSubject, eMailBody, eMailHTMLBody, "", "", CType(Nothing, Messaging.EMailAttachment()), CType(Nothing, Messaging.EMails.Priority), Messaging.EMails.Sensitivity.Status_Personal) = False Then
@@ -286,7 +211,6 @@ Namespace CompuMaster.camm.WebManager.Notifications
         End Sub
 
         '/// will be called by System_SetUserInfo method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Welcome notification e-mail for the self registered user 
         ''' </summary>
@@ -294,10 +218,6 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' <remarks>
         '''     This method will be called by the standard mechanisms of camm Web-Manager
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Overloads Sub NotificationForUser_Welcome_UserRegisteredByHimself(ByVal userInfo As UserInformation) Implements INotifications.NotificationForUser_Welcome_UserRegisteredByHimself
 
             'Backup current language ID
@@ -309,17 +229,17 @@ Namespace CompuMaster.camm.WebManager.Notifications
 
             Dim MainSubject As String, eMailBody As String, eMailHTMLBody As String
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
-            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome, userInfo.LoginName, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
+            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome, userInfo.LoginName, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" & _
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" &
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"
 
             If cammWebManager.MessagingEMails.SendEMail(userInfo.FullName, userInfo.EMailAddress, MainSubject, eMailBody, eMailHTMLBody, "", "", CType(Nothing, Messaging.EMailAttachment()), CType(Nothing, Messaging.EMails.Priority), Messaging.EMails.Sensitivity.Status_Personal) = False Then
@@ -337,7 +257,6 @@ Namespace CompuMaster.camm.WebManager.Notifications
         End Sub
 
         '/// will be called by System_SetUserInfo method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Welcome notification e-mail for the user created by a security administrator with mention of the password 
         ''' </summary>
@@ -346,10 +265,6 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' <remarks>
         '''     This method will be called by the standard mechanisms of camm Web-Manager
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub NotificationForUser_Welcome_UserHasBeenCreated(ByVal userInfo As UserInformation, ByVal password As String) Implements INotifications.NotificationForUser_Welcome_UserHasBeenCreated
 
             'Backup current language ID
@@ -361,17 +276,17 @@ Namespace CompuMaster.camm.WebManager.Notifications
 
             Dim MainSubject As String, eMailBody As String, eMailHTMLBody As String
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
-            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextWelcome, userInfo.LoginName, password, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
+            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextWelcome, userInfo.LoginName, password, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextWelcome, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(password) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" & _
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextWelcome, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(password) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" &
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"
 
             Dim errors As String = String.Empty
@@ -394,17 +309,10 @@ Namespace CompuMaster.camm.WebManager.Notifications
         End Sub
 
         '/// will be called by System_SetUserInfo method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for every security administrator to review and authorize a new user account
         ''' </summary>
         ''' <param name="userInfoToBeReviewed">The user information object to be reviewed</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub NotificationForSecurityAdministration_ReviewNewUserAccount(ByVal userInfoToBeReviewed As UserInformation) Implements INotifications.NotificationForSecurityAdministration_ReviewNewUserAccount
             Dim MailLanguage As Integer
             Dim Success As Boolean
@@ -433,46 +341,46 @@ Namespace CompuMaster.camm.WebManager.Notifications
                         'Account has been created by current logged in admin or one of his collegues
                         emailIntroduction = cammWebManager.Internationalization.UserManagement_NewUser_MsgEMail4Admin
                     End If
-                    email4SecurityAdminMsgBody = UserSalutation(MySecurityAdmin) & ControlChars.CrLf & _
-                        ControlChars.CrLf & _
-                        emailIntroduction & ControlChars.CrLf & _
-                        ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleLogin & userInfoToBeReviewed.LoginName & ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleCompany & userInfoToBeReviewed.Company & ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleName & userInfoToBeReviewed.FullName & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleEMailAddress & userInfoToBeReviewed.EMailAddress & ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleStreet & userInfoToBeReviewed.Street & ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleZIPCode & userInfoToBeReviewed.ZipCode & ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleLocation & userInfoToBeReviewed.Location & ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleState & userInfoToBeReviewed.State & ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleCountry & userInfoToBeReviewed.Country & ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitle1stLanguage & userInfoToBeReviewed.PreferredLanguage1.LanguageName_English & ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitle2ndLanguage & userInfoToBeReviewed.PreferredLanguage2.LanguageName_English & ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitle3rdLanguage & userInfoToBeReviewed.PreferredLanguage3.LanguageName_English & ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleComesFrom & userInfoToBeReviewed.AdditionalFlags("ComesFrom") & ControlChars.CrLf & _
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleMotivation & userInfoToBeReviewed.AdditionalFlags("Motivation") & ControlChars.CrLf & _
-                        ControlChars.CrLf & _
+                    email4SecurityAdminMsgBody = UserSalutation(MySecurityAdmin) & ControlChars.CrLf &
+                        ControlChars.CrLf &
+                        emailIntroduction & ControlChars.CrLf &
+                        ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleLogin & userInfoToBeReviewed.LoginName & ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleCompany & userInfoToBeReviewed.Company & ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleName & userInfoToBeReviewed.FullName &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleEMailAddress & userInfoToBeReviewed.EMailAddress & ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleStreet & userInfoToBeReviewed.Street & ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleZIPCode & userInfoToBeReviewed.ZipCode & ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleLocation & userInfoToBeReviewed.Location & ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleState & userInfoToBeReviewed.State & ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleCountry & userInfoToBeReviewed.Country & ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitle1stLanguage & userInfoToBeReviewed.PreferredLanguage1.LanguageName_English & ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitle2ndLanguage & userInfoToBeReviewed.PreferredLanguage2.LanguageName_English & ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitle3rdLanguage & userInfoToBeReviewed.PreferredLanguage3.LanguageName_English & ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleComesFrom & userInfoToBeReviewed.AdditionalFlags("ComesFrom") & ControlChars.CrLf &
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleMotivation & userInfoToBeReviewed.AdditionalFlags("Motivation") & ControlChars.CrLf &
+                        ControlChars.CrLf &
                         cammWebManager.Internationalization.UserManagementEMailColumnTitleComment & ControlChars.CrLf & CommentOfNewUser
-                    email4SecurityAdminMsgHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
-                        "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(MySecurityAdmin)) & "</p>" & _
-                        "<p>" & Utils.HighlightLinksInMessage(Utils.HTMLEncodeLineBreaks(emailIntroduction)) & "</p>" & _
-                        "<table border=""0"">" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleLogin & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.LoginName) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleCompany & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Company) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleName & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.FullName) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleEMailAddress & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.EMailAddress) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleStreet & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Street) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleZIPCode & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.ZipCode) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleLocation & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Location) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleState & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.State) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleCountry & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Country) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitle1stLanguage & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.PreferredLanguage1.LanguageName_English) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitle2ndLanguage & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.PreferredLanguage2.LanguageName_English) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitle3rdLanguage & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.PreferredLanguage3.LanguageName_English) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleComesFrom & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.AdditionalFlags("ComesFrom")) & "</td></tr>" & _
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleMotivation & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.AdditionalFlags("Motivation")) & "</td></tr>" & _
-                        CType(IIf(CommentOfNewUser <> "", "<tr><td colspan=""2"">&nbsp;</td></tr>" & _
-                        "<tr><td colspan=""2""><h4>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleComment & "</h4>" & Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(CommentOfNewUser)) & "</td></tr>", ""), String) & _
+                    email4SecurityAdminMsgHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
+                        "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(MySecurityAdmin)) & "</p>" &
+                        "<p>" & Utils.HighlightLinksInMessage(Utils.HTMLEncodeLineBreaks(emailIntroduction)) & "</p>" &
+                        "<table border=""0"">" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleLogin & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.LoginName) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleCompany & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Company) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleName & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.FullName) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleEMailAddress & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.EMailAddress) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleStreet & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Street) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleZIPCode & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.ZipCode) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleLocation & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Location) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleState & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.State) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleCountry & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Country) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitle1stLanguage & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.PreferredLanguage1.LanguageName_English) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitle2ndLanguage & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.PreferredLanguage2.LanguageName_English) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitle3rdLanguage & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.PreferredLanguage3.LanguageName_English) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleComesFrom & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.AdditionalFlags("ComesFrom")) & "</td></tr>" &
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleMotivation & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.AdditionalFlags("Motivation")) & "</td></tr>" &
+                        CType(IIf(CommentOfNewUser <> "", "<tr><td colspan=""2"">&nbsp;</td></tr>" &
+                        "<tr><td colspan=""2""><h4>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleComment & "</h4>" & Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(CommentOfNewUser)) & "</td></tr>", ""), String) &
                         "</table></body></html>"
                     Success = cammWebManager.MessagingEMails.SendEMail(MySecurityAdmin.FullName, MySecurityAdmin.EMailAddress, cammWebManager.Internationalization.UserManagementEMailTextSubject4AdminNewUser, email4SecurityAdminMsgBody, email4SecurityAdminMsgHTMLBody, "", "")
                 Next
@@ -536,7 +444,6 @@ Namespace CompuMaster.camm.WebManager.Notifications
         End Sub
 
         '/// will be called by System_SetUserPassword method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for the user with mention of the password when the password has been changed by a security administrator
         ''' </summary>
@@ -545,10 +452,6 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' <remarks>
         '''     This method will be called by the standard mechanisms of camm Web-Manager
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub NotificationForUser_ResettedPassword(ByVal userInfo As UserInformation, ByVal newPassword As String) Implements INotifications.NotificationForUser_ResettedPassword
             Dim MainSubject As String
             Dim eMailBody As String
@@ -563,17 +466,17 @@ Namespace CompuMaster.camm.WebManager.Notifications
             cammWebManager.Internationalization.LoadLanguageStrings(MailLanguage)
 
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
-            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                Utils.sprintf(cammWebManager.Internationalization.UserManagement_ResetPWByAdmin_EMailMsg, newPassword, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
+            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.UserManagement_ResetPWByAdmin_EMailMsg, newPassword, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_ResetPWByAdmin_EMailMsg, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(newPassword) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" & _
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_ResetPWByAdmin_EMailMsg, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(newPassword) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" &
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"
             Dim ErrorDetailsBuffer As String = String.Empty
             Success = cammWebManager.MessagingEMails.SendEMail(userInfo.FullName, userInfo.EMailAddress, MainSubject, eMailBody, eMailHTMLBody, "", "", "", "", Nothing, Nothing, CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity.Status_Personal, , , , , ErrorDetailsBuffer)
@@ -592,17 +495,10 @@ Namespace CompuMaster.camm.WebManager.Notifications
         End Sub
 
         '/// will be called by the appropriate formular
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for the user who has forgotten his password
         ''' </summary>
         ''' <param name="userInfo">The user information object</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub NotificationForUser_ForgottenPassword(ByVal userInfo As UserInformation) Implements INotifications.NotificationForUser_ForgottenPassword
             Dim PW As String = cammWebManager.System_GetUserPassword(userInfo.LoginName, userInfo.EMailAddress)
             Dim MainSubject As String
@@ -618,17 +514,17 @@ Namespace CompuMaster.camm.WebManager.Notifications
             cammWebManager.Internationalization.LoadLanguageStrings(MailLanguage)
 
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
-            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                Utils.sprintf(cammWebManager.Internationalization.SendPassword_EMailMessage, PW, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
+            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.SendPassword_EMailMessage, PW, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.SendPassword_EMailMessage, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(PW) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" & _
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.SendPassword_EMailMessage, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(PW) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" &
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"
             Success = cammWebManager.MessagingEMails.SendEMail(userInfo.FullName, userInfo.EMailAddress, MainSubject, eMailBody, eMailHTMLBody, "", "", CType(Nothing, Messaging.EMailAttachment()), CType(Nothing, Messaging.EMails.Priority), Messaging.EMails.Sensitivity.Status_Personal)
 
@@ -655,20 +551,20 @@ Namespace CompuMaster.camm.WebManager.Notifications
             cammWebManager.Internationalization.LoadLanguageStrings(MailLanguage)
 
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
-            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                Utils.sprintf(cammWebManager.Internationalization.SendPasswordResetLink_EMailMessage, resetLinkUrl) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
+            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.SendPasswordResetLink_EMailMessage, resetLinkUrl) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
 
             resetLinkUrl = System.Web.HttpUtility.HtmlEncode(resetLinkUrl)
 
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.SendPasswordResetLink_EMailMessage, "<a href=""" & resetLinkUrl & """>" & resetLinkUrl & "</a>")) & "</p>" & _
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.SendPasswordResetLink_EMailMessage, "<a href=""" & resetLinkUrl & """>" & resetLinkUrl & "</a>")) & "</p>" &
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"
             Success = cammWebManager.MessagingEMails.SendEMail(userInfo.FullName, userInfo.EMailAddress, MainSubject, eMailBody, eMailHTMLBody, "", "", CType(Nothing, Messaging.EMailAttachment()), CType(Nothing, Messaging.EMails.Priority), Messaging.EMails.Sensitivity.Status_Personal)
 
@@ -682,17 +578,10 @@ Namespace CompuMaster.camm.WebManager.Notifications
 
 
         '/// will be called by the appropriate admin formular
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for the user that he has got his first authorizations and that it makes sense now to revisit us again
         ''' </summary>
         ''' <param name="userInfo"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub NotificationForUser_AuthorizationsSet(ByVal userInfo As UserInformation) Implements INotifications.NotificationForUser_AuthorizationsSet
 
             Dim Success As Boolean
@@ -706,18 +595,18 @@ Namespace CompuMaster.camm.WebManager.Notifications
 
             'Create and send the mail
             Dim MainSubject As String = cammWebManager.Internationalization.UserManagement_NewUser_SubjectAuthCheckSuccessfull
-            Dim eMailBody As String = UserSalutation(userInfo) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextAuthCheckSuccessfull, userInfo.LoginName, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf & _
-                ControlChars.CrLf & _
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
+            Dim eMailBody As String = UserSalutation(userInfo) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextAuthCheckSuccessfull, userInfo.LoginName, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf &
+                ControlChars.CrLf &
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
             Dim eMailHTMLBody As String
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextAuthCheckSuccessfull, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" & _
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextAuthCheckSuccessfull, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" &
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"
             cammWebManager.MessagingEMails.SendEMail(userInfo.FullName, userInfo.EMailAddress, MainSubject, eMailBody, eMailHTMLBody, Nothing, Nothing, CType(Nothing, Messaging.EMailAttachment()), CType(Nothing, Messaging.EMails.Priority), Messaging.EMails.Sensitivity.Status_Personal)
 
@@ -731,17 +620,10 @@ Namespace CompuMaster.camm.WebManager.Notifications
         End Sub
 
         '/// will be called by the appropriate admin formular
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for the user that he has to activate his account
         ''' </summary>
         ''' <param name="userInfo"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub NotificationForUser_ActivationRequired(ByVal userInfo As WMSystem.UserInformation) Implements INotifications.NotificationForUser_ActivationRequired
             'TODO: Implementation
             Throw New NotImplementedException("NotificationForUser_ActivationRequired")
@@ -787,24 +669,15 @@ Namespace CompuMaster.camm.WebManager.Notifications
         Implements INotifications
 
         Protected cammWebManager As WMSystem
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a new WMNotifications class
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance this class shall work with</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal webManager As WMSystem)
             cammWebManager = webManager
         End Sub
 
         '/// will be called by System_SetUserInfo method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Welcome notification e-mail for the self registered user with mention of the password 
         ''' </summary>
@@ -813,15 +686,10 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' <remarks>
         '''     This method will be called by the standard mechanisms of camm Web-Manager
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Overloads Sub NotificationForUser_Welcome_UserRegisteredByHimself(ByVal userInfo As UserInformation, ByVal password As String) Implements INotifications.NotificationForUser_Welcome_UserRegisteredByHimself
         End Sub
 
         '/// will be called by System_SetUserInfo method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Welcome notification e-mail for the self registered user 
         ''' </summary>
@@ -829,15 +697,10 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' <remarks>
         '''     This method will be called by the standard mechanisms of camm Web-Manager
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Overloads Sub NotificationForUser_Welcome_UserRegisteredByHimself(ByVal userInfo As UserInformation) Implements INotifications.NotificationForUser_Welcome_UserRegisteredByHimself
         End Sub
 
         '/// will be called by System_SetUserInfo method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Welcome notification e-mail for the user created by a security administrator with mention of the password 
         ''' </summary>
@@ -846,30 +709,18 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' <remarks>
         '''     This method will be called by the standard mechanisms of camm Web-Manager
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub NotificationForUser_Welcome_UserHasBeenCreated(ByVal userInfo As UserInformation, ByVal password As String) Implements INotifications.NotificationForUser_Welcome_UserHasBeenCreated
         End Sub
 
         '/// will be called by System_SetUserInfo method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for every security administrator to review and authorize a new user account
         ''' </summary>
         ''' <param name="userInfoToBeReviewed">The user information object to be reviewed</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub NotificationForSecurityAdministration_ReviewNewUserAccount(ByVal userInfoToBeReviewed As UserInformation) Implements INotifications.NotificationForSecurityAdministration_ReviewNewUserAccount
         End Sub
 
         '/// will be called by System_SetUserPassword method
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for the user with mention of the password when the password has been changed by a security administrator
         ''' </summary>
@@ -878,57 +729,32 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' <remarks>
         '''     This method will be called by the standard mechanisms of camm Web-Manager
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub NotificationForUser_ResettedPassword(ByVal userInfo As UserInformation, ByVal newPassword As String) Implements INotifications.NotificationForUser_ResettedPassword
         End Sub
 
         '/// will be called by the appropriate formular
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for the user who has forgotten his password
         ''' </summary>
         ''' <param name="UserInfo">The user information object</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub NotificationForUser_ForgottenPassword(ByVal userInfo As UserInformation) Implements INotifications.NotificationForUser_ForgottenPassword
         End Sub
 
         Public Overridable Sub NotificationForUser_PassordResetLink(ByVal userInfo As UserInformation, ByVal resetLinkUrl As String) Implements INotifications.NotificationForUser_PasswordResetLink
         End Sub
         '/// will be called by the appropriate admin formular
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for the user that he has got his first authorizations and that it makes sense now to revisit us again
         ''' </summary>
         ''' <param name="userInfo"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Sub NotificationForUser_AuthorizationsSet(ByVal userInfo As UserInformation) Implements INotifications.NotificationForUser_AuthorizationsSet
         End Sub
 
         '/// will be called by the appropriate admin formular
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Notification e-mail for the user that he has to activate his account
         ''' </summary>
         ''' <param name="userInfo"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub NotificationForUser_ActivationRequired(ByVal userInfo As WMSystem.UserInformation) Implements INotifications.NotificationForUser_ActivationRequired
         End Sub
 
@@ -955,26 +781,14 @@ Namespace CompuMaster.camm.WebManager
     ''' <remarks>
     '''     Use this class to modify/customize the e-mails to all your users
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	06.07.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class WMNotifications
         Inherits Notifications.DefaultNotifications
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Creates a new WMNotifications class
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance this class shall work with</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal webManager As WMSystem)
-            MyBase.New(WebManager)
+            MyBase.New(webManager)
         End Sub
 
     End Class

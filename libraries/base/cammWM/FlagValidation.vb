@@ -116,7 +116,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Is the flag a strong type
         ''' </summary>
-        ''' <returns></returns>
         Public ReadOnly Property IsTypeFlag As Boolean
             Get
                 Return _isTypeFlag
@@ -127,7 +126,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Returns the flag as it was passed here, so for example "Birthday{DATE}"
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public ReadOnly Property FlagCompleteDefinition As String
             Get
@@ -139,7 +137,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Returns the name of the flag without type information. So for "Birthday{DATE}" it would return "Birthday"
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public ReadOnly Property FlagName As String
             Get
@@ -151,7 +148,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Returns the type of the flag. So for "Birthday{DATE}" it would return "DATE"
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public ReadOnly Property FlagType As String
             Get
@@ -163,7 +159,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Validates the given value against the type of this flag. 
         ''' </summary>
         ''' <param name="value">the value to be checked</param>
-        ''' <returns></returns>
         Public Function IsCorrectValueForType(ByVal value As String) As Boolean
             If Not Me.IsTypeFlag Then
                 Return True
@@ -230,7 +225,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Validate this flag requirement on a user information object
         ''' </summary>
         ''' <param name="userinfo"></param>
-        ''' <returns></returns>
         Public Function Validate(ByVal userinfo As WMSystem.UserInformation) As FlagValidationResult
             Dim result As New FlagValidationResult(userinfo.IDLong, Me.FlagCompleteDefinition, Nothing)
             Dim userAdditionalFlags As System.Collections.Specialized.NameValueCollection = userinfo.AdditionalFlags
@@ -254,7 +248,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="userinfo"></param>
         ''' <param name="requiredFlags"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function ValidateRequiredFlags(ByVal userinfo As WMSystem.UserInformation, ByVal requiredFlags As String(), filterForErrorsOnly As Boolean) As FlagValidationResult()
             Dim result As New ArrayList
@@ -318,7 +311,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Only 1st warning filled, more warnings might be available
             ''' </summary>
-            ''' <returns></returns>
             Public ReadOnly Property MoreWarningsAvailable As Boolean
                 Get
                     Return _MoreWarningsAvailable

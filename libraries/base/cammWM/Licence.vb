@@ -33,8 +33,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Licence details of the camm Web-Manager instance
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
         Public ReadOnly Property Licence() As Licence
             Get
                 Static _Licence As Licence
@@ -187,18 +185,10 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The licencee, the name or an identifier of the organization 
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	11.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Licencee() As String
             Get
                 If CachedLicencee = Nothing Then
@@ -217,34 +207,26 @@ Namespace CompuMaster.camm.WebManager
                 Return CachedLicencee
             End Get
             Set(ByVal Value As String)
-                Dim MyCmd As New SqlCommand( _
-                    "declare @ExistingValue bit" & vbNewLine & _
-                        "SELECT TOP 1 @ExistingValue  = 1" & vbNewLine & _
-                        "FROM [dbo].[System_GlobalProperties] " & vbNewLine & _
-                        "WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = 'camm WebManager'" & vbNewLine & _
-                        "IF @ExistingValue IS NULL" & vbNewLine & _
-                        "	INSERT INTO [dbo].[System_GlobalProperties]([PropertyName], [ValueNVarChar], [ValueNText])" & vbNewLine & _
-                        "	VALUES ('LicenceeName', 'camm WebManager', @Name)" & vbNewLine & _
-                        "ELSE" & vbNewLine & _
-                        "	UPDATE [dbo].[System_GlobalProperties] SET [ValueNText] = @Name WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = 'camm WebManager'", _
+                Dim MyCmd As New SqlCommand(
+                    "declare @ExistingValue bit" & vbNewLine &
+                        "SELECT TOP 1 @ExistingValue  = 1" & vbNewLine &
+                        "FROM [dbo].[System_GlobalProperties] " & vbNewLine &
+                        "WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = 'camm WebManager'" & vbNewLine &
+                        "IF @ExistingValue IS NULL" & vbNewLine &
+                        "	INSERT INTO [dbo].[System_GlobalProperties]([PropertyName], [ValueNVarChar], [ValueNText])" & vbNewLine &
+                        "	VALUES ('LicenceeName', 'camm WebManager', @Name)" & vbNewLine &
+                        "ELSE" & vbNewLine &
+                        "	UPDATE [dbo].[System_GlobalProperties] SET [ValueNText] = @Name WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = 'camm WebManager'",
                     New SqlConnection(_WebManager.ConnectionString))
                 MyCmd.Parameters.Add("@Name", SqlDbType.NText).Value = Value
-                CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(mycmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+                CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
                 CachedLicencee = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A cached value wether this application has been unlocked successfully
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	11.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Property IsLicenced() As Boolean
             Get
 

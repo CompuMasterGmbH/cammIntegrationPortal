@@ -26,8 +26,6 @@ Namespace CompuMaster.camm.WebManager.Modules.Redirector.Pages
     ''' <summary>
     ''' Redirect to an URL which is referenced by the R-parameter in the querystring
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     <System.Runtime.InteropServices.ComVisible(False)> Public Class Redirector
         Inherits CompuMaster.camm.WebManager.Pages.Page
 
@@ -118,29 +116,14 @@ Namespace CompuMaster.camm.WebManager.Modules.Redirector.Pages
     ''' <summary>
     '''     Data handling for the module of redirections
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	11.01.2006	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class Data
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Read the number of redirections
         ''' </summary>
         ''' <param name="id">The redirection ID as visible in the administration area</param>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	11.01.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function NumberOfRedirections(ByVal id As Integer, ByVal webmanager As CompuMaster.camm.WebManager.IWebManager) As Integer
-            Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(webmanager.ConnectionString), _
+            Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(webmanager.ConnectionString),
                                     "Select numberofredirections from Redirects_ToAddr where id = " & id.ToString, CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), 0)
         End Function
 

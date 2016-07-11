@@ -52,7 +52,6 @@ Namespace CompuMaster.camm.WebManager.Security
         ''' Real time check for finally effective authorizations
         ''' </summary>
         ''' <param name="serverGroupID">The server group where an authorizations will be granted</param>
-        ''' <returns></returns>
         ''' <remarks>Note: Use method cammWebManager.IsUserAuthorized to check a single, finally effective authorization for a user</remarks>
         Public Function EffectiveFinally(serverGroupID As Integer) As SecurityObjectAuthorizationForUser()
             Return MyBase.EffectiveFinallyInternal(EffectivityType.SecurityObjectByUser, serverGroupID)

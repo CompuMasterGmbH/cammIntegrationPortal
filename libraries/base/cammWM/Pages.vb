@@ -22,8 +22,6 @@ Namespace CompuMaster.camm.WebManager.Pages
     ''' <summary>
     '''     An interface for all controls which are implementing the cammWebManager property
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Public Interface IPage
         Property cammWebManager() As CompuMaster.camm.WebManager.Controls.cammWebManager
         ReadOnly Property Page() As System.Web.UI.Page
@@ -39,7 +37,6 @@ Namespace CompuMaster.camm.WebManager.Pages
         ''' The cammWebManager instance created by a cammWebManager control on this master page or one of its parent master pages
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Property cammWebManager As CompuMaster.camm.WebManager.Controls.cammWebManager
             Get
@@ -90,7 +87,6 @@ Namespace CompuMaster.camm.WebManager.Pages
         ''' If IsProtectedPage is enabled, the page request must be authorized before page prerender event, otherwise an exception is thrown.
         ''' </summary>
         ''' <value></value>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public ReadOnly Property IsProtectedPage As Boolean
             Get
@@ -105,19 +101,11 @@ Namespace CompuMaster.camm.WebManager.Pages
         Protected Sub EnableProtectedPageRequirement()
             _IsProtectedPage = True
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Throws an error when no security object has been set up
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub CheckForExecutedPageAuthValidationOnPreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.PreRender
             If _IsProtectedPage Then
                 If Me.cammWebManager Is Nothing Then
@@ -145,18 +133,10 @@ Namespace CompuMaster.camm.WebManager.Pages
                 Return Response.ApplyAppPathModifier(Request.RawUrl)
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Lookup the server form which resides on the page
         ''' </summary>
         ''' <returns>The control of the server form if it's existant</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function LookupServerForm() As System.Web.UI.HtmlControls.HtmlForm
             Static Result As System.Web.UI.HtmlControls.HtmlForm
             If Result Is Nothing Then
@@ -164,30 +144,14 @@ Namespace CompuMaster.camm.WebManager.Pages
             End If
             Return Result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Fires all page evens manually if the camm Web-Manager object has been created just on the fly because it won't do automatically since this is not a regular involved control
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private _FirePageEventsToCammWebManagerManually As Boolean
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     True to allow it (makes only sense for error pages) or False to ask the configuration setting
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Overridable ReadOnly Property CreationOnTheFlyAllowed() As Boolean
             Get
                 Return False
@@ -234,17 +198,10 @@ Namespace CompuMaster.camm.WebManager.Pages
         Private AlreadyTryedToLookUpCammWebManager As Boolean = False
         Private AlreadyTryedToLookUpCammWebManagerInMasterPageSubControls As Boolean = False
         'ToDo: Change in next major release into Public Property cammWebManager() As CompuMaster.camm.WebManager.controls.cammWebManager or better IWebManager
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The current instance of camm Web-Manager
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property cammWebManager() As CompuMaster.camm.WebManager.WMSystem
             Get
 #If NetFramework <> "1_1" Then
@@ -337,18 +294,10 @@ Namespace CompuMaster.camm.WebManager.Pages
             Next
             Return Nothing
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The property which implements the interface for IPage.cammWebManager
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	27.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Property WebManager() As CompuMaster.camm.WebManager.Controls.cammWebManager Implements IPage.cammWebManager
             Get
                 Return _WebManager
@@ -357,18 +306,9 @@ Namespace CompuMaster.camm.WebManager.Pages
                 _WebManager = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a camm Web-Manager instance on the fly
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Function OnWebManagerJustInTimeCreation() As CompuMaster.camm.WebManager.Controls.cammWebManager
             Return New CompuMaster.camm.WebManager.Controls.cammWebManagerJIT
         End Function
@@ -423,18 +363,10 @@ Namespace CompuMaster.camm.WebManager.Pages
             'Auto-Distribution of the camm Web-Manager instance to all controls
             InheritCwmInstance(Me.Controls)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Recursive method to assign the camm Web-Manager instance to all sub controls
         ''' </summary>
         ''' <param name="controls">The control collection which shall be tested for the CompuMaster.camm.WebManager.Controls.IControl interface</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	28.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub InheritCwmInstance(ByVal controls As System.Web.UI.ControlCollection)
             Dim CwmIControlType As System.Type = GetType(CompuMaster.camm.WebManager.Controls.IControl)
             For MyCounter As Integer = 0 To controls.Count - 1

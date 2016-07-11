@@ -24,8 +24,6 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
     ''' <summary>
     '''     Collect eedback from the users
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Friend Class NamespaceDoc
     End Class
 
@@ -37,59 +35,31 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
     '''     <para>The controls can be placed by you yourself. If they contain user input data, it will be added to the collected data list.</para>
     '''     <para>You only should ensure that you also create a Button or LinkButton which calls the method <see cref="CompuMaster.camm.WebManager.Modules.Feedback.Pages.FeedbackForm.CollectDataAndSendEMail">CollectDataAndSendEMail</see> to collect and send the data.</para>
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	26.01.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class FeedbackForm
         Inherits CompuMaster.camm.WebManager.Pages.Page
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Loop through a control collection and collect all information a user has made
         ''' </summary>
         ''' <param name="page">A page instance with some controls to be parsed/collected</param>
         ''' <param name="results">The reference to the results hashtable</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	26.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub CollectAllInputControls(ByVal page As System.Web.UI.Page, ByVal results As Hashtable)
             CollectAllInputControls(page.Controls, results, Nothing)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Loop through a control collection and collect all information a user has made
         ''' </summary>
         ''' <param name="control">A single control to be parsed/collected</param>
         ''' <param name="results">The reference to the results hashtable</param>
         ''' <param name="prefix">An optional prefix for the control name in the results hashtable</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	26.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub CollectAllInputControls(ByVal control As UI.Control, ByVal results As Hashtable, ByVal prefix As String)
             CollectAllInputControls(control.Controls, results, prefix)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Loop through a control collection and collect all information a user has made
         ''' </summary>
         ''' <param name="controls">A single control to be parsed/collected</param>
         ''' <param name="results">The reference to the results hashtable</param>
         ''' <param name="prefix">An optional prefix for the control name in the results hashtable</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	26.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub CollectAllInputControls(ByVal controls As UI.ControlCollection, ByVal results As Hashtable, ByVal prefix As String)
 
             For Each MyControl As UI.Control In controls
@@ -150,8 +120,6 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
 
             Next
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Add values to the results collection
         ''' </summary>
@@ -159,12 +127,6 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
         ''' <param name="controlID">The control name to identify the value</param>
         ''' <param name="value">The value</param>
         ''' <param name="keyPrefix">An optional prefix for the control name, regulary used for controls in controls</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	26.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub AddResult(ByVal results As Hashtable, ByVal controlID As String, ByVal value As Object, ByVal keyPrefix As String)
             If controlID = Nothing Then
                 Throw New ArgumentNullException(controlID)
@@ -176,18 +138,10 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
                 End If
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The subject of the form in the e-mail
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	26.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property Subject() As String
             Get
                 If CType(ViewState("Subject"), String) = Nothing Then
@@ -200,18 +154,10 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
                 ViewState("Subject") = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The introduction of your e-mail
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	26.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property MessageIntroText() As String
             Get
                 Return CType(ViewState("MessageIntroText"), String)
@@ -220,18 +166,10 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
                 ViewState("MessageIntroText") = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The finish of your e-mail
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	26.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property MessageFinishText() As String
             Get
                 Return CType(ViewState("MessageFinishText"), String)
@@ -240,8 +178,6 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
                 ViewState("MessageFinishText") = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Collect all data and process the results
         ''' </summary>
@@ -250,15 +186,9 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
         ''' <remarks>
         '''     The list of the form fields will be sorted alphabetically, that's why it's recommended to name all controls IDs in a way (e. g. "00_FirstName", "01_FamilyName", etc.) which allows you to get a well sorted list of form data.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	26.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function CollectDataAndSendEMail(ByVal emailAddress As String) As String
             Return CollectDataAndSendEMail(emailAddress, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Collect all data and process the results
         ''' </summary>
@@ -268,10 +198,6 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
         ''' <remarks>
         '''     The list of the form fields will be sorted alphabetically, that's why it's recommended to name all controls IDs in a way (e. g. "00_FirstName", "01_FamilyName", etc.) which allows you to get a well sorted list of form data.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	26.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function CollectDataAndSendEMail(ByVal emailAddress As String, ByVal inputFormPanelOrContainer As UI.Control) As String
 
             Dim Results As New Hashtable
@@ -313,8 +239,6 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
             End If
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Collect all data and send them to the e-mail address and show/hide the panels of the form dependent on the success of the e-mail transmission
         ''' </summary>
@@ -326,10 +250,6 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
         ''' <remarks>
         '''     The list of the form fields will be sorted alphabetically, that's why it's recommended to name all controls IDs in a way (e. g. "00_FirstName", "01_FamilyName", etc.) which allows you to get a well sorted list of form data.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	26.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function CollectDataAndSendEMail(ByVal emailAddress As String, ByVal formContent As UI.Control, ByVal successContent As UI.Control, ByVal submissionFailureContent As UI.Control) As String
 
             Dim errors As String = CollectDataAndSendEMail(emailAddress, formContent)

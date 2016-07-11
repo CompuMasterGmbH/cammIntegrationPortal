@@ -125,8 +125,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
         ''' <summary>
         '''     Provider for loading and saving of data from and to the database
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
         Public Class SmartWcmsDatabaseAccessLayer
 
             Private _swcms As ISmartWcmsEditor
@@ -164,13 +162,12 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     An array of available languages within an editor controls version
             ''' </summary>
-            ''' <returns></returns>
             Public Function AvailableMarketsInData(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal version As Integer) As Integer()
                 Dim myConnection As SqlClient.SqlConnection
                 Dim myCommand As SqlClient.SqlCommand
-                Dim myQuery As String = _
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                    "select LanguageID from webmanager_webeditor where Url = @Url " & vbNewLine & _
+                Dim myQuery As String =
+                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                    "select LanguageID from webmanager_webeditor where Url = @Url " & vbNewLine &
                     "and EditorID = @EditorID and version = @Version AND ServerID = @ServerID group by LanguageID"
                 myConnection = New SqlClient.SqlConnection(ConnectionString)
                 myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -190,40 +187,38 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="marketID"></param>
             ''' <param name="content"></param>
             ''' <param name="modifiedBy"></param>
-            ''' <remarks>
-            ''' </remarks>
             Public Sub SaveEditorContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal content As String, ByVal modifiedBy As Long)
                 'Prepare query:
-                Dim myQuery As String = _
-                    "DECLARE @Version int" & vbNewLine & _
-                    "DECLARE @ReplaceExistingValue bit" & vbNewLine & _
-                    "DECLARE @ModifiedOn datetime" & vbNewLine & _
-                    "-- Retrieve editable version" & vbNewLine & _
-                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine & _
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
-                    "-- Insert or update data?" & vbNewLine & _
-                    "SELECT @ReplaceExistingValue = CASE WHEN COUNT(*) = 0 THEN 0 ELSE 1 END" & vbNewLine & _
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                    "WHERE Version = @Version AND LanguageID = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
-                    "-- Insert new or update existing data" & vbNewLine & _
-                    "SELECT @ModifiedOn = GETDATE()" & vbNewLine & _
-                    "IF @ReplaceExistingValue = 1" & vbNewLine & _
-                    "   UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                    "   SET [ServerID]=@ServerID, [LanguageID]=@LanguageID, [IsActive]=0," & vbNewLine & _
-                    "       [URL]=@URL, [EditorID]=@EditorID, [Content]=@Content, [ModifiedOn]=@ModifiedOn," & vbNewLine & _
-                    "       [ModifiedByUser]=@ModifiedByUser, [ReleasedOn]=NULL, " & vbNewLine & _
-                    "       [ReleasedByUser]=NULL, [Version]=@Version" & vbNewLine & _
-                    "   WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
-                    "ELSE" & vbNewLine & _
-                    "   INSERT INTO [dbo].[WebManager_WebEditor](" & vbNewLine & _
-                    "       [ServerID], [LanguageID], [IsActive], [URL], [EditorID], [Content], [ModifiedOn], " & vbNewLine & _
-                    "       [ModifiedByUser], [ReleasedOn], [ReleasedByUser], [Version]" & vbNewLine & _
-                    "       )" & vbNewLine & _
-                    "   VALUES(" & vbNewLine & _
-                    "       @ServerID, @LanguageID, 0, " & vbNewLine & _
-                    "       @URL, @EditorID, @Content, @ModifiedOn, " & vbNewLine & _
-                    "       @ModifiedByUser, NULL, NULL, " & vbNewLine & _
+                Dim myQuery As String =
+                    "DECLARE @Version int" & vbNewLine &
+                    "DECLARE @ReplaceExistingValue bit" & vbNewLine &
+                    "DECLARE @ModifiedOn datetime" & vbNewLine &
+                    "-- Retrieve editable version" & vbNewLine &
+                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine &
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
+                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
+                    "-- Insert or update data?" & vbNewLine &
+                    "SELECT @ReplaceExistingValue = CASE WHEN COUNT(*) = 0 THEN 0 ELSE 1 END" & vbNewLine &
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
+                    "WHERE Version = @Version AND LanguageID = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
+                    "-- Insert new or update existing data" & vbNewLine &
+                    "SELECT @ModifiedOn = GETDATE()" & vbNewLine &
+                    "IF @ReplaceExistingValue = 1" & vbNewLine &
+                    "   UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine &
+                    "   SET [ServerID]=@ServerID, [LanguageID]=@LanguageID, [IsActive]=0," & vbNewLine &
+                    "       [URL]=@URL, [EditorID]=@EditorID, [Content]=@Content, [ModifiedOn]=@ModifiedOn," & vbNewLine &
+                    "       [ModifiedByUser]=@ModifiedByUser, [ReleasedOn]=NULL, " & vbNewLine &
+                    "       [ReleasedByUser]=NULL, [Version]=@Version" & vbNewLine &
+                    "   WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
+                    "ELSE" & vbNewLine &
+                    "   INSERT INTO [dbo].[WebManager_WebEditor](" & vbNewLine &
+                    "       [ServerID], [LanguageID], [IsActive], [URL], [EditorID], [Content], [ModifiedOn], " & vbNewLine &
+                    "       [ModifiedByUser], [ReleasedOn], [ReleasedByUser], [Version]" & vbNewLine &
+                    "       )" & vbNewLine &
+                    "   VALUES(" & vbNewLine &
+                    "       @ServerID, @LanguageID, 0, " & vbNewLine &
+                    "       @URL, @EditorID, @Content, @ModifiedOn, " & vbNewLine &
+                    "       @ModifiedByUser, NULL, NULL, " & vbNewLine &
                     "       @Version)"
 
                 'Establish connection
@@ -250,7 +245,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="editorID"></param>
             ''' <param name="marketID"></param>
             ''' <param name="version"></param>
-            ''' <returns></returns>
             Public Function IsMarketAvailable(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As Boolean
                 Dim Data As DataRow() = Me.ReadAllData(serverID, url, editorID).Select("LanguageID = " & marketID & " AND Version = " & version)
                 If Data.Length = 0 Then
@@ -269,15 +263,15 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="marketID"></param>
             Public Sub RemoveMarketFromEditVersion(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer)
                 'Prepare query:
-                Dim myQuery As String = _
-                    "DECLARE @Version int" & vbNewLine & _
-                    "-- Retrieve editable version" & vbNewLine & _
-                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine & _
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
-                    "-- Remove rows regarding the defined market" & vbNewLine & _
-                    "DELETE" & vbNewLine & _
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                Dim myQuery As String =
+                    "DECLARE @Version int" & vbNewLine &
+                    "-- Retrieve editable version" & vbNewLine &
+                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine &
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
+                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
+                    "-- Remove rows regarding the defined market" & vbNewLine &
+                    "DELETE" & vbNewLine &
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
                     "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID AND Version = @Version AND LanguageID = @LanguageID"
 
                 'Establish connection
@@ -301,20 +295,19 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="url"></param>
             ''' <param name="editorID"></param>
             ''' <param name="releasedByUser"></param>
-            ''' <returns></returns>
             Public Function ReleaseLatestVersion(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal releasedByUser As Long) As Boolean
-                Dim myQuery As String = _
-                    "DECLARE @Version int" & vbNewLine & _
-                    "-- Retrieve latest version" & vbNewLine & _
-                    "SELECT @Version = IsNull(MAX(Version), 0)" & vbNewLine & _
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                    "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
-                    "-- Release latest version" & vbNewLine & _
-                    "UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                    "SET [IsActive] = 0" & vbNewLine & _
-                    "WHERE [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine & _
-                    "UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                    "SET [IsActive] = 1, [ReleasedByUser] = @ReleasedByUser, ReleasedOn = GETDATE()" & vbNewLine & _
+                Dim myQuery As String =
+                    "DECLARE @Version int" & vbNewLine &
+                    "-- Retrieve latest version" & vbNewLine &
+                    "SELECT @Version = IsNull(MAX(Version), 0)" & vbNewLine &
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
+                    "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
+                    "-- Release latest version" & vbNewLine &
+                    "UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine &
+                    "SET [IsActive] = 0" & vbNewLine &
+                    "WHERE [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine &
+                    "UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine &
+                    "SET [IsActive] = 1, [ReleasedByUser] = @ReleasedByUser, ReleasedOn = GETDATE()" & vbNewLine &
                     "WHERE [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID AND [Version] = @Version"
 
                 Dim myConnection As SqlClient.SqlConnection
@@ -412,12 +405,12 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                     'No, then perform a special query to just lookup the requested two important version numbers
                     Dim myConnection As SqlClient.SqlConnection
                     Dim myCommand As SqlClient.SqlCommand
-                    Dim myQuery As String = _
-                        "DECLARE @MaxVersion int, @ReleasedVersion int" & vbNewLine & _
-                        "select @MaxVersion = Max([Version]) from [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                        "where [URL] = @URL AND [EditorID] = @EditorID and ServerID = @ServerID" & vbNewLine & _
-                        "select @ReleasedVersion = Max([Version]) from [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                        "where IsActive = 1 AND [URL] = @URL AND [EditorID] = @EditorID and ServerID = @ServerID" & vbNewLine & _
+                    Dim myQuery As String =
+                        "DECLARE @MaxVersion int, @ReleasedVersion int" & vbNewLine &
+                        "select @MaxVersion = Max([Version]) from [dbo].[WebManager_WebEditor]" & vbNewLine &
+                        "where [URL] = @URL AND [EditorID] = @EditorID and ServerID = @ServerID" & vbNewLine &
+                        "select @ReleasedVersion = Max([Version]) from [dbo].[WebManager_WebEditor]" & vbNewLine &
+                        "where IsActive = 1 AND [URL] = @URL AND [EditorID] = @EditorID and ServerID = @ServerID" & vbNewLine &
                         "select @MaxVersion, @ReleasedVersion"
                     myConnection = New SqlClient.SqlConnection(ConnectionString)
                     myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -453,18 +446,15 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="serverID"></param>
             ''' <param name="url"></param>
             ''' <param name="editorID"></param>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
             Public Function ReadAllData(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String) As DataTable
                 If serverID <> Me._CachedCompleteData_ServerID OrElse url <> Me._CachedCompleteData_Url OrElse editorID = Me._CachedCompleteData_EditorID OrElse Me._CachedCompleteData_Result Is Nothing Then
                     Dim myConnection As SqlClient.SqlConnection
                     Dim myCommand As SqlClient.SqlCommand
-                    Dim myQuery As String = _
-                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                        "select [ServerID],[LanguageID],[IsActive],[URL],[EditorID],[ModifiedOn],[ModifiedByUser],[ReleasedOn],[ReleasedByUser],[Version]" & vbNewLine & _
-                        "from [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                        "where [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    Dim myQuery As String =
+                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                        "select [ServerID],[LanguageID],[IsActive],[URL],[EditorID],[ModifiedOn],[ModifiedByUser],[ReleasedOn],[ReleasedByUser],[Version]" & vbNewLine &
+                        "from [dbo].[WebManager_WebEditor]" & vbNewLine &
+                        "where [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine &
                         "order by [ID]"
                     myConnection = New SqlClient.SqlConnection(ConnectionString)
                     myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -492,23 +482,23 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 End If
 
                 'Prepare query:
-                Dim myQuery As String = _
-                    "DECLARE @Version int" & vbNewLine & _
-                    "-- Retrieve editable version" & vbNewLine & _
-                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine & _
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
-                    "-- Remove any pre-existing data (but regulary, there should be nothing, but sure is sure)" & vbNewLine & _
-                    "DELETE" & vbNewLine & _
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                    "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID AND Version = @Version" & vbNewLine & _
-                    "-- Copy data rows" & vbNewLine & _
-                    "INSERT INTO [dbo].[WebManager_WebEditor](" & vbNewLine & _
-                    "   [ServerID], [LanguageID], [IsActive], [URL], [EditorID], [Content], [ModifiedOn], " & vbNewLine & _
-                    "   [ModifiedByUser], [ReleasedOn], [ReleasedByUser], [Version]" & vbNewLine & _
-                    "   )" & vbNewLine & _
-                    "SELECT ServerID, LanguageID, 0, [URL], EditorID, Content, ModifiedOn, ModifiedByUser, NULL, NULL, @Version" & vbNewLine & _
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                Dim myQuery As String =
+                    "DECLARE @Version int" & vbNewLine &
+                    "-- Retrieve editable version" & vbNewLine &
+                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine &
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
+                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
+                    "-- Remove any pre-existing data (but regulary, there should be nothing, but sure is sure)" & vbNewLine &
+                    "DELETE" & vbNewLine &
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
+                    "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID AND Version = @Version" & vbNewLine &
+                    "-- Copy data rows" & vbNewLine &
+                    "INSERT INTO [dbo].[WebManager_WebEditor](" & vbNewLine &
+                    "   [ServerID], [LanguageID], [IsActive], [URL], [EditorID], [Content], [ModifiedOn], " & vbNewLine &
+                    "   [ModifiedByUser], [ReleasedOn], [ReleasedByUser], [Version]" & vbNewLine &
+                    "   )" & vbNewLine &
+                    "SELECT ServerID, LanguageID, 0, [URL], EditorID, Content, ModifiedOn, ModifiedByUser, NULL, NULL, @Version" & vbNewLine &
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
                     "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID AND Version = @SourceVersion"
 
                 'Establish connection
@@ -528,15 +518,12 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     List the activated markets as defined in camm Web-Manager
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
             Public Function ActiveMarketsInWebManager() As DataTable
                 If HttpContext.Current.Application("WebManager.sWcms.ActiveLanguages") Is Nothing Then
                     Dim myConnection As SqlClient.SqlConnection
                     Dim myCommand As SqlClient.SqlCommand
-                    Dim myQuery As String = _
-                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                    Dim myQuery As String =
+                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                         "select ID, Description_English, AlternativeLanguage from system_languages where [IsActive] = 1"
                     myConnection = New SqlClient.SqlConnection(ConnectionString)
                     myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -555,7 +542,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     List the activated markets as defined in camm Web-Manager
             ''' </summary>
-            ''' <returns></returns>
             Public Function ActiveMarketIDsInWebManager() As Integer()
                 Dim Data As DataTable = Me.ActiveMarketsInWebManager
                 Dim Result As New ArrayList
@@ -574,13 +560,12 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="url"></param>
             ''' <param name="editorID"></param>
             ''' <param name="marketID"></param>
-            ''' <returns></returns>
             Public Function ReadReleasedContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer) As String
-                Dim MyCmd As New SqlClient.SqlCommand( _
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                    "SELECT [Content] " & vbNewLine & _
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                    "WHERE IsActive = 1 AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine, _
+                Dim MyCmd As New SqlClient.SqlCommand(
+                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                    "SELECT [Content] " & vbNewLine &
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
+                    "WHERE IsActive = 1 AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine,
                     New SqlClient.SqlConnection(Me.ConnectionString))
                 MyCmd.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
                 MyCmd.Parameters.Add("@LanguageID", SqlDbType.Int).Value = marketID
@@ -597,12 +582,11 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="editorID"></param>
             ''' <param name="marketID"></param>
             ''' <param name="version"></param>
-            ''' <returns></returns>
             Public Function GetFirstPreviousVersionThatDiffers(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As Integer
-                Dim command As New SqlClient.SqlCommand("SELECT TOP 1 version FROM dbo.WebManager_WebEditor " & vbNewLine & _
-"WHERE content NOT LIKE ( SELECT  content FROM dbo.WebManager_WebEditor a " & vbNewLine & _
-"WHERE a.URL = @URL  " & vbNewLine & _
-"AND a.LanguageID = @LanguageID AND a.version = @VERSION AND a.ServerId = @ServerID AND a.EditorID = @EditorID) " & vbNewLine & _
+                Dim command As New SqlClient.SqlCommand("SELECT TOP 1 version FROM dbo.WebManager_WebEditor " & vbNewLine &
+"WHERE content NOT LIKE ( SELECT  content FROM dbo.WebManager_WebEditor a " & vbNewLine &
+"WHERE a.URL = @URL  " & vbNewLine &
+"AND a.LanguageID = @LanguageID AND a.version = @VERSION AND a.ServerId = @ServerID AND a.EditorID = @EditorID) " & vbNewLine &
 " AND LanguageID =  @LanguageID AND URL = @URL AND ServerId = @ServerID AND EditorID = @EditorID AND version < @VERSION ORDER BY VERSION DESC ", New SqlClient.SqlConnection(Me.ConnectionString))
 
                 command.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
@@ -624,13 +608,12 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="url"></param>
             ''' <param name="editorID"></param>
             ''' <param name="version"></param>
-            ''' <returns></returns>
             Public Function ReadContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As String
-                Dim MyCmd As New SqlClient.SqlCommand( _
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                    "SELECT [Content] " & vbNewLine & _
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
-                    "WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine, _
+                Dim MyCmd As New SqlClient.SqlCommand(
+                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                    "SELECT [Content] " & vbNewLine &
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
+                    "WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine,
                     New SqlClient.SqlConnection(Me.ConnectionString))
                 MyCmd.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
                 MyCmd.Parameters.Add("@LanguageID", SqlDbType.Int).Value = marketID
@@ -645,12 +628,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
         ''' <summary>
         '''     The common interface for all SmartWcms editor controls
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	18.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Interface ISmartWcmsEditor
 
             ReadOnly Property cammWebManager() As IWebManager
@@ -660,8 +637,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
         ''' <summary>
         '''     A base implementation of a smart wcms editor control providing access to the database acces layer
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
         Public MustInherit Class SmartWcmsEditorBase
             Inherits CompuMaster.camm.WebManager.Controls.Control
             Implements UI.INamingContainer, ISmartWcmsEditor
@@ -678,8 +653,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     The interface implementation required for the database access layer
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Private ReadOnly Property _cammWebManager() As CompuMaster.camm.WebManager.IWebManager Implements ISmartWcmsEditor.cammWebManager
                 Get
                     Return Me.cammWebManager
@@ -692,8 +665,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Database access layer
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Protected ReadOnly Property Database() As SmartWcmsDatabaseAccessLayer
                 Get
                     Static _Database As SmartWcmsDatabaseAccessLayer
@@ -713,8 +684,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     An identifier of the current document, by default its URL
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public Property DocumentID() As String
                 Get
                     If _DocumentID Is Nothing Then
@@ -821,8 +790,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Represents the current MarketLookupMode, passed as parameter by the ctrl
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public Property MarketLookupMode() As MarketLookupModes
                 Get
                     Return _MarketLookupMode
@@ -837,8 +804,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Indicates which application is needed to edit the formular
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public Property SecurityObjectEditMode() As String
                 Get
                     Return _SecurityObjectEditMode
@@ -858,15 +823,12 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             ''' The editor control to display or edit the content
             ''' </summary>
-            ''' <returns></returns>
             Protected MustOverride ReadOnly Property MainEditor As IEditor
 
             ''' <summary>
             '''     Is this editor in edit mode?
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public MustOverride ReadOnly Property EditModeActive() As Boolean
 
         End Class
@@ -880,8 +842,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     The pages latest data (RowID)
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public Property LatestData() As Integer
                 Get
                     Return _LatestData
@@ -896,8 +856,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     The pages latest version
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public Property LatestVersion() As Integer
                 Get
                     Return _LatestVersion
@@ -913,8 +871,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     The pages current version
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public Property CurrentVersion() As Integer
                 Get
                     If _CurrentVersionAvailableForReadAccess = False Then
@@ -933,17 +889,12 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Only for saving the new value without a "_CurrentVersionHasChanged = True"
             ''' </summary>
             ''' <param name="value"></param>
-            ''' <remarks>
-            ''' </remarks>
             Private Sub CurrentVersionSetWithoutInternalChangeFlag(ByVal value As Integer)
                 ViewState("WebEditorXXL.showversion") = value
             End Sub
             ''' <summary>
             '''     Indicate if the viewstate already contains an information about the version which shall be shown
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
             Private Function CurrentVersionNotYetDefinedByViewstate() As Boolean
                 If ViewState("WebEditorXXL.showversion") Is Nothing Then
                     Return True
@@ -958,7 +909,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             ''' Is this smart editor in one of the EditModes (editor control visible in edit or view mode)?
             ''' </summary>
-            ''' <returns></returns>
             Public NotOverridable Overrides ReadOnly Property EditModeActive As Boolean
                 Get
                     Return Me.MainEditor.Visible
@@ -1008,8 +958,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     The edit mode as it is defined in the viewstate
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public Property EditModeAsDefinedInViewstate() As TriState
                 Get
                     If ViewState("WebEditorXXL.EditMode") Is Nothing Then
@@ -1035,8 +983,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Is the control editable in general or not?
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public Property Enabled() As Boolean
                 Get
                     If ViewState Is Nothing OrElse ViewState("WebEditorXXL.Enabled") Is Nothing Then
@@ -1053,44 +999,30 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     Possible actions requested by the form front-end
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
             Public Enum RequestModes As Integer
                 ''' <summary>
                 '''     Nothing to do
                 ''' </summary>
-                ''' <remarks>
-                ''' </remarks>
                 NoActionRequested = 0
                 ''' <summary>
                 '''     Save changes
                 ''' </summary>
-                ''' <remarks>
-                ''' </remarks>
                 Update = 1
                 ''' <summary>
                 '''     Create a new version for modification
                 ''' </summary>
-                ''' <remarks>
-                ''' </remarks>
                 NewVersion = 2
                 ''' <summary>
                 '''     Save changes and release the whole version
                 ''' </summary>
-                ''' <remarks>
-                ''' </remarks>
                 Activation = 3
                 ''' <summary>
                 '''     Drop the content of the current market
                 ''' </summary>
-                ''' <remarks>
-                ''' </remarks>
                 DropCurrentMarketData = 6
                 ''' <summary>
                 '''     There is no version data available, but the first version shall be created now
                 ''' </summary>
-                ''' <remarks>
-                ''' </remarks>
                 CreateFirstVersion = 7
             End Enum
 
@@ -1099,8 +1031,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Contains the requested controls mode
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public Property RequestMode() As RequestModes
                 Get
                     Return _RequestMode
@@ -1119,7 +1049,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' Counts available edit versions
             ''' </summary>
             ''' <remarks>Based on old IsEditVersionAvailable() Code, slightly modified</remarks>
-            ''' <returns></returns>
             Protected ReadOnly Property CountAvailableEditVersions() As Integer
                 Get
                     Dim result As Integer = 0
@@ -1176,8 +1105,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Has the user authorization to change the content and does he see at least the pencil to start editing?
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public Property ShowWithEditRights() As Boolean
                 Get
                     Return _ShowWithEditRights
@@ -1200,8 +1127,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Indicates which toolbar shall be used
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Protected Property ToolbarSetting() As ToolbarSettings
                 Get
                     Return _ToolbarSetting
@@ -1216,8 +1141,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     about the currently opened version and it's status
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Private ReadOnly Property HtmlCodeCurrentEditInformation() As String
                 Get
                     If CurrentVersion = 0 Then
@@ -1304,8 +1227,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' </summary>
             ''' <param name="sender"></param>
             ''' <param name="e"></param>
-            ''' <remarks>
-            ''' </remarks>
             Private Sub ibtnSwitchToEditMode_Click(ByVal sender As Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles ibtnSwitchToEditMode.Click
                 If CType(ViewState("WebEditorXXL.CurrentEditorInEditMode"), String) = "" OrElse CType(ViewState("WebEditorXXL.CurrentEditorInEditMode"), String) = Me.EditorID Then
                     ViewState("WebEditorXXL.CurrentEditorInEditMode") = Me.EditorID
@@ -1321,8 +1242,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     Adds the controls components to it's form
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
             Protected Overrides Sub CreateChildControls()
 
                 lblCurrentEditInformation = New System.Web.UI.WebControls.Label
@@ -1398,8 +1317,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="paths">Array of several virtual paths</param>
             ''' <param name="singlePath">One virtual path</param>
             ''' <returns>Array without any duplicate, virtual path meanings</returns>
-            ''' <remarks>
-            ''' </remarks>
             Protected Function PathsWithoutDuplicateMeaning(ByVal paths As String(), ByVal singlePath As String) As String()
                 Dim Result As New ArrayList
                 '1st parameter
@@ -1423,8 +1340,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     Detects which toolbar shall appear
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
             Private Sub GetToolbarSetting()
                 If CurrentVersion = 0 AndAlso Me.IsEmptyInnerHtml Then
                     ToolbarSetting = ToolbarSettings.NoVersionAvailable
@@ -1444,8 +1359,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Raises the standard 404 error message as defined right in the IIS
             ''' </summary>
             ''' <param name="message">An error message with some details on the missing item</param>
-            ''' <remarks>
-            ''' </remarks>
             Protected Overridable Sub Raise404(ByVal message As String)
 
                 If Not cammWebManager Is Nothing AndAlso cammWebManager.DebugLevel >= CompuMaster.camm.WebManager.WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
@@ -1462,9 +1375,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     If the inner html property contains spaces, tabs, CR or LF chars only, then this will be indicated as True, otherwise there is some real text/content and this method will return False
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
             Private Function IsEmptyInnerHtml() As Boolean
                 If Me._InnerHtml Is Nothing Then
                     Return True
@@ -1484,8 +1394,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Detect the language/market for first-time-data-creation in edit-requests
             ''' </summary>
             ''' <returns>An integer ID of the market/language</returns>
-            ''' <remarks>
-            ''' </remarks>
             Private Function LookupDefaultMarketBasedOnMarketLookupMode() As Integer
                 Dim Result As Integer
                 Select Case Me.MarketLookupMode
@@ -1506,8 +1414,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     Change the LanguageToShow variable to an existing value when the current one is not valid
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
             Private Sub LookupMatchingMarketDataBasedOnExistingContent()
                 'Switch to another language which is there - if required only
                 Dim myLangs() As Integer = Database.AvailableMarketsInData(Me.ContentOfServerID, DocumentID, Me.EditorID, Me.CurrentVersion)
@@ -1537,7 +1443,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             ''' Alternative markets which might contain data if the typical market doesn't contain any released data
             ''' </summary>
-            ''' <returns></returns>
             <System.ComponentModel.TypeConverter(GetType(IntegerArrayConverter))> Public Property AlternativeDataMarkets As Integer()
                 Get
                     Return _AlternativeDataMarkets
@@ -1552,8 +1457,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Detect the LanguageToShow for view-only requests
             ''' </summary>
             ''' <param name="returnCode404InCaseOfMissingData">True raises a 404 error when it can't be looked up</param>
-            ''' <remarks>
-            ''' </remarks>
             Private Sub LookupMatchingMarketDataForReleasedContent(ByVal returnCode404InCaseOfMissingData As Boolean)
                 Dim myLangs() As Integer = Database.AvailableMarketsInData(Me.ContentOfServerID, DocumentID, Me.EditorID, Me.Database.ReleasedVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID))
                 Dim IsLangExisting As Boolean = False
@@ -1669,9 +1572,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Generates a url conform string to pass trough url as parameter for later usement
             ''' </summary>
             ''' <param name="sourceString"></param>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
             Protected Function EncryptAStringForUrlUsement(ByVal sourceString As String) As String
                 Dim result As String = Nothing
                 Try
@@ -1686,8 +1586,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     Update an already existing document in given language or create a new language for the document, depends on several parameters
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
             Private Sub DoUpdateAction()
                 If CurrentVersion <> 0 Then
                     'Create a new version or update an older one
@@ -1702,8 +1600,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     Creates a new pages version
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
             Private Sub CreateANewPageVersion()
                 'Check for clicked savebutton with update instructions without an already existing version in the given language
                 'Case new version
@@ -1741,9 +1637,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Returns the languages description in english as string
             ''' </summary>
             ''' <param name="ID">The language id whose description you want to get</param>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
             Private Function GetWMLanguageDescriptionByLanguageID(ByVal ID As Integer) As String
                 Dim myDataTable As DataTable = CType(HttpContext.Current.Application("WebManager.ActiveLanguages"), DataTable)
                 If myDataTable Is Nothing Then
@@ -1763,9 +1656,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     Is there at least one SmartWcms control in edit mode?
             ''' </summary>
-            ''' <returns></returns>
-            ''' <remarks>
-            ''' </remarks>
             Private Function FindSWcmsControlsInEditModeOnThisPage() As Boolean
                 Dim Result As Boolean
 #If NetFrameWork = "1_1" Then
@@ -1789,8 +1679,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' </summary>
             ''' <param name="results">An arraylist which will contain all positive matches</param>
             ''' <param name="controlsCollection">The control collection which shall be browsed</param>
-            ''' <remarks>
-            ''' </remarks>
 #If NetFrameWork = "1_1" Then
             Protected Sub FindSWcmsControlsOnThisPage(ByVal results As ArrayList, ByVal controlsCollection As System.Web.UI.ControlCollection)
 #Else
@@ -1812,8 +1700,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' Remove all occurances in links of the current server name, e. g. http://www.yourcompany.com
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public Property RemoveServerNameFromLinks() As Boolean
                 Get
                     Return _RemoveServerNameFromLinks
@@ -1845,8 +1731,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Use HttpCache to boost the performance by decreasing the number of required database queries
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Public Property EnableCache() As Boolean
                 Get
                     Return _EnableCache
@@ -1974,19 +1858,19 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 Dim ForeignControls As New ArrayList
                 For MyCounter As Integer = 0 To Me.Controls.Count - 1
                     Dim compareControl As UI.Control = Me.Controls(MyCounter)
-                    If compareControl Is editorMain OrElse _
-                            compareControl Is txtHiddenActiveVersion OrElse _
-                            compareControl Is txtHiddenLastVersion OrElse _
-                            compareControl Is txtRequestedAction OrElse _
-                            compareControl Is txtCurrentURL OrElse _
-                            compareControl Is txtActivate OrElse _
-                            compareControl Is txtBrowseToMarketVersion OrElse _
-                            compareControl Is txtLastVersion OrElse _
-                            compareControl Is txtCurrentlyLoadedVersion OrElse _
-                            compareControl Is txtEditModeRequested OrElse _
-                            compareControl Is lblCurrentEditInformation OrElse _
-                            compareControl Is lblViewOnlyContent OrElse _
-                            compareControl Is ibtnSwitchToEditMode OrElse _
+                    If compareControl Is editorMain OrElse
+                            compareControl Is txtHiddenActiveVersion OrElse
+                            compareControl Is txtHiddenLastVersion OrElse
+                            compareControl Is txtRequestedAction OrElse
+                            compareControl Is txtCurrentURL OrElse
+                            compareControl Is txtActivate OrElse
+                            compareControl Is txtBrowseToMarketVersion OrElse
+                            compareControl Is txtLastVersion OrElse
+                            compareControl Is txtCurrentlyLoadedVersion OrElse
+                            compareControl Is txtEditModeRequested OrElse
+                            compareControl Is lblCurrentEditInformation OrElse
+                            compareControl Is lblViewOnlyContent OrElse
+                            compareControl Is ibtnSwitchToEditMode OrElse
                             compareControl Is pnlEditorToolbar Then
 
                         'All is fine - this is an internally managed control
@@ -2383,7 +2267,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             ''' Returns an array of available languages
             ''' </summary>
-            ''' <returns></returns>
             ''' <remarks>Based on code by Swiercz, extracted into this function to not mix it with HTML code</remarks>
             Public Function GetAvailableLanguages() As AvailableLanguage()
                 Dim result As AvailableLanguage() = Nothing
@@ -2424,8 +2307,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' </summary>
             ''' <param name="list">An array containing some elements</param>
             ''' <param name="allowedItems">Allowed values</param>
-            ''' <remarks>
-            ''' </remarks>
             Private Sub RemoveLanguageItemsNotInAllowedList(ByVal list As DataTable, ByVal allowedItems As Integer())
                 Dim allowedLanguages As New ArrayList(allowedItems)
                 For MyCounter As Integer = list.Rows.Count - 1 To 0 Step -1
@@ -2440,8 +2321,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     Set the editor by a given id
             ''' </summary>
             ''' <param name="serverID"></param>
-            ''' <remarks>
-            ''' </remarks>
             Private Sub FillEditorContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer)
                 Try
                     Dim myContent As String = Database.ReadContent(serverID, url, editorID, marketID, version)
@@ -2454,8 +2333,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     Gets information to decide which request mode shall be shown
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
             Private Sub CheckForRequestMode()
 
                 'Lookup requested action
@@ -2486,8 +2363,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     The standard loading functionallity for this document
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
             Private Sub StandardLoading()
 
 #If DebugMode Then
@@ -2601,8 +2476,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     This is the name of the key for the content for this editor in the HttpCache
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Private ReadOnly Property CachedItemKey() As String
                 Get
                     Return Me.GetType.ToString & "&" & HttpContext.Current.Server.UrlEncode(Me.DocumentID) & "&" & HttpContext.Current.Server.UrlEncode(Me.EditorID) & "&" & LanguageToShow.ToString
@@ -2612,8 +2485,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <summary>
             '''     Clear all keys related to this document (all languages/markets)
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
             Private Sub ClearCache()
                 Dim SearchCacheKeys As String = Me.GetType.ToString & "&" & HttpContext.Current.Server.UrlEncode(Me.DocumentID) & "&" & HttpContext.Current.Server.UrlEncode(Me.EditorID) & "&"
                 For Each item As Collections.DictionaryEntry In HttpContext.Current.Cache
@@ -2628,8 +2499,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     The value of the cached, released content or null (Nothing in VisualBasic) when it's not cached yet
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Private Property CachedItemContent() As String
                 Get
                     Return CType(HttpContext.Current.Cache(CachedItemKey), String)
@@ -2643,8 +2512,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     The default cache duration takes 15 minutes at maximum
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Protected Overridable ReadOnly Property CachedItemLivetime() As TimeSpan
                 Get
                     Return New TimeSpan(0, 15, 0) '15 minutes
@@ -2655,8 +2522,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             '''     The default cache priority is set to low to allow remval of this cache item at first
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             Protected Overridable ReadOnly Property CachedItemPriority() As Caching.CacheItemPriority
                 Get
                     Return Caching.CacheItemPriority.Low
@@ -2678,7 +2543,7 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
 
         End Class
 
-        <DefaultProperty("Html"), ToolboxData("<{0}:PlainTextEditor1 runat=server></{0}:PlainTextEditor1>")> _
+        <DefaultProperty("Html"), ToolboxData("<{0}:PlainTextEditor1 runat=server></{0}:PlainTextEditor1>")>
         Friend Class PlainTextEditor
             Inherits System.Web.UI.WebControls.TextBox
             Implements IEditor
@@ -2730,17 +2595,17 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                                                                    "")
                     Me.Page.RegisterOnSubmitStatement( "EncodeRawData_" & Me.ClientID, String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}'));", Me.ClientID))
 #Else
-                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType, "EncodeRawData|Base", "function EncodeRawDataIfNotEncoded (item) " & vbNewLine & _
-                                                                   "{ " & vbNewLine & _
-                                                                   "if ((item.value != null) && (item.value.length >= 5) && (item.value.substring(0, 5) != String.fromCharCode(27) + 'ESC' + String.fromCharCode(27))) " & vbNewLine & _
-                                                                   "    { " & vbNewLine & _
-                                                                   "    item.value = EncodeRawData(item); " & vbNewLine & _
-                                                                   "    } " & vbNewLine & _
-                                                                   "}" & vbNewLine & _
-                                                                   "function EncodeRawData (item) " & vbNewLine & _
-                                                                   "{ " & vbNewLine & _
-                                                                   "    return String.fromCharCode(27) + 'ESC' + String.fromCharCode(27) + item.value.replace(/%/g,escape('%')).replace(/</g,escape('<')).replace(/>/g,escape('>')); " & vbNewLine & _
-                                                                   "}" & vbNewLine & _
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType, "EncodeRawData|Base", "function EncodeRawDataIfNotEncoded (item) " & vbNewLine &
+                                                                   "{ " & vbNewLine &
+                                                                   "if ((item.value != null) && (item.value.length >= 5) && (item.value.substring(0, 5) != String.fromCharCode(27) + 'ESC' + String.fromCharCode(27))) " & vbNewLine &
+                                                                   "    { " & vbNewLine &
+                                                                   "    item.value = EncodeRawData(item); " & vbNewLine &
+                                                                   "    } " & vbNewLine &
+                                                                   "}" & vbNewLine &
+                                                                   "function EncodeRawData (item) " & vbNewLine &
+                                                                   "{ " & vbNewLine &
+                                                                   "    return String.fromCharCode(27) + 'ESC' + String.fromCharCode(27) + item.value.replace(/%/g,escape('%')).replace(/</g,escape('<')).replace(/>/g,escape('>')); " & vbNewLine &
+                                                                   "}" & vbNewLine &
                                                                    "", True)
                     Me.Page.ClientScript.RegisterOnSubmitStatement(Me.GetType, "EncodeRawData_" & Me.ClientID, String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}'));", Me.ClientID))
 #End If
@@ -3160,13 +3025,13 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                     Me.FindSWcmsControlsOnThisPage(AllEditorControls, Me.Page.Controls)
                     Dim IsDirtyChecksJScriptSnippet As String = Nothing
                     For Each Editor As System.Web.UI.Control In AllEditorControls
-                        Dim EditorInstanceIsDirtyScript As String = "function isDirty_" & Editor.ClientID & "() " & vbNewLine & _
-                                                                   "{  " & vbNewLine & _
-                                                                   "var editor = document.getElementById('" & CType(Editor, SmartWcmsEditorCommonBase).EditorClientID & "'); " & vbNewLine & _
-                                                                   "if(editor && (editor.defaultValue != editor.value) && (editor.defaultValue != EncodeRawData(editor)))" & vbNewLine & _
-                                                                   "    return true; " & vbNewLine & _
-                                                                   "else " & vbNewLine & _
-                                                                   "    return false;  " & vbNewLine & _
+                        Dim EditorInstanceIsDirtyScript As String = "function isDirty_" & Editor.ClientID & "() " & vbNewLine &
+                                                                   "{  " & vbNewLine &
+                                                                   "var editor = document.getElementById('" & CType(Editor, SmartWcmsEditorCommonBase).EditorClientID & "'); " & vbNewLine &
+                                                                   "if(editor && (editor.defaultValue != editor.value) && (editor.defaultValue != EncodeRawData(editor)))" & vbNewLine &
+                                                                   "    return true; " & vbNewLine &
+                                                                   "else " & vbNewLine &
+                                                                   "    return false;  " & vbNewLine &
                                                                    "}" & vbNewLine
 #If NetFrameWork = "1_1" Then
                         Me.Page.RegisterClientScriptBlock("IsDirty_" & Editor.ClientID, EditorInstanceIsDirtyScript)
@@ -3176,10 +3041,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                         If IsDirtyChecksJScriptSnippet <> "" Then IsDirtyChecksJScriptSnippet &= " && "
                         IsDirtyChecksJScriptSnippet &= "(isDirty_" & Editor.ClientID & "())"
                     Next
-                    Dim IsDirtySnippet As String = "function isDirty() " & vbNewLine & _
-                                                                   "{  " & vbNewLine & _
-                                                                   "    return (" & IsDirtyChecksJScriptSnippet & ");  " & vbNewLine & _
-                                                                   "}" & vbNewLine & _
+                    Dim IsDirtySnippet As String = "function isDirty() " & vbNewLine &
+                                                                   "{  " & vbNewLine &
+                                                                   "    return (" & IsDirtyChecksJScriptSnippet & ");  " & vbNewLine &
+                                                                   "}" & vbNewLine &
                                                                    ""
 #If NetFrameWork = "1_1" Then
                     Me.Page.RegisterClientScriptBlock("IsDirty", IsDirtySnippet)
@@ -3188,54 +3053,54 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
 #End If
 
                     'Single script instances
-                    Const ExecPostBackSnippet As String = "function ExecPostBack(caller, event, ensureUnbindedCloseCheck) " & vbNewLine & _
-                                                                   "{ " & vbNewLine & _
-                                                                   "    if(ensureUnbindedCloseCheck) unbindCloseCheck(); " & vbNewLine & _
-                                                                   "    __doPostBack (caller, event);" & vbNewLine & _
-                                                                   "} " & vbNewLine & _
+                    Const ExecPostBackSnippet As String = "function ExecPostBack(caller, event, ensureUnbindedCloseCheck) " & vbNewLine &
+                                                                   "{ " & vbNewLine &
+                                                                   "    if(ensureUnbindedCloseCheck) unbindCloseCheck(); " & vbNewLine &
+                                                                   "    __doPostBack (caller, event);" & vbNewLine &
+                                                                   "} " & vbNewLine &
                                                                    ""
-                    Dim UnbindCloseCheckSnippet As String = "function unbindCloseCheck() " & vbNewLine & _
-                                                                   "{ " & vbNewLine & _
-                                                                   "    if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); " & vbNewLine & _
-                                                                   "} " & vbNewLine & _
-                                                                   "var documentForm = document.forms['" & LookupParentServerFormName() & "']; " & vbNewLine & _
-                                                                   "if(documentForm.addEventListener) " & vbNewLine & _
-                                                                   "    documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });" & vbNewLine & _
+                    Dim UnbindCloseCheckSnippet As String = "function unbindCloseCheck() " & vbNewLine &
+                                                                   "{ " & vbNewLine &
+                                                                   "    if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); " & vbNewLine &
+                                                                   "} " & vbNewLine &
+                                                                   "var documentForm = document.forms['" & LookupParentServerFormName() & "']; " & vbNewLine &
+                                                                   "if(documentForm.addEventListener) " & vbNewLine &
+                                                                   "    documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });" & vbNewLine &
                                                                    ""
-                    Const ConfirmPageCloseSnippet As String = "function confirmPageClose() " & vbNewLine & _
-                                                                   "{" & vbNewLine & _
-                                                                   "var result = false; " & vbNewLine & _
-                                                                   "if(isDirty()) " & vbNewLine & _
-                                                                   "    result = confirm('Do you want to leave? All your changes will be lost'); " & vbNewLine & _
-                                                                   "else " & vbNewLine & _
-                                                                   "    { " & vbNewLine & _
-                                                                   "    result = true " & vbNewLine & _
-                                                                   "    } " & vbNewLine & _
-                                                                   "if(result) " & vbNewLine & _
-                                                                   "    unbindCloseCheck(); " & vbNewLine & _
-                                                                   "return result; " & vbNewLine & _
+                    Const ConfirmPageCloseSnippet As String = "function confirmPageClose() " & vbNewLine &
+                                                                   "{" & vbNewLine &
+                                                                   "var result = false; " & vbNewLine &
+                                                                   "if(isDirty()) " & vbNewLine &
+                                                                   "    result = confirm('Do you want to leave? All your changes will be lost'); " & vbNewLine &
+                                                                   "else " & vbNewLine &
+                                                                   "    { " & vbNewLine &
+                                                                   "    result = true " & vbNewLine &
+                                                                   "    } " & vbNewLine &
+                                                                   "if(result) " & vbNewLine &
+                                                                   "    unbindCloseCheck(); " & vbNewLine &
+                                                                   "return result; " & vbNewLine &
                                                                    "}" & vbNewLine
-                    Const ResetSelectBoxSnippet As String = "function resetSelectBox(box)" & vbNewLine & _
-                                                                   "{ " & vbNewLine & _
-                                                                   "for(var i = 0; i < box.options.length; i++) " & vbNewLine & _
-                                                                   "    {	" & vbNewLine & _
-                                                                   "    if(box.options[i].defaultSelected) " & vbNewLine & _
-                                                                   "        {" & vbNewLine & _
-                                                                   "        box.options[i].selected = true; " & vbNewLine & _
-                                                                   "        return;	" & vbNewLine & _
-                                                                   "        } " & vbNewLine & _
-                                                                   "    }" & vbNewLine & _
+                    Const ResetSelectBoxSnippet As String = "function resetSelectBox(box)" & vbNewLine &
+                                                                   "{ " & vbNewLine &
+                                                                   "for(var i = 0; i < box.options.length; i++) " & vbNewLine &
+                                                                   "    {	" & vbNewLine &
+                                                                   "    if(box.options[i].defaultSelected) " & vbNewLine &
+                                                                   "        {" & vbNewLine &
+                                                                   "        box.options[i].selected = true; " & vbNewLine &
+                                                                   "        return;	" & vbNewLine &
+                                                                   "        } " & vbNewLine &
+                                                                   "    }" & vbNewLine &
                                                                    "}" & vbNewLine
-                    Const CloseCheckSnippet As String = "function closeCheck(e) " & vbNewLine & _
-                                                                       "{ " & vbNewLine & _
-                                                                       "if(!isDirty())  " & vbNewLine & _
-                                                                       "    return; " & vbNewLine & _
-                                                                       "var confirmationMessage = 'Do you want to close this site without saving your changes?';  " & vbNewLine & _
-                                                                       "e.returnValue = confirmationMessage; " & vbNewLine & _
-                                                                       "return confirmationMessage;" & vbNewLine & _
-                                                                       "} " & vbNewLine & _
-                                                                       "if(window.addEventListener) " & vbNewLine & _
-                                                                       "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine & _
+                    Const CloseCheckSnippet As String = "function closeCheck(e) " & vbNewLine &
+                                                                       "{ " & vbNewLine &
+                                                                       "if(!isDirty())  " & vbNewLine &
+                                                                       "    return; " & vbNewLine &
+                                                                       "var confirmationMessage = 'Do you want to close this site without saving your changes?';  " & vbNewLine &
+                                                                       "e.returnValue = confirmationMessage; " & vbNewLine &
+                                                                       "return confirmationMessage;" & vbNewLine &
+                                                                       "} " & vbNewLine &
+                                                                       "if(window.addEventListener) " & vbNewLine &
+                                                                       "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine &
                                                                        ""
 #If NetFrameWork = "1_1" Then
                     Me.Page.RegisterClientScriptBlock("ExecPostBack", ExecPostBackSnippet)
@@ -3275,10 +3140,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
         '''     The content may be different for languages or markets. In all cases, there will be a version history.
         '''     When there is no content for an URL in the database - or it hasn't been released - the page request will lead to an HTTP 404 error code.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	29.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete("Better use one of the cammWM.SmartEditor controls instead")> Public Class SmartWcms3
             Inherits SmartPlainHtmlEditor
 
@@ -3302,17 +3163,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
 
 #Region "For compatibility only: binary interface stays untouched"
             Private _Docs As String
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Contains the control specific upload folder for documents
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[swiercz]	06.12.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property Docs() As String
                 Get
                     Return _Docs
@@ -3328,17 +3182,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 End Set
             End Property
             Private _DocsUploadSizeMax As Integer = 512000
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Max. upload size for documents in Bytes
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	23.02.2006	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property DocsUploadSizeMax() As Integer
                 Get
                     Return _DocsUploadSizeMax
@@ -3353,19 +3200,15 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
 
             Private _BaseDocsUploadFilter As String() = New String() {"*.rtf", "*.csv", "*.xml", "*.ppt", "*.pptm", "*.pptx", "*.pps", "*.ppsx", "*.pdf", "*.txt", "*.doc", "*.docm", "*.docx", "*.xls", "*.xlsx", "*.xlsm", "*.xlsb", "*.xlt", "*.xltx", "*.xltm", "*.pot", "*.potx", "*.potm", "*.dot", "*.dotx", "*.dotm", "*.xps", "*.odt", "*.ott", "*.odp", "*.otp", "*.ods", "*.ots", "*.odg"}
             Private _DocsUploadFilter As String() = New String() {}
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Contains the control specific upload filter for documents
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
             ''' <history>
             '''     [link]		30.08.2007  Fixed
             '''     [zeutzheim] 10.05.2007  Fixed
             ''' 	[swiercz]	06.12.2005	Created
             ''' </history>
-            ''' -----------------------------------------------------------------------------
             <System.ComponentModel.TypeConverter(GetType(CompuMaster.camm.WebManager.StringArrayConverter))> Public Property DocsUploadFilter() As String()
                 Get
                     'Here we also add the upper and lower case of the given filters, otherwise you are not allowed
@@ -3393,17 +3236,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 End Set
             End Property
             Private _DocsReadOnly As String() = New String() {}
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Contains the control specific readonly folders for documents
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[swiercz]	06.12.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             <System.ComponentModel.TypeConverter(GetType(CompuMaster.camm.WebManager.StringArrayConverter))> Public Overloads Property DocsReadOnly() As String()
                 Get
                     Return _DocsReadOnly
@@ -3417,17 +3253,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             End Property
 
             Private _Media As String
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Contains the control specific upload folder for media files
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[swiercz]	06.12.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property Media() As String
                 Get
                     Return _Media
@@ -3443,17 +3272,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 End Set
             End Property
             Private _MediaUploadSizeMax As Integer = 512000
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Max. upload size for media files in Bytes
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	23.02.2006	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property MediaUploadSizeMax() As Integer
                 Get
                     Return _MediaUploadSizeMax
@@ -3466,17 +3288,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 End Set
             End Property
             Private _MediaReadOnly As String() = New String() {}
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Contains the control specific readonly folders for media files
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[swiercz]	06.12.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             <System.ComponentModel.TypeConverter(GetType(CompuMaster.camm.WebManager.StringArrayConverter))> Public Overloads Property MediaReadOnly() As String()
                 Get
                     Return _MediaReadOnly
@@ -3490,17 +3305,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             End Property
 
             Private _Images As String
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Contains the control specific upload folder for images
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[swiercz]	06.12.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property Images() As String
                 Get
                     Return _Images
@@ -3516,17 +3324,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 End Set
             End Property
             Private _ImagesUploadSizeMax As Integer = 512000
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Max. upload size for images in Bytes
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	23.02.2006	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Property ImagesUploadSizeMax() As Integer
                 Get
                     Return _ImagesUploadSizeMax
@@ -3539,17 +3340,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 End Set
             End Property
             Private _ImagesReadOnly As String() = New String() {}
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Contains the control specific readonly folders for images
             ''' </summary>
             ''' <value></value>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[swiercz]	06.12.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             <System.ComponentModel.TypeConverter(GetType(CompuMaster.camm.WebManager.StringArrayConverter))> Public Overloads Property ImagesReadOnly() As String()
                 Get
                     Return _ImagesReadOnly
@@ -3573,10 +3367,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
         '''     The content may be different for languages or markets. In all cases, there will be a version history.
         '''     When there is no content for an URL in the database - or it hasn't been released - the page request will lead to an HTTP 404 error code.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	29.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <Obsolete("Better use one of the cammWM.SmartEditor controls instead")> Public Class SmartWcms
             Inherits SmartWcms3
 

@@ -25,16 +25,12 @@ Namespace CompuMaster.camm.WebManager.Tools.IO
     ''' <summary>
     '''     Filesystem Input/Output operations
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Friend Class NamespaceDoc
     End Class
 
     ''' <summary>
     '''     Hardlinks, Softlinks and Junctions
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
     Friend Class Junctions
 
 #Region "Get link information details"
@@ -71,19 +67,10 @@ Namespace CompuMaster.camm.WebManager.Tools.IO
             'TODO: implementation
             Return False
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' 
         ''' </summary>
         ''' <param name="Path"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	07.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function GetLinkType(ByVal Path As String) As LinkTypeDirectives
             'TODO: reviewing
             If 1 = 1 Then

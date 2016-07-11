@@ -31,7 +31,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Evaluate by the given request headers if a browser is a search robot
         ''' </summary>
         ''' <param name="request">The current HTTP request</param>
-        ''' <returns></returns>
         ''' <remarks>
         ''' <seealso cref="IsRequestFromCrawlerOrPotentialMachineAgent" />
         ''' <seealso cref="IsRequestFromPotentialMachineAgent" />
@@ -76,7 +75,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Evaluate by the given request headers if the browser is potentially a crawler agent, a machine or a mis-configured browser agent indicating that the client is not a typical browser with a user interace
         ''' </summary>
         ''' <param name="request">The current HTTP request</param>
-        ''' <returns></returns>
         ''' <remarks>
         ''' Following requests will be evaluated to be a potential crawler/to be not a typical browser with user interface
         ''' <list>
@@ -110,7 +108,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Evaluate by the given request headers if the browser is potentially an application, a machine or a mis-configured browser agent indicating that the client is not a typical browser with a user interace
         ''' </summary>
         ''' <param name="request">The current HTTP request</param>
-        ''' <returns></returns>
         ''' <remarks>
         ''' A crawler request will be evaluated with a False result.
         ''' Following requests will be evaluated to be a potential crawler/to be not a typical browser with user interface
@@ -134,7 +131,6 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Support for reverse proxy environments"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Lookup the real IP address of the remote client in a current HttpContext
         ''' </summary>
@@ -145,15 +141,9 @@ Namespace CompuMaster.camm.WebManager
         '''     <para>Sometimes if there are multiple cascaded proxies or reverse proxies, then you may get a value in headers like 'client-ip, proxy-ip, reverse-proxy-1-ip, reverse-proxy-2-ip'. In this situation, this function will return the IP address of the partner of the latest reverse proxy, in this example reverse-proxy-2-ip.</para>
         '''     <para>ATTENTION: Because request headers can be manipulated, the general requesting of this value in unsecure. It's only a trustable value if you really run a reverse proxy environment. That's why you need to activate the interpretation of the request header 'X-Forwarded-For' in your web.config by configuring the setting WebManager.InterpreteRequestHeaderXForwardedFor.</para>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	17.08.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function LookupRealRemoteClientIPOfHttpContext() As String
             Return LookupRealRemoteClientIPOfHttpContext(System.Web.HttpContext.Current)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Lookup the real IP address of the remote client in a current HttpContext
         ''' </summary>
@@ -165,12 +155,8 @@ Namespace CompuMaster.camm.WebManager
         '''     <para>Sometimes if there are multiple cascaded proxies or reverse proxies, then you may get a value in headers like 'client-ip, proxy-ip, reverse-proxy-1-ip, reverse-proxy-2-ip'. In this situation, this function will return the IP address of the partner of the latest reverse proxy, in this example reverse-proxy-2-ip.</para>
         '''     <para>ATTENTION: Because request headers can be manipulated, the general requesting of this value in unsecure. It's only a trustable value if you really run a reverse proxy environment. That's why you need to activate the interpretation of the request header 'X-Forwarded-For' in your web.config by configuring the setting WebManager.InterpreteRequestHeaderXForwardedFor.</para>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	17.08.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function LookupRealRemoteClientIPOfHttpContext(ByVal httpContext As System.Web.HttpContext) As String
-            If httpContext Is Nothing OrElse httpContext.Current Is Nothing Then
+            If httpContext Is Nothing OrElse HttpContext.Current Is Nothing Then
                 Throw New ArgumentNullException("httpContext")
             End If
             If Configuration.InterpreteRequestHeaderXForwardedFor AndAlso Trim(httpContext.Request.Headers("X-Forwarded-For")) <> "" Then
@@ -187,8 +173,6 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "HttpCaching"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Set an HttpCache item to a new value respectively remove it if the value is Nothing
         ''' </summary>
@@ -198,17 +182,9 @@ Namespace CompuMaster.camm.WebManager
         ''' <exception cref="System.SystemException">
         ''' If HttpContext.Current is not available (if it is not a web application), there will be thrown a normal System.Exception
         ''' </exception>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	27.04.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Sub SetHttpCacheValue(ByVal key As String, ByVal value As Object, ByVal priority As System.Web.Caching.CacheItemPriority)
             SetHttpCacheValue(key, value, System.Web.Caching.Cache.NoSlidingExpiration, priority)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Set an HttpCache item to a new value respectively remove it if the value is Nothing
         ''' </summary>
@@ -219,12 +195,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <exception cref="System.SystemException">
         ''' If HttpContext.Current is not available (if it is not a web application), there will be thrown a normal System.Exception
         ''' </exception>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	27.04.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Sub SetHttpCacheValue(ByVal key As String, ByVal value As Object, ByVal slidingTimespan As TimeSpan, ByVal priority As System.Web.Caching.CacheItemPriority)
             If key = Nothing Then
                 Throw New ArgumentNullException("key")
@@ -292,7 +262,6 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Redirect of POST requests"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Redirect to another url by using regular html forms to post data
         ''' </summary>
@@ -303,15 +272,9 @@ Namespace CompuMaster.camm.WebManager
         ''' <para>This method creates a client HTML form with hidden data fields and a JavaScript auto-post-back to send the data with POST method to a destination address.</para>
         ''' <para>Use this redirection method if the recieving page only understands form data and doesn't understand query parameters. Also use this method if you have to post a huge amount of data so that it extends the critical browser-limits of the request GET parameters.</para>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	29.04.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Sub RedirectWithPostData(ByVal context As System.Web.HttpContext, ByVal url As String, ByVal postData As Collections.Specialized.NameValueCollection)
             RedirectWithPostData(context, url, postData, "POST")
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Redirect to another url by using regular html forms to post data
         ''' </summary>
@@ -323,10 +286,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <para>This method creates a client HTML form with hidden data fields and a JavaScript auto-post-back to send the data with POST method to a destination address.</para>
         ''' <para>Use this redirection method if the recieving page only understands form data and doesn't understand query parameters. Also use this method if you have to post a huge amount of data so that it extends the critical browser-limits of the request GET parameters.</para>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	14.11.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Sub RedirectWithPostData(ByVal context As System.Web.HttpContext, ByVal url As String, ByVal postData As Collections.Specialized.NameValueCollection, ByVal httpMethod As String)
             RedirectWithPostData(context, url, postData, httpMethod, Nothing)
         End Sub
@@ -436,17 +395,9 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Network host information"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get the first value of the IP address list or the workstation name if there are no IP addresses
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function GetWorkstationID() As String
 #If VS2015OrHigher = True Then
 #Disable Warning BC40000 'disable obsolete warnings because this code must be compatible to .NET 1.1
@@ -472,18 +423,10 @@ Namespace CompuMaster.camm.WebManager
 #Enable Warning BC40000 'obsolete warnings
 #End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is the remote client connecting from a private network?
         ''' </summary>
         ''' <returns>True for private networks, false for localhost and public networks</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function IsRemoteClientFromLanOrPrivateNetwork() As Boolean
 
             If System.Web.HttpContext.Current Is Nothing Then
@@ -493,18 +436,10 @@ Namespace CompuMaster.camm.WebManager
             Return IsHostFromLanOrPrivateNetwork(System.Web.HttpContext.Current.Request.UserHostAddress)
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is the real remote client (possibly from behind a reverse proxy server) connecting from a private network?
         ''' </summary>
         ''' <returns>True for private networks, false for localhost and public networks</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function IsRealRemoteClientIPFromLanOrPrivateNetwork() As Boolean
 
             If System.Web.HttpContext.Current Is Nothing Then
@@ -514,14 +449,11 @@ Namespace CompuMaster.camm.WebManager
             Return IsHostFromLanOrPrivateNetwork(LookupRealRemoteClientIPOfHttpContext())
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is the IPv4 address a host of a specified address range?
         ''' </summary>
         ''' <param name="IPv4Address">An IPv4 host address</param>
         ''' <param name="AddressRange">An array of strings defining address ranges, e. g. 192.168.*</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     This method compares the string content and not the byte content, that's why you should not forget the leading dot in front of the star in your IP address range.
         ''' </remarks>
@@ -537,10 +469,6 @@ Namespace CompuMaster.camm.WebManager
         '''         <item>192.168.*.* <em>(all letters after the first star will be ignored)</em></item>
         '''     </list>
         ''' </example>
-        ''' <history>
-        ''' 	[adminsupport]	08.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function IsHostOfAddressRange(ByVal IPv4Address As String, ByVal AddressRange As String()) As Boolean
 
             If IPv4Address = "" Then
@@ -571,19 +499,11 @@ Namespace CompuMaster.camm.WebManager
             End If
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is the host address a private network node (defined by RFC-1597)?
         ''' </summary>
         ''' <param name="IPAddress">The IP address to validate</param>
         ''' <returns>True for private or LAN networks, otherwise false</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function IsHostFromLanOrPrivateNetwork(ByVal IPAddress As String) As Boolean
 
             Dim IP As System.Net.IPAddress
@@ -644,19 +564,10 @@ Namespace CompuMaster.camm.WebManager
             End If
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is the host a localhost?
         ''' </summary>
         ''' <param name="IPAddress">The IP address to validate</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function IsLoopBackDevice(ByVal IPAddress As String) As Boolean
             Return System.Net.IPAddress.IsLoopback(System.Net.IPAddress.Parse(IPAddress))
         End Function
@@ -670,7 +581,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="row"></param>
         ''' <param name="columnName"></param>
-        ''' <returns></returns>
         Friend Shared Function CellValueIfColumnExists(row As System.Data.DataRow, columnName As String) As Object
             If row.Table.Columns.Contains(columnName) Then
                 Return row(columnName)
@@ -678,20 +588,12 @@ Namespace CompuMaster.camm.WebManager
                 Return DBNull.Value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function IfNull(ByVal CheckValueIfDBNull As Object, Optional ByVal ReplaceWithThis As Object = Nothing) As Object
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -699,18 +601,11 @@ Namespace CompuMaster.camm.WebManager
                 Return (CheckValueIfDBNull)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns null (Nothing in VisualBasic) in that case
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function Nz(ByVal CheckValueIfDBNull As Object) As Object
             If IsDBNull(CheckValueIfDBNull) Then
                 Return Nothing
@@ -718,19 +613,12 @@ Namespace CompuMaster.camm.WebManager
                 Return (CheckValueIfDBNull)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Object) As Object
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -738,19 +626,12 @@ Namespace CompuMaster.camm.WebManager
                 Return (CheckValueIfDBNull)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Integer) As Integer
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -758,19 +639,12 @@ Namespace CompuMaster.camm.WebManager
                 Return CType(CheckValueIfDBNull, Integer)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Long) As Long
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -778,19 +652,12 @@ Namespace CompuMaster.camm.WebManager
                 Return CType(CheckValueIfDBNull, Long)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Boolean) As Boolean
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -798,19 +665,12 @@ Namespace CompuMaster.camm.WebManager
                 Return CType(CheckValueIfDBNull, Boolean)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As DateTime) As DateTime
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -818,19 +678,12 @@ Namespace CompuMaster.camm.WebManager
                 Return CType(CheckValueIfDBNull, DateTime)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As String) As String
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -841,20 +694,12 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "InlineIf"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return one of the parameters based on the expression value
         ''' </summary>
         ''' <param name="expression">An expression which shall be validated</param>
         ''' <param name="trueValue">If the expression is True, this parameter will be returned</param>
         ''' <param name="falseValue">If the expression is False, this parameter will be returned</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	10.08.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function InlineIf(ByVal expression As Boolean, ByVal trueValue As String, ByVal falseValue As String) As String
             If expression Then
                 Return trueValue
@@ -862,20 +707,12 @@ Namespace CompuMaster.camm.WebManager
                 Return falseValue
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return one of the parameters based on the expression value
         ''' </summary>
         ''' <param name="expression">An expression which shall be validated</param>
         ''' <param name="trueValue">If the expression is True, this parameter will be returned</param>
         ''' <param name="falseValue">If the expression is False, this parameter will be returned</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	10.08.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function InlineIf(ByVal expression As Boolean, ByVal trueValue As Integer, ByVal falseValue As Integer) As Integer
             If expression Then
                 Return trueValue
@@ -883,20 +720,12 @@ Namespace CompuMaster.camm.WebManager
                 Return falseValue
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return one of the parameters based on the expression value
         ''' </summary>
         ''' <param name="expression">An expression which shall be validated</param>
         ''' <param name="trueValue">If the expression is True, this parameter will be returned</param>
         ''' <param name="falseValue">If the expression is False, this parameter will be returned</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	10.08.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function InlineIf(ByVal expression As Boolean, ByVal trueValue As Date, ByVal falseValue As Date) As Date
             If expression Then
                 Return trueValue
@@ -904,20 +733,12 @@ Namespace CompuMaster.camm.WebManager
                 Return falseValue
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return one of the parameters based on the expression value
         ''' </summary>
         ''' <param name="expression">An expression which shall be validated</param>
         ''' <param name="trueValue">If the expression is True, this parameter will be returned</param>
         ''' <param name="falseValue">If the expression is False, this parameter will be returned</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	10.08.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function InlineIf(ByVal expression As Boolean, ByVal trueValue As Long, ByVal falseValue As Long) As Long
             If expression Then
                 Return trueValue
@@ -925,20 +746,12 @@ Namespace CompuMaster.camm.WebManager
                 Return falseValue
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return one of the parameters based on the expression value
         ''' </summary>
         ''' <param name="expression">An expression which shall be validated</param>
         ''' <param name="trueValue">If the expression is True, this parameter will be returned</param>
         ''' <param name="falseValue">If the expression is False, this parameter will be returned</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	10.08.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function InlineIf(ByVal expression As Boolean, ByVal trueValue As Double, ByVal falseValue As Double) As Double
             If expression Then
                 Return trueValue
@@ -946,20 +759,12 @@ Namespace CompuMaster.camm.WebManager
                 Return falseValue
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return one of the parameters based on the expression value
         ''' </summary>
         ''' <param name="expression">An expression which shall be validated</param>
         ''' <param name="trueValue">If the expression is True, this parameter will be returned</param>
         ''' <param name="falseValue">If the expression is False, this parameter will be returned</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	10.08.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function InlineIf(ByVal expression As Boolean, ByVal trueValue As Boolean, ByVal falseValue As Boolean) As Boolean
             If expression Then
                 Return trueValue
@@ -970,20 +775,11 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Type conversions"
-
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Convert a boolean value into the corresponding value of a TriState
         ''' </summary>
         ''' <param name="value">A boolean value</param>
         ''' <returns>A value of type TriState with either TriState.True or TriState.False</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	09.11.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function BooleanToWMTriplestate(ByVal value As Boolean) As WMSystem.TripleState
             If value Then
                 Return WMSystem.TripleState.True
@@ -991,19 +787,11 @@ Namespace CompuMaster.camm.WebManager
                 Return WMSystem.TripleState.False
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Convert a boolean value into the corresponding value of a TriState
         ''' </summary>
         ''' <param name="value">A boolean value</param>
         ''' <returns>A value of type TriState with either TriState.True or TriState.False</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	09.11.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function BooleanToTristate(ByVal value As Boolean) As TriState
             If value Then
                 Return TriState.True
@@ -1011,8 +799,6 @@ Namespace CompuMaster.camm.WebManager
                 Return TriState.False
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Convert a TriState value into a corresponding boolean value
         ''' </summary>
@@ -1021,10 +807,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     If the input value is TriState.Default, there will be thrown an ArgumentException
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	09.11.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function TristateToBoolean(ByVal value As TriState) As Boolean
             If value = TriState.True Then
                 Return True
@@ -1034,8 +816,6 @@ Namespace CompuMaster.camm.WebManager
                 Throw New ArgumentException("value must be TriState.True or TriState.False", "value")
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Convert a TriState value into a corresponding boolean value
         ''' </summary>
@@ -1044,10 +824,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     If the input value is TriState.Default, there will be thrown an ArgumentException
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	09.11.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function WMTriplestateToBoolean(ByVal value As WMSystem.TripleState) As Boolean
             If value = WMSystem.TripleState.True Then
                 Return True
@@ -1057,19 +833,11 @@ Namespace CompuMaster.camm.WebManager
                 Throw New ArgumentException("value must be TripleState.True or TripleState.False", "value")
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Convert a WMSystem.TripleState value into a corresponding Tristate value
         ''' </summary>
         ''' <param name="value">A value of type WMSystem.TripleState</param>
         ''' <returns>A Tristate value</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	09.11.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function WMTriplestateToTristate(ByVal value As WMSystem.TripleState) As TriState
             If value = WMSystem.TripleState.True Then
                 Return TriState.True
@@ -1079,19 +847,11 @@ Namespace CompuMaster.camm.WebManager
                 Return TriState.UseDefault
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Convert a Tristate value into a corresponding WMSystem.TripleState value
         ''' </summary>
         ''' <param name="value">A Tristate value</param>
         ''' <returns>A value of type WMSystem.TripleState</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	09.11.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function TristateToWMTriplestate(ByVal value As TriState) As WMSystem.TripleState
             If value = TriState.True Then
                 Return WMSystem.TripleState.True
@@ -1101,19 +861,10 @@ Namespace CompuMaster.camm.WebManager
                 Return WMSystem.TripleState.Undefined
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the string which is not nothing or else String.Empty
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function StringNotEmptyOrNothing(ByVal value As String) As String
             If value = Nothing Then
                 Return Nothing
@@ -1121,19 +872,10 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the string which is not nothing or else String.Empty
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function StringNotNothingOrEmpty(ByVal value As String) As String
             If value Is Nothing Then
                 Return String.Empty
@@ -1141,20 +883,11 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the string which is not nothing or else the alternative value
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
         ''' <param name="alternativeValue">An alternative value if the first value is nothing</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function StringNotNothingOrAlternativeValue(ByVal value As String, ByVal alternativeValue As String) As String
             If value Is Nothing Then
                 Return alternativeValue
@@ -1162,20 +895,11 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the string which is not empty or else the alternative value
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
         ''' <param name="alternativeValue">An alternative value if the first value is empty</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function StringNotEmptyOrAlternativeValue(ByVal value As String, ByVal alternativeValue As String) As String
             If value = Nothing Then
                 Return alternativeValue
@@ -1183,19 +907,10 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the string which is not empty or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function StringNotEmptyOrDBNull(ByVal value As String) As Object
             If value = Nothing Then
                 Return DBNull.Value
@@ -1203,20 +918,10 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the datetime value which is not nothing or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The datetime value to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function DateTimeNotNothingOrDBNull(ByVal value As DateTime) As Object
             If value = Nothing Then
                 Return DBNull.Value
@@ -1224,19 +929,10 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the object which is not nothing or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The object to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ObjectNotNothingOrEmptyString(ByVal value As Object) As Object
             If value Is Nothing Then
                 Return String.Empty
@@ -1244,19 +940,10 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the object which is not nothing or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The object to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ObjectNotNothingOrDBNull(ByVal value As Object) As Object
             If value Is Nothing Then
                 Return DBNull.Value
@@ -1264,19 +951,11 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the object which is not an empty string or otherwise return Nothing
         ''' </summary>
         ''' <param name="value">The object to be validated</param>
         ''' <returns>A string with length > 0 (the value) or nothing</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ObjectNotEmptyStringOrNothing(ByVal value As Object) As Object
             If value Is Nothing Then
                 Return Nothing
@@ -1286,19 +965,10 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the string which is not nothing or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function StringNotNothingOrDBNull(ByVal value As String) As Object
             If value Is Nothing Then
                 Return DBNull.Value
@@ -1306,36 +976,20 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a long value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <returns>The converted long value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function TryCLng(ByVal Expression As Object) As Long
             Return TryCLng(Expression, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a long value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
         ''' <returns>The converted long value or the alternative value if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function TryCLng(ByVal Expression As Object, ByVal AlternativeValue As Long) As Long
             Try
                 Return CLng(Expression)
@@ -1343,36 +997,20 @@ Namespace CompuMaster.camm.WebManager
                 Return AlternativeValue
             End Try
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a integer value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <returns>The converted integer value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function TryCInt(ByVal Expression As Object) As Integer
             Return TryCInt(Expression, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a integer value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
         ''' <returns>The converted integer value or the alternative value if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function TryCInt(ByVal Expression As Object, ByVal AlternativeValue As Integer) As Integer
             Try
                 Return CInt(Expression)
@@ -1380,36 +1018,20 @@ Namespace CompuMaster.camm.WebManager
                 Return AlternativeValue
             End Try
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a double value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <returns>The converted double value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function TryCDbl(ByVal Expression As Object) As Double
             Return TryCDbl(Expression, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a double value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
         ''' <returns>The converted double value or the alternative value if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function TryCDbl(ByVal Expression As Object, ByVal AlternativeValue As Integer) As Double
             Try
                 Return CDbl(Expression)
@@ -1417,36 +1039,20 @@ Namespace CompuMaster.camm.WebManager
                 Return AlternativeValue
             End Try
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a decimal value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <returns>The converted decimal value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function TryCDec(ByVal Expression As Object) As Decimal
             Return TryCDec(Expression, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a decimal value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
         ''' <returns>The converted decimal value or the alternative value if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function TryCDec(ByVal Expression As Object, ByVal AlternativeValue As Integer) As Decimal
             Try
                 Return CDec(Expression)
@@ -1489,7 +1095,6 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "String encoding Base64"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Convert a normal string into base64 string
         ''' </summary>
@@ -1498,14 +1103,9 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' The byte encoding is based on UTF-8 encoding
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	17.11.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ConvertStringToBase64String(ByVal text As String) As String
             Return ConvertBytesToBase64String(ConvertStringToBytes(text))
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Convert a base64 string into a normal string
         ''' </summary>
@@ -1514,10 +1114,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' The byte encoding is based on UTF-8 encoding
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	17.11.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ConvertBase64StringToString(ByVal base64String As String) As String
             Return ConvertBytesToString(ConvertBase64StringToBytes(base64String))
         End Function
@@ -1543,8 +1139,6 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "String manipulation and HTML conversions"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Combine a unix path with another one
         ''' </summary>
@@ -1554,10 +1148,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' If path2 starts with &quot;/&quot;, it is considered as root folder and will be the only return value.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	11.01.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function CombineUnixPaths(ByVal path1 As String, ByVal path2 As String) As String
             If path1 = Nothing OrElse (path2 <> Nothing AndAlso path2.StartsWith("/")) Then
                 Return path2
@@ -1572,36 +1162,20 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get the complete query string of the current request in a form usable for recreating this query string for a following request
         ''' </summary>
         ''' <param name="removeParameters">Remove all values with this name form the query string</param>
         ''' <returns>A new string with all query string information without the starting questionmark character</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function QueryStringWithoutSpecifiedParameters(ByVal removeParameters As String()) As String
             Return NameValueCollectionWithoutSpecifiedKeys(System.Web.HttpContext.Current.Request.QueryString, removeParameters)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get the complete string of a collection in a form usable for recreating a query string for a following request
         ''' </summary>
         ''' <param name="collection">A NameValueCollection, e. g. Request.QueryString</param>
         ''' <param name="removeKeys">Names of keys which shall not be in the output</param>
         ''' <returns>A string of the collection data which can be appended to any URL (with url encoding)</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	16.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function NameValueCollectionWithoutSpecifiedKeys(ByVal collection As System.Collections.Specialized.NameValueCollection, ByVal removeKeys As String()) As String
             Dim RedirectionParams As String = ""
             For Each ParamItem As String In collection
@@ -1623,21 +1197,12 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return Mid(RedirectionParams, 2)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Split a string by a separator if there is not a special leading character
         ''' </summary>
         ''' <param name="text"></param>
         ''' <param name="separator"></param>
         ''' <param name="exceptLeadingCharacter"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	09.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function SplitString(ByVal text As String, ByVal separator As Char, ByVal exceptLeadingCharacter As Char) As String()
             If text = Nothing Then
                 Return New String() {}
@@ -1670,7 +1235,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="text"></param>
         ''' <param name="separator"></param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function SplitStringToInteger(ByVal text As String, ByVal separator As Char) As Integer()
             If text Is Nothing Then
@@ -1683,8 +1247,6 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return CType(Result.ToArray(GetType(Integer)), Integer())
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Converts all line breaks into HTML line breaks (&quot;&lt;br&gt;&quot;)
         ''' </summary>
@@ -1693,10 +1255,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Supported line breaks are linebreaks of Windows, MacOS as well as Linux/Unix.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function HTMLEncodeLineBreaks(ByVal text As String) As String
             If text = Nothing Then
                 Return text
@@ -1704,38 +1262,20 @@ Namespace CompuMaster.camm.WebManager
                 Return text.Replace(ControlChars.CrLf, "<br />").Replace(ControlChars.Cr, "<br />").Replace(ControlChars.Lf, "<br />")
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search for a string in another string and return the number of matches
         ''' </summary>
         ''' <param name="source">The string where to search in</param>
         ''' <param name="searchFor">The searched string (binary comparison)</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function CountOfOccurances(ByVal source As String, ByVal searchFor As String) As Integer
             Return CountOfOccurances(source, searchFor, CompareMethod.Binary)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search for a string in another string and return the number of matches
         ''' </summary>
         ''' <param name="source">The string where to search in</param>
         ''' <param name="searchFor">The searched string</param>
         ''' <param name="compareMethod">Binary or text search</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function CountOfOccurances(ByVal source As String, ByVal searchFor As String, ByVal compareMethod As Microsoft.VisualBasic.CompareMethod) As Integer
 
             If searchFor = "" Then
@@ -1763,8 +1303,6 @@ Namespace CompuMaster.camm.WebManager
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Replaces placeholders in a string by defined values
         ''' </summary>
@@ -1775,10 +1313,6 @@ Namespace CompuMaster.camm.WebManager
         '''     <para>Supported special character combinations are <code>\t</code>, <code>\r</code>, <code>\n</code>, <code>\\</code>, <code>\[</code></para>
         '''     <para>Supported placeholders are <code>[*]</code>, <code>[n:1..9]</code></para>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function sprintf(ByVal message As String, ByVal ParamArray values() As Object) As String
             Const errpfNoClosingBracket As Integer = vbObjectError + 1
             Const errpfMissingValue As Integer = vbObjectError + 2
@@ -1859,20 +1393,11 @@ Namespace CompuMaster.camm.WebManager
             sprintf = message
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Join the elements of an integer array to a single string
         ''' </summary>
         ''' <param name="values">An array of values</param>
         ''' <param name="delimiter">A delimiter which shall separate the values in the string</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	20.04.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function JoinArrayToString(ByVal values As Integer(), ByVal delimiter As String) As String
             Dim result As New System.Text.StringBuilder
             If values Is Nothing Then
@@ -1884,19 +1409,11 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return result.ToString
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Join the elements of an integer array to a single string
         ''' </summary>
         ''' <param name="values">An array of values</param>
         ''' <param name="delimiter">A delimiter which shall separate the values in the string</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	20.04.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function _JoinArrayToString(ByVal values As Long(), ByVal delimiter As String) As String
             Dim result As New System.Text.StringBuilder
             If values Is Nothing Then
@@ -1908,7 +1425,6 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return result.ToString
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Join all items of a NameValueCollection (for example Request.QueryString) to a simple string
         ''' </summary>
@@ -1917,12 +1433,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="KeyValueSeparator">The string between key and value</param>
         ''' <param name="EndOfItem">The string to be placed at the end of a value</param>
         ''' <returns>A string containing all elements of the collection</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	09.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function JoinNameValueCollectionToString(ByVal NameValueCollectionToString As Collections.Specialized.NameValueCollection, ByVal BeginningOfItem As String, ByVal KeyValueSeparator As String, ByVal EndOfItem As String) As String
             Dim Result As String = Nothing
             For Each ParamItem As String In NameValueCollectionToString
@@ -1930,8 +1440,6 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return Result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Join all items of a NameValueCollection (for example Request.QueryString) to a simple string
         ''' </summary>
@@ -1941,10 +1449,6 @@ Namespace CompuMaster.camm.WebManager
         '''     If you need to read the values directly from the returned string, pay attention that all names and values might be UrlEncoded and you have to decode them, first.
         ''' </remarks>
         ''' <see also="FillNameValueCollectionWith" />
-        ''' <history>
-        ''' 	[adminwezel]	09.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function JoinNameValueCollectionWithUrlEncodingToString(ByVal NameValueCollectionToString As Collections.Specialized.NameValueCollection) As String
             Dim Result As String = Nothing
             For Each ParamItem As String In NameValueCollectionToString
@@ -1955,8 +1459,6 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return Result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Restore a NameValueCollection's content which has been previously converted to a string
         ''' </summary>
@@ -1966,10 +1468,6 @@ Namespace CompuMaster.camm.WebManager
         '''     Please note: existing values in the collection won't be appended, they'll be overridden
         ''' </remarks>
         ''' <see also="JoinNameValueCollectionWithUrlEncodingToString" />
-        ''' <history>
-        ''' 	[AdminSupport]	01.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Sub ReFillNameValueCollection(ByVal nameValueCollection As System.Collections.Specialized.NameValueCollection, ByVal nameValueCollectionWithUrlEncoding As String)
 
             If nameValueCollection Is Nothing Then
@@ -1999,19 +1497,11 @@ Namespace CompuMaster.camm.WebManager
             Next
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Converts HTML messages to simple text
         ''' </summary>
         ''' <param name="HTML">A string with HTML code</param>
         ''' <returns>The rendered output as plain text</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	09.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ConvertHTMLToText(ByVal HTML As String) As String
             'TODO: 1. remove of all other HTML tags
             '      2. search case insensitive
@@ -2252,7 +1742,6 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "LinkHighlighting"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Converts addresses or URLs in a string into HTML hyperlinks
         ''' </summary>
@@ -2260,15 +1749,9 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="Msg">Search inside this string</param>
         ''' <param name="AdditionalProtocolInitiator">An additionally required prefix</param>
         ''' <returns>HTML with hyperlinks</returns>
-        ''' <remarks>
-        ''' </remarks>
         ''' <example language="vb">
         '''     Dim HTMLResult As String = ConvertProtocolAddressIntoHyperLink ("www.", Text, "http://")
         ''' </example>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function ConvertProtocolAddressIntoHyperLink(ByVal LinkInitiator As String, ByVal Msg As String, ByVal AdditionalProtocolInitiator As String) As String
             Dim OldEndPoint As Integer
             Dim LinkStartPos As Integer
@@ -2287,11 +1770,11 @@ Namespace CompuMaster.camm.WebManager
                     If LinkEndPosByReturnChar = -1 Then LinkEndPosByReturnChar = Len(Msg)
                     LinkEndPos = CType(IIf(LinkEndPosBySpaceChar < LinkEndPosByReturnChar, LinkEndPosBySpaceChar, LinkEndPosByReturnChar), Integer)
                     'Exclude Satzzeichen
-                    If Mid(Msg, LinkEndPos, 1) = "." Or _
-                            Mid(Msg, LinkEndPos, 1) = "!" Or _
-                            Mid(Msg, LinkEndPos, 1) = "?" Or _
-                            Mid(Msg, LinkEndPos, 1) = "," Or _
-                            Mid(Msg, LinkEndPos, 1) = ";" Or _
+                    If Mid(Msg, LinkEndPos, 1) = "." Or
+                            Mid(Msg, LinkEndPos, 1) = "!" Or
+                            Mid(Msg, LinkEndPos, 1) = "?" Or
+                            Mid(Msg, LinkEndPos, 1) = "," Or
+                            Mid(Msg, LinkEndPos, 1) = ";" Or
                             Mid(Msg, LinkEndPos, 1) = ":" Then
                         LinkEndPos = LinkEndPos - 1
                     End If
@@ -2306,18 +1789,11 @@ Namespace CompuMaster.camm.WebManager
             ConvertProtocolAddressIntoHyperLink = Msg
 
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert e-mail addresses into hyperlinks
         ''' </summary>
         ''' <param name="Msg">The string where to search in</param>
         ''' <returns>HTML with hyperlinks</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function ConvertEMailAddressIntoHyperLink(ByVal Msg As String) As String
             Dim OldEndPoint As Integer
             Dim LinkStartPos As Integer
@@ -2337,13 +1813,13 @@ Namespace CompuMaster.camm.WebManager
                     Else
                         LefterChar = " "
                     End If
-                    If LefterChar = " " Or _
-                            LefterChar = Chr(13) Or _
-                            LefterChar = Chr(10) Or _
-                            LefterChar = "!" Or _
-                            LefterChar = "?" Or _
-                            LefterChar = "," Or _
-                            LefterChar = ";" Or _
+                    If LefterChar = " " Or
+                            LefterChar = Chr(13) Or
+                            LefterChar = Chr(10) Or
+                            LefterChar = "!" Or
+                            LefterChar = "?" Or
+                            LefterChar = "," Or
+                            LefterChar = ";" Or
                             LefterChar = ":" Then
                         Exit Do
                     Else
@@ -2358,11 +1834,11 @@ Namespace CompuMaster.camm.WebManager
                     If LinkEndPosByReturnChar = -1 Then LinkEndPosByReturnChar = Len(Msg)
                     LinkEndPos = CType(IIf(LinkEndPosBySpaceChar < LinkEndPosByReturnChar, LinkEndPosBySpaceChar, LinkEndPosByReturnChar), Integer)
                     'Exclude Satzzeichen
-                    If Mid(Msg, LinkEndPos, 1) = "." Or _
-                            Mid(Msg, LinkEndPos, 1) = "!" Or _
-                            Mid(Msg, LinkEndPos, 1) = "?" Or _
-                            Mid(Msg, LinkEndPos, 1) = "," Or _
-                            Mid(Msg, LinkEndPos, 1) = ";" Or _
+                    If Mid(Msg, LinkEndPos, 1) = "." Or
+                            Mid(Msg, LinkEndPos, 1) = "!" Or
+                            Mid(Msg, LinkEndPos, 1) = "?" Or
+                            Mid(Msg, LinkEndPos, 1) = "," Or
+                            Mid(Msg, LinkEndPos, 1) = ";" Or
                             Mid(Msg, LinkEndPos, 1) = ":" Then
                         LinkEndPos = LinkEndPos - 1
                     End If
@@ -2425,19 +1901,11 @@ Namespace CompuMaster.camm.WebManager
             ConvertEMailAddressCurrentlyWOHyperLinkToHyperLink = Msg
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Converts URLs and e-mail addresses in a string into HTML hyperlinks
         ''' </summary>
         ''' <param name="Text">The standard text without any HTML</param>
         ''' <returns>HTML with hyperlinks</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function HighlightLinksInMessage(ByVal Text As String) As String
             Dim HTMLMsg As String = Text
 
@@ -2457,19 +1925,10 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Paths and URIs"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Remove a possibly trailing slash from an URL
         ''' </summary>
         ''' <param name="url">An URL address</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	08.10.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function RemoveTrailingSlash(ByVal url As String) As String
             If url.Length > 0 AndAlso Right(url, 1) = "/" Then
                 Return Mid(url, 1, url.Length - 1)
@@ -2477,20 +1936,13 @@ Namespace CompuMaster.camm.WebManager
                 Return url
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     If the path is a unix path with a filename at the end, the file name will be removed. The resulting path always ends with a "/".
         ''' </summary>
         ''' <param name="path">A unix path with or without a filename</param>
-        ''' <returns></returns>
         ''' <remarks>
         ''' All letters behind the last slash will be removed, so a path ending with a slash will never be modified.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	07.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function RemoveFilenameInUnixPath(ByVal path As String) As String
             If path Is Nothing Then
                 Return Nothing
@@ -2502,19 +1954,10 @@ Namespace CompuMaster.camm.WebManager
                 Return path.Substring(0, path.LastIndexOf("/"c) + 1)
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the full virtual path based on the given string
         ''' </summary>
         ''' <param name="virtualPath">A path like ~/images or images/styles or /images/</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[swiercz]	06.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function FullyInterpretedVirtualPath(ByVal virtualPath As String) As String
             If virtualPath Is Nothing Then
                 Throw New ArgumentNullException("virtualPath")
@@ -2537,35 +1980,20 @@ Namespace CompuMaster.camm.WebManager
             End If
             Return virtualPath
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the full physical path based on the given string
         ''' </summary>
         ''' <param name="virtualPath">A path like ~/images or images/styles or /images/</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     Requires execution on a web server (because HttpContext must be there)
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	06.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function FullyInterpredetPhysicalPath(ByVal virtualPath As String) As String
             Return System.Web.HttpContext.Current.Server.MapPath(virtualPath)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The script name without path and query information, only the file name itself
         ''' </summary>
         ''' <returns>E. g. "index.aspx"</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	24.11.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ScriptNameWithoutPath() As String
             Dim result As String
 
@@ -2586,19 +2014,11 @@ Namespace CompuMaster.camm.WebManager
 
             Return result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Check validity of an email address
         ''' </summary>
         ''' <param name="emailAddress">email address to be validated</param>
         ''' <returns>True if email address is syntactically valid else false</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	05.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ValidateEmailAddress(ByVal emailAddress As String) As Boolean
             If Trim(emailAddress) = Nothing Then
                 Return False
@@ -2623,18 +2043,11 @@ Namespace CompuMaster.camm.WebManager
                 Return regEx.IsMatch(Trim(emailAddress))
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Check validity of an URL
         ''' </summary>
         ''' <param name="url">URL to be validated</param>
         ''' <returns>True if URL is syntactically valid else false</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	05.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ValidateInternetUrl(ByVal url As String) As Boolean
             If Trim(url) = Nothing Then
                 Return False
@@ -2731,19 +2144,11 @@ Namespace CompuMaster.camm.WebManager
             End If
             Return Result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is the assembly already loaded into the current application domain?
         ''' </summary>
         ''' <param name="assemblyName">The name of an assembly</param>
         ''' <returns>True if the assembly is loaded, False if not</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	16.02.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Function IsAssemblyAlreadyLoaded(ByVal assemblyName As String) As Boolean
             For Each MyAssembly As System.Reflection.Assembly In System.AppDomain.CurrentDomain.GetAssemblies
                 If MyAssembly.GetName.Name.ToLower = assemblyName.ToLower Then
@@ -2752,20 +2157,11 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return False
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load a value from an embedded resource file
         ''' </summary>
         ''' <param name="resourceFileWithoutExtension">The name of the .resx file</param>
         ''' <param name="key">The key of the requested value</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function ResourceValue(ByVal resourceFileWithoutExtension As String, ByVal key As String) As String
             Dim Result As String = Nothing
 
@@ -2788,7 +2184,6 @@ Namespace CompuMaster.camm.WebManager
         ''' Read an embedded, binary resource file
         ''' </summary>
         ''' <param name="embeddedFileName">The name of the resouces</param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
         Friend Shared Function ResourceBinaryValue(ByVal embeddedFileName As String) As Byte()
             Dim stream As System.IO.Stream = Nothing
@@ -2810,19 +2205,11 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Regular Expressions"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Check if a value matches to the regular expression
         ''' </summary>
         ''' <param name="regularExpression"></param>
         ''' <param name="value"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function IsRegExMatch(ByVal regularExpression As String, ByVal value As String) As Boolean
             Dim regEx As New System.Text.RegularExpressions.Regex(regularExpression)
             Return regEx.IsMatch(value)
@@ -2864,18 +2251,11 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Lookup of server form"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search for the server form in the list of parent controls
         ''' </summary>
         ''' <param name="control"></param>
         ''' <returns>The control of the server form if it's existant</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function LookupParentServerForm(ByVal control As System.Web.UI.Control) As System.Web.UI.HtmlControls.HtmlForm
             If control Is Nothing Then
                 Throw New ArgumentNullException("control")
@@ -2895,36 +2275,20 @@ Namespace CompuMaster.camm.WebManager
                 Return Result
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Lookup the server form which resides on the page
         ''' </summary>
         ''' <param name="page"></param>
         ''' <returns>The control of the server form if it's existant</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function LookupServerForm(ByVal page As System.Web.UI.Page) As System.Web.UI.HtmlControls.HtmlForm
             Return LookupServerForm(page.Controls, True)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search in the controls collection for a server form
         ''' </summary>
         ''' <param name="controls"></param>
         ''' <param name="searchInChildren">True to execute the search in the controls collection recursively, False to not search in any children controls</param>
         ''' <returns>The control of the server form if it's existant</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	22.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function LookupServerForm(ByVal controls As System.Web.UI.ControlCollection, ByVal searchInChildren As Boolean) As System.Web.UI.HtmlControls.HtmlForm
             Dim Result As System.Web.UI.HtmlControls.HtmlForm = Nothing
             'Search in controls
@@ -2947,8 +2311,6 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Performing external requests"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Perform a request to a remote server and read the HTML/text from there
         ''' </summary>
@@ -2960,7 +2322,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </remarks>
         ''' <history>
         ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetHtmlFromUri(ByVal uri As String) As String
             Dim response As System.Net.HttpWebResponse = Nothing
             Dim dataStream As System.IO.Stream = Nothing
@@ -2985,8 +2346,6 @@ Namespace CompuMaster.camm.WebManager
             End Try
             Return result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Perform a request to a remote server and read the HTML/text from there
         ''' </summary>
@@ -2998,12 +2357,9 @@ Namespace CompuMaster.camm.WebManager
         ''' </remarks>
         ''' <history>
         ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetHtmlFromUri(ByVal uri As String, ByVal method As String, ByVal postData As System.Collections.Specialized.NameValueCollection) As String
             Return GetHtmlFromUri(uri, method, Utils.JoinNameValueCollectionWithUrlEncodingToString(postData))
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Perform a request to a remote server and read the HTML/text from there
         ''' </summary>
@@ -3015,12 +2371,9 @@ Namespace CompuMaster.camm.WebManager
         ''' </remarks>
         ''' <history>
         ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetHtmlFromUri(ByVal uri As String, ByVal method As String, ByVal postData As System.Collections.Specialized.NameValueCollection, ByVal requestContentType As String, ByVal requestEncoding As System.Text.Encoding, ByVal responseEncoding As System.Text.Encoding) As String
             Return GetHtmlFromUri(uri, method, Utils.JoinNameValueCollectionWithUrlEncodingToString(postData), String.Empty, System.Text.Encoding.UTF8, System.Text.Encoding.UTF8)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Perform a request to a remote server and read the HTML/text from there
         ''' </summary>
@@ -3032,12 +2385,9 @@ Namespace CompuMaster.camm.WebManager
         ''' </remarks>
         ''' <history>
         ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetHtmlFromUri(ByVal uri As String, ByVal method As String, ByVal postData As String) As String
             Return GetHtmlFromUri(uri, method, postData, String.Empty, System.Text.Encoding.UTF8, System.Text.Encoding.UTF8)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Perform a request to a remote server and read the HTML/text from there
         ''' </summary>
@@ -3049,7 +2399,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </remarks>
         ''' <history>
         ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function GetHtmlFromUri(ByVal uri As String, ByVal method As String, ByVal postData As String, ByVal requestContentType As String, ByVal requestEncoding As System.Text.Encoding, ByVal responseEncoding As System.Text.Encoding) As String
 
             If method = Nothing Then
@@ -3111,24 +2460,15 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Windows application event log"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Write entry to event log 
         ''' </summary>
         ''' <param name="type">The entry type, e. g. Warning, Information</param>
         ''' <param name="data">The event details</param>
         ''' <returns>True if successful, false if not</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	27.05.2009	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Shared Function WriteToEventLog(ByVal type As System.Diagnostics.EventLogEntryType, ByVal data As String) As Boolean
             Return WriteToEventLog(data, "camm Web-Manager", type, "Application")
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Write entry to event log 
         ''' </summary>
@@ -3148,10 +2488,6 @@ Namespace CompuMaster.camm.WebManager
         '''          So don't use the same source name for different 
         '''          logs, and vice versa
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	27.05.2009	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function WriteToEventLog(ByVal entry As String, ByVal appName As String, Optional ByVal eventType As System.Diagnostics.EventLogEntryType = System.Diagnostics.EventLogEntryType.Information, Optional ByVal logName As String = "Application") As Boolean
 
             Dim objEventLog As New System.Diagnostics.EventLog
@@ -3421,8 +2757,6 @@ Namespace CompuMaster.camm.WebManager
                     If Not zipFileStream Is Nothing Then zipFileStream.Close()
                 End Try
             End Sub
-
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             ''' Extract a single file from a ZIP archive
             ''' </summary>
@@ -3432,10 +2766,6 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' The extraction path must be absolute. There won't be any modifications to reflect a matching folder structure from the ZIP archive with the one on disc
             ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	19.06.2009	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Shared Sub Extract(ByVal zipFile As String, ByVal zipItem As ZipContentListItem, ByVal fullExtractionFilePath As String)
                 If File.Exists(zipFile) = False Then Throw New FileNotFoundException("ZIP archive doesn't exist", zipFile)
 
@@ -3497,18 +2827,11 @@ Namespace CompuMaster.camm.WebManager
                 newItem.IsDirectory = zipEntry.IsDirectory
                 Return newItem
             End Function
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             ''' Load the list of content of a zip archive
             ''' </summary>
             ''' <param name="zipFile">The ZIP archive</param>
             ''' <returns>An array of ZipContentListItems</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[wezel]	19.06.2009	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Shared Function LoadListOfContent(ByVal zipFile As String) As ZipContentListItem()
                 If File.Exists(zipFile) = False Then Throw New FileNotFoundException("ZIP archive doesn't exist", zipFile)
                 Dim zipFileStream As FileStream = Nothing
@@ -3534,7 +2857,6 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "ConnectionString without sensitive data"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Prepare a connection string for transmission to users without sensitive password information
         ''' </summary>
@@ -3543,10 +2865,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' All information after the password position will be removed, too. So, you can hide the user name by positioning it after the password (UID=user;PWD=xxxx vs. PWD=xxxx;UID=user).
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	25.06.2009	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ConnectionStringWithoutPasswords(ByVal fullConnectionString As String) As String
             Dim PWDPos As Integer
             PWDPos = InStr(UCase(fullConnectionString), "PWD=")
@@ -3578,50 +2896,34 @@ Namespace CompuMaster.camm.WebManager
     End Class
 
 #Region "Compatibility module"
-    <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+    <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
     Public Module UtilsCompatibility
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Redirect to another url by using regular html forms to post data
         ''' </summary>
         ''' <param name="url"></param>
         ''' <param name="postData"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	29.04.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Sub RedirectWithPostData(ByVal context As System.Web.HttpContext, ByVal url As String, ByVal postData As Collections.Specialized.NameValueCollection)
             Utils.RedirectWithPostData(context, url, postData)
         End Sub
 
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Sub RedirectWithPostData(ByVal context As System.Web.HttpContext, ByVal url As String, ByVal postData As Collections.Specialized.NameValueCollection, ByVal httpMethod As String)
             Utils.RedirectWithPostData(context, url, postData, httpMethod)
         End Sub
 
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Sub RedirectWithPostData(ByVal context As System.Web.HttpContext, ByVal url As String, ByVal postData As Collections.Specialized.NameValueCollection, ByVal httpMethod As String, ByVal additionalFormAttributes As String)
             Utils.RedirectWithPostData(context, url, postData, httpMethod, additionalFormAttributes)
         End Sub
 
 
 #Region "Network host information"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get the first value of the IP address list or the workstation name if there are no IP addresses
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function GetWorkstationID() As String
 
             Dim host As System.Net.IPHostEntry = System.Net.Dns.Resolve(System.Net.Dns.GetHostName)
@@ -3641,19 +2943,11 @@ Namespace CompuMaster.camm.WebManager
             Return System.Net.Dns.GetHostName
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is the remote client connecting from a private network?
         ''' </summary>
         ''' <returns>True for private networks, false for localhost and public networks</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function IsRemoteClientFromLanOrPrivateNetwork() As Boolean
 
             If System.Web.HttpContext.Current Is Nothing Then
@@ -3663,14 +2957,11 @@ Namespace CompuMaster.camm.WebManager
             Return Utils.IsHostFromLanOrPrivateNetwork(System.Web.HttpContext.Current.Request.UserHostAddress)
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is the IPv4 address a host of a specified address range?
         ''' </summary>
         ''' <param name="IPv4Address">An IPv4 host address</param>
         ''' <param name="AddressRange">An array of strings defining address ranges, e. g. 192.168.*</param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     This method compares the string content and not the byte content, that's why you should not forget the leading dot in front of the star in your IP address range.
         ''' </remarks>
@@ -3686,11 +2977,7 @@ Namespace CompuMaster.camm.WebManager
         '''         <item>192.168.*.* <em>(all letters after the first star will be ignored)</em></item>
         '''     </list>
         ''' </example>
-        ''' <history>
-        ''' 	[adminsupport]	08.02.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function IsHostOfAddressRange(ByVal IPv4Address As String, ByVal AddressRange As String()) As Boolean
 
             If IPv4Address = "" Then
@@ -3721,20 +3008,12 @@ Namespace CompuMaster.camm.WebManager
             End If
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is the host address a private network node (defined by RFC-1597)?
         ''' </summary>
         ''' <param name="IPAddress">The IP address to validate</param>
         ''' <returns>True for private or LAN networks, otherwise false</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function IsHostFromLanOrPrivateNetwork(ByVal IPAddress As String) As Boolean
 
             Dim IP As System.Net.IPAddress
@@ -3795,20 +3074,11 @@ Namespace CompuMaster.camm.WebManager
             End If
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is the host a localhost?
         ''' </summary>
         ''' <param name="IPAddress">The IP address to validate</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function IsLoopBackDevice(ByVal IPAddress As String) As Boolean
             Return System.Net.IPAddress.IsLoopback(System.Net.IPAddress.Parse(IPAddress))
         End Function
@@ -3816,20 +3086,13 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Nz"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function IfNull(ByVal CheckValueIfDBNull As Object, Optional ByVal ReplaceWithThis As Object = Nothing) As Object
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3837,19 +3100,12 @@ Namespace CompuMaster.camm.WebManager
                 Return (CheckValueIfDBNull)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns null (Nothing in VisualBasic) in that case
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function Nz(ByVal CheckValueIfDBNull As Object) As Object
             If IsDBNull(CheckValueIfDBNull) Then
                 Return Nothing
@@ -3857,20 +3113,13 @@ Namespace CompuMaster.camm.WebManager
                 Return (CheckValueIfDBNull)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Object) As Object
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3878,20 +3127,13 @@ Namespace CompuMaster.camm.WebManager
                 Return (CheckValueIfDBNull)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Integer) As Integer
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3899,20 +3141,13 @@ Namespace CompuMaster.camm.WebManager
                 Return CType(CheckValueIfDBNull, Integer)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Long) As Long
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3920,20 +3155,13 @@ Namespace CompuMaster.camm.WebManager
                 Return CType(CheckValueIfDBNull, Long)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Boolean) As Boolean
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3941,20 +3169,13 @@ Namespace CompuMaster.camm.WebManager
                 Return CType(CheckValueIfDBNull, Boolean)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As DateTime) As DateTime
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3962,20 +3183,13 @@ Namespace CompuMaster.camm.WebManager
                 Return CType(CheckValueIfDBNull, DateTime)
             End If
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Checks for DBNull and returns the second value alternatively
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As String) As String
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3986,20 +3200,11 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Type conversions"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the string which is not nothing or else String.Empty
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function StringNotEmptyOrNothing(ByVal value As String) As String
             If value = Nothing Then
                 Return Nothing
@@ -4007,20 +3212,11 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the string which is not nothing or else String.Empty
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function StringNotNothingOrEmpty(ByVal value As String) As String
             If value Is Nothing Then
                 Return String.Empty
@@ -4028,20 +3224,11 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the string which is not empty or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function StringNotEmptyOrDBNull(ByVal value As String) As Object
             If value = Nothing Then
                 Return DBNull.Value
@@ -4049,20 +3236,11 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the object which is not nothing or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function ObjectNotNothingOrEmptyString(ByVal value As Object) As Object
             If value Is Nothing Then
                 Return String.Empty
@@ -4070,20 +3248,11 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the object which is not nothing or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function ObjectNotNothingOrDBNull(ByVal value As Object) As Object
             If value Is Nothing Then
                 Return DBNull.Value
@@ -4091,20 +3260,11 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the object which is not an empty string or otherwise return Nothing
         ''' </summary>
         ''' <param name="value">The object to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function ObjectNotEmptyStringOrNothing(ByVal value As Object) As Object
             If value.GetType Is GetType(String) AndAlso CType(value, String) = "" Then
                 Return Nothing
@@ -4112,20 +3272,11 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Return the string which is not nothing or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function StringNotNothingOrDBNull(ByVal value As String) As Object
             If value Is Nothing Then
                 Return DBNull.Value
@@ -4133,38 +3284,22 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a long value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <returns>The converted long value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function TryCLng(ByVal Expression As Object) As Long
             Return Utils.TryCLng(Expression, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a long value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
         ''' <returns>The converted long value or the alternative value if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function TryCLng(ByVal Expression As Object, ByVal AlternativeValue As Long) As Long
             Try
                 Return CLng(Expression)
@@ -4172,38 +3307,22 @@ Namespace CompuMaster.camm.WebManager
                 Return AlternativeValue
             End Try
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a integer value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <returns>The converted integer value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function TryCInt(ByVal Expression As Object) As Integer
             Return Utils.TryCInt(Expression, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a integer value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
         ''' <returns>The converted integer value or the alternative value if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function TryCInt(ByVal Expression As Object, ByVal AlternativeValue As Integer) As Integer
             Try
                 Return CInt(Expression)
@@ -4211,38 +3330,22 @@ Namespace CompuMaster.camm.WebManager
                 Return AlternativeValue
             End Try
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a double value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <returns>The converted double value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function TryCDbl(ByVal Expression As Object) As Double
             Return Utils.TryCDbl(Expression, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a double value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
         ''' <returns>The converted double value or the alternative value if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function TryCDbl(ByVal Expression As Object, ByVal AlternativeValue As Integer) As Double
             Try
                 Return CDbl(Expression)
@@ -4250,38 +3353,22 @@ Namespace CompuMaster.camm.WebManager
                 Return AlternativeValue
             End Try
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a decimal value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <returns>The converted decimal value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function TryCDec(ByVal Expression As Object) As Decimal
             Return Utils.TryCDec(Expression, Nothing)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Tries to convert the expression into a decimal value, but never throws an exception
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
         ''' <returns>The converted decimal value or the alternative value if the conversion was unsuccessfull</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function TryCDec(ByVal Expression As Object, ByVal AlternativeValue As Integer) As Decimal
             Try
                 Return CDec(Expression)
@@ -4293,38 +3380,22 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "String manipulation and HTML conversions"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get the complete query string of the current request in a form usable for recreating this query string for a following request
         ''' </summary>
         ''' <param name="removeParameters">Remove all values with this name form the query string</param>
         ''' <returns>A new string with all query string information without the starting questionmark character</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function QueryStringWithoutSpecifiedParameters(ByVal removeParameters As String()) As String
             Return Utils.NameValueCollectionWithoutSpecifiedKeys(System.Web.HttpContext.Current.Request.QueryString, removeParameters)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Get the complete string of a collection in a form usable for recreating a query string for a following request
         ''' </summary>
         ''' <param name="collection">A NameValueCollection, e. g. Request.QueryString</param>
         ''' <param name="removeKeys">Names of keys which shall not be in the output</param>
         ''' <returns>A string of the collection data which can be appended to any URL (with url encoding)</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	16.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function NameValueCollectionWithoutSpecifiedKeys(ByVal collection As System.Collections.Specialized.NameValueCollection, ByVal removeKeys As String()) As String
             Dim RedirectionParams As String = ""
             For Each ParamItem As String In collection
@@ -4346,22 +3417,13 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return Mid(RedirectionParams, 2)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Split a string by a separator if there is not a special leading character
         ''' </summary>
         ''' <param name="text"></param>
         ''' <param name="separator"></param>
         ''' <param name="exceptLeadingCharacter"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	09.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function SplitString(ByVal text As String, ByVal separator As Char, ByVal exceptLeadingCharacter As Char) As String()
             Dim Result As New ArrayList
             'Go through every char of the string
@@ -4385,58 +3447,33 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return CType(Result.ToArray(GetType(String)), String())
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Converts all line breaks into HTML line breaks (&quot;&lt;br&gt;&quot;)
         ''' </summary>
         ''' <param name="Text"></param>
-        ''' <returns></returns>
         ''' <remarks>
         '''     Supported line breaks are linebreaks of Windows, MacOS as well as Linux/Unix.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function HTMLEncodeLineBreaks(ByVal Text As String) As String
             Return Text.Replace(ControlChars.CrLf, "<br>").Replace(ControlChars.Cr, "<br>").Replace(ControlChars.Lf, "<br>")
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search for a string in another string and return the number of matches
         ''' </summary>
         ''' <param name="source">The string where to search in</param>
         ''' <param name="searchFor">The searched string (binary comparison)</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function CountOfOccurances(ByVal source As String, ByVal searchFor As String) As Integer
             Return Utils.CountOfOccurances(source, searchFor, CompareMethod.Binary)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search for a string in another string and return the number of matches
         ''' </summary>
         ''' <param name="source">The string where to search in</param>
         ''' <param name="searchFor">The searched string</param>
         ''' <param name="compareMethod">Binary or text search</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function CountOfOccurances(ByVal source As String, ByVal searchFor As String, ByVal compareMethod As Microsoft.VisualBasic.CompareMethod) As Integer
 
             If searchFor = "" Then
@@ -4464,8 +3501,6 @@ Namespace CompuMaster.camm.WebManager
             Return Result
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Replaces placeholders in a string by defined values
         ''' </summary>
@@ -4476,11 +3511,7 @@ Namespace CompuMaster.camm.WebManager
         '''     <para>Supported special character combinations are <code>\t</code>, <code>\r</code>, <code>\n</code>, <code>\\</code>, <code>\[</code></para>
         '''     <para>Supported placeholders are <code>[*]</code>, <code>[n:1..9]</code></para>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function sprintf(ByVal message As String, ByVal ParamArray values() As Object) As String
             Const errpfNoClosingBracket As Integer = vbObjectError + 1
             Const errpfMissingValue As Integer = vbObjectError + 2
@@ -4561,8 +3592,6 @@ Namespace CompuMaster.camm.WebManager
             sprintf = message
 
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Join all items of a NameValueCollection (for example Request.QueryString) to a simple string
         ''' </summary>
@@ -4571,13 +3600,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="KeyValueSeparator">The string between key and value</param>
         ''' <param name="EndOfItem">The string to be placed at the end of a value</param>
         ''' <returns>A string containing all elements of the collection</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	09.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function JoinNameValueCollectionToString(ByVal NameValueCollectionToString As Collections.Specialized.NameValueCollection, ByVal BeginningOfItem As String, ByVal KeyValueSeparator As String, ByVal EndOfItem As String) As String
             Dim Result As String = Nothing
             For Each ParamItem As String In NameValueCollectionToString
@@ -4585,8 +3608,6 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return Result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Join all items of a NameValueCollection (for example Request.QueryString) to a simple string
         ''' </summary>
@@ -4596,11 +3617,7 @@ Namespace CompuMaster.camm.WebManager
         '''     If you need to read the values directly from the returned string, pay attention that all names and values might be UrlEncoded and you have to decode them, first.
         ''' </remarks>
         ''' <see also="FillNameValueCollectionWith" />
-        ''' <history>
-        ''' 	[adminwezel]	09.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function JoinNameValueCollectionWithUrlEncodingToString(ByVal NameValueCollectionToString As Collections.Specialized.NameValueCollection) As String
             Dim Result As String = Nothing
             For Each ParamItem As String In NameValueCollectionToString
@@ -4611,8 +3628,6 @@ Namespace CompuMaster.camm.WebManager
             Next
             Return Result
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Restore a NameValueCollection's content which has been previously converted to a string
         ''' </summary>
@@ -4622,11 +3637,7 @@ Namespace CompuMaster.camm.WebManager
         '''     Please note: existing values in the collection won't be appended, they'll be overridden
         ''' </remarks>
         ''' <see also="JoinNameValueCollectionWithUrlEncodingToString" />
-        ''' <history>
-        ''' 	[AdminSupport]	01.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Sub ReFillNameValueCollection(ByVal nameValueCollection As System.Collections.Specialized.NameValueCollection, ByVal nameValueCollectionWithUrlEncoding As String)
 
             If nameValueCollection Is Nothing Then
@@ -4656,20 +3667,12 @@ Namespace CompuMaster.camm.WebManager
             Next
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Converts HTML messages to simple text
         ''' </summary>
         ''' <param name="HTML">A string with HTML code</param>
         ''' <returns>The rendered output as plain text</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	09.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function ConvertHTMLToText(ByVal HTML As String) As String
             'TODO: 1. remove of all other HTML tags
             '      2. search case insensitive
@@ -4702,54 +3705,33 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "LinkHighlighting"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Converts URLs and e-mail addresses in a string into HTML hyperlinks
         ''' </summary>
         ''' <param name="Text">The standard text without any HTML</param>
         ''' <returns>HTML with hyperlinks</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	06.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function HighlightLinksInMessage(ByVal Text As String) As String
             Return Utils.HighlightLinksInMessage(Text)
         End Function
 #End Region
 
 #Region "Paths and URIs"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Check validity of an email address
         ''' </summary>
         ''' <param name="emailAddress">email address to be validated</param>
         ''' <returns>True if email address is syntactically valid else false</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	05.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function ValidateEmailAddress(ByVal emailAddress As String) As Boolean
             Return Utils.ValidateEmailAddress(emailAddress)
         End Function
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Check validity of an URL
         ''' </summary>
         ''' <param name="url">URL to be validated</param>
         ''' <returns>True if URL is syntactically valid else false</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	05.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function ValidateInternetUrl(ByVal url As String) As Boolean
             Return Utils.ValidateInternetUrl(url)
         End Function

@@ -35,8 +35,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
             'The force-login page must post the data back to our page here, not the regular checklogin-page
             cammWebManager.Internationalization.User_Auth_Validation_TerminateOldSessionScriptURL &= "?CheckLoginUrl=" & Server.UrlEncode(Request.Url.AbsolutePath)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Are any login credentials available? In single-sign-on scenarios, the user might be logged on with an external user account or anonymously.
         ''' </summary>
@@ -44,10 +42,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
         ''' <remarks>
         '''     This property helps to find out why the LoginCredentials property was empty: either the external login information hasbn't been there or else the login information had been there but without an assigned, valid webmanager account
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	11.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overrides ReadOnly Property IsAuthenticated() As Boolean
             Get
                 Return Page.User.Identity.IsAuthenticated
@@ -89,39 +83,24 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
                 Return Result
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The actions which shall be made if an external login has been detected but there is not user account in CWM for it
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overrides Sub OnMissingAuthentication()
             Me.cammWebManager.RedirectTo(Me.cammWebManager.Internationalization.User_Auth_Validation_NoRefererURL, "OnMissingAuthentication", Nothing)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Create appropriate log entries for external, not-yet-assigned user account 
         ''' </summary>
         ''' <param name="nameOfExternalAccountSystem"></param>
         ''' <param name="externalUserName"></param>
-        ''' <remarks>
-        ''' </remarks>
         ''' <history>
         ''' 	[wezel]	    12.09.2008	Created
         ''' 	[zeutzheim]	09.07.2009	Modified
         ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Sub LogMissingAssignmentOfExternalUserAccount(ByVal nameOfExternalAccountSystem As String, ByVal externalUserName As String, ByVal fullUserName As String, ByVal emailAddress As String, ByVal errorDetails As String)
             CompuMaster.camm.WebManager.DataLayer.Current.AddMissingExternalAccountAssignment(Me.cammWebManager, nameOfExternalAccountSystem, externalUserName, fullUserName, emailAddress, errorDetails)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Mark an external user account (which has been marked as with missing assignment) as assigned successfully
         ''' </summary>
@@ -130,10 +109,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
         ''' To provide a most current list of user accounts which haven't been assigned (e. g. the user hasn't completed the SSO-create-account form), the user account shall be removed from the list of unassigned users.
         ''' In the camm Web-Manager administration area, there will be a statistic of those unassigned user accounts.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	12.09.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Sub MarkExternalUserAccountAsAssigned(ByVal nameOfExternalAccountSystem As String, ByVal externalUserName As String)
             CompuMaster.camm.WebManager.DataLayer.Current.RemoveMissingExternalAccountAssignment(Me.cammWebManager, "MS ADS", externalUserName)
         End Sub
@@ -143,12 +118,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
     ''' <summary>
     '''     A page which performs an automatic logon procedure with the Active Directory
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	12.07.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class LoginWithActiveDirectoryUser
         Inherits LoginWithExternalAccount
 
@@ -179,17 +148,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
         Protected LabelRegisterNewPassword2 As System.Web.UI.WebControls.Label
         Protected LabelRegisterNewEMail As System.Web.UI.WebControls.Label
         Protected ContactUs As System.Web.UI.WebControls.Label
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Prepare the page in the case that there is no external account assigned to the CWM user account, yet
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overrides Sub OnMissingAssignmentOfExternalAccount()
             RegisterUserDocument.Visible = True
             Try
@@ -211,17 +172,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
                 cammWebManager.RedirectTo(RedirectUrlWhenAdsUserCantBeAssignedToCWMUser, "LoginWithActiveDirectoryUser", errorData)
             End Try
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Localize this page
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	21.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub Localize()
 
             Me.cammWebManager.PageTitle = Me.cammWebManager.Internationalization.Logon_SSO_ADS_PageTitle
@@ -247,18 +200,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
             Me.FormSubTitle.Text = Me.cammWebManager.CurrentServerInfo.ParentServerGroup.Title
 
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     When there is an error or the user cancels the assignment process/form, the page redirects to this URL which is the logon page per default
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected ReadOnly Property RedirectUrlWhenAdsUserCantBeAssignedToCWMUser() As String
             Get
                 Return cammWebManager.Internationalization.User_Auth_Validation_NoRefererURL
@@ -266,34 +211,18 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
         End Property
 
         Private AdsUser As CompuMaster.camm.WebManager.WMSystem.UserInformation
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     When a user exists in ADS but hasn't got an e-mail address or other must fields are missing, don't ask the user for assigning/creating a new account
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	30.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable ReadOnly Property EnsureMustFieldsInAdsBeforeAsking() As Boolean
             Get
                 Return True
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Show the register page or automatically redirect to the start page
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	30.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub LoadPageData()
 
             AdsUser = SuggestedUserInfoByExternalAccountData
@@ -369,95 +298,42 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
 
             Messages.Text = Nothing
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Possible automation methods
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	05.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Enum AutomationMethod As Byte
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Show a form to the user where he can decide to assign an existing, create a new account or to proceed without doing anything
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	05.10.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             UserDefined = 0
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Automatically create a new account when the required fields are available
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	05.10.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             CreateAccount = 1
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Never assign anything, don't ask, just forward the user without logging on
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[AdminSupport]	05.10.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             DoNothing = 2
         End Enum
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     What shall happen when a user has been identified through ADS and doesn't exist in our camm Web-Manager user account system?
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	05.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable ReadOnly Property AutomateExternalAccountAssignment() As AutomationMethod
             Get
                 Return AutomationMethod.UserDefined
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Provide additional user information which is not available by the external account system
         ''' </summary>
         ''' <param name="user">The user profile as it has been read already</param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	05.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub FillFieldsRequiredAsMinimum(ByVal user As CompuMaster.camm.WebManager.IUserInformation)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Search for an already existing user account with the same first and last name
         ''' </summary>
         ''' <returns>The found user information object if there is only one matching user account available, otherwise in case of no match or several matches it will be nothing</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function SearchExistingUser(ByVal adsUser As CompuMaster.camm.WebManager.WMSystem.UserInformation) As CompuMaster.camm.WebManager.WMSystem.UserInformation
 
             Try 'For the case that the search executes with exceptions (in case of some special charachters which would break down the SQL query execution (e. g. "[", "]" or "'")
@@ -556,18 +432,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
                 AppendValidationErrorMessage(ex.Message)
             End Try
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Add an additional error message
         ''' </summary>
         ''' <param name="text"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	15.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Sub AppendValidationErrorMessage(ByVal text As String)
             If Me.Messages.Text = Nothing Then
                 Me.Messages.Text = text
@@ -575,8 +443,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
                 Me.Messages.Text &= "<br>" & text
             End If
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This is the name of the LDAP server which shall be asked for additional user details when the external account hasn't been assigned to a camm Web-Manager user account, yet
         ''' </summary>
@@ -584,10 +450,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
         ''' <remarks>
         '''     By default, this is the NETBIOS name of the user's domain which is the domain server, regulary
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	13.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable ReadOnly Property LdapServerName() As String
             Get
                 Return Mid(Page.User.Identity.Name, 1, System.Math.Max(InStr(Page.User.Identity.Name, "\") - 1, 0))
@@ -610,30 +472,30 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
                 If Not userdata Is Nothing AndAlso userdata.Rows.Count = 1 Then
                     Dim UserDataRow As DataRow = userdata.Rows(0)
                     Dim Result As CompuMaster.camm.WebManager.WMSystem.UserInformation
-                    Result = New CompuMaster.camm.WebManager.WMSystem.UserInformation( _
-                        0&, _
-                        "", _
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("EMail"), ""), _
-                        False, _
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Company"), ""), _
-                        WMSystem.Sex.Undefined, _
-                        "", _
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("FirstName"), ""), _
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("LastName"), ""), _
-                        "", _
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Street"), ""), _
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("ZipCode"), ""), _
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("City"), ""), _
-                        "", _
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Country"), ""), _
-                        Me.cammWebManager.UI.MarketID, _
-                        0, _
-                        0, _
-                        False, _
-                        False, _
-                        False, _
-                        Me.cammWebManager.CurrentServerInfo.ParentServerGroup.AccessLevelDefault.ID, _
-                        Me.cammWebManager, _
+                    Result = New CompuMaster.camm.WebManager.WMSystem.UserInformation(
+                        0&,
+                        "",
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("EMail"), ""),
+                        False,
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Company"), ""),
+                        WMSystem.Sex.Undefined,
+                        "",
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("FirstName"), ""),
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("LastName"), ""),
+                        "",
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Street"), ""),
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("ZipCode"), ""),
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("City"), ""),
+                        "",
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Country"), ""),
+                        Me.cammWebManager.UI.MarketID,
+                        0,
+                        0,
+                        False,
+                        False,
+                        False,
+                        Me.cammWebManager.CurrentServerInfo.ParentServerGroup.AccessLevelDefault.ID,
+                        Me.cammWebManager,
                         Page.User.Identity.Name)
                     Result.MobileNumber = CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("MobilePhone"), "")
                     Result.PhoneNumber = CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Phone"), "")
@@ -680,20 +542,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
                 End If
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Find a CWM user with a defined external account name and return its ID
         ''' </summary>
         ''' <param name="webManager">The current CWM which shall be used for searching for users with an external account information</param>
         ''' <param name="adsAccountName">The searched value</param>
         ''' <returns>A camm Web-Manager user ID or 0 if not found</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	08.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Function LookupUserIDFromExternalAccountName(ByVal webmanager As CompuMaster.camm.WebManager.WMSystem, ByVal adsAccountName As String) As Long
             Me.cammWebManager.Log.RuntimeInformation("SSO ADS / identified ADS user is: " & adsAccountName, WMSystem.DebugLevels.Medium_LoggingOfDebugInformation)
             Dim userIDs As Long() = webmanager.SearchUsers(New CompuMaster.camm.WebManager.WMSystem.UserFilter() {New CompuMaster.camm.WebManager.WMSystem.UserFilter("ExternalAccount", CompuMaster.camm.WebManager.WMSystem.UserFilter.SearchMethods.MatchExactly, New String() {adsAccountName})}, Nothing)
@@ -713,12 +567,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
     ''' <summary>
     '''     An alternative start page for the root folder to redirect the browser to the single sign on page
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	16.07.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class RootPageForRedirectToLogonPageWithExternalAccount
         Inherits Page
 
@@ -757,12 +605,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
     ''' <summary>
     '''     The page which is responsible for all situations when the user can't be authorized successfully
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	12.07.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class NotAuthorizedWithExternalAccount
         Inherits Page
 

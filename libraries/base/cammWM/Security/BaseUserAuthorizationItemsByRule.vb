@@ -75,7 +75,6 @@ Namespace CompuMaster.camm.WebManager.Security
         ''' <summary>
         ''' Effective authorizations (in context of user's current server group environment) are the combination of the rules [{AllowDevelopment} - {DenyDevelopment}] + [{AllowStandard} - {DenyStandard}]
         ''' </summary>
-        ''' <returns></returns>
         ''' <remarks>
         ''' <para>Authorizations for ServerGroup ID "0" always beat such ones for a ServerGroup ID &lt;&gt; 0</para>
         ''' <para>User with different authorization setups are effective authorizations by standard rules as follows (0=false, 1=true)
@@ -221,7 +220,6 @@ Namespace CompuMaster.camm.WebManager.Security
         ''' <summary>
         ''' Effective authorizations (in context of user's current server group environment) are the combination of the rules [{AllowIsDev} - {DenyIsDev}]
         ''' </summary>
-        ''' <returns></returns>
         Friend ReadOnly Property EffectiveByDenyRuleForDevelopmentInternal(filterType As EffectivityType) As SecurityObjectAuthorizationForUser()
             Get
                 If Me._EffectiveByDenyRuleForDevelopment Is Nothing Then
