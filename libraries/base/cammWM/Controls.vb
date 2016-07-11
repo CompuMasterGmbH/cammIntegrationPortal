@@ -308,11 +308,6 @@ Namespace CompuMaster.camm.WebManager.Controls
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Controls.cammWebManagerJIT
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A cammWebManager class which can be used to create a webmanager just on the fly
     ''' </summary>
@@ -324,10 +319,6 @@ Namespace CompuMaster.camm.WebManager.Controls
     '''         <item>by the page's JIT creator when it is allowed (attention: only default values - no customization is available!)</item>
     '''     </list>
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	09.07.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Friend Class cammWebManagerJIT
         Inherits cammWebManager
 
@@ -339,68 +330,32 @@ Namespace CompuMaster.camm.WebManager.Controls
             MyBase.New("", ignoreCheckCompatibilityToDatabaseByBuildNumber)
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load configuration (for internal purposes only)
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Overrides Sub _LoadConfiguration()
             Me.IsConfigurationLoaded = True
         End Sub
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Do not load any configuration data
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overrides Sub LoadConfiguration()
         End Sub
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Interface	 : camm.WebManager.Controls.IControl
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     An interface for all controls which are implementing the cammWebManager property
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	27.06.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Interface IControl
         Property cammWebManager() As cammWebManager
         ReadOnly Property Control() As System.Web.UI.Control
     End Interface
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Controls.HtmlContainerControl
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A System.Web.UI.HtmlControl.HtmlContainerControl with a property to access the camm WebManager
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[swiercz]	21.12.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class HtmlContainerControl
         Inherits System.Web.UI.HtmlControls.HtmlContainerControl
         Implements IControl
@@ -463,20 +418,9 @@ Namespace CompuMaster.camm.WebManager.Controls
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Controls.LiteralControl
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A System.Web.UI.LiteralControl with a property to access the camm WebManager
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[swiercz]	21.12.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class LiteralControl
         Inherits System.Web.UI.LiteralControl
         Implements IControl
@@ -539,20 +483,9 @@ Namespace CompuMaster.camm.WebManager.Controls
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Controls.WebControl
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A System.Web.UI.WebControls.WebControl with a property to access the camm WebManager
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	09.10.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class WebControl
         Inherits System.Web.UI.WebControls.WebControl
         Implements IControl
@@ -615,20 +548,9 @@ Namespace CompuMaster.camm.WebManager.Controls
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Controls.Control
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A System.Web.UI.Control with a property to access the camm WebManager
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	09.10.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class Control
         Inherits System.Web.UI.Control
         Implements IControl
@@ -691,20 +613,9 @@ Namespace CompuMaster.camm.WebManager.Controls
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Controls.Control
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A System.Web.UI.TemplateControl with a property to access the camm WebManager
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	09.10.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class TemplateControl
         Inherits System.Web.UI.TemplateControl
         Implements IControl
@@ -767,40 +678,17 @@ Namespace CompuMaster.camm.WebManager.Controls
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Controls.BaseControl
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A System.Web.UI.UserControl with a property to access the camm WebManager
     ''' </summary>
-    ''' <remarks>
-    '''     Obsolete, to be removed in one of the next versions
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	09.10.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <Obsolete("Use UserControl instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public MustInherit Class BaseControl
         Inherits UserControl
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Controls.BaseControl
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A System.Web.UI.UserControl with a property to access the camm WebManager
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	09.10.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class UserControl
         Inherits System.Web.UI.UserControl
         Implements IControl
@@ -919,17 +807,10 @@ Namespace CompuMaster.camm.WebManager.Controls
                 End Get
             End Property
 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Search for the server form in the list of parent controls
             ''' </summary>
             ''' <returns>The control of the server form if it's existant</returns>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	22.02.2006	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Public Function LookupParentServerForm() As System.Web.UI.HtmlControls.HtmlForm
                 Static Result As System.Web.UI.HtmlControls.HtmlForm
                 If Result Is Nothing Then
@@ -1003,20 +884,9 @@ Namespace CompuMaster.camm.WebManager.Controls
 
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.Controls.WebControls.Literal
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A System.Web.UI.WebControls.Literal with a property to access the camm WebManager
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[swiercz]	21.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         <System.Runtime.InteropServices.ComVisible(False)> Public Class Literal
             Inherits System.Web.UI.WebControls.Literal
             Implements IControl

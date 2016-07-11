@@ -98,11 +98,6 @@ Namespace CompuMaster.camm.WebManager
         End Function
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.EncDecMOD
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Encoding methods
     ''' </summary>
@@ -110,10 +105,6 @@ Namespace CompuMaster.camm.WebManager
     '''     ACHTUNG! Kompatibilität nur mit ANSI gegeben, nicht mit Unicode!
     '''              Unicode-Strings werden wohl auch gecrypted, jedoch ist eine Rückkonvertierung nicht mehr funktional
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	18.04.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Friend Class EncDecMOD
         Shared x1a0(9) As Integer
         Shared cle(17) As Integer

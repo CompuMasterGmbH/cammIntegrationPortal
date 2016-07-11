@@ -115,11 +115,6 @@ Namespace CompuMaster.camm.WebManager.Modules.Redirector.Pages
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Modules.Redirector.Pages.Data
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Data handling for the module of redirections
     ''' </summary>

@@ -75,11 +75,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.UsersOverview
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The users overview administration page
     ''' </summary>

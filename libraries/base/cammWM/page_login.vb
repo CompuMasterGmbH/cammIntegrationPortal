@@ -136,11 +136,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Login.LoginProcedureFinished
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     After a successfull logon/logoff, the user must be redirected to either the originally demanded URL or to the normal start page.
     ''' </summary>
@@ -558,11 +553,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.Pages.Login.Utils.LogonCredentials
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Logon data
         ''' </summary>
@@ -580,11 +570,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
 
     End Module
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Login.CheckLogin
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Validate the authorization credentials and start the login process when possible
     ''' </summary>
@@ -797,11 +782,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Login.ForceLogin
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page which asks to really process the pending login when there is already a login from another workstation
     ''' </summary>
@@ -826,11 +806,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Login.LoginForm
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The regular login page
     ''' </summary>

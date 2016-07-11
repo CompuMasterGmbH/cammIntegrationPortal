@@ -29,11 +29,6 @@ Namespace CompuMaster.camm.WebManager.Modules.Feedback.Pages
     Friend Class NamespaceDoc
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Specialized.FeedbackForm
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A feedback form always requires some logic to collect user inputs and to send them via e-mail to a defined address.
     ''' </summary>

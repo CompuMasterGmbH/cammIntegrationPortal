@@ -23,20 +23,9 @@ Imports System.Web.SessionState
 Namespace CompuMaster.camm.WebManager.Pages.Application
 
 #Region "Base error/warning pages"
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : cammMM
-    ''' Class	 : camm.MediaManager.Pages.Specialized.ErrorPage
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The common error page when an exception raises and doesn't get handled otherwise
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	14.12.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class BaseErrorPage
         Inherits CompuMaster.camm.WebManager.Pages.Page
 
@@ -119,20 +108,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Application
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : cammMM
-    ''' Class	 : camm.MediaManager.Pages.Specialized.ErrorPage
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The common error page when an exception raises and doesn't get handled otherwise
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	14.12.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class BaseWarningPage
         Inherits CompuMaster.camm.WebManager.Pages.Page
 
@@ -181,11 +159,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Application
 #End Region
 
 #Region "Customizable error page"
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Application.ErrorPage
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The error page which displays a notification to the user
     ''' </summary>
@@ -193,10 +166,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Application
     '''     This is the page class which should be the base for all customizations.
     '''     Please note: all links and resources in the HTML code of this page must be absolute and start with "/". This is since the rendered HTML code will be displayed in the folders of the scripts where the errors occured.
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	10.06.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class ErrorPage
         Inherits BaseErrorPage
 
@@ -880,11 +849,6 @@ Namespace CompuMaster.camm.WebManager.Application
 #End Region
 
 #Region "Optional HttpApplication handler of camm Web-Manager (e. g. for handling of exceptions)"
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Application.HttpApplication
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     An HttpApplication handler of camm Web-Manager for the handling of thrown exceptions
     ''' </summary>
@@ -901,10 +865,6 @@ Namespace CompuMaster.camm.WebManager.Application
     '''         <item>WebManager.NotifyOnApplicationExceptions (only if you want to change the default)</item>
     '''     </list>
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	10.06.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class HttpApplication
         Inherits BaseHttpApplication
 

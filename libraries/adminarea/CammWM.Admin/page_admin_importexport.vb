@@ -267,11 +267,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.ImportUsers
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Import a list of users - wizard
     ''' </summary>
@@ -1146,11 +1141,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.ImportUsersProcessing
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A helper page which processes the import in fact
     ''' </summary>

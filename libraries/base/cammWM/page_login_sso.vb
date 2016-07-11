@@ -140,11 +140,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Login.LoginWithActiveDirectoryUser
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     A page which performs an automatic logon procedure with the Active Directory
     ''' </summary>
@@ -715,11 +710,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Login.RootPageForRedirectToExternalAccountLogonPage
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     An alternative start page for the root folder to redirect the browser to the single sign on page
     ''' </summary>
@@ -764,11 +754,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Login.NotAuthorized
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The page which is responsible for all situations when the user can't be authorized successfully
     ''' </summary>

@@ -289,11 +289,6 @@ Namespace CompuMaster.camm.WebManager
 
 #If Implemented Then
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMSystem.UserInformation
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     User information
     ''' </summary>
@@ -1836,11 +1831,6 @@ Namespace CompuMaster.camm.WebManager
         End Property
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMSystem.LanguageInformation
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Language details
     ''' </summary>
@@ -2032,11 +2022,6 @@ Namespace CompuMaster.camm.WebManager
         End Property
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMSystem.AccessLevelInformation
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Access level information
     ''' </summary>
@@ -2237,11 +2222,6 @@ Namespace CompuMaster.camm.WebManager
         End Property
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMSystem.GroupInformation
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Group information
     ''' </summary>
@@ -2623,11 +2603,6 @@ Namespace CompuMaster.camm.WebManager
         End Sub
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMSystem.ServerGroupInformation
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Server group information
     ''' </summary>
@@ -2984,11 +2959,6 @@ Namespace CompuMaster.camm.WebManager
         End Property
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMSystem.ServerInformation
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Server information
     ''' </summary>
@@ -3293,11 +3263,6 @@ Namespace CompuMaster.camm.WebManager
         End Property
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMSystem.Authorizations
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Authorizations
     ''' </summary>
@@ -3312,11 +3277,6 @@ Namespace CompuMaster.camm.WebManager
         Dim _SecurityObjectID As Integer
         Dim _ServerGroupID As Integer
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.WMSystem.Authorizations.GroupAuthorizationInformation
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An authorization for an user group
         ''' </summary>
@@ -3482,11 +3442,6 @@ Namespace CompuMaster.camm.WebManager
                 End Set
             End Property
         End Class
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.WMSystem.Authorizations.GroupAuthorizationInformation
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An authorization for an user
         ''' </summary>
@@ -4261,11 +4216,6 @@ Namespace CompuMaster.camm.WebManager
         End Function
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMSystem.SecurityObjectInformation
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Security object information
     ''' </summary>
@@ -4686,11 +4636,6 @@ Namespace CompuMaster.camm.WebManager
 #Region "BuggyInheritingClassesInWMSystem"
 #If Buggy Then
 
-            ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.WMSystem.ServerGroupInformation
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Server group information
         ''' </summary>
@@ -4711,11 +4656,6 @@ Namespace CompuMaster.camm.WebManager
             End Sub
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.WMSystem.ServerInformation
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Server information
         ''' </summary>
@@ -4740,11 +4680,6 @@ Namespace CompuMaster.camm.WebManager
 
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.WMSystem.Authorizations
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Authorizations
         ''' </summary>
@@ -4763,11 +4698,6 @@ Namespace CompuMaster.camm.WebManager
 
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.WMSystem.SecurityObjectInformation
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Security object information
         ''' </summary>
@@ -4789,11 +4719,6 @@ Namespace CompuMaster.camm.WebManager
 
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.WMSystem.UserInformation
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     User information
         ''' </summary>
@@ -4967,11 +4892,6 @@ Namespace CompuMaster.camm.WebManager
 
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.WMSystem.LanguageInformation
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Language details
         ''' </summary>
@@ -4992,11 +4912,6 @@ Namespace CompuMaster.camm.WebManager
             End Sub
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.WMSystem.AccessLevelInformation
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Access level information
         ''' </summary>
@@ -5197,11 +5112,6 @@ Namespace CompuMaster.camm.WebManager
             End Property
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.WMSystem.GroupInformation
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Group information
         ''' </summary>

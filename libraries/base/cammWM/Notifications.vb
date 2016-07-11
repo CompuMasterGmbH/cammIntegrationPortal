@@ -160,11 +160,6 @@ Namespace CompuMaster.camm.WebManager.Notifications
 
 #Region "Notifications"
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMNotifications
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The default notification e-mails of camm Web-Manager
     ''' </summary>
@@ -954,11 +949,6 @@ End Namespace
 Namespace CompuMaster.camm.WebManager
 
     '<Obsolete("Use Notifications instead")> _
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMNotifications
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The default notification e-mails of camm Web-Manager
     ''' </summary>

@@ -29,11 +29,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
     Friend Class NamespaceDoc
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Messaging.EMails
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Mail delivery methods
     ''' </summary>
@@ -2433,11 +2428,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
     End Class
 
 #Region " Friend Class Mail "
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Messaging.Mail
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The content of an e-mail with all required data
     ''' </summary>
@@ -2809,11 +2799,6 @@ Namespace CompuMaster.camm.WebManager.Messaging
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Messaging.QueueMonitoring
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Methods for the mail queue manager
     ''' </summary>

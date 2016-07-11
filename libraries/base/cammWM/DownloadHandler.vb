@@ -482,20 +482,9 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "DownloadCollection"
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : harish
-        ''' Struct	 : camm.WebManager.DownloadHandler.FileData
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''         Download Collection contains each element of type "FileData". Which is added to it by "Add" methods.
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Structure FileData
             Dim Type As FileDataType
             ''' -----------------------------------------------------------------------------
@@ -656,41 +645,24 @@ Namespace CompuMaster.camm.WebManager
             fData.FolderVirtualPath = folderInVirtualDownloadLocation
             Me.InnerList.Add(fData)
         End Sub
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : harish
-        ''' Struct	 : camm.WebManager.DownloadHandler.RawDataSingleFile
-        ''' 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     This raw file data can be sent to the browser in all circumstances
         ''' </summary>
         ''' <remarks>
         '''     This structure describes the one of the type of "FileData". Please see the description for structure "FileData"
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Structure RawDataSingleFile
             Dim Filename As String
             Dim MimeType As String
             Dim Data As Byte()
         End Structure
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : harish
-        ''' Struct	 : camm.WebManager.DownloadHandler.RawDataCollectionMember
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This file data must be added into a ZIP download or can be sent to the browser in fully featured mode. It cannot get transferred as a single, uncompressed file if the fully featured mode is not available. 
         ''' </summary>
         ''' <remarks>
         '''     This structure describes the one of the type of "FileData". Please see the description for structure "FileData"
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	21.07.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Structure RawDataCollectionMember
             Dim Filename As String
             Dim Data As Byte()
@@ -1937,20 +1909,9 @@ Namespace CompuMaster.camm.WebManager
             End If
         End Function
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Struct	 : camm.WebManager.DownloadHandler.DataToProcessDownload
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     This structure used to hold data returned by method "GetDataToRecordAndProcess".
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Structure DataToProcessDownload
             Dim PathToRecordAndProcess As String
             Dim TargetFileExists As Boolean
@@ -3494,11 +3455,6 @@ Namespace CompuMaster.camm.WebManager
 
 
 #Region "Class AllFilesInDirectory"
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.DownloadHandler.AllFilesInDirectory
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Inherites abstract class "CollectionBase". 
         ''' </summary>
@@ -3506,10 +3462,6 @@ Namespace CompuMaster.camm.WebManager
         '''     The object of this class contains list of all files in directory structure 
         '''     defined by "directoryInfo" as "FileInfo" object.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Class AllFilesInDirectory
             Inherits CollectionBase
 
@@ -3529,11 +3481,6 @@ Namespace CompuMaster.camm.WebManager
 #End Region
 
 #Region "Class AllDirsInDirectory"
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.DownloadHandler.AllDirsInDirectory
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Inherites abstract class "CollectionBase". 
         ''' </summary>
@@ -3541,10 +3488,6 @@ Namespace CompuMaster.camm.WebManager
         '''     The object of this class contains list of all directories in directory structure
         '''     defined by "directoryInfo" as "DirectoryInfo" object.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	31.01.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Class AllDirsInDirectory
             Inherits CollectionBase
 
@@ -3828,20 +3771,9 @@ Namespace CompuMaster.camm.WebManager
     End Class
 
 #Region "Exceptions"
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.DownloadSizeLimitException
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The exception that is thrown when a download size exceeds limit.
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[patil]	31.01.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class DownloadHandlerFileSizeLimitException
         Inherits Exception
 
@@ -3855,20 +3787,9 @@ Namespace CompuMaster.camm.WebManager
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.CollectionSizeLimitExecption
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The exception that is thrown when a download collection exceeds limit.
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[patil]	31.01.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class DownloadHandlerCollectionSizeLimitException
         Inherits Exception
 
@@ -3886,27 +3807,16 @@ Namespace CompuMaster.camm.WebManager
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Public Sub New(ByVal currentMaxCollectionSize As Long, ByVal collectionSizeTriedToDownload As Long)
-            MyBase.New("Maximum collection size to download is exceeded. " & _
-                        "Current MaxCollectionSize = " & currentMaxCollectionSize & _
+            MyBase.New("Maximum collection size to download is exceeded. " &
+                        "Current MaxCollectionSize = " & currentMaxCollectionSize &
                         " CollectionSize tried to download = " & collectionSizeTriedToDownload)
         End Sub
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.CollectionSizeLimitExecption
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The exception that is thrown when a download requires full features respectively write access to the working folder
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[patil]	31.01.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class DownloadHandlerNotSupportedException
         Inherits Exception
 
@@ -3916,20 +3826,9 @@ Namespace CompuMaster.camm.WebManager
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.SecurityObjectIsNothingException
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     This exception is thrown when Security Object for camm WebManager is undefined.
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[patil]	16.12.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public Class EmptySecurityObjectException
         Inherits Exception
 

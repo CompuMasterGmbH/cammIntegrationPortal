@@ -328,11 +328,6 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
                 Return Result
             End Function
 
-            ''' -----------------------------------------------------------------------------
-            ''' Project	 : kvp
-            ''' Class	 : Tools.Data.DataQuery.AnyIDataProvider.DataException
-            ''' 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Data execution exceptions with details on the executed IDbCommand
             ''' </summary>
@@ -4187,11 +4182,6 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : SqlServerCommandExecutionTimeStopper
-        ''' Class	 : CompuMaster.camm.WebManager.Tools.Data.DataTables.DataReaderAdapter
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A data adapter for data readers making the real conversion
         ''' </summary>
@@ -4806,11 +4796,6 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
 
 #Region "ReArrangeDataColumns"
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : UserImport
-        ''' Class	 : Tools.Data.DataTables.ReArrangeDataColumnsException
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An exception which gets thrown when converting data in the ReArrangeDataColumns methods
         ''' </summary>

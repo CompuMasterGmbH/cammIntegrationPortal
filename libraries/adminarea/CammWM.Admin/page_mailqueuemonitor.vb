@@ -20,11 +20,6 @@ Imports System.Data.SqlClient
 Namespace CompuMaster.camm.WebManager.Controls.Administration
 
 #Region " Public Class ActionControl "
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Controls.Administration.MailQueueMonitorActionControl
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Processes action events show email text, resend email, accept failure.
     ''' </summary>
@@ -289,11 +284,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region " Public Class MailQueueMonitorShowEmail "
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.MailQueueMonitorShowEmail
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Displays email content
     ''' </summary>
@@ -402,11 +392,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region " Public Class MailQueueMonitor "
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Administration.MailQueueActivity
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     This page allows the supervisors to view the activity of the e-mail queue and to restart a mail item when there were some problems
     ''' </summary>
@@ -1842,11 +1827,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region " Private Class DataToFilterClass "
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.Pages.Administration.MailQueueMonitor.DataToFilterClass
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     To hold data to filter
         ''' </summary>
@@ -1869,11 +1849,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Public Sub New()
                 Me.State = New States
             End Sub
-            ''' -----------------------------------------------------------------------------
-            ''' Project	 : camm WebManager
-            ''' Class	 : camm.WebManager.Pages.Administration.MailQueueMonitor.DataToFilterClass.States
-            ''' 
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     Used to hold the status of State for filter purpose
             ''' </summary>
@@ -1900,11 +1875,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region " Private Class AnalysisRow "
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.Pages.Administration.MailQueueMonitor.AnalysisRow
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' To display filtered data in tablerow format
         ''' </summary>
@@ -2030,11 +2000,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region " Private Class HideDisplayRow "
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.Pages.Administration.MailQueueMonitor.HideDisplayRow
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     To display filtered data in tablerow format.
         ''' </summary>
@@ -2162,11 +2127,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region " Private Class AddLine "
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.Pages.Administration.MailQueueMonitor.AddLine
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Adds row as a line
         ''' </summary>
@@ -2192,11 +2152,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region " Friend Class DataService "
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.Pages.Administration.MailQueueMonitor.DataService
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Data layer class
         ''' </summary>
@@ -2474,10 +2429,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
 #Region " Public Class DisplayText"
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : CompuMaster.camm.WebManager.Pages.Administration.DisplayText
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     This page displays text 
     ''' </summary>

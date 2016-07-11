@@ -4228,20 +4228,9 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
 
 #Region "ReArrangeDataColumns"
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : UserImport
-        ''' Class	 : Tools.Data.DataTables.ReArrangeDataColumnsException
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An exception which gets thrown when converting data in the ReArrangeDataColumns methods
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	14.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Class ReArrangeDataColumnsException
             Inherits Exception
 

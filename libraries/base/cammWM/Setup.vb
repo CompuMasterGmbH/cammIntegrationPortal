@@ -521,11 +521,6 @@ Namespace CompuMaster.camm.WebManager.Setup
 
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.Setup.Pages.Update
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Database update page (accessable via About page)
         ''' </summary>
@@ -2281,11 +2276,6 @@ Namespace CompuMaster.camm.WebManager.Setup
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Setup.Configuration
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Update the configuration files in the file system
     ''' </summary>

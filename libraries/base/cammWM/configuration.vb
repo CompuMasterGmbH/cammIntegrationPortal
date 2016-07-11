@@ -19,54 +19,14 @@ Imports CompuMaster.camm.WebManager.WMSystem
 
 Namespace CompuMaster.camm.WebManager
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMSystem.Configuration
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Configuration settings read from web.config/app.config
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	16.10.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Friend Class Configuration
 
-        ''' -----------------------------------------------------------------------------
-        ''' <summary>
-        '''     The license key to unlock the camm Web-Manager
-        ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	30.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
-        Public Shared ReadOnly Property LicenseKey() As String
-            Get
-                Try
-                    Return WebManagerSettings.Item("WebManager.LicenseKey")
-                Catch
-                    Return Nothing
-                End Try
-            End Get
-        End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The connection string to connect to the camm Web-Manager database
         ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property ConnectionString() As String
             Get
                 Dim Result As String = Nothing
@@ -94,18 +54,12 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The SecurityObject which must be authorized for the current user
         ''' </summary>
-        ''' <value></value>
         ''' <remarks>
         '''     You can configure this value in your web.config to ensure that e. g. a whole directory structure uses this value and is protected by this way
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property SecurityObject() As String
             Get
                 Try
@@ -116,17 +70,10 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The configured server identification string
         ''' </summary>
         ''' <value>If nothing has been defined in the web.config/app.config, it returns "1st server"</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property CurrentServerIdentification() As String
             Get
                 Try
@@ -137,17 +84,10 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The configured server identification string
         ''' </summary>
         ''' <value>If nothing has been defined in the web.config/app.config, it returns "1st server"</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property WebServiceCurrentServerIdentification() As String
             Get
                 Try
@@ -158,17 +98,10 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     In case there is no e-mail address data in the external account system, this default will be used
         ''' </summary>
         ''' <value>If nothing has been defined in the web.config/app.config, it doesn't return any value</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property SingleSignOnDefaultEMailAddress() As String
             Get
                 Return LoadStringSetting("WebManager.SingleSignOn.DefaultEMailAddress", Nothing)
@@ -199,34 +132,20 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Shall the user receive a notification e-mail if the user account has been created by the single-sign-on process?
         ''' </summary>
         ''' <value>If nothing has been defined in the web.config/app.config, it defaults to False</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property SingleSignOnSuppressUserNotification() As Boolean
             Get
                 Return LoadBooleanSetting("WebManager.SingleSignOn.SuppressUserNotification", False, True)
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Is it allowed to create the cammWebManager object just on the fly?
         ''' </summary>
         ''' <value>Default value is "Off"</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property CreationOnTheFlyAllowed() As Boolean
             Get
                 Return LoadBooleanSetting("WebManager.CreationOnTheFly", False, False)
@@ -234,29 +153,14 @@ Namespace CompuMaster.camm.WebManager
         End Property
 
         Public Enum NotificationLevelOnApplicationException As Byte
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     No exception handling
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	09.06.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             [False] = 0
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     No exception handling
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	09.06.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Off = 0
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A notification to the technical contact person will be send, but only with the StackTrace of the exception, no source code of a page
             ''' </summary>
@@ -264,12 +168,7 @@ Namespace CompuMaster.camm.WebManager
             '''     This is the most often used setting because it notifies the webmaster about existing problems but never sends senstive data like hard coded passwords nor any other source code.
             '''     A maximum of 10 notification e-mails per 10 minutes has been set.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	09.06.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             NoSourceCode = 1
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A notification to the technical contact person will be send inclusive source code which caused the exception
             ''' </summary>
@@ -277,12 +176,7 @@ Namespace CompuMaster.camm.WebManager
             '''     This is ideal for fast error analysis and solving. Use this when the e-mails can never been read by hackers (e. g. the e-mail gets sent from an internal web server to your internal SMTP server to your internal workstation; so, external hackers can't read the plain text of an e-mail).
             '''     A maximum of 10 notification e-mails per 10 minutes has been set.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	09.06.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             [True] = 2
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A notification to the technical contact person will be send inclusive source code which caused the exception
             ''' </summary>
@@ -290,12 +184,7 @@ Namespace CompuMaster.camm.WebManager
             '''     This is ideal for fast error analysis and solving. Use this when the e-mails can never been read by hackers (e. g. the e-mail gets sent from an internal web server to your internal SMTP server to your internal workstation; so, external hackers can't read the plain text of an e-mail).
             '''     A maximum of 10 notification e-mails per 10 minutes has been set.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	09.06.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             [On] = 2
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A notification to the technical contact person will be send inclusive source code which caused the exception
             ''' </summary>
@@ -303,23 +192,11 @@ Namespace CompuMaster.camm.WebManager
             '''     This is ideal for fast error analysis and solving. Use this when the e-mails can never been read by hackers (e. g. the e-mail gets sent from an internal web server to your internal SMTP server to your internal workstation; so, external hackers can't read the plain text of an e-mail).
             '''     A maximum of 10 notification e-mails per 10 minutes has been set.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	09.06.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             TechnicalContact = 2
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     No notifications will be sent to the technical contact, but on the web site the error page will be shown instead of the standard ASP.NET error page
             ''' </summary>
-            ''' <remarks>
-            ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	22.06.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             NoNotifications = 3
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A notification to the development contact person will be send inclusive source code which caused the exception
             ''' </summary>
@@ -327,12 +204,7 @@ Namespace CompuMaster.camm.WebManager
             '''     This is ideal for fast error analysis and solving. Use this when the e-mails can never been read by hackers (e. g. the e-mail gets sent from an internal web server to your internal SMTP server to your internal workstation; so, external hackers can't read the plain text of an e-mail).
             '''     A maximum of 10 notification e-mails per 10 minutes has been set.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	09.06.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             Developer = 4
-            ''' -----------------------------------------------------------------------------
             ''' <summary>
             '''     A notification to the technical contact as well as to the development contact person will be send inclusive source code which caused the exception
             ''' </summary>
@@ -340,10 +212,6 @@ Namespace CompuMaster.camm.WebManager
             '''     This is ideal for fast error analysis and solving. Use this when the e-mails can never been read by hackers (e. g. the e-mail gets sent from an internal web server to your internal SMTP server to your internal workstation; so, external hackers can't read the plain text of an e-mail).
             '''     A maximum of 10 notification e-mails per 10 minutes has been set.
             ''' </remarks>
-            ''' <history>
-            ''' 	[adminsupport]	09.06.2005	Created
-            ''' </history>
-            ''' -----------------------------------------------------------------------------
             TechnicalContactAndDeveloper = 5
         End Enum
         ''' <summary>
@@ -399,17 +267,9 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' camm Web-Manager can automatically bind all page controls in its Page_Load event if desired
         ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	09.11.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property DataBindAutomaticallyWhilePageOnLoad() As Boolean
             Get
                 Return LoadBooleanSetting("WebManager.DataBindAutomaticallyWhilePageOnLoad", False, True)
@@ -453,28 +313,7 @@ Namespace CompuMaster.camm.WebManager
                 End Try
             End Get
         End Property
-        '''' <summary>
-        '''' The SMTP component used for sending e-mails
-        '''' </summary>
-        '''' <value>A value with assembly name and class name separated by a comma, e. g. "EasyMail,EasyMail.Smtp.Mail"</value>
-        '''' <remarks>The camm Web-Manager is heavily using e-mails for information and workflow purposes.</remarks>
-        '<Obsolete("Not in use yet - requires JIT-MailCompong-Logic and concept", True)> _
-        'Friend Shared ReadOnly Property SmtpComponent() As String
-        '    Get
-        '        Throw New NotImplementedException("Not in use yet - requires JIT-MailCompong-Logic and concept")
-        '        'TODO: Not in use yet - requires JIT-MailCompong-Logic and concept
-        '        Dim Result As String = Nothing
-        '        Try
-        '            Return WebManagerSettings.Item("WebManager.SMTPComponent")
-        '        Catch
-        '        End Try
-        '        If Result <> Nothing Then
-        '            Return Result
-        '        Else
-        '            Return "localhost"
-        '        End If
-        '    End Get
-        'End Property
+
         ''' <summary>
         ''' The SMTP server name for sending e-mails
         ''' </summary>
@@ -594,17 +433,10 @@ Namespace CompuMaster.camm.WebManager
                 End Try
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Configures the authentication methods for the SMTP server
         ''' </summary>
         ''' <value>The authentification type, possible values are "" or "NONE", "LOGIN", "PLAIN", "CRAM-MD5", or "NTLM"</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property SmtpAuthentificationMode() As String
             Get
                 Try
@@ -625,17 +457,10 @@ Namespace CompuMaster.camm.WebManager
                 End Try
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sets up an user name for the SMTP server
         ''' </summary>
         ''' <value>The user name</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	31.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property SmtpUsername() As String
             Get
                 Try
@@ -649,17 +474,10 @@ Namespace CompuMaster.camm.WebManager
                 End Try
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Sets up a password for the SMTP server
         ''' </summary>
         ''' <value>The password</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	31.08.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property SmtpPassword() As String
             Get
                 Try
@@ -674,17 +492,9 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A compact policy header to be sent to the client
         ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property CompactPolicyHeader() As String
             Get
                 Try
@@ -695,41 +505,24 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Does this site uses a frameset?
         ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property UseFrameset() As Boolean
             Get
                 Return LoadBooleanSetting("WebManager.UseFrameset", False, False)
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Allow logon processing with GET and POST request methods (true) or only with POST data (false)
         ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	26.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property AllowLogonViaRequestTypeGet() As Boolean
             Get
                 Return LoadBooleanSetting("WebManager.AllowLogonViaRequestTypeGet", False, False)
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Run camm Web-Manager in cookieless mode
         ''' </summary>
@@ -741,45 +534,28 @@ Namespace CompuMaster.camm.WebManager
         '''         <item>it caches navigation items with an additional SessionID value in the primary key field</item>
         '''     </list>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	23.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property CookieLess() As Boolean
             Get
                 Return LoadBooleanSetting("WebManager.CookieLess", False, False)
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Use the integrated mail queue for sending e-mails
         ''' </summary>
         ''' <value>TripleState.Undefined is for auto-detection, use TripleState.False for direct sending without mail queue or TripleState.True for sending via mail queue</value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	04.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property ProcessMailQueue() As TripleState
             Get
                 Return LoadTripleStateSetting("WebManager.ProcessMailQueue", True)
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Defines weather to put data in "Session" or in "Cache".
         ''' </summary>
-        ''' <value></value>
         ''' <remarks>
         '''     Reads set value from web.config. "True" indicates to use "Session" for holding data in memory, else hold data in "Http Cache"
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	25.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property DownloadHandlerSeparateRequestPutDataInSession() As Boolean
             Get
                 Return LoadBooleanSetting("WebManager.DownloadHandlerSeparateRequestPutDataInSession", False, True)
@@ -815,18 +591,12 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Defines the time limit in minutes to hold download data in Cache
         ''' </summary>
-        ''' <value></value>
         ''' <remarks>
         '''     The default time limit is "5" minits.
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	25.05.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property DownloadHandlerSeparateRequestCacheTimeLimit_InMinutes() As Integer
             Get
                 Dim result As Integer = 5 ' 5 minutes is default value
@@ -846,17 +616,9 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The language which shall be used when it can't be detected by any other way
         ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	12.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property GlobalizationDefaultMarket() As Integer
             Get
                 'Return the forced language if there is one
@@ -869,7 +631,6 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     A comma separated list of market IDs which are supported by the current web application and which are available for the users
         ''' </summary>
@@ -881,10 +642,6 @@ Namespace CompuMaster.camm.WebManager
         ''' </example>
         ''' <para>If not defined, the general list of activated markets will be used.</para>
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	19.10.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property GlobalizationSupportedMarkets() As Integer()
             Get
                 Try
@@ -905,24 +662,15 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The language which shall be forced for the GUI
         ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	12.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property GlobalizationForcedMarket() As Integer
             Get
                 Return Configuration.LoadIntegerSetting("WebManager.Globalization.ForcedMarket", Configuration.LoadIntegerSetting("WebManager.Languages.ForcedLanguage", Nothing, True), True)
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Every WebEditor content is related to a server; this property overrides the server ID value where to read from/save to
         ''' </summary>
@@ -930,10 +678,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' 0 = currently used server; other values = forced server ID
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	14.01.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property WebEditorContentOfServerID() As Integer
             Get
                 Dim Result As Integer
@@ -945,73 +689,45 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' To support reverse proxy environments, you need to activate the interpretion of the additional request header X-Forwarded-For which is typically created by the reverse proxy. This allows you to receive the IP address of the client that is connecting to the reverse proxy. In those cases, this is the more correct IP address of the client and the possibly more interesting value for you.
         ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	14.01.2008	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property InterpreteRequestHeaderXForwardedFor() As Boolean
             Get
                 Return Configuration.LoadBooleanSetting("WebManager.InterpreteRequestHeaderXForwardedFor", False, False)
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Always regard the crawlers as an anonymous user and do not test authorization with database lookups
         ''' </summary>
-        ''' <value></value>
         ''' <remarks>
         '''     <para>Based on the browser identification string, all browsers and also the crawlers are identifying themselves.</para>
         '''     <para>If one of these browsers identifies itself as a crawler, it can mostly be seen as an anonymous user. This helps saving unneeded roundtrips to the database for asking user account information and authorization states.</para>
         '''     <para>To reduce heavy loads while a crawler is visiting the website, all security objects other than @@Anonymous are handled as forbidden by default, even if a normal SecurityObject has got authorization for anonymous user.</para>
         '''     <para>In case you run into crawler indexing problems, consider to set this value to False in your configuration or configure your pages and applications to ask for SecurityObject=&quot;@@Anonymous&quot;.</para>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	23.04.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property SecurityRecognizeCrawlersAsAnonymous() As Boolean
             Get
                 Return LoadBooleanSetting("WebManager.Security.RecognizeCrawlersAsAnonymous", True, False)
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' EventLog trace enables reporting of the current page request progress
         ''' </summary>
-        ''' <value></value>
         ''' <remarks>
         ''' This trace feature is especially useful in StackTrace overflow situations and may give a hint to identify the code area causing the problem.
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	27.05.2009	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property EventLogTrace() As Boolean
             Get
                 Return LoadBooleanSetting("WebManager.EventLogTrace", False, True)
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' The working folder of Download-Handler, defaults to /system/downloads/
         ''' </summary>
-        ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	26.06.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property DownloadHandlerVirtualTempPath() As String
             Get
                 Dim Result As String = WebManagerSettings("WebManager.DownloadHandlerVirtualTempPath")
@@ -1023,7 +739,6 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         ''' Recognize all database builds up to this number to be compatible with the current assembly version
         ''' </summary>
@@ -1031,10 +746,6 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' In some situations, you update the camm Web-Manager database but still want to keep running an older version of the assembly in combination with the newer database version. This is possible, but not recommended. Do it on your own risk.
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	10.08.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property CompatibilityWithDatabaseBuild() As Integer
             Get
                 Return LoadIntegerSetting("WebManager.CompatibilityWithDatabaseBuild", Setup.ApplicationUtils.Version.Build, True)
@@ -1042,11 +753,9 @@ Namespace CompuMaster.camm.WebManager
         End Property
 
 #Region "TextModules"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Default ServerGroupID for load/save of text modules
         ''' </summary>
-        ''' <value></value>
         ''' <remarks>
         '''     The ServerGroupID is typically diffferent for intranet and extranet.
         '''     By this setting complete cammWM.TextModule library will use the configured ServerGroupID for all loading/saving in methods with undefined server group ID
@@ -1063,19 +772,13 @@ Namespace CompuMaster.camm.WebManager
                 Return result
             End Get
         End Property
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Default ServerGroupID for load/save of text modules
         ''' </summary>
-        ''' <value></value>
         ''' <remarks>
         '''     The ServerGroupID is typically diffferent for intranet and extranet.
         '''     By this setting complete cammWM.TextModule library will always use the configured ServerGroupID for all loading/saving even if a parameter of a method defines a server group ID
         ''' </remarks>
-        ''' <history>
-        ''' 	[patil]	07.06.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared ReadOnly Property TextModulesServerGroupIDForced() As System.Int32
             Get
                 Static result As System.Int32
@@ -1158,19 +861,11 @@ Namespace CompuMaster.camm.WebManager
             End Get
         End Property
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load a boolean value from the configuration file
         ''' </summary>
         ''' <param name="appSettingName">The name of the appSetting item</param>
         ''' <param name="suppressExceptions">True if exceptions shall be suppressed and default value returned or False if exception shall be thrown if there is an error</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	12.04.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function LoadTripleStateSetting(ByVal appSettingName As String, ByVal suppressExceptions As Boolean) As TripleState
             Dim Result As TripleState = TripleState.Undefined
             Try
@@ -1199,20 +894,12 @@ Namespace CompuMaster.camm.WebManager
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load a boolean value from the configuration file
         ''' </summary>
         ''' <param name="appSettingName">The name of the appSetting item</param>
         ''' <param name="defaultValue">A default value if not configured of configured invalid</param>
         ''' <param name="suppressExceptions">True if exceptions shall be suppressed and default value returned or False if exception shall be thrown if there is an error</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	12.04.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function LoadBooleanSetting(ByVal appSettingName As String, ByVal defaultValue As Boolean, ByVal suppressExceptions As Boolean) As Boolean
             Dim Result As Boolean = defaultValue
             Try
@@ -1241,20 +928,12 @@ Namespace CompuMaster.camm.WebManager
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load an integer value from the configuration file
         ''' </summary>
         ''' <param name="appSettingName">The name of the appSetting item</param>
         ''' <param name="defaultValue">A default value if not configured of configured invalid</param>
         ''' <param name="suppressExceptions">True if exceptions shall be suppressed and default value returned or False if exception shall be thrown if there is an error</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	12.04.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function LoadIntegerSetting(ByVal appSettingName As String, ByVal defaultValue As Integer, ByVal suppressExceptions As Boolean) As Integer
             Dim Result As Integer = defaultValue
             Try
@@ -1273,17 +952,12 @@ Namespace CompuMaster.camm.WebManager
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load an Int64 value from the configuration file
         ''' </summary>
         ''' <param name="appSettingName">The name of the appSetting item</param>
         ''' <param name="defaultValue">A default value if not configured of configured invalid</param>
         ''' <param name="suppressExceptions">True if exceptions shall be suppressed and default value returned or False if exception shall be thrown if there is an error</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function LoadLongSetting(ByVal appSettingName As String, ByVal defaultValue As Long, ByVal suppressExceptions As Boolean) As Long
             Dim Result As Long = defaultValue
             Try
@@ -1302,19 +976,11 @@ Namespace CompuMaster.camm.WebManager
             Return Result
         End Function
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Load a string value from the configuration file
         ''' </summary>
         ''' <param name="appSettingName">The name of the appSetting item</param>
         ''' <param name="defaultValue">A default value if not configured of configured invalid</param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	12.04.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function LoadStringSetting(ByVal appSettingName As String, ByVal defaultValue As String) As String
             Dim value As String = CType(WebManagerSettings.Item(appSettingName), String)
             If value = Nothing Then value = AdditionalConfiguration(appSettingName)

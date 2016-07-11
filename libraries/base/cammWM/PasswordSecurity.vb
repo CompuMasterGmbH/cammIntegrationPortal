@@ -44,11 +44,7 @@ Namespace CompuMaster.camm.WebManager
             MyBase.New(webManager)
         End Sub
     End Class
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMPasswordSecurityInspectionSeverity
-    ''' 
-    ''' -----------------------------------------------------------------------------
+
     ''' <summary>
     '''     Policy rules for password security
     ''' </summary>
@@ -95,11 +91,6 @@ Namespace CompuMaster.camm.WebManager
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMPasswordSecurity
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Container for policy rules for password security
     ''' </summary>
@@ -157,11 +148,7 @@ Namespace CompuMaster.camm.WebManager
             End Set
         End Property
     End Class
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WMPasswordSecurityInspectionSeverity
-    ''' 
-    ''' -----------------------------------------------------------------------------
+
     ''' <summary>
     '''     Policy rules for password security
     ''' </summary>

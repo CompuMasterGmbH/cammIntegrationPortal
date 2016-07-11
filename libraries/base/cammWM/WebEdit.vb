@@ -642,11 +642,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
 
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Interface	 : camm.WebManager.Modules.WebEdit.Controls.ISmartWcmsEditor
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The common interface for all SmartWcms editor controls
         ''' </summary>
@@ -3272,11 +3267,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
 
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.Modules.WebEdit.Controls.SmartWcms
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The smart and built-in content management system of camm Web-Manager
         ''' </summary>
@@ -3575,11 +3565,6 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
 
         End Class
 
-        ''' -----------------------------------------------------------------------------
-        ''' Project	 : camm WebManager
-        ''' Class	 : camm.WebManager.Modules.WebEdit.Controls.SmartWcms
-        ''' 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The smart and built-in content management system of camm Web-Manager
         ''' </summary>

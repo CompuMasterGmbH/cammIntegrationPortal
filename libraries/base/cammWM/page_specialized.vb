@@ -74,11 +74,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Specialized
 #End Region
 
 #Region " Public Class StartPageForFrameSet "
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Specialized.StartPageForFrameSet
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Handles referrer requests by session content or query string arguments
     ''' </summary>
@@ -346,11 +341,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Specialized
 #End Region
 
 #Region " Public Class DownloadFileByDownloadHandler "
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Specialized.DownloadFileByDownloadHandler
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Send a binary file from download handler to the browser
     ''' </summary>

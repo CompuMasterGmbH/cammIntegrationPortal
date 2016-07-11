@@ -77,12 +77,6 @@ Namespace CompuMaster.camm.WebManager.WebServices
     End Class
 
 
-
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.WebServices.Core
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     camm Web-Manager core web service
     ''' </summary>
