@@ -1,4 +1,4 @@
-#camm Web-Manager ChangeLog
+﻿#ChangeLog for camm Integration Portal / camm Web-Manager
 
 ##Note on updates
 * camm Web-Manager is build up to provide most compatibility with old version. But there may be some modifications which need to be tested on your current instance.
