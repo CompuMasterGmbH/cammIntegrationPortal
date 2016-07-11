@@ -392,15 +392,37 @@
       <ID>89</ID>
       <file>camm_WebManager_build_204_views.xml</file>
     </files>
-	<!-- MULTIPLE LOGIN FEATURE RELEASE REJECTED BY JW ON 2015-11-30 BECAUSE OF A CRITICAL BUG
-	<files>
-      <ID>89</ID>
-      <file>camm_WebManager_build_204?.xml</file>
-    </files>
 	<files>
       <ID>90</ID>
-      <file>camm_WebManager_build_205?_func+sp.xml</file>
+      <file>camm_WebManager_build_205_indexes.xml</file>
     </files>
-	-->
+	<files>
+      <ID>91</ID>
+      <file>camm_WebManager_build_206.xml</file>
+    </files>
+	<files>
+      <ID>92</ID>
+      <file>camm_WebManager_build_2103.xml</file>
+    </files>
+	<files>
+      <ID>93</ID>
+      <file>camm_WebManager_build_2104.xml</file>
+    </files>
+	<files>
+      <ID>94</ID>
+      <file>camm_WebManager_build_2105_func+sp.xml</file>
+    </files>
+	<files>
+      <ID>95</ID>
+      <file>camm_WebManager_build_2106_indexes.xml</file>
+    </files>
+	<files>
+      <ID>96</ID>
+      <file>camm_WebManager_build_2107_trigger.xml</file>
+    </files>
+	<files>
+      <ID>97</ID>
+      <file>camm_WebManager_build_2108.xml</file>
+    </files>
   </dataroot>
 </NewDataSet>

@@ -118,15 +118,15 @@
     <Compile Include="AssemblyVersion.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="page_admin_apps.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Tools.Data.vb" />
     <Compile Include="controls_admin.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="import_export.vb">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="page_admin.vb">
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="page_admin.vb">
       <SubType>ASPXCodeBehind</SubType>

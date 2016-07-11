@@ -23,6 +23,20 @@ ADD IsSupervisorAutoAccessRule bit NOT NULL DEFAULT (0)
 GO
 
 <%IGNORE_ERRORS%>
+-- Add column ServerGroupID for later preparation of feature for SplitAppsIntoNav+SecObj milestone
+-- Add column ID_ServerGroup for allowing assignment of  server group scope for an authorization item
+ALTER TABLE [dbo].[ApplicationsRightsByGroup]
+ADD ID_ServerGroup int NOT NULL DEFAULT (0)
+GO
+
+<%IGNORE_ERRORS%>
+-- Add column ServerGroupID for later preparation of feature for SplitAppsIntoNav+SecObj milestone
+-- Add column ID_ServerGroup for allowing assignment of  server group scope for an authorization item
+ALTER TABLE [dbo].[ApplicationsRightsByUser]
+ADD ID_ServerGroup int NOT NULL DEFAULT (0)
+GO
+
+<%IGNORE_ERRORS%>
 -- Add column IsDenyRule for allowing GRANT and DENY priviledges
 ALTER TABLE [dbo].[ApplicationsRightsByUser]
 ADD IsDenyRule bit NOT NULL DEFAULT (0)
@@ -127,7 +141,8 @@ CREATE TABLE [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup](
 	[IsDenyRule] [bit] NOT NULL,
 	[IsDevRule] [bit] NOT NULL,
 	[DerivedFromUserAppRightsID] int NULL,
-	[DerivedFromGroupAppRightsID] int NULL
+	[DerivedFromGroupAppRightsID] int NULL,
+	[DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID] int NULL
  CONSTRAINT [PK_ApplicationsRightsByUser_PreStagingForRealServerGroup] PRIMARY KEY CLUSTERED 
  (
 	[ID] ASC

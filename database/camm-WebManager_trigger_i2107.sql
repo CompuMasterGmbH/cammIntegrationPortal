@@ -70,21 +70,14 @@ BEGIN
 	DELETE dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
 	FROM dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
 		INNER JOIN deleted
-			ON dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].ID_SecurityObject = deleted.ID_Application
-				AND dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].ID_Group = deleted.ID_GroupOrPerson
-				AND dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].IsDevRule = deleted.DevelopmentTeamMember
-				AND dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].IsDenyRule = deleted.IsDenyRule
+			ON dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].[DerivedFromAppRightsID] = deleted.ID
 				AND dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].IsServerGroup0Rule <> 0
 	WHERE deleted.ID_ServerGroup = 0;
 	-- Drop all pre-staging data to old/deleted auth setup: ID_ServerGroup <> 0
 	DELETE dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
 	FROM dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
 		INNER JOIN deleted
-			ON dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].ID_SecurityObject = deleted.ID_Application
-				AND dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].ID_ServerGroup = deleted.ID_ServerGroup
-				AND dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].ID_Group = deleted.ID_GroupOrPerson
-				AND dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].IsDevRule = deleted.DevelopmentTeamMember
-				AND dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].IsDenyRule = deleted.IsDenyRule
+			ON dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].DerivedFromAppRightsID = deleted.ID
 				AND dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].IsServerGroup0Rule = 0
 	WHERE deleted.ID_ServerGroup <> 0;
 	-- (Re-)insert required pre-staging data for new/inserted auth setup: ID_ServerGroup = 0
@@ -120,32 +113,25 @@ BEGIN
 	DELETE dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
 	FROM dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
 		INNER JOIN deleted
-			ON dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].ID_SecurityObject = deleted.ID_Application
-				AND dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].ID_User = deleted.ID_GroupOrPerson
-				AND dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].IsDevRule = deleted.DevelopmentTeamMember
-				AND dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].IsDenyRule = deleted.IsDenyRule
+			ON dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].DerivedFromUserAppRightsID = deleted.ID
 				AND dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].IsServerGroup0Rule <> 0
 	WHERE deleted.ID_ServerGroup = 0;
 	-- Drop all pre-staging data to old/deleted auth setup: ID_ServerGroup <> 0
 	DELETE dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
 	FROM dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
 		INNER JOIN deleted
-			ON dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].ID_SecurityObject = deleted.ID_Application
-				AND dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].ID_ServerGroup = deleted.ID_ServerGroup
-				AND dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].ID_User = deleted.ID_GroupOrPerson
-				AND dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].IsDevRule = deleted.DevelopmentTeamMember
-				AND dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].IsDenyRule = deleted.IsDenyRule
+			ON dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].DerivedFromUserAppRightsID = deleted.ID
 				AND dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].IsServerGroup0Rule = 0
 	WHERE deleted.ID_ServerGroup <> 0;
 	-- (Re-)insert required pre-staging data for new/inserted auth setup: ID_ServerGroup = 0
-	INSERT INTO dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID)
-	SELECT ID_Application, dbo.System_ServerGroups.ID AS ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, 1, inserted.ID, NULL
+	INSERT INTO dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID, [DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID])
+	SELECT ID_Application, dbo.System_ServerGroups.ID AS ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, 1, inserted.ID, NULL, NULL
 	FROM inserted
         CROSS JOIN dbo.System_ServerGroups
 	WHERE inserted.ID_ServerGroup = 0
 	-- (Re-)insert required pre-staging data for new/inserted auth setup: ID_ServerGroup <> 0
-	INSERT INTO dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID)
-	SELECT ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, 0, inserted.ID, NULL
+	INSERT INTO dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID, [DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID])
+	SELECT ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, 0, inserted.ID, NULL, NULL
 	FROM inserted
 	WHERE inserted.ID_ServerGroup <> 0
 END
@@ -210,8 +196,8 @@ SELECT TOP 1 @AFirstServerGroupID = ID FROM [dbo].[System_ServerGroups] WHERE ID
 				CROSS JOIN inserted
 			WHERE ID_ServerGroup = @AFirstServerGroupID AND IsServerGroup0Rule <> 0
 			-- clone user auths from a first, existing server group
-			INSERT INTO dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID)
-			SELECT ID_SecurityObject, inserted.ID, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID
+			INSERT INTO dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID, [DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID])
+			SELECT ID_SecurityObject, inserted.ID, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID, [DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID]
 			FROM dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
 				CROSS JOIN inserted
 			WHERE ID_ServerGroup = @AFirstServerGroupID AND IsServerGroup0Rule <> 0
@@ -239,16 +225,12 @@ BEGIN
 	DELETE [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup]
 	FROM [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup]
 		INNER JOIN deleted
-			ON [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup].ID_ServerGroup = deleted.ID_ServerGroup
+			ON [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup].[DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID] = deleted.ID
 				AND [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup].ID_User = -1
-				AND [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup].ID_SecurityObject = deleted.ID_SecurityObject
-				AND [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup].IsServerGroup0Rule = deleted.IsServerGroup0Rule
-				AND [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup].IsDenyRule = deleted.IsDenyRule
-				AND [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup].IsDevRule = deleted.IsDevRule
 	WHERE deleted.ID_Group IN (SELECT dbo.System_ServerGroups.ID_Group_Anonymous FROM dbo.System_ServerGroups)
 	-- Forward-Insert required pre-staging data for anonymous app-rights
-	INSERT INTO dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID)
-	SELECT ID_SecurityObject, ID_ServerGroup, -1, IsDevRule, IsDenyRule, IsServerGroup0Rule, NULL, DerivedFromAppRightsID
+	INSERT INTO dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID, [DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID])
+	SELECT ID_SecurityObject, ID_ServerGroup, -1, IsDevRule, IsDenyRule, IsServerGroup0Rule, NULL, DerivedFromAppRightsID, inserted.ID
 	FROM inserted
 		INNER JOIN dbo.System_ServerGroups 
 			ON inserted.ID_Group = dbo.System_ServerGroups.ID_Group_Anonymous

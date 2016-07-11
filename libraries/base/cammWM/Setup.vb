@@ -674,6 +674,7 @@ Namespace CompuMaster.camm.WebManager.Setup
                     Response.Write("Setup: Update-Error: Unhandled exception in DoUpdates call: " & Utils.HTMLEncodeLineBreaks(ex.ToString))
                     Response.Write(Utils.HTMLEncodeLineBreaks("Warnings: " & vbNewLine & DBSetup.Warnings & vbNewLine & vbNewLine & DBSetup.GetLogData))
                 End Try
+                Response.Write("<p><strong>ATTENTION: all servers and web applications must be restarted to reset local caches (use e.g. iisreset.exe or re-save every web.config).</strong></p>")
                 Response.Write("</font></body></html>")
                 Response.End()
 
