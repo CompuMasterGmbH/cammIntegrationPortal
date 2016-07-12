@@ -1591,7 +1591,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <returns>The very current amount of log entries in database</returns>
         ''' <remarks></remarks>
-        Private Function RefreshedRowsInLogTable() As Long
+        Public Function RefreshedRowsInLogTable() As Long
             Dim Result As Long = Me.CountRowsInLogTable()
             Me.RowsInLogTable = Result
             Return Result

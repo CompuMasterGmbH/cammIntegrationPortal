@@ -91,11 +91,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     txtBoxValue = CStr(lifeTimeTable(enumvalue))
                 End If
                 daysTextBox.Text = txtBoxValue
-                daysTextBox.ID = "txtBox" & enumvalue.ToString()
+                daysTextBox.ID = "txtBox" & enumvalue.ToString().Replace("-"c, "_"c)
                 txtCell.Controls.Add(daysTextBox)
 
                 Dim validator As System.Web.UI.WebControls.CompareValidator = CreateIntegerCompareValidator(daysTextBox)
-                validator.ID = "validator" & enumvalue.ToString()
+                validator.ID = "validator" & enumvalue.ToString().Replace("-"c, "_"c)
                 txtCell.Controls.Add(validator)
 
                 row.Cells.Add(cell)
@@ -112,7 +112,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Sub
         Private Sub Page_Onload(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
             If Not Me.IsPostBack Then
-                lblRowsInLogTable.Text = CStr(cammWebManager.Log.RowsInLogTable)
+                lblRowsInLogTable.Text = CStr(cammWebManager.Log.RefreshedRowsInLogTable)
                 txtMaxRowsInLogTable.Text = CStr(cammWebManager.Log.MaxRowsInLogTable)
                 txtMaxDaysOfLogEntries.Text = CStr(cammWebManager.Log.MaxRetentionDays)
             End If
@@ -150,6 +150,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             cammWebManager.Log.CleanUpLogTable()
             lblRowsInLogTable.Text = CStr(cammWebManager.Log.RowsInLogTable)
             lblMsg.Text = "Old logs successfully deleted!"
+        End Sub
+
+        Private Sub ConfigurationLogging_PreRender(sender As Object, e As EventArgs) Handles Me.PreRender
+            If txtMaxDaysOfLogEntries.Text <> Nothing AndAlso Utils.TryCInt(txtMaxDaysOfLogEntries.Text, 0) <> 0 Then
+                Dim CurrentDaysAmount As Integer = Utils.TryCInt(txtMaxDaysOfLogEntries.Text, 0)
+                txtMaxDaysOfLogEntries.ToolTip = CurrentDaysAmount & " days ~ " & (CurrentDaysAmount / 30).ToString("0.00") & " months ~ " & (CurrentDaysAmount / 365).ToString("0.00") & " years"
+            End If
         End Sub
 #End Region
     End Class

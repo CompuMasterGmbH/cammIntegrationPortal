@@ -123,6 +123,21 @@ Namespace CompuMaster.camm.WebManager
         End Property
 
         ''' <summary>
+        ''' Shortened licence hash code for camm Web-Manager
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>This shortened license code is not intended for licence identification, but for project discussions to clarify the instance in discussion</remarks>
+        Public ReadOnly Property LicenceKeyShortened As String
+            Get
+                Static _Result As String
+                If _Result = Nothing Then
+                    _Result = Me.LicenceKey.Substring(0, 5)
+                End If
+                Return _Result
+            End Get
+        End Property
+
+        ''' <summary>
         ''' Licence hash code for camm Web-Manager
         ''' </summary>
         ''' <value></value>

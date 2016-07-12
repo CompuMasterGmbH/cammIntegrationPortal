@@ -288,7 +288,12 @@
                             <td valign="Top" width="240">
                                 <p>
                                     <font face="Arial" size="2">
-                                        <%= Me.cammWebManager.Environment.LicenceKey %></font></p>
+									<% If Me.CurrentAdminIsSupervisor Then %>
+										<%= Me.cammWebManager.Environment.LicenceKey %>
+									<% Else %>
+										<%= Me.cammWebManager.Environment.LicenceKeyShortened & "..." %>
+									<% End If %>
+                                    </font></p>
                             </td>
                         </tr>
 								<tr>

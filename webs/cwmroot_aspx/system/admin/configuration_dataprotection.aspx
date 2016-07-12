@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationDataProtection" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<camm:WebManager PageTitle="Administration - Modify data protection rules" id="cammWebManager"
+<camm:WebManager PageTitle="Administration - Advanced Configuration - Modify data protection rules" id="cammWebManager"
     SecurityObject="System - User Administration - ServerSetup" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>

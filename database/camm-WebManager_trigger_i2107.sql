@@ -22,10 +22,9 @@ BEGIN
 	DELETE dbo.[ApplicationsRights_Inheriting]
 	FROM dbo.[ApplicationsRights_Inheriting]
 		INNER JOIN deleted
-			ON dbo.[ApplicationsRights_Inheriting].ID_Inheriting = deleted.ID
-				AND dbo.[ApplicationsRights_Inheriting].ID_Source = deleted.AuthsAsAppID;
-	INSERT INTO dbo.[ApplicationsRights_Inheriting] (ID_Inheriting, ID_Source, ReleasedBy, ModifiedBy)
-	SELECT ID, AuthsAsAppID, ModifiedBy, ModifiedBy
+			ON dbo.[ApplicationsRights_Inheriting].[RuleSourceApplicationID] = deleted.ID
+	INSERT INTO dbo.[ApplicationsRights_Inheriting] (ID_Inheriting, ID_Source, ReleasedBy, ModifiedBy, RuleSourceApplicationID)
+	SELECT ID, AuthsAsAppID, ModifiedBy, ModifiedBy, ID
 	FROM inserted
 	WHERE AppDeleted = 0 AND AuthsAsAppID IS NOT NULL;
 	-- Update table dbo.ApplicationsRightsByGroup to always allow Supervisors
@@ -37,12 +36,12 @@ BEGIN
 				AND dbo.[ApplicationsRightsByGroup].ID_GroupOrPerson IN (-6, 6)
 				AND dbo.[ApplicationsRightsByGroup].DevelopmentTeamMember = 1
 				AND dbo.[ApplicationsRightsByGroup].IsDenyRule = 0;
-	INSERT INTO dbo.[ApplicationsRightsByGroup] (ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, ReleasedBy, [IsSupervisorAutoAccessRule])
-	SELECT ID, 0, 6, 1, 0, IsNull(inserted.ModifiedBy, inserted.ReleasedBy), 1
+	INSERT INTO dbo.[ApplicationsRightsByGroup] (ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, ReleasedBy, ReleasedOn, [IsSupervisorAutoAccessRule])
+	SELECT ID, 0, 6, 1, 0, IsNull(inserted.ModifiedBy, inserted.ReleasedBy), IsNull(inserted.ModifiedOn, inserted.ReleasedOn), 1
 	FROM inserted
 	WHERE AppDeleted = 0;
-	INSERT INTO dbo.[ApplicationsRightsByGroup] (ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, ReleasedBy, [IsSupervisorAutoAccessRule])
-	SELECT ID, 0, -6, 1, 0, IsNull(inserted.ModifiedBy, inserted.ReleasedBy), 1
+	INSERT INTO dbo.[ApplicationsRightsByGroup] (ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, ReleasedBy, ReleasedOn, [IsSupervisorAutoAccessRule])
+	SELECT ID, 0, -6, 1, 0, IsNull(inserted.ModifiedBy, inserted.ReleasedBy), IsNull(inserted.ModifiedOn, inserted.ReleasedOn), 1
 	FROM inserted
 	WHERE AppDeleted = 0;
 END' 

@@ -84,6 +84,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         Public securityAdministratorsCount As Integer
         Public securityRelatedContactsCount As Integer
         Public dataProtectionCoordinatorsCount As Integer
+        Public securityAccessEverythingCount As Integer
         Public ActiveMarketsCount As Integer
         Public RequestTime As DateTime
         Public ValidationHash As Byte()
@@ -157,6 +158,8 @@ Namespace CompuMaster.camm.WebManager.Registration
             binaryWriter.Write(info.appInstancesCount)
             binaryWriter.Write("/" & info.databaseVersion.ToString())
             binaryWriter.Write("/" & info.dataProtectionCoordinatorsCount)
+            'TODO: add info.securityAccessEverythingCount as soon as version no. for interface can be fixed - into separate info.version-Check-Code-Block
+            'binaryWriter.Write("/" & info.securityAccessEverythingCount)
             binaryWriter.Write("/" & info.enginesCount)
             binaryWriter.Write("/" & info.groupsCount)
             binaryWriter.Write("/" & info.instanceId)
@@ -313,6 +316,9 @@ Namespace CompuMaster.camm.WebManager.Registration
 
                 cmd.CommandText = "Select COUNT(ID) FROM dbo.Memberships WHERE ID_GROUP = " & CompuMaster.camm.WebManager.WMSystem.SpecialGroups.Group_DataProtectionCoordinators
                 result.dataProtectionCoordinatorsCount = GetIntegerResult(cmd)
+
+                cmd.CommandText = "Select COUNT(ID) FROM dbo.Memberships WHERE ID_GROUP = " & CompuMaster.camm.WebManager.WMSystem.SpecialGroups.Group_SecurityAccessEverything
+                result.securityAccessEverythingCount = GetIntegerResult(cmd)
 
                 result.WebAppInstanceID = cammWebManger.CurrentWebAppInstanceID
 
@@ -766,8 +772,8 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' Fetches datetime value with the corresponding key form the global properties table
         ''' </summary>
         ''' <param name="key"></param>
-        ''' TODO: this doesn't belong to this class, it should probably be in one which is made for this purpose...
         Private Function FetchDateFromGlobalPropertiesDbTable(ByVal key As String) As DateTime
+            'TODO: this method should probably be in a class specialy made for this purpose...
             Dim cmd As New SqlClient.SqlCommand
             cmd.CommandText = "SELECT ValueDateTime FROM [dbo].[System_GlobalProperties] WHERE PropertyName = @key AND ValueNVarchar = 'camm WebManager'"
             cmd.CommandType = CommandType.Text
@@ -776,9 +782,9 @@ Namespace CompuMaster.camm.WebManager.Registration
             Dim value As Object = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             If IsDBNull(value) OrElse value Is Nothing Then
                 Return Nothing
+            Else
+                Return CType(value, DateTime)
             End If
-            Dim expirationDate As DateTime = CType(value, DateTime)
-            Return expirationDate
         End Function
 
         Private Function MustSendMail(ByVal key As String) As Boolean
@@ -788,22 +794,12 @@ Namespace CompuMaster.camm.WebManager.Registration
 
 #Region "Mail distribution"
 
-        Private ReadOnly Property LicenseKeyShortened As String
-            Get
-                Static _Result As String
-                If _Result = Nothing Then
-                    _Result = Me.cammWebManger.Environment.LicenceKey.Substring(0, 5)
-                End If
-                Return _Result
-            End Get
-        End Property
-
         ''' <summary>
         ''' Notifies appropriate recipients when the support and maintanence contract has expired
         ''' </summary>
         Private Sub SendExpiredSupportContractNotificationMails(ByVal expirationDate As DateTime)
 
-            Dim notifier As New ContractExpirationNotifier(Me.cammWebManger, expirationDate, ContractExpirationNotificationTypes.SupportAndMaintananceContract, Me.LicenseKeyShortened)
+            Dim notifier As New ContractExpirationNotifier(Me.cammWebManger, expirationDate, ContractExpirationNotificationTypes.SupportAndMaintananceContract, Me.cammWebManger.Environment.LicenceKeyShortened)
 
             Dim currentDate As DateTime = DateTime.Now.ToUniversalTime()
             Dim expiredSinceDays As Double = currentDate.Subtract(expirationDate).TotalDays
@@ -836,7 +832,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         End Sub
 
         Private Sub SendExpiredUpdateContractMail(ByVal expirationDate As DateTime)
-            Dim notifier As New ContractExpirationNotifier(Me.cammWebManger, expirationDate, ContractExpirationNotificationTypes.UpdateContract, Me.LicenseKeyShortened)
+            Dim notifier As New ContractExpirationNotifier(Me.cammWebManger, expirationDate, ContractExpirationNotificationTypes.UpdateContract, Me.cammWebManger.Environment.LicenceKeyShortened)
 
             Dim currentDate As DateTime = DateTime.Now.ToUniversalTime()
             Dim expiredSinceDays As Double = currentDate.Subtract(expirationDate).TotalDays
@@ -855,7 +851,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         End Sub
 
         Private Sub SendExpiringLicenceNotificationMails(ByVal expirationDate As DateTime, ByVal daysTillExpiration As Double)
-            Dim notifier As New ContractExpirationNotifier(Me.cammWebManger, expirationDate, ContractExpirationNotificationTypes.Licence, Me.LicenseKeyShortened)
+            Dim notifier As New ContractExpirationNotifier(Me.cammWebManger, expirationDate, ContractExpirationNotificationTypes.Licence, Me.cammWebManger.Environment.LicenceKeyShortened)
 
             If daysTillExpiration <= 14 Then
                 notifier.AddRecipient(WMSystem.SpecialGroups.Group_Supervisors)

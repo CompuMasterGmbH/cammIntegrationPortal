@@ -104,6 +104,7 @@ CREATE TABLE [dbo].[ApplicationsRights_Inheriting] (
 	[ID] [int] IDENTITY (1, 1) NOT NULL ,
 	[ID_Inheriting] [int] NOT NULL ,
 	[ID_Source] [int] NOT NULL ,
+	[RuleSourceApplicationID] [int] NULL ,
 	[ReleasedOn] [datetime] NOT NULL CONSTRAINT [DF_ApplicationsRights_Inheriting_ReleasedOn] DEFAULT (getdate()),
 	[ReleasedBy] [int] NOT NULL ,
 	[ModifiedOn] [datetime] NULL CONSTRAINT [DF_ApplicationsRights_Inheriting_ModifiedOn] DEFAULT (getdate()),
