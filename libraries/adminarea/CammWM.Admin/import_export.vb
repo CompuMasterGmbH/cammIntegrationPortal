@@ -59,11 +59,11 @@ Namespace CompuMaster.camm.WebManager.Administration
             Dim uInfo As New CompuMaster.camm.WebManager.WMSystem.UserInformation(userID, webmanager)
             Dim Result As DataTable = MembershipsTableCreate("memberships")
 
-            For MyCounter As Integer = 0 To uInfo.MembershipsByRule(False).AllowRule.Length - 1
-                MembershipsTableAddRow(Result, uInfo.MembershipsByRule(False).AllowRule(MyCounter), uInfo, False)
+            For MyCounter As Integer = 0 To uInfo.MembershipsByRule().AllowRule.Length - 1
+                MembershipsTableAddRow(Result, uInfo.MembershipsByRule().AllowRule(MyCounter), uInfo, False)
             Next
-            For MyCounter As Integer = 0 To uInfo.MembershipsByRule(False).DenyRule.Length - 1
-                MembershipsTableAddRow(Result, uInfo.MembershipsByRule(False).DenyRule(MyCounter), uInfo, True)
+            For MyCounter As Integer = 0 To uInfo.MembershipsByRule().DenyRule.Length - 1
+                MembershipsTableAddRow(Result, uInfo.MembershipsByRule().DenyRule(MyCounter), uInfo, True)
             Next
 
             Return Result
@@ -91,20 +91,20 @@ Namespace CompuMaster.camm.WebManager.Administration
             Dim gInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(groupID, webmanager)
             Dim Result As DataTable = MembershipsTableCreate("members")
 
-            For MyCounter As Integer = 0 To gInfo.MembersByRule(False).AllowRule.Length - 1
-                If includeDisabledUsers = False AndAlso gInfo.MembersByRule(False).AllowRule(MyCounter).LoginDisabled Then
+            For MyCounter As Integer = 0 To gInfo.MembersByRule().AllowRule.Length - 1
+                If includeDisabledUsers = False AndAlso gInfo.MembersByRule().AllowRule(MyCounter).LoginDisabled Then
                     'don't add a row with disabled user
                 Else
                     Dim newRow As DataRow = Result.NewRow
-                    MembershipsTableAddRow(Result, gInfo, gInfo.MembersByRule(False).AllowRule(MyCounter), False)
+                    MembershipsTableAddRow(Result, gInfo, gInfo.MembersByRule().AllowRule(MyCounter), False)
                 End If
             Next
-            For MyCounter As Integer = 0 To gInfo.MembersByRule(False).DenyRule.Length - 1
-                If includeDisabledUsers = False AndAlso gInfo.MembersByRule(False).DenyRule(MyCounter).LoginDisabled Then
+            For MyCounter As Integer = 0 To gInfo.MembersByRule().DenyRule.Length - 1
+                If includeDisabledUsers = False AndAlso gInfo.MembersByRule().DenyRule(MyCounter).LoginDisabled Then
                     'don't add a row with disabled user
                 Else
                     Dim newRow As DataRow = Result.NewRow
-                    MembershipsTableAddRow(Result, gInfo, gInfo.MembersByRule(False).DenyRule(MyCounter), True)
+                    MembershipsTableAddRow(Result, gInfo, gInfo.MembersByRule().DenyRule(MyCounter), True)
                 End If
             Next
 

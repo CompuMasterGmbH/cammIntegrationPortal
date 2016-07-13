@@ -1,64 +1,23 @@
 ﻿/* Contains all views cumulated in their latest version from build 204 up to latest */
 
 -------------------------------------------------------------------------------------------------
--- INDEXED VIEW FOR PERFORMANCE REASONS: view_Memberships_DenyRulesOnly
+-- CLEAN-UP OF VIEWS NOT IN USE ANY MORE
 -------------------------------------------------------------------------------------------------
-if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Memberships_DenyRulesOnly]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
-drop view [dbo].[view_Memberships_DenyRulesOnly]
-GO
-CREATE VIEW [dbo].[view_Memberships_DenyRulesOnly]
-WITH SCHEMABINDING
-AS
-	SELECT ID_Group, ID_User
-	FROM         dbo.Memberships
-	WHERE IsDenyRule <> 0
-GO
-
-CREATE UNIQUE CLUSTERED INDEX IXDVW_view_Memberships_DenyRulesOnly
-	ON dbo.view_Memberships_DenyRulesOnly(ID_Group, ID_User);
-GO
-
 IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[view_Memberships_Effective_wo_PublicNAnonymous]'))
 DROP VIEW [dbo].[view_Memberships_Effective_wo_PublicNAnonymous]
-GO
-CREATE VIEW [dbo].[view_Memberships_Effective_wo_PublicNAnonymous]
-
-AS
---------------------------------------------------------------------------------------
--- Calculated effective memberships: 
--- subtraction of all DenyRules from amount of AllowRules
---------------------------------------------------------------------------------------
-SELECT     AllowEntries.ID_Group, AllowEntries.ID_User
-FROM         dbo.Memberships AS AllowEntries
-	LEFT JOIN (
-		SELECT ID_Group, ID_User
-		FROM         dbo.Memberships
-		WHERE IsDenyRule <> 0
-		) AS DenyEntries ON AllowEntries.ID_Group = DenyEntries.ID_Group AND AllowEntries.ID_User = DenyEntries.ID_User
-WHERE IsNull(AllowEntries.IsDenyRule, 0) = 0
-	AND DenyEntries.ID_Group IS NULL
-	AND AllowEntries.IsSystemRule = 0
 GO
 
 IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[view_Memberships_Effective_with_PublicNAnonymous]'))
 DROP VIEW [dbo].[view_Memberships_Effective_with_PublicNAnonymous]
 GO
-CREATE VIEW [dbo].[view_Memberships_Effective_with_PublicNAnonymous]
 
-AS
---------------------------------------------------------------------------------------
--- Calculated effective memberships: 
--- subtraction of all DenyRules from amount of AllowRules 
--- AND added memberships for public/registered and anonymous groups
---------------------------------------------------------------------------------------
-SELECT     AllowEntries.ID_Group, AllowEntries.ID_User
-FROM         dbo.Memberships AS AllowEntries
-	LEFT JOIN dbo.[view_Memberships_DenyRulesOnly] AS DenyEntries 
-		ON AllowEntries.ID_Group = DenyEntries.ID_Group AND AllowEntries.ID_User = DenyEntries.ID_User
-WHERE IsNull(AllowEntries.IsDenyRule, 0) = 0
-	AND DenyEntries.ID_Group IS NULL
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Memberships_DenyRulesOnly]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
+drop view [dbo].[view_Memberships_DenyRulesOnly]
 GO
 
+-------------------------------------------------------------------------------------------------
+-- AUTHS CALCULATION QUEUE
+-------------------------------------------------------------------------------------------------
 IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[ApplicationsRightsByUser_RulesCumulative]'))
 DROP VIEW [dbo].[ApplicationsRightsByUser_RulesCumulative]
 GO
@@ -79,14 +38,14 @@ AS
     SELECT ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule
     FROM dbo.ApplicationsRightsByUser_PreStagingForRealServerGroup
     UNION ALL
-    SELECT ID_SecurityObject, ID_ServerGroup, [dbo].[view_Memberships_Effective_with_PublicNAnonymous].ID_User, IsDevRule, IsDenyRule
+    SELECT ID_SecurityObject, ID_ServerGroup, [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].ID_User, IsDevRule, IsDenyRule
     FROM (
 			-- all regular users
 			SELECT ID_SecurityObject, ID_ServerGroup, ID_Group, IsDevRule, IsDenyRule
 			FROM dbo.ApplicationsRightsByGroup_PreStagingForRealServerGroup
 		) AS ApplicationsRightsByGroupEffective
-        INNER JOIN [dbo].[view_Memberships_Effective_with_PublicNAnonymous] 
-            ON ApplicationsRightsByGroupEffective.ID_Group = [dbo].[view_Memberships_Effective_with_PublicNAnonymous].ID_Group
+        INNER JOIN [dbo].[Memberships_EffectiveRulesWithClonesNthGrade] 
+            ON ApplicationsRightsByGroupEffective.ID_Group = [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].ID_Group
 
 GO
 
@@ -478,11 +437,11 @@ GO
 CREATE VIEW dbo.view_eMailAccounts_of_Groups
 
 AS
-SELECT dbo.view_Memberships_Effective_with_PublicNAnonymous.ID_Group, dbo.Benutzer.[E-MAIL]
-FROM dbo.view_Memberships_Effective_with_PublicNAnonymous 
+SELECT dbo.Memberships_EffectiveRulesWithClonesNthGrade.ID_Group, dbo.Benutzer.[E-MAIL]
+FROM dbo.Memberships_EffectiveRulesWithClonesNthGrade 
 	LEFT OUTER JOIN dbo.Benutzer 
-		ON dbo.view_Memberships_Effective_with_PublicNAnonymous.ID_User = dbo.Benutzer.ID
-GROUP BY dbo.view_Memberships_Effective_with_PublicNAnonymous.ID_Group, dbo.Benutzer.[E-MAIL]
+		ON dbo.Memberships_EffectiveRulesWithClonesNthGrade.ID_User = dbo.Benutzer.ID
+GROUP BY dbo.Memberships_EffectiveRulesWithClonesNthGrade.ID_Group, dbo.Benutzer.[E-MAIL]
 GO
 ----------------------------------------------------
 -- [dbo].[view_Groups]
@@ -571,7 +530,7 @@ WHERE
 	AND dbo.[Log].UserID NOT IN
 		(
 			SELECT     id_user
-			FROM       dbo.view_Memberships_Effective_wo_PublicNAnonymous
+			FROM       dbo.Memberships_EffectiveRulesWithClonesNthGrade
 			WHERE      ID_Group = 6
 		)
 	AND NOT dbo.[Log].ApplicationID IN
@@ -755,7 +714,7 @@ SELECT dbo.Memberships.ID AS ID_Membership, dbo.Memberships.IsDenyRule,
 	dbo.Memberships.ReleasedOn,
 	ReleasedByBenutzer.ID AS ID_ReleasedBy, ReleasedByBenutzer.Vorname AS ReleasedByFirstName, ReleasedByBenutzer.Nachname AS ReleasedByLastName,
 	dbo.Benutzer.ID AS ID_User, dbo.Benutzer.Loginname, dbo.Benutzer.Vorname, dbo.Benutzer.Nachname, dbo.Benutzer.LoginDisabled, dbo.Benutzer.Company ,
-	dbo.Memberships.IsCloneRule
+	CAST(0 AS bit) AS IsCloneRule
 FROM dbo.Memberships 
 	INNER JOIN dbo.Benutzer ON dbo.Memberships.ID_User = dbo.Benutzer.ID 
 	LEFT OUTER JOIN dbo.Benutzer ReleasedByBenutzer ON dbo.Memberships.ReleasedBy = ReleasedByBenutzer.ID 

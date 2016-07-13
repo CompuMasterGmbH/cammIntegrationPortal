@@ -1934,7 +1934,7 @@ If @GroupID Is Not Null
 		-- log indirect changes on users
 		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription, ServerGroupID) 
 		select id_user, GetDate(), '0.0.0.0', '0.0.0.0', @AppID, -7, Null, NULL
-		from [dbo].[view_Memberships_Effective_wo_PublicNAnonymous] -- no logging of users being member of groups public or anonymous (would be too much data to write to log and is typically not required for audits)
+		from [dbo].[Memberships_EffectiveRulesWithClonesNthGrade] 
 		where id_group = @GroupID
 		-- log group auth change
 		insert into dbo.Log (UserID, LoginDate, ServerIP, RemoteIP, ApplicationID, ConflictType, ConflictDescription, ServerGroupID) 
@@ -2051,7 +2051,7 @@ where
 		AND @AdminUserID IN 
 		(
 		        SELECT ID_User 
-		        FROM view_Memberships_Effective_wo_PublicNAnonymous 
+		        FROM Memberships_EffectiveRulesWithClonesNthGrade 
 		        WHERE ID_Group = 7 
 		            AND ID_User = @AdminUserID
 		) -- user must still be security admin
@@ -2059,7 +2059,7 @@ where
 	OR @AdminUserID IN 
         (
             SELECT ID_User 
-            FROM view_Memberships_Effective_wo_PublicNAnonymous 
+            FROM Memberships_EffectiveRulesWithClonesNthGrade 
             WHERE ID_Group = 6 
                 AND ID_User = @AdminUserID
         ) -- ALTERNATIVELY user must be a supervisor
@@ -2094,9 +2094,9 @@ where
 			OR (UserID=@AdminUserID and TableName='Groups' and AuthorizationType='SecurityMaster' and TablePrimaryIDValue = 0)
 		)
 		AND @AdminUserID IN (SELECT ID FROM Benutzer WHERE ID = @AdminUserID AND LoginDisabled = 0) -- user must still be valid
-		AND @AdminUserID IN (SELECT ID_User FROM view_Memberships_Effective_wo_PublicNAnonymous WHERE ID_Group = 7 AND ID_User = @AdminUserID) -- user must still be security admin
+		AND @AdminUserID IN (SELECT ID_User FROM Memberships_EffectiveRulesWithClonesNthGrade WHERE ID_Group = 7 AND ID_User = @AdminUserID) -- user must still be security admin
 	)
-	OR @AdminUserID IN (SELECT ID_User FROM view_Memberships_Effective_wo_PublicNAnonymous WHERE ID_Group = 6 AND ID_User = @AdminUserID) -- ALTERNATIVELY user must be a supervisor
+	OR @AdminUserID IN (SELECT ID_User FROM Memberships_EffectiveRulesWithClonesNthGrade WHERE ID_Group = 6 AND ID_User = @AdminUserID) -- ALTERNATIVELY user must be a supervisor
 IF @Result IS NULL 
 	RETURN 0
 ELSE
@@ -2338,10 +2338,10 @@ ALTER Procedure dbo.Public_GetEMailAddressesOfAllSecurityAdmins
 AS
 
 SELECT Benutzer.[E-MAIL], Benutzer.ID 
-FROM dbo.view_Memberships_Effective_with_PublicNAnonymous 
+FROM dbo.Memberships_EffectiveRulesWithClonesNthGrade 
 	LEFT OUTER JOIN dbo.Benutzer 
-		ON dbo.view_Memberships_Effective_with_PublicNAnonymous.ID_User = dbo.Benutzer.ID
-WHERE dbo.view_Memberships_Effective_with_PublicNAnonymous.ID_Group = 7
+		ON dbo.Memberships_EffectiveRulesWithClonesNthGrade.ID_User = dbo.Benutzer.ID
+WHERE dbo.Memberships_EffectiveRulesWithClonesNthGrade.ID_Group = 7
 GROUP BY Benutzer.[E-MAIL], Benutzer.ID
 
 return 
@@ -3374,9 +3374,9 @@ SELECT @WebAppID = (select top 1 ID from Applications where ((Applications.Title
 		SELECT @PublicGroupID = dbo.System_ServerGroups.ID_Group_Public FROM dbo.System_ServerGroups INNER JOIN dbo.System_Servers ON dbo.System_ServerGroups.ID = dbo.System_Servers.ServerGroup WHERE system_servers.ip = @ServerIP
 		If @PublicGroupID Is Null 
 			SELECT @PublicGroupID = 0
-		SELECT @bufferUserIDByPublicGroup = (SELECT DISTINCT ApplicationsRightsByGroup.ID_GroupOrPerson FROM view_Memberships_Effective_wo_PublicNAnonymous RIGHT OUTER JOIN ApplicationsRightsByGroup ON view_Memberships_Effective_wo_PublicNAnonymous.ID_Group = ApplicationsRightsByGroup.ID_GroupOrPerson RIGHT OUTER JOIN Applications ON ApplicationsRightsByGroup.ID_Application = Applications.ID WHERE (Applications.Title = @WebApplication) AND (Applications.LocationID = @RequestedServerID) AND (ApplicationsRightsByGroup.ID_GroupOrPerson = @PublicGroupID))
-		SELECT @bufferUserIDByGroup = (SELECT DISTINCT view_Memberships_Effective_wo_PublicNAnonymous.ID_User FROM view_Memberships_Effective_wo_PublicNAnonymous RIGHT OUTER JOIN ApplicationsRightsByGroup ON view_Memberships_Effective_wo_PublicNAnonymous.ID_Group = ApplicationsRightsByGroup.ID_GroupOrPerson RIGHT OUTER JOIN Applications ON ApplicationsRightsByGroup.ID_Application = Applications.ID WHERE (((view_Memberships_Effective_wo_PublicNAnonymous.ID_User = @CurUserID) AND (Applications.Title = @WebApplication))) AND Applications.LocationID = @RequestedServerID)
-		SELECT @bufferUserIDByAdmin = (SELECT DISTINCT ID_User FROM view_Memberships_Effective_wo_PublicNAnonymous WHERE ID_User = @CurUserID AND ID_Group = 6)
+		SELECT @bufferUserIDByPublicGroup = (SELECT DISTINCT ApplicationsRightsByGroup.ID_GroupOrPerson FROM Memberships_EffectiveRulesWithClonesNthGrade RIGHT OUTER JOIN ApplicationsRightsByGroup ON Memberships_EffectiveRulesWithClonesNthGrade.ID_Group = ApplicationsRightsByGroup.ID_GroupOrPerson RIGHT OUTER JOIN Applications ON ApplicationsRightsByGroup.ID_Application = Applications.ID WHERE (Applications.Title = @WebApplication) AND (Applications.LocationID = @RequestedServerID) AND (ApplicationsRightsByGroup.ID_GroupOrPerson = @PublicGroupID))
+		SELECT @bufferUserIDByGroup = (SELECT DISTINCT Memberships_EffectiveRulesWithClonesNthGrade.ID_User FROM Memberships_EffectiveRulesWithClonesNthGrade RIGHT OUTER JOIN ApplicationsRightsByGroup ON Memberships_EffectiveRulesWithClonesNthGrade.ID_Group = ApplicationsRightsByGroup.ID_GroupOrPerson RIGHT OUTER JOIN Applications ON ApplicationsRightsByGroup.ID_Application = Applications.ID WHERE (((Memberships_EffectiveRulesWithClonesNthGrade.ID_User = @CurUserID) AND (Applications.Title = @WebApplication))) AND Applications.LocationID = @RequestedServerID)
+		SELECT @bufferUserIDByAdmin = (SELECT DISTINCT ID_User FROM Memberships_EffectiveRulesWithClonesNthGrade WHERE ID_User = @CurUserID AND ID_Group = 6)
 		If NullIf(@bufferUserIDByPublicGroup, -1) <> -1 Or NullIf(@bufferUserIDByGroup, -1) <> -1 Or NullIf(@bufferUserIDByAdmin, -1) <> -1 Or NullIf(@WebApplication, '') = 'Public'
 			SET @MyResult = 1 -- Zugriff gewährt
 		Else

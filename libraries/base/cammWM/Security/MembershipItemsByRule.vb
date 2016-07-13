@@ -16,50 +16,94 @@ Option Explicit On
 Option Strict On
 
 Imports CompuMaster.camm.WebManager.WMSystem
+Imports System.Data.SqlClient
 
 Namespace CompuMaster.camm.WebManager.Security
 
     Public Class MembershipItemsByRule
-        Friend Sub New(allowRuleItems As GroupInformation(), denyRuleItems As GroupInformation())
-            Me._AllowRule = allowRuleItems
-            Me._DenyRule = denyRuleItems
+
+        Friend Sub New(webManager As WMSystem, userID As Long)
+            Me._WebManager = webManager
+            Me._UserID = userID
         End Sub
 
+        Private _WebManager As WMSystem
+        Private _UserID As Long
         Private _AllowRule As GroupInformation()
         Private _DenyRule As GroupInformation()
         Private _Effective As GroupInformation()
 
         Public ReadOnly Property AllowRule As GroupInformation()
             Get
+                If Me._DenyRule Is Nothing Then
+                    Me.QueryAllowAndDenyRuleItems()
+                End If
                 Return Me._AllowRule
             End Get
         End Property
         Public ReadOnly Property DenyRule As GroupInformation()
             Get
+                If Me._DenyRule Is Nothing Then
+                    Me.QueryAllowAndDenyRuleItems()
+                End If
                 Return Me._DenyRule
             End Get
         End Property
         Public ReadOnly Property Effective As GroupInformation()
             Get
                 If Me._Effective Is Nothing Then
-                    Dim RuleResult As New ArrayList()
-                    For AllowRuleCounter As Integer = 0 To Me._AllowRule.Length - 1
-                        Dim IsDenied As Boolean = False
-                        For DenyRuleCounter As Integer = 0 To Me._DenyRule.Length - 1
-                            If Me._AllowRule(AllowRuleCounter).ID = Me._DenyRule(DenyRuleCounter).ID Then
-                                IsDenied = True
-                                Exit For
-                            End If
-                        Next
-                        If IsDenied = False Then
-                            RuleResult.Add(Me._AllowRule(AllowRuleCounter))
-                        End If
-                    Next
-                    Me._Effective = CType(RuleResult.ToArray(GetType(GroupInformation)), GroupInformation())
+                    Me.QueryEffectiveRuleItems()
                 End If
                 Return Me._Effective
             End Get
         End Property
+
+        Private Sub QueryAllowAndDenyRuleItems()
+            Dim AllowRuleMemberGroups As New List(Of GroupInformation)
+            Dim DenyRuleMemberGroups As New List(Of GroupInformation)
+            Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
+            Dim MyCmd As New SqlCommand("", MyConn)
+            MyCmd.CommandType = CommandType.Text
+            If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                MyCmd.CommandText = "select gruppen.*, IsNull(memberships.IsDenyRule, 0) AS IsDenyRule from memberships inner join gruppen on memberships.id_group = gruppen.id where id_user = @ID "
+            Else
+                MyCmd.CommandText = "select gruppen.*, CAST (0 AS bit) AS IsDenyRule from memberships inner join gruppen on memberships.id_group = gruppen.id where id_user = @ID"
+            End If
+            MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _UserID
+            Dim MemberGroups As DataTable = Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "MemberGroups")
+            For MyCounter As Integer = 0 To MemberGroups.Rows.Count - 1
+                Dim MyDataRow As DataRow = MemberGroups.Rows(MyCounter)
+                Dim grp As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(MyDataRow, _WebManager)
+                If Utils.Nz(MyDataRow("IsDenyRule"), False) = False Then
+                    AllowRuleMemberGroups.Add(grp)
+                Else
+                    DenyRuleMemberGroups.Add(grp)
+                End If
+            Next
+            Me._AllowRule = AllowRuleMemberGroups.ToArray
+            Me._DenyRule = DenyRuleMemberGroups.ToArray
+        End Sub
+
+        Private Sub QueryEffectiveRuleItems()
+            If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                Dim EffectiveRuleMemberGroups As New List(Of GroupInformation)
+                Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
+                Dim MyCmd As New SqlCommand("", MyConn)
+                MyCmd.CommandType = CommandType.Text
+                MyCmd.CommandText = "select gruppen.* from Memberships_EffectiveRulesWithClonesNthGrade inner join gruppen on Memberships_EffectiveRulesWithClonesNthGrade.id_group = gruppen.id where id_user = @ID "
+                MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _UserID
+                Dim MemberGroups As DataTable = Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "MemberGroups")
+                For MyCounter As Integer = 0 To MemberGroups.Rows.Count - 1
+                    Dim MyDataRow As DataRow = MemberGroups.Rows(MyCounter)
+                    Dim grp As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(MyDataRow, _WebManager)
+                    EffectiveRuleMemberGroups.Add(grp)
+                Next
+                Me._Effective = EffectiveRuleMemberGroups.ToArray
+            Else
+                Me._Effective = AllowRule
+            End If
+        End Sub
+
     End Class
 
 End Namespace

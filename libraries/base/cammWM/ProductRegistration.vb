@@ -705,8 +705,8 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' <param name="group"></param>
         Public Sub AddRecipient(ByVal group As WMSystem.SpecialGroups)
             Dim groupInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(group, cammwebmanager)
-            If Not groupInfo Is Nothing AndAlso Not groupInfo.MembersByRule(True).Effective Is Nothing Then
-                For Each user As WMSystem.UserInformation In groupInfo.MembersByRule(True).Effective
+            If Not groupInfo Is Nothing AndAlso Not groupInfo.MembersByRule().Effective Is Nothing Then
+                For Each user As WMSystem.UserInformation In groupInfo.MembersByRule().Effective
                     AddRecipient(user)
                 Next
             End If

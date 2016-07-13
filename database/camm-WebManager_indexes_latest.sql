@@ -915,3 +915,24 @@ GO
 CREATE STATISTICS [_dta_stat_1188199283_1_8_2_3_6_4] ON [dbo].[Log]([ID], [ConflictType], [UserID], [LoginDate], [ApplicationID], [RemoteIP])
 go
 
+IF EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Memberships_EffectiveRulesWithClonesNthGrade]') AND name = N'IX_Memberships_EffectiveRulesWithClonesNthGrade')
+DROP INDEX IX_Memberships_EffectiveRulesWithClonesNthGrade ON dbo.Memberships_EffectiveRulesWithClonesNthGrade
+GO
+CREATE NONCLUSTERED INDEX IX_Memberships_EffectiveRulesWithClonesNthGrade ON dbo.Memberships_EffectiveRulesWithClonesNthGrade
+	(
+	ID_Group,
+	ID_User
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+IF EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[Memberships_EffectiveRulesWithClonesNthGrade]') AND name = N'IX_Memberships_EffectiveRulesWithClonesNthGrade_1')
+DROP INDEX IX_Memberships_EffectiveRulesWithClonesNthGrade_1 ON dbo.Memberships_EffectiveRulesWithClonesNthGrade
+GO
+CREATE NONCLUSTERED INDEX IX_Memberships_EffectiveRulesWithClonesNthGrade_1 ON dbo.Memberships_EffectiveRulesWithClonesNthGrade
+	(
+	ID_User,
+	ID_Group
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+
+

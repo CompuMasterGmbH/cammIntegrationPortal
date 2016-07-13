@@ -8027,6 +8027,38 @@ Namespace CompuMaster.camm.WebManager
                 _WebManager = WebManager
                 ReadCompleteUserInformation(SearchForDeletedAccountsAsWell)
             End Sub
+            ''' <summary>
+            '''     Assign properties of a user profile from a table row of the system database
+            ''' </summary>
+            ''' <param name="dataRow">The row from the data table containing the full user data</param>
+            ''' <param name="webManager">The current instance of camm Web-Manager</param>
+            Friend Sub New(dataRow As DataRow, webManager As WMSystem)
+                Me.New(CType(dataRow("ID"), Long),
+                                                CType(dataRow("LoginName"), String),
+                                                CType(dataRow("E-Mail"), String),
+                                                False,
+                                                Utils.Nz(dataRow("Company"), CType(Nothing, String)),
+                                                CType(IIf(Convert.ToString(Utils.Nz(dataRow("Anrede"), "")) = "", Sex.Undefined, IIf(Convert.ToString(Utils.Nz(dataRow("Anrede"), "")) = "Mr.", Sex.Masculine, Sex.Feminine)), Sex),
+                                                Utils.Nz(dataRow("Namenszusatz"), CType(Nothing, String)),
+                                                Utils.Nz(dataRow("Vorname"), CType(Nothing, String)),
+                                                Utils.Nz(dataRow("Nachname"), CType(Nothing, String)),
+                                                Utils.Nz(dataRow("Titel"), CType(Nothing, String)),
+                                                Utils.Nz(dataRow("Strasse"), CType(Nothing, String)),
+                                                Utils.Nz(dataRow("PLZ"), CType(Nothing, String)),
+                                                Utils.Nz(dataRow("Ort"), CType(Nothing, String)),
+                                                Utils.Nz(dataRow("State"), CType(Nothing, String)),
+                                                Utils.Nz(dataRow("Land"), CType(Nothing, String)),
+                                                CType(dataRow("1stPreferredLanguage"), Integer),
+                                                Utils.Nz(dataRow("2ndPreferredLanguage"), 0),
+                                                Utils.Nz(dataRow("3rdPreferredLanguage"), 0),
+                                                CType(dataRow("LoginDisabled"), Boolean),
+                                                Not IsDBNull(dataRow("LoginLockedTill")),
+                                                False,
+                                                CType(dataRow("AccountAccessability"), Integer),
+                                                webManager,
+                                                CType(Nothing, String),
+                                                CType(Nothing, System.Collections.Specialized.NameValueCollection))
+            End Sub
 
             ''' <summary>
             ''' Returns a value from the database which indicates whether the authorizations for this user have already been set
@@ -8669,11 +8701,11 @@ Namespace CompuMaster.camm.WebManager
                 NewUser.Save(newPassword)  'Intermediate save point
 
                 'Following actions take place at database directly
-                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule(False).AllowRule.Length - 1
-                    NewUser.AddMembership(TemplateUser.MembershipsByRule(False).AllowRule(MyCounter).ID, False)
+                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule().AllowRule.Length - 1
+                    NewUser.AddMembership(TemplateUser.MembershipsByRule().AllowRule(MyCounter).ID, False)
                 Next
-                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule(False).DenyRule.Length - 1
-                    NewUser.AddMembership(TemplateUser.MembershipsByRule(False).DenyRule(MyCounter).ID, True)
+                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule().DenyRule.Length - 1
+                    NewUser.AddMembership(TemplateUser.MembershipsByRule().DenyRule(MyCounter).ID, True)
                 Next
                 For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.AllowRuleDevelopers.Length - 1
                     Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.AllowRuleDevelopers(MyCounter)
@@ -9481,7 +9513,7 @@ Namespace CompuMaster.camm.WebManager
             ''' <value></value>
             <Obsolete("Use MembershipsByRule instead")> Public ReadOnly Property Memberships() As CompuMaster.camm.WebManager.WMSystem.GroupInformation()
                 Get
-                    Return MembershipsByRule(True).Effective
+                    Return MembershipsByRule().Effective
                 End Get
             End Property
 
@@ -9489,44 +9521,13 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Memberships of the current user by rule-set
             ''' </summary>
-            Public ReadOnly Property MembershipsByRule(alsoClonedMemberships As Boolean) As Security.MembershipItemsByRule
+            Public ReadOnly Property MembershipsByRule() As Security.MembershipItemsByRule
                 Get
-                    If _PartiallyLoadedDataCurrently Then
+                    If Me._ID = 0 AndAlso _PartiallyLoadedDataCurrently Then 'prevent access to this property while the user hasn't been saved (ID = 0 will throw exception in following)
                         ReadCompleteUserInformation()
                     End If
                     If _MembershipsByRule Is Nothing Then
-                        Dim sqlClauseCloneRule As String
-                        If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_MembershipsWithSupportForSystemAndCloneRule) >= 0 Then 'Newer
-                            If alsoClonedMemberships Then
-                                sqlClauseCloneRule = ""
-                            Else
-                                sqlClauseCloneRule = " AND memberships.IsCloneRule = 0"
-                            End If
-                        Else
-                            sqlClauseCloneRule = ""
-                        End If
-                        Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                        Dim MyCmd As New SqlCommand("", MyConn)
-                        MyCmd.CommandType = CommandType.Text
-                        If Setup.DatabaseUtils.Version(WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                            MyCmd.CommandText = "select gruppen.*, IsNull(memberships.IsDenyRule, 0) AS IsDenyRule from memberships inner join gruppen on memberships.id_group = gruppen.id where id_user = @ID " & sqlClauseCloneRule
-                        Else
-                            MyCmd.CommandText = "select gruppen.*, CAST (0 AS bit) AS IsDenyRule from memberships inner join gruppen on memberships.id_group = gruppen.id where id_user = @ID"
-                        End If
-                        MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
-                        Dim MemberGroups As DataTable = Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "MemberGroups")
-                        Dim AllowRuleMemberGroups As New ArrayList
-                        Dim DenyRuleMemberGroups As New ArrayList
-                        For MyCounter As Integer = 0 To MemberGroups.Rows.Count - 1
-                            Dim MyDataRow As DataRow = MemberGroups.Rows(MyCounter)
-                            Dim grp As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(CType(MyDataRow("ID"), Integer), CType(MyDataRow("Name"), String), Utils.Nz(MyDataRow("Description"), CType(Nothing, String)), CType(IIf(CType(MyDataRow("SystemGroup"), Integer) <> 0, True, False), Boolean), _WebManager)
-                            If Utils.Nz(MyDataRow("IsDenyRule"), False) = False Then
-                                AllowRuleMemberGroups.Add(grp)
-                            Else
-                                DenyRuleMemberGroups.Add(grp)
-                            End If
-                        Next
-                        _MembershipsByRule = New Security.MembershipItemsByRule(CType(AllowRuleMemberGroups.ToArray(GetType(GroupInformation)), GroupInformation()), CType(DenyRuleMemberGroups.ToArray(GetType(GroupInformation)), GroupInformation()))
+                        _MembershipsByRule = New Security.MembershipItemsByRule(_WebManager, _ID)
                     End If
                     Return _MembershipsByRule
                 End Get
@@ -9737,8 +9738,8 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="groupName">The name of the group which shall be checked</param>
             ''' <returns>True if the user is a member, otherwise False</returns>
             Public Function IsMember(ByVal groupName As String) As Boolean
-                For MyCounter As Integer = 0 To Me.MembershipsByRule(True).Effective.Length - 1
-                    If LCase(Me.MembershipsByRule(True).Effective(MyCounter).Name) = LCase(groupName) Then
+                For MyCounter As Integer = 0 To Me.MembershipsByRule().Effective.Length - 1
+                    If LCase(Me.MembershipsByRule().Effective(MyCounter).Name) = LCase(groupName) Then
                         Return True
                     End If
                 Next
@@ -9750,8 +9751,8 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="groupID">The ID of the group which shall be checked</param>
             ''' <returns>True if the user is a member, otherwise False</returns>
             Public Function IsMember(ByVal groupID As Integer) As Boolean
-                For MyCounter As Integer = 0 To Me.MembershipsByRule(True).Effective.Length - 1
-                    If Me.MembershipsByRule(True).Effective(MyCounter).ID = groupID Then
+                For MyCounter As Integer = 0 To Me.MembershipsByRule().Effective.Length - 1
+                    If Me.MembershipsByRule().Effective(MyCounter).ID = groupID Then
                         Return True
                     End If
                 Next
@@ -10395,31 +10396,7 @@ Namespace CompuMaster.camm.WebManager
                             ReDim Preserve _Users(MyUsers.Rows.Count - 1)
                             Dim MyCounter As Integer = 0
                             For Each MyDataRow As DataRow In MyUsers.Rows
-                                _Users(MyCounter) = New CompuMaster.camm.WebManager.WMSystem.UserInformation(
-                                                CType(MyDataRow("ID"), Long),
-                                                CType(MyDataRow("LoginName"), String),
-                                                CType(MyDataRow("E-Mail"), String),
-                                                False,
-                                                Utils.Nz(MyDataRow("Company"), CType(Nothing, String)),
-                                                CType(IIf(Convert.ToString(Utils.Nz(MyDataRow("Anrede"), "")) = "", Sex.Undefined, IIf(Convert.ToString(Utils.Nz(MyDataRow("Anrede"), "")) = "Mr.", Sex.Masculine, Sex.Feminine)), Sex),
-                                                Utils.Nz(MyDataRow("Namenszusatz"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("Vorname"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("Nachname"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("Titel"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("Strasse"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("PLZ"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("Ort"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("State"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("Land"), CType(Nothing, String)),
-                                                CType(MyDataRow("1stPreferredLanguage"), Integer),
-                                                Utils.Nz(MyDataRow("2ndPreferredLanguage"), 0),
-                                                Utils.Nz(MyDataRow("3rdPreferredLanguage"), 0),
-                                                CType(MyDataRow("LoginDisabled"), Boolean),
-                                                Not IsDBNull(MyDataRow("LoginLockedTill")),
-                                                False,
-                                                CType(MyDataRow("AccountAccessability"), Integer),
-                                                _WebManager,
-                                                Nothing)
+                                _Users(MyCounter) = New CompuMaster.camm.WebManager.WMSystem.UserInformation(MyDataRow, _WebManager)
                                 If _Users(MyCounter).Gender = Sex.Undefined AndAlso (_Users(MyCounter).FirstName = Nothing OrElse _Users(MyCounter).LastName = Nothing) Then
                                     'Regard it as a group of persons without a specific name
                                     _Users(MyCounter).Gender = Sex.MissingNameOrGroupOfPersons
@@ -10450,12 +10427,29 @@ Namespace CompuMaster.camm.WebManager
             Dim _Description As String
             Dim _IsSystemGroup As Boolean
 
+            ''' <summary>
+            ''' Create a new instance of group information
+            ''' </summary>
+            ''' <param name="GroupID"></param>
+            ''' <param name="InternalName"></param>
+            ''' <param name="Description"></param>
+            ''' <param name="IsSystemGroup"></param>
+            ''' <param name="WebManager"></param>
             Friend Sub New(ByVal GroupID As Integer, ByVal InternalName As String, ByVal Description As String, ByVal IsSystemGroup As Boolean, ByRef WebManager As CompuMaster.camm.WebManager.WMSystem)
                 _ID = GroupID
                 _Name = InternalName
                 _Description = Description
                 _IsSystemGroup = IsSystemGroup
                 _WebManager = WebManager
+            End Sub
+
+            ''' <summary>
+            '''     Assign properties of a group from a table row of the system database
+            ''' </summary>
+            ''' <param name="dataRow">The row from the data table containing the full user data</param>
+            ''' <param name="webManager">The current instance of camm Web-Manager</param>
+            Friend Sub New(dataRow As DataRow, webManager As WMSystem)
+                Me.New(CType(dataRow("ID"), Integer), CType(dataRow("Name"), String), Utils.Nz(dataRow("Description"), CType(Nothing, String)), CType(IIf(CType(dataRow("SystemGroup"), Integer) <> 0, True, False), Boolean), webManager)
             End Sub
 
             ''' <summary>
@@ -10634,7 +10628,7 @@ Namespace CompuMaster.camm.WebManager
             ''' <value></value>
             <Obsolete("Use MembersByRule instead")> Public ReadOnly Property Members() As CompuMaster.camm.WebManager.WMSystem.UserInformation()
                 Get
-                    Return MembersByRule(True).Effective
+                    Return MembersByRule().Effective
                 End Get
             End Property
 
@@ -10642,64 +10636,10 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             ''' Memberships of the current user by rule-set
             ''' </summary>
-            Public ReadOnly Property MembersByRule(alsoClonedMembers As Boolean) As Security.MemberItemsByRule
+            Public ReadOnly Property MembersByRule() As Security.MemberItemsByRule
                 Get
                     If _MembersByRule Is Nothing Then
-                        Dim sqlClauseCloneRule As String
-                        If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_MembershipsWithSupportForSystemAndCloneRule) >= 0 Then 'Newer
-                            If alsoClonedMembers Then
-                                sqlClauseCloneRule = ""
-                            Else
-                                sqlClauseCloneRule = " AND memberships.IsCloneRule = 0"
-                            End If
-                        Else
-                            sqlClauseCloneRule = ""
-                        End If
-                        Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
-                        Dim MyCmd As New SqlCommand("", MyConn)
-                        MyCmd.CommandType = CommandType.Text
-                        If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                            MyCmd.CommandText = "Select benutzer.*, memberships.IsDenyRule From memberships inner Join benutzer On memberships.id_user = benutzer.id Where memberships.id_group = @ID " & sqlClauseCloneRule
-                        Else
-                            MyCmd.CommandText = "Select benutzer.*, CAST(0 AS bit) AS IsDenyRule From memberships inner Join benutzer On memberships.id_user = benutzer.id Where memberships.id_group = @ID"
-                        End If
-                        MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = _ID
-                        Dim MemberUsers As DataTable = Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "MemberUsers")
-                        Dim AllowRuleMemberGroups As New ArrayList
-                        Dim DenyRuleMemberGroups As New ArrayList
-                        For MyCounter As Integer = 0 To MemberUsers.Rows.Count - 1
-                            Dim MyDataRow As DataRow = MemberUsers.Rows(MyCounter)
-                            Dim usr As New CompuMaster.camm.WebManager.WMSystem.UserInformation(CType(MyDataRow("ID"), Long),
-                                                CType(MyDataRow("LoginName"), String),
-                                                CType(MyDataRow("E-Mail"), String),
-                                                False,
-                                                Utils.Nz(MyDataRow("Company"), CType(Nothing, String)),
-                                                CType(IIf(Convert.ToString(Utils.Nz(MyDataRow("Anrede"), "")) = "", Sex.Undefined, IIf(Convert.ToString(Utils.Nz(MyDataRow("Anrede"), "")) = "Mr.", Sex.Masculine, Sex.Feminine)), Sex),
-                                                Utils.Nz(MyDataRow("Namenszusatz"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("Vorname"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("Nachname"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("Titel"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("Strasse"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("PLZ"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("Ort"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("State"), CType(Nothing, String)),
-                                                Utils.Nz(MyDataRow("Land"), CType(Nothing, String)),
-                                                CType(MyDataRow("1stPreferredLanguage"), Integer),
-                                                Utils.Nz(MyDataRow("2ndPreferredLanguage"), 0),
-                                                Utils.Nz(MyDataRow("3rdPreferredLanguage"), 0),
-                                                CType(MyDataRow("LoginDisabled"), Boolean),
-                                                Not IsDBNull(MyDataRow("LoginLockedTill")),
-                                                False,
-                                                CType(MyDataRow("AccountAccessability"), Integer),
-                                                _WebManager,
-                                                Nothing)
-                            If Utils.Nz(MyDataRow("IsDenyRule"), False) = False Then
-                                AllowRuleMemberGroups.Add(usr)
-                            Else
-                                DenyRuleMemberGroups.Add(usr)
-                            End If
-                        Next
-                        _MembersByRule = New Security.MemberItemsByRule(CType(AllowRuleMemberGroups.ToArray(GetType(UserInformation)), UserInformation()), CType(DenyRuleMemberGroups.ToArray(GetType(UserInformation)), UserInformation()))
+                        _MembersByRule = New Security.MemberItemsByRule(_WebManager, _ID)
                     End If
                     Return _MembersByRule
                 End Get
@@ -14136,10 +14076,10 @@ Namespace CompuMaster.camm.WebManager
                             "    WHERE Type IN (" & SqlFlagsEnumeration.ToString & ")" & vbNewLine &
                             "    AND ID_User IN " & vbNewLine &
                             "    (" & vbNewLine &
-                            "        SELECT [dbo].[view_Memberships_Effective_with_PublicNAnonymous].ID_User" & vbNewLine &
+                            "        SELECT [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].ID_User" & vbNewLine &
                             "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine &
-                            "            INNER JOIN [dbo].[view_Memberships_Effective_with_PublicNAnonymous]" & vbNewLine &
-                            "                ON [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = [dbo].[view_Memberships_Effective_with_PublicNAnonymous].ID_Group" & vbNewLine &
+                            "            INNER JOIN [dbo].[Memberships_EffectiveRulesWithClonesNthGrade]" & vbNewLine &
+                            "                ON [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].ID_Group" & vbNewLine &
                             "        WHERE [dbo].[ApplicationsRightsByGroup].isdenyrule = 0" & vbNewLine &
                             "            AND [dbo].[ApplicationsRightsByGroup].ID_Application = @SecObjID" & vbNewLine &
                             "            AND [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine &
@@ -15212,7 +15152,7 @@ Namespace CompuMaster.camm.WebManager
                 ReDim Preserve _GroupInfos(MyDataSet.Tables("Groups").Rows.Count - 1)
                 Dim MyCounter As Integer = 0
                 For Each MyDataRow As DataRow In MyDataSet.Tables("Groups").Rows
-                    _GroupInfos(MyCounter) = New CompuMaster.camm.WebManager.WMSystem.GroupInformation(CType(MyDataRow("ID"), Integer), CType(MyDataRow("Name"), String), Utils.Nz(MyDataRow("Description"), CType(Nothing, String)), CType(IIf(CType(MyDataRow("SystemGroup"), Integer) <> 0, True, False), Boolean), _WebManager)
+                    _GroupInfos(MyCounter) = New CompuMaster.camm.WebManager.WMSystem.GroupInformation(MyDataRow, _WebManager)
                     MyCounter += 1
                 Next
             Else
@@ -15798,7 +15738,7 @@ Namespace CompuMaster.camm.WebManager
             'Get parameter value and append parameter
             Dim MyCmd As SqlCommand
             If Setup.DatabaseUtils.Version(Me, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                MyCmd = New SqlCommand("SELECT ID_User FROM view_Memberships_Effective_wo_PublicNAnonymous WHERE ID_Group = 6 AND ID_User = @UserID", New SqlConnection(Me.ConnectionString))
+                MyCmd = New SqlCommand("SELECT ID_User FROM Memberships_EffectiveRulesWithClonesNthGrade WHERE ID_Group = 6 AND ID_User = @UserID", New SqlConnection(Me.ConnectionString))
             Else
                 MyCmd = New SqlCommand("SELECT ID_User FROM Memberships WHERE ID_Group = 6 AND ID_User = @UserID", New SqlConnection(Me.ConnectionString))
             End If
@@ -15833,7 +15773,7 @@ Namespace CompuMaster.camm.WebManager
 
             Try
                 If Setup.DatabaseUtils.Version(Me, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                    MyCmd = New SqlCommand("SELECT ID_User FROM view_Memberships_Effective_with_PublicNAnonymous INNER JOIN Gruppen ON view_Memberships_Effective_with_PublicNAnonymous.ID_Group = Gruppen.ID WHERE Gruppen.Name = @GroupName AND ID_User= @UserID", New SqlConnection(ConnectionString))
+                    MyCmd = New SqlCommand("SELECT ID_User FROM Memberships_EffectiveRulesWithClonesNthGrade INNER JOIN Gruppen ON Memberships_EffectiveRulesWithClonesNthGrade.ID_Group = Gruppen.ID WHERE Gruppen.Name = @GroupName AND ID_User= @UserID", New SqlConnection(ConnectionString))
                 Else
                     MyCmd = New SqlCommand("SELECT ID_User FROM Memberships INNER JOIN Gruppen ON Memberships.ID_Group = Gruppen.ID WHERE Gruppen.Name = @GroupName AND ID_User= @UserID", New SqlConnection(ConnectionString))
                 End If
@@ -15891,7 +15831,7 @@ Namespace CompuMaster.camm.WebManager
             'Get parameter value and append parameter
             Dim MyCmd As SqlCommand
             If Setup.DatabaseUtils.Version(Me, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                MyCmd = New SqlCommand("SELECT ID_User FROM view_Memberships_Effective_wo_PublicNAnonymous WHERE ID_Group IN (6, 7) AND ID_User = @UserID", New SqlConnection(Me.ConnectionString))
+                MyCmd = New SqlCommand("SELECT ID_User FROM Memberships_EffectiveRulesWithClonesNthGrade WHERE ID_Group IN (6, 7) AND ID_User = @UserID", New SqlConnection(Me.ConnectionString))
             Else
                 MyCmd = New SqlCommand("SELECT ID_User FROM Memberships WHERE ID_Group IN (6, 7) AND ID_User = @UserID", New SqlConnection(Me.ConnectionString))
             End If

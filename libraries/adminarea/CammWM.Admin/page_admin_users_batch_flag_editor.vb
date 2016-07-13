@@ -163,7 +163,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
                 If gi.IsSystemGroupByServerGroup = False Then
                     Dim LI As New ListItem
                     LI.Value = gi.Name
-                    LI.Text = gi.Name & " (" & gi.MembersByRule(True).AllowRule.Length & ")"
+                    LI.Text = gi.Name & " (" & gi.MembersByRule().Effective.Length & ")"
                     If gi.Description <> Nothing Then LI.Attributes.Add("title", gi.Description)
                     Me.ddlCwmGroupnames.Items.Add(LI)
                 End If
@@ -252,48 +252,38 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
             End If
         End Sub
 
+        ''' <summary>
+        ''' The list of authorized users for an application by using the effective rules
+        ''' </summary>
+        ''' <param name="securityObjectID"></param>
+        ''' <returns></returns>
         Private Function GetUsersBySecurityObjectID(ByVal securityObjectID As Integer) As CompuMaster.camm.WebManager.WMSystem.UserInformation()
             Dim Sql As String
             If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                Sql = "SELECT ID_User " & vbNewLine & _
-                    "FROM (" & vbNewLine & _
-                    "    SELECT [ID_User] " & vbNewLine & _
-                    "    FROM [dbo].[view_Memberships_Effective_with_PublicNAnonymous] " & vbNewLine & _
-                    "    WHERE [ID_Group] IN " & vbNewLine & _
-                    "        ( " & vbNewLine & _
-                    "        SELECT ID_Group " & vbNewLine & _
-                    "        FROM [dbo].[view_ApplicationRights] " & vbNewLine & _
-                    "        WHERE ID_Group Is NOT Null " & vbNewLine & _
-                    "            AND ID_Application = @AppID" & vbNewLine & _
-                    "        )" & vbNewLine & _
-                    "    UNION ALL" & vbNewLine & _
-                    "    SELECT ID_User " & vbNewLine & _
-                    "    FROM [dbo].[view_ApplicationRights] " & vbNewLine & _
-                    "    WHERE ID_User IS NOT NULL " & vbNewLine & _
-                    "        AND ID_Application = @AppID" & vbNewLine & _
-                    "    ) AS UserList " & vbNewLine & _
-                    "GROUP BY ID_User " & vbNewLine & _
-                    "ORDER BY ID_User "
+                Sql = "SELECT ID_User " & vbNewLine &
+                    "FROM dbo.ApplicationsRightsByUser_RulesCumulativeWithInherition " & vbNewLine &
+                    "WHERE ID_SecurityObject = @AppID" & vbNewLine &
+                    "GROUP BY ID_User "
             Else
-                Sql = "SELECT ID_User " & vbNewLine & _
-                    "FROM (" & vbNewLine & _
-                    "    SELECT [ID_User] " & vbNewLine & _
-                    "    FROM [dbo].[view_Memberships_CummulatedWithAnonymous] " & vbNewLine & _
-                    "    WHERE [ID_Group] IN " & vbNewLine & _
-                    "        ( " & vbNewLine & _
-                    "        SELECT ID_Group " & vbNewLine & _
-                    "        FROM [dbo].[view_ApplicationRights] " & vbNewLine & _
-                    "        WHERE ID_Group Is NOT Null " & vbNewLine & _
-                    "            AND ID_Application = @AppID" & vbNewLine & _
-                    "        )" & vbNewLine & _
-                    "    UNION ALL" & vbNewLine & _
-                    "    SELECT ID_User " & vbNewLine & _
-                    "    FROM [dbo].[view_ApplicationRights] " & vbNewLine & _
-                    "    WHERE ID_User IS NOT NULL " & vbNewLine & _
-                    "        AND ID_Application = @AppID" & vbNewLine & _
-                    "    ) AS UserList " & vbNewLine & _
-                    "GROUP BY ID_User " & vbNewLine & _
-                    "ORDER BY ID_User "
+                Sql = "SELECT ID_User " & vbNewLine &
+                    "FROM (" & vbNewLine &
+                    "    SELECT [ID_User] " & vbNewLine &
+                    "    FROM [dbo].[view_Memberships_CummulatedWithAnonymous] " & vbNewLine &
+                    "    WHERE [ID_Group] IN " & vbNewLine &
+                    "        ( " & vbNewLine &
+                    "        SELECT ID_Group " & vbNewLine &
+                    "        FROM [dbo].[view_ApplicationRights] " & vbNewLine &
+                    "        WHERE ID_Group Is NOT Null " & vbNewLine &
+                    "            AND ID_Application = @AppID" & vbNewLine &
+                    "        )" & vbNewLine &
+                    "    UNION ALL" & vbNewLine &
+                    "    SELECT ID_User " & vbNewLine &
+                    "    FROM [dbo].[view_ApplicationRights] " & vbNewLine &
+                    "    WHERE ID_User IS NOT NULL " & vbNewLine &
+                    "        AND ID_Application = @AppID" & vbNewLine &
+                    "    ) AS UserList " & vbNewLine &
+                    "WHERE ID_User IS NOT NULL" & vbNewLine &
+                    "GROUP BY ID_User "
             End If
 
             Dim Result As New ArrayList
@@ -305,9 +295,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
             Dim ResultDT As DataTable = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(SqlCmd, Automations.AutoOpenAndCloseAndDisposeConnection, "UserIDs")
 
             For Each row As DataRow In ResultDT.Rows
-                If Not row(0) Is DBNull.Value Then
-                    Result.Add(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(row(0)), Me.cammWebManager))
-                End If
+                Result.Add(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(row(0)), Me.cammWebManager))
             Next
 
             Return CType(Result.ToArray(GetType(WMSystem.UserInformation)), WMSystem.UserInformation())
@@ -467,7 +455,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
                     If Me.ddlCwmApps.SelectedValue <> Nothing Then
                         Me.Session("CWM.Admin.BatchUserFlagEditor") = Me.GetUsersBySecurityObjectID(CInt(Me.ddlCwmApps.SelectedValue))
                     ElseIf Me.ddlCwmGroupnames.SelectedValue <> Nothing Then
-                        Me.Session("CWM.Admin.BatchUserFlagEditor") = Me.cammWebManager.System_GetGroupInfo(Me.ddlCwmGroupnames.SelectedValue).MembersByRule(True).AllowRule
+                        Me.Session("CWM.Admin.BatchUserFlagEditor") = Me.cammWebManager.System_GetGroupInfo(Me.ddlCwmGroupnames.SelectedValue).MembersByRule().Effective
                     Else
                         Me.Session("CWM.Admin.BatchUserFlagEditor") = Me.cammWebManager.System_GetUserInfos(Me.cammWebManager.System_GetUserIDs())
                     End If

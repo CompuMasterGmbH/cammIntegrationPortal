@@ -62,12 +62,6 @@ ADD IsSystemRule bit NOT NULL DEFAULT (0)
 GO
 
 <%IGNORE_ERRORS%>
--- Add column IsCloneRule
-ALTER TABLE [dbo].[Memberships]
-ADD IsCloneRule bit NOT NULL DEFAULT (0)
-GO
-
-<%IGNORE_ERRORS%>
 -- Add column ServerGroupID for later feature for SplitAppsIntoNav+SecObj milestone
 ALTER TABLE [dbo].[Log]
 ADD ServerGroupID int NULL
@@ -156,4 +150,71 @@ CREATE TABLE [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup](
 	[ID] ASC
  )
 ) ON [PRIMARY]
+GO
+
+--Pre-Staging tables for memberships
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Memberships_DenyRules]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+DROP TABLE [dbo].[Memberships_DenyRules]
+GO
+CREATE TABLE [dbo].[Memberships_DenyRules](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ID_Group] [int] NOT NULL,
+	[ID_User] [int] NOT NULL,
+	[ID_Memberships] [int] NOT NULL,
+ CONSTRAINT [PK_Memberships_DenyRules] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)
+) ON [PRIMARY]
+GO
+
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Memberships_EffectiveRules]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+DROP TABLE [dbo].[Memberships_EffectiveRules]
+GO
+CREATE TABLE [dbo].[Memberships_EffectiveRules](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ID_Group] [int] NOT NULL,
+	[ID_User] [int] NOT NULL,
+	[ID_Memberships_ByAllowRule] [int] NOT NULL,
+ CONSTRAINT [PK_Memberships_EffectiveRules] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)
+) ON [PRIMARY]
+GO
+
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Memberships_EffectiveRulesWithClones1stGrade]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+DROP TABLE [dbo].[Memberships_EffectiveRulesWithClones1stGrade]
+GO
+CREATE TABLE [dbo].[Memberships_EffectiveRulesWithClones1stGrade](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ID_Group] [int] NOT NULL,
+	[ID_User] [int] NOT NULL,
+	[ID_Memberships_ByAllowRule] [int] NOT NULL,
+	[ID_Memberships_EffectiveRules] [int] NOT NULL,
+	[ID_MembershipsClones] [int] NULL,
+ CONSTRAINT [PK_Memberships_EffectiveRulesWithClones1stGrade] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)
+) ON [PRIMARY]
+GO
+
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Memberships_EffectiveRulesWithClonesNthGrade]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+DROP TABLE [dbo].[Memberships_EffectiveRulesWithClonesNthGrade]
+GO
+CREATE TABLE [dbo].[Memberships_EffectiveRulesWithClonesNthGrade](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ID_Group] [int] NOT NULL,
+	[ID_User] [int] NOT NULL,
+	[ID_Memberships_ByAllowRule] [int] NOT NULL,
+	[ID_Memberships_EffectiveRulesWithClones1stGrade] [int] NOT NULL,
+	[ID_MembershipsClones] [int] NULL,
+ CONSTRAINT [PK_Memberships_EffectiveRulesWithClonesNthGrade] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)
+) ON [PRIMARY]
+GO
+ALTER TABLE dbo.Memberships_EffectiveRulesWithClonesNthGrade SET (LOCK_ESCALATION = TABLE)
 GO

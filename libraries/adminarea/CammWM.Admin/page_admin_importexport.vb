@@ -1380,7 +1380,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     End If
                 Next
                 'Remove unwanted memberships
-                Dim CurrentMemberships As WMSystem.GroupInformation() = user.MembershipsByRule(False).AllowRule
+                Dim CurrentMemberships As WMSystem.GroupInformation() = user.MembershipsByRule().AllowRule
                 If importActionMemberships = ImportBase.ImportActions.FitExact Then
                     For MyCounterIsCurrently As Integer = 0 To CurrentMemberships.Length - 1
                         'Evaluate if wanted membership
@@ -1422,7 +1422,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     End If
                 Next
                 'Remove unwanted memberships
-                Dim CurrentMemberships As WMSystem.GroupInformation() = user.MembershipsByRule(False).DenyRule
+                Dim CurrentMemberships As WMSystem.GroupInformation() = user.MembershipsByRule().DenyRule
                 If importActionMemberships = ImportBase.ImportActions.FitExact Then
                     For MyCounterIsCurrently As Integer = 0 To CurrentMemberships.Length - 1
                         'Evaluate if wanted membership

@@ -622,11 +622,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)), _
                         New SqlParameter("@compare", CLng(cammWebManager.System_IsSecurityMaster("Groups", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))))}
                     Dim mySqlQuery As String
-                    If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_MembershipsWithSupportForSystemAndCloneRule) >= 0 Then 'Newer
-                        mySqlQuery = "DELETE FROM dbo.Memberships WHERE ID=@ID AND IsCloneRule = 0 AND (0 <> @compare OR id_group in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid=@UserID AND TableName = 'Groups' AND AuthorizationType In ('UpdateRelations','Owner')))"
-                    Else
-                        mySqlQuery = "DELETE FROM dbo.Memberships WHERE ID=@ID and (0 <> @compare OR id_group in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid=@UserID AND TableName = 'Groups' AND AuthorizationType In ('UpdateRelations','Owner')))"
-                    End If
+                    mySqlQuery = "DELETE FROM dbo.Memberships WHERE ID=@ID and (0 <> @compare OR id_group in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid=@UserID AND TableName = 'Groups' AND AuthorizationType In ('UpdateRelations','Owner')))"
                     ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), mySqlQuery, CommandType.Text, sqlParams1, Automations.AutoOpenAndCloseAndDisposeConnection)
                     Redirect2URL = "memberships.aspx?GROUPID=" & Request.QueryString("GROUPID")
                 Catch ex As Exception

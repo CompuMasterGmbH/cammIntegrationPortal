@@ -1048,7 +1048,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                     Dim commandText As String
                     If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                        commandText = "SELECT A.ID_USER [ID], (Select   ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname FROM Benutzer Where ID = A.ID_USER) AS [Name] From view_Memberships_Effective_with_PublicNAnonymous A Where ID_Group =  @GroupID" '+ CStr(id_grouporperson.SelectedItem.Id)
+                        commandText = "SELECT A.ID_USER [ID], (Select   ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname FROM Benutzer Where ID = A.ID_USER) AS [Name] From ApplicationsRightsByUser_RulesCumulativeWithInherition AS A Where ID_Group = @GroupID" '+ CStr(id_grouporperson.SelectedItem.Id)
                     Else
                         commandText = "SELECT A.ID_USER [ID], (Select   ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname FROM Benutzer Where ID = A.ID_USER) AS [Name] From Memberships A Where ID_Group =  @GroupID" '+ CStr(id_grouporperson.SelectedItem.Id)
                     End If
@@ -1617,8 +1617,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             For MyUserCounter As Integer = 0 To userAuths.Length - 1
                 Dim FoundInGroupAuth As WMSystem.SecurityObjectAuthorizationForGroup = Nothing
                 For MyGroupCounter As Integer = 0 To groupAuths.Length - 1
-                    For MyGroupMemberCounter As Integer = 0 To groupAuths(MyGroupCounter).GroupInfo.MembersByRule(True).Effective.Length - 1
-                        If userAuths(MyUserCounter).UserID = groupAuths(MyGroupCounter).GroupInfo.MembersByRule(True).Effective(MyGroupMemberCounter).IDLong AndAlso (userAuths(MyUserCounter).ServerGroupID = groupAuths(MyGroupCounter).ServerGroupID OrElse groupAuths(MyGroupCounter).ServerGroupID = 0) Then
+                    For MyGroupMemberCounter As Integer = 0 To groupAuths(MyGroupCounter).GroupInfo.MembersByRule().Effective.Length - 1
+                        If userAuths(MyUserCounter).UserID = groupAuths(MyGroupCounter).GroupInfo.MembersByRule().Effective(MyGroupMemberCounter).IDLong AndAlso (userAuths(MyUserCounter).ServerGroupID = groupAuths(MyGroupCounter).ServerGroupID OrElse groupAuths(MyGroupCounter).ServerGroupID = 0) Then
                             'UserID must be the same - but also the server group ID must be the same or at least the GroupAuth's server group ID must be 0 meaning "applying everywhere"
                             FoundInGroupAuth = groupAuths(MyGroupCounter)
                             Exit For
@@ -1841,7 +1841,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Function GetUsersByAppID(ByVal ID As Integer) As DataTable
             Dim cmd As System.Data.SqlClient.SqlCommand
             If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                cmd = New System.Data.SqlClient.SqlCommand("Select * From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_User from view_Memberships_Effective_with_PublicNAnonymous where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a Group by ID_User", New SqlConnection(cammWebManager.ConnectionString))
+                cmd = New System.Data.SqlClient.SqlCommand("Select * From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_User from ApplicationsRightsByUser_RulesCumulativeWithInherition where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a Group by ID_User", New SqlConnection(cammWebManager.ConnectionString))
             Else
                 cmd = New System.Data.SqlClient.SqlCommand("Select * From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_User from Memberships where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a Group by ID_User", New SqlConnection(cammWebManager.ConnectionString))
             End If

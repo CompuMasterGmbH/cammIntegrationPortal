@@ -613,7 +613,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                     Dim cmd As SqlClient.SqlCommand
                     If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                        cmd = New SqlClient.SqlCommand("Select * From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_User from view_Memberships_Effective_with_PublicNAnonymous where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a GROUP BY ID_User", New SqlConnection(cammWebManager.ConnectionString))
+                        cmd = New SqlClient.SqlCommand("Select * From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_User from Memberships_EffectiveRulesWithClonesNthGrade where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a GROUP BY ID_User", New SqlConnection(cammWebManager.ConnectionString))
                     Else
                         cmd = New SqlClient.SqlCommand("Select * From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_User from Memberships where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a GROUP BY ID_User", New SqlConnection(cammWebManager.ConnectionString))
                     End If

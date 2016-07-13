@@ -982,8 +982,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' Assigns the membership information of the source user to the webform
         ''' </summary>
         Private Sub AssignMembershipsToPnl()
-            Dim MyGroupInfosAllowRule As CompuMaster.camm.WebManager.WMSystem.GroupInformation() = UserInfo.MembershipsByRule(False).AllowRule
-            Dim MyGroupInfosDenyRule As CompuMaster.camm.WebManager.WMSystem.GroupInformation() = UserInfo.MembershipsByRule(False).AllowRule
+            Dim MyGroupInfosAllowRule As CompuMaster.camm.WebManager.WMSystem.GroupInformation() = UserInfo.MembershipsByRule().AllowRule
+            Dim MyGroupInfosDenyRule As CompuMaster.camm.WebManager.WMSystem.GroupInformation() = UserInfo.MembershipsByRule().DenyRule
 
             If (Not MyGroupInfosAllowRule Is Nothing AndAlso MyGroupInfosAllowRule.Length > 0) OrElse (Not MyGroupInfosDenyRule Is Nothing AndAlso MyGroupInfosDenyRule.Length > 0) Then
                 Dim lit As Literal

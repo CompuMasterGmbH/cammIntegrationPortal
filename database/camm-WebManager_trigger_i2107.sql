@@ -417,6 +417,207 @@ BEGIN
 	GROUP BY [dbo].[System_ServerGroups].ID_Group_Anonymous, [dbo].[Benutzer].ID
 END
 GO
+------------------------------------------------------------------------------------------------------------
+-- PRE-CALCULATION OF EFFECTIVE MEMBERSHIPS BASED ON ALLOW AND DENY RULES
+------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID ('dbo.U_Memberships', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.U_Memberships;
+GO
+CREATE TRIGGER [dbo].U_Memberships 
+   ON  [dbo].Memberships 
+   FOR UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	RAISERROR ('Memberships can''t be updated, only inserted or deleted', 16, 1)
+	ROLLBACK TRANSACTION 		
+	RETURN	
+END
+GO
+IF OBJECT_ID ('dbo.ID_Memberships', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.ID_Memberships;
+GO
+CREATE TRIGGER [dbo].ID_Memberships 
+   ON  [dbo].Memberships
+   FOR INSERT,DELETE,UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	-- 1st, forward all row deletions
+	DELETE [dbo].[Memberships_EffectiveRules]
+	FROM [dbo].[Memberships_EffectiveRules]
+		INNER JOIN deleted
+			ON [dbo].[Memberships_EffectiveRules].[ID_Memberships_ByAllowRule] = deleted.ID;
+	DELETE [dbo].[Memberships_DenyRules]
+	FROM [dbo].[Memberships_DenyRules]
+		INNER JOIN deleted
+			ON [dbo].[Memberships_DenyRules].[ID_Memberships] = deleted.ID;
+	-- 2nd, forward all row inserts
+	INSERT INTO dbo.[Memberships_EffectiveRules] (ID_Group, ID_User, ID_Memberships_ByAllowRule)
+	SELECT inserted.ID_Group, inserted.ID_User, inserted.ID
+	FROM inserted
+		LEFT JOIN [dbo].[Memberships_DenyRules]
+			ON inserted.ID_Group = [dbo].[Memberships_DenyRules].ID_Group
+				AND inserted.ID_User = [dbo].[Memberships_DenyRules].ID_User
+	WHERE IsDenyRule = 0
+		AND [dbo].[Memberships_DenyRules].ID_Group IS NULL;
+	INSERT INTO dbo.[Memberships_DenyRules] (ID_Group, ID_User, ID_Memberships)
+	SELECT ID_Group, ID_User, ID
+	FROM inserted
+	WHERE IsDenyRule <> 0;
+END
+GO
+IF OBJECT_ID ('dbo.U_Memberships_DenyRules', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.U_Memberships_DenyRules;
+GO
+CREATE TRIGGER [dbo].U_Memberships_DenyRules 
+   ON  [dbo].Memberships_DenyRules 
+   FOR UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	RAISERROR ('Membership Deny Rules can''t be updated, only inserted or deleted', 16, 1)
+	ROLLBACK TRANSACTION 		
+	RETURN	
+END
+GO
+IF OBJECT_ID ('dbo.ID_Memberships_DenyRules', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.ID_Memberships_DenyRules;
+GO
+CREATE TRIGGER [dbo].ID_Memberships_DenyRules 
+   ON  [dbo].Memberships_DenyRules 
+   FOR INSERT,DELETE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	-- 1st, forward all insertions as row deletions
+	DELETE [dbo].[Memberships_EffectiveRules]
+	FROM [dbo].[Memberships_EffectiveRules]
+		INNER JOIN inserted
+			ON inserted.ID_Group = [dbo].[Memberships_EffectiveRules].ID_Group
+				AND inserted.ID_User = [dbo].[Memberships_EffectiveRules].ID_User
+	-- 2nd, forward all deletions as row inserts (if any allow rules start to apply)
+	INSERT INTO dbo.[Memberships_EffectiveRules] (ID_Group, ID_User, ID_Memberships_ByAllowRule)
+	SELECT [dbo].[Memberships].ID_Group, [dbo].[Memberships].ID_User, [dbo].[Memberships].ID
+	FROM deleted
+		INNER JOIN [dbo].[Memberships]
+			ON deleted.ID_Group = [dbo].[Memberships].ID_Group
+				AND deleted.ID_User = [dbo].[Memberships].ID_User
+		LEFT JOIN [dbo].[Memberships_DenyRules]
+			ON [dbo].[Memberships].ID_Group = [dbo].[Memberships_DenyRules].ID_Group
+				AND [dbo].[Memberships].ID_User = [dbo].[Memberships_DenyRules].ID_User
+		LEFT JOIN [dbo].[Memberships_EffectiveRules]
+			ON [dbo].[Memberships].ID_Group = [dbo].[Memberships_EffectiveRules].ID_Group
+				AND [dbo].[Memberships].ID_User = [dbo].[Memberships_EffectiveRules].ID_User
+	WHERE IsDenyRule = 0 -- only add allow rules
+		AND [dbo].[Memberships_DenyRules].ID_Group IS NULL -- only insert rows which haven't got a deny rule in place
+		AND [dbo].[Memberships_EffectiveRules].ID_Group IS NULL -- only insert rows which haven't already existed (e.g. by another rule)
+	;
+END
+GO
+IF OBJECT_ID ('dbo.U_MembershipsClones', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.U_MembershipsClones;
+GO
+CREATE TRIGGER [dbo].U_MembershipsClones 
+   ON  [dbo].MembershipsClones 
+   FOR UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	RAISERROR ('Membership Clones Rules can''t be updated, only inserted or deleted', 16, 1)
+	ROLLBACK TRANSACTION 		
+	RETURN	
+END
+GO
+IF OBJECT_ID ('dbo.ID_MembershipsClones', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.ID_MembershipsClones;
+GO
+CREATE TRIGGER [dbo].ID_MembershipsClones 
+   ON  [dbo].MembershipsClones 
+   FOR INSERT,DELETE
+AS 
+BEGIN
+	DECLARE @InsertedDenyRules int
+	SELECT @InsertedDenyRules = COUNT(*) FROM inserted WHERE IsDenyRule <> 0;
+	IF IsNull(@InsertedDenyRules, 0) > 0
+		BEGIN
+			SET NOCOUNT ON;
+			RAISERROR ('Membership Clones Rules for DenyRules not supported, yet', 16, 1)
+			ROLLBACK TRANSACTION 		
+			RETURN	
+		END
+END
+GO
+IF OBJECT_ID ('dbo.ID_Memberships_EffectiveRules', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.ID_Memberships_EffectiveRules
+GO
+CREATE TRIGGER [dbo].ID_Memberships_EffectiveRules
+   ON  [dbo].Memberships_EffectiveRules
+   FOR INSERT,DELETE,UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	-- 1st, forward all row deletions
+	DELETE [dbo].[Memberships_EffectiveRulesWithClones1stGrade]
+	FROM [dbo].[Memberships_EffectiveRulesWithClones1stGrade]
+		INNER JOIN deleted
+			ON [dbo].[Memberships_EffectiveRulesWithClones1stGrade].[ID_Memberships_EffectiveRules] = deleted.ID;
+		-- TODO on delete: what has to happen when Deny-Cloning-Rules exist? Recalculate AllowRule?!?
+	-- 2nd, forward all row inserts
+	-- 2a. direct effective memberships
+	INSERT INTO dbo.[Memberships_EffectiveRulesWithClones1stGrade] (ID_Group, ID_User, [ID_Memberships_EffectiveRules], [ID_Memberships_ByAllowRule], [ID_MembershipsClones])
+	SELECT inserted.ID_Group, inserted.ID_User, inserted.ID, inserted.ID_Memberships_ByAllowRule, NULL
+	FROM inserted;
+	-- 2b. cloned effective memberships by Allow-Rule
+	INSERT INTO dbo.[Memberships_EffectiveRulesWithClones1stGrade] (ID_Group, ID_User, [ID_Memberships_EffectiveRules], [ID_Memberships_ByAllowRule], [ID_MembershipsClones])
+	SELECT [dbo].[MembershipsClones].ID_Group, inserted.ID_User, inserted.ID, inserted.ID_Memberships_ByAllowRule, [dbo].[MembershipsClones].ID
+	FROM inserted
+		INNER JOIN [dbo].[MembershipsClones] ON [dbo].[MembershipsClones].ID_ClonedGroup = inserted.ID_Group
+		LEFT JOIN 
+			(
+			SELECT ID_Group, ID_ClonedGroup
+			FROM [dbo].[MembershipsClones] 
+			WHERE IsDenyRule <> 0
+			) AS DenyCloningRules 
+				ON DenyCloningRules.ID_ClonedGroup = [dbo].[MembershipsClones].ID_ClonedGroup
+					AND DenyCloningRules.ID_Group = [dbo].[MembershipsClones].ID_Group
+	WHERE [dbo].[MembershipsClones].IsDenyRule = 0 -- only Cloning-Allowed-Rules
+		AND DenyCloningRules.ID_ClonedGroup IS NULL -- only on missing Cloning-Denied-Rules
+	;
+	-- 2c. cloned effective memberships by Deny-Rule
+	-- TODO on insert: what has to happen when Deny-Cloning-Rules exist? Delete what from what? Restore which Allow-Rules?
+END
+GO
+IF OBJECT_ID ('dbo.ID_Memberships_EffectiveRulesWithClones1stGrade', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.ID_Memberships_EffectiveRulesWithClones1stGrade;
+GO
+CREATE TRIGGER [dbo].ID_Memberships_EffectiveRulesWithClones1stGrade 
+   ON  [dbo].[Memberships_EffectiveRulesWithClones1stGrade] 
+   FOR INSERT,DELETE
+AS 
+BEGIN
+	-- 1st, forward all row deletions
+	DELETE [dbo].[Memberships_EffectiveRulesWithClonesNthGrade]
+	FROM [dbo].[Memberships_EffectiveRulesWithClonesNthGrade]
+		INNER JOIN deleted
+			ON [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].[ID_Memberships_EffectiveRulesWithClones1stGrade] = deleted.ID;
+	-- TODO on delete: what has to happen when cloning of 1 of the many n cloning-levels has been revoked? Delete? Recalculate ?!?
+
+	-- 2nd, forward all row inserts
+	INSERT INTO dbo.[Memberships_EffectiveRulesWithClonesNthGrade] (ID_Group, ID_User, [ID_Memberships_EffectiveRulesWithClones1stGrade], [ID_Memberships_ByAllowRule], [ID_MembershipsClones])
+	SELECT inserted.ID_Group, inserted.ID_User, inserted.ID, inserted.ID_Memberships_ByAllowRule, [ID_MembershipsClones]
+	FROM inserted;
+	-- TODO on insert: what has to happen when cloning of has been added for a group which is 1 of the many n cloning-levels? Delete what from what? Insert what into what? Restore what?
+
+END
+GO
+-- Initial reset/filling of pre-calculated effective memberships
+ALTER TABLE dbo.Memberships DISABLE TRIGGER U_Memberships;
+UPDATE dbo.Memberships
+SET ReleasedBy = ReleasedBy;
+ALTER TABLE dbo.Memberships ENABLE TRIGGER U_Memberships;
+GO
+
 -- =========================================================================================================
 -- ===== CONTINUEOUS DATA INTEGRITY: on DELETE, do the required cleanup on depending foreign key rows
 -- =========================================================================================================
