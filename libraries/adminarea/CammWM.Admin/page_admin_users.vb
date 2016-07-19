@@ -1454,6 +1454,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
             End Get
         End Property
+
+        Private _DatabaseServerDateTime As DateTime
+        Protected ReadOnly Property DatabaseServerDateTime As DateTime
+            Get
+                If _DatabaseServerDateTime = Nothing Then
+                    _DatabaseServerDateTime = Me.CurrentDatabaseDateTime
+                End If
+                Return _DatabaseServerDateTime
+            End Get
+        End Property
 #End Region
 
 #Region "Page Events"

@@ -261,12 +261,24 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(connection)
         End Sub
 
+        ''' <summary>
+        ''' The current version of the database instance
+        ''' </summary>
+        ''' <returns></returns>
         Protected Friend Function CurrentDbVersion() As Version
             Static MyDBVersion As Version
             If MyDBVersion Is Nothing Then
                 MyDBVersion = cammWebManager.System_DBVersion_Ex
             End If
             Return MyDBVersion
+        End Function
+
+        ''' <summary>
+        ''' The date/time as used by the database server
+        ''' </summary>
+        ''' <returns></returns>
+        Protected Function CurrentDatabaseDateTime() As DateTime
+            Return CType(ExecuteScalar(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SELECT GETDATE();", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), DateTime)
         End Function
 
     End Class

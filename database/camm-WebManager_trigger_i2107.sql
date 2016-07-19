@@ -3,6 +3,82 @@ IF OBJECT_ID ('dbo.IUD_Apps2SecObjAndNavItems', 'TR') IS NOT NULL
    DROP TRIGGER dbo.IUD_Apps2SecObjAndNavItems;
 GO
 -- =========================================================================================================
+-- ===== CIRCULAR REFERENCES CHECKS
+-- =========================================================================================================
+IF OBJECT_ID ('dbo.IU_MembershipsClones_CircularReferences', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.IU_MembershipsClones_CircularReferences;
+GO
+CREATE TRIGGER [dbo].IU_MembershipsClones_CircularReferences 
+   ON  [dbo].MembershipsClones 
+   FOR INSERT,DELETE
+AS 
+BEGIN
+	DECLARE @InsertedCircularReferences int
+	DECLARE @InvalidSampleValue int
+	DECLARE @ErrorMessage nvarchar(120)
+	SELECT @InsertedCircularReferences = COUNT(*) FROM inserted WHERE [ID_Group] = [ID_ClonedGroup];
+	IF IsNull(@InsertedCircularReferences, 0) > 0
+		BEGIN
+			SET NOCOUNT ON;
+			SELECT TOP 1 @InvalidSampleValue = ID_Group FROM inserted
+			SET @ErrorMessage = 'Cannot add circular references into table MembershipsClones: ID ' + CAST(@InvalidSampleValue AS nvarchar(20))
+			RAISERROR (@ErrorMessage, 16, 1)
+			ROLLBACK TRANSACTION 		
+			RETURN	
+		END
+END
+GO
+IF OBJECT_ID ('dbo.IU_ApplicationsRights_Inheriting_CircularReferences', 'TR') IS NOT NULL
+   DROP TRIGGER [dbo].[IU_ApplicationsRights_Inheriting_CircularReferences];
+GO
+CREATE TRIGGER [dbo].IU_ApplicationsRights_Inheriting_CircularReferences 
+   ON  [dbo].ApplicationsRights_Inheriting 
+   FOR INSERT,DELETE
+AS 
+BEGIN
+	DECLARE @InsertedCircularReferences int
+	DECLARE @InvalidSampleValue int
+	DECLARE @ErrorMessage nvarchar(120)
+	SELECT @InsertedCircularReferences = COUNT(*) FROM inserted WHERE [ID_Inheriting] = [ID_Source];
+	IF IsNull(@InsertedCircularReferences, 0) > 0
+		BEGIN
+			SET NOCOUNT ON;
+			SELECT TOP 1 @InvalidSampleValue = [ID_Source] FROM inserted
+			SET @ErrorMessage = 'Cannot add circular references into table ApplicationsRights_Inheriting: ID ' + CAST(@InvalidSampleValue AS nvarchar(20))
+			RAISERROR (@ErrorMessage, 16, 1)
+			ROLLBACK TRANSACTION 		
+			RETURN	
+		END
+END
+GO
+-- Execute checks on existing data to prevent stepping forward in case of critical errors
+DECLARE @InsertedCircularReferences int
+DECLARE @InvalidSampleValue int
+DECLARE @ErrorMessage nvarchar(120)
+
+SELECT @InsertedCircularReferences = COUNT(*) FROM dbo.MembershipsClones WHERE [ID_Group] = [ID_ClonedGroup];
+IF IsNull(@InsertedCircularReferences, 0) > 0
+	BEGIN
+		SET NOCOUNT ON;
+		SELECT TOP 1 @InvalidSampleValue = ID_Group FROM dbo.MembershipsClones
+		SET @ErrorMessage = 'Cannot add circular references into table MembershipsClones: ID ' + CAST(@InvalidSampleValue AS nvarchar(20))
+		RAISERROR (@ErrorMessage, 16, 1)
+		ROLLBACK TRANSACTION 		
+		RETURN	
+	END
+SELECT @InsertedCircularReferences = NULL, @InvalidSampleValue = @InvalidSampleValue
+SELECT @InsertedCircularReferences = COUNT(*) FROM dbo.ApplicationsRights_Inheriting WHERE [ID_Inheriting] = [ID_Source];
+IF IsNull(@InsertedCircularReferences, 0) > 0
+	BEGIN
+		SET NOCOUNT ON;
+		SELECT TOP 1 @InvalidSampleValue = [ID_Source] FROM dbo.ApplicationsRights_Inheriting
+		SET @ErrorMessage = 'Cannot add circular references into table ApplicationsRights_Inheriting: ID ' + CAST(@InvalidSampleValue AS nvarchar(20))
+		RAISERROR (@ErrorMessage, 16, 1)
+		ROLLBACK TRANSACTION 		
+		RETURN	
+	END
+GO
+-- =========================================================================================================
 -- ===== SUPERVISOR'S ALWAYS ACCESS RULE
 -- =========================================================================================================
 ------------------------------------------------------------------------------------------------------------
@@ -51,204 +127,6 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Applic
 UPDATE [dbo].[Applications_CurrentAndInactiveOnes] 
 SET TitleAdminArea = TitleAdminArea
 GO
-
--- =========================================================================================================
--- ===== AUTHORIZATIONS TABLES - PRE-STAGED/PRE-CALCULATED, EFFECTIVE
--- =========================================================================================================
-------------------------------------------------------------------------------------------------------------
--- TABLE [dbo].[ApplicationsRightsByGroup] - TRIGGER dbo.IUD_AuthsGroups2PreStagingForServerGroup
-------------------------------------------------------------------------------------------------------------
-IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_AuthsGroups2PreStagingForServerGroup]'))
-DROP TRIGGER [dbo].[IUD_AuthsGroups2PreStagingForServerGroup]
-GO
-IF NOT EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_AuthsGroups2PreStagingForServerGroup]'))
-EXEC dbo.sp_executesql @statement = N'
-CREATE TRIGGER [dbo].[IUD_AuthsGroups2PreStagingForServerGroup] 
-   ON  [dbo].[ApplicationsRightsByGroup] 
-   FOR INSERT,DELETE,UPDATE
-AS 
-BEGIN
-	SET NOCOUNT ON;
-	-- Drop all pre-staging data to old/deleted auth setup: ID_ServerGroup = 0
-	DELETE dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
-	FROM dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
-		INNER JOIN deleted
-			ON dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].[DerivedFromAppRightsID] = deleted.ID
-				AND dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].IsServerGroup0Rule <> 0
-	WHERE deleted.ID_ServerGroup = 0;
-	-- Drop all pre-staging data to old/deleted auth setup: ID_ServerGroup <> 0
-	DELETE dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
-	FROM dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
-		INNER JOIN deleted
-			ON dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].DerivedFromAppRightsID = deleted.ID
-				AND dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].IsServerGroup0Rule = 0
-	WHERE deleted.ID_ServerGroup <> 0;
-	-- (Re-)insert required pre-staging data for new/inserted auth setup: ID_ServerGroup = 0
-	INSERT INTO dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_Group, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromAppRightsID)
-	SELECT ID_Application, dbo.System_ServerGroups.ID AS ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, 1, inserted.ID
-	FROM inserted
-        CROSS JOIN dbo.System_ServerGroups
-	WHERE inserted.ID_ServerGroup = 0
-	-- (Re-)insert required pre-staging data for new/inserted auth setup: ID_ServerGroup <> 0
-	INSERT INTO dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_Group, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromAppRightsID)
-	SELECT ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, 0, inserted.ID
-	FROM inserted
-	WHERE inserted.ID_ServerGroup <> 0
-END
-' 
-GO
-
-------------------------------------------------------------------------------------------------------------
--- TABLE [dbo].[ApplicationsRightsByUser] - TRIGGER dbo.IUD_AuthsUsers2PreStagingForServerGroup
-------------------------------------------------------------------------------------------------------------
-IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_AuthsUsers2PreStagingForServerGroup]'))
-DROP TRIGGER [dbo].[IUD_AuthsUsers2PreStagingForServerGroup]
-GO
-IF NOT EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_AuthsUsers2PreStagingForServerGroup]'))
-EXEC dbo.sp_executesql @statement = N'
-CREATE TRIGGER [dbo].[IUD_AuthsUsers2PreStagingForServerGroup] 
-   ON  [dbo].[ApplicationsRightsByUser] 
-   FOR INSERT,DELETE,UPDATE
-AS 
-BEGIN
-	SET NOCOUNT ON;
-	-- Drop all pre-staging data to old/deleted auth setup: ID_ServerGroup = 0
-	DELETE dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
-	FROM dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
-		INNER JOIN deleted
-			ON dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].DerivedFromUserAppRightsID = deleted.ID
-				AND dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].IsServerGroup0Rule <> 0
-	WHERE deleted.ID_ServerGroup = 0;
-	-- Drop all pre-staging data to old/deleted auth setup: ID_ServerGroup <> 0
-	DELETE dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
-	FROM dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
-		INNER JOIN deleted
-			ON dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].DerivedFromUserAppRightsID = deleted.ID
-				AND dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].IsServerGroup0Rule = 0
-	WHERE deleted.ID_ServerGroup <> 0;
-	-- (Re-)insert required pre-staging data for new/inserted auth setup: ID_ServerGroup = 0
-	INSERT INTO dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID, [DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID])
-	SELECT ID_Application, dbo.System_ServerGroups.ID AS ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, 1, inserted.ID, NULL, NULL
-	FROM inserted
-        CROSS JOIN dbo.System_ServerGroups
-	WHERE inserted.ID_ServerGroup = 0
-	-- (Re-)insert required pre-staging data for new/inserted auth setup: ID_ServerGroup <> 0
-	INSERT INTO dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID, [DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID])
-	SELECT ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, 0, inserted.ID, NULL, NULL
-	FROM inserted
-	WHERE inserted.ID_ServerGroup <> 0
-END
-' 
-GO
-
-------------------------------------------------------------------------------------------------------------
--- TABLE [dbo].[System_ServerGroups] - TRIGGER dbo.IUD_ServerGroupAuths2PreStagingForServerGroup
-------------------------------------------------------------------------------------------------------------
-IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_ServerGroupAuths2PreStagingForServerGroup]'))
-DROP TRIGGER [dbo].[IUD_ServerGroupAuths2PreStagingForServerGroup]
-GO
-IF NOT EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_ServerGroupAuths2PreStagingForServerGroup]'))
-EXEC dbo.sp_executesql @statement = N'
-CREATE TRIGGER [dbo].[IUD_ServerGroupAuths2PreStagingForServerGroup] 
-   ON  [dbo].[System_ServerGroups] 
-   FOR INSERT,DELETE
-   -- NOT FOR UPDATE since applications rights would be deleted 
-AS 
-BEGIN
-DECLARE @AFirstServerGroupID int
-SELECT TOP 1 @AFirstServerGroupID = ID FROM [dbo].[System_ServerGroups] WHERE ID NOT IN (SELECT ID FROM inserted)
-
-	SET NOCOUNT ON;
-	-- Drop all directly related app-rights: USERS
-	DELETE dbo.[ApplicationsRightsByUser]
-	FROM dbo.[ApplicationsRightsByUser]
-		INNER JOIN deleted
-			ON dbo.[ApplicationsRightsByUser].ID_ServerGroup = deleted.ID
-	-- Drop all directly related app-rights: GROUPS
-	DELETE dbo.[ApplicationsRightsByGroup]
-	FROM dbo.[ApplicationsRightsByGroup]
-		INNER JOIN deleted
-			ON dbo.[ApplicationsRightsByGroup].ID_ServerGroup = deleted.ID
-	-- Drop all indirectly related app-rights (ApplicationsRightsByUser_PreStagingForRealServerGroup): USERS
-	DELETE dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
-	FROM dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
-		INNER JOIN deleted
-			ON dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup].ID_ServerGroup = deleted.ID
-	-- Drop all indirectly related app-rights (ApplicationsRightsByGroup_PreStagingForRealServerGroup): GROUPS
-	DELETE dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
-	FROM dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
-		INNER JOIN deleted
-			ON dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup].ID_ServerGroup = deleted.ID
-	-- Drop public groups
-	DELETE dbo.[Gruppen]
-	FROM dbo.[Gruppen]
-		INNER JOIN deleted
-			ON dbo.[Gruppen].ID = deleted.ID_Group_Public
-	-- Drop anonymous groups
-	DELETE dbo.[Gruppen]
-	FROM dbo.[Gruppen]
-		INNER JOIN deleted
-			ON dbo.[Gruppen].ID = deleted.ID_Group_Anonymous
-	-- Insert required pre-staging data for inserted ServerGroup to complete pre-stage-data for CROSS JOIN for auths with ID_ServerGroup = 0
-	IF @AFirstServerGroupID IS NOT NULL
-		BEGIN
-			-- clone group auths from a first, existing server group
-			INSERT INTO dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_Group, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromAppRightsID)
-			SELECT ID_SecurityObject, inserted.ID, ID_Group, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromAppRightsID
-			FROM dbo.[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
-				CROSS JOIN inserted
-			WHERE ID_ServerGroup = @AFirstServerGroupID AND IsServerGroup0Rule <> 0
-			-- clone user auths from a first, existing server group
-			INSERT INTO dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID, [DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID])
-			SELECT ID_SecurityObject, inserted.ID, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID, [DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID]
-			FROM dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup]
-				CROSS JOIN inserted
-			WHERE ID_ServerGroup = @AFirstServerGroupID AND IsServerGroup0Rule <> 0
-		END 
-END
-' 
-GO
-
-------------------------------------------------------------------------------------------------------------
--- TABLE [dbo].[ApplicationsRightsByGroup_PreStagingForRealServerGroup] - TRIGGER dbo.IUD_AuthsByGroup_PreStagingForRealServerGroup_SyncAnonymousUser
-------------------------------------------------------------------------------------------------------------
-IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_AuthsByGroup_PreStagingForRealServerGroup_SyncAnonymousUser]'))
-DROP TRIGGER [dbo].[IUD_AuthsByGroup_PreStagingForRealServerGroup_SyncAnonymousUser]
-GO
-IF NOT EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_AuthsByGroup_PreStagingForRealServerGroup_SyncAnonymousUser]'))
-EXEC dbo.sp_executesql @statement = N'
--- Forward ALL auth changes (DROP+INSERT) for anonymous group to anonymous user
-CREATE TRIGGER [dbo].[IUD_AuthsByGroup_PreStagingForRealServerGroup_SyncAnonymousUser] 
-   ON  [dbo].[ApplicationsRightsByGroup_PreStagingForRealServerGroup] 
-   FOR INSERT,DELETE,UPDATE
-AS 
-BEGIN
-	SET NOCOUNT ON;
-	-- Forward-Drop all anonymous app-rights
-	DELETE [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup]
-	FROM [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup]
-		INNER JOIN deleted
-			ON [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup].[DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID] = deleted.ID
-				AND [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup].ID_User = -1
-	WHERE deleted.ID_Group IN (SELECT dbo.System_ServerGroups.ID_Group_Anonymous FROM dbo.System_ServerGroups)
-	-- Forward-Insert required pre-staging data for anonymous app-rights
-	INSERT INTO dbo.[ApplicationsRightsByUser_PreStagingForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromUserAppRightsID, DerivedFromGroupAppRightsID, [DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID])
-	SELECT ID_SecurityObject, ID_ServerGroup, -1, IsDevRule, IsDenyRule, IsServerGroup0Rule, NULL, DerivedFromAppRightsID, inserted.ID
-	FROM inserted
-		INNER JOIN dbo.System_ServerGroups 
-			ON inserted.ID_Group = dbo.System_ServerGroups.ID_Group_Anonymous
-END
-'
-GO
--- Force first table filling (or full update on repetitions)
-  update [ApplicationsRightsByGroup]
-  set IsDenyRule = IsDenyRule
-GO
--- Force first table filling (or full update on repetitions)
-  update [ApplicationsRightsByUser]
-  set IsDenyRule = IsDenyRule
-GO
-
 -- =========================================================================================================
 -- ===== MEMBERSHIPS TABLES - PRE-STAGED/PRE-CALCULATED, EFFECTIVE
 -- =========================================================================================================
@@ -611,13 +489,641 @@ BEGIN
 
 END
 GO
+IF OBJECT_ID ('dbo.ID_Memberships_EffectiveRulesWithClonesNthGrade', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.ID_Memberships_EffectiveRulesWithClonesNthGrade;
+GO
+CREATE TRIGGER [dbo].ID_Memberships_EffectiveRulesWithClonesNthGrade 
+   ON  [dbo].[Memberships_EffectiveRulesWithClonesNthGrade] 
+   FOR INSERT,DELETE
+AS 
+BEGIN
+	-- 1st, forward all row deletions
+	DELETE dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
+	FROM dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
+		INNER JOIN deleted 
+			ON dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved.DerivedFromPreStaging2_Groups_ID = deleted.ID_Group
+				AND dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved.ID_User = deleted.ID_User;
+
+	-- 2nd, forward all row inserts
+	INSERT INTO dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
+           ([ID_SecurityObject]
+           ,[ID_User]
+           ,[ID_ServerGroup]
+           ,[IsDevRule]
+           ,[IsDenyRule]
+           ,[DerivedFromAppRightsID]
+           ,[DerivedFromPreStaging2_Groups_RealServerGroupID]
+           ,[DerivedFromPreStaging2_Groups_ID]
+           ,[DerivedFromPreStaging2_Users_ID])
+	SELECT ApplicationsRightsByGroup_PreStaging2Inheritions.[ID_SecurityObject]
+           ,inserted.ID_User
+           ,ApplicationsRightsByGroup_PreStaging2Inheritions.[ID_ServerGroup]
+           ,ApplicationsRightsByGroup_PreStaging2Inheritions.[IsDevRule]
+           ,ApplicationsRightsByGroup_PreStaging2Inheritions.[IsDenyRule]
+           ,ApplicationsRightsByGroup_PreStaging2Inheritions.[DerivedFromAppRightsID]
+           ,ApplicationsRightsByGroup_PreStaging2Inheritions.ID_ServerGroup
+           ,ApplicationsRightsByGroup_PreStaging2Inheritions.ID
+           ,NULL
+	FROM dbo.ApplicationsRightsByGroup_PreStaging2Inheritions
+		INNER JOIN inserted
+			ON ApplicationsRightsByGroup_PreStaging2Inheritions.ID_Group = inserted.ID_Group;
+	
+END
+GO
 -- Initial reset/filling of pre-calculated effective memberships
 ALTER TABLE dbo.Memberships DISABLE TRIGGER U_Memberships;
 UPDATE dbo.Memberships
 SET ReleasedBy = ReleasedBy;
 ALTER TABLE dbo.Memberships ENABLE TRIGGER U_Memberships;
 GO
+-- =========================================================================================================
+-- ===== AUTHORIZATIONS TABLES - PRE-STAGED/PRE-CALCULATED, EFFECTIVE
+-- =========================================================================================================
 
+---------------------------------------------------------------------------------------------------
+--> PLEASE NOTE: anonymous user is a user with a group ID -1 and user ID -1!
+---------------------------------------------------------------------------------------------------
+--> ATTENTION GROUPS VERSION: 
+--> users are already member of public group, but GROUPS are not automatically member of public group
+--> consider this behaviour in all dependent queries/SPs like SP GetNavPoints*ByUser/ByGroup
+---------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------
+-- PRE-STAGING-LEVEL 1
+---------------------------------------------------------------------------------------------------
+-- pre-existing authorizations for all registered users/groups incl. anonymous and public auths
+--> AND all-server-groups "0" rewritten to real server-group-IDs
+---------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------
+-- PRE-STAGING-LEVEL 2
+---------------------------------------------------------------------------------------------------
+-- pre-existing authorizations for all registered users/groups incl. anonymous and public auths
+-- AND groups auths resolved to the several users auths
+-- AND all-server-groups "0" rewritten to real server-group-IDs
+--> AND added entries from inherited security objects/applications
+---------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------
+-- PRE-STAGING-LEVEL 3
+---------------------------------------------------------------------------------------------------
+-- cumulated for all registered users (incl. anonymous auths)
+-- AND groups auths resolved to the several users auths
+-- AND all-server-groups "0" rewritten to real server-group-IDs
+-- AND added entries from inherited security objects/applications
+--> AND groups auths resolved to the several users auths 
+-->     respectively user id -1 with related server group ID for all anonymous groups
+---------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------
+-- PRE-STAGING-LEVEL 4
+---------------------------------------------------------------------------------------------------
+-- cumulated for all registered users (incl. anonymous auths)
+-- AND groups auths resolved to the several users auths
+-- AND all-server-groups "0" rewritten to real server-group-IDs
+-- AND added entries from inherited security objects/applications
+-- AND groups auths resolved to the several users auths 
+--     respectively user id -1 with related server group ID for all anonymous groups
+--> AND calculated remaining AllowRules after subtraction of DenyRules
+---------------------------------------------------------------------------------------------------
+GO
+-- CLEANUP OF ALL PRE-EXISTING DATA IN PRE-STAGING-TABLES
+TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules
+TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
+TRUNCATE TABLE dbo.ApplicationsRightsByGroup_PreStaging2Inheritions
+TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging2Inheritions
+TRUNCATE TABLE dbo.ApplicationsRightsByGroup_PreStaging1ForRealServerGroup
+TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging1ForRealServerGroup
+GO
+---------------------------------------------------------------------------------------------------
+-- PRE-STAGING-LEVEL 1
+---------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+-- TABLE [dbo].[ApplicationsRightsByGroup] - TRIGGER dbo.IUD_AuthsGroups2PreStaging1ForServerGroup
+------------------------------------------------------------------------------------------------------------
+IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_AuthsGroups2PreStagingForServerGroup]'))
+DROP TRIGGER [dbo].[IUD_AuthsGroups2PreStagingForServerGroup]
+GO
+CREATE TRIGGER [dbo].[IUD_AuthsGroups2PreStagingForServerGroup] 
+   ON  [dbo].[ApplicationsRightsByGroup] 
+   FOR INSERT,DELETE,UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	-- Drop all pre-staging data to old/deleted auth setup: ID_ServerGroup = 0
+	DELETE dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup]
+	FROM dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup]
+		INNER JOIN deleted
+			ON dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup].[DerivedFromAppRightsID] = deleted.ID
+				AND dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup].IsServerGroup0Rule <> 0
+	WHERE deleted.ID_ServerGroup = 0;
+	-- Drop all pre-staging data to old/deleted auth setup: ID_ServerGroup <> 0
+	DELETE dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup]
+	FROM dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup]
+		INNER JOIN deleted
+			ON dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup].DerivedFromAppRightsID = deleted.ID
+				AND dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup].IsServerGroup0Rule = 0
+	WHERE deleted.ID_ServerGroup <> 0;
+	-- (Re-)insert required pre-staging data for new/inserted auth setup: ID_ServerGroup = 0
+	INSERT INTO dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_Group, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromAppRightsID)
+	SELECT ID_Application, dbo.System_ServerGroups.ID AS ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, 1, inserted.ID
+	FROM inserted
+        CROSS JOIN dbo.System_ServerGroups
+	WHERE inserted.ID_ServerGroup = 0
+	-- (Re-)insert required pre-staging data for new/inserted auth setup: ID_ServerGroup <> 0
+	INSERT INTO dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_Group, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromAppRightsID)
+	SELECT ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, 0, inserted.ID
+	FROM inserted
+	WHERE inserted.ID_ServerGroup <> 0
+END
+GO
+
+------------------------------------------------------------------------------------------------------------
+-- TABLE [dbo].[ApplicationsRightsByUser] - TRIGGER dbo.IUD_AuthsUsers2PreStagingForServerGroup
+------------------------------------------------------------------------------------------------------------
+IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_AuthsUsers2PreStagingForServerGroup]'))
+DROP TRIGGER [dbo].[IUD_AuthsUsers2PreStagingForServerGroup]
+GO
+CREATE TRIGGER [dbo].[IUD_AuthsUsers2PreStagingForServerGroup] 
+   ON  [dbo].[ApplicationsRightsByUser] 
+   FOR INSERT,DELETE,UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	-- Drop all pre-staging data to old/deleted auth setup: ID_ServerGroup = 0
+	DELETE dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup]
+	FROM dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup]
+		INNER JOIN deleted
+			ON dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup].DerivedFromAppRightsID = deleted.ID
+				AND dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup].IsServerGroup0Rule <> 0
+	WHERE deleted.ID_ServerGroup = 0;
+	-- Drop all pre-staging data to old/deleted auth setup: ID_ServerGroup <> 0
+	DELETE dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup]
+	FROM dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup]
+		INNER JOIN deleted
+			ON dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup].DerivedFromAppRightsID = deleted.ID
+				AND dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup].IsServerGroup0Rule = 0
+	WHERE deleted.ID_ServerGroup <> 0;
+	-- (Re-)insert required pre-staging data for new/inserted auth setup: ID_ServerGroup = 0
+	INSERT INTO dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromAppRightsID)
+	SELECT ID_Application, dbo.System_ServerGroups.ID AS ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, 1, inserted.ID
+	FROM inserted
+        CROSS JOIN dbo.System_ServerGroups
+	WHERE inserted.ID_ServerGroup = 0
+	-- (Re-)insert required pre-staging data for new/inserted auth setup: ID_ServerGroup <> 0
+	INSERT INTO dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromAppRightsID)
+	SELECT ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, 0, inserted.ID
+	FROM inserted
+	WHERE inserted.ID_ServerGroup <> 0
+END
+GO
+
+------------------------------------------------------------------------------------------------------------
+-- TABLE [dbo].[System_ServerGroups] - TRIGGER dbo.IUD_ServerGroupAuths2PreStagingForServerGroup
+------------------------------------------------------------------------------------------------------------
+IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_ServerGroupAuths2PreStagingForServerGroup]'))
+DROP TRIGGER [dbo].[IUD_ServerGroupAuths2PreStagingForServerGroup]
+GO
+CREATE TRIGGER [dbo].[IUD_ServerGroupAuths2PreStagingForServerGroup] 
+   ON  [dbo].[System_ServerGroups] 
+   FOR INSERT,DELETE
+   -- NOT FOR UPDATE since applications rights would be deleted 
+AS 
+BEGIN
+DECLARE @AFirstServerGroupID int
+SELECT TOP 1 @AFirstServerGroupID = ID FROM [dbo].[System_ServerGroups] WHERE ID NOT IN (SELECT ID FROM inserted)
+
+	SET NOCOUNT ON;
+	-- Drop of depending auths and data works automatically except for anonymous-group->anonymous-user translations
+	DELETE dbo.[ApplicationsRightsByUser_PreStaging3GroupsResolved]
+	FROM dbo.[ApplicationsRightsByUser_PreStaging3GroupsResolved]
+		INNER JOIN deleted 
+			ON dbo.[ApplicationsRightsByUser_PreStaging3GroupsResolved].DerivedFromPreStaging2_Groups_RealServerGroupID = deleted.ID
+	-- All ServerRule-0-CrossJoin-Rows have to be 
+	--   1. deleted for existing ServerGroup-0-Rules
+	--   2. inserted(copied) for new server group for existing ServerGroup-0-Rules
+	-- Drop all indirectly related app-rights (ApplicationsRightsByUser_PreStaging1ForRealServerGroup): USERS
+	DELETE dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup]
+	FROM dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup]
+		INNER JOIN deleted
+			ON dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup].ID_ServerGroup = deleted.ID
+	-- Drop all indirectly related app-rights (ApplicationsRightsByGroup_PreStaging1ForRealServerGroup): GROUPS
+	DELETE dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup]
+	FROM dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup]
+		INNER JOIN deleted
+			ON dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup].ID_ServerGroup = deleted.ID
+	-- Insert required pre-staging data for inserted ServerGroup to complete pre-stage-data for CROSS JOIN for auths with ID_ServerGroup = 0
+	IF @AFirstServerGroupID IS NOT NULL
+		BEGIN
+			-- clone group auths from a first, existing server group
+			INSERT INTO dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_Group, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromAppRightsID)
+			SELECT ID_SecurityObject, inserted.ID, ID_Group, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromAppRightsID
+			FROM dbo.[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup]
+				CROSS JOIN inserted
+			WHERE ID_ServerGroup = @AFirstServerGroupID AND IsServerGroup0Rule <> 0
+			-- clone user auths from a first, existing server group
+			INSERT INTO dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup] (ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromAppRightsID)
+			SELECT ID_SecurityObject, inserted.ID, ID_User, IsDevRule, IsDenyRule, IsServerGroup0Rule, DerivedFromAppRightsID
+			FROM dbo.[ApplicationsRightsByUser_PreStaging1ForRealServerGroup]
+				CROSS JOIN inserted
+			WHERE ID_ServerGroup = @AFirstServerGroupID AND IsServerGroup0Rule <> 0
+		END 
+END
+GO
+---------------------------------------------------------------------------------------------------
+-- PRE-STAGING-LEVEL 2
+---------------------------------------------------------------------------------------------------
+GO
+IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_ApplicationsRightsByGroup_PreStaging1ToPreStaging2]'))
+DROP TRIGGER [dbo].[IUD_ApplicationsRightsByGroup_PreStaging1ToPreStaging2]
+GO
+CREATE TRIGGER [dbo].[IUD_ApplicationsRightsByGroup_PreStaging1ToPreStaging2] 
+   ON  [dbo].[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup] 
+   FOR INSERT,DELETE,UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	DELETE dbo.ApplicationsRightsByGroup_PreStaging2Inheritions
+	FROM dbo.ApplicationsRightsByGroup_PreStaging2Inheritions
+		INNER JOIN deleted 
+			ON dbo.ApplicationsRightsByGroup_PreStaging2Inheritions.DerivedFromPreStaging1ID = deleted.ID;
+	INSERT INTO [dbo].[ApplicationsRightsByGroup_PreStaging2Inheritions]
+           ([ID_SecurityObject]
+           ,[ID_Group]
+           ,[ID_ServerGroup]
+           ,[IsDenyRule]
+           ,[IsDevRule]
+           ,[DerivedFromAppRightsID]
+           ,[DerivedFromPreStaging1ID]
+		   ,[DerivedFromInheritedSecurityObjectRelationID])
+	SELECT ID_SecurityObject, ID_Group, ID_ServerGroup, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, NULL
+    FROM inserted
+	UNION ALL
+	SELECT dbo.ApplicationsRights_Inheriting.ID_Inheriting, ID_ServerGroup, ID_Group, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, dbo.ApplicationsRights_Inheriting.ID
+	FROM inserted
+		INNER JOIN dbo.ApplicationsRights_Inheriting
+			ON inserted.ID_SecurityObject = dbo.ApplicationsRights_Inheriting.ID_Source;
+END
+GO
+IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_ApplicationsRightsByUser_PreStaging1ToPreStaging2]'))
+DROP TRIGGER [dbo].[IUD_ApplicationsRightsByUser_PreStaging1ToPreStaging2]
+GO
+CREATE TRIGGER [dbo].[IUD_ApplicationsRightsByUser_PreStaging1ToPreStaging2] 
+   ON  [dbo].[ApplicationsRightsByUser_PreStaging1ForRealServerGroup] 
+   FOR INSERT,DELETE,UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	DELETE dbo.ApplicationsRightsByUser_PreStaging2Inheritions
+	FROM dbo.ApplicationsRightsByUser_PreStaging2Inheritions
+		INNER JOIN deleted 
+			ON dbo.ApplicationsRightsByUser_PreStaging2Inheritions.DerivedFromPreStaging1ID = deleted.ID;
+	INSERT INTO [dbo].[ApplicationsRightsByUser_PreStaging2Inheritions]
+           ([ID_SecurityObject]
+           ,[ID_User]
+           ,[ID_ServerGroup]
+           ,[IsDenyRule]
+           ,[IsDevRule]
+           ,[DerivedFromAppRightsID]
+           ,[DerivedFromPreStaging1ID]
+		   ,[DerivedFromInheritedSecurityObjectRelationID])
+	SELECT ID_SecurityObject, ID_User, ID_ServerGroup, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, NULL
+    FROM inserted
+	UNION ALL
+	SELECT dbo.ApplicationsRights_Inheriting.ID_Inheriting, ID_ServerGroup, ID_User, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, dbo.ApplicationsRights_Inheriting.ID
+	FROM inserted
+		INNER JOIN dbo.ApplicationsRights_Inheriting
+			ON inserted.ID_SecurityObject = dbo.ApplicationsRights_Inheriting.ID_Source;
+END
+--TODO: DerivedFromInheritedSecurityObjectRelationID INSERT/DELETE ON dbo.ApplicationsRights_Inheriting
+GO
+---------------------------------------------------------------------------------------------------
+-- PRE-STAGING-LEVEL 3
+---------------------------------------------------------------------------------------------------
+GO
+IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_ApplicationsRightsByGroup_PreStaging2ToPreStaging3]'))
+DROP TRIGGER [dbo].[IUD_ApplicationsRightsByGroup_PreStaging2ToPreStaging3]
+GO
+CREATE TRIGGER [dbo].[IUD_ApplicationsRightsByGroup_PreStaging2ToPreStaging3] 
+   ON  [dbo].[ApplicationsRightsByGroup_PreStaging2Inheritions] 
+   FOR INSERT,DELETE,UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	-- forward-drop all group auths
+	DELETE dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
+	FROM dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
+		INNER JOIN deleted 
+			ON dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved.DerivedFromPreStaging2_Groups_ID = deleted.ID;
+
+	-- I. Forward ALL auth changes (INSERT) for anonymous group to anonymous user
+	-- Forward-Insert required pre-staging data for anonymous app-rights
+	INSERT INTO dbo.[ApplicationsRightsByUser_PreStaging3GroupsResolved] 
+			(ID_SecurityObject
+			, ID_ServerGroup
+			, ID_User
+			, IsDevRule
+			, IsDenyRule
+			, DerivedFromAppRightsID
+			, DerivedFromPreStaging2_Users_ID
+			, DerivedFromPreStaging2_Groups_ID
+			, DerivedFromPreStaging2_Groups_RealServerGroupID)
+	SELECT ID_SecurityObject, ID_ServerGroup, -1, IsDevRule, IsDenyRule, DerivedFromAppRightsID, NULL, inserted.ID, System_ServerGroups.ID
+	FROM inserted
+		INNER JOIN dbo.System_ServerGroups 
+			ON inserted.ID_Group = dbo.System_ServerGroups.ID_Group_Anonymous;
+
+	-- II. Forward ALL auth changes (INSERT) for standard group auths
+	-- forward-insert all standard group auths
+	INSERT INTO dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
+           ([ID_SecurityObject]
+           ,[ID_User]
+           ,[ID_ServerGroup]
+           ,[IsDevRule]
+           ,[IsDenyRule]
+           ,[DerivedFromAppRightsID]
+           ,[DerivedFromPreStaging2_Groups_RealServerGroupID]
+           ,[DerivedFromPreStaging2_Groups_ID]
+           ,[DerivedFromPreStaging2_Users_ID])
+	SELECT inserted.[ID_SecurityObject]
+           ,Memberships_EffectiveRulesWithClonesNthGrade.[ID_User]
+           ,inserted.[ID_ServerGroup]
+           ,inserted.[IsDevRule]
+           ,inserted.[IsDenyRule]
+           ,inserted.[DerivedFromAppRightsID]
+           ,inserted.ID_ServerGroup
+           ,inserted.ID
+           ,NULL
+	FROM inserted
+		INNER JOIN dbo.Memberships_EffectiveRulesWithClonesNthGrade
+			ON inserted.ID_Group = Memberships_EffectiveRulesWithClonesNthGrade.ID_Group;
+END
+GO
+IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_ApplicationsRightsByUser_PreStaging2ToPreStaging3]'))
+DROP TRIGGER [dbo].[IUD_ApplicationsRightsByUser_PreStaging2ToPreStaging3]
+GO
+CREATE TRIGGER [dbo].[IUD_ApplicationsRightsByUser_PreStaging2ToPreStaging3] 
+   ON  [dbo].[ApplicationsRightsByUser_PreStaging2Inheritions] 
+   FOR INSERT,DELETE,UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	-- forward-drop all user auths
+	DELETE dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
+	FROM dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
+		INNER JOIN deleted 
+			ON dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved.DerivedFromPreStaging2_Users_ID = deleted.ID;
+	-- forward-insert all user auths
+	INSERT INTO dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
+           ([ID_SecurityObject]
+           ,[ID_User]
+           ,[ID_ServerGroup]
+           ,[IsDevRule]
+           ,[IsDenyRule]
+           ,[DerivedFromAppRightsID]
+           ,[DerivedFromPreStaging2_Groups_RealServerGroupID]
+           ,[DerivedFromPreStaging2_Groups_ID]
+           ,[DerivedFromPreStaging2_Users_ID])
+	SELECT [ID_SecurityObject]
+           ,[ID_User]
+           ,[ID_ServerGroup]
+           ,[IsDevRule]
+           ,[IsDenyRule]
+           ,[DerivedFromAppRightsID]
+           ,NULL
+           ,NULL
+           ,ID
+	FROM inserted
+END
+GO
+---------------------------------------------------------------------------------------------------
+-- PRE-STAGING-LEVEL 4
+---------------------------------------------------------------------------------------------------
+GO
+IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[IUD_ApplicationsRightsByUser_PreStaging3ToPreStaging4]'))
+DROP TRIGGER [dbo].[IUD_ApplicationsRightsByUser_PreStaging3ToPreStaging4]
+GO
+CREATE TRIGGER [dbo].[IUD_ApplicationsRightsByUser_PreStaging3ToPreStaging4] 
+   ON  [dbo].[ApplicationsRightsByUser_PreStaging3GroupsResolved] 
+   FOR INSERT,DELETE,UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	DECLARE @Soll table (
+		[ID_SecurityObject] [int] NOT NULL,
+		ID_User [int] NOT NULL,
+		[ID_ServerGroup] [int] NOT NULL,
+		[IsDevRule] [bit] NOT NULL,
+		[DerivedFromAppRightsID] [int] NOT NULL,
+		[DerivedFromPreStaging3ID] [bigint] NOT NULL,
+		[PK_UniqueRowData] varchar(250) NOT NULL,
+		[UniqueAuthObject] varchar(120) NOT NULL)
+	DECLARE @ChangedAuthObjects table (
+		[PK] varchar(250) NOT NULL)
+	DECLARE @RowInsertsCount bigint, @RowDeletesCount bigint, @CurrentRowsCount bigint
+	SELECT @RowInsertsCount = IsNull(COUNT_BIG(*), 0) FROM inserted;
+	SELECT @RowDeletesCount = IsNull(COUNT_BIG(*), 0) FROM deleted;
+	SELECT @CurrentRowsCount = IsNull(COUNT_BIG(*), 0) FROM dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules;
+	IF IsNull(@RowInsertsCount, 0) + IsNull(@RowDeletesCount, 0) >= IsNull(@CurrentRowsCount, 0)
+		BEGIN
+			-- too many rows to be updated - just re-create the whole table in full
+			INSERT INTO @Soll
+				   ([ID_SecurityObject]
+				   ,[ID_User]
+				   ,[ID_ServerGroup]
+				   ,[IsDevRule]
+				   ,[DerivedFromAppRightsID]
+				   ,[DerivedFromPreStaging3ID]
+				   ,[PK_UniqueRowData]
+				   ,[UniqueAuthObject])
+			SELECT AllowRules.ID_SecurityObject, AllowRules.ID_User, AllowRules.ID_ServerGroup, AllowRules.IsDevRule, DerivedFromAppRightsID, AllowRules.ID,
+				CAST(AllowRules.ID_SecurityObject AS varchar(50)) + '|' + 
+					CAST(AllowRules.ID_User AS varchar(50)) + '|' + 
+					CAST(AllowRules.ID_ServerGroup AS varchar(50)) + '|' + 
+					CAST(AllowRules.IsDevRule AS varchar(1)) + '|' + 
+					CAST(DerivedFromAppRightsID AS varchar(50)) + '|' + 
+					CAST(AllowRules.ID AS varchar(50)) AS PK_UniqueRowData,
+				CAST(AllowRules.ID_SecurityObject AS varchar(50)) + '|' + 
+					CAST(AllowRules.ID_User AS varchar(50)) + '|' + 
+					CAST(AllowRules.ID_ServerGroup AS varchar(50)) + '|' AS UniqueAuthObject
+			FROM dbo.[ApplicationsRightsByUser_PreStaging3GroupsResolved] AS AllowRules
+				LEFT JOIN 
+					(
+						SELECT ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule
+						FROM dbo.[ApplicationsRightsByUser_PreStaging3GroupsResolved] 
+						WHERE IsDenyRule <> 0
+					) AS DenyRules
+					ON AllowRules.ID_SecurityObject = DenyRules.ID_SecurityObject 
+						AND AllowRules.ID_ServerGroup = DenyRules.ID_ServerGroup 
+						AND AllowRules.ID_User = DenyRules.ID_User
+						AND AllowRules.IsDevRule = DenyRules.IsDevRule
+				INNER JOIN 
+					(
+						SELECT     ID, AppDisabled
+						FROM         dbo.Applications_CurrentAndInactiveOnes
+						WHERE     (AppDeleted = 0)
+					) AS Applications 
+					ON AllowRules.ID_SecurityObject = Applications.ID
+			WHERE AllowRules.IsDenyRule = 0
+				AND DenyRules.ID_SecurityObject IS NULL
+				AND 
+				(
+					(
+						AllowRules.IsDevRule = 0 
+						AND Applications.AppDisabled = 0
+					)
+					OR AllowRules.IsDevRule = 1
+				)
+			GROUP BY AllowRules.[ID_SecurityObject]
+				   ,AllowRules.[ID_User]
+				   ,AllowRules.[ID_ServerGroup]
+				   ,AllowRules.[IsDevRule]
+				   ,AllowRules.[DerivedFromAppRightsID]
+				   ,AllowRules.ID;
+			-- insert missing rows in IST table from SOLL definition table
+			INSERT INTO [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules]
+				   ([ID_SecurityObject]
+				   ,[ID_User]
+				   ,[ID_ServerGroup]
+				   ,[IsDevRule]
+				   ,[DerivedFromAppRightsID]
+				   ,[DerivedFromPreStaging3ID]
+				   ,[PK_UniqueRowData]
+				   ,[UniqueAuthObject])
+			SELECT Soll.[ID_SecurityObject]
+				   ,Soll.[ID_User]
+				   ,Soll.[ID_ServerGroup]
+				   ,Soll.[IsDevRule]
+				   ,Soll.[DerivedFromAppRightsID]
+				   ,Soll.[DerivedFromPreStaging3ID]
+				   ,Soll.[PK_UniqueRowData]
+				   ,Soll.[UniqueAuthObject]
+			FROM @Soll AS Soll
+				LEFT JOIN [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules]
+					ON Soll.[PK_UniqueRowData] = [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules].[PK_UniqueRowData]
+			WHERE [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules].ID_SecurityObject IS NULL;
+			-- drop rows in IST table which are not present in SOLL definition table any more
+			DELETE [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules]
+			FROM @Soll AS Soll
+				RIGHT JOIN [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules]
+					ON Soll.[PK_UniqueRowData] = [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules].[PK_UniqueRowData]
+			WHERE Soll.ID_SecurityObject IS NULL;
+		END
+	ELSE
+		BEGIN
+			-- smaller amount of rows to be updated - just update required rows
+			-- 1. lookup the changed auth objects
+			INSERT INTO @ChangedAuthObjects (PK)
+			SELECT CAST(ID_SecurityObject AS varchar(50)) + '|' + 
+					CAST(ID_User AS varchar(50)) + '|' + 
+					CAST(ID_ServerGroup AS varchar(50)) + '|'
+			FROM inserted
+			UNION ALL
+			SELECT CAST(ID_SecurityObject AS varchar(50)) + '|' + 
+					CAST(ID_User AS varchar(50)) + '|' + 
+					CAST(ID_ServerGroup AS varchar(50)) + '|'
+			FROM deleted;
+			-- 2. update as full table statements above, but filter for rows of @ChangedAuthObjects
+			INSERT INTO @Soll
+				   ([ID_SecurityObject]
+				   ,[ID_User]
+				   ,[ID_ServerGroup]
+				   ,[IsDevRule]
+				   ,[DerivedFromAppRightsID]
+				   ,[DerivedFromPreStaging3ID]
+				   ,[PK_UniqueRowData]
+				   ,[UniqueAuthObject])
+			SELECT AllowRules.ID_SecurityObject, AllowRules.ID_User, AllowRules.ID_ServerGroup, AllowRules.IsDevRule, DerivedFromAppRightsID, AllowRules.ID,
+				CAST(AllowRules.ID_SecurityObject AS varchar(50)) + '|' + 
+					CAST(AllowRules.ID_User AS varchar(50)) + '|' + 
+					CAST(AllowRules.ID_ServerGroup AS varchar(50)) + '|' + 
+					CAST(AllowRules.IsDevRule AS varchar(1)) + '|' + 
+					CAST(DerivedFromAppRightsID AS varchar(50)) + '|' + 
+					CAST(AllowRules.ID AS varchar(50)) AS PK_UniqueRowData,
+				CAST(AllowRules.ID_SecurityObject AS varchar(50)) + '|' + 
+					CAST(AllowRules.ID_User AS varchar(50)) + '|' + 
+					CAST(AllowRules.ID_ServerGroup AS varchar(50)) + '|' AS UniqueAuthObject
+			FROM dbo.[ApplicationsRightsByUser_PreStaging3GroupsResolved] AS AllowRules
+				LEFT JOIN 
+					(
+						SELECT ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule
+						FROM dbo.[ApplicationsRightsByUser_PreStaging3GroupsResolved] 
+						WHERE IsDenyRule <> 0
+					) AS DenyRules
+					ON AllowRules.ID_SecurityObject = DenyRules.ID_SecurityObject 
+						AND AllowRules.ID_ServerGroup = DenyRules.ID_ServerGroup 
+						AND AllowRules.ID_User = DenyRules.ID_User
+						AND AllowRules.IsDevRule = DenyRules.IsDevRule
+				INNER JOIN 
+					(
+						SELECT     ID, AppDisabled
+						FROM         dbo.Applications_CurrentAndInactiveOnes
+						WHERE     (AppDeleted = 0)
+					) AS Applications 
+					ON AllowRules.ID_SecurityObject = Applications.ID
+			WHERE AllowRules.IsDenyRule = 0
+				AND DenyRules.ID_SecurityObject IS NULL
+				AND 
+				(
+					(
+						AllowRules.IsDevRule = 0 
+						AND Applications.AppDisabled = 0
+					)
+					OR AllowRules.IsDevRule = 1
+				)
+				AND CAST(AllowRules.ID_SecurityObject AS varchar(50)) + '|' + 
+					CAST(AllowRules.ID_User AS varchar(50)) + '|' + 
+					CAST(AllowRules.ID_ServerGroup AS varchar(50)) + '|' IN (SELECT PK FROM @ChangedAuthObjects)
+			GROUP BY AllowRules.[ID_SecurityObject]
+				   ,AllowRules.[ID_User]
+				   ,AllowRules.[ID_ServerGroup]
+				   ,AllowRules.[IsDevRule]
+				   ,AllowRules.[DerivedFromAppRightsID]
+				   ,AllowRules.ID;
+			-- insert missing rows in IST table from SOLL definition table
+			INSERT INTO [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules]
+				   ([ID_SecurityObject]
+				   ,[ID_User]
+				   ,[ID_ServerGroup]
+				   ,[IsDevRule]
+				   ,[DerivedFromAppRightsID]
+				   ,[DerivedFromPreStaging3ID]
+				   ,[PK_UniqueRowData]
+				   ,[UniqueAuthObject])
+			SELECT Soll.[ID_SecurityObject]
+				   ,Soll.[ID_User]
+				   ,Soll.[ID_ServerGroup]
+				   ,Soll.[IsDevRule]
+				   ,Soll.[DerivedFromAppRightsID]
+				   ,Soll.[DerivedFromPreStaging3ID]
+				   ,Soll.[PK_UniqueRowData]
+				   ,Soll.[UniqueAuthObject]
+			FROM @Soll AS Soll
+				LEFT JOIN [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules]
+					ON Soll.[PK_UniqueRowData] = [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules].[PK_UniqueRowData]
+			WHERE [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules].ID_SecurityObject IS NULL;
+			-- drop rows in IST table which are not present in SOLL definition table any more
+			DELETE [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules]
+			FROM @Soll AS Soll
+				RIGHT JOIN [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules]
+					ON Soll.[PK_UniqueRowData] = [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules].[PK_UniqueRowData]
+			WHERE Soll.ID_SecurityObject IS NULL
+				AND [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules].[UniqueAuthObject] IN (SELECT PK FROM @ChangedAuthObjects);
+		END
+END
+GO
+---------------------------------------------------------------------------------------------------
+-- PRE-FILL ALL PRE-STAGING-LEVELS
+---------------------------------------------------------------------------------------------------
+GO
+-- Force first table filling (or full update on repetitions)
+  update [ApplicationsRightsByGroup]
+  set IsDenyRule = IsDenyRule
+GO
+-- Force first table filling (or full update on repetitions)
+  update [ApplicationsRightsByUser]
+  set IsDenyRule = IsDenyRule
+GO
 -- =========================================================================================================
 -- ===== CONTINUEOUS DATA INTEGRITY: on DELETE, do the required cleanup on depending foreign key rows
 -- =========================================================================================================
@@ -691,6 +1197,26 @@ BEGIN
 	DELETE dbo.System_Servers
 	FROM dbo.System_Servers 
 		INNER JOIN deleted ON dbo.System_Servers.ServerGroup = deleted.ID
+	-- Drop all directly related app-rights: USERS
+	DELETE dbo.[ApplicationsRightsByUser]
+	FROM dbo.[ApplicationsRightsByUser]
+		INNER JOIN deleted
+			ON dbo.[ApplicationsRightsByUser].ID_ServerGroup = deleted.ID
+	-- Drop all directly related app-rights: GROUPS
+	DELETE dbo.[ApplicationsRightsByGroup]
+	FROM dbo.[ApplicationsRightsByGroup]
+		INNER JOIN deleted
+			ON dbo.[ApplicationsRightsByGroup].ID_ServerGroup = deleted.ID
+	-- Drop public groups
+	DELETE dbo.[Gruppen]
+	FROM dbo.[Gruppen]
+		INNER JOIN deleted
+			ON dbo.[Gruppen].ID = deleted.ID_Group_Public
+	-- Drop anonymous groups
+	DELETE dbo.[Gruppen]
+	FROM dbo.[Gruppen]
+		INNER JOIN deleted
+			ON dbo.[Gruppen].ID = deleted.ID_Group_Anonymous
 END
 GO
 

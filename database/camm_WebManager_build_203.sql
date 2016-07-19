@@ -1,4 +1,8 @@
-﻿-- add security access everything group (but without supervisor priviledges to do aministration)
+﻿-- drop table because of dropped concept
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Apps2SecObj_SyncWarnLog]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+DROP TABLE [dbo].[Apps2SecObj_SyncWarnLog]
+
+-- add security access everything group (but without supervisor priviledges to do aministration)
 IF NOT EXISTS (SELECT ID FROM Gruppen WHERE ID = -5)
 BEGIN
 INSERT INTO Gruppen (ID, Name, Description, ReleasedOn, ReleasedBy, SystemGroup, ModifiedOn, ModifiedBy) 
@@ -111,10 +115,10 @@ CREATE TABLE [dbo].[ApplicationsRights_Inheriting] (
 GO
 
 -- Pre-Staging table for pre-translation of GROUP-AUTH rows with ID_ServerGroup = 0 being multiplied to all available server groups
-if exists (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationsRightsByGroup_PreStagingForRealServerGroup]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
-DROP TABLE [dbo].[ApplicationsRightsByGroup_PreStagingForRealServerGroup]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+DROP TABLE [dbo].[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup]
 GO
-CREATE TABLE [dbo].[ApplicationsRightsByGroup_PreStagingForRealServerGroup](
+CREATE TABLE [dbo].[ApplicationsRightsByGroup_PreStaging1ForRealServerGroup](
 	[ID] [bigint] IDENTITY(1,1) NOT NULL,
 	[ID_SecurityObject] [int] NOT NULL,
 	[ID_Group] [int] NOT NULL,
@@ -122,8 +126,8 @@ CREATE TABLE [dbo].[ApplicationsRightsByGroup_PreStagingForRealServerGroup](
 	[IsServerGroup0Rule] [bit] NOT NULL,
 	[IsDenyRule] [bit] NOT NULL,
 	[IsDevRule] [bit] NOT NULL,
-	[DerivedFromAppRightsID] int NULL
- CONSTRAINT [PK_ApplicationsRightsByGroup_PreStagingForRealServerGroup] PRIMARY KEY CLUSTERED 
+	[DerivedFromAppRightsID] int NOT NULL
+ CONSTRAINT [PK_ApplicationsRightsByGroup_PreStaging1ForRealServerGroup] PRIMARY KEY CLUSTERED 
  (
 	[ID] ASC
  )
@@ -131,10 +135,10 @@ CREATE TABLE [dbo].[ApplicationsRightsByGroup_PreStagingForRealServerGroup](
 GO
 
 -- Pre-Staging table for pre-translation of USER-AUTH rows with ID_ServerGroup = 0 being multiplied to all available server groups
-if exists (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
-DROP TABLE [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup]
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationsRightsByUser_PreStaging1ForRealServerGroup]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+DROP TABLE [dbo].[ApplicationsRightsByUser_PreStaging1ForRealServerGroup]
 GO
-CREATE TABLE [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup](
+CREATE TABLE [dbo].[ApplicationsRightsByUser_PreStaging1ForRealServerGroup](
 	[ID] [bigint] IDENTITY(1,1) NOT NULL,
 	[ID_SecurityObject] [int] NOT NULL,
 	[ID_User] [int] NOT NULL,
@@ -142,12 +146,95 @@ CREATE TABLE [dbo].[ApplicationsRightsByUser_PreStagingForRealServerGroup](
 	[IsServerGroup0Rule] [bit] NOT NULL,
 	[IsDenyRule] [bit] NOT NULL,
 	[IsDevRule] [bit] NOT NULL,
-	[DerivedFromUserAppRightsID] int NULL,
-	[DerivedFromGroupAppRightsID] int NULL,
-	[DerivedFromGroupAppRightsPreStagingForRealServerGroup_ID] int NULL
- CONSTRAINT [PK_ApplicationsRightsByUser_PreStagingForRealServerGroup] PRIMARY KEY CLUSTERED 
+	[DerivedFromAppRightsID] int NOT NULL
+ CONSTRAINT [PK_ApplicationsRightsByUser_PreStaging1ForRealServerGroup] PRIMARY KEY CLUSTERED 
  (
 	[ID] ASC
+ )
+) ON [PRIMARY]
+GO
+
+-- Pre-Staging table for pre-translation of GROUP-AUTH rows for auth inheritions
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationsRightsByGroup_PreStaging2Inheritions]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+DROP TABLE [dbo].[ApplicationsRightsByGroup_PreStaging2Inheritions]
+GO
+CREATE TABLE [dbo].[ApplicationsRightsByGroup_PreStaging2Inheritions](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[ID_SecurityObject] [int] NOT NULL,
+	[ID_Group] [int] NOT NULL,
+	[ID_ServerGroup] [int] NOT NULL,
+	[IsDenyRule] [bit] NOT NULL,
+	[IsDevRule] [bit] NOT NULL,
+	[DerivedFromAppRightsID] int NOT NULL,
+	[DerivedFromInheritedSecurityObjectRelationID] int NULL,
+	[DerivedFromPreStaging1ID] bigint NOT NULL
+ CONSTRAINT [PK_ApplicationsRightsByGroup_PreStaging2Inheritions] PRIMARY KEY CLUSTERED 
+ (
+	[ID] ASC
+ )
+) ON [PRIMARY]
+GO
+
+-- Pre-Staging table for pre-translation of USER-AUTH rows for auth inheritions
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationsRightsByUser_PreStaging2Inheritions]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+DROP TABLE [dbo].[ApplicationsRightsByUser_PreStaging2Inheritions]
+GO
+CREATE TABLE [dbo].[ApplicationsRightsByUser_PreStaging2Inheritions](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[ID_SecurityObject] [int] NOT NULL,
+	[ID_User] [int] NOT NULL,
+	[ID_ServerGroup] [int] NOT NULL,
+	[IsDenyRule] [bit] NOT NULL,
+	[IsDevRule] [bit] NOT NULL,
+	[DerivedFromAppRightsID] int NOT NULL,
+	[DerivedFromInheritedSecurityObjectRelationID] int NULL,
+	[DerivedFromPreStaging1ID] bigint NOT NULL
+ CONSTRAINT [PK_ApplicationsRightsByUser_PreStaging2Inheritions] PRIMARY KEY CLUSTERED 
+ (
+	[ID] ASC
+ )
+) ON [PRIMARY]
+GO
+
+-- Pre-Staging table for pre-translation of USER-AUTH rows for group auth resolvings
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationsRightsByUser_PreStaging3GroupsResolved]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+DROP TABLE [dbo].[ApplicationsRightsByUser_PreStaging3GroupsResolved]
+GO
+CREATE TABLE [dbo].[ApplicationsRightsByUser_PreStaging3GroupsResolved](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[ID_SecurityObject] [int] NOT NULL,
+	[ID_User] [int] NOT NULL,
+	[ID_ServerGroup] [int] NOT NULL,
+	[IsDevRule] [bit] NOT NULL,
+	[IsDenyRule] [bit] NOT NULL,
+	[DerivedFromAppRightsID] bigint NOT NULL,
+	[DerivedFromPreStaging2_Groups_RealServerGroupID] int NULL,
+	[DerivedFromPreStaging2_Groups_ID] bigint NULL,
+	[DerivedFromPreStaging2_Users_ID] bigint NULL
+ CONSTRAINT [PK_ApplicationsRightsByUser_PreStaging3GroupsResolved] PRIMARY KEY CLUSTERED 
+ (
+	[ID] ASC
+ )
+) ON [PRIMARY]
+GO
+
+-- Pre-Staging table for pre-translation of GROUP-AUTH rows for allow/deny rules
+if exists (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+DROP TABLE [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules]
+GO
+CREATE TABLE [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[ID_SecurityObject] [int] NOT NULL,
+	[ID_User] [int] NOT NULL,
+	[ID_ServerGroup] [int] NOT NULL,
+	[IsDevRule] [bit] NOT NULL,
+	[DerivedFromAppRightsID] int NOT NULL,
+	[DerivedFromPreStaging3ID] bigint NOT NULL,
+	[PK_UniqueRowData] varchar(250) NOT NULL,
+	[UniqueAuthObject] varchar(120) NOT NULL
+ CONSTRAINT [PK_ApplicationsRightsByUser_PreStaging4AllowDenyRules] PRIMARY KEY CLUSTERED 
+ (
+	[PK_UniqueRowData] ASC
  )
 ) ON [PRIMARY]
 GO

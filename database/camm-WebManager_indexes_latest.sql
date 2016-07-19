@@ -936,3 +936,89 @@ GO
 
 
 
+CREATE NONCLUSTERED INDEX [_dta_index_Log_5_1188199283__K4_K3_K1] ON [dbo].[Log]
+(
+	[RemoteIP] ASC,
+	[LoginDate] ASC,
+	[ID] ASC
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
+go
+
+CREATE NONCLUSTERED INDEX [_dta_index_ApplicationsRightsByUser_PreStag_5_1330155834__K2_K4] ON [dbo].[ApplicationsRightsByUser_PreStaging4AllowDenyRules]
+(
+	[ID_SecurityObject] ASC,
+	[ID_ServerGroup] ASC
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
+go
+
+SET ANSI_PADDING ON
+
+go
+
+CREATE NONCLUSTERED INDEX [_dta_index_Applications_CurrentAndInactiveO_5_21575115__K2_K26_K1_3_4_5_6_7_8_9_10_11_12_13_14_15_16_17_18_19_20_21_22_23_24_] ON [dbo].[Applications_CurrentAndInactiveOnes]
+(
+	[Title] ASC,
+	[AppDeleted] ASC,
+	[ID] ASC
+)
+INCLUDE ( 	[TitleAdminArea],
+	[ReleasedOn],
+	[ReleasedBy],
+	[Level1Title],
+	[Level2Title],
+	[Level3Title],
+	[Level4Title],
+	[Level5Title],
+	[Level6Title],
+	[NavURL],
+	[NavFrame],
+	[NavTooltipText],
+	[IsNew],
+	[IsUpdated],
+	[LocationID],
+	[LanguageID],
+	[SystemApp],
+	[ModifiedOn],
+	[ModifiedBy],
+	[AppDisabled],
+	[AuthsAsAppID],
+	[Sort],
+	[ResetIsNewUpdatedStatusOn],
+	[OnMouseOver],
+	[OnMouseOut],
+	[OnClick],
+	[AddLanguageID2URL],
+	[Level1TitleIsHTMLCoded],
+	[Level2TitleIsHTMLCoded],
+	[Level3TitleIsHTMLCoded],
+	[Level4TitleIsHTMLCoded],
+	[Level5TitleIsHTMLCoded],
+	[Level6TitleIsHTMLCoded],
+	[SystemAppType],
+	[Remarks],
+	[RequiredUserProfileFlags],
+	[RequiredUserProfileFlagsRemarks]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
+go
+
+SET ANSI_PADDING ON
+
+go
+
+CREATE NONCLUSTERED INDEX [_dta_index_Applications_CurrentAndInactiveO_5_21575115__K26_K2_K1_17] ON [dbo].[Applications_CurrentAndInactiveOnes]
+(
+	[AppDeleted] ASC,
+	[Title] ASC,
+	[ID] ASC
+)
+INCLUDE ( 	[LocationID]) WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
+go
+
+CREATE STATISTICS [_dta_stat_21575115_17_2_26] ON [dbo].[Applications_CurrentAndInactiveOnes]([LocationID], [Title], [AppDeleted])
+go
+
+CREATE STATISTICS [_dta_stat_21575115_1_2_26] ON [dbo].[Applications_CurrentAndInactiveOnes]([ID], [Title], [AppDeleted])
+go
+
+CREATE STATISTICS [_dta_stat_21575115_1_2_17_26] ON [dbo].[Applications_CurrentAndInactiveOnes]([ID], [Title], [LocationID], [AppDeleted])
+go
+
