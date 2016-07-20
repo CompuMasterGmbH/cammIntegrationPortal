@@ -42,6 +42,40 @@ GO
 IF EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[ApplicationsRightsByGroup_EffectiveCumulative]'))
 DROP VIEW [dbo].[ApplicationsRightsByGroup_EffectiveCumulative]
 GO
+CREATE VIEW [dbo].[ApplicationsRightsByGroup_EffectiveCumulative]
+AS
+---------------------------------------------------------------------------------------------------
+-- cumulated for all registered users (incl. anonymous auths)
+-- AND already added in pre-staging-data: all-server-groups rewritten to real server-group-IDs
+-- AND added entries from inherited security objects/applications
+--> AND calculated remaining AllowRules after subtraction of DenyRules
+-- PLEASE NOTE: anonymous user is a user with a group ID -1 and user ID -1!
+---------------------------------------------------------------------------------------------------
+    SELECT AllowRules.ID_SecurityObject, AllowRules.ID_ServerGroup, AllowRules.ID_Group, AllowRules.IsDevRule
+    FROM dbo.[ApplicationsRightsByGroup_RulesCumulativeWithInherition] AS AllowRules
+        LEFT JOIN 
+            (
+                SELECT ID_SecurityObject, ID_ServerGroup, ID_Group, IsDevRule
+                FROM dbo.[ApplicationsRightsByGroup_RulesCumulativeWithInherition] 
+                WHERE IsDenyRule <> 0
+            ) AS DenyRules
+            ON AllowRules.ID_SecurityObject = DenyRules.ID_SecurityObject 
+                AND AllowRules.ID_ServerGroup = DenyRules.ID_ServerGroup 
+                AND AllowRules.ID_Group = DenyRules.ID_Group
+                AND AllowRules.IsDevRule = DenyRules.IsDevRule
+		INNER JOIN dbo.Applications 
+			ON AllowRules.ID_SecurityObject = dbo.Applications.ID
+    WHERE AllowRules.IsDenyRule = 0
+        AND DenyRules.ID_SecurityObject IS NULL
+		AND 
+		(
+			(
+				AllowRules.IsDevRule = 0 
+				AND dbo.Applications.AppDisabled = 0
+			)
+			OR AllowRules.IsDevRule = 1
+		)
+GO
 
 ----------------------------------------------------
 -- [dbo].[AdminPrivate_ServerGroupAccessLevels]
