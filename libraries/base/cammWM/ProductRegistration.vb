@@ -292,10 +292,22 @@ Namespace CompuMaster.camm.WebManager.Registration
                 result.AuthsDirectlyCount = GetLongResult(cmd)
 
                 If Setup.DatabaseUtils.Version(Me.cammWebManger, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
-                    cmd.CommandText = "SELECT count(*) as AuthsCount from [view_ApplicationRights_CommulatedPerUser_FAST]"
+                    Dim Sql As String = "SELECT count(*) AS AuthsCount " & vbNewLine &
+                        "FROM (" & vbNewLine &
+                        "	SELECT ID_Application, ID_User" & vbNewLine &
+                        "	FROM [view_ApplicationRights_CommulatedPerUser_FAST]" & vbNewLine &
+                        "	GROUP BY ID_Application, ID_User" & vbNewLine &
+                        "	) AS UniqueAuths"
+                    cmd.CommandText = Sql
                     result.AuthsIndirectlyCount = GetLongResult(cmd)
                 Else
-                    cmd.CommandText = "SELECT count(*) as AuthsCount from [ApplicationsRightsByUser_EffectiveCumulative]"
+                    Dim Sql As String = "SELECT count(*) AS AuthsCount " & vbNewLine &
+                        "FROM (" & vbNewLine &
+                        "	SELECT ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule" & vbNewLine &
+                        "	FROM [ApplicationsRightsByUser_EffectiveCumulative]" & vbNewLine &
+                        "	GROUP BY ID_SecurityObject, ID_ServerGroup, ID_User, IsDevRule" & vbNewLine &
+                        "	) AS UniqueAuths"
+                    cmd.CommandText = Sql
                     result.AuthsIndirectlyCount = GetLongResult(cmd)
                 End If
 
