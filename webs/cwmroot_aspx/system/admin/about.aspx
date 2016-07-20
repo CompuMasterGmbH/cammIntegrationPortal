@@ -355,7 +355,7 @@
                         <tr>
                             <td valign="Top" width="160">
                                 <p>
-                                    <font face="Arial" size="2">Licence description</font></p>
+                                    <font face="Arial" size="2">Active subscription</font></p>
                             </td>
                             <td valign="Top" width="240">
                                 <p>
