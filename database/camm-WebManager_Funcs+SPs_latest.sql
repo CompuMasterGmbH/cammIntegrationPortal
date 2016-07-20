@@ -2657,7 +2657,7 @@ WHERE ResetIsNewUpdatedStatusOn < GETDATE()
 			dbo.Applications.ID IN 
 				(
 					SELECT ID_SecurityObject
-					FROM dbo.ApplicationsRightsByUser_EffectiveCumulative
+					FROM dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules
 					WHERE ID_ServerGroup = @ServerGroupID 
 						AND ID_User = @UserID 
 				)	
@@ -2756,7 +2756,7 @@ WHERE ResetIsNewUpdatedStatusOn < GETDATE()
 				dbo.Applications.ID IN 
 					(
 					SELECT ID_SecurityObject
-					FROM dbo.ApplicationsRightsByUser_EffectiveCumulative
+					FROM dbo.[ApplicationsRightsByUser_PreStaging4AllowDenyRules]
 						WHERE ID_ServerGroup = @ServerGroupID 
 							AND ID_User = @UserID 
 					)	
@@ -3687,13 +3687,13 @@ If IsNull(@SecurityObjectName, '') = 'Public' And @UserID <> -1
 DECLARE @FoundAuthsCount int
 IF @SecurityObjectID <> 0
 	SELECT @FoundAuthsCount = COUNT(*)
-		FROM dbo.ApplicationsRightsByUser_EffectiveCumulative WITH (NOLOCK)
+		FROM dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules WITH (NOLOCK)
 		WHERE ID_User = @UserID
 			AND ID_ServerGroup = @ServerGroupID 
 			AND ID_SecurityObject = @SecurityObjectID
 ELSE
 	SELECT @FoundAuthsCount = COUNT(*)
-		FROM dbo.ApplicationsRightsByUser_EffectiveCumulative WITH (NOLOCK)
+		FROM dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules WITH (NOLOCK)
 		WHERE ID_User = @UserID
 			AND ID_ServerGroup = @ServerGroupID 
 			AND ID_SecurityObject IN (SELECT ID FROM dbo.Applications WITH (NOLOCK) WHERE Title = @SecurityObjectName)
@@ -3769,7 +3769,7 @@ If IsNull(@WebApplication, '') = 'Public' And @CurUserID Is Not Null
 	
 DECLARE @FoundAuthsCount int
 SELECT @FoundAuthsCount = COUNT(*)
-	FROM dbo.ApplicationsRightsByUser_EffectiveCumulative WITH (NOLOCK)
+	FROM dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules WITH (NOLOCK)
 	WHERE ID_User = IsNull(@CurUserID, -1)
 		AND ID_ServerGroup = @ServerGroupID 
 		AND ID_SecurityObject IN (SELECT ID FROM dbo.Applications WITH (NOLOCK) WHERE Title = @WebApplication)
@@ -4000,11 +4000,19 @@ If @FoundFirstExistingIDApplication Is Null
 -- UserLoginValidierung --
 ------------------------------
 DECLARE @FoundFirstIDApplication int
-SELECT TOP 1 @FoundFirstIDApplication = ID_SecurityObject
-    FROM dbo.ApplicationsRightsByUser_EffectiveCumulative WITH (NOLOCK)
-	WHERE ID_User = IsNull(@CurUserID, -1)
-		AND ID_ServerGroup = @ServerGroupID 
-		AND ID_SecurityObject IN (SELECT ID FROM dbo.Applications WITH (NOLOCK) WHERE Title = @WebApplication)
+DECLARE @IsDevUser bit
+SELECT TOP 1 @FoundFirstIDApplication = ID_SecurityObject, @IsDevUser = IsDevRule
+    FROM dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules WITH (NOLOCK)
+	WHERE ID_User = IsNull(2, -1)
+		AND ID_ServerGroup = 1
+		AND ID_SecurityObject IN (SELECT ID FROM dbo.Applications WITH (NOLOCK) WHERE Title = 'rmmh Wiki')
+ORDER BY IsDevRule DESC          
+
+----------------------------------------------------------------
+-- Deactivate access logging for dev&test users --
+----------------------------------------------------------------
+IF IsNull(@IsDevUser, 0) <> 0
+	SELECT @LoggingSuccess_Disabled = 1
     
 ----------------------------------------------------------------
 -- Ergebnis-Rückmeldung und ordentliche Protokollierung
