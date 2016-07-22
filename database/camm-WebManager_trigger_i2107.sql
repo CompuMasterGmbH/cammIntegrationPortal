@@ -1505,6 +1505,8 @@ BEGIN
 			DELETE FROM dbo.Memberships WHERE ID_Group IN ( SELECT ID FROM deleted ) 
 			DELETE FROM dbo.ApplicationsRightsByGroup WHERE ID_GroupOrPerson IN ( SELECT ID FROM deleted ) 
 			DELETE FROM dbo.System_SubSecurityAdjustments WHERE TableName = 'Groups' AND TablePrimaryIDValue IN ( SELECT ID FROM deleted ) 
+			--Break up membership inherition
+			DELETE FROM [dbo].[MembershipsClones] WHERE ID_Group IN ( SELECT ID FROM deleted ) OR ID_ClonedGroup IN ( SELECT ID FROM deleted ) 
 		END
 END
 GO
@@ -1526,5 +1528,8 @@ BEGIN
 			DELETE FROM dbo.ApplicationsRightsByGroup WHERE ID_Application IN ( SELECT ID FROM deleted ) 
 			DELETE FROM dbo.ApplicationsRightsByUser WHERE ID_Application IN ( SELECT ID FROM deleted ) 
 			DELETE FROM dbo.System_SubSecurityAdjustments WHERE TableName = 'Applications' AND TablePrimaryIDValue IN ( SELECT ID FROM deleted ) 
+			--Break up app-rights inherition
+			UPDATE dbo.Applications_CurrentAndInactiveOnes SET AuthsAsAppID = NULL WHERE ID IN ( SELECT ID FROM deleted )
+			DELETE [dbo].[ApplicationsRights_Inheriting] WHERE ID_Inheriting IN ( SELECT ID FROM deleted ) OR ID_Source IN ( SELECT ID FROM deleted )
 		END
 END
