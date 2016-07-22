@@ -26,6 +26,73 @@ Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIData
 
 Namespace CompuMaster.camm.WebManager.Pages.Administration
 
+    Public Class ApplicationBasePage
+        Inherits Page
+
+        Friend Sub New()
+        End Sub
+
+        ''' <summary>
+        ''' The authorizations overview block for an application as HTML
+        ''' </summary>
+        ''' <param name="securityObjectID"></param>
+        ''' <returns></returns>
+        Public Function RenderAuthorizations(securityObjectID As Integer) As String
+            Dim strblr As New System.Text.StringBuilder
+            strblr.Append("<table cellSpacing=""0"" cellPadding=""0"" border=""0"">")
+            Dim sql As String
+            If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
+                sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                              "SELECT ItemType, ID_Group, Name, ID_User, LoginDisabled, LoginName, DevelopmentTeamMember, IsDenyRule FROM view_ApplicationRights WHERE ID_Application = 6185 AND ID_AppRight Is NOT Null ORDER BY ItemType, Name, DevelopmentTeamMember, IsDenyRule"
+            Else
+                sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                              "SELECT ItemType, ID_Group, Name, ID_User, LoginDisabled, LoginName, DevelopmentTeamMember, 0 AS IsDenyRule FROM view_ApplicationRights WHERE ID_Application = @ID AND ID_AppRight Is NOT Null ORDER BY ItemType, Name, DevelopmentTeamMember"
+            End If
+            Dim cmd2 As New SqlClient.SqlCommand(sql, New SqlConnection(cammWebManager.ConnectionString))
+            cmd2.Parameters.Add("@ID", SqlDbType.Int).Value = CType(Trim(Request.QueryString("ID")), Integer)
+            Dim dtUpdate As DataTable = FillDataTable(cmd2, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+
+            If Not dtUpdate Is Nothing Then
+                For Each dr As DataRow In dtUpdate.Rows
+                    strblr.Append("<TR><TD VAlign=""Top"" WIDTH=""160""><P><FONT face=""Arial"" size=""2"">")
+                    If Utils.Nz(dr("IsDenyRule"), False) Then
+                        strblr.Append("DENY")
+                    Else
+                        strblr.Append("ALLOW")
+                    End If
+                    If CInt(dr("ItemType")) = 1 Then
+                        'Groups
+                        strblr.Append(" Group ")
+                        If Utils.Nz(dr("DevelopmentTeamMember"), False) Then
+                            strblr.Append("<strong title=""Authorization For test And development purposes And For inactive security objects""> {Dev} </strong>")
+                        End If
+                        strblr.Append("</FONT></P></TD><TD VAlign=""Top"" Width=""240""><P><FONT face=""Arial"" size=""2"">")
+                        strblr.Append("<a href=""groups_update.aspx?ID=" & Utils.Nz(dr("ID_Group"), 0) & """>")
+                        Dim GroupName As String = Utils.Nz(dr("Name"), String.Empty)
+                        If Trim(GroupName) = "" Then GroupName = "{Group ID " & Utils.Nz(dr("ID_Group"), 0) & "}"
+                        strblr.Append(Server.HtmlEncode(GroupName))
+                        strblr.Append("</a>")
+                    Else
+                        'Users
+                        strblr.Append(" User ")
+                        If Utils.Nz(dr("DevelopmentTeamMember"), False) Then
+                            strblr.Append("<strong title=""Authorization For test And development purposes And For inactive security objects""> {Dev} </strong>")
+                        End If
+                        strblr.Append("</FONT></P></TD><TD VAlign=""Top"" Width=""240""><P><FONT face=""Arial"" size=""2"">")
+                        strblr.Append("<a href=""users_update.aspx?ID=" & Utils.Nz(dr("ID_User"), 0).ToString & """>")
+                        strblr.Append(Utils.Nz(Server.HtmlEncode(Me.SafeLookupUserFullName(Utils.Nz(dr("ID_User"), -1L))), String.Empty) & " (" & Server.HtmlEncode(Utils.Nz(dr("LoginName"), String.Empty)) & ")")
+                        strblr.Append("</a>")
+                        strblr.Append(Utils.Nz(IIf(Utils.Nz(dr("LoginDisabled"), False) <> False, "&nbsp;<em><font color= ""#D1D1D1"">(Disabled)</font></em>", ""), String.Empty))
+                    End If
+                    strblr.Append("</FONT></P></TD></TR>")
+                Next
+            End If
+            strblr.Append("</table>")
+            Return strblr.ToString
+        End Function
+
+    End Class
+
     ''' <summary>
     '''     A page to view list of applications
     ''' </summary>
@@ -322,7 +389,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     ''     A page to update an application
     '' </summary>
     Public Class ApplicationUpdate
-        Inherits Page
+        Inherits ApplicationBasePage
 
 #Region "Variable Declaration"
         Protected lblField_ID, lblField_ReleasedOn, lblField_ModifiedOn, lblErrMsg As Label
@@ -365,14 +432,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Sub SetControlValues()
             Dim dtUpdate As New DataTable
             Dim dr As DataRow
-            Dim strBlr As New Text.StringBuilder
 
             hypUsersMissingFlags.NavigateUrl = "apps_users_missing_flags.aspx?ID=" & CType(Request.QueryString("ID"), Integer)
 
             Try
                 lblField_ID.Text = Server.HtmlEncode(Trim(Request.QueryString("ID")))
                 Dim MySecurityObjectInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(CInt(Trim(Request.QueryString("ID"))), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
-                Dim cmd As New SqlClient.SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                Dim cmd As New SqlClient.SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT * FROM dbo.Applications WHERE ID=@ID", New SqlConnection(cammWebManager.ConnectionString))
                 cmd.Parameters.Add("@ID", SqlDbType.Int).Value = CType(Request.QueryString("ID"), Integer)
                 dtUpdate = FillDataTable(cmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
@@ -455,34 +521,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Throw New Exception("Unexpected exception", ex)
                 End Try
 
-                Try
-                    strBlr.Append("<table cellSpacing=""0"" cellPadding=""0"" border=""0"">")
-                    Dim cmd2 As New SqlClient.SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT ItemType, ID_Group, Name, ID_User, LoginDisabled, LoginName, DevelopmentTeamMember FROM view_ApplicationRights WHERE ID_Application = @ID AND ID_AppRight Is NOT Null ORDER BY ItemType, Name", New SqlConnection(cammWebManager.ConnectionString))
-                    cmd2.Parameters.Add("@ID", SqlDbType.Int).Value = CType(Trim(Request.QueryString("ID")), Integer)
-                    dtUpdate = FillDataTable(cmd2, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
-
-                    If Not dtUpdate Is Nothing Then
-                        For Each dr In dtUpdate.Rows
-                            If CInt(dr("ItemType")) = 1 Then
-                                strBlr.Append("<TR><TD VAlign=""Top"" WIDTH=""160""><P><FONT face=""Arial"" size=""2"">Group</FONT></P></TD><TD VAlign=""Top"" Width=""240""><P><FONT face=""Arial"" size=""2""><a href=""groups_update.aspx?ID=" & Utils.Nz(dr("ID_Group"), 0) & """>" & Server.HtmlEncode(Utils.Nz(dr("Name"), String.Empty)) & "</a></FONT></P></TD></TR>")
-                            Else
-                                strBlr.Append("<TR><TD VAlign=""Top"" WIDTH=""160""><P><FONT face=""Arial"" size=""2"">User " + Utils.Nz(IIf(Utils.Nz(dr("DevelopmentTeamMember"), False), "<B title=""Authorization for test and development purposes and for inactive security objects""> {Dev} </B>", ""), String.Empty) + "</FONT></P></TD><TD VAlign=""Top"" Width=""240""><P><FONT face=""Arial"" size=""2""><a href=""users_update.aspx?ID=" & Utils.Nz(dr("ID_User"), 0).ToString & """>" & Utils.Nz(Server.HtmlEncode(Me.SafeLookupUserFullName(Utils.Nz(dr("ID_User"), -1L))), String.Empty) & " (" & Server.HtmlEncode(Utils.Nz(dr("LoginName"), String.Empty)) & ")</a>" & Utils.Nz(IIf(Utils.Nz(dr("LoginDisabled"), False) <> False, "&nbsp;<em><font color=""#D1D1D1"">(Disabled)</font></em>", ""), String.Empty) & "</FONT></P></TD></TR>")
-                            End If
-                        Next
-                    End If
-                Catch ex As Exception
-                    Throw New Exception("Unexpected exception", ex)
-                End Try
-
-                strBlr.Append("</table>")
-                tdAddLinks.InnerHtml = strBlr.ToString
+                tdAddLinks.InnerHtml = Me.RenderAuthorizations(MySecurityObjectInfo.ID)
             Catch ex As Exception
                 Throw New Exception("Unexpected exception", ex)
             Finally
                 dtUpdate.Dispose()
                 dr = Nothing
-                strBlr = Nothing
             End Try
         End Sub
 
@@ -493,8 +537,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 'bind location dropdownlist
                 cmbLocation.Items.Clear()
                 If Field_LocationID = Nothing Then cmbLocation.Items.Add(New ListItem("(Please select!)", ""))
-                dtUpdate = FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM System_Servers WHERE Enabled = 1 ORDER BY ServerDescription", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+                dtUpdate = FillDataTable(New SqlCommand("Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                                    "Select * FROM System_Servers WHERE Enabled = 1 ORDER BY ServerDescription", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                 If Not dtUpdate Is Nothing Then
                     For Each dr As DataRow In dtUpdate.Rows
@@ -511,8 +555,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 'bind language dropdownlist
                 cmbLanguage.Items.Clear()
                 If Field_Language = Nothing Then cmbLanguage.Items.Add(New ListItem("(Please select!)", ""))
-                dtUpdate = FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM view_Languages WHERE IsActive = 1 ORDER BY Description", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+                dtUpdate = FillDataTable(New SqlCommand("Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                                    "Select * FROM view_Languages WHERE IsActive = 1 ORDER BY Description", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                 If Not dtUpdate Is Nothing Then
                     For Each dr As DataRow In dtUpdate.Rows
@@ -552,7 +596,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
         Private Sub SetSubmitErrorText(ByVal requiredFlags As ArrayList)
 
-            lblErrMsg.Text = Server.HtmlDecode("<hr><p><b>You changed the Required user flags,</b><br>but there are some users authorized for this app which do not have one or more of the required user flags, or the value of a flag is invalid for its type. You need to <b>add these flags</b> to all listed users <b>before</b> you can update this application.</p>")
+            lblErrMsg.Text = Server.HtmlDecode("<hr><p><b>You changed the Required user flags,</b><br>but there are some users authorized For this app which Do Not have one Or more Of the required user flags, Or the value Of a flag Is invalid For its type. You need To <b>add these flags</b> To all listed users <b>before</b> you can update this application.</p>")
             lblErrMsg.Text &= "<p>The following flags are affected:<br>"
             Dim HtmlCode As New System.Text.StringBuilder
             For Each rFlag As String In requiredFlags
@@ -658,7 +702,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     '''     A page to delete an application
     ''' </summary>
     Public Class ApplicationDelete
-        Inherits Page
+        Inherits ApplicationBasePage
 
 #Region "Variable Declaration"
         Protected lblField_ID, lblField_Name, lblField_Title, lblField_LocationID, lblErrMsg As Label
@@ -687,7 +731,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Sub DeleteApplication()
             Dim Field_Language As Integer
             Dim dtDelete As New DataTable
-            Dim strBlr As New Text.StringBuilder
 
             lblField_ID.Text = Request.QueryString("ID")
             Dim MySecurityObjectInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(Utils.Nz(lblField_ID.Text, 0), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
@@ -751,35 +794,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Throw New Exception("Unexpected exception", ex)
             End Try
 
-            Try
-                strBlr.Append("<table cellSpacing=""0"" cellPadding=""0"" border=""0"">")
-                Dim sqlParams As SqlParameter() = {New SqlParameter("@ID_Application", lblField_ID.Text)}
-                dtDelete = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT ItemType, ID_Group, Name, ID_User, LoginDisabled, LoginName FROM view_ApplicationRights WHERE ID_Application = @ID_Application AND ID_AppRight Is NOT Null ORDER BY ItemType, Title", CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
-
-                If Not dtDelete Is Nothing Then
-                    For Each dr As DataRow In dtDelete.Rows
-                        If Utils.Nz(dr("ItemType"), 0) = 1 Then
-                            strBlr.Append("<TR><TD VAlign=""Top"" WIDTH=""160""><P><FONT face=""Arial"" size=""2"">Group</FONT></P></TD><TD VAlign=""Top"" Width=""240""><P><FONT face=""Arial"" size=""2""><a href=""groups_update.aspx?ID=" & Utils.Nz(dr("ID_Group"), 0).ToString & """>" & Server.HtmlEncode(Utils.Nz(dr("Name"), String.Empty)) & "</a></FONT></P></TD></TR>")
-                        Else
-#If VS2015OrHigher = True Then
-#Disable Warning BC40000 ' Der Typ oder Member ist veraltet.
-#End If
-                            strBlr.Append("<TR><TD VAlign=""Top"" WIDTH=""160""><P><FONT face=""Arial"" size=""2"">User</FONT></P></TD><TD VAlign=""Top"" Width=""240""><P><FONT face=""Arial"" size=""2""><a href=""users_update.aspx?ID=" & Utils.Nz(dr("ID_User"), 0).ToString & """>" & Server.HtmlEncode(Utils.Nz(cammWebManager.System_GetUserDetail(dr("ID_User"), "CompleteName"), String.Empty)) & " (" & Server.HtmlEncode(Utils.Nz(dr("LoginName"), String.Empty)) & ")</a>" & Utils.Nz(IIf(Utils.Nz(dr("LoginDisabled"), False), "&nbsp;<em><font color= ""#D1D1D1"">(Disabled)</font></em>", ""), String.Empty) & "</FONT></P></TD></TR>")
-#If VS2015OrHigher = True Then
-#Enable Warning BC40000 ' Der Typ oder Member ist veraltet.
-#End If
-                        End If
-                    Next
-                End If
-            Catch ex As Exception
-                Throw New Exception("Unexpected exception", ex)
-            Finally
-                dtDelete.Dispose()
-            End Try
-
-            strBlr.Append("</table>")
-            tdAddLinks.InnerHtml = strBlr.ToString
+            tdAddLinks.InnerHtml = Me.RenderAuthorizations(MySecurityObjectInfo.ID)
         End Sub
 #End Region
 
