@@ -185,13 +185,13 @@ Namespace CompuMaster.camm.WebManager.Notifications
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
             eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
                 ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome_WithPassword, userInfo.LoginName, password, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome_WithPassword, userInfo.LoginName, password, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf &
                 ControlChars.CrLf &
                 cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
             eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
                 "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome_WithPassword, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(password) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome_WithPassword, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(password) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" &
                 "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
                 "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"
@@ -231,13 +231,13 @@ Namespace CompuMaster.camm.WebManager.Notifications
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
             eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
                 ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome, userInfo.LoginName, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome, userInfo.LoginName, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf &
                 ControlChars.CrLf &
                 cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
             eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
                 "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" &
                 "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
                 "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"
@@ -278,13 +278,13 @@ Namespace CompuMaster.camm.WebManager.Notifications
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
             eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
                 ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextWelcome, userInfo.LoginName, password, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextWelcome, userInfo.LoginName, password, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf &
                 ControlChars.CrLf &
                 cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
             eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
                 "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextWelcome, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(password) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextWelcome, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(password) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" &
                 "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
                 "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"
@@ -468,13 +468,13 @@ Namespace CompuMaster.camm.WebManager.Notifications
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
             eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
                 ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.UserManagement_ResetPWByAdmin_EMailMsg, newPassword, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.UserManagement_ResetPWByAdmin_EMailMsg, newPassword, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf &
                 ControlChars.CrLf &
                 cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
             eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
                 "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_ResetPWByAdmin_EMailMsg, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(newPassword) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_ResetPWByAdmin_EMailMsg, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(newPassword) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" &
                 "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
                 "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"
@@ -516,13 +516,13 @@ Namespace CompuMaster.camm.WebManager.Notifications
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
             eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
                 ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.SendPassword_EMailMessage, PW, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.SendPassword_EMailMessage, PW, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf &
                 ControlChars.CrLf &
                 cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
             eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
                 "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.SendPassword_EMailMessage, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(PW) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.SendPassword_EMailMessage, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(PW) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" &
                 "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
                 "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"
@@ -597,14 +597,14 @@ Namespace CompuMaster.camm.WebManager.Notifications
             Dim MainSubject As String = cammWebManager.Internationalization.UserManagement_NewUser_SubjectAuthCheckSuccessfull
             Dim eMailBody As String = UserSalutation(userInfo) & ControlChars.CrLf &
                 ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextAuthCheckSuccessfull, userInfo.LoginName, GetUserLogonServers(cammWebManager, userInfo.ID)) & ControlChars.CrLf &
+                Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextAuthCheckSuccessfull, userInfo.LoginName, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf &
                 ControlChars.CrLf &
                 cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
             Dim eMailHTMLBody As String
             eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
                 "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextAuthCheckSuccessfull, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.ID)))) & "</p>" &
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextAuthCheckSuccessfull, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" &
                 "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
                 "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
                 "</body></html>"

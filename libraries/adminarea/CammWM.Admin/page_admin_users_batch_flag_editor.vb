@@ -544,13 +544,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
             Dim Cell As TableCell
 
             'userid
-            Result.Cells.Add(GetTableCell(userInfo.ID.ToString))
+            Result.Cells.Add(GetTableCell(userInfo.IDLong.ToString))
 
             'user fullname
             Cell = GetTableCell()
             Dim hpl As New HyperLink
             hpl.Target = "_blank"
-            hpl.NavigateUrl = "users_update.aspx?ID=" & userInfo.ID.ToString
+            hpl.NavigateUrl = "users_update.aspx?ID=" & userInfo.IDLong.ToString
             hpl.Text = Server.HtmlEncode(userInfo.LoginName & " (" & userInfo.FirstName & " " & userInfo.LastName & ")")
             hpl.ToolTip = Server.HtmlEncode(userInfo.Company & ", " & userInfo.FullName)
             Cell.Controls.Add(hpl)
@@ -570,7 +570,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
             Dim Result As TableCell = GetTableCell()
 
             Dim txtFlagValue As New TextBox
-            txtFlagValue.ID = "txtFlagValue#" & userInfo.ID
+            txtFlagValue.ID = "txtFlagValue#" & userInfo.IDLong
             txtFlagValue.Text = GetFlagValue(userInfo)
             txtFlagValue.Width = Unit.Pixel(350)
             txtFlagValue.Attributes.Add("onfocus", "this.select()")

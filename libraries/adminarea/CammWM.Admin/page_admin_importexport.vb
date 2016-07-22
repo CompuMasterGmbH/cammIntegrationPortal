@@ -1170,7 +1170,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             'Password too weak - use a random password now
                             Dim userAccesslevel As Integer = CType(userData("User_AccessLevel"), Integer)
                             Dim newPW As String = cammWebManager.PasswordSecurity.InspectionSeverities(userAccesslevel).CreateRandomSecurePassword
-                            If MyUser.ID <> Nothing Then
+                            If MyUser.IDLong <> Nothing Then
                                 'User account has already been created in the try block
                                 MyUser.SetPassword(newPW, SuppressNotificationMails)
                             Else

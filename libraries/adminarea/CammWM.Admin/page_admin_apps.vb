@@ -198,10 +198,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     CType(e.Item.FindControl("hlnTitleAdminArea"), HyperLink).Text = ""
 
                     If Utils.Nz(.Item("TitleAdminArea"), "") <> "" Then CType(e.Item.FindControl("hlnTitleAdminArea"), HyperLink).Text = Server.HtmlEncode(Utils.Nz(.Item("TitleAdminArea"), "")) Else CType(e.Item.FindControl("hlnTitleAdminArea"), HyperLink).Text = Server.HtmlEncode(Utils.Nz(.Item("Title"), String.Empty))
-                    Dim userinfo As WMSystem.UserInformation
-                    If camm.WebManager.WMSystem.SpecialUsers.User_Anonymous = CInt(.Item("ReleasedByID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_Code = CInt(.Item("ReleasedByID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_Invalid = CInt(.Item("ReleasedByID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_Public = CInt(.Item("ReleasedByID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_UpdateProcessor = CInt(.Item("ReleasedByID")) Then
-                        userinfo = New WebManager.WMSystem.UserInformation(CType(.Item("ReleasedByID"), Int64), cammWebManager, False)
-                        CType(e.Item.FindControl("hlnReleasedByLastName"), HyperLink).Text = Server.HtmlEncode(Utils.Nz(userinfo.FullName, ""))
+                    If camm.WebManager.WMSystem.SpecialUsers.User_Anonymous = CLng(.Item("ReleasedByID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_Code = CLng(.Item("ReleasedByID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_Invalid = CLng(.Item("ReleasedByID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_Public = CLng(.Item("ReleasedByID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_UpdateProcessor = CLng(.Item("ReleasedByID")) Then
+                        CType(e.Item.FindControl("hlnReleasedByLastName"), HyperLink).Text = Server.HtmlEncode(Me.SafeLookupUserFullName(CType(.Item("ReleasedByID"), Int64)))
                         CType(e.Item.FindControl("hlnReleasedByLastName"), HyperLink).NavigateUrl = ""
                     Else
                         CType(e.Item.FindControl("hlnReleasedByLastName"), HyperLink).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(.Item("ReleasedByFirstName"), .Item("ReleasedByLastName"), CLng(Utils.Nz(.Item("ReleasedByID"), 0))))
@@ -431,10 +429,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
 
                 Try
-                    If Not MySecurityObjectInfo.ReleasedBy_UserInfo Is Nothing Then
+                    If MySecurityObjectInfo.ReleasedBy_UserID <> 0 Then
                         lblField_ReleasedOn.Text = Utils.Nz(MySecurityObjectInfo.ReleasedOn, String.Empty)
-                        Dim Field_ReleasedByID As String = Utils.Nz(MySecurityObjectInfo.ReleasedBy_UserInfo.ID, String.Empty)
-                        Dim Field_ReleasedByName As String = MySecurityObjectInfo.ReleasedBy_UserInfo.FullName
+                        Dim Field_ReleasedByID As String = MySecurityObjectInfo.ReleasedBy_UserID.ToString
+                        Dim Field_ReleasedByName As String = Me.SafeLookupUserFullName(MySecurityObjectInfo.ReleasedBy_UserID)
                         hypCreatedBy.NavigateUrl = "users_update.aspx?ID=" & Field_ReleasedByID
                         hypCreatedBy.Text = Server.HtmlEncode(Utils.Nz(Field_ReleasedByName, String.Empty))
                     End If
@@ -447,18 +445,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 lblField_ModifiedOn.Text = Utils.Nz(MySecurityObjectInfo.ModifiedOn, String.Empty)
                 Try
                     Dim Field_ModifiedByID As String = ""
-                    If Val(MySecurityObjectInfo.ModifiedBy_UserID & "") <> 0 Then
-                        Field_ModifiedByID = Utils.Nz(MySecurityObjectInfo.ModifiedBy_UserInfo.ID, String.Empty)
-                        Dim Field_ModifiedByName As String = MySecurityObjectInfo.ModifiedBy_UserInfo.FullName
-                        hypLastModifiedBy.NavigateUrl = "users_update.aspx?ID=" & Field_ModifiedByID
-                        hypLastModifiedBy.Text = Server.HtmlEncode(Utils.Nz(Field_ModifiedByName, String.Empty))
-                    Else
-                        Dim userinfo As New CompuMaster.camm.WebManager.WMSystem.UserInformation(CType(MySecurityObjectInfo.ModifiedBy_UserID, Int64), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem), True)
-                        Field_ModifiedByID = Utils.Nz(MySecurityObjectInfo.ModifiedBy_UserID, String.Empty)
-                        Dim Field_ModifiedByName As String = userinfo.FullName
-                        hypLastModifiedBy.NavigateUrl = "users_update.aspx?ID=" & Field_ModifiedByID
-                        hypLastModifiedBy.Text = Server.HtmlEncode(Utils.Nz(Field_ModifiedByName, "{User ID 0}"))
-                    End If
+                    Field_ModifiedByID = MySecurityObjectInfo.ModifiedBy_UserID.ToString
+                    Dim Field_ModifiedByName As String = Me.SafeLookupUserFullName(MySecurityObjectInfo.ModifiedBy_UserID)
+                    hypLastModifiedBy.NavigateUrl = "users_update.aspx?ID=" & Field_ModifiedByID
+                    hypLastModifiedBy.Text = Server.HtmlEncode(Utils.Nz(Field_ModifiedByName, String.Empty))
                 Catch ex As ArgumentNullException
                     hypLastModifiedBy.Text = "{User ID 0}"
                 Catch ex As Exception

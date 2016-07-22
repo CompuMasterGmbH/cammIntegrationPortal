@@ -32,7 +32,16 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' </summary>
         ''' <param name="userInfo">The userinformation object.</param>
         Public Shared Function FormatUserName(ByVal userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation) As String
-            Return FormatUserName(userInfo.FirstName, userInfo.LastName, userInfo.LoginName, userInfo.NameAddition, userInfo.ID, userInfo.FullName)
+            Return FormatUserName(userInfo, False)
+        End Function
+
+        ''' <summary>
+        ''' Formats a username depending of which parts of the username exists.
+        ''' </summary>
+        ''' <param name="userInfo">The userinformation object.</param>
+        ''' <param name="additionallyWithLoginName">True to enable additional output of login name, e.g. &quot;User Full Name (Login name)&quot;</param>
+        Public Shared Function FormatUserName(ByVal userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation, additionallyWithLoginName As Boolean) As String
+            Return FormatUserName(userInfo.FirstName, userInfo.LastName, userInfo.LoginName, userInfo.NameAddition, userInfo.IDLong, userInfo.FullName, additionallyWithLoginName)
         End Function
 
         ''' <summary>
@@ -42,7 +51,7 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' <param name="lastName">The last name of the user.</param>
         ''' <remarks>The parameters are mostly expected as a Datarow item. This is why there are of type Object. The function itself will do a check if theyre are NullReference, NullValue or DBnull.Value.</remarks>
         Public Shared Function FormatUserName(ByVal firstName As Object, ByVal lastName As Object) As String
-            Return FormatUserName(firstName, lastName, Nothing, Nothing, Nothing)
+            Return FormatUserName(firstName, lastName, CType(Nothing, Object), CType(Nothing, Object), CType(Nothing, Long))
         End Function
 
         ''' <summary>
@@ -53,7 +62,7 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' <param name="userID">The id of the user.</param>
         ''' <remarks>The parameters are mostly expected as a Datarow item. This is why there are of type Object. The function itself will do a check if theyre are NullReference, NullValue or DBnull.Value.</remarks>
         Public Shared Function FormatUserName(ByVal firstName As Object, ByVal lastName As Object, ByVal userID As Long) As String
-            Return FormatUserName(firstName, lastName, Nothing, Nothing, userID)
+            Return FormatUserName(firstName, lastName, CType(Nothing, Object), CType(Nothing, Object), userID)
         End Function
 
         ''' <summary>
@@ -64,7 +73,7 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' <param name="loginName">The login name of the user.</param>
         ''' <remarks>The parameters are mostly expected as a Datarow item. This is why there are of type Object. The function itself will do a check if theyre are NullReference, NullValue or DBnull.Value.</remarks>
         Public Shared Function FormatUserName(ByVal firstName As Object, ByVal lastName As Object, ByVal loginName As Object) As String
-            Return FormatUserName(firstName, lastName, loginName, Nothing, Nothing)
+            Return FormatUserName(firstName, lastName, loginName, Nothing, CType(Nothing, Long))
         End Function
 
         ''' <summary>
@@ -88,7 +97,7 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' <param name="nameAddittion">The name addittion of the user.</param>
         ''' <remarks>The parameters are mostly expected as a Datarow item. This is why there are of type Object. The function itself will do a check if theyre are NullReference, NullValue or DBnull.Value.</remarks>
         Public Shared Function FormatUserName(ByVal firstName As Object, ByVal lastName As Object, ByVal loginName As Object, ByVal nameAddittion As Object) As String
-            Return FormatUserName(firstName, lastName, loginName, nameAddittion, Nothing)
+            Return FormatUserName(firstName, lastName, loginName, nameAddittion, CType(Nothing, Long))
         End Function
 
         ''' <summary>
@@ -101,7 +110,7 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' <param name="userID">The id of the user.</param>
         ''' <remarks>The parameters are mostly expected as a Datarow item. This is why there are of type Object. The function itself will do a check if theyre are NullReference, NullValue or DBnull.Value.</remarks>
         Public Shared Function FormatUserName(ByVal firstName As Object, ByVal lastName As Object, ByVal loginName As Object, ByVal nameAddittion As Object, ByVal userID As Long) As String
-            Return FormatUserName(firstName, lastName, loginName, nameAddittion, userID, "")
+            Return FormatUserName(firstName, lastName, loginName, nameAddittion, userID, "", False)
         End Function
 
         ''' <summary>
@@ -113,8 +122,9 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' <param name="nameAddittion">The name addittion of the user.</param>
         ''' <param name="userID">The id of the user.</param>
         ''' <param name="fullNameFromLog">The name information from the user log which might be the only information on a deleted user account</param>
+        ''' <param name="additionallyWithLoginName">True to enable additional output of login name, e.g. &quot;User Full Name (Login name)&quot;</param>
         ''' <remarks>The parameters are mostly expected as a Datarow item. This is why there are of type Object. The function itself will do a check if theyre are NullReference, NullValue or DBnull.Value.</remarks>
-        Friend Shared Function FormatUserName(ByVal firstName As Object, ByVal lastName As Object, ByVal loginName As Object, ByVal nameAddittion As Object, ByVal userID As Long, fullNameFromLog As String) As String
+        Friend Shared Function FormatUserName(ByVal firstName As Object, ByVal lastName As Object, ByVal loginName As Object, ByVal nameAddittion As Object, ByVal userID As Long, fullNameFromLog As String, additionallyWithLoginName As Boolean) As String
             Dim First As String = Trim(CompuMaster.camm.WebManager.Utils.Nz(firstName, String.Empty))
             Dim Last As String = Trim(CompuMaster.camm.WebManager.Utils.Nz(lastName, String.Empty))
             Dim Login As String = Trim(CompuMaster.camm.WebManager.Utils.Nz(loginName, String.Empty))
@@ -148,6 +158,10 @@ Namespace CompuMaster.camm.WebManager.Administration
                 Result = "[?]"
             End If
 
+            If additionallyWithLoginName AndAlso Result <> Login Then
+                Result &= " (" & Login & ")"
+            End If
+
             Return Result
         End Function
 
@@ -161,7 +175,7 @@ Namespace CompuMaster.camm.WebManager.Administration
                     problem = "invalid value for type"
                 End If
 
-                result = "<a target=""_blank"" href=""users_update_flag.aspx?ID=" & userInfo.ID.ToString() & "&Type=" & System.Web.HttpUtility.UrlEncode(validationResult.Flag) & """>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & " - Flag: " & System.Web.HttpUtility.HtmlEncode(validationResult.Flag) & ", Problem: " & System.Web.HttpUtility.HtmlEncode(problem) & "</a>"
+                result = "<a target=""_blank"" href=""users_update_flag.aspx?ID=" & userInfo.IDLong.ToString() & "&Type=" & System.Web.HttpUtility.UrlEncode(validationResult.Flag) & """>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & " - Flag: " & System.Web.HttpUtility.HtmlEncode(validationResult.Flag) & ", Problem: " & System.Web.HttpUtility.HtmlEncode(problem) & "</a>"
             End If
             Return result
         End Function

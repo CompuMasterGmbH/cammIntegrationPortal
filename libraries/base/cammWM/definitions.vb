@@ -8454,7 +8454,7 @@ Namespace CompuMaster.camm.WebManager
             '''     The account ID
             ''' </summary>
             ''' <value></value>
-            Public ReadOnly Property ID() As Integer
+            <Obsolete("Better use IDLong instead")> Public ReadOnly Property ID() As Integer
                 Get
                     Return CType(_ID, Integer)
                 End Get
@@ -8740,7 +8740,7 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>Ideal for saving single values quickly</remarks>
             Public Sub SaveAdditionalFlag(ByVal flagName As String, ByVal value As String)
                 Me.AdditionalFlags(flagName) = value
-                DataLayer.Current.SetUserDetail(Me._WebManager, Nothing, Me.ID, flagName, value, True)
+                DataLayer.Current.SetUserDetail(Me._WebManager, Nothing, Me.IDLong, flagName, value, True)
             End Sub
 
 #Region "Save"
@@ -10667,7 +10667,7 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="Notifications">A notification class which can be user for sending messages to the user</param>
             Public Sub AddMember(ByRef UserInfo As UserInformation, IsDenyRule As Boolean, Optional ByVal Notifications As CompuMaster.camm.WebManager.Notifications.INotifications = Nothing)
 
-                If UserInfo.ID = SpecialUsers.User_Anonymous OrElse UserInfo.ID = SpecialUsers.User_Public OrElse UserInfo.ID = SpecialUsers.User_UpdateProcessor OrElse UserInfo.ID = SpecialUsers.User_Code Then
+                If UserInfo.IDLong = SpecialUsers.User_Anonymous OrElse UserInfo.IDLong = SpecialUsers.User_Public OrElse UserInfo.IDLong = SpecialUsers.User_UpdateProcessor OrElse UserInfo.IDLong = SpecialUsers.User_Code Then
                     Dim Message As String = "An 'anonymous' user or a 'public' user never can be a member of another group"
                     _WebManager.Log.RuntimeException(Message)
                 ElseIf _ID = Nothing Then
@@ -10686,7 +10686,7 @@ Namespace CompuMaster.camm.WebManager
                 MyCmd.CommandType = CommandType.StoredProcedure
                 MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Code)
                 MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = _ID
-                MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = UserInfo.ID
+                MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = UserInfo.IDLong
                 If Setup.DatabaseUtils.Version(_WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
                     MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = IsDenyRule
                 ElseIf IsDenyRule Then
@@ -11156,7 +11156,7 @@ Namespace CompuMaster.camm.WebManager
                 End Get
                 Set(ByVal Value As UserInformation)
                     _ModifiedBy_UserInfo = Value
-                    _ModifiedBy_UserID = _ModifiedBy_UserInfo.ID
+                    _ModifiedBy_UserID = _ModifiedBy_UserInfo.IDLong
                 End Set
             End Property
             ''' <summary>
@@ -11194,7 +11194,7 @@ Namespace CompuMaster.camm.WebManager
                 End Get
                 Set(ByVal Value As UserInformation)
                     _ReleasedBy_UserInfo = Value
-                    _ReleasedBy_UserID = _ReleasedBy_UserInfo.ID
+                    _ReleasedBy_UserID = _ReleasedBy_UserInfo.IDLong
                 End Set
             End Property
             ''' <summary>
@@ -12340,7 +12340,7 @@ Namespace CompuMaster.camm.WebManager
                     End Get
                     Set(ByVal Value As UserInformation)
                         _ReleasedBy_UserInfo = Value
-                        _ReleasedBy_UserID = _ReleasedBy_UserInfo.ID
+                        _ReleasedBy_UserID = _ReleasedBy_UserInfo.IDLong
                     End Set
                 End Property
                 ''' <summary>
@@ -12539,7 +12539,7 @@ Namespace CompuMaster.camm.WebManager
                     End Get
                     Set(ByVal Value As UserInformation)
                         _ReleasedBy_UserInfo = Value
-                        _ReleasedBy_UserID = _ReleasedBy_UserInfo.ID
+                        _ReleasedBy_UserID = _ReleasedBy_UserInfo.IDLong
                     End Set
                 End Property
                 ''' <summary>
@@ -12799,7 +12799,7 @@ Namespace CompuMaster.camm.WebManager
                     If Not MyUserInfos Is Nothing Then
                         For Each MyUserInfo As UserInformation In MyUserInfos
                             For Each MyUserAuthInfo As UserAuthorizationInformation In _AuthorizedUsers
-                                If MyUserInfo.ID = MyUserAuthInfo.UserID Then
+                                If MyUserInfo.IDLong = MyUserAuthInfo.UserID Then
                                     MyUserAuthInfo.Friend_UserInfo = MyUserInfo
                                     Exit For
                                 End If
@@ -12942,7 +12942,7 @@ Namespace CompuMaster.camm.WebManager
 
                     'Do the normal job
                     For MyCounter As Integer = 0 To _AuthorizedUsers.Count - 1
-                        If CType(_AuthorizedUsers(MyCounter), UserInformation).ID = UserID Then
+                        If CType(_AuthorizedUsers(MyCounter), UserInformation).IDLong = UserID Then
                             Return CType(_AuthorizedUsers(MyCounter), UserInformation)
                         End If
                     Next
@@ -13084,7 +13084,7 @@ Namespace CompuMaster.camm.WebManager
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Code)
                     MyCmd.Parameters.Add("@IDServerGroup", SqlDbType.Int).Value = ServerGroupID
-                    MyCmd.Parameters.Add("@IDCurUser", SqlDbType.Int).Value = UserInfo.ID
+                    MyCmd.Parameters.Add("@IDCurUser", SqlDbType.Int).Value = UserInfo.IDLong
                     MyCmd.Parameters.Add("@DevelopmentTeamMember", SqlDbType.Bit).Value = AlsoVisibleWhileSecurityObjectIsDisabled
                     MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = IsDenyRule
                 Else
@@ -13096,7 +13096,7 @@ Namespace CompuMaster.camm.WebManager
                     MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND DevelopmentTeamMember = @DevelopmentTeamMember" & vbNewLine &
                                         "INSERT INTO [dbo].[ApplicationsRightsByUser] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, DevelopmentTeamMember) VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate(), @DevelopmentTeamMember)"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
-                    MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = UserInfo.ID
+                    MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = UserInfo.IDLong
                     MyCmd.Parameters.Add("@IDCurUser", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Code)
                     MyCmd.Parameters.Add("@DevelopmentTeamMember", SqlDbType.Bit).Value = AlsoVisibleWhileSecurityObjectIsDisabled
                 End If
@@ -13690,16 +13690,15 @@ Namespace CompuMaster.camm.WebManager
                 End Set
             End Property
 
-            'ToDo: change to Long
             ''' <summary>
             '''     Last modification by this user
             ''' </summary>
             ''' <value></value>
-            Public Property ModifiedBy_UserID() As Integer
+            Public Property ModifiedBy_UserID() As Long
                 Get
-                    Return CType(_ModifiedBy_UserID, Integer)
+                    Return CType(_ModifiedBy_UserID, Long)
                 End Get
-                Set(ByVal Value As Integer)
+                Set(ByVal Value As Long)
                     _ModifiedBy_UserID = Value
                     _ModifiedBy_UserInfo = Nothing
                 End Set
@@ -13718,7 +13717,7 @@ Namespace CompuMaster.camm.WebManager
                 End Get
                 Set(ByVal Value As UserInformation)
                     _ModifiedBy_UserInfo = Value
-                    _ModifiedBy_UserID = _ModifiedBy_UserInfo.ID
+                    _ModifiedBy_UserID = _ModifiedBy_UserInfo.IDLong
                 End Set
             End Property
 
@@ -13735,16 +13734,15 @@ Namespace CompuMaster.camm.WebManager
                 End Set
             End Property
 
-            'ToDo: change to Long
             ''' <summary>
             '''     The release has been done by this user
             ''' </summary>
             ''' <value></value>
-            Public Property ReleasedBy_UserID() As Integer
+            Public Property ReleasedBy_UserID() As Long
                 Get
-                    Return CType(_ReleasedBy_UserID, Integer)
+                    Return CType(_ReleasedBy_UserID, Long)
                 End Get
-                Set(ByVal Value As Integer)
+                Set(ByVal Value As Long)
                     _ReleasedBy_UserID = Value
                     _ReleasedBy_UserInfo = Nothing
                 End Set
@@ -13763,7 +13761,7 @@ Namespace CompuMaster.camm.WebManager
                 End Get
                 Set(ByVal Value As UserInformation)
                     _ReleasedBy_UserInfo = Value
-                    _ReleasedBy_UserID = _ReleasedBy_UserInfo.ID
+                    _ReleasedBy_UserID = _ReleasedBy_UserInfo.IDLong
                 End Set
             End Property
 
@@ -14638,20 +14636,20 @@ Namespace CompuMaster.camm.WebManager
             'TODO: detect and send information about changed loginname to user --> requires extension of notification classes
 
             'Never change virtual system users
-            If IsSystemUser(userInfo.ID) Then
+            If IsSystemUser(userInfo.IDLong) Then
                 Throw New Exception("Can't set user details for system users")
             End If
 
             'Validate the information before writing back to the database
-            If userInfo.LoginDeleted = True And userInfo.ID = Nothing Then
+            If userInfo.LoginDeleted = True And userInfo.IDLong = Nothing Then
                 Throw New Exception("Login cannot be deleted when the Login ID is not existent")
-            ElseIf userInfo.ID = Nothing AndAlso Not newPassword Is Nothing Then
+            ElseIf userInfo.IDlong = Nothing AndAlso Not newPassword Is Nothing Then
                 'Validate password first
                 newPassword = Trim(newPassword)
                 If Not Me.PasswordSecurity(userInfo.AccessLevel.ID).ValidatePasswordComplexity(newPassword, userInfo) = WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Success Then
                     Throw New PasswordTooWeakException("Password doesn't match the current policy for passwords")
                 End If
-            ElseIf userInfo.ID <> Nothing AndAlso Not newPassword Is Nothing Then
+            ElseIf userInfo.IDlong <> Nothing AndAlso Not newPassword Is Nothing Then
                 Throw New ArgumentException("Password cannot be set by this method. Please use System_SetUserPassword instead.", "NewPassword")
             End If
             If userInfo.LoginName = String.Empty Then
@@ -14687,7 +14685,7 @@ Namespace CompuMaster.camm.WebManager
             End If
 
             'Proceed now
-            Dim WriteForUserID As Long = userInfo.ID
+            Dim WriteForUserID As Long = userInfo.IDLong
             Dim NewAccountCreated As Boolean = False
             Dim MyConn As New SqlConnection(ConnectionString)
             Try
@@ -14697,7 +14695,7 @@ Namespace CompuMaster.camm.WebManager
                     'will be resetted to False again later if it exists
                     Dim MyCmd As New SqlCommand("AdminPrivate_DeleteUser", MyConn)
                     MyCmd.CommandType = CommandType.StoredProcedure
-                    MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userInfo.ID
+                    MyCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userInfo.IDLong
                     Dim _DBVersion As Version = Setup.DatabaseUtils.Version(Me, True)
                     If _DBVersion.Build >= 138 Then  'Newer
                         MyCmd.Parameters.Add("@AdminUserID", SqlDbType.Int).Value = Me.CurrentUserID(SpecialUsers.User_Anonymous)
@@ -14709,7 +14707,7 @@ Namespace CompuMaster.camm.WebManager
 
                 Dim IsUserChange As Boolean
                 Dim IsNewUser As Boolean
-                If userInfo.ID = Nothing Then
+                If userInfo.IDLong = Nothing Then
 
                     IsNewUser = True
 
@@ -14846,7 +14844,7 @@ Namespace CompuMaster.camm.WebManager
                         MyLogonNameChangeCmd.Connection = MyConn
                         MyLogonNameChangeCmd.CommandType = CommandType.StoredProcedure
                         MyLogonNameChangeCmd.CommandText = "dbo.AdminPrivate_RenameLoginName"
-                        MyLogonNameChangeCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userInfo.ID
+                        MyLogonNameChangeCmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userInfo.IDLong
                         MyLogonNameChangeCmd.Parameters.Add("@LogonName", SqlDbType.NVarChar).Value = userInfo.LoginName
                         CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyLogonNameChangeCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.None)
                     End If
@@ -14857,7 +14855,7 @@ Namespace CompuMaster.camm.WebManager
                     MyCmd.CommandText = "AdminPrivate_UpdateUserDetails"
                     MyCmd.CommandType = CommandType.StoredProcedure
 
-                    MyCmd.Parameters.Add("@CurUserID", SqlDbType.Int).Value = userInfo.ID
+                    MyCmd.Parameters.Add("@CurUserID", SqlDbType.Int).Value = userInfo.IDLong
                     MyCmd.Parameters.Add("@WebApplication", SqlDbType.NVarChar, 1024).Value = DBNull.Value
                     MyCmd.Parameters.Add("@Company", SqlDbType.NVarChar).Value = IIf(userInfo.Company = "", DBNull.Value, userInfo.Company)
                     Select Case userInfo.Gender
@@ -15936,7 +15934,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="notificationProvider">An instance of a NotificationProvider class which handles the distribution of all required mails</param>
         Public Sub System_SetUserPassword(ByVal userInfo As UserInformation, ByVal newPassword As String, ByVal notificationProvider As Notifications.INotifications)
 
-            If IsSystemUser(userInfo.ID) Then
+            If IsSystemUser(userInfo.IDLong) Then
                 Throw New Exception("Can't set user details for system users")
             End If
 
@@ -15959,7 +15957,7 @@ Namespace CompuMaster.camm.WebManager
                 Catch ex As Exception
                     Me.Log.Warn(ex)
                 End Try
-            ElseIf userInfo.ID = Me.CurrentUserID(SpecialUsers.User_Code) Then 'the user itself 
+            ElseIf userInfo.IDlong = Me.CurrentUserID(SpecialUsers.User_Code) Then 'the user itself 
                 _System_SetUserPassword(userInfo, newPassword, False)
             ElseIf Me.System_IsSecurityOperator(Me.CurrentUserID(SpecialUsers.User_Anonymous)) Then  'a security operator (or supervisor)
                 _System_SetUserPassword(userInfo, newPassword, False)

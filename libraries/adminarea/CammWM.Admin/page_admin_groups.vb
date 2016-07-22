@@ -108,9 +108,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         CType(e.Item.FindControl("ancReleasedByID"), HtmlAnchor).HRef = "users_update.aspx?ID=" & Utils.Nz(.Item("ReleasedByID"), 0).ToString
 
                         If camm.WebManager.WMSystem.SpecialUsers.User_Anonymous = CInt(.Item("ID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_Code = CInt(.Item("ID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_Invalid = CInt(.Item("ID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_Public = CInt(.Item("ID")) OrElse camm.WebManager.WMSystem.SpecialUsers.User_UpdateProcessor = CInt(.Item("ID")) Then
-                            Dim userinfo As WMSystem.UserInformation
-                            userinfo = New WebManager.WMSystem.UserInformation(CType(.Item("ReleasedByID"), Int64), cammWebManager, False)
-                            CType(e.Item.FindControl("ancReleasedByID"), HtmlAnchor).InnerHtml = Server.HtmlEncode(Utils.Nz(userinfo.FullName, String.Empty))
+                            CType(e.Item.FindControl("ancReleasedByID"), HtmlAnchor).InnerHtml = Server.HtmlEncode(Utils.Nz(Me.SafeLookupUserFullName(CType(.Item("ReleasedByID"), Int64)), String.Empty))
                         Else
                             CType(e.Item.FindControl("ancReleasedByID"), HtmlAnchor).InnerHtml = Server.HtmlEncode(Utils.Nz(.Item("ReleasedByLastName"), String.Empty) & ", " & Utils.Nz(.Item("ReleasedByFirstName"), String.Empty))
                         End If

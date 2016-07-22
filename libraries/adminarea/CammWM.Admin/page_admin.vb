@@ -294,7 +294,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Return New CompuMaster.camm.WebManager.WMSystem.GroupInformation(id, Me.cammWebManager).Name
                 End If
             Catch ex As Exception
-                Return "[?] (" & ex.Message & ")"
+                Return "[?:" & id & "] (" & ex.Message & ")"
             End Try
         End Function
 
@@ -304,6 +304,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="id"></param>
         ''' <returns></returns>
         Protected Function SafeLookupUserFullName(id As Long) As String
+            Return Me.SafeLookupUserFullName(id, False)
+        End Function
+
+        ''' <summary>
+        ''' Safely lookup the name of a user
+        ''' </summary>
+        ''' <param name="id"></param>
+        ''' <param name="additionallyWithLoginName">True to enable additional output of login name, e.g. &quot;User Full Name (Login name)&quot;</param>
+        ''' <returns></returns>
+        Protected Function SafeLookupUserFullName(id As Long, additionallyWithLoginName As Boolean) As String
             Try
                 If id = WMSystem.SpecialUsers.User_Anonymous Then
                     Return "{Anonymous}"
@@ -315,11 +325,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Return "{Public}"
                 ElseIf id = WMSystem.SpecialUsers.User_UpdateProcessor Then
                     Return "{UpdateProcessor}"
+                ElseIf id = 0 Then
+                    Return "{User ID 0}"
                 Else
-                    Return CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(New CompuMaster.camm.WebManager.WMSystem.UserInformation(id, Me.cammWebManager, True))
+                    Return CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(New CompuMaster.camm.WebManager.WMSystem.UserInformation(id, Me.cammWebManager, True), additionallyWithLoginName)
                 End If
             Catch ex As Exception
-                Return "[?] (" & ex.Message & ")"
+                Return "[?:" & id & "] (" & ex.Message & ")"
             End Try
         End Function
 

@@ -1140,7 +1140,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         PnlAuth.Controls.Add(lit)
 
                     Catch
-                        cammWebManager.Log.Warn("Missing security object with ID " & MyUserAuthInfo.SecurityObjectID & " in authorizations for group ID " & UserInfo.ID)
+                        cammWebManager.Log.Warn("Missing security object with ID " & MyUserAuthInfo.SecurityObjectID & " in authorizations for user ID " & UserInfo.IDLong)
                         HtmlStr = New System.Text.StringBuilder
                         HtmlStr.Append("<tr>" & vbNewLine)
                         HtmlStr.Append("    <td colspan=""2"">" & vbNewLine)
@@ -1393,7 +1393,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim ClonedUser As CompuMaster.camm.WebManager.WMSystem.UserInformation = Clone(New_Field_LoginName.Text, CShort(IIf(cmbAnrede.SelectedValue = Nothing, 0, cmbAnrede.SelectedValue)), New_Field_Titel.Text, New_Field_Vorname.Text, New_Field_Namenszusatz.Text, New_Field_Nachname.Text, New_Field_e_mail.Text, New_Field_Password.Text)
                 If Not ClonedUser Is Nothing Then
                     lblStatusMsg.ForeColor = Drawing.Color.Green
-                    lblStatusMsg.Text = "Cloning was successful! New userID: " & ClonedUser.IDLong & ". <a href=""users_update.aspx?ID=" & ClonedUser.ID & """>>>Update UserProfile</a><br />"
+                    lblStatusMsg.Text = "Cloning was successful! New userID: " & ClonedUser.IDLong & ". <a href=""users_update.aspx?ID=" & ClonedUser.IDLong & """>>>Update UserProfile</a><br />"
                     'Add list of user-details that could not be copied to status message
                     Dim sb As New Text.StringBuilder
                     If notCopiedData.Rows.Count > 0 Then

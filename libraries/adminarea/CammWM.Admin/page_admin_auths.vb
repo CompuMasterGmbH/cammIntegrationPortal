@@ -1791,7 +1791,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     'Add a new row with all information to the result table
                     Dim row As DataRow = resultDt.NewRow
                     'Provide username as a link to the user-update page
-                    row("UserName") = "<a target=""_blank"" href=""users_update.aspx?ID=" & CLng(Utils.Nz(Users.Rows(myUserCounter)("ID_User"))) & """>" & cammWebManager.System_GetUserInfo(CLng(Utils.Nz(Users.Rows(myUserCounter)("ID_User")))).FullName & " (" & cammWebManager.System_GetUserInfo(CLng(Utils.Nz(Users.Rows(myUserCounter)("ID_User")))).LoginName & ")" & "</a>"
+                    row("UserName") = "<a target=""_blank"" href=""users_update.aspx?ID=" & CLng(Utils.Nz(Users.Rows(myUserCounter)("ID_User"))) & """>" & Me.SafeLookupUserFullName(Utils.Nz(Users.Rows(myUserCounter)("ID_User"), 0L), True) & "</a>"
                     row("MissingFlags") = LinksToMissingFlags
                     resultDt.Rows.Add(row)
                 End If
