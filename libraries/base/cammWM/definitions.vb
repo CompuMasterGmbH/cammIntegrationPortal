@@ -5811,6 +5811,9 @@ Namespace CompuMaster.camm.WebManager
                 RedirectToErrorPage(ex.Message, RedirectionCause, RequestDetails)
             End Try
 
+#If VS2015OrHigher = True Then
+#Disable Warning BC40000 'disable obsolete warnings because this code must be compatible to .NET 1.1
+#End If
             If Result = System_AccessAuthorizationChecks_DBResults.LoginRequired Then
                 Dim strWebURL As String = Nothing
                 If Not HttpContext.Current Is Nothing Then
@@ -5882,6 +5885,9 @@ Namespace CompuMaster.camm.WebManager
                 RequestDetails("ServerIP") = CType(IIf(serverIP <> "", serverIP, "<em>(current server)</em>"), String)
                 RedirectToErrorPage(System_AccessAuthorizationChecks_ErrorPageForwarderIDs.ErrorUndefined, "ReturnValue = UnknownValue (" & Result & ")", RedirectionCause, RequestDetails)
             End If
+#If VS2015OrHigher = True Then
+#Enable Warning BC40000 'disable obsolete warnings because this code must be compatible to .NET 1.1
+#End If
             'Access has been granted!
             If bufRedirect2URL <> "" Then
                 Dim RedirectionCause As String = "CheckForAccessAuthorization asked for this redirect."
@@ -6367,7 +6373,7 @@ Namespace CompuMaster.camm.WebManager
             Catch ex As Exception
                 If Me.DebugLevel >= DebugLevels.Low_WarningMessagesOnAccessError Then
                     Me.Log.RuntimeException(ex, False, False, DebugLevels.Low_WarningMessagesOnAccessError)
-                    Me.Log.ReportErrorViaEMail(ex, Nothing)
+                    Me.Log.ReportErrorByEMail(ex, Nothing)
                 End If
             End Try
 

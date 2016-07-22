@@ -1464,7 +1464,7 @@ Namespace CompuMaster.camm.WebManager
                                             Throw New Exception("The hardlink could not be created at " & targetFi.FullName)
                                         End If
                                     Catch ex As Exception
-                                        Me._WebManager.Log.ReportWarningViaEMail(ex, "Download handler FAILED to create a hard link")
+                                        Me._WebManager.Log.ReportWarningByEMail(ex, "Download handler FAILED to create a hard link")
                                         Log.WriteEventLogTrace("CWM DH: Cannot create hardlink. SourceLocation '" & sourceFileInfo.FullName & "'. TargetLocation '" & targetFi.FullName & "'." & vbNewLine & "Full exception: " & vbNewLine & ex.ToString, Diagnostics.EventLogEntryType.Warning)
                                         CreationOfHardlinkFailed = True
                                     End Try

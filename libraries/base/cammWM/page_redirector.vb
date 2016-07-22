@@ -80,7 +80,7 @@ Namespace CompuMaster.camm.WebManager.Modules.Redirector.Pages
         ''' <remarks></remarks>
         Protected Overridable Sub ReportException(ByVal exception As Exception)
             Try
-                cammWebManager.Log.ReportErrorViaEMail(exception, "Redirection link invalid")
+                cammWebManager.Log.ReportErrorByEMail(exception, "Redirection link invalid")
             Catch
             End Try
         End Sub

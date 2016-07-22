@@ -168,7 +168,7 @@ Namespace CompuMaster.camm.WebManager
                         CachedLicenceKey = key
                         Return key
                     Catch ex As Exception
-                        _WebManager.Log.ReportErrorViaEMail(ex, "Error accessing System_GlobalProperties table")
+                        _WebManager.Log.ReportErrorByEMail(ex, "Error accessing System_GlobalProperties table")
                         Return _ExceptionalDefaultKey
                     End Try
                 End If

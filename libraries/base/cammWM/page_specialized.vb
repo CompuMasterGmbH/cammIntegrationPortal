@@ -218,6 +218,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Specialized
             Dim ErrID As CompuMaster.camm.WebManager.WMSystem.System_AccessAuthorizationChecks_ErrorPageForwarderIDs
 
             ErrID = CType(Request.QueryString("ErrID"), CompuMaster.camm.WebManager.WMSystem.System_AccessAuthorizationChecks_ErrorPageForwarderIDs)
+#If VS2015OrHigher = True Then
+#Disable Warning BC40000 'disable obsolete warnings because this code must be compatible to .NET 1.1
+#End If
             Select Case ErrID
                 Case ErrorWrongNetwork
                     DisplayMessage = "<p><font face=""Arial"" color=""red"">" & cammWebManager.Internationalization.ErrorWrongNetwork & "</font></p>"
@@ -314,6 +317,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Specialized
                         HideLogonAnchor = True
                     End If
             End Select
+#If VS2015OrHigher = True Then
+#Enable Warning BC40000 'disable obsolete warnings because this code must be compatible to .NET 1.1
+#End If
 
             cammWebManager.PageTitle = "Error"
 
