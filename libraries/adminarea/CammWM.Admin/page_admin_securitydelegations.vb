@@ -349,11 +349,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             For Each myDR As DataRow In MyDT.Rows
                 Dim FormattedName As String = Nothing
-                Try
-                    FormattedName = CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(myDR("ID_User")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem)))
-                Catch ex As Exception
-                    FormattedName = "[?] (" & ex.Message & ")"
-                End Try
+                FormattedName = Me.SafeLookupUserFullName(CLng(myDR("ID_User")))
                 myDR("Completename") = FormattedName
             Next
 
@@ -418,11 +414,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim myDR As DataRow
             For Each myDR In MyDt.Rows
                 Dim FormattedName As String = Nothing
-                Try
-                    FormattedName = CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(myDR("userid")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem)))
-                Catch ex As Exception
-                    FormattedName = "[?] (" & ex.Message & ")"
-                End Try
+                FormattedName = Me.SafeLookupUserFullName(CLng(myDR("userid")))
                 myDR("Completename") = CStr(myDR("userid")) & FormattedName
             Next
             rptAdjust.DataSource = New DataView(MyDt, "", sortexp, DataViewRowState.CurrentRows)
@@ -453,11 +445,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             For Each myDR In MyDT.Rows
                 If Not cammWebManager.System_GetUserInfo(CType(Utils.Nz(CLng(myDR("userid"))), Int64)) Is Nothing Then
                     Dim FormattedName As String = Nothing
-                    Try
-                        FormattedName = CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(myDR("userid")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem)))
-                    Catch ex As Exception
-                        FormattedName = "[?] (" & ex.Message & ")"
-                    End Try
+                    FormattedName = Me.SafeLookupUserFullName(CLng(myDR("userid")))
                     myDR("Completename") = FormattedName
                 End If
             Next
@@ -533,18 +521,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Dim lblReleasedBy As Label = CType(e.Item.FindControl("lblReleasedBy"), Label)
                     Dim lblReleasedOn As Label = CType(e.Item.FindControl("lblReleasedOn"), Label)
                     Dim drCurrent As DataRowView = CType(e.Item.DataItem, DataRowView)
-                    Try
-                        lblSecurityAdmin.Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(drCurrent("UserID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))))
-                    Catch ex As Exception
-                        lblSecurityAdmin.Text = Server.HtmlEncode("[?] (" & ex.Message & ")")
-                    End Try
+                    lblSecurityAdmin.Text = Server.HtmlEncode(Me.SafeLookupUserFullName(CLng(drCurrent("UserID"))))
                     If Me.cammWebManager.System_DBVersion_Ex.Build >= WMSystem.MilestoneDBBuildNumber_Build173 AndAlso Not Utils.Nz(drCurrent("ReleasedBy")) Is Nothing Then
-                        Try
-                            Dim UI As New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(Utils.Nz(drCurrent("ReleasedBy"))), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
-                            lblReleasedBy.Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(UI.FirstName, UI.LastName, UI.LoginName, UI.IDLong))
-                        Catch ex As Exception
-                            lblReleasedBy.Text = Server.HtmlEncode("[?] (" & ex.Message & ")")
-                        End Try
+                        lblReleasedBy.Text = Server.HtmlEncode(Me.SafeLookupUserFullName(CLng(Utils.Nz(drCurrent("ReleasedBy")))))
                     Else
                         lblReleasedBy.Text = Nothing
                     End If

@@ -2008,9 +2008,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim MyUserInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation = Nothing
                 Try
                     LookupUserID = CLng(cammWebManager.System_GetUserID(txtLoginName.Text))
-                    MyUserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(LookupUserID), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
+                    MyUserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(LookupUserID), Me.cammWebManager)
                     Dim gCtl As New HtmlGenericControl
-                    gCtl.InnerHtml = cammWebManager.System_WriteNavPreviewNav_TR2TR_2Cols(CLng(LookupUserID), MyUserInfo.FullName)
+                    gCtl.InnerHtml = cammWebManager.System_WriteNavPreviewNav_TR2TR_2Cols(CLng(LookupUserID), CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(MyUserInfo))
                     tdAddDataTable.Controls.Add(gCtl)
                 Catch
                     Response.Redirect(Response.ApplyAppPathModifier(Request.ServerVariables("SCRIPT_NAME")) & "?ErrID=134&LoginName=" & Server.UrlEncode(txtLoginName.Text))

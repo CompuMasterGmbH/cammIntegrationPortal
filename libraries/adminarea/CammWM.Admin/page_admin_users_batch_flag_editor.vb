@@ -261,8 +261,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
             Dim Sql As String
             If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
                 Sql = "SELECT ID_User " & vbNewLine &
-                    "FROM dbo.ApplicationsRightsByUser_RulesCumulativeWithInherition " & vbNewLine &
-                    "WHERE ID_SecurityObject = @AppID" & vbNewLine &
+                    "FROM dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved " & vbNewLine &
+                    "WHERE IsDenyRule = 0 AND ID_SecurityObject = @AppID" & vbNewLine &
                     "GROUP BY ID_User "
             Else
                 Sql = "SELECT ID_User " & vbNewLine &
@@ -286,19 +286,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
                     "GROUP BY ID_User "
             End If
 
-            Dim Result As New ArrayList
-
             Dim SqlCmd As New SqlCommand
             SqlCmd.Connection = New SqlConnection(Me.cammWebManager.ConnectionString)
             SqlCmd.CommandText = Sql
             SqlCmd.Parameters.Add("@AppID", SqlDbType.Int).Value = securityObjectID
-            Dim ResultDT As DataTable = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(SqlCmd, Automations.AutoOpenAndCloseAndDisposeConnection, "UserIDs")
-
-            For Each row As DataRow In ResultDT.Rows
-                Result.Add(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(row(0)), Me.cammWebManager))
-            Next
-
-            Return CType(Result.ToArray(GetType(WMSystem.UserInformation)), WMSystem.UserInformation())
+            Dim Users As System.Collections.Generic.List(Of Long) = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoGenericList(Of Long)(SqlCmd, Automations.AutoOpenAndCloseAndDisposeConnection)
+            Return cammWebManager.System_GetUserInfos(Users.ToArray)
         End Function
 
         Private Function SelectedEditMode() As EditMode

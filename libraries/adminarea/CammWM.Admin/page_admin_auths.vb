@@ -1083,7 +1083,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     lblErr.Text = ""
                     lblMsg.Text = dropGroupText.Trim + " has been authorized for application " + dropAppText
                 Catch ex As Exception
-                    cammWebManager.Log.ReportErrorViaEMail(ex, "cammWebManager: Group authorization creation failed!")
+                    cammWebManager.Log.ReportErrorByEMail(ex, "cammWebManager: Group authorization creation failed!")
                     ErrMSg = "Group authorization creation failed! (" & ex.Message & ")"
                 End Try
 

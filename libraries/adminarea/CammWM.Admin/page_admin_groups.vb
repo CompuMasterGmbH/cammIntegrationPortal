@@ -115,7 +115,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             CType(e.Item.FindControl("ancReleasedByID"), HtmlAnchor).InnerHtml = Server.HtmlEncode(Utils.Nz(.Item("ReleasedByLastName"), String.Empty) & ", " & Utils.Nz(.Item("ReleasedByFirstName"), String.Empty))
                         End If
                     Else
-                        CType(e.Item.FindControl("ancReleasedByID"), HtmlAnchor).InnerHtml = Server.HtmlEncode(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(.Item("ReleasedByID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem), True).FullName)
+                        CType(e.Item.FindControl("ancReleasedByID"), HtmlAnchor).InnerHtml = Server.HtmlEncode(Me.SafeLookupUserFullName(CLng(.Item("ReleasedByID"))))
                     End If
 
                     CType(e.Item.FindControl("lblReleasedOn"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item("ReleasedOn"), String.Empty))
@@ -344,10 +344,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         lblDescription.Text = Server.HtmlEncode(Utils.Nz(.Item("description"), String.Empty))
                         lblCreatedOn.Text = Server.HtmlEncode(Utils.Nz(.Item("ReleasedOn"), String.Empty))
                         hypCreatedBy.NavigateUrl = Server.HtmlEncode("users_update.aspx?ID=" + Utils.Nz(.Item("ReleasedByID"), 0).ToString)
-                        hypCreatedBy.Text = Server.HtmlEncode(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(.Item("ReleasedByID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem)).FullName)
+                        hypCreatedBy.Text = Server.HtmlEncode(Me.SafeLookupUserFullName(CLng(.Item("ReleasedByID"))))
                         lblLastModificationOn.Text = Server.HtmlEncode(Utils.Nz(.Item("ModifiedOn"), String.Empty))
                         hypLastModificationBy.NavigateUrl = "users_update.aspx?ID=" + .Item("ModifiedByID").ToString
-                        hypLastModificationBy.Text = Server.HtmlEncode(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(.Item("ModifiedByID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem)).FullName)
+                        hypLastModificationBy.Text = Server.HtmlEncode(Me.SafeLookupUserFullName(CLng(.Item("ModifiedByID"))))
                         hypDeleteConfirmation.NavigateUrl = "groups_delete.aspx?ID=" + Request.QueryString("ID") + "&DEL=NOW&token=" & Session.SessionID
                         hypDeleteConfirmation.Text = "Yes, delete it!"
                     End With
@@ -440,9 +440,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         lblCreationDate.Text = Server.HtmlEncode(Utils.Nz(dtGroupInfo.Rows(0)("ReleasedOn"), String.Empty))
                         lblModificationDate.Text = Server.HtmlEncode(Utils.Nz(dtGroupInfo.Rows(0)("ModifiedOn"), String.Empty))
                         hypCreatedBy.NavigateUrl = "users_update.aspx?ID=" + Utils.Nz(dtGroupInfo.Rows(0)("ReleasedByID"), 0).ToString
-                        hypCreatedBy.Text = Server.HtmlEncode(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(dtGroupInfo.Rows(0)("ReleasedByID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem), True).FullName)
+                        hypCreatedBy.Text = Server.HtmlEncode(Me.SafeLookupUserFullName(CLng(dtGroupInfo.Rows(0)("ReleasedByID"))))
                         hypModifiedBy.NavigateUrl = "users_update.aspx?ID=" + Utils.Nz(dtGroupInfo.Rows(0)("ModifiedByID"), 0).ToString
-                        hypModifiedBy.Text = Server.HtmlEncode(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(dtGroupInfo.Rows(0)("ModifiedByID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem), True).FullName)
+                        hypModifiedBy.Text = Server.HtmlEncode(Me.SafeLookupUserFullName(CLng(dtGroupInfo.Rows(0)("ModifiedByID"))))
                     End If
 
                     Dim dtMembership As DataTable

@@ -32,7 +32,7 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' </summary>
         ''' <param name="userInfo">The userinformation object.</param>
         Public Shared Function FormatUserName(ByVal userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation) As String
-            Return FormatUserName(userInfo.FirstName, userInfo.LastName, userInfo.LoginName, userInfo.NameAddition, userInfo.ID)
+            Return FormatUserName(userInfo.FirstName, userInfo.LastName, userInfo.LoginName, userInfo.NameAddition, userInfo.ID, userInfo.FullName)
         End Function
 
         ''' <summary>
@@ -101,6 +101,20 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' <param name="userID">The id of the user.</param>
         ''' <remarks>The parameters are mostly expected as a Datarow item. This is why there are of type Object. The function itself will do a check if theyre are NullReference, NullValue or DBnull.Value.</remarks>
         Public Shared Function FormatUserName(ByVal firstName As Object, ByVal lastName As Object, ByVal loginName As Object, ByVal nameAddittion As Object, ByVal userID As Long) As String
+            Return FormatUserName(firstName, lastName, loginName, nameAddittion, userID, "")
+        End Function
+
+        ''' <summary>
+        ''' Formats a username depending of which parts of the username exists.
+        ''' </summary>
+        ''' <param name="firstName">The first name of the user.</param>
+        ''' <param name="lastName">The last name of the user.</param>
+        ''' <param name="loginName">The login name of the user.</param>
+        ''' <param name="nameAddittion">The name addittion of the user.</param>
+        ''' <param name="userID">The id of the user.</param>
+        ''' <param name="fullNameFromLog">The name information from the user log which might be the only information on a deleted user account</param>
+        ''' <remarks>The parameters are mostly expected as a Datarow item. This is why there are of type Object. The function itself will do a check if theyre are NullReference, NullValue or DBnull.Value.</remarks>
+        Friend Shared Function FormatUserName(ByVal firstName As Object, ByVal lastName As Object, ByVal loginName As Object, ByVal nameAddittion As Object, ByVal userID As Long, fullNameFromLog As String) As String
             Dim First As String = Trim(CompuMaster.camm.WebManager.Utils.Nz(firstName, String.Empty))
             Dim Last As String = Trim(CompuMaster.camm.WebManager.Utils.Nz(lastName, String.Empty))
             Dim Login As String = Trim(CompuMaster.camm.WebManager.Utils.Nz(loginName, String.Empty))
@@ -121,6 +135,9 @@ Namespace CompuMaster.camm.WebManager.Administration
                 If Login <> Nothing Then
                     Result &= " (" & Login & ")"
                 End If
+            ElseIf fullNameFromLog <> Nothing Then
+                'use the full name from table log_users
+                Result = fullNameFromLog
             ElseIf Login <> Nothing Then
                 'use loginname
                 Result = Login
@@ -128,7 +145,7 @@ Namespace CompuMaster.camm.WebManager.Administration
                 'use userid
                 Result = "UserID " & CStr(userID)
             Else
-                Result = Nothing
+                Result = "[?]"
             End If
 
             Return Result

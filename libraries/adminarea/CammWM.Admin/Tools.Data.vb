@@ -395,6 +395,289 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
             Friend Shared Function ExecuteReaderAndPutFirstColumnIntoArrayList(ByVal dbConnection As IDbConnection, ByVal commandText As String, ByVal commandType As System.Data.CommandType, ByVal sqlParameters As IDataParameter()) As ArrayList
                 Return ExecuteReaderAndPutFirstColumnIntoArrayList(dbConnection, commandText, commandType, sqlParameters, Automations.AutoOpenAndCloseAndDisposeConnection)
             End Function
+            Friend Shared Function ExecuteReaderAndPutFirstColumnIntoGenericList(Of TValue)(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As System.Collections.Generic.List(Of TValue)
+                Dim MyConn As IDbConnection = dbCommand.Connection
+                Dim MyCmd As IDbCommand = dbCommand
+                Dim MyReader As IDataReader = Nothing
+                Dim Result As New System.Collections.Generic.List(Of TValue)
+                Try
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
+                        If Not MyConn Is Nothing AndAlso MyConn.State <> ConnectionState.Open Then
+                            MyConn.Open()
+                        End If
+                    End If
+                    MyReader = MyCmd.ExecuteReader
+                    While MyReader.Read
+                        If IsDBNull(MyReader(0)) Then
+                            Result.Add(Nothing)
+                        Else
+                            Result.Add(CType(MyReader(0), TValue))
+                        End If
+                    End While
+                Catch ex As Exception
+                    Throw New DataException(MyCmd, ex)
+                Finally
+                    If Not MyReader Is Nothing AndAlso Not MyReader.IsClosed Then
+                        MyReader.Close()
+                    End If
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
+                        If Not MyConn Is Nothing Then
+                            If MyConn.State <> ConnectionState.Closed Then
+                                MyConn.Close()
+                            End If
+                            MyConn.Dispose()
+                        End If
+                    End If
+                End Try
+                Return Result
+            End Function
+
+            Friend Shared Function ExecuteReaderAndPutFirstColumnIntoGenericNullableList(Of TValue As Structure)(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As System.Collections.Generic.List(Of TValue?)
+                Dim MyConn As IDbConnection = dbCommand.Connection
+                Dim MyCmd As IDbCommand = dbCommand
+                Dim MyReader As IDataReader = Nothing
+                Dim Result As New System.Collections.Generic.List(Of TValue?)
+                Try
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
+                        If Not MyConn Is Nothing AndAlso MyConn.State <> ConnectionState.Open Then
+                            MyConn.Open()
+                        End If
+                    End If
+                    MyReader = MyCmd.ExecuteReader
+                    While MyReader.Read
+                        If IsDBNull(MyReader(0)) Then
+                            Result.Add(New TValue?()) 'Empty T --> .HasValue = False
+                        Else
+                            Result.Add(New TValue?(CType(MyReader(0), TValue)))
+                        End If
+                    End While
+                Catch ex As Exception
+                    Throw New DataException(MyCmd, ex)
+                Finally
+                    If Not MyReader Is Nothing AndAlso Not MyReader.IsClosed Then
+                        MyReader.Close()
+                    End If
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
+                        If Not MyConn Is Nothing Then
+                            If MyConn.State <> ConnectionState.Closed Then
+                                MyConn.Close()
+                            End If
+                            MyConn.Dispose()
+                        End If
+                    End If
+                End Try
+                Return Result
+            End Function
+
+            ''' <summary>
+            '''     Executes a command with a data reader and returns the values of the first two columns
+            ''' </summary>
+            ''' <param name="dbCommand">The command object which shall be executed</param>
+            ''' <param name="automations">Automation options for the connection</param>
+            ''' <returns>A list of KeyValuePairs with the values of the first column in the key field and the second column values in the value field, NULL values are initialized with null (Nothing in VisualBasic)</returns>
+            Friend Shared Function ExecuteReaderAndPutFirstTwoColumnsIntoGenericKeyValuePairs(Of TKey, TValue)(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As System.Collections.Generic.List(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue))
+                Dim Result As New System.Collections.Generic.List(Of System.Collections.Generic.KeyValuePair(Of TKey, TValue))
+                Dim MyCmd As IDbCommand = dbCommand
+                Dim MyReader As IDataReader = Nothing
+                Try
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
+                        If MyCmd.Connection.State <> ConnectionState.Open Then
+                            MyCmd.Connection.Open()
+                        End If
+                    End If
+                    MyReader = MyCmd.ExecuteReader
+                    While MyReader.Read
+                        Dim key As TKey, value As TValue
+                        If IsDBNull(MyReader(0)) Then
+                            key = Nothing
+                        Else
+                            key = CType(MyReader(0), TKey)
+                        End If
+                        If IsDBNull(MyReader(1)) Then
+                            value = Nothing
+                        Else
+                            value = CType(MyReader(1), TValue)
+                        End If
+                        Result.Add(New System.Collections.Generic.KeyValuePair(Of TKey, TValue)(key, value))
+                    End While
+                Catch ex As Exception
+                    Throw New DataException(MyCmd, ex)
+                Finally
+                    If Not MyReader Is Nothing AndAlso Not MyReader.IsClosed Then
+                        MyReader.Close()
+                    End If
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
+                        If Not MyCmd.Connection Is Nothing Then
+                            If MyCmd.Connection.State <> ConnectionState.Closed Then
+                                MyCmd.Connection.Close()
+                            End If
+                            MyCmd.Connection.Dispose()
+                        End If
+                    End If
+                End Try
+                Return Result
+            End Function
+
+            ''' <summary>
+            '''     Executes a command with a data reader and returns the values of the first two columns
+            ''' </summary>
+            ''' <param name="dbCommand">The command object which shall be executed</param>
+            ''' <param name="automations">Automation options for the connection</param>
+            ''' <returns>A list of KeyValuePairs with the values of the first column in the key field and the second column values in the value field</returns>
+            Friend Shared Function ExecuteReaderAndPutFirstTwoColumnsIntoGenericNullableKeyValuePairs(Of TKey As Structure, TValue As Structure)(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As System.Collections.Generic.List(Of System.Collections.Generic.KeyValuePair(Of TKey?, TValue?))
+                Dim Result As New System.Collections.Generic.List(Of System.Collections.Generic.KeyValuePair(Of TKey?, TValue?))
+                Dim MyCmd As IDbCommand = dbCommand
+                Dim MyReader As IDataReader = Nothing
+                Try
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
+                        If MyCmd.Connection.State <> ConnectionState.Open Then
+                            MyCmd.Connection.Open()
+                        End If
+                    End If
+                    MyReader = MyCmd.ExecuteReader
+                    While MyReader.Read
+                        Dim key As TKey?, value As TValue?
+                        If IsDBNull(MyReader(0)) Then
+                            key = New TKey?
+                        Else
+                            key = New TKey?(CType(MyReader(0), TKey))
+                        End If
+                        If IsDBNull(MyReader(1)) Then
+                            value = New TValue?
+                        Else
+                            value = New TValue?(CType(MyReader(1), TValue))
+                        End If
+                        Result.Add(New System.Collections.Generic.KeyValuePair(Of TKey?, TValue?)(key, value))
+                    End While
+                Catch ex As Exception
+                    Throw New DataException(MyCmd, ex)
+                Finally
+                    If Not MyReader Is Nothing AndAlso Not MyReader.IsClosed Then
+                        MyReader.Close()
+                    End If
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
+                        If Not MyCmd.Connection Is Nothing Then
+                            If MyCmd.Connection.State <> ConnectionState.Closed Then
+                                MyCmd.Connection.Close()
+                            End If
+                            MyCmd.Connection.Dispose()
+                        End If
+                    End If
+                End Try
+                Return Result
+            End Function
+
+            ''' <summary>
+            '''     Executes a command with a data reader and returns the values of the first two columns
+            ''' </summary>
+            ''' <param name="dbCommand">The command object which shall be executed</param>
+            ''' <param name="automations">Automation options for the connection</param>
+            ''' <returns>A dictionary of KeyValuePairs with the values of the first column in the key field and the second column values in the value field, NULL values are initialized with null (Nothing in VisualBasic)</returns>
+            ''' <remarks>
+            ''' ATTENTION: Please note that multiple but equal values from the first column will result in 1 key/value pair since hashtables use a unique key and override the value with the last assignment. Alternatively you may want to receive a List of KeyValuePairs.
+            ''' </remarks>
+            Friend Shared Function ExecuteReaderAndPutFirstTwoColumnsIntoGenericDictionary(Of TKey, TValue)(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As System.Collections.Generic.Dictionary(Of TKey, TValue)
+                Dim Result As New System.Collections.Generic.Dictionary(Of TKey, TValue)
+                Dim MyCmd As IDbCommand = dbCommand
+                Dim MyReader As IDataReader = Nothing
+                Try
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
+                        If MyCmd.Connection.State <> ConnectionState.Open Then
+                            MyCmd.Connection.Open()
+                        End If
+                    End If
+                    MyReader = MyCmd.ExecuteReader
+                    While MyReader.Read
+                        Dim key As TKey, value As TValue
+                        If IsDBNull(MyReader(0)) Then
+                            key = Nothing
+                        Else
+                            key = CType(MyReader(0), TKey)
+                        End If
+                        If IsDBNull(MyReader(1)) Then
+                            value = Nothing
+                        Else
+                            value = CType(MyReader(1), TValue)
+                        End If
+                        If Result.ContainsKey(key) Then
+                            Result(key) = value
+                        Else
+                            Result.Add(key, value)
+                        End If
+                    End While
+                Catch ex As Exception
+                    Throw New DataException(MyCmd, ex)
+                Finally
+                    If Not MyReader Is Nothing AndAlso Not MyReader.IsClosed Then
+                        MyReader.Close()
+                    End If
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
+                        If Not MyCmd.Connection Is Nothing Then
+                            If MyCmd.Connection.State <> ConnectionState.Closed Then
+                                MyCmd.Connection.Close()
+                            End If
+                            MyCmd.Connection.Dispose()
+                        End If
+                    End If
+                End Try
+                Return Result
+            End Function
+
+            ''' <summary>
+            '''     Executes a command with a data reader and returns the values of the first two columns
+            ''' </summary>
+            ''' <param name="dbCommand">The command object which shall be executed</param>
+            ''' <param name="automations">Automation options for the connection</param>
+            ''' <returns>A dictionary of KeyValuePairs with the values of the first column in the key field and the second column values in the value field</returns>
+            ''' <remarks>
+            ''' ATTENTION: Please note that multiple but equal values from the first column will result in 1 key/value pair since hashtables use a unique key and override the value with the last assignment. Alternatively you may want to receive a List of KeyValuePairs.
+            ''' </remarks>
+            Friend Shared Function ExecuteReaderAndPutFirstTwoColumnsIntoGenericNullableDictionary(Of TKey, TValue As Structure)(ByVal dbCommand As IDbCommand, ByVal automations As Automations) As System.Collections.Generic.Dictionary(Of TKey, TValue?)
+                Dim Result As New System.Collections.Generic.Dictionary(Of TKey, TValue?)
+                Dim MyCmd As IDbCommand = dbCommand
+                Dim MyReader As IDataReader = Nothing
+                Try
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoOpenConnection Then
+                        If MyCmd.Connection.State <> ConnectionState.Open Then
+                            MyCmd.Connection.Open()
+                        End If
+                    End If
+                    MyReader = MyCmd.ExecuteReader
+                    While MyReader.Read
+                        Dim key As TKey, value As TValue?
+                        If IsDBNull(MyReader(0)) Then
+                            key = Nothing
+                        Else
+                            key = CType(MyReader(0), TKey)
+                        End If
+                        If IsDBNull(MyReader(1)) Then
+                            value = New TValue?
+                        Else
+                            value = New TValue?(CType(MyReader(1), TValue))
+                        End If
+                        If Result.ContainsKey(key) Then
+                            Result(key) = value
+                        Else
+                            Result.Add(key, value)
+                        End If
+                    End While
+                Catch ex As Exception
+                    Throw New DataException(MyCmd, ex)
+                Finally
+                    If Not MyReader Is Nothing AndAlso Not MyReader.IsClosed Then
+                        MyReader.Close()
+                    End If
+                    If automations = Automations.AutoOpenAndCloseAndDisposeConnection OrElse automations = Automations.AutoCloseAndDisposeConnection Then
+                        If Not MyCmd.Connection Is Nothing Then
+                            If MyCmd.Connection.State <> ConnectionState.Closed Then
+                                MyCmd.Connection.Close()
+                            End If
+                            MyCmd.Connection.Dispose()
+                        End If
+                    End If
+                End Try
+                Return Result
+            End Function
             ''' <summary>
             '''     Executes a command with a data reader and returns the values of the first column
             ''' </summary>

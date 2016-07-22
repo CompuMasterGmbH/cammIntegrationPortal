@@ -281,6 +281,48 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Return CType(ExecuteScalar(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SELECT GETDATE();", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), DateTime)
         End Function
 
+        ''' <summary>
+        ''' Safely lookup the name of a group
+        ''' </summary>
+        ''' <param name="id"></param>
+        ''' <returns></returns>
+        Protected Function SafeLookupGroupName(id As Integer) As String
+            Try
+                If id = -1 Then
+                    Return "{Anonymous}"
+                Else
+                    Return New CompuMaster.camm.WebManager.WMSystem.GroupInformation(id, Me.cammWebManager).Name
+                End If
+            Catch ex As Exception
+                Return "[?] (" & ex.Message & ")"
+            End Try
+        End Function
+
+        ''' <summary>
+        ''' Safely lookup the name of a user
+        ''' </summary>
+        ''' <param name="id"></param>
+        ''' <returns></returns>
+        Protected Function SafeLookupUserFullName(id As Long) As String
+            Try
+                If id = WMSystem.SpecialUsers.User_Anonymous Then
+                    Return "{Anonymous}"
+                ElseIf id = WMSystem.SpecialUsers.User_Code Then
+                    Return "{Code}"
+                ElseIf id = WMSystem.SpecialUsers.User_Invalid Then
+                    Return "{Invalid}"
+                ElseIf id = WMSystem.SpecialUsers.User_Public Then
+                    Return "{Public}"
+                ElseIf id = WMSystem.SpecialUsers.User_UpdateProcessor Then
+                    Return "{UpdateProcessor}"
+                Else
+                    Return CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(New CompuMaster.camm.WebManager.WMSystem.UserInformation(id, Me.cammWebManager, True))
+                End If
+            Catch ex As Exception
+                Return "[?] (" & ex.Message & ")"
+            End Try
+        End Function
+
     End Class
 
 End Namespace
