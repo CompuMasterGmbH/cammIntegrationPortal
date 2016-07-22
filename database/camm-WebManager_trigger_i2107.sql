@@ -1501,7 +1501,7 @@ BEGIN
 	SELECT @RowDeletesCount = IsNull(COUNT_BIG(*), 0) FROM deleted;
 	IF IsNull(@RowDeletesCount, 0) > 0
 		BEGIN
-			--Remove references of deleted users
+			--Remove references of deleted groups
 			DELETE FROM dbo.Memberships WHERE ID_Group IN ( SELECT ID FROM deleted ) 
 			DELETE FROM dbo.ApplicationsRightsByGroup WHERE ID_GroupOrPerson IN ( SELECT ID FROM deleted ) 
 			DELETE FROM dbo.System_SubSecurityAdjustments WHERE TableName = 'Groups' AND TablePrimaryIDValue IN ( SELECT ID FROM deleted ) 
@@ -1524,12 +1524,30 @@ BEGIN
 	SELECT @RowDeletesCount = IsNull(COUNT_BIG(*), 0) FROM deleted;
 	IF IsNull(@RowDeletesCount, 0) > 0
 		BEGIN
-			--Remove references of deleted users
+			--Remove references of deleted apps
 			DELETE FROM dbo.ApplicationsRightsByGroup WHERE ID_Application IN ( SELECT ID FROM deleted ) 
 			DELETE FROM dbo.ApplicationsRightsByUser WHERE ID_Application IN ( SELECT ID FROM deleted ) 
 			DELETE FROM dbo.System_SubSecurityAdjustments WHERE TableName = 'Applications' AND TablePrimaryIDValue IN ( SELECT ID FROM deleted ) 
+			DELETE FROM [dbo].[SecurityObjects_vs_NavItems] WHERE ID_SecurityObject IN ( SELECT ID FROM deleted )
 			--Break up app-rights inherition
 			UPDATE dbo.Applications_CurrentAndInactiveOnes SET AuthsAsAppID = NULL WHERE ID IN ( SELECT ID FROM deleted )
 			DELETE [dbo].[ApplicationsRights_Inheriting] WHERE ID_Inheriting IN ( SELECT ID FROM deleted ) OR ID_Source IN ( SELECT ID FROM deleted )
+		END
+END
+
+IF OBJECT_ID ('dbo.D_SecurityObjects_vs_NavItems', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.D_SecurityObjects_vs_NavItems;
+GO
+CREATE TRIGGER dbo.D_SecurityObjects_vs_NavItems
+   ON [dbo].SecurityObjects_vs_NavItems
+   AFTER DELETE
+AS 
+BEGIN
+	-- check for real changes - in case of 0 updated rows, don't forward 0-row-updates to sub-sequent triggers (would be a waste of time)
+	DECLARE @RowDeletesCount bigint
+	SELECT @RowDeletesCount = IsNull(COUNT_BIG(*), 0) FROM deleted;
+	IF IsNull(@RowDeletesCount, 0) > 0
+		BEGIN
+			DELETE FROM dbo.NavItems WHERE ID IN ( SELECT ID_NavItem FROM deleted )
 		END
 END

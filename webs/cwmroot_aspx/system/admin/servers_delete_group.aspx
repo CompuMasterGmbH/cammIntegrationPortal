@@ -45,6 +45,7 @@
 						<li>Script engines of connected servers will be UNREGISTERED.</li>
 						<li>Content of Web Editors of connected servers will <b>STAY</b> permanently (other servers might reference that content).</li>
 						<li>Related <b>applications</b> and their <b>authorizations</b> will be <b>DELETED</b> permanently.</li>
+						<li>All <b>inherition rules</b> pointing to the anonymous group or public group of this server group will be <b>DELETED</b> permanently. Memberships of inheriting groups might be extended or reduced due to missing ALLOW or DENY rules.</li>
 					</ul>
 					</FONT></P></TD>
 					</TR>
