@@ -1,7 +1,7 @@
 Imports System.Reflection
 
 <Assembly: AssemblyVersion("4.10.206.107")>
-<Assembly: AssemblyInformationalVersion("4.10.206.107")>
+<Assembly: AssemblyInformationalVersion("4.10.206.107-beta")>
 
 Namespace CompuMaster.camm.WebManager.Administration
     ''' <summary>

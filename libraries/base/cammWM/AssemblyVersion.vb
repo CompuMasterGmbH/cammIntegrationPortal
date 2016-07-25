@@ -6,7 +6,7 @@ Imports System.Reflection
 Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyVersion("4.10.206.107")>
-<Assembly: AssemblyInformationalVersion("4.10.206.107")>
+<Assembly: AssemblyInformationalVersion("4.10.206.107-beta")>
 
 Namespace CompuMaster.camm.WebManager.Setup
     ''' <summary>
