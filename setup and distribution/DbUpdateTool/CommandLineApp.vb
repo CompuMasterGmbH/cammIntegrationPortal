@@ -19,6 +19,65 @@ Imports CompuMaster.camm.WebManager
 
 Friend Module CommandLineApp
 
+    Sub ShowCurrentDbBuildNo(options As CommandlineOptions)
+        Dim MyDBVersion As Setup.DatabaseSetup.DBServerVersion
+        MyDBVersion = DBSetup.GetSQLServerVersion(options.ConnectionString)
+
+        ' Test connection for MS SQL Servers
+        If MyDBVersion.ErrorsFound = True Then
+            If MyDBVersion.Exception.InnerException IsNot Nothing AndAlso MyDBVersion.Exception.Message = "Data layer exception" Then
+                'show inner exception for CM DataLayer Exception
+                QuitWithError("CRITICAL ERROR: Error connecting to database server: " & MyDBVersion.Exception.InnerException.Message)
+            Else
+                QuitWithError("CRITICAL ERROR: Error connecting to database server: " & MyDBVersion.Exception.Message)
+            End If
+        Else
+            Console.WriteLine("Database build no. currently installed: " & DBSetup.GetCurrentDBBuildNo(options.ConnectionString).ToString)
+        End If
+    End Sub
+
+    Sub ShowLatestAvailableDbPatchVersion()
+        Console.WriteLine("Database updates are available up to build no. " & CompuMaster.camm.WebManager.Setup.DatabaseSetup.LastBuildVersionInSetupFiles.ToString)
+    End Sub
+
+    Sub ListAvailablePatches()
+        'Get builds overview
+        Dim ds_build_index As New Data.DataSet
+        Dim indexdata As New Data.DataView
+        Dim Stream As System.IO.TextReader = Nothing
+        Try
+            Dim BuildIndex As String = CompuMaster.camm.WebManager.Setup.DatabaseSetup.ResourceStringDatabaseSetup("build_index.xml")
+            If BuildIndex = Nothing Then
+                Throw New Exception("Resources for update not available; these are the error details: " & CompuMaster.camm.WebManager.Setup.DatabaseSetup.ValidateResourceAccessability())
+            End If
+            Stream = New System.IO.StringReader(BuildIndex)
+            ds_build_index.ReadXml(Stream)
+        Finally
+            If Not Stream Is Nothing Then Stream.Close()
+        End Try
+        indexdata = ds_build_index.Tables("files").DefaultView
+        indexdata.Sort = "ID"
+
+        'Enumerate build infos
+        Dim ds_data As New Data.DataSet
+        For MyCounter As Integer = 0 To indexdata.Count - 1
+            Dim MyRow As Data.DataRowView = indexdata.Item(MyCounter)
+            Dim BuildMetaData As String = CompuMaster.camm.WebManager.Setup.DatabaseSetup.ResourceStringDatabaseSetup(CType(MyRow("file"), String))
+            If BuildMetaData <> "" Then
+                Try
+                    Stream = New System.IO.StringReader(BuildMetaData)
+                    ds_data.ReadXml(Stream)
+                    Dim MyDataRow As Data.DataRow = ds_data.Tables("version").Rows(ds_data.Tables("version").Rows.Count - 1)
+                    Console.WriteLine(New Version(CType(MyDataRow("major"), Integer), CType(MyDataRow("minor"), Integer), CType(MyDataRow("build"), Integer)))
+                Catch ex As Exception
+                    Throw New Exception("Error reading meta data in " & CType(MyRow("file"), String), ex)
+                Finally
+                    If Not Stream Is Nothing Then Stream.Close()
+                End Try
+            End If
+        Next
+    End Sub
+
     Sub TestConnection(options As CommandlineOptions)
         Dim MyDBVersion As Setup.DatabaseSetup.DBServerVersion
         If options.ConnectionStringForSqlDatabaseCreation <> "" Then

@@ -6,13 +6,13 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")>
 <Assembly: AssemblyCompany("CompuMaster")>
 <Assembly: AssemblyProduct("camm Web-Manager")>
-<Assembly: AssemblyCopyright("2003-2016 CompuMaster GmbH")>
+<Assembly: AssemblyCopyright("(c) 2003-2016 CompuMaster GmbH")>
 <Assembly: AssemblyTrademark("")>
 <Assembly: CLSCompliant(False)>
 
 <Assembly: Guid("efd61116-7bd9-4d98-b42c-e03177573980")>
 
-<Assembly: AssemblyVersion("4.10.206.1001")>
+<Assembly: AssemblyVersion("4.10.206.1002")>
 #If UseLocalSQLs = True Then
 Namespace Setup
     ''' <summary>
