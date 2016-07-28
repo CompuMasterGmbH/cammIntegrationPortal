@@ -526,11 +526,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     End If
                 End If
                 'Verify that column "User_Authorizations_*Rule_IsDe*/SrvGroupID" has got array length or 0 (zero) or same length as User_Authorizations_*Rule_AppIDs array
-                If Result = True AndAlso (Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDevRule") OrElse
-                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDenyRule") OrElse
-                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_SrvGroupID") OrElse
-                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDevRule") OrElse
-                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDenyRule") OrElse
+                If Result = True AndAlso (Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDevRule") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDenyRule") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_SrvGroupID") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDevRule") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDenyRule") OrElse _
                                 Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_SrvGroupID")) Then
                     'TODO: further implementation required for import with columns User_Authorizations_*Rule_IsDe*/SrvGroupID
                     LabelStep3Errors.Text = "Error: column support not yet implemented for ""User_Authorizations_*Rule_IsDevRule"", ""User_Authorizations_*Rule_IsDenyRule"", ""User_Authorizations_*Rule_SrvGroupID""<br>"
@@ -1573,7 +1573,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     'Evaluate if missing authorization
                     Dim AlreadyExist As Boolean = False
                     For MyCounterIsCurrently As Integer = 0 To CurrentAuthorizations.Length - 1
-                        If RequiredSecObjID = CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID AndAlso
+                        If RequiredSecObjID = CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID AndAlso _
                                     RequiredSrvGroupID = CurrentAuthorizations(MyCounterIsCurrently).ServerGroupID Then
                             AlreadyExist = True
                         End If
@@ -1602,8 +1602,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Dim SrvGroupID As Integer = CurrentAuthorizations(MyCounterIsCurrently).ServerGroupID
                     Dim ShallBeThere As Boolean = False
                     For MyCounterShallBe As Integer = 0 To RequiredSecurityObjects.Length - 1
-                        If RequiredSecurityObjects(MyCounterShallBe) = CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID AndAlso
-                                    RequiredSecurityObjects_SrvGroupIDs(MyCounterShallBe) = SrvGroupID AndAlso
+                        If RequiredSecurityObjects(MyCounterShallBe) = CurrentAuthorizations(MyCounterIsCurrently).SecurityObjectID AndAlso _
+                                    RequiredSecurityObjects_SrvGroupIDs(MyCounterShallBe) = SrvGroupID AndAlso _
                                     RequiredSecurityObjects_IsDevRule(MyCounterShallBe) = isDevRule Then
                             ShallBeThere = True
                         End If

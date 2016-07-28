@@ -260,29 +260,29 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
         Private Function GetUsersBySecurityObjectID(ByVal securityObjectID As Integer) As CompuMaster.camm.WebManager.WMSystem.UserInformation()
             Dim Sql As String
             If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                Sql = "SELECT ID_User " & vbNewLine &
-                    "FROM dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved " & vbNewLine &
-                    "WHERE IsDenyRule = 0 AND ID_SecurityObject = @AppID" & vbNewLine &
+                Sql = "SELECT ID_User " & vbNewLine & _
+                    "FROM dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved " & vbNewLine & _
+                    "WHERE IsDenyRule = 0 AND ID_SecurityObject = @AppID" & vbNewLine & _
                     "GROUP BY ID_User "
             Else
-                Sql = "SELECT ID_User " & vbNewLine &
-                    "FROM (" & vbNewLine &
-                    "    SELECT [ID_User] " & vbNewLine &
-                    "    FROM [dbo].[view_Memberships_CummulatedWithAnonymous] " & vbNewLine &
-                    "    WHERE [ID_Group] IN " & vbNewLine &
-                    "        ( " & vbNewLine &
-                    "        SELECT ID_Group " & vbNewLine &
-                    "        FROM [dbo].[view_ApplicationRights] " & vbNewLine &
-                    "        WHERE ID_Group Is NOT Null " & vbNewLine &
-                    "            AND ID_Application = @AppID" & vbNewLine &
-                    "        )" & vbNewLine &
-                    "    UNION ALL" & vbNewLine &
-                    "    SELECT ID_User " & vbNewLine &
-                    "    FROM [dbo].[view_ApplicationRights] " & vbNewLine &
-                    "    WHERE ID_User IS NOT NULL " & vbNewLine &
-                    "        AND ID_Application = @AppID" & vbNewLine &
-                    "    ) AS UserList " & vbNewLine &
-                    "WHERE ID_User IS NOT NULL" & vbNewLine &
+                Sql = "SELECT ID_User " & vbNewLine & _
+                    "FROM (" & vbNewLine & _
+                    "    SELECT [ID_User] " & vbNewLine & _
+                    "    FROM [dbo].[view_Memberships_CummulatedWithAnonymous] " & vbNewLine & _
+                    "    WHERE [ID_Group] IN " & vbNewLine & _
+                    "        ( " & vbNewLine & _
+                    "        SELECT ID_Group " & vbNewLine & _
+                    "        FROM [dbo].[view_ApplicationRights] " & vbNewLine & _
+                    "        WHERE ID_Group Is NOT Null " & vbNewLine & _
+                    "            AND ID_Application = @AppID" & vbNewLine & _
+                    "        )" & vbNewLine & _
+                    "    UNION ALL" & vbNewLine & _
+                    "    SELECT ID_User " & vbNewLine & _
+                    "    FROM [dbo].[view_ApplicationRights] " & vbNewLine & _
+                    "    WHERE ID_User IS NOT NULL " & vbNewLine & _
+                    "        AND ID_Application = @AppID" & vbNewLine & _
+                    "    ) AS UserList " & vbNewLine & _
+                    "WHERE ID_User IS NOT NULL" & vbNewLine & _
                     "GROUP BY ID_User "
             End If
 

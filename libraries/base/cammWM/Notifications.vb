@@ -183,17 +183,17 @@ Namespace CompuMaster.camm.WebManager.Notifications
 
             Dim MainSubject As String, eMailBody As String, eMailHTMLBody As String
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
-            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome_WithPassword, userInfo.LoginName, password, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
+            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome_WithPassword, userInfo.LoginName, password, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome_WithPassword, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(password) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" &
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome_WithPassword, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(password) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" & _
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
                 "</body></html>"
 
             If cammWebManager.MessagingEMails.SendEMail(userInfo.FullName, userInfo.EMailAddress, MainSubject, eMailBody, eMailHTMLBody, "", "", CType(Nothing, Messaging.EMailAttachment()), CType(Nothing, Messaging.EMails.Priority), Messaging.EMails.Sensitivity.Status_Personal) = False Then
@@ -229,17 +229,17 @@ Namespace CompuMaster.camm.WebManager.Notifications
 
             Dim MainSubject As String, eMailBody As String, eMailHTMLBody As String
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
-            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome, userInfo.LoginName, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
+            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome, userInfo.LoginName, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" &
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.CreateAccount_MsgEMailWelcome, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" & _
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
                 "</body></html>"
 
             If cammWebManager.MessagingEMails.SendEMail(userInfo.FullName, userInfo.EMailAddress, MainSubject, eMailBody, eMailHTMLBody, "", "", CType(Nothing, Messaging.EMailAttachment()), CType(Nothing, Messaging.EMails.Priority), Messaging.EMails.Sensitivity.Status_Personal) = False Then
@@ -276,17 +276,17 @@ Namespace CompuMaster.camm.WebManager.Notifications
 
             Dim MainSubject As String, eMailBody As String, eMailHTMLBody As String
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
-            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextWelcome, userInfo.LoginName, password, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
+            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextWelcome, userInfo.LoginName, password, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextWelcome, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(password) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" &
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextWelcome, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(password) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" & _
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
                 "</body></html>"
 
             Dim errors As String = String.Empty
@@ -341,46 +341,46 @@ Namespace CompuMaster.camm.WebManager.Notifications
                         'Account has been created by current logged in admin or one of his collegues
                         emailIntroduction = cammWebManager.Internationalization.UserManagement_NewUser_MsgEMail4Admin
                     End If
-                    email4SecurityAdminMsgBody = UserSalutation(MySecurityAdmin) & ControlChars.CrLf &
-                        ControlChars.CrLf &
-                        emailIntroduction & ControlChars.CrLf &
-                        ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleLogin & userInfoToBeReviewed.LoginName & ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleCompany & userInfoToBeReviewed.Company & ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleName & userInfoToBeReviewed.FullName &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleEMailAddress & userInfoToBeReviewed.EMailAddress & ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleStreet & userInfoToBeReviewed.Street & ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleZIPCode & userInfoToBeReviewed.ZipCode & ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleLocation & userInfoToBeReviewed.Location & ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleState & userInfoToBeReviewed.State & ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleCountry & userInfoToBeReviewed.Country & ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitle1stLanguage & userInfoToBeReviewed.PreferredLanguage1.LanguageName_English & ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitle2ndLanguage & userInfoToBeReviewed.PreferredLanguage2.LanguageName_English & ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitle3rdLanguage & userInfoToBeReviewed.PreferredLanguage3.LanguageName_English & ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleComesFrom & userInfoToBeReviewed.AdditionalFlags("ComesFrom") & ControlChars.CrLf &
-                        cammWebManager.Internationalization.UserManagementEMailColumnTitleMotivation & userInfoToBeReviewed.AdditionalFlags("Motivation") & ControlChars.CrLf &
-                        ControlChars.CrLf &
+                    email4SecurityAdminMsgBody = UserSalutation(MySecurityAdmin) & ControlChars.CrLf & _
+                        ControlChars.CrLf & _
+                        emailIntroduction & ControlChars.CrLf & _
+                        ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleLogin & userInfoToBeReviewed.LoginName & ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleCompany & userInfoToBeReviewed.Company & ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleName & userInfoToBeReviewed.FullName & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleEMailAddress & userInfoToBeReviewed.EMailAddress & ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleStreet & userInfoToBeReviewed.Street & ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleZIPCode & userInfoToBeReviewed.ZipCode & ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleLocation & userInfoToBeReviewed.Location & ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleState & userInfoToBeReviewed.State & ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleCountry & userInfoToBeReviewed.Country & ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitle1stLanguage & userInfoToBeReviewed.PreferredLanguage1.LanguageName_English & ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitle2ndLanguage & userInfoToBeReviewed.PreferredLanguage2.LanguageName_English & ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitle3rdLanguage & userInfoToBeReviewed.PreferredLanguage3.LanguageName_English & ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleComesFrom & userInfoToBeReviewed.AdditionalFlags("ComesFrom") & ControlChars.CrLf & _
+                        cammWebManager.Internationalization.UserManagementEMailColumnTitleMotivation & userInfoToBeReviewed.AdditionalFlags("Motivation") & ControlChars.CrLf & _
+                        ControlChars.CrLf & _
                         cammWebManager.Internationalization.UserManagementEMailColumnTitleComment & ControlChars.CrLf & CommentOfNewUser
-                    email4SecurityAdminMsgHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
-                        "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(MySecurityAdmin)) & "</p>" &
-                        "<p>" & Utils.HighlightLinksInMessage(Utils.HTMLEncodeLineBreaks(emailIntroduction)) & "</p>" &
-                        "<table border=""0"">" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleLogin & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.LoginName) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleCompany & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Company) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleName & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.FullName) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleEMailAddress & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.EMailAddress) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleStreet & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Street) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleZIPCode & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.ZipCode) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleLocation & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Location) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleState & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.State) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleCountry & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Country) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitle1stLanguage & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.PreferredLanguage1.LanguageName_English) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitle2ndLanguage & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.PreferredLanguage2.LanguageName_English) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitle3rdLanguage & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.PreferredLanguage3.LanguageName_English) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleComesFrom & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.AdditionalFlags("ComesFrom")) & "</td></tr>" &
-                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleMotivation & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.AdditionalFlags("Motivation")) & "</td></tr>" &
-                        CType(IIf(CommentOfNewUser <> "", "<tr><td colspan=""2"">&nbsp;</td></tr>" &
-                        "<tr><td colspan=""2""><h4>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleComment & "</h4>" & Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(CommentOfNewUser)) & "</td></tr>", ""), String) &
+                    email4SecurityAdminMsgHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
+                        "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(MySecurityAdmin)) & "</p>" & _
+                        "<p>" & Utils.HighlightLinksInMessage(Utils.HTMLEncodeLineBreaks(emailIntroduction)) & "</p>" & _
+                        "<table border=""0"">" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleLogin & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.LoginName) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleCompany & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Company) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleName & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.FullName) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleEMailAddress & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.EMailAddress) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleStreet & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Street) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleZIPCode & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.ZipCode) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleLocation & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Location) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleState & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.State) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleCountry & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.Country) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitle1stLanguage & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.PreferredLanguage1.LanguageName_English) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitle2ndLanguage & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.PreferredLanguage2.LanguageName_English) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitle3rdLanguage & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.PreferredLanguage3.LanguageName_English) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleComesFrom & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.AdditionalFlags("ComesFrom")) & "</td></tr>" & _
+                        "<tr><td>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleMotivation & "</td><td>" & System.Web.HttpUtility.HtmlEncode(userInfoToBeReviewed.AdditionalFlags("Motivation")) & "</td></tr>" & _
+                        CType(IIf(CommentOfNewUser <> "", "<tr><td colspan=""2"">&nbsp;</td></tr>" & _
+                        "<tr><td colspan=""2""><h4>" & cammWebManager.Internationalization.UserManagementEMailColumnTitleComment & "</h4>" & Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(CommentOfNewUser)) & "</td></tr>", ""), String) & _
                         "</table></body></html>"
                     Success = cammWebManager.MessagingEMails.SendEMail(MySecurityAdmin.FullName, MySecurityAdmin.EMailAddress, cammWebManager.Internationalization.UserManagementEMailTextSubject4AdminNewUser, email4SecurityAdminMsgBody, email4SecurityAdminMsgHTMLBody, "", "")
                 Next
@@ -394,51 +394,51 @@ Namespace CompuMaster.camm.WebManager.Notifications
         Private alreadyNotifiedMailsExpiredContract As New ArrayList
 
         Public Sub SendSupportContractHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date, instanceReference As String) Implements INotifications.SendSupportContractHasExpiredMessage
-            Dim body As String = "Dear Sirs," & ChrW(13) & ChrW(10) &
-                ChrW(13) & ChrW(10) &
-                "Your camm Web-Manager support and maintenance subscription (" & instanceReference & ") expired on " & expirationDate.ToShortDateString() & "." & ChrW(13) & ChrW(10) &
-                "Don't forget to renew your support and maintenance subscription at http://www.camm.biz/redir/?R=35" & ChrW(13) & ChrW(10) &
-                ChrW(13) & ChrW(10) &
-                "Some of your possible benefits:" & ChrW(13) & ChrW(10) &
-                "- Always updated camm Web-Manager software available" & ChrW(13) & ChrW(10) &
-                "- Support for your employees and developers by e-mail, ticket system and phone" & ChrW(13) & ChrW(10) &
-                "- Support for your individual compliance requirements to match your local law" & ChrW(13) & ChrW(10) &
-                "- You pay only for your actual needs - never be over-licensed" & ChrW(13) & ChrW(10) &
-                "- Individually tailored licenses for efficient support - never be sub-license" & ChrW(13) & ChrW(10) &
-                "- Fair conditions for your standard requirements as well as for your individual needs" & ChrW(13) & ChrW(10) &
-                ChrW(13) & ChrW(10) &
-                "Please note:" & ChrW(13) & ChrW(10) &
-                "- You need an active subscription to receive support and maintenance. Using outdated software could be a risk to your server infrastructure in case of required security updates. " & ChrW(13) & ChrW(10) &
-                "- Optional updates might contain important updates supporting your compliance with local law (e.g. data protection rules)." & ChrW(13) & ChrW(10) &
-                "- Optional updates might contain important updates with support for latest browser platforms." & ChrW(13) & ChrW(10) &
+            Dim body As String = "Dear Sirs," & ChrW(13) & ChrW(10) & _
+                ChrW(13) & ChrW(10) & _
+                "Your camm Web-Manager support and maintenance subscription (" & instanceReference & ") expired on " & expirationDate.ToShortDateString() & "." & ChrW(13) & ChrW(10) & _
+                "Don't forget to renew your support and maintenance subscription at http://www.camm.biz/redir/?R=35" & ChrW(13) & ChrW(10) & _
+                ChrW(13) & ChrW(10) & _
+                "Some of your possible benefits:" & ChrW(13) & ChrW(10) & _
+                "- Always updated camm Web-Manager software available" & ChrW(13) & ChrW(10) & _
+                "- Support for your employees and developers by e-mail, ticket system and phone" & ChrW(13) & ChrW(10) & _
+                "- Support for your individual compliance requirements to match your local law" & ChrW(13) & ChrW(10) & _
+                "- You pay only for your actual needs - never be over-licensed" & ChrW(13) & ChrW(10) & _
+                "- Individually tailored licenses for efficient support - never be sub-license" & ChrW(13) & ChrW(10) & _
+                "- Fair conditions for your standard requirements as well as for your individual needs" & ChrW(13) & ChrW(10) & _
+                ChrW(13) & ChrW(10) & _
+                "Please note:" & ChrW(13) & ChrW(10) & _
+                "- You need an active subscription to receive support and maintenance. Using outdated software could be a risk to your server infrastructure in case of required security updates. " & ChrW(13) & ChrW(10) & _
+                "- Optional updates might contain important updates supporting your compliance with local law (e.g. data protection rules)." & ChrW(13) & ChrW(10) & _
+                "- Optional updates might contain important updates with support for latest browser platforms." & ChrW(13) & ChrW(10) & _
                 "- A missing support and maintenance subscription could extend the waiting period for immediately needed support - System failures could result." & ChrW(13) & ChrW(10)
             cammWebManager.MessagingEMails.SendEMail(recipientName, recipientEmail, "Your camm Web-Manager support and maintenance contract expired", body, Nothing, "", "")
         End Sub
         Public Sub SendLicenceHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date, instanceReference As String) Implements INotifications.SendLicenceHasExpiredMessage
-            Dim body As String = "Dear Sirs, " & ChrW(13) & ChrW(10) &
-                ChrW(13) & ChrW(10) &
-                "Your camm Web-Manager license (" & instanceReference & ") expires on " & expirationDate.ToShortDateString() & "." & ChrW(13) & ChrW(10) &
-                "Please renew your license on time to continue using your product without interruption." & ChrW(13) & ChrW(10) &
-                "http://www.camm.biz/redir/?R=33" & ChrW(13) & ChrW(10) &
-                 ChrW(13) & ChrW(10) &
-                "Please note:" & ChrW(13) & ChrW(10) &
-                "- When your license expires, your current license edition will be reset to the Demo License. Your current feature set will automatically be reduced to the standard feature set of the that license." & ChrW(13) & ChrW(10) &
-                "- You need an active subscription to receive latest updates. Using outdated software could be a risk to your server infrastructure in case of required security updates." & ChrW(13) & ChrW(10) &
-                "- Optional updates might contain important updates supporting you for your compliance with local law (e.g. data protection rules)." & ChrW(13) & ChrW(10) &
+            Dim body As String = "Dear Sirs, " & ChrW(13) & ChrW(10) & _
+                ChrW(13) & ChrW(10) & _
+                "Your camm Web-Manager license (" & instanceReference & ") expires on " & expirationDate.ToShortDateString() & "." & ChrW(13) & ChrW(10) & _
+                "Please renew your license on time to continue using your product without interruption." & ChrW(13) & ChrW(10) & _
+                "http://www.camm.biz/redir/?R=33" & ChrW(13) & ChrW(10) & _
+                 ChrW(13) & ChrW(10) & _
+                "Please note:" & ChrW(13) & ChrW(10) & _
+                "- When your license expires, your current license edition will be reset to the Demo License. Your current feature set will automatically be reduced to the standard feature set of the that license." & ChrW(13) & ChrW(10) & _
+                "- You need an active subscription to receive latest updates. Using outdated software could be a risk to your server infrastructure in case of required security updates." & ChrW(13) & ChrW(10) & _
+                "- Optional updates might contain important updates supporting you for your compliance with local law (e.g. data protection rules)." & ChrW(13) & ChrW(10) & _
                 "- Optional updates might contain important updates with support for latest browser platforms."
             cammWebManager.MessagingEMails.SendEMail(recipientName, recipientEmail, "Your camm Web-Manager license is about to expire", body, Nothing, "", "")
         End Sub
 
         Public Sub SendUpdateContractHasExpiredMessage(ByVal recipientName As String, ByVal recipientEmail As String, ByVal expirationDate As Date, instanceReference As String) Implements INotifications.SendUpdateContractHasExpiredMessage
-            Dim body As String = "Dear Sirs, " & ChrW(13) & ChrW(10) &
-                ChrW(13) & ChrW(10) &
-                "Your camm Web-Manager update subscription (" & instanceReference & ") expired on " & expirationDate.ToShortDateString() & "." & ChrW(13) & ChrW(10) &
-                "Please renew your update contract on time to be able to download the most current product version with latest patches and enhancements." & ChrW(13) & ChrW(10) &
-                "http://www.camm.biz/redir/?R=34" & ChrW(13) & ChrW(10) &
-                ChrW(13) & ChrW(10) &
-                "Please note:" & ChrW(13) & ChrW(10) &
-                "- You need an active subscription to receive latest updates. Using outdated software could be a risk to your server infrastructure in case of required security updates." & ChrW(13) & ChrW(10) &
-                "- Optional updates might contain important updates supporting you for your compliance with local law (e.g. data protection rules)." & ChrW(13) & ChrW(10) &
+            Dim body As String = "Dear Sirs, " & ChrW(13) & ChrW(10) & _
+                ChrW(13) & ChrW(10) & _
+                "Your camm Web-Manager update subscription (" & instanceReference & ") expired on " & expirationDate.ToShortDateString() & "." & ChrW(13) & ChrW(10) & _
+                "Please renew your update contract on time to be able to download the most current product version with latest patches and enhancements." & ChrW(13) & ChrW(10) & _
+                "http://www.camm.biz/redir/?R=34" & ChrW(13) & ChrW(10) & _
+                ChrW(13) & ChrW(10) & _
+                "Please note:" & ChrW(13) & ChrW(10) & _
+                "- You need an active subscription to receive latest updates. Using outdated software could be a risk to your server infrastructure in case of required security updates." & ChrW(13) & ChrW(10) & _
+                "- Optional updates might contain important updates supporting you for your compliance with local law (e.g. data protection rules)." & ChrW(13) & ChrW(10) & _
                 "- Optional updates might contain important updates with support for latest browser platforms."
             cammWebManager.MessagingEMails.SendEMail(recipientName, recipientEmail, "Your camm Web-Manager update contract expired", body, Nothing, "", "")
         End Sub
@@ -466,17 +466,17 @@ Namespace CompuMaster.camm.WebManager.Notifications
             cammWebManager.Internationalization.LoadLanguageStrings(MailLanguage)
 
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
-            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.UserManagement_ResetPWByAdmin_EMailMsg, newPassword, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
+            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                Utils.sprintf(cammWebManager.Internationalization.UserManagement_ResetPWByAdmin_EMailMsg, newPassword, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_ResetPWByAdmin_EMailMsg, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(newPassword) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" &
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_ResetPWByAdmin_EMailMsg, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(newPassword) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" & _
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
                 "</body></html>"
             Dim ErrorDetailsBuffer As String = String.Empty
             Success = cammWebManager.MessagingEMails.SendEMail(userInfo.FullName, userInfo.EMailAddress, MainSubject, eMailBody, eMailHTMLBody, "", "", "", "", Nothing, Nothing, CompuMaster.camm.WebManager.Messaging.EMails.Sensitivity.Status_Personal, , , , , ErrorDetailsBuffer)
@@ -514,17 +514,17 @@ Namespace CompuMaster.camm.WebManager.Notifications
             cammWebManager.Internationalization.LoadLanguageStrings(MailLanguage)
 
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
-            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.SendPassword_EMailMessage, PW, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
+            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                Utils.sprintf(cammWebManager.Internationalization.SendPassword_EMailMessage, PW, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.SendPassword_EMailMessage, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(PW) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" &
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.SendPassword_EMailMessage, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(PW) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" & _
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
                 "</body></html>"
             Success = cammWebManager.MessagingEMails.SendEMail(userInfo.FullName, userInfo.EMailAddress, MainSubject, eMailBody, eMailHTMLBody, "", "", CType(Nothing, Messaging.EMailAttachment()), CType(Nothing, Messaging.EMails.Priority), Messaging.EMails.Sensitivity.Status_Personal)
 
@@ -551,20 +551,20 @@ Namespace CompuMaster.camm.WebManager.Notifications
             cammWebManager.Internationalization.LoadLanguageStrings(MailLanguage)
 
             MainSubject = cammWebManager.Internationalization.UserManagementEMailTextSubject
-            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.SendPasswordResetLink_EMailMessage, resetLinkUrl) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
+            eMailBody = UserSalutation(userInfo) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                Utils.sprintf(cammWebManager.Internationalization.SendPasswordResetLink_EMailMessage, resetLinkUrl) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
 
             resetLinkUrl = System.Web.HttpUtility.HtmlEncode(resetLinkUrl)
 
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.SendPasswordResetLink_EMailMessage, "<a href=""" & resetLinkUrl & """>" & resetLinkUrl & "</a>")) & "</p>" &
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.SendPasswordResetLink_EMailMessage, "<a href=""" & resetLinkUrl & """>" & resetLinkUrl & "</a>")) & "</p>" & _
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
                 "</body></html>"
             Success = cammWebManager.MessagingEMails.SendEMail(userInfo.FullName, userInfo.EMailAddress, MainSubject, eMailBody, eMailHTMLBody, "", "", CType(Nothing, Messaging.EMailAttachment()), CType(Nothing, Messaging.EMails.Priority), Messaging.EMails.Sensitivity.Status_Personal)
 
@@ -595,18 +595,18 @@ Namespace CompuMaster.camm.WebManager.Notifications
 
             'Create and send the mail
             Dim MainSubject As String = cammWebManager.Internationalization.UserManagement_NewUser_SubjectAuthCheckSuccessfull
-            Dim eMailBody As String = UserSalutation(userInfo) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextAuthCheckSuccessfull, userInfo.LoginName, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf &
-                ControlChars.CrLf &
-                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf &
+            Dim eMailBody As String = UserSalutation(userInfo) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextAuthCheckSuccessfull, userInfo.LoginName, GetUserLogonServers(cammWebManager, userInfo.IDLong)) & ControlChars.CrLf & _
+                ControlChars.CrLf & _
+                cammWebManager.Internationalization.UserManagementEMailTextRegards & ControlChars.CrLf & _
                 cammWebManager.StandardEMailAccountName & ControlChars.CrLf
             Dim eMailHTMLBody As String
-            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" &
-                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" &
-                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextAuthCheckSuccessfull, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" &
-                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" &
-                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" &
+            eMailHTMLBody = "" & HtmlTagOpener() & "<head><style>BODY { font-family: Arial, Helvetica } </style></head><body>" & _
+                "<p>" & System.Web.HttpUtility.HtmlEncode(UserSalutation(userInfo)) & "</p>" & _
+                "<p>" & Utils.HTMLEncodeLineBreaks(Utils.sprintf(cammWebManager.Internationalization.UserManagement_NewUser_TextAuthCheckSuccessfull, "<font color=""#FF0000""><strong>" & System.Web.HttpUtility.HtmlEncode(userInfo.LoginName) & "</strong></font>", Utils.HighlightLinksInMessage(GetUserLogonServers(cammWebManager, userInfo.IDLong)))) & "</p>" & _
+                "<p>" & cammWebManager.Internationalization.UserManagementEMailTextRegards & "<br>" & _
+                "<em>" & System.Web.HttpUtility.HtmlEncode(cammWebManager.StandardEMailAccountName) & "</em></p>" & _
                 "</body></html>"
             cammWebManager.MessagingEMails.SendEMail(userInfo.FullName, userInfo.EMailAddress, MainSubject, eMailBody, eMailHTMLBody, Nothing, Nothing, CType(Nothing, Messaging.EMailAttachment()), CType(Nothing, Messaging.EMails.Priority), Messaging.EMails.Sensitivity.Status_Personal)
 

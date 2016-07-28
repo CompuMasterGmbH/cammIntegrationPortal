@@ -288,7 +288,12 @@
                             <td valign="Top" width="240">
                                 <p>
                                     <font face="Arial" size="2">
-                                        <%= cammWebManager.System_Licence %></font></p>
+									<% If Me.CurrentAdminIsSupervisor Then %>
+										<%= Me.cammWebManager.Environment.LicenceKey %>
+									<% Else %>
+										<%= Me.cammWebManager.Environment.LicenceKeyShortened & "..." %>
+									<% End If %>
+                                    </font></p>
                             </td>
                         </tr>
 								<tr>
@@ -350,7 +355,7 @@
                         <tr>
                             <td valign="Top" width="160">
                                 <p>
-                                    <font face="Arial" size="2">Licence description</font></p>
+                                    <font face="Arial" size="2">Active subscription</font></p>
                             </td>
                             <td valign="Top" width="240">
                                 <p>

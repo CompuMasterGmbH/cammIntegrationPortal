@@ -56,6 +56,20 @@
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminGroupInfoDetails" Src="groups_additionalinformation.ascx" %>
 <camm:WebManagerAdminGroupInfoDetails id="cammWebManagerAdminGroupInfoDetails" runat="server" />
 					<TR>
+					<TD VAlign="Top" Colspan="2"><P> &nbsp;</P></TD>
+					</TR>
+					<TR>
+					<TD colspan="2" bgcolor="#C1C1C1"><P><FONT face="Arial" size=2><b>ATTENTION!!!</b></FONT></P></TD>
+					</TR>
+					<TR>
+					<TD VAlign="Top" colspan="2"><P><FONT face="Arial" size=2>This step will modify all of the following objects:<br><br>
+					<ul>
+						<li>All <b>authorizations</b> for this group will be <b>DELETED</b>.</li>
+						<li>All <b>inherition rules</b> will be <b>DELETED</b> permanently. Memberships of inheriting groups might be extended or reduced due to missing ALLOW or DENY rules.</li>
+					</ul>
+					</FONT></P></TD>
+					</TR>
+					<TR>
 					<TD ColSpan="2" VAlign="Top"><P> &nbsp;</P></TD>
 					</TR>
 					<TR>

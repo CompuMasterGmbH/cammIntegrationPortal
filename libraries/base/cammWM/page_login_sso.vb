@@ -472,30 +472,30 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
                 If Not userdata Is Nothing AndAlso userdata.Rows.Count = 1 Then
                     Dim UserDataRow As DataRow = userdata.Rows(0)
                     Dim Result As CompuMaster.camm.WebManager.WMSystem.UserInformation
-                    Result = New CompuMaster.camm.WebManager.WMSystem.UserInformation(
-                        0&,
-                        "",
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("EMail"), ""),
-                        False,
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Company"), ""),
-                        WMSystem.Sex.Undefined,
-                        "",
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("FirstName"), ""),
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("LastName"), ""),
-                        "",
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Street"), ""),
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("ZipCode"), ""),
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("City"), ""),
-                        "",
-                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Country"), ""),
-                        Me.cammWebManager.UI.MarketID,
-                        0,
-                        0,
-                        False,
-                        False,
-                        False,
-                        Me.cammWebManager.CurrentServerInfo.ParentServerGroup.AccessLevelDefault.ID,
-                        Me.cammWebManager,
+                    Result = New CompuMaster.camm.WebManager.WMSystem.UserInformation( _
+                        0&, _
+                        "", _
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("EMail"), ""), _
+                        False, _
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Company"), ""), _
+                        WMSystem.Sex.Undefined, _
+                        "", _
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("FirstName"), ""), _
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("LastName"), ""), _
+                        "", _
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Street"), ""), _
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("ZipCode"), ""), _
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("City"), ""), _
+                        "", _
+                        CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Country"), ""), _
+                        Me.cammWebManager.UI.MarketID, _
+                        0, _
+                        0, _
+                        False, _
+                        False, _
+                        False, _
+                        Me.cammWebManager.CurrentServerInfo.ParentServerGroup.AccessLevelDefault.ID, _
+                        Me.cammWebManager, _
                         Page.User.Identity.Name)
                     Result.MobileNumber = CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("MobilePhone"), "")
                     Result.PhoneNumber = CompuMaster.camm.WebManager.Utils.Nz(UserDataRow("Phone"), "")

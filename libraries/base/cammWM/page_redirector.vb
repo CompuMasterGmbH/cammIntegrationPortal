@@ -123,7 +123,7 @@ Namespace CompuMaster.camm.WebManager.Modules.Redirector.Pages
         ''' <param name="id">The redirection ID as visible in the administration area</param>
         ''' <param name="webmanager">An instance of camm Web-Manager</param>
         Public Shared Function NumberOfRedirections(ByVal id As Integer, ByVal webmanager As CompuMaster.camm.WebManager.IWebManager) As Integer
-            Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(webmanager.ConnectionString),
+            Return Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(webmanager.ConnectionString), _
                                     "Select numberofredirections from Redirects_ToAddr where id = " & id.ToString, CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), 0)
         End Function
 

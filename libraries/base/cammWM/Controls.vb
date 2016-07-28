@@ -31,7 +31,7 @@ Namespace CompuMaster.camm.WebManager.Controls
         ''' <summary>
         '''     Creates a new instance of the camm Web-Manager
         ''' </summary>
-        <Obsolete("You should not create a camm Web-Manager instance by yourself in web applications, use the cammWebManager property or cammWebManager object created in the aspx page itself")>
+        <Obsolete("You should not create a camm Web-Manager instance by yourself in web applications, use the cammWebManager property or cammWebManager object created in the aspx page itself")> _
         Public Sub New()
             MyBase.New("")
         End Sub

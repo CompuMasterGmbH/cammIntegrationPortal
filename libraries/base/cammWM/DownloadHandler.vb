@@ -634,7 +634,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Download-Handler will automatically remove the file as soon as the regular timeout for the file has been reached.
         ''' </remarks>
-        <Obsolete("Never implemented", True), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Never implemented", True), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function GetTempFileVirtualPath(ByVal downloadLocation As DownloadLocations, ByVal pathInDownloadLocation As String, ByVal fileName As String) As String
             'TODO: implementation of DownloadHandler.GetTempFileName
             Throw New NotImplementedException
@@ -2610,7 +2610,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="virtualDownloadLocation"></param>
         ''' <param name="timeOfRemoval"></param>
-        <Obsolete("the file shall continue with its timeout even if the file has been reused")>
+        <Obsolete("the file shall continue with its timeout even if the file has been reused")> _
         Private Sub UpdateDownloadFileRecord(ByVal virtualDownloadLocation As String, ByVal timeOfRemoval As TimeSpan)
             Dim hour As Integer = timeOfRemoval.Hours
             Dim day As Integer = timeOfRemoval.Days
@@ -3189,8 +3189,8 @@ Namespace CompuMaster.camm.WebManager
         '''     Message to get more infromation
         ''' </summary>
         Public Sub New(ByVal currentMaxCollectionSize As Long, ByVal collectionSizeTriedToDownload As Long)
-            MyBase.New("Maximum collection size to download is exceeded. " &
-                        "Current MaxCollectionSize = " & currentMaxCollectionSize &
+            MyBase.New("Maximum collection size to download is exceeded. " & _
+                        "Current MaxCollectionSize = " & currentMaxCollectionSize & _
                         " CollectionSize tried to download = " & collectionSizeTriedToDownload)
         End Sub
 

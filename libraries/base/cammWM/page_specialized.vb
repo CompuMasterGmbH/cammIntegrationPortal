@@ -226,8 +226,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Specialized
                     DisplayMessage = "<p><font face=""Arial"" color=""red"">" & cammWebManager.Internationalization.ErrorWrongNetwork & "</font></p>"
                     DisplayLoginDenied = cammWebManager.Internationalization.AccessError_Descr_LoginDenied
                     If cammWebManager.System_DebugLevel >= 1 Then
-                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress,
-                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorWrongNetwork & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorWrongNetwork & ErrorDetailDataFromServer4eMailAttachment & "</font>",
+                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress, _
+                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorWrongNetwork & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorWrongNetwork & ErrorDetailDataFromServer4eMailAttachment & "</font>", _
                             cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                     End If
                     cammWebManager.ResetUserLoginName()
@@ -236,8 +236,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Specialized
                     DisplayLoginDenied = cammWebManager.Internationalization.AccessError_Descr_LoginDenied
                     'Do not send unnecessary e-mail warnings when the client is a crawler like "Yahoo! Slurp" or others
                     If cammWebManager.System_DebugLevel >= 2 OrElse (Utils.IsRequestFromCrawlerAgent(Me.Request) = False AndAlso cammWebManager.System_DebugLevel >= 1) Then 'Debug level for crawlers >=2 or normal browsers >=1
-                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress,
-                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorCookiesMustNotBeDisabled & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorCookiesMustNotBeDisabled & ErrorDetailDataFromServer4eMailAttachment & "</font>",
+                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress, _
+                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorCookiesMustNotBeDisabled & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorCookiesMustNotBeDisabled & ErrorDetailDataFromServer4eMailAttachment & "</font>", _
                             cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                     End If
                     cammWebManager.ResetUserLoginName()
@@ -247,8 +247,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Specialized
                     DisplayMessage = "<p><font face=""Arial"" color=""red"">" & cammWebManager.Internationalization.ErrorServerConfigurationError & CustomErrorMessage & "</font></p>"
                     DisplayLoginDenied = cammWebManager.Internationalization.AccessError_Descr_LoginDenied
                     If cammWebManager.System_DebugLevel >= 1 Then
-                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress,
-                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorServerConfigurationError & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorServerConfigurationError & CustomErrorMessage & ErrorDetailDataFromServer4eMailAttachment & "</font>",
+                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress, _
+                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorServerConfigurationError & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorServerConfigurationError & CustomErrorMessage & ErrorDetailDataFromServer4eMailAttachment & "</font>", _
                             cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                     End If
                     cammWebManager.ResetUserLoginName()
@@ -256,24 +256,24 @@ Namespace CompuMaster.camm.WebManager.Pages.Specialized
                     DisplayMessage = "<p><font face=""Arial"" color=""red"">" & cammWebManager.Internationalization.ErrorNoAuthorization & "</font></p>"
                     DisplayLoginDenied = cammWebManager.Internationalization.AccessError_Descr_LoginDenied
                     If cammWebManager.System_DebugLevel >= 1 Then
-                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress,
-                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorNoAuthorization & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorNoAuthorization & ErrorDetailDataFromServer4eMailAttachment & "</font>",
+                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress, _
+                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorNoAuthorization & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorNoAuthorization & ErrorDetailDataFromServer4eMailAttachment & "</font>", _
                             cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                     End If
                 Case ErrorAlreadyLoggedOn
                     DisplayMessage = "<p><font face=""Arial"" color=""red"">" & CompuMaster.camm.WebManager.Utils.sprintf(cammWebManager.Internationalization.ErrorAlreadyLoggedOn, cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString(), "AreaSecurityContactEMail"), cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString(), "AreaSecurityContactEMail"), "", "", "", "", "", "", "", "", "", "") & "</font></p>"
                     DisplayLoginDenied = cammWebManager.Internationalization.AccessError_Descr_LoginDenied
                     If cammWebManager.System_DebugLevel >= 1 Then
-                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress,
-                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorAlreadyLoggedOn & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & CompuMaster.camm.WebManager.Utils.sprintf(cammWebManager.Internationalization.ErrorAlreadyLoggedOn, cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString(), "AreaSecurityContactEMail"), cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString(), "AreaSecurityContactEMail"), "", "", "", "", "", "", "", "", "", "") & ErrorDetailDataFromServer4eMailAttachment & "</font>",
+                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress, _
+                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorAlreadyLoggedOn & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & CompuMaster.camm.WebManager.Utils.sprintf(cammWebManager.Internationalization.ErrorAlreadyLoggedOn, cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString(), "AreaSecurityContactEMail"), cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString(), "AreaSecurityContactEMail"), "", "", "", "", "", "", "", "", "", "") & ErrorDetailDataFromServer4eMailAttachment & "</font>", _
                             cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                     End If
                     cammWebManager.ResetUserLoginName()
                 Case ErrorLoggedOutBecauseLoggedOnAtAnotherMachine
                     DisplayMessage = "<p><font face=""Arial"" color=""red"">" & cammWebManager.Internationalization.ErrorLoggedOutBecauseLoggedOnAtAnotherMachine & "</font></p>"
                     If cammWebManager.System_DebugLevel >= 1 Then
-                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress,
-                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorLoggedOutBecauseLoggedOnAtAnotherMachine & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorLoggedOutBecauseLoggedOnAtAnotherMachine & vbNewLine & "Userlogin: " & cammWebManager.CurrentUserLoginName & ErrorDetailDataFromServer4eMailAttachment & "</font>",
+                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress, _
+                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorLoggedOutBecauseLoggedOnAtAnotherMachine & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorLoggedOutBecauseLoggedOnAtAnotherMachine & vbNewLine & "Userlogin: " & cammWebManager.CurrentUserLoginName & ErrorDetailDataFromServer4eMailAttachment & "</font>", _
                             cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                     End If
                     cammWebManager.ResetUserLoginName()
@@ -281,31 +281,31 @@ Namespace CompuMaster.camm.WebManager.Pages.Specialized
                     DisplayMessage = "<p><font face=""Arial"" color=""red"">" & cammWebManager.Internationalization.ErrorLogonFailedTooOften & "</font></p>"
                     DisplayLoginDenied = cammWebManager.Internationalization.AccessError_Descr_LoginDenied
                     If cammWebManager.System_DebugLevel >= 1 Then
-                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress,
-                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorLogonFailedTooOften & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorLogonFailedTooOften & ErrorDetailDataFromServer4eMailAttachment & "</font>",
+                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress, _
+                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorLogonFailedTooOften & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorLogonFailedTooOften & ErrorDetailDataFromServer4eMailAttachment & "</font>", _
                             cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                     End If
                     cammWebManager.ResetUserLoginName()
                 Case ErrorSendPWWrongLoginOrEmailAddress
                     DisplayMessage = "<p><font face=""Arial"" color=""red"">" & cammWebManager.Internationalization.ErrorSendPWWrongLoginOrEmailAddress & "</font></p>"
                     If cammWebManager.System_DebugLevel >= 1 Then
-                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress,
-                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorSendPWWrongLoginOrEmailAddress & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorSendPWWrongLoginOrEmailAddress & ErrorDetailDataFromServer4eMailAttachment & "</font>",
+                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress, _
+                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorSendPWWrongLoginOrEmailAddress & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorSendPWWrongLoginOrEmailAddress & ErrorDetailDataFromServer4eMailAttachment & "</font>", _
                             cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                     End If
                     cammWebManager.ResetUserLoginName()
                 Case ErrorApplicationConfigurationIsEmpty
                     DisplayMessage = "<p><font face=""Arial"" color=""red"">" & cammWebManager.Internationalization.ErrorApplicationConfigurationIsEmpty & "</font></p>"
                     If cammWebManager.System_DebugLevel >= 1 Then
-                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress,
-                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorApplicationConfigurationIsEmpty & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorApplicationConfigurationIsEmpty & ErrorDetailDataFromServer4eMailAttachment & "</font>",
+                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress, _
+                            "camm WebManager - Error or warning detected", cammWebManager.Internationalization.ErrorApplicationConfigurationIsEmpty & ErrorDetailDataFromServer4eMailTextAttachment, "<font face=""Arial"">" & cammWebManager.Internationalization.ErrorApplicationConfigurationIsEmpty & ErrorDetailDataFromServer4eMailAttachment & "</font>", _
                             cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                     End If
                 Case ErrorUndefined
                     If cammWebManager.System_DebugLevel >= 1 Then
                         DisplayMessage = "Undefined error found - the webmaster has been informed."
-                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress,
-                            "camm WebManager - Error or warning detected", ErrorDetailDataFromServer4eMailAttachment, "<font face=""Arial"">" & ErrorDetailDataFromServer4eMailAttachment & "</font>",
+                        cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress, _
+                            "camm WebManager - Error or warning detected", ErrorDetailDataFromServer4eMailAttachment, "<font face=""Arial"">" & ErrorDetailDataFromServer4eMailAttachment & "</font>", _
                             cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                     Else
                         DisplayMessage = "Undefined error found. Please notify our webmaster."

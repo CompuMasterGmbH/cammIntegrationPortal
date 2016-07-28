@@ -290,12 +290,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 #Region "Control Events"
         Private Sub btnSubmitClick(ByVal sender As Object, ByVal e As EventArgs) Handles btnSubmit.Click
-            If txtLoginName.Text <> "" AndAlso
-               txtPassword1.Text <> "" AndAlso
-               txtPassword2.Text <> "" AndAlso
-               txtPassword1.Text = txtPassword2.Text AndAlso
-               txtemail.Text <> "" AndAlso
-               cmbFirstPreferredLanguage.SelectedItem.Text <> "Please Select!" AndAlso
+            If txtLoginName.Text <> "" AndAlso _
+               txtPassword1.Text <> "" AndAlso _
+               txtPassword2.Text <> "" AndAlso _
+               txtPassword1.Text = txtPassword2.Text AndAlso _
+               txtemail.Text <> "" AndAlso _
+               cmbFirstPreferredLanguage.SelectedItem.Text <> "Please Select!" AndAlso _
                cmbAccountAccessability.SelectedItem.Text <> "Please Select!" Then
 
                 If Me.cmbAnrede.SelectedValue = "1" Then
@@ -324,10 +324,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Try
                             Dim dt As DataTable
                             Dim sqlParams As SqlParameter() = {New SqlParameter("@Loginname", Trim(txtLoginName.Text))}
-                            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "select count(*) from Benutzer where Loginname=@Loginname", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                             Dim sqlParamsNew As SqlParameter() = {New SqlParameter("@Loginname", Trim(txtLoginName.Text))}
-                            MyCount = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                            MyCount = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "select count(*) from Benutzer where Loginname=@Loginname", CommandType.Text, sqlParamsNew, Automations.AutoOpenAndCloseAndDisposeConnection)
 
                             If Utils.Nz(MyCount, 0) > 0 Then
@@ -415,26 +415,26 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Field_AccountAccessable = Utils.Nz(cmbAccountAccessability.SelectedValue, 0)
                 End If
 
-                If Not txtLoginName.Text = "" AndAlso
-                  txtPassword1.Text = "" AndAlso
-                  txtPassword2.Text = "" AndAlso
-                  txtCompany.Text = "" AndAlso
-                  cmbAnrede.SelectedItem.Text = "" AndAlso
-                  txtTitle.Text = "" AndAlso
-                  txtVorname.Text = "" AndAlso
-                  txtNachname.Text = "" AndAlso
-                  txtNamenszusatz.Text = "" AndAlso
-                  txtemail.Text = "" AndAlso
-                  txtStrasse.Text = "" AndAlso
-                  txtPLZ.Text = "" AndAlso
-                  txtOrt.Text = "" AndAlso
-                  txtState.Text = "" AndAlso
-                  txtLand.Text = "" AndAlso
-                  cmbFirstPreferredLanguage.SelectedItem.Text = "" AndAlso
-                  cmbSecondPreferredLanguage.SelectedItem.Text = "" AndAlso
-                  cmbThirdPreferredLanguage.SelectedItem.Text = "" AndAlso
-                  cmbAccountAccessability.SelectedItem.Text = "" AndAlso
-                  txtPassword1.Text = "" AndAlso
+                If Not txtLoginName.Text = "" AndAlso _
+                  txtPassword1.Text = "" AndAlso _
+                  txtPassword2.Text = "" AndAlso _
+                  txtCompany.Text = "" AndAlso _
+                  cmbAnrede.SelectedItem.Text = "" AndAlso _
+                  txtTitle.Text = "" AndAlso _
+                  txtVorname.Text = "" AndAlso _
+                  txtNachname.Text = "" AndAlso _
+                  txtNamenszusatz.Text = "" AndAlso _
+                  txtemail.Text = "" AndAlso _
+                  txtStrasse.Text = "" AndAlso _
+                  txtPLZ.Text = "" AndAlso _
+                  txtOrt.Text = "" AndAlso _
+                  txtState.Text = "" AndAlso _
+                  txtLand.Text = "" AndAlso _
+                  cmbFirstPreferredLanguage.SelectedItem.Text = "" AndAlso _
+                  cmbSecondPreferredLanguage.SelectedItem.Text = "" AndAlso _
+                  cmbThirdPreferredLanguage.SelectedItem.Text = "" AndAlso _
+                  cmbAccountAccessability.SelectedItem.Text = "" AndAlso _
+                  txtPassword1.Text = "" AndAlso _
                   txtPassword2.Text = "" Then
                     If ErrMsg = "" Then ErrMsg = "Please specify a unique logon name, the password inclusive the confirmation, the complete name and address and at least one language preference to proceed!"
                 End If
@@ -574,7 +574,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
 
             Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CInt(Request.QueryString("ID")))}
-            Dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+            Dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT * FROM [Benutzer] WHERE ID=@ID", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             MyUserInfo = cammWebManager.System_GetUserInfo(CType(Request.QueryString("ID"), Long))
             If MyUserInfo Is Nothing Then
@@ -837,7 +837,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <remarks>Intended for the preferred languages dropdown boxes
         ''' </remarks>
         Private Function AvailableLanguages(ByVal alwaysIncludeThisLanguage As Integer) As DictionaryEntry()
-            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT ID, Description_English FROM System_Languages WHERE (IsActive = 1 AND NOT ID = 10000) OR ID = " & alwaysIncludeThisLanguage & " ORDER BY Description_English", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
         ''' <summary>
@@ -846,7 +846,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <remarks>Intended for the preferred languages dropdown boxes
         ''' </remarks>
         Private Function AvailableAccessLevels() As DictionaryEntry()
-            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT ID, Title FROM System_AccessLevels ORDER BY Title", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
 
@@ -1217,7 +1217,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="SecurityObjectID"></param>
         Private Function getRequiredFlags(ByVal SecurityObjectID As Integer) As String()
             'Get required flags
-            Dim cmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+            Dim cmd As New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "Select RequiredUserProfileFlags From Applications_CurrentAndInactiveOnes Where ID = @ID", New SqlConnection(cammWebManager.ConnectionString))
             cmd.Parameters.Add("@ID", SqlDbType.Int).Value = SecurityObjectID
             Dim al As ArrayList = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoArrayList(cmd, Automations.AutoOpenAndCloseAndDisposeConnection)
@@ -1492,7 +1492,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <remarks>Intended for the preferred languages dropdown boxes
         ''' </remarks>
         Private Function AvailableLanguages(ByVal alwaysIncludeThisLanguage As Integer) As DictionaryEntry()
-            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT ID, Description_English FROM System_Languages WHERE (IsActive = 1 AND NOT ID = 10000) OR ID = " & alwaysIncludeThisLanguage & " ORDER BY Description_English", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
         ''' <summary>
@@ -1501,7 +1501,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <remarks>Intended for the preferred languages dropdown boxes
         ''' </remarks>
         Private Function AvailableAccessLevels() As DictionaryEntry()
-            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT ID, Title FROM System_AccessLevels ORDER BY Title", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
 

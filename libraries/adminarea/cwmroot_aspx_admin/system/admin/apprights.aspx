@@ -53,7 +53,7 @@
 											<a class="None" name="Application<%# container.dataitem("ID_Application") %>" />
 											<a id="ancAuthsAsAppID" runat="server">ID<br>
 											<%# cammWebManager.System_Nz(container.dataitem("ID_Application")) %>
-											<span id="gcDisabled" runat="server" title="Disabled" style="display:none">(D)</span></a>
+											<span id="gcDisabled" runat="server" title="Disabled security object (application)" style="display:none">(D)</span></a>
 										</P>
 									</TD>
 									<TD BGCOLOR="#C1C1C1">
@@ -83,7 +83,7 @@
 									<TD runat="server" id="tdAddUserDetails" colspan="4"></TD>
 								</TR>
 							</TABLE>
-							<table BGCOLOR="#C1C1C1" CELLSPACING="0" CELLPADDING="2" border="0" style="margin:0px;display:inline;" Width="110">
+							<table BGCOLOR="#C1C1C1" CELLSPACING="0" CELLPADDING="2" border="0" style="margin:0px;display:inline;float:left;" width="110">
 								<tr>
 									<TD>
 										<P class="boldFont">

@@ -252,7 +252,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim MyDt As New DataTable
 
             Try
-                Dim sqlParams As SqlParameter() = {New SqlParameter("@PrimID", CLng(Request.QueryString("ID"))),
+                Dim sqlParams As SqlParameter() = {New SqlParameter("@PrimID", CLng(Request.QueryString("ID"))), _
                     New SqlParameter("@TableName", lblTableName.Text)}
                 Dim sqlQuery As String = Nothing
                 If Me.cammWebManager.System_DBVersion_Ex.Build >= WMSystem.MilestoneDBBuildNumber_Build173 Then
@@ -308,7 +308,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Try
                 Dim sqlParams As SqlParameter() = {New SqlParameter("@TableName", "Groups")}
-                Dim sqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                Dim sqlQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT System_SubSecurityAdjustments.*, dbo.Gruppen.[Name] AS SecuredObject FROM System_SubSecurityAdjustments LEFT JOIN dbo.Gruppen ON System_SubSecurityAdjustments.TablePrimaryIDValue = dbo.Gruppen.ID WHERE TableName = @TableName  AND (TablePrimaryIDValue = 0 OR TablePrimaryIDValue IN (SELECT ID FROM dbo.Gruppen)) ORDER BY AuthorizationType"
                 MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), sqlQuery, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             Catch

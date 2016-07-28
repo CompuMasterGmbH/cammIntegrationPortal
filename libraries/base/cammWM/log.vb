@@ -60,7 +60,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Collect and write error data into the error log file on webserver disk (see app_data directory)
         ''' </summary>
-        <Obsolete("The preferred log mechanism should be to database or e-mail")>
+        <Obsolete("The preferred log mechanism should be to database or e-mail")> _
         Friend Shared Sub LogToFileError(exception As Exception)
             Dim filePath As String = System.Web.HttpContext.Current.Server.MapPath("~/app_data/error.log")
             Dim basePath As String = System.IO.Path.GetDirectoryName(filePath)
@@ -91,7 +91,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Collect and write warning data into the warning log file on webserver disk (see app_data directory)
         ''' </summary>
-        <Obsolete("The preferred log mechanism should be to database or e-mail")>
+        <Obsolete("The preferred log mechanism should be to database or e-mail")> _
         Friend Shared Sub LogToFileWarning(exception As Exception)
             Dim filePath As String = System.Web.HttpContext.Current.Server.MapPath("~/app_data/warning.log")
             Dim basePath As String = System.IO.Path.GetDirectoryName(filePath)
@@ -122,7 +122,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Collect and write debug data into the debug log file on webserver disk (see app_data directory)
         ''' </summary>
-        <Obsolete("The preferred log mechanism should be to database or e-mail")>
+        <Obsolete("The preferred log mechanism should be to database or e-mail")> _
         Friend Shared Sub LogToFileDebugInfo(logData As String)
             Dim filePath As String = System.Web.HttpContext.Current.Server.MapPath("~/app_data/debug.log")
             Dim basePath As String = System.IO.Path.GetDirectoryName(filePath)
@@ -161,7 +161,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")> _
         Public Sub ReportWarningViaEMail(ByVal exception As Exception, ByVal messageSubject As String)
             ReportWarningByEMail(exception, messageSubject)
         End Sub
@@ -202,7 +202,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportWarningByEMail instead")> _
         Public Sub ReportWarningViaEMail(ByVal plainText As String, ByVal htmlText As String, ByVal messageSubject As String)
             ReportWarningByEMail(plainText, htmlText, messageSubject)
         End Sub
@@ -238,7 +238,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")> _
         Public Sub ReportErrorViaEMail(ByVal exception As Exception, ByVal messageSubject As String)
             ReportErrorByEMail(exception, messageSubject)
         End Sub
@@ -301,7 +301,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' Requires an active e-mail system. Errors will be ignored.
         ''' </remarks>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("Use ReportErrorByEMail instead")> _
         Public Sub ReportErrorViaEMail(ByVal plainText As String, ByVal htmlText As String, ByVal messageSubject As String)
             ReportErrorByEMail(plainText, htmlText, messageSubject)
         End Sub
@@ -1449,7 +1449,7 @@ Namespace CompuMaster.camm.WebManager
 
                                 'Get parameter value and append parameter
                                 With MyCmd
-                                    .CommandText = "INSERT INTO [dbo].[Log] ([UserID], [LoginDate], [RemoteIP], [ServerIP], [ApplicationID], [URL], [ConflictType], [ConflictDescription]) " &
+                                    .CommandText = "INSERT INTO [dbo].[Log] ([UserID], [LoginDate], [RemoteIP], [ServerIP], [ApplicationID], [URL], [ConflictType], [ConflictDescription]) " & _
                                         "VALUES (@UserID, GetDate(), @RemoteIP, @ServerIP, @ApplicationID, @URL, @ConflictType, @ConflictDescription)"
                                     .CommandType = CommandType.Text
 
@@ -1706,19 +1706,19 @@ Namespace CompuMaster.camm.WebManager
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand()
             MyCmd.Connection = MyConn
-            MyCmd.CommandText = "DECLARE @RowNumber int" & vbNewLine &
-                        "SELECT @RowNumber = COUNT(*)" & vbNewLine &
-                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
-                        "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = @key" & vbNewLine &
-                        "SELECT @RowNumber" & vbNewLine &
-                        vbNewLine &
-                        "IF @RowNumber = 0 " & vbNewLine &
-                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine &
-                        "		(ValueNVarChar, PropertyName, ValueInt)" & vbNewLine &
-                        "	VALUES (N'camm WebManager', @key, @ValueInt)" & vbNewLine &
-                        "ELSE" & vbNewLine &
-                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine &
-                        "	SET ValueInt = @ValueInt" & vbNewLine &
+            MyCmd.CommandText = "DECLARE @RowNumber int" & vbNewLine & _
+                        "SELECT @RowNumber = COUNT(*)" & vbNewLine & _
+                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = @key" & vbNewLine & _
+                        "SELECT @RowNumber" & vbNewLine & _
+                        vbNewLine & _
+                        "IF @RowNumber = 0 " & vbNewLine & _
+                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "		(ValueNVarChar, PropertyName, ValueInt)" & vbNewLine & _
+                        "	VALUES (N'camm WebManager', @key, @ValueInt)" & vbNewLine & _
+                        "ELSE" & vbNewLine & _
+                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "	SET ValueInt = @ValueInt" & vbNewLine & _
                         "	WHERE ValueNVarChar = N'camm WebManager' AND PropertyName = @key" & vbNewLine
             MyCmd.Parameters.Add(New SqlParameter("@key", SqlDbType.VarChar)).Value = key
             MyCmd.Parameters.Add(New SqlParameter("@ValueInt", SqlDbType.Int)).Value = value
@@ -1754,8 +1754,8 @@ Namespace CompuMaster.camm.WebManager
         Public Sub SetConflictTypesLifetime(ByVal hashTable As Hashtable)
             Dim MyCmd As SqlCommand = Nothing
             Dim MyConn As SqlConnection = Nothing
-            Dim message As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDecimal = @value WHERE ValueNVarChar = N'camm WebManager' AND PropertyName= @propertyname AND ValueInt = @key " &
-                "IF @@ROWCOUNT = 0 " &
+            Dim message As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDecimal = @value WHERE ValueNVarChar = N'camm WebManager' AND PropertyName= @propertyname AND ValueInt = @key " & _
+                "IF @@ROWCOUNT = 0 " & _
                 "INSERT INTO [dbo].[System_GlobalProperties] (ValueNVarChar, PropertyName, ValueInt, ValueDecimal) VALUES ('camm WebManager', @propertyname, @key, @value)"
             Try
                 MyCmd = New SqlCommand(message)
@@ -1820,7 +1820,7 @@ Namespace CompuMaster.camm.WebManager
             Dim connection As SqlConnection = Nothing
             Try
                 connection = New SqlConnection(_WebManager.ConnectionString)
-                cmd = New SqlCommand("INSERT INTO [dbo].[Log] ([UserID], [LoginDate], [RemoteIP], [ServerIP], [ApplicationID], [URL], [ConflictType], [ConflictDescription]) " &
+                cmd = New SqlCommand("INSERT INTO [dbo].[Log] ([UserID], [LoginDate], [RemoteIP], [ServerIP], [ApplicationID], [URL], [ConflictType], [ConflictDescription]) " & _
                         "VALUES (@UserID, GetDate(), @RemoteIP, @ServerIP, @ApplicationID, @URL, @ConflictType, @ConflictDescription)", connection)
 
                 With cmd
@@ -1872,14 +1872,14 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks></remarks>
         Private Function DeleteExpiredEntries(maxNumberOfDeletedRows As Integer) As Integer
             Dim connection As New SqlConnection(_WebManager.ConnectionString)
-            Dim Sql As String = "DELETE FROM [dbo].[Log] WHERE ID IN " & vbNewLine &
-                "    (" & vbNewLine &
-                "        SELECT TOP " & maxNumberOfDeletedRows & " ID " & vbNewLine &
-                "        FROM dbo.Log" & vbNewLine &
-                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine &
-                "                ON Log.ConflictType = RetentionConfig.ConflictTypeID" & vbNewLine &
-                "        WHERE LoginDate < DateAdd(dd, -COALESCE(RetentionDays, @DefaultRetentionDays), GETDATE())" & vbNewLine &
-                "    )" & vbNewLine &
+            Dim Sql As String = "DELETE FROM [dbo].[Log] WHERE ID IN " & vbNewLine & _
+                "    (" & vbNewLine & _
+                "        SELECT TOP " & maxNumberOfDeletedRows & " ID " & vbNewLine & _
+                "        FROM dbo.Log" & vbNewLine & _
+                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine & _
+                "                ON Log.ConflictType = RetentionConfig.ConflictTypeID" & vbNewLine & _
+                "        WHERE LoginDate < DateAdd(dd, -COALESCE(RetentionDays, @DefaultRetentionDays), GETDATE())" & vbNewLine & _
+                "    )" & vbNewLine & _
                 "SELECT @@ROWCOUNT"
             Dim cmd As New SqlCommand(Sql, connection)
             cmd.CommandType = CommandType.Text

@@ -95,6 +95,21 @@
 						<TD id="tdAddLinks" runat="server" VAlign="Top" Colspan="2" />
 					</tr>
 					<TR>
+					<TD VAlign="Top" Colspan="2"><P> &nbsp;</P></TD>
+					</TR>
+					<TR>
+					<TD colspan="2" bgcolor="#C1C1C1"><P><FONT face="Arial" size=2><b>ATTENTION!!!</b></FONT></P></TD>
+					</TR>
+					<TR>
+					<TD VAlign="Top" colspan="2"><P><FONT face="Arial" size=2>This step will modify all of the following objects:<br><br>
+					<ul>
+						<li>All <b>authorizations</b> for this application will be <b>DELETED</b>.</li>
+						<li>All <b>inherition rules</b> will be <b>DELETED</b> permanently. Authorizations of inheriting applications might be extended or reduced due to missing ALLOW or DENY rules.</li>
+						<li>All related <b>navigation entries</b> will be be <b>DELETED</b>.</li>
+					</ul>
+					</FONT></P></TD>
+					</TR>
+					<TR>
 					<TD ColSpan="2" VAlign="Top"><P> &nbsp;</P></TD>
 					</TR>
 					<TR>

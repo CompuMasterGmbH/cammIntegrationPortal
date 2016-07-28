@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationLogging" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<camm:WebManager PageTitle="Administration - Modify user account" id="cammWebManager"
+<camm:WebManager PageTitle="Administration - Advanced Configuration" id="cammWebManager"
     SecurityObject="System - User Administration - ServerSetup" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
@@ -24,13 +24,18 @@ Maximum number of Log-Entries in database:
 <asp:textbox runat="server" id="txtMaxRowsInLogTable" />
 <br />
 Maximum age of Log-Entries in database:
-<asp:textbox runat="server" id="txtMaxDaysOfLogEntries" /> days
+<asp:textbox runat="server" id="txtMaxDaysOfLogEntries" /> days 
 <br /><br />
 <asp:button runat="server" id="btnSaveSettings" text="Save settings" />
 <br />
 <hr>
 Here you can specify how long a specific ConflictType should be kept. Otherwise, the default value above will be used. 
-<asp:Table id="tblConflictTypes" BorderWidth="1" runat="server" />
+<style>
+table#tblConflictTypes.TableWithAlternatingRowBackground tr:nth-child(odd) { background-color:lightgray; }
+table#tblConflictTypes.TableWithAlternatingRowBackground th { background-color:gray; }
+table#tblConflictTypes.TableWithAlternatingRowBackground { border-spacing:0px; cellspacing:0px; }
+</style>
+<asp:Table class="TableWithAlternatingRowBackground" id="tblConflictTypes" BorderWidth="0" runat="server" />
 <br />
 <asp:button runat="server" id="btnSaveConflictTypes" text="Save settings" />
 <hr>

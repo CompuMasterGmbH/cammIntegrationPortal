@@ -770,12 +770,12 @@ Namespace CompuMaster.camm.WebManager
                 MyCmd = New SqlCommand("LookupUserNameByScriptEngineSessionID", New SqlConnection(Me.ConnectionString))
                 MyCmd.CommandType = CommandType.StoredProcedure
             Else 'full SQL command text
-                Const sql As String = "SELECT Benutzer.LoginName" & vbNewLine &
-                    "FROM [System_WebAreasAuthorizedForSession] As SSID" & vbNewLine &
-                    "	LEFT JOIN System_UserSessions As USID On SSID.SessionID = USID.ID_Session" & vbNewLine &
-                    "	LEFT JOIN Benutzer On USID.ID_User = Benutzer.ID" & vbNewLine &
-                    "WHERE SSID.Server = @ServerID" & vbNewLine &
-                    "	And SSID.ScriptEngine_ID = @ScriptEngineID" & vbNewLine &
+                Const sql As String = "SELECT Benutzer.LoginName" & vbNewLine & _
+                    "FROM [System_WebAreasAuthorizedForSession] As SSID" & vbNewLine & _
+                    "	LEFT JOIN System_UserSessions As USID On SSID.SessionID = USID.ID_Session" & vbNewLine & _
+                    "	LEFT JOIN Benutzer On USID.ID_User = Benutzer.ID" & vbNewLine & _
+                    "WHERE SSID.Server = @ServerID" & vbNewLine & _
+                    "	And SSID.ScriptEngine_ID = @ScriptEngineID" & vbNewLine & _
                     "	And SSID.ScriptEngine_SessionID = @ScriptEngineSessionID"
                 MyCmd = New SqlCommand(sql, New SqlConnection(Me.ConnectionString))
                 MyCmd.CommandType = CommandType.Text
@@ -794,11 +794,11 @@ Namespace CompuMaster.camm.WebManager
         ''' <returns>The loginname of the registered user or Nothing if no user is registered for the specified browser session</returns>
         Friend Function LookupUserNameByScriptEngineSessionID(ByVal scriptEngineID As CompuMaster.camm.WebManager.WMSystem.ScriptEngines, ByVal scriptEngineSessionID As String) As String
             Dim MyCmd As SqlCommand
-            Const sql As String = "SELECT Benutzer.LoginName" & vbNewLine &
-                    "FROM [System_WebAreasAuthorizedForSession] As SSID" & vbNewLine &
-                    "	LEFT JOIN System_UserSessions As USID On SSID.SessionID = USID.ID_Session" & vbNewLine &
-                    "	LEFT JOIN Benutzer On USID.ID_User = Benutzer.ID" & vbNewLine &
-                    "WHERE SSID.ScriptEngine_ID = @ScriptEngineID" & vbNewLine &
+            Const sql As String = "SELECT Benutzer.LoginName" & vbNewLine & _
+                    "FROM [System_WebAreasAuthorizedForSession] As SSID" & vbNewLine & _
+                    "	LEFT JOIN System_UserSessions As USID On SSID.SessionID = USID.ID_Session" & vbNewLine & _
+                    "	LEFT JOIN Benutzer On USID.ID_User = Benutzer.ID" & vbNewLine & _
+                    "WHERE SSID.ScriptEngine_ID = @ScriptEngineID" & vbNewLine & _
                     "	And SSID.ScriptEngine_SessionID = @ScriptEngineSessionID"
             MyCmd = New SqlCommand(sql, New SqlConnection(Me.ConnectionString))
             MyCmd.CommandType = CommandType.Text
@@ -815,10 +815,10 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="scriptEngineSessionID">A SessionID string of the script engine which is registered for a special user session</param>
         ''' <returns>The session ID in camm Web-Manager for the specified browser session or zero value (0) if no one can be found</returns>
         Private Function LookupUserSessionIDByScriptEngineSessionID(ByVal serverID As Integer, ByVal scriptEngineID As CompuMaster.camm.WebManager.WMSystem.ScriptEngines, ByVal scriptEngineSessionID As String) As Long
-            Const sql As String = "SELECT SSID.SessionID" & vbNewLine &
-                "FROM [System_WebAreasAuthorizedForSession] As SSID" & vbNewLine &
-                "WHERE SSID.Server = @ServerID" & vbNewLine &
-                "	And SSID.ScriptEngine_ID = @ScriptEngineID" & vbNewLine &
+            Const sql As String = "SELECT SSID.SessionID" & vbNewLine & _
+                "FROM [System_WebAreasAuthorizedForSession] As SSID" & vbNewLine & _
+                "WHERE SSID.Server = @ServerID" & vbNewLine & _
+                "	And SSID.ScriptEngine_ID = @ScriptEngineID" & vbNewLine & _
                 "	And SSID.ScriptEngine_SessionID = @ScriptEngineSessionID"
             Dim MyCmd As New SqlCommand(sql, New SqlConnection(Me.ConnectionString))
             MyCmd.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
@@ -1733,18 +1733,18 @@ Namespace CompuMaster.camm.WebManager
                     AssemblyLocationHash = "{ERROR detecting AssemblyLocation: " & ex.Message & "}"
                 End Try
                 Try
-                    Dim sql As String = "DECLARE @RowNumber int" & vbNewLine &
-                        "SELECT @RowNumber = COUNT(*)" & vbNewLine &
-                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
-                        "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = @PropertyName" & vbNewLine &
-                        "SELECT @RowNumber" & vbNewLine &
-                        "IF @RowNumber = 0 " & vbNewLine &
-                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine &
-                        "		(ValueNVarChar, PropertyName, ValueDateTime, ValueInt, ValueDecimal, ValueNText)" & vbNewLine &
-                        "	VALUES (N'camm WebManager', @PropertyName, GetDate(), @BuildNoAsIs, @BuildNoAsCompatible, @DetailsText)" & vbNewLine &
-                        "ELSE" & vbNewLine &
-                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine &
-                        "	SET ValueDateTime = GetDate(), ValueInt = @BuildNoAsIs, ValueDecimal = @BuildNoAsCompatible, ValueNText = @DetailsText" & vbNewLine &
+                    Dim sql As String = "DECLARE @RowNumber int" & vbNewLine & _
+                        "SELECT @RowNumber = COUNT(*)" & vbNewLine & _
+                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = @PropertyName" & vbNewLine & _
+                        "SELECT @RowNumber" & vbNewLine & _
+                        "IF @RowNumber = 0 " & vbNewLine & _
+                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "		(ValueNVarChar, PropertyName, ValueDateTime, ValueInt, ValueDecimal, ValueNText)" & vbNewLine & _
+                        "	VALUES (N'camm WebManager', @PropertyName, GetDate(), @BuildNoAsIs, @BuildNoAsCompatible, @DetailsText)" & vbNewLine & _
+                        "ELSE" & vbNewLine & _
+                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "	SET ValueDateTime = GetDate(), ValueInt = @BuildNoAsIs, ValueDecimal = @BuildNoAsCompatible, ValueNText = @DetailsText" & vbNewLine & _
                         "	WHERE ValueNVarChar = N'camm WebManager' AND PropertyName = @PropertyName"
 
                     'Set flag that logging has been done for this application
@@ -1813,18 +1813,18 @@ Namespace CompuMaster.camm.WebManager
                 For Each MyAttribute As String In Me.Attributes.Keys
 
                     Select Case MyAttribute.ToLower(System.Globalization.CultureInfo.InvariantCulture)
-                        Case "securityobject", "pageadditionalheaders",
+                        Case "securityobject", "pageadditionalheaders", _
                             "pagetitle", "pagep3pcompactpolicy"
                             'OK
-                        Case "connectionstring", "currentserveridentstring",
-                            "smtpserverport", "smtpservername",
-                            "technicalserviceemailaccountaddress", "technicalserviceemailaccountname",
-                            "standardemailaccountaddress", "standardemailaccountname",
+                        Case "connectionstring", "currentserveridentstring", _
+                            "smtpserverport", "smtpservername", _
+                            "technicalserviceemailaccountaddress", "technicalserviceemailaccountname", _
+                            "standardemailaccountaddress", "standardemailaccountname", _
                             "developmentemailaccountaddress"
                             'Shouldn't be configured here, but okay for debugging and development
                             'you should use config.vb instead
                             ControlAttributes_WarningsIfNotInDebugMode &= ", " & MyAttribute
-                        Case "user_auth_config_cursmtpserver_port",
+                        Case "user_auth_config_cursmtpserver_port", _
                             "user_auth_config_cursmtpserver", "additionalbodytags"
                             'Upgrade warning
                             ControlAttributes_UpgradeWarnings &= ", " & MyAttribute
@@ -1949,7 +1949,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Creates a new instance of the camm Web-Manager
         ''' </summary>
-        <Obsolete("You should not create a camm Web-Manager instance by yourself in web applications, use the cammWebManager property or cammWebManager object created in the aspx page itself")>
+        <Obsolete("You should not create a camm Web-Manager instance by yourself in web applications, use the cammWebManager property or cammWebManager object created in the aspx page itself")> _
         Public Sub New()
             MyBase.New()
             If HttpContext.Current Is Nothing Then
@@ -3010,7 +3010,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="AllowSecurityCache_Read">Allow to read this information from the cache</param>
         ''' <param name="AllowSecurityCache_Write">Allow to write this information to the cache</param>
         ''' <returns>True if the current user is authorized for that security object at the required server</returns>
-        <Obsolete("Use IsUserAuthorized instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use IsUserAuthorized instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_IsUserAuthorizedForApp(ByVal SecurityObjectName As String, Optional ByVal ServerName As String = Nothing, Optional ByVal AllowSecurityCache_Read As Boolean = False, Optional ByVal AllowSecurityCache_Write As Boolean = False) As Boolean
             Return _IsUserAuthorized(SecurityObjectName, ServerName, AllowSecurityCache_Read, AllowSecurityCache_Write)
         End Function
@@ -4073,7 +4073,7 @@ Namespace CompuMaster.camm.WebManager
             '''     A list of expression to search for matching search methods
             ''' </summary>
             ''' <remarks>
-            '''     The elements of this list will be queried by a logical OR
+            '''     The elements of this list will be queried by a logical Or _
             ''' </remarks>
             Public MatchExpressions As String()
 
@@ -4691,7 +4691,7 @@ Namespace CompuMaster.camm.WebManager
         '
         'Return     : Bei Erfolg True, ansonsten False
         '--------------------------------------------------------------------------------------
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_SetUserDetail(ByVal MyUserID As Integer, ByVal MyProperty As String, ByVal MyNewValue As Object, Optional ByVal DoNotLogSuccess As Boolean = False) As Object
             Return DataLayer.Current.SetUserDetail(Me, Nothing, CLng(MyUserID), MyProperty, Utils.Nz(MyNewValue, CType(Nothing, String)), DoNotLogSuccess)
         End Function
@@ -4704,13 +4704,13 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="MyProperty"></param>
         ''' <param name="MyNewValue"></param>
         ''' <param name="DoNotLogSuccess"></param>
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_SetUserDetail(ByVal dbConnection As SqlConnection, ByVal MyUserID As Long, ByVal MyProperty As String, ByVal MyNewValue As Object, Optional ByVal DoNotLogSuccess As Boolean = False) As Boolean
             Return DataLayer.Current.SetUserDetail(Me, dbConnection, MyUserID, MyProperty, Utils.Nz(MyNewValue, CType(Nothing, String)), DoNotLogSuccess)
         End Function
 
         ' TODO: change result type to boolean
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_SetUserDetail(ByVal MyUserID As Long, ByVal MyProperty As String, ByVal MyNewValue As Object, Optional ByVal DoNotLogSuccess As Boolean = False) As Object
             Return DataLayer.Current.SetUserDetail(Me, Nothing, MyUserID, MyProperty, Utils.Nz(MyNewValue, CType(Nothing, String)), DoNotLogSuccess)
         End Function
@@ -4725,7 +4725,7 @@ Namespace CompuMaster.camm.WebManager
         '
         'Return     : Liefert das Ergebnis als String/Null zurück
         '--------------------------------------------------------------------------------------
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserDetail(ByVal MyUserID As Object, ByVal MyProperty As Object) As Object
             If IsDBNull(MyUserID) Then
                 Return DBNull.Value
@@ -4738,7 +4738,7 @@ Namespace CompuMaster.camm.WebManager
             End If
         End Function
 
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserDetail(ByVal MyUserID As Long, ByVal MyProperty As String) As Object
             Dim Result As String = CompuMaster.camm.WebManager.DataLayer.Current.GetUserDetail(Me, MyUserID, MyProperty)
             If Result = Nothing Then
@@ -4803,11 +4803,11 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="MyUserID">A user ID</param>
         ''' <returns>Returns "Mr." respectively "Ms." in the current language</returns>
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserAddresses(ByVal MyUserID As Integer) As String
             Return System_GetUserAddresses_Internal(CLng(MyUserID))
         End Function
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Private Function System_GetUserAddresses_Internal(ByVal MyUserID As Long) As String
             Dim BufferedValue As String
 
@@ -4832,7 +4832,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="MyUserID">A user ID</param>
         ''' <returns>Returns "Mr." respectively "Ms." in the current language</returns>
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserAddresses(ByVal MyUserID As Long) As String
             Return System_GetUserAddresses_Internal(MyUserID)
         End Function
@@ -4841,7 +4841,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserInfo">A user information object</param>
         ''' <returns>Returns "Mr." respectively "Ms." in the current language</returns>
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserAddresses(ByVal UserInfo As UserInformation) As String
             If UserInfo.Gender = Sex.Feminin Then
                 System_GetUserAddresses = Internationalization.UserManagementAddressesMs
@@ -4857,7 +4857,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="MyUserID">A user ID</param>
         ''' <returns>Returns "Dear Mr." respectively "Dear Ms." in the current language</returns>
-        <Obsolete("use UserInfo.Salutation* functions to retrieve the complete salutation string"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("use UserInfo.Salutation* functions to retrieve the complete salutation string"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserFormOfAddress(ByVal MyUserID As Integer) As String
             Dim BufferedValue As String
             Try
@@ -4877,7 +4877,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="MyUserID">A user ID</param>
         ''' <returns>Returns "Dear Mr." respectively "Dear Ms." in the current language</returns>
-        <Obsolete("use UserInfo.Salutation* functions to retrieve the complete salutation string"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("use UserInfo.Salutation* functions to retrieve the complete salutation string"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserFormOfAddress(ByVal MyUserID As Long) As String
             Dim BufferedValue As String
 
@@ -4900,7 +4900,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserInfo">A user information object</param>
         ''' <returns>Returns "Dear Mr." respectively "Dear Ms." in the current language</returns>
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserFormOfAddress(ByVal UserInfo As UserInformation) As String
             If UserInfo.Gender = Sex.Feminin Then
                 Return Internationalization.UserManagementEMailTextDearMs
@@ -4934,7 +4934,7 @@ Namespace CompuMaster.camm.WebManager
         '''     If there is only 1 server group available, the returned string contains only the simply URL of the master server of this server group.
         '''     Are there 2 or more server groups available then each URL of the corresponding master server is followed by the server group title in parenthesis.
         ''' </remarks>
-        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserLogonServers(ByVal userID As Object) As String
             Return CompuMaster.camm.WebManager.DataLayer.Current.GetUserLogonServers(Me, CType(userID, Long))
         End Function
@@ -4946,7 +4946,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        <Obsolete("Use Utils.Nz instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use Utils.Nz instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Shared Function System_Nz(ByVal CheckValueIfDBNull As Object, Optional ByVal ReplaceWithThis As Object = Nothing) As Object
             Return Utils.Nz(CheckValueIfDBNull, ReplaceWithThis)
         End Function
@@ -6576,7 +6576,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="AllowCacheRead">Allow to read from a cache</param>
         ''' <param name="AllowCacheWrite">Allow to save the navigation items to a cache</param>
         ''' <returns>A datatable with all navigation items</returns>
-        <Obsolete("Use System_GetUserNavigationElements instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use System_GetUserNavigationElements instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetNavItems(ByVal UserID As Integer, Optional ByVal LanguageID As Integer = Nothing, Optional ByVal ServerIdentString As String = Nothing, Optional ByVal AutoAddLogonLinks As Boolean = True, Optional ByVal AllowCacheRead As Boolean = True, Optional ByVal AllowCacheWrite As Boolean = True) As DataTable
             Return _System_GetNavItems(CLng(UserID), CType(Nothing, Integer), LanguageID, ServerIdentString, AutoAddLogonLinks, AllowCacheRead, AllowCacheWrite)
         End Function
@@ -6590,7 +6590,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="AllowCacheRead">Allow to read from a cache</param>
         ''' <param name="AllowCacheWrite">Allow to save the navigation items to a cache</param>
         ''' <returns>A datatable with all navigation items</returns>
-        <Obsolete("Use System_GetUserNavigationElements instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use System_GetUserNavigationElements instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetNavItems(ByVal UserID As Long, Optional ByVal LanguageID As Integer = Nothing, Optional ByVal ServerIdentString As String = Nothing, Optional ByVal AutoAddLogonLinks As Boolean = True, Optional ByVal AllowCacheRead As Boolean = True, Optional ByVal AllowCacheWrite As Boolean = True) As DataTable
             Return _System_GetNavItems(UserID, CType(Nothing, Integer), LanguageID, ServerIdentString, AutoAddLogonLinks, AllowCacheRead, AllowCacheWrite)
         End Function
@@ -6604,7 +6604,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="AllowCacheRead">Allow to read from a cache</param>
         ''' <param name="AllowCacheWrite">Allow to save the navigation items to a cache</param>
         ''' <returns>A datatable with all navigation items</returns>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Private Function _System_GetNavItems(ByVal userID As Long, ByVal groupID As Integer, Optional ByVal LanguageID As Integer = Nothing, Optional ByVal ServerIdentString As String = Nothing, Optional ByVal AutoAddLogonLinks As Boolean = True, Optional ByVal AllowCacheRead As Boolean = True, Optional ByVal AllowCacheWrite As Boolean = True) As DataTable
 
             If Not (userID = Nothing Xor groupID = Nothing) Then
@@ -7192,21 +7192,21 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="currentScriptEngineSessionID">The browser session ID for the current session</param>
         ''' <returns>The browser session ID on the requested target or Nothing (null) if session hasn't been found</returns>
         Private Function LookupBrowserSessionIDForAnotherServerOrScriptEngineTarget(ByVal userName As String, ByVal requiredServerID As Integer, requiredScriptEngineID As Integer, currentServerID As Integer, currentScriptEngineID As ScriptEngines, currentScriptEngineSessionID As String) As String
-            Const Sql As String = "    DECLARE @CurrentSessionID int" & vbNewLine &
-                "    SELECT @CurrentSessionID = SessionID" & vbNewLine &
-                "          from benutzer " & vbNewLine &
-                "            inner join System_UserSessions on benutzer.id = System_UserSessions.id_user" & vbNewLine &
-                "            inner join System_WebAreasAuthorizedForSession on System_WebAreasAuthorizedForSession.SessionID = System_UserSessions.ID_Session" & vbNewLine &
-                "		WHERE benutzer.loginname = @Username" & vbNewLine &
-                "            and ScriptEngine_SessionID = @CurrentScriptEngineSessionID " & vbNewLine &
-                "			AND ScriptEngine_ID = @CurrentScriptEngineID" & vbNewLine &
-                "			AND Server = @CurrentServerID" & vbNewLine &
-                "    If @CurrentSessionID IS NOT NULL" & vbNewLine &
-                "		-- gewünschten Session ID Wert ausliefern" & vbNewLine &
-                "        select System_WebAreasAuthorizedForSession.ScriptEngine_SessionID" & vbNewLine &
-                "  		FROM System_WebAreasAuthorizedForSession " & vbNewLine &
-                "          where System_WebAreasAuthorizedForSession.Server = @RequiredServerID" & vbNewLine &
-                "            and System_WebAreasAuthorizedForSession.ScriptEngine_ID = @RequiredScriptEngineID" & vbNewLine &
+            Const Sql As String = "    DECLARE @CurrentSessionID int" & vbNewLine & _
+                "    SELECT @CurrentSessionID = SessionID" & vbNewLine & _
+                "          from benutzer " & vbNewLine & _
+                "            inner join System_UserSessions on benutzer.id = System_UserSessions.id_user" & vbNewLine & _
+                "            inner join System_WebAreasAuthorizedForSession on System_WebAreasAuthorizedForSession.SessionID = System_UserSessions.ID_Session" & vbNewLine & _
+                "		WHERE benutzer.loginname = @Username" & vbNewLine & _
+                "            and ScriptEngine_SessionID = @CurrentScriptEngineSessionID " & vbNewLine & _
+                "			AND ScriptEngine_ID = @CurrentScriptEngineID" & vbNewLine & _
+                "			AND Server = @CurrentServerID" & vbNewLine & _
+                "    If @CurrentSessionID IS NOT NULL" & vbNewLine & _
+                "		-- gewünschten Session ID Wert ausliefern" & vbNewLine & _
+                "        select System_WebAreasAuthorizedForSession.ScriptEngine_SessionID" & vbNewLine & _
+                "  		FROM System_WebAreasAuthorizedForSession " & vbNewLine & _
+                "          where System_WebAreasAuthorizedForSession.Server = @RequiredServerID" & vbNewLine & _
+                "            and System_WebAreasAuthorizedForSession.ScriptEngine_ID = @RequiredScriptEngineID" & vbNewLine & _
                 "            and System_WebAreasAuthorizedForSession.SessionID = @CurrentSessionID"
             Dim MyCmd As New SqlCommand(Sql, New SqlConnection(ConnectionString))
             With MyCmd
@@ -7289,21 +7289,21 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     An e-mail attachment
         ''' </summary>
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Structure EMailAttachement
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
             Dim AttachmentData As Byte()
             ''' <summary>
             '''     The filename for the binary data
             ''' </summary>
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
             Dim AttachmentData_Filename As String
             ''' <summary>
             '''     A path to a file which shall be included
             ''' </summary>
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
             Dim AttachmentFile As String
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
             Dim AttachmentFile_Charset As String
             ''' <summary>
             '''     A placeholder string in the HTML code of the message which shall be replaced by the CID code of the attachment
@@ -7311,7 +7311,7 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             '''     Define the placeholder which shall be replaced by the Content-ID for the contents of a file to the email. Emails formatted in HTML can include images with this information and internally reference the image through a "cid" hyperlink.
             ''' </remarks>
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
             Dim PlaceholderInMHTML_ToReplaceWithCID As String
             '''' -----------------------------------------------------------------------------
             '''' <summary>
@@ -7328,7 +7328,7 @@ Namespace CompuMaster.camm.WebManager
         End Structure
 
         '<Obsolete("Use Messaging.EMails.Priority instead"), _
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Enum MailImportance As Byte
             High = 1
             Normal = 3
@@ -7336,7 +7336,7 @@ Namespace CompuMaster.camm.WebManager
         End Enum
 
         '<Obsolete("Use Messaging.EMails.Sensitivity instead"), _
-        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Enum MailSensitivity As Byte
             Status_Normal = 1
             Status_Personal = 2
@@ -7409,7 +7409,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        <Obsolete("Use MessagingEMails.SendEMail() instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use MessagingEMails.SendEMail() instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_SendEMail(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal Priority As MailImportance = Nothing) As Boolean
             Return Me.MessagingEMails.SendEMail(RcptName, RcptAddress, MsgSubject, MsgBody, "", SenderName, SenderAddress, CType(Nothing, Messaging.EMailAttachment()), CType(Priority, Messaging.EMails.Priority), Nothing, False, False, Nothing, Nothing, Nothing)
         End Function
@@ -7435,7 +7435,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        <Obsolete("Use MessagingEMails.SendEMail() instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use MessagingEMails.SendEMail() instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_SendEMailEx(ByVal RcptName As String, ByVal RcptAddress As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal MsgCharset As Object = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal Attachments As EMailAttachement() = Nothing, Optional ByVal Priority As MailImportance = Nothing, Optional ByVal Sensitivity As MailSensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing) As Boolean
             Return MessagingEMails.SendEMail(RcptName, RcptAddress, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, Messaging.EMails.ConvertWMSystemEMailAttachmentToMessagingEMailAttachment(Attachments), CType(Priority, Messaging.EMails.Priority), CType(Sensitivity, Messaging.EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders, CType(MsgCharset, String), bufErrorDetails)
         End Function
@@ -7462,7 +7462,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
-        <Obsolete("Use MessagingEMails.SendEMail() instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use MessagingEMails.SendEMail() instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_SendEMail_MultipleRcpts(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing, Optional ByVal Attachments As EMailAttachement() = Nothing, Optional ByVal Priority As MailImportance = Nothing, Optional ByVal Sensitivity As MailSensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing) As Boolean
             Return MessagingEMails.SendEMail(RcptAddresses_To, RcptAddresses_CC, RcptAddresses_BCC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, Messaging.EMails.ConvertWMSystemEMailAttachmentToMessagingEMailAttachment(Attachments), CType(Priority, Messaging.EMails.Priority), CType(Sensitivity, Messaging.EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders, MsgCharset, bufErrorDetails)
         End Function
@@ -8039,30 +8039,30 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="dataRow">The row from the data table containing the full user data</param>
             ''' <param name="webManager">The current instance of camm Web-Manager</param>
             Friend Sub New(dataRow As DataRow, webManager As WMSystem)
-                Me.New(CType(dataRow("ID"), Long),
-                                                CType(dataRow("LoginName"), String),
-                                                CType(dataRow("E-Mail"), String),
-                                                False,
-                                                Utils.Nz(dataRow("Company"), CType(Nothing, String)),
-                                                CType(IIf(Convert.ToString(Utils.Nz(dataRow("Anrede"), "")) = "", Sex.Undefined, IIf(Convert.ToString(Utils.Nz(dataRow("Anrede"), "")) = "Mr.", Sex.Masculine, Sex.Feminine)), Sex),
-                                                Utils.Nz(dataRow("Namenszusatz"), CType(Nothing, String)),
-                                                Utils.Nz(dataRow("Vorname"), CType(Nothing, String)),
-                                                Utils.Nz(dataRow("Nachname"), CType(Nothing, String)),
-                                                Utils.Nz(dataRow("Titel"), CType(Nothing, String)),
-                                                Utils.Nz(dataRow("Strasse"), CType(Nothing, String)),
-                                                Utils.Nz(dataRow("PLZ"), CType(Nothing, String)),
-                                                Utils.Nz(dataRow("Ort"), CType(Nothing, String)),
-                                                Utils.Nz(dataRow("State"), CType(Nothing, String)),
-                                                Utils.Nz(dataRow("Land"), CType(Nothing, String)),
-                                                CType(dataRow("1stPreferredLanguage"), Integer),
-                                                Utils.Nz(dataRow("2ndPreferredLanguage"), 0),
-                                                Utils.Nz(dataRow("3rdPreferredLanguage"), 0),
-                                                CType(dataRow("LoginDisabled"), Boolean),
-                                                Not IsDBNull(dataRow("LoginLockedTill")),
-                                                False,
-                                                CType(dataRow("AccountAccessability"), Integer),
-                                                webManager,
-                                                CType(Nothing, String),
+                Me.New(CType(dataRow("ID"), Long), _
+                                                CType(dataRow("LoginName"), String), _
+                                                CType(dataRow("E-Mail"), String), _
+                                                False, _
+                                                Utils.Nz(dataRow("Company"), CType(Nothing, String)), _
+                                                CType(IIf(Convert.ToString(Utils.Nz(dataRow("Anrede"), "")) = "", Sex.Undefined, IIf(Convert.ToString(Utils.Nz(dataRow("Anrede"), "")) = "Mr.", Sex.Masculine, Sex.Feminine)), Sex), _
+                                                Utils.Nz(dataRow("Namenszusatz"), CType(Nothing, String)), _
+                                                Utils.Nz(dataRow("Vorname"), CType(Nothing, String)), _
+                                                Utils.Nz(dataRow("Nachname"), CType(Nothing, String)), _
+                                                Utils.Nz(dataRow("Titel"), CType(Nothing, String)), _
+                                                Utils.Nz(dataRow("Strasse"), CType(Nothing, String)), _
+                                                Utils.Nz(dataRow("PLZ"), CType(Nothing, String)), _
+                                                Utils.Nz(dataRow("Ort"), CType(Nothing, String)), _
+                                                Utils.Nz(dataRow("State"), CType(Nothing, String)), _
+                                                Utils.Nz(dataRow("Land"), CType(Nothing, String)), _
+                                                CType(dataRow("1stPreferredLanguage"), Integer), _
+                                                Utils.Nz(dataRow("2ndPreferredLanguage"), 0), _
+                                                Utils.Nz(dataRow("3rdPreferredLanguage"), 0), _
+                                                CType(dataRow("LoginDisabled"), Boolean), _
+                                                Not IsDBNull(dataRow("LoginLockedTill")), _
+                                                False, _
+                                                CType(dataRow("AccountAccessability"), Integer), _
+                                                webManager, _
+                                                CType(Nothing, String), _
                                                 CType(Nothing, System.Collections.Specialized.NameValueCollection))
             End Sub
 
@@ -8624,9 +8624,9 @@ Namespace CompuMaster.camm.WebManager
             '''     The full name of an user, e. g. "Dr. Adam van Vrede")
             ''' </summary>
             Public Function FullName() As String
-                Return CType(IIf(_AcademicTitle = "", "", _AcademicTitle & " "), String) &
-                    _FirstName & " " &
-                    CType(IIf(_NameAddition = "", "", _NameAddition & " "), String) &
+                Return CType(IIf(_AcademicTitle = "", "", _AcademicTitle & " "), String) & _
+                    _FirstName & " " & _
+                    CType(IIf(_NameAddition = "", "", _NameAddition & " "), String) & _
                     _LastName
             End Function
             <Obsolete("use FullName instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> Public ReadOnly Property CompleteName() As String
@@ -8646,8 +8646,8 @@ Namespace CompuMaster.camm.WebManager
                 If Me.LastName = Nothing Then
                     Return ""
                 Else
-                    Return CType(IIf(_AcademicTitle = "", "", _AcademicTitle & " "), String) &
-                        CType(IIf(_NameAddition = "", "", _NameAddition & " "), String) &
+                    Return CType(IIf(_AcademicTitle = "", "", _AcademicTitle & " "), String) & _
+                        CType(IIf(_NameAddition = "", "", _NameAddition & " "), String) & _
                         _LastName
                 End If
             End Function
@@ -9547,7 +9547,7 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             ''' This action will be done immediately without the need for saving
             ''' </remarks>
-            <Obsolete("Better use overloaded method which implements INotifications"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+            <Obsolete("Better use overloaded method which implements INotifications"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
             Public Sub AddMembership(ByVal groupID As Integer, ByVal notifications As WMNotifications)
                 AddMembership(groupID, CType(notifications, Notifications.INotifications))
             End Sub
@@ -9896,33 +9896,33 @@ Namespace CompuMaster.camm.WebManager
                         Dim DenyRuleAuthsIsDev As New ArrayList
                         For MyCounter As Integer = 0 To SecObjects.Rows.Count - 1
                             Dim MyDataRow As DataRow = SecObjects.Rows(MyCounter)
-                            Dim NavInfo As New Security.NavigationInformation(
-                                        0,
-                                        Nothing,
-                                        Utils.Nz(MyDataRow("Level1Title"), String.Empty),
-                                        Utils.Nz(MyDataRow("Level2Title"), String.Empty),
-                                        Utils.Nz(MyDataRow("Level3Title"), String.Empty),
-                                        Utils.Nz(MyDataRow("Level4Title"), String.Empty),
-                                        Utils.Nz(MyDataRow("Level5Title"), String.Empty),
-                                        Utils.Nz(MyDataRow("Level6Title"), String.Empty),
-                                        Utils.Nz(MyDataRow("Level1TitleIsHtmlCoded"), False),
-                                        Utils.Nz(MyDataRow("Level2TitleIsHtmlCoded"), False),
-                                        Utils.Nz(MyDataRow("Level3TitleIsHtmlCoded"), False),
-                                        Utils.Nz(MyDataRow("Level4TitleIsHtmlCoded"), False),
-                                        Utils.Nz(MyDataRow("Level5TitleIsHtmlCoded"), False),
-                                        Utils.Nz(MyDataRow("Level6TitleIsHtmlCoded"), False),
-                                        Utils.Nz(MyDataRow("NavURL"), String.Empty),
-                                        Utils.Nz(MyDataRow("NavFrame"), String.Empty),
-                                        Utils.Nz(MyDataRow("NavTooltipText"), String.Empty),
-                                        Utils.Nz(MyDataRow("AddLanguageID2URL"), False),
-                                        Utils.Nz(MyDataRow("LanguageID"), 0),
-                                        Utils.Nz(MyDataRow("LocationID"), 0),
-                                        Utils.Nz(MyDataRow("Sort"), 0),
-                                        Utils.Nz(MyDataRow("IsNew"), False),
-                                        Utils.Nz(MyDataRow("IsUpdated"), False),
-                                        Utils.Nz(MyDataRow("ResetIsNewUpdatedStatusOn"), DateTime.MinValue),
-                                        Utils.Nz(MyDataRow("OnMouseOver"), String.Empty),
-                                        Utils.Nz(MyDataRow("OnMouseOut"), String.Empty),
+                            Dim NavInfo As New Security.NavigationInformation( _
+                                        0, _
+                                        Nothing, _
+                                        Utils.Nz(MyDataRow("Level1Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level2Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level3Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level4Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level5Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level6Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level1TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level2TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level3TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level4TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level5TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level6TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("NavURL"), String.Empty), _
+                                        Utils.Nz(MyDataRow("NavFrame"), String.Empty), _
+                                        Utils.Nz(MyDataRow("NavTooltipText"), String.Empty), _
+                                        Utils.Nz(MyDataRow("AddLanguageID2URL"), False), _
+                                        Utils.Nz(MyDataRow("LanguageID"), 0), _
+                                        Utils.Nz(MyDataRow("LocationID"), 0), _
+                                        Utils.Nz(MyDataRow("Sort"), 0), _
+                                        Utils.Nz(MyDataRow("IsNew"), False), _
+                                        Utils.Nz(MyDataRow("IsUpdated"), False), _
+                                        Utils.Nz(MyDataRow("ResetIsNewUpdatedStatusOn"), DateTime.MinValue), _
+                                        Utils.Nz(MyDataRow("OnMouseOver"), String.Empty), _
+                                        Utils.Nz(MyDataRow("OnMouseOut"), String.Empty), _
                                         Utils.Nz(MyDataRow("OnClick"), String.Empty))
                             Dim secObjInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(CType(MyDataRow("ID"), Integer), CType(MyDataRow("Title"), String), Utils.Nz(MyDataRow("TitleAdminArea"), CType(Nothing, String)), Utils.Nz(MyDataRow("Remarks"), CType(Nothing, String)), CType(MyDataRow("ModifiedBy"), Long), Utils.Nz(MyDataRow("ModifiedOn"), CType(Nothing, Date)), CType(MyDataRow("ReleasedBy"), Long), Utils.Nz(MyDataRow("ReleasedOn"), CType(Nothing, Date)), Utils.Nz(MyDataRow("AppDisabled"), False), Utils.Nz(MyDataRow("AppDeleted"), False), Utils.Nz(MyDataRow("AuthsAsAppID"), 0), Utils.Nz(MyDataRow("SystemAppType"), 0), Utils.Nz(Utils.CellValueIfColumnExists(MyDataRow, "RequiredUserProfileFlags"), ""), Utils.Nz(Utils.CellValueIfColumnExists(MyDataRow, "RequiredUserProfileFlagsRemarks"), ""), NavInfo, _WebManager)
                             Dim secObjAuth As New SecurityObjectAuthorizationForUser(_WebManager, CType(MyDataRow("AuthorizationID"), Integer), CType(MyDataRow("AuthorizationGroupID"), Integer), CType(MyDataRow("AuthorizationSecurityObjectID"), Integer), Utils.Nz(MyDataRow("AuthorizationServerGroupID"), 0), Me, secObjInfo, Nothing, Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False), Utils.Nz(MyDataRow("IsDenyRule"), False), CType(MyDataRow("AuthorizationReleasedOn"), DateTime), CType(MyDataRow("AuthorizationReleasedBy"), Integer), False)
@@ -9940,14 +9940,14 @@ Namespace CompuMaster.camm.WebManager
                                 End If
                             End If
                         Next
-                        _AuthorizationsByRule = New Security.UserAuthorizationItemsByRuleForUsers(
-                            _WebManager.CurrentServerInfo.ParentServerGroupID,
-                            Me._ID,
-                            0,
-                            CType(AllowRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()),
-                            CType(AllowRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()),
-                            CType(DenyRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()),
-                            CType(DenyRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()),
+                        _AuthorizationsByRule = New Security.UserAuthorizationItemsByRuleForUsers( _
+                            _WebManager.CurrentServerInfo.ParentServerGroupID, _
+                            Me._ID, _
+                            0, _
+                            CType(AllowRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
+                            CType(AllowRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
+                            CType(DenyRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
+                            CType(DenyRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
                             Me._WebManager)
                     End If
                     Return _AuthorizationsByRule
@@ -11024,33 +11024,33 @@ Namespace CompuMaster.camm.WebManager
                         Dim DenyRuleAuthsIsDev As New ArrayList
                         For MyCounter As Integer = 0 To SecObjects.Rows.Count - 1
                             Dim MyDataRow As DataRow = SecObjects.Rows(MyCounter)
-                            Dim NavInfo As New Security.NavigationInformation(
-                                        0,
-                                        Nothing,
-                                        Utils.Nz(MyDataRow("Level1Title"), String.Empty),
-                                        Utils.Nz(MyDataRow("Level2Title"), String.Empty),
-                                        Utils.Nz(MyDataRow("Level3Title"), String.Empty),
-                                        Utils.Nz(MyDataRow("Level4Title"), String.Empty),
-                                        Utils.Nz(MyDataRow("Level5Title"), String.Empty),
-                                        Utils.Nz(MyDataRow("Level6Title"), String.Empty),
-                                        Utils.Nz(MyDataRow("Level1TitleIsHtmlCoded"), False),
-                                        Utils.Nz(MyDataRow("Level2TitleIsHtmlCoded"), False),
-                                        Utils.Nz(MyDataRow("Level3TitleIsHtmlCoded"), False),
-                                        Utils.Nz(MyDataRow("Level4TitleIsHtmlCoded"), False),
-                                        Utils.Nz(MyDataRow("Level5TitleIsHtmlCoded"), False),
-                                        Utils.Nz(MyDataRow("Level6TitleIsHtmlCoded"), False),
-                                        Utils.Nz(MyDataRow("NavURL"), String.Empty),
-                                        Utils.Nz(MyDataRow("NavFrame"), String.Empty),
-                                        Utils.Nz(MyDataRow("NavTooltipText"), String.Empty),
-                                        Utils.Nz(MyDataRow("AddLanguageID2URL"), False),
-                                        Utils.Nz(MyDataRow("LanguageID"), 0),
-                                        Utils.Nz(MyDataRow("LocationID"), 0),
-                                        Utils.Nz(MyDataRow("Sort"), 0),
-                                        Utils.Nz(MyDataRow("IsNew"), False),
-                                        Utils.Nz(MyDataRow("IsUpdated"), False),
-                                        Utils.Nz(MyDataRow("ResetIsNewUpdatedStatusOn"), DateTime.MinValue),
-                                        Utils.Nz(MyDataRow("OnMouseOver"), String.Empty),
-                                        Utils.Nz(MyDataRow("OnMouseOut"), String.Empty),
+                            Dim NavInfo As New Security.NavigationInformation( _
+                                        0, _
+                                        Nothing, _
+                                        Utils.Nz(MyDataRow("Level1Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level2Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level3Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level4Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level5Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level6Title"), String.Empty), _
+                                        Utils.Nz(MyDataRow("Level1TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level2TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level3TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level4TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level5TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("Level6TitleIsHtmlCoded"), False), _
+                                        Utils.Nz(MyDataRow("NavURL"), String.Empty), _
+                                        Utils.Nz(MyDataRow("NavFrame"), String.Empty), _
+                                        Utils.Nz(MyDataRow("NavTooltipText"), String.Empty), _
+                                        Utils.Nz(MyDataRow("AddLanguageID2URL"), False), _
+                                        Utils.Nz(MyDataRow("LanguageID"), 0), _
+                                        Utils.Nz(MyDataRow("LocationID"), 0), _
+                                        Utils.Nz(MyDataRow("Sort"), 0), _
+                                        Utils.Nz(MyDataRow("IsNew"), False), _
+                                        Utils.Nz(MyDataRow("IsUpdated"), False), _
+                                        Utils.Nz(MyDataRow("ResetIsNewUpdatedStatusOn"), DateTime.MinValue), _
+                                        Utils.Nz(MyDataRow("OnMouseOver"), String.Empty), _
+                                        Utils.Nz(MyDataRow("OnMouseOut"), String.Empty), _
                                         Utils.Nz(MyDataRow("OnClick"), String.Empty))
                             Dim secObjInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(CType(MyDataRow("ID"), Integer), CType(MyDataRow("Title"), String), Utils.Nz(MyDataRow("TitleAdminArea"), CType(Nothing, String)), Utils.Nz(MyDataRow("Remarks"), CType(Nothing, String)), CType(MyDataRow("ModifiedBy"), Long), Utils.Nz(MyDataRow("ModifiedOn"), CType(Nothing, Date)), CType(MyDataRow("ReleasedBy"), Long), Utils.Nz(MyDataRow("ReleasedOn"), CType(Nothing, Date)), Utils.Nz(MyDataRow("AppDisabled"), False), Utils.Nz(MyDataRow("AppDeleted"), False), Utils.Nz(MyDataRow("AuthsAsAppID"), 0), Utils.Nz(MyDataRow("SystemAppType"), 0), Utils.Nz(Utils.CellValueIfColumnExists(MyDataRow, "RequiredUserProfileFlags"), ""), Utils.Nz(Utils.CellValueIfColumnExists(MyDataRow, "RequiredUserProfileFlagsRemarks"), ""), NavInfo, _WebManager)
                             Dim secObjAuth As New SecurityObjectAuthorizationForGroup(_WebManager, CType(MyDataRow("AuthorizationID"), Integer), CType(MyDataRow("AuthorizationGroupID"), Integer), CType(MyDataRow("AuthorizationSecurityObjectID"), Integer), Utils.Nz(MyDataRow("AuthorizationServerGroupID"), 0), Me, secObjInfo, Nothing, Utils.Nz(MyDataRow("AuthorizationIsDeveloper"), False), Utils.Nz(MyDataRow("IsDenyRule"), False), CType(MyDataRow("AuthorizationReleasedOn"), DateTime), CType(MyDataRow("AuthorizationReleasedBy"), Integer), False)
@@ -11068,14 +11068,14 @@ Namespace CompuMaster.camm.WebManager
                                 End If
                             End If
                         Next
-                        _AuthorizationsByRule = New Security.GroupAuthorizationItemsByRuleForGroups(
-                            _WebManager.CurrentServerInfo.ParentServerGroupID,
-                            Me._ID,
-                            0,
-                            CType(AllowRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()),
-                            CType(AllowRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()),
-                            CType(DenyRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()),
-                            CType(DenyRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()),
+                        _AuthorizationsByRule = New Security.GroupAuthorizationItemsByRuleForGroups( _
+                            _WebManager.CurrentServerInfo.ParentServerGroupID, _
+                            Me._ID, _
+                            0, _
+                            CType(AllowRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
+                            CType(AllowRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
+                            CType(DenyRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
+                            CType(DenyRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
                             Me._WebManager)
                     End If
                     Return _AuthorizationsByRule
@@ -11093,19 +11093,19 @@ Namespace CompuMaster.camm.WebManager
             Friend Shared Function RequiredAdditionalFlags(groupID As Integer, webManager As WMSystem) As String()
                 Dim Sql As String
                 If webManager.System_DBVersion_Ex(True).CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                    Sql = "        SELECT Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags" & vbNewLine &
-                            "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine &
-                            "            INNER JOIN dbo.Applications_CurrentAndInactiveOnes " & vbNewLine &
-                            "                ON Applications_CurrentAndInactiveOnes.ID = [dbo].[ApplicationsRightsByGroup].ID_Application" & vbNewLine &
-                            "        WHERE [dbo].[ApplicationsRightsByGroup].isdenyrule = 0" & vbNewLine &
-                            "            AND [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine &
+                    Sql = "        SELECT Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags" & vbNewLine & _
+                            "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine & _
+                            "            INNER JOIN dbo.Applications_CurrentAndInactiveOnes " & vbNewLine & _
+                            "                ON Applications_CurrentAndInactiveOnes.ID = [dbo].[ApplicationsRightsByGroup].ID_Application" & vbNewLine & _
+                            "        WHERE [dbo].[ApplicationsRightsByGroup].isdenyrule = 0" & vbNewLine & _
+                            "            AND [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine & _
                             "            AND Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags IS NOT NULL"
                 Else
-                    Sql = "        SELECT Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags" & vbNewLine &
-                            "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine &
-                            "            INNER JOIN dbo.Applications_CurrentAndInactiveOnes " & vbNewLine &
-                            "                ON Applications_CurrentAndInactiveOnes.ID = [dbo].[ApplicationsRightsByGroup].ID_Application" & vbNewLine &
-                            "        WHERE [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine &
+                    Sql = "        SELECT Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags" & vbNewLine & _
+                            "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine & _
+                            "            INNER JOIN dbo.Applications_CurrentAndInactiveOnes " & vbNewLine & _
+                            "                ON Applications_CurrentAndInactiveOnes.ID = [dbo].[ApplicationsRightsByGroup].ID_Application" & vbNewLine & _
+                            "        WHERE [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine & _
                             "            AND Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags IS NOT NULL"
                 End If
                 Dim command As New SqlCommand(Sql, New SqlConnection(webManager.ConnectionString))
@@ -11538,7 +11538,7 @@ Namespace CompuMaster.camm.WebManager
             Dim _GroupPublic As GroupInformation
             Dim _Servers As ServerInformation()
 
-            Friend Sub New(ByVal ServerGroupID As Integer, ByVal Title As String, ByVal NavTitle As String, ByVal OfficialCompanyWebSiteTitle As String, ByVal OfficialCompanyWebSiteURL As String, ByVal CompanyTitle As String, ByVal CompanyFormerTitle As String, ByVal AccessLevelDefaultID As Integer, ByVal MasterServerID As Integer, ByVal AdminServerID As Integer, ByVal GroupAnonymousID As Integer, ByVal GroupPublicID As Integer,
+            Friend Sub New(ByVal ServerGroupID As Integer, ByVal Title As String, ByVal NavTitle As String, ByVal OfficialCompanyWebSiteTitle As String, ByVal OfficialCompanyWebSiteURL As String, ByVal CompanyTitle As String, ByVal CompanyFormerTitle As String, ByVal AccessLevelDefaultID As Integer, ByVal MasterServerID As Integer, ByVal AdminServerID As Integer, ByVal GroupAnonymousID As Integer, ByVal GroupPublicID As Integer, _
                 SecurityContactName As String, SecurityContactAddress As String, DevelopmentContactName As String, DevelopmentContractAddress As String, ContentManagementContactName As String, ContentManagementContactAddress As String, UnspecifiedContactName As String, UnspecifiedContactAddress As String, ByRef WebManager As WMSystem)
                 _WebManager = WebManager
                 _ID = ServerGroupID
@@ -12681,14 +12681,14 @@ Namespace CompuMaster.camm.WebManager
                         Else
                             MyIsDenyRule = Nothing
                         End If
-                        _AuthorizedUsers.Add(New UserAuthorizationInformation(_WebManager,
-                            CType(MyReader("ID"), Integer),
-                            CType(MyReader("ID_Application"), Integer),
-                            CType(MyReader("ID_GroupOrPerson"), Long),
-                            MyServerGroup,
-                            Utils.Nz(MyReader("DevelopmentTeamMember"), False),
-                            CType(MyReader("ReleasedOn"), DateTime),
-                            CType(MyReader("ReleasedBy"), Long),
+                        _AuthorizedUsers.Add(New UserAuthorizationInformation(_WebManager, _
+                            CType(MyReader("ID"), Integer), _
+                            CType(MyReader("ID_Application"), Integer), _
+                            CType(MyReader("ID_GroupOrPerson"), Long), _
+                            MyServerGroup, _
+                            Utils.Nz(MyReader("DevelopmentTeamMember"), False), _
+                            CType(MyReader("ReleasedOn"), DateTime), _
+                            CType(MyReader("ReleasedBy"), Long), _
                             MyIsDenyRule))
                     End While
                     MyReader.Close()
@@ -12733,14 +12733,14 @@ Namespace CompuMaster.camm.WebManager
                         Else
                             MyIsDev = False
                         End If
-                        _AuthorizedGroups.Add(New GroupAuthorizationInformation(_WebManager,
-                            CType(MyReader("ID"), Integer),
-                            CType(MyReader("ID_Application"), Integer),
-                            CType(MyReader("ID_GroupOrPerson"), Integer),
-                            MyServerGroup,
-                            MyIsDev,
-                            CType(MyReader("ReleasedOn"), DateTime),
-                            CType(MyReader("ReleasedBy"), Long),
+                        _AuthorizedGroups.Add(New GroupAuthorizationInformation(_WebManager, _
+                            CType(MyReader("ID"), Integer), _
+                            CType(MyReader("ID_Application"), Integer), _
+                            CType(MyReader("ID_GroupOrPerson"), Integer), _
+                            MyServerGroup, _
+                            MyIsDev, _
+                            CType(MyReader("ReleasedOn"), DateTime), _
+                            CType(MyReader("ReleasedBy"), Long), _
                             MyIsDenyRule))
                     End While
                     MyReader.Close()
@@ -12875,7 +12875,7 @@ Namespace CompuMaster.camm.WebManager
                     Return Nothing
                 End Get
             End Property
-            <Obsolete("UserID should be of type Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+            <Obsolete("UserID should be of type Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
             Public ReadOnly Property UserAuthorizationInformations(ByVal UserID As Integer) As UserAuthorizationInformation()
                 Get
                     Return UserAuthorizationInformations(CLng(UserID))
@@ -12993,8 +12993,8 @@ Namespace CompuMaster.camm.WebManager
                 Dim MyCmd As New SqlCommand
                 MyCmd.Connection = MyConn
                 If _DBVersion.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND IsNull(ID_ServerGroup, 0) = @IDServerGroup AND IsDenyRule = @IsDenyRule AND DevelopmentTeamMember = @IsDevRule" & vbNewLine &
-                                        "INSERT INTO [dbo].[ApplicationsRightsByGroup] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, ID_ServerGroup, DevelopmentTeamMember, IsDenyRule) " &
+                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND IsNull(ID_ServerGroup, 0) = @IDServerGroup AND IsDenyRule = @IsDenyRule AND DevelopmentTeamMember = @IsDevRule" & vbNewLine & _
+                                        "INSERT INTO [dbo].[ApplicationsRightsByGroup] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, ID_ServerGroup, DevelopmentTeamMember, IsDenyRule) " & _
                                         "VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate(), @IDServerGroup, @IsDevRule, @IsDenyRule)"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = GroupID
@@ -13010,7 +13010,7 @@ Namespace CompuMaster.camm.WebManager
                     ElseIf IsDevRule = True Then
                         Throw New Exception("Parameter 'IsDevRule' not supported by the currently used database version")
                     End If
-                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson" & vbNewLine &
+                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson" & vbNewLine & _
                                         "INSERT INTO [dbo].[ApplicationsRightsByGroup] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn) VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate())"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = GroupID
@@ -13079,7 +13079,7 @@ Namespace CompuMaster.camm.WebManager
                 Dim MyCmd As New SqlCommand
                 MyCmd.Connection = MyConn
                 If _DBVersion.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND IsNull(ID_ServerGroup, 0) = @IDServerGroup AND DevelopmentTeamMember = @DevelopmentTeamMember AND IsDenyRule = @IsDenyRule" & vbNewLine &
+                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND IsNull(ID_ServerGroup, 0) = @IDServerGroup AND DevelopmentTeamMember = @DevelopmentTeamMember AND IsDenyRule = @IsDenyRule" & vbNewLine & _
                                         "INSERT INTO [dbo].[ApplicationsRightsByUser] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, ID_ServerGroup, DevelopmentTeamMember, IsDenyRule) VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate(), @IDServerGroup, @DevelopmentTeamMember, @IsDenyRule)"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Code)
@@ -13093,7 +13093,7 @@ Namespace CompuMaster.camm.WebManager
                     ElseIf IsDenyRule = True Then
                         Throw New Exception("Parameter 'IsDenyRule' not supported by the currently used database version")
                     End If
-                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND DevelopmentTeamMember = @DevelopmentTeamMember" & vbNewLine &
+                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND DevelopmentTeamMember = @DevelopmentTeamMember" & vbNewLine & _
                                         "INSERT INTO [dbo].[ApplicationsRightsByUser] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, DevelopmentTeamMember) VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate(), @DevelopmentTeamMember)"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = UserInfo.IDLong
@@ -13373,33 +13373,33 @@ Namespace CompuMaster.camm.WebManager
                         If Setup.DatabaseUtils.Version(WebManager, True).Build >= 185 Then
                             _RequiredFlagsRemarks = Utils.Nz(MyReader("RequiredUserProfileFlagsRemarks"), CType(Nothing, String))
                         End If
-                        _NavigationItems = New Security.NavigationInformation() {New Security.NavigationInformation(
-                            _ID,
-                            Me,
-                            Utils.Nz(MyReader("Level1Title"), String.Empty),
-                            Utils.Nz(MyReader("Level2Title"), String.Empty),
-                            Utils.Nz(MyReader("Level3Title"), String.Empty),
-                            Utils.Nz(MyReader("Level4Title"), String.Empty),
-                            Utils.Nz(MyReader("Level5Title"), String.Empty),
-                            Utils.Nz(MyReader("Level6Title"), String.Empty),
-                            Utils.Nz(MyReader("Level1TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level2TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level3TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level4TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level5TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level6TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("NavURL"), String.Empty),
-                            Utils.Nz(MyReader("NavFrame"), String.Empty),
-                            Utils.Nz(MyReader("NavTooltipText"), String.Empty),
-                            Utils.Nz(MyReader("AddLanguageID2URL"), False),
-                            Utils.Nz(MyReader("LanguageID"), 0),
-                            Utils.Nz(MyReader("LocationID"), 0),
-                            Utils.Nz(MyReader("Sort"), 0),
-                            Utils.Nz(MyReader("IsNew"), False),
-                            Utils.Nz(MyReader("IsUpdated"), False),
-                            Utils.Nz(MyReader("ResetIsNewUpdatedStatusOn"), DateTime.MinValue),
-                            Utils.Nz(MyReader("OnMouseOver"), String.Empty),
-                            Utils.Nz(MyReader("OnMouseOut"), String.Empty),
+                        _NavigationItems = New Security.NavigationInformation() {New Security.NavigationInformation( _
+                            _ID, _
+                            Me, _
+                            Utils.Nz(MyReader("Level1Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level2Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level3Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level4Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level5Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level6Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level1TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level2TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level3TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level4TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level5TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level6TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("NavURL"), String.Empty), _
+                            Utils.Nz(MyReader("NavFrame"), String.Empty), _
+                            Utils.Nz(MyReader("NavTooltipText"), String.Empty), _
+                            Utils.Nz(MyReader("AddLanguageID2URL"), False), _
+                            Utils.Nz(MyReader("LanguageID"), 0), _
+                            Utils.Nz(MyReader("LocationID"), 0), _
+                            Utils.Nz(MyReader("Sort"), 0), _
+                            Utils.Nz(MyReader("IsNew"), False), _
+                            Utils.Nz(MyReader("IsUpdated"), False), _
+                            Utils.Nz(MyReader("ResetIsNewUpdatedStatusOn"), DateTime.MinValue), _
+                            Utils.Nz(MyReader("OnMouseOver"), String.Empty), _
+                            Utils.Nz(MyReader("OnMouseOut"), String.Empty), _
                             Utils.Nz(MyReader("OnClick"), String.Empty))}
                     Else
                         'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class
@@ -13839,14 +13839,14 @@ Namespace CompuMaster.camm.WebManager
                                 End If
                             End If
                         Next
-                        _AuthorizationsForGroupsByRule = New Security.GroupAuthorizationItemsByRuleForSecurityObjects(
-                            _WebManager.CurrentServerInfo.ParentServerGroupID,
-                            0,
-                            Me._ID,
-                            CType(AllowRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()),
-                            CType(AllowRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()),
-                            CType(DenyRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()),
-                            CType(DenyRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()),
+                        _AuthorizationsForGroupsByRule = New Security.GroupAuthorizationItemsByRuleForSecurityObjects( _
+                            _WebManager.CurrentServerInfo.ParentServerGroupID, _
+                            0, _
+                            Me._ID, _
+                            CType(AllowRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
+                            CType(AllowRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
+                            CType(DenyRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
+                            CType(DenyRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup()), _
                             Me._WebManager)
                     End If
                     Return _AuthorizationsForGroupsByRule
@@ -13891,14 +13891,14 @@ Namespace CompuMaster.camm.WebManager
                                 End If
                             End If
                         Next
-                        _AuthorizationsForUsersByRule = New Security.UserAuthorizationItemsByRuleForSecurityObjects(
-                            _WebManager.CurrentServerInfo.ParentServerGroupID,
-                            0L,
-                            Me._ID,
-                            CType(AllowRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()),
-                            CType(AllowRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()),
-                            CType(DenyRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()),
-                            CType(DenyRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()),
+                        _AuthorizationsForUsersByRule = New Security.UserAuthorizationItemsByRuleForSecurityObjects( _
+                            _WebManager.CurrentServerInfo.ParentServerGroupID, _
+                            0L, _
+                            Me._ID, _
+                            CType(AllowRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
+                            CType(AllowRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
+                            CType(DenyRuleAuthsNonDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
+                            CType(DenyRuleAuthsIsDev.ToArray(GetType(SecurityObjectAuthorizationForUser)), SecurityObjectAuthorizationForUser()), _
                             Me._WebManager)
                     End If
                     Return _AuthorizationsForUsersByRule
@@ -14075,20 +14075,20 @@ Namespace CompuMaster.camm.WebManager
                         End If
                         SqlFlagsEnumeration.Append("N'" & requiredFlags(MyCounter).Replace("'", "''") & "'")
                     Next
-                    Dim Sql As String = "    SELECT TOP 1 ID_User, COUNT(*) AS FoundFlagsCount" & vbNewLine &
-                            "    FROM dbo.Log_Users" & vbNewLine &
-                            "    WHERE Type IN (" & SqlFlagsEnumeration.ToString & ")" & vbNewLine &
-                            "    AND ID_User IN " & vbNewLine &
-                            "    (" & vbNewLine &
-                            "        SELECT [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].ID_User" & vbNewLine &
-                            "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine &
-                            "            INNER JOIN [dbo].[Memberships_EffectiveRulesWithClonesNthGrade]" & vbNewLine &
-                            "                ON [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].ID_Group" & vbNewLine &
-                            "        WHERE [dbo].[ApplicationsRightsByGroup].isdenyrule = 0" & vbNewLine &
-                            "            AND [dbo].[ApplicationsRightsByGroup].ID_Application = @SecObjID" & vbNewLine &
-                            "            AND [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine &
-                            "    )" & vbNewLine &
-                            "    GROUP BY ID_User" & vbNewLine &
+                    Dim Sql As String = "    SELECT TOP 1 ID_User, COUNT(*) AS FoundFlagsCount" & vbNewLine & _
+                            "    FROM dbo.Log_Users" & vbNewLine & _
+                            "    WHERE Type IN (" & SqlFlagsEnumeration.ToString & ")" & vbNewLine & _
+                            "    AND ID_User IN " & vbNewLine & _
+                            "    (" & vbNewLine & _
+                            "        SELECT [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].ID_User" & vbNewLine & _
+                            "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine & _
+                            "            INNER JOIN [dbo].[Memberships_EffectiveRulesWithClonesNthGrade]" & vbNewLine & _
+                            "                ON [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].ID_Group" & vbNewLine & _
+                            "        WHERE [dbo].[ApplicationsRightsByGroup].isdenyrule = 0" & vbNewLine & _
+                            "            AND [dbo].[ApplicationsRightsByGroup].ID_Application = @SecObjID" & vbNewLine & _
+                            "            AND [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine & _
+                            "    )" & vbNewLine & _
+                            "    GROUP BY ID_User" & vbNewLine & _
                             "    HAVING COUNT(*) <> @RequiredFlagsCount"
                     Dim MyCmd As New SqlCommand(Sql, New SqlConnection(webManager.ConnectionString))
                     MyCmd.CommandType = CommandType.Text
@@ -14263,24 +14263,24 @@ Namespace CompuMaster.camm.WebManager
                 Dim MyCounter As Integer = 0
                 If MyDataSet.Tables("Languages").Columns.Contains("DirectionOfLetters") Then
                     For Each MyDataRow As DataRow In MyDataSet.Tables("Languages").Rows
-                        _Languages(MyCounter) = New LanguageInformation(CType(MyDataRow("ID"), Integer),
-                        Utils.Nz(MyDataRow("Description"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("Description_OwnLang"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("IsActive"), False),
-                        Utils.Nz(MyDataRow("BrowserLanguageID"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("Abbreviation"), CType(Nothing, String)),
+                        _Languages(MyCounter) = New LanguageInformation(CType(MyDataRow("ID"), Integer), _
+                        Utils.Nz(MyDataRow("Description"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("Description_OwnLang"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("IsActive"), False), _
+                        Utils.Nz(MyDataRow("BrowserLanguageID"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("Abbreviation"), CType(Nothing, String)), _
                         Utils.Nz(MyDataRow("DirectionOfLetters"), CType(Nothing, String)), Me)
                         MyCounter += 1
                     Next
                 Else
                     'The additional column exist beginning with db build 171
                     For Each MyDataRow As DataRow In MyDataSet.Tables("Languages").Rows
-                        _Languages(MyCounter) = New LanguageInformation(CType(MyDataRow("ID"), Integer),
-                        Utils.Nz(MyDataRow("Description"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("Description_OwnLang"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("IsActive"), False),
-                        Utils.Nz(MyDataRow("BrowserLanguageID"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("Abbreviation"), CType(Nothing, String)),
+                        _Languages(MyCounter) = New LanguageInformation(CType(MyDataRow("ID"), Integer), _
+                        Utils.Nz(MyDataRow("Description"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("Description_OwnLang"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("IsActive"), False), _
+                        Utils.Nz(MyDataRow("BrowserLanguageID"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("Abbreviation"), CType(Nothing, String)), _
                         "ltr", Me)
                         MyCounter += 1
                     Next
@@ -14346,25 +14346,25 @@ Namespace CompuMaster.camm.WebManager
                 ReDim Preserve _ServerGroups(MyDataSet.Tables("ServerGroups").Rows.Count - 1)
                 Dim MyCounter As Integer = 0
                 For Each MyDataRow As DataRow In MyDataSet.Tables("ServerGroups").Rows
-                    _ServerGroups(MyCounter) = New ServerGroupInformation(CType(MyDataRow("ID"), Integer),
-                        Utils.Nz(MyDataRow("ServerGroup"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaNavTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AccessLevel_Default"), 0),
-                        Utils.Nz(MyDataRow("MasterServer"), 0),
-                        Utils.Nz(MyDataRow("UserAdminServer"), 0),
-                        Utils.Nz(MyDataRow("ID_Group_Anonymous"), 0),
-                        Utils.Nz(MyDataRow("ID_Group_Public"), 0), Utils.Nz(MyDataRow("AreaSecurityContactEMail"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaSecurityContactTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaDevelopmentContactTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaDevelopmentContactEMail"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaContentManagementContactTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaContentManagementContactEMail"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaUnspecifiedContactTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaUnspecifiedContactEMail"), CType(Nothing, String)),
+                    _ServerGroups(MyCounter) = New ServerGroupInformation(CType(MyDataRow("ID"), Integer), _
+                        Utils.Nz(MyDataRow("ServerGroup"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaNavTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AccessLevel_Default"), 0), _
+                        Utils.Nz(MyDataRow("MasterServer"), 0), _
+                        Utils.Nz(MyDataRow("UserAdminServer"), 0), _
+                        Utils.Nz(MyDataRow("ID_Group_Anonymous"), 0), _
+                        Utils.Nz(MyDataRow("ID_Group_Public"), 0), Utils.Nz(MyDataRow("AreaSecurityContactEMail"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaSecurityContactTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaDevelopmentContactTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaDevelopmentContactEMail"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaContentManagementContactTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaContentManagementContactEMail"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaUnspecifiedContactTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaUnspecifiedContactEMail"), CType(Nothing, String)), _
                                                                           _WebManager)
                     MyCounter += 1
                 Next
@@ -14451,14 +14451,14 @@ Namespace CompuMaster.camm.WebManager
                 ReDim Preserve _Servers(ServerData.Rows.Count - 1)
                 Dim MyCounter As Integer = 0
                 For Each MyDataRow As DataRow In ServerData.Rows
-                    _Servers(MyCounter) = New ServerInformation(CType(MyDataRow("ID"), Integer),
-                        CType(MyDataRow("IP"), String),
-                        Utils.Nz(MyDataRow("ServerDescription"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("ServerProtocol"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("ServerName"), CType(MyDataRow("IP"), String)),
-                        Utils.Nz(MyDataRow("ServerPort"), CType(Nothing, String)),
-                        CType(MyDataRow("Enabled"), Boolean),
-                        Utils.Nz(MyDataRow("ServerGroup"), 0),
+                    _Servers(MyCounter) = New ServerInformation(CType(MyDataRow("ID"), Integer), _
+                        CType(MyDataRow("IP"), String), _
+                        Utils.Nz(MyDataRow("ServerDescription"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("ServerProtocol"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("ServerName"), CType(MyDataRow("IP"), String)), _
+                        Utils.Nz(MyDataRow("ServerPort"), CType(Nothing, String)), _
+                        CType(MyDataRow("Enabled"), Boolean), _
+                        Utils.Nz(MyDataRow("ServerGroup"), 0), _
                         _WebManager)
                     MyCounter += 1
                 Next
@@ -14563,10 +14563,10 @@ Namespace CompuMaster.camm.WebManager
             Dim MyCmd As New System.Data.SqlClient.SqlCommand
             MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupID
             MyCmd.CommandType = CommandType.Text
-            MyCmd.CommandText = "BEGIN TRANSACTION" & vbNewLine &
-                "DELETE FROM dbo.Gruppen WHERE ID=@GroupID" & vbNewLine &
-                "DELETE FROM dbo.Memberships WHERE ID_Group=@GroupID" & vbNewLine &
-                "DELETE FROM dbo.ApplicationsRightsByGroup WHERE ID_GroupOrPerson=@GroupID" & vbNewLine &
+            MyCmd.CommandText = "BEGIN TRANSACTION" & vbNewLine & _
+                "DELETE FROM dbo.Gruppen WHERE ID=@GroupID" & vbNewLine & _
+                "DELETE FROM dbo.Memberships WHERE ID_Group=@GroupID" & vbNewLine & _
+                "DELETE FROM dbo.ApplicationsRightsByGroup WHERE ID_GroupOrPerson=@GroupID" & vbNewLine & _
                 "COMMIT"
             MyCmd.Connection = New System.Data.SqlClient.SqlConnection(Me.ConnectionString)
             CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
@@ -14991,7 +14991,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserIDs">An arraylist of user IDs</param>
         ''' <returns>An array of user information</returns>
-        <Obsolete("use instead: System_GetUserInfos(ByVal UserIDs As Long()) As UserInformation())"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("use instead: System_GetUserInfos(ByVal UserIDs As Long()) As UserInformation())"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserInfos(ByVal UserIDs As ArrayList) As UserInformation()
             If UserIDs Is Nothing OrElse UserIDs.Count = 0 Then
                 'Where nothing is, there can only be returned nothing ;-)
@@ -15011,7 +15011,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserIDs">An array of user IDs</param>
         ''' <returns>An array of user information</returns>
-        <Obsolete("use instead: System_GetUserInfos(ByVal UserIDs As Long()) As UserInformation())"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("use instead: System_GetUserInfos(ByVal UserIDs As Long()) As UserInformation())"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserInfos(ByVal UserIDs As Integer()) As UserInformation()
             Dim UserLongIDs As Long() = Nothing
             If Not UserIDs Is Nothing Then
@@ -15085,29 +15085,29 @@ Namespace CompuMaster.camm.WebManager
                 ReDim Preserve Result(MyUsers.Rows.Count - 1)
                 Dim MyCounter As Integer = 0
                 For Each MyDataRow As DataRow In MyUsers.Rows
-                    Result(MyCounter) = New CompuMaster.camm.WebManager.WMSystem.UserInformation(CType(MyDataRow("ID"), Long),
-                                    CType(MyDataRow("LoginName"), String),
-                                    CType(MyDataRow("E-Mail"), String),
-                                    False,
-                                    Utils.Nz(MyDataRow("Company"), CType(Nothing, String)),
-                                    CType(IIf(Convert.ToString(Utils.Nz(MyDataRow("Anrede"), "")) = "", Sex.Undefined, IIf(Convert.ToString(Utils.Nz(MyDataRow("Anrede"), "")) = "Mr.", Sex.Masculine, Sex.Feminine)), Sex),
-                                    Utils.Nz(MyDataRow("Namenszusatz"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("Vorname"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("Nachname"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("Titel"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("Strasse"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("PLZ"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("Ort"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("State"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("Land"), CType(Nothing, String)),
-                                    CType(MyDataRow("1stPreferredLanguage"), Integer),
-                                    Utils.Nz(MyDataRow("2ndPreferredLanguage"), 0),
-                                    Utils.Nz(MyDataRow("3rdPreferredLanguage"), 0),
-                                    CType(MyDataRow("LoginDisabled"), Boolean),
-                                    Not IsDBNull(MyDataRow("LoginLockedTill")),
-                                    False,
-                                    CType(MyDataRow("AccountAccessability"), Integer),
-                                    _WebManager,
+                    Result(MyCounter) = New CompuMaster.camm.WebManager.WMSystem.UserInformation(CType(MyDataRow("ID"), Long), _
+                                    CType(MyDataRow("LoginName"), String), _
+                                    CType(MyDataRow("E-Mail"), String), _
+                                    False, _
+                                    Utils.Nz(MyDataRow("Company"), CType(Nothing, String)), _
+                                    CType(IIf(Convert.ToString(Utils.Nz(MyDataRow("Anrede"), "")) = "", Sex.Undefined, IIf(Convert.ToString(Utils.Nz(MyDataRow("Anrede"), "")) = "Mr.", Sex.Masculine, Sex.Feminine)), Sex), _
+                                    Utils.Nz(MyDataRow("Namenszusatz"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("Vorname"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("Nachname"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("Titel"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("Strasse"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("PLZ"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("Ort"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("State"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("Land"), CType(Nothing, String)), _
+                                    CType(MyDataRow("1stPreferredLanguage"), Integer), _
+                                    Utils.Nz(MyDataRow("2ndPreferredLanguage"), 0), _
+                                    Utils.Nz(MyDataRow("3rdPreferredLanguage"), 0), _
+                                    CType(MyDataRow("LoginDisabled"), Boolean), _
+                                    Not IsDBNull(MyDataRow("LoginLockedTill")), _
+                                    False, _
+                                    CType(MyDataRow("AccountAccessability"), Integer), _
+                                    _WebManager, _
                                     Nothing)
                     If Result(MyCounter).Gender = Sex.Undefined AndAlso (Result(MyCounter).FirstName = Nothing OrElse Result(MyCounter).LastName = Nothing) Then
                         'Regard it as a group of persons without a specific name
@@ -15306,69 +15306,69 @@ Namespace CompuMaster.camm.WebManager
                 End If
                 While MyReader.Read
                     Dim secObj As SecurityObjectInformation
-                    Dim navItem As New Security.NavigationInformation(
-                            0,
-                            Nothing,
-                            Utils.Nz(MyReader("Level1Title"), String.Empty),
-                            Utils.Nz(MyReader("Level2Title"), String.Empty),
-                            Utils.Nz(MyReader("Level3Title"), String.Empty),
-                            Utils.Nz(MyReader("Level4Title"), String.Empty),
-                            Utils.Nz(MyReader("Level5Title"), String.Empty),
-                            Utils.Nz(MyReader("Level6Title"), String.Empty),
-                            Utils.Nz(MyReader("Level1TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level2TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level3TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level4TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level5TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level6TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("NavURL"), String.Empty),
-                            Utils.Nz(MyReader("NavFrame"), String.Empty),
-                            Utils.Nz(MyReader("NavTooltipText"), String.Empty),
-                            Utils.Nz(MyReader("AddLanguageID2URL"), False),
-                            Utils.Nz(MyReader("LanguageID"), 0),
-                            Utils.Nz(MyReader("LocationID"), 0),
-                            Utils.Nz(MyReader("Sort"), 0),
-                            Utils.Nz(MyReader("IsNew"), False),
-                            Utils.Nz(MyReader("IsUpdated"), False),
-                            Utils.Nz(MyReader("ResetIsNewUpdatedStatusOn"), DateTime.MinValue),
-                            Utils.Nz(MyReader("OnMouseOver"), String.Empty),
-                            Utils.Nz(MyReader("OnMouseOut"), String.Empty),
+                    Dim navItem As New Security.NavigationInformation( _
+                            0, _
+                            Nothing, _
+                            Utils.Nz(MyReader("Level1Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level2Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level3Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level4Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level5Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level6Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level1TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level2TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level3TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level4TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level5TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level6TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("NavURL"), String.Empty), _
+                            Utils.Nz(MyReader("NavFrame"), String.Empty), _
+                            Utils.Nz(MyReader("NavTooltipText"), String.Empty), _
+                            Utils.Nz(MyReader("AddLanguageID2URL"), False), _
+                            Utils.Nz(MyReader("LanguageID"), 0), _
+                            Utils.Nz(MyReader("LocationID"), 0), _
+                            Utils.Nz(MyReader("Sort"), 0), _
+                            Utils.Nz(MyReader("IsNew"), False), _
+                            Utils.Nz(MyReader("IsUpdated"), False), _
+                            Utils.Nz(MyReader("ResetIsNewUpdatedStatusOn"), DateTime.MinValue), _
+                            Utils.Nz(MyReader("OnMouseOver"), String.Empty), _
+                            Utils.Nz(MyReader("OnMouseOut"), String.Empty), _
                             Utils.Nz(MyReader("OnClick"), String.Empty))
                     If RequiredFlagsSupported Then
-                        secObj = New SecurityObjectInformation(
-                                    Utils.Nz(MyReader("ID"), 0),
-                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)),
-                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)),
-                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)),
-                                    Utils.Nz(MyReader("ModifiedBy"), 0&),
-                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)),
-                                    Utils.Nz(MyReader("ReleasedBy"), 0&),
-                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)),
-                                    Utils.Nz(MyReader("AppDisabled"), False),
-                                    Utils.Nz(MyReader("AppDeleted"), False),
-                                    Utils.Nz(MyReader("AuthsAsAppID"), 0),
-                                    Utils.Nz(MyReader("SystemAppType"), 0),
-                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""),
-                                    Utils.Nz(MyReader("RequiredUserProfileFlagsRemarks"), ""),
-                                    navItem,
+                        secObj = New SecurityObjectInformation( _
+                                    Utils.Nz(MyReader("ID"), 0), _
+                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("ModifiedBy"), 0&), _
+                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)), _
+                                    Utils.Nz(MyReader("ReleasedBy"), 0&), _
+                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)), _
+                                    Utils.Nz(MyReader("AppDisabled"), False), _
+                                    Utils.Nz(MyReader("AppDeleted"), False), _
+                                    Utils.Nz(MyReader("AuthsAsAppID"), 0), _
+                                    Utils.Nz(MyReader("SystemAppType"), 0), _
+                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""), _
+                                    Utils.Nz(MyReader("RequiredUserProfileFlagsRemarks"), ""), _
+                                    navItem, _
                                     Me)
                     Else
-                        secObj = New SecurityObjectInformation(
-                                    Utils.Nz(MyReader("ID"), 0),
-                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)),
-                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)),
-                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)),
-                                    Utils.Nz(MyReader("ModifiedBy"), 0&),
-                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)),
-                                    Utils.Nz(MyReader("ReleasedBy"), 0&),
-                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)),
-                                    Utils.Nz(MyReader("AppDisabled"), False),
-                                    Utils.Nz(MyReader("AppDeleted"), False),
-                                    Utils.Nz(MyReader("AuthsAsAppID"), 0),
-                                    Utils.Nz(MyReader("SystemAppType"), 0),
-                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""),
-                                    "",
-                                    navItem,
+                        secObj = New SecurityObjectInformation( _
+                                    Utils.Nz(MyReader("ID"), 0), _
+                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("ModifiedBy"), 0&), _
+                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)), _
+                                    Utils.Nz(MyReader("ReleasedBy"), 0&), _
+                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)), _
+                                    Utils.Nz(MyReader("AppDisabled"), False), _
+                                    Utils.Nz(MyReader("AppDeleted"), False), _
+                                    Utils.Nz(MyReader("AuthsAsAppID"), 0), _
+                                    Utils.Nz(MyReader("SystemAppType"), 0), _
+                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""), _
+                                    "", _
+                                    navItem, _
                                     Me)
                     End If
                     MyTempCollection.Add(secObj)
@@ -15433,10 +15433,10 @@ Namespace CompuMaster.camm.WebManager
 
             For Each MySGInfo As ServerGroupInformation In UserAccessableServerGroups
                 For Each MyLangInfo As LanguageInformation In AvailableLanguages
-                    Result &= "<a href=""#"" onClick=""OpenNavDemo(" & MyLangInfo.ID & ", '" & System.Web.HttpUtility.UrlEncode(MySGInfo.MasterServer.IPAddressOrHostHeader) & "', '" & UserID & "');"">" &
-                        MySGInfo.Title &
-                        ", " &
-                        MyLangInfo.LanguageName_English &
+                    Result &= "<a href=""#"" onClick=""OpenNavDemo(" & MyLangInfo.ID & ", '" & System.Web.HttpUtility.UrlEncode(MySGInfo.MasterServer.IPAddressOrHostHeader) & "', '" & UserID & "');"">" & _
+                        MySGInfo.Title & _
+                        ", " & _
+                        MyLangInfo.LanguageName_English & _
                         "</a><br>"
                 Next
             Next
@@ -15542,9 +15542,9 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="RequiredAuth"></param>
         Public Function System_GetSubAuthorizationStatus(ByVal TableName As String, ByVal TablePrimID As Integer, ByVal UserID As Long, ByVal RequiredAuth As String) As Boolean
 
-            If AdminPrivate_GetSubAuthorizationStatus_TableName = TableName And
-              AdminPrivate_GetSubAuthorizationStatus_TablePrimID = TablePrimID And
-              AdminPrivate_GetSubAuthorizationStatus_UserID = UserID And
+            If AdminPrivate_GetSubAuthorizationStatus_TableName = TableName And _
+              AdminPrivate_GetSubAuthorizationStatus_TablePrimID = TablePrimID And _
+              AdminPrivate_GetSubAuthorizationStatus_UserID = UserID And _
               AdminPrivate_GetSubAuthorizationStatus_RequiredAuth = RequiredAuth Then
                 Return AdminPrivate_GetSubAuthorizationStatus_Result
             End If
@@ -15645,13 +15645,13 @@ Namespace CompuMaster.camm.WebManager
             Dim MyDBConn As New SqlConnection
             Dim MyCmd As New SqlCommand
 
-            If AdminPrivate_IsSecurityMaster_TableName = TableName And
-              AdminPrivate_IsSecurityMaster_UserID = UserID And
+            If AdminPrivate_IsSecurityMaster_TableName = TableName And _
+              AdminPrivate_IsSecurityMaster_UserID = UserID And _
               AdminPrivate_IsSecurityMaster_Result = 1 Then
                 System_IsSecurityMaster = True
                 Exit Function
-            ElseIf AdminPrivate_IsSecurityMaster_TableName = TableName And
-              AdminPrivate_IsSecurityMaster_UserID = UserID And
+            ElseIf AdminPrivate_IsSecurityMaster_TableName = TableName And _
+              AdminPrivate_IsSecurityMaster_UserID = UserID And _
               AdminPrivate_IsSecurityMaster_Result = 2 Then
                 System_IsSecurityMaster = False
                 Exit Function

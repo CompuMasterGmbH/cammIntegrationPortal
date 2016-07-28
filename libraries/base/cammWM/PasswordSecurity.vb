@@ -239,7 +239,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <returns>A string with a strong typed password</returns>
         Protected Overridable Function CreateRandomPassword(ByVal length As Integer) As String
             Const specchars As String = "@#$?!.+~%=;:()_-\/*&"
-            Const alphabetnumbers As String =
+            Const alphabetnumbers As String = _
                 "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
             Dim _Length As Integer
@@ -441,11 +441,11 @@ Namespace CompuMaster.camm.WebManager
             End If
 
             'Summarize the complexity points
-            CollectedComplexityPoints = CollectedComplexityPoints_Numbers +
-                CollectedComplexityPoints_CharsEqualOrGreaterThanAscW +
-                CollectedComplexityPoints_LargeLetters +
-                CollectedComplexityPoints_SmallLetters +
-                CollectedComplexityPoints_SpecChars +
+            CollectedComplexityPoints = CollectedComplexityPoints_Numbers + _
+                CollectedComplexityPoints_CharsEqualOrGreaterThanAscW + _
+                CollectedComplexityPoints_LargeLetters + _
+                CollectedComplexityPoints_SmallLetters + _
+                CollectedComplexityPoints_SpecChars + _
                 CollectedComplexityPoints_IncreaseingSecurity + CollectedComplexityPoints
 
             'Result of complexity points comparison

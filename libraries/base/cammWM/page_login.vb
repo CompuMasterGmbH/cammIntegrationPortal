@@ -765,7 +765,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
                 End If
             End If
 
-            If cammWebManager.IsLoggedOn Then 'LCase(Request.QueryString("Action")) = "logout" Or 
+            If cammWebManager.IsLoggedOn Then 'LCase(Request.QueryString("Action")) = "logout" Or _
                 cammWebManager.ExecuteLogout()
             End If
 

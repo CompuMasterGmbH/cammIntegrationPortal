@@ -1,1 +1,1 @@
-﻿<!--#include virtual="/system/admin/UpdateEmailDetail.aspx" -->
+﻿<!--#include virtual="/system/admin/updateemaildetail.aspx" -->

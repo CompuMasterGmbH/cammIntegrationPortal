@@ -217,7 +217,7 @@ End Namespace
 Namespace CompuMaster.camm.WebManager.Application
 
 #Region "InternalBaseHttpApplication"
-    <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), System.Runtime.InteropServices.ComVisible(False)>
+    <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), System.Runtime.InteropServices.ComVisible(False)> _
     Public MustInherit Class InternalBaseHttpApplication
         Inherits System.Web.HttpApplication
 

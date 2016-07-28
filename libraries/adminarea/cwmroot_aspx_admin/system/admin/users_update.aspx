@@ -106,7 +106,7 @@
 								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Label runat="server" id="Field_LoginFailures" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2">Login blocked until &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2">Login blocked until<br /><em>(Current server time: <%= Me.CurrentDatabaseDateTime.ToString("yyyy-MM-dd HH:mm:ss") %>)</em> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="20" id="Field_LoginLockedTill" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>

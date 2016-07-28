@@ -165,9 +165,9 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             Public Function AvailableMarketsInData(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal version As Integer) As Integer()
                 Dim myConnection As SqlClient.SqlConnection
                 Dim myCommand As SqlClient.SqlCommand
-                Dim myQuery As String =
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                    "select LanguageID from webmanager_webeditor where Url = @Url " & vbNewLine &
+                Dim myQuery As String = _
+                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                    "select LanguageID from webmanager_webeditor where Url = @Url " & vbNewLine & _
                     "and EditorID = @EditorID and version = @Version AND ServerID = @ServerID group by LanguageID"
                 myConnection = New SqlClient.SqlConnection(ConnectionString)
                 myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -189,36 +189,36 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="modifiedBy"></param>
             Public Sub SaveEditorContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal content As String, ByVal modifiedBy As Long)
                 'Prepare query:
-                Dim myQuery As String =
-                    "DECLARE @Version int" & vbNewLine &
-                    "DECLARE @ReplaceExistingValue bit" & vbNewLine &
-                    "DECLARE @ModifiedOn datetime" & vbNewLine &
-                    "-- Retrieve editable version" & vbNewLine &
-                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "-- Insert or update data?" & vbNewLine &
-                    "SELECT @ReplaceExistingValue = CASE WHEN COUNT(*) = 0 THEN 0 ELSE 1 END" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE Version = @Version AND LanguageID = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "-- Insert new or update existing data" & vbNewLine &
-                    "SELECT @ModifiedOn = GETDATE()" & vbNewLine &
-                    "IF @ReplaceExistingValue = 1" & vbNewLine &
-                    "   UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "   SET [ServerID]=@ServerID, [LanguageID]=@LanguageID, [IsActive]=0," & vbNewLine &
-                    "       [URL]=@URL, [EditorID]=@EditorID, [Content]=@Content, [ModifiedOn]=@ModifiedOn," & vbNewLine &
-                    "       [ModifiedByUser]=@ModifiedByUser, [ReleasedOn]=NULL, " & vbNewLine &
-                    "       [ReleasedByUser]=NULL, [Version]=@Version" & vbNewLine &
-                    "   WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "ELSE" & vbNewLine &
-                    "   INSERT INTO [dbo].[WebManager_WebEditor](" & vbNewLine &
-                    "       [ServerID], [LanguageID], [IsActive], [URL], [EditorID], [Content], [ModifiedOn], " & vbNewLine &
-                    "       [ModifiedByUser], [ReleasedOn], [ReleasedByUser], [Version]" & vbNewLine &
-                    "       )" & vbNewLine &
-                    "   VALUES(" & vbNewLine &
-                    "       @ServerID, @LanguageID, 0, " & vbNewLine &
-                    "       @URL, @EditorID, @Content, @ModifiedOn, " & vbNewLine &
-                    "       @ModifiedByUser, NULL, NULL, " & vbNewLine &
+                Dim myQuery As String = _
+                    "DECLARE @Version int" & vbNewLine & _
+                    "DECLARE @ReplaceExistingValue bit" & vbNewLine & _
+                    "DECLARE @ModifiedOn datetime" & vbNewLine & _
+                    "-- Retrieve editable version" & vbNewLine & _
+                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "-- Insert or update data?" & vbNewLine & _
+                    "SELECT @ReplaceExistingValue = CASE WHEN COUNT(*) = 0 THEN 0 ELSE 1 END" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE Version = @Version AND LanguageID = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "-- Insert new or update existing data" & vbNewLine & _
+                    "SELECT @ModifiedOn = GETDATE()" & vbNewLine & _
+                    "IF @ReplaceExistingValue = 1" & vbNewLine & _
+                    "   UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "   SET [ServerID]=@ServerID, [LanguageID]=@LanguageID, [IsActive]=0," & vbNewLine & _
+                    "       [URL]=@URL, [EditorID]=@EditorID, [Content]=@Content, [ModifiedOn]=@ModifiedOn," & vbNewLine & _
+                    "       [ModifiedByUser]=@ModifiedByUser, [ReleasedOn]=NULL, " & vbNewLine & _
+                    "       [ReleasedByUser]=NULL, [Version]=@Version" & vbNewLine & _
+                    "   WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "ELSE" & vbNewLine & _
+                    "   INSERT INTO [dbo].[WebManager_WebEditor](" & vbNewLine & _
+                    "       [ServerID], [LanguageID], [IsActive], [URL], [EditorID], [Content], [ModifiedOn], " & vbNewLine & _
+                    "       [ModifiedByUser], [ReleasedOn], [ReleasedByUser], [Version]" & vbNewLine & _
+                    "       )" & vbNewLine & _
+                    "   VALUES(" & vbNewLine & _
+                    "       @ServerID, @LanguageID, 0, " & vbNewLine & _
+                    "       @URL, @EditorID, @Content, @ModifiedOn, " & vbNewLine & _
+                    "       @ModifiedByUser, NULL, NULL, " & vbNewLine & _
                     "       @Version)"
 
                 'Establish connection
@@ -263,15 +263,15 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="marketID"></param>
             Public Sub RemoveMarketFromEditVersion(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer)
                 'Prepare query:
-                Dim myQuery As String =
-                    "DECLARE @Version int" & vbNewLine &
-                    "-- Retrieve editable version" & vbNewLine &
-                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "-- Remove rows regarding the defined market" & vbNewLine &
-                    "DELETE" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
+                Dim myQuery As String = _
+                    "DECLARE @Version int" & vbNewLine & _
+                    "-- Retrieve editable version" & vbNewLine & _
+                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "-- Remove rows regarding the defined market" & vbNewLine & _
+                    "DELETE" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
                     "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID AND Version = @Version AND LanguageID = @LanguageID"
 
                 'Establish connection
@@ -296,18 +296,18 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="editorID"></param>
             ''' <param name="releasedByUser"></param>
             Public Function ReleaseLatestVersion(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal releasedByUser As Long) As Boolean
-                Dim myQuery As String =
-                    "DECLARE @Version int" & vbNewLine &
-                    "-- Retrieve latest version" & vbNewLine &
-                    "SELECT @Version = IsNull(MAX(Version), 0)" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "-- Release latest version" & vbNewLine &
-                    "UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "SET [IsActive] = 0" & vbNewLine &
-                    "WHERE [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "SET [IsActive] = 1, [ReleasedByUser] = @ReleasedByUser, ReleasedOn = GETDATE()" & vbNewLine &
+                Dim myQuery As String = _
+                    "DECLARE @Version int" & vbNewLine & _
+                    "-- Retrieve latest version" & vbNewLine & _
+                    "SELECT @Version = IsNull(MAX(Version), 0)" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "-- Release latest version" & vbNewLine & _
+                    "UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "SET [IsActive] = 0" & vbNewLine & _
+                    "WHERE [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "UPDATE [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "SET [IsActive] = 1, [ReleasedByUser] = @ReleasedByUser, ReleasedOn = GETDATE()" & vbNewLine & _
                     "WHERE [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID AND [Version] = @Version"
 
                 Dim myConnection As SqlClient.SqlConnection
@@ -405,12 +405,12 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                     'No, then perform a special query to just lookup the requested two important version numbers
                     Dim myConnection As SqlClient.SqlConnection
                     Dim myCommand As SqlClient.SqlCommand
-                    Dim myQuery As String =
-                        "DECLARE @MaxVersion int, @ReleasedVersion int" & vbNewLine &
-                        "select @MaxVersion = Max([Version]) from [dbo].[WebManager_WebEditor]" & vbNewLine &
-                        "where [URL] = @URL AND [EditorID] = @EditorID and ServerID = @ServerID" & vbNewLine &
-                        "select @ReleasedVersion = Max([Version]) from [dbo].[WebManager_WebEditor]" & vbNewLine &
-                        "where IsActive = 1 AND [URL] = @URL AND [EditorID] = @EditorID and ServerID = @ServerID" & vbNewLine &
+                    Dim myQuery As String = _
+                        "DECLARE @MaxVersion int, @ReleasedVersion int" & vbNewLine & _
+                        "select @MaxVersion = Max([Version]) from [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                        "where [URL] = @URL AND [EditorID] = @EditorID and ServerID = @ServerID" & vbNewLine & _
+                        "select @ReleasedVersion = Max([Version]) from [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                        "where IsActive = 1 AND [URL] = @URL AND [EditorID] = @EditorID and ServerID = @ServerID" & vbNewLine & _
                         "select @MaxVersion, @ReleasedVersion"
                     myConnection = New SqlClient.SqlConnection(ConnectionString)
                     myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -450,11 +450,11 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 If serverID <> Me._CachedCompleteData_ServerID OrElse url <> Me._CachedCompleteData_Url OrElse editorID = Me._CachedCompleteData_EditorID OrElse Me._CachedCompleteData_Result Is Nothing Then
                     Dim myConnection As SqlClient.SqlConnection
                     Dim myCommand As SqlClient.SqlCommand
-                    Dim myQuery As String =
-                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                        "select [ServerID],[LanguageID],[IsActive],[URL],[EditorID],[ModifiedOn],[ModifiedByUser],[ReleasedOn],[ReleasedByUser],[Version]" & vbNewLine &
-                        "from [dbo].[WebManager_WebEditor]" & vbNewLine &
-                        "where [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine &
+                    Dim myQuery As String = _
+                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                        "select [ServerID],[LanguageID],[IsActive],[URL],[EditorID],[ModifiedOn],[ModifiedByUser],[ReleasedOn],[ReleasedByUser],[Version]" & vbNewLine & _
+                        "from [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                        "where [URL] = @URL AND [EditorID] = @EditorID AND ServerID = @ServerID" & vbNewLine & _
                         "order by [ID]"
                     myConnection = New SqlClient.SqlConnection(ConnectionString)
                     myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -482,23 +482,23 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 End If
 
                 'Prepare query:
-                Dim myQuery As String =
-                    "DECLARE @Version int" & vbNewLine &
-                    "-- Retrieve editable version" & vbNewLine &
-                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine &
-                    "-- Remove any pre-existing data (but regulary, there should be nothing, but sure is sure)" & vbNewLine &
-                    "DELETE" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID AND Version = @Version" & vbNewLine &
-                    "-- Copy data rows" & vbNewLine &
-                    "INSERT INTO [dbo].[WebManager_WebEditor](" & vbNewLine &
-                    "   [ServerID], [LanguageID], [IsActive], [URL], [EditorID], [Content], [ModifiedOn], " & vbNewLine &
-                    "   [ModifiedByUser], [ReleasedOn], [ReleasedByUser], [Version]" & vbNewLine &
-                    "   )" & vbNewLine &
-                    "SELECT ServerID, LanguageID, 0, [URL], EditorID, Content, ModifiedOn, ModifiedByUser, NULL, NULL, @Version" & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
+                Dim myQuery As String = _
+                    "DECLARE @Version int" & vbNewLine & _
+                    "-- Retrieve editable version" & vbNewLine & _
+                    "SELECT @Version = IsNull(MAX(Version), 0) + 1" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE IsActive = 1 AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine & _
+                    "-- Remove any pre-existing data (but regulary, there should be nothing, but sure is sure)" & vbNewLine & _
+                    "DELETE" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID AND Version = @Version" & vbNewLine & _
+                    "-- Copy data rows" & vbNewLine & _
+                    "INSERT INTO [dbo].[WebManager_WebEditor](" & vbNewLine & _
+                    "   [ServerID], [LanguageID], [IsActive], [URL], [EditorID], [Content], [ModifiedOn], " & vbNewLine & _
+                    "   [ModifiedByUser], [ReleasedOn], [ReleasedByUser], [Version]" & vbNewLine & _
+                    "   )" & vbNewLine & _
+                    "SELECT ServerID, LanguageID, 0, [URL], EditorID, Content, ModifiedOn, ModifiedByUser, NULL, NULL, @Version" & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
                     "WHERE [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID AND Version = @SourceVersion"
 
                 'Establish connection
@@ -522,8 +522,8 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 If HttpContext.Current.Application("WebManager.sWcms.ActiveLanguages") Is Nothing Then
                     Dim myConnection As SqlClient.SqlConnection
                     Dim myCommand As SqlClient.SqlCommand
-                    Dim myQuery As String =
-                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                    Dim myQuery As String = _
+                        "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                         "select ID, Description_English, AlternativeLanguage from system_languages where [IsActive] = 1"
                     myConnection = New SqlClient.SqlConnection(ConnectionString)
                     myCommand = New SqlClient.SqlCommand(myQuery, myConnection)
@@ -561,11 +561,11 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="editorID"></param>
             ''' <param name="marketID"></param>
             Public Function ReadReleasedContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer) As String
-                Dim MyCmd As New SqlClient.SqlCommand(
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                    "SELECT [Content] " & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE IsActive = 1 AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine,
+                Dim MyCmd As New SqlClient.SqlCommand( _
+                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                    "SELECT [Content] " & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE IsActive = 1 AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine, _
                     New SqlClient.SqlConnection(Me.ConnectionString))
                 MyCmd.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
                 MyCmd.Parameters.Add("@LanguageID", SqlDbType.Int).Value = marketID
@@ -583,10 +583,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="marketID"></param>
             ''' <param name="version"></param>
             Public Function GetFirstPreviousVersionThatDiffers(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As Integer
-                Dim command As New SqlClient.SqlCommand("SELECT TOP 1 version FROM dbo.WebManager_WebEditor " & vbNewLine &
-"WHERE content NOT LIKE ( SELECT  content FROM dbo.WebManager_WebEditor a " & vbNewLine &
-"WHERE a.URL = @URL  " & vbNewLine &
-"AND a.LanguageID = @LanguageID AND a.version = @VERSION AND a.ServerId = @ServerID AND a.EditorID = @EditorID) " & vbNewLine &
+                Dim command As New SqlClient.SqlCommand("SELECT TOP 1 version FROM dbo.WebManager_WebEditor " & vbNewLine & _
+"WHERE content NOT LIKE ( SELECT  content FROM dbo.WebManager_WebEditor a " & vbNewLine & _
+"WHERE a.URL = @URL  " & vbNewLine & _
+"AND a.LanguageID = @LanguageID AND a.version = @VERSION AND a.ServerId = @ServerID AND a.EditorID = @EditorID) " & vbNewLine & _
 " AND LanguageID =  @LanguageID AND URL = @URL AND ServerId = @ServerID AND EditorID = @EditorID AND version < @VERSION ORDER BY VERSION DESC ", New SqlClient.SqlConnection(Me.ConnectionString))
 
                 command.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
@@ -609,11 +609,11 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' <param name="editorID"></param>
             ''' <param name="version"></param>
             Public Function ReadContent(ByVal serverID As Integer, ByVal url As String, ByVal editorID As String, ByVal marketID As Integer, ByVal version As Integer) As String
-                Dim MyCmd As New SqlClient.SqlCommand(
-                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                    "SELECT [Content] " & vbNewLine &
-                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine &
-                    "WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine,
+                Dim MyCmd As New SqlClient.SqlCommand( _
+                    "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                    "SELECT [Content] " & vbNewLine & _
+                    "FROM [dbo].[WebManager_WebEditor]" & vbNewLine & _
+                    "WHERE Version = @Version AND [LanguageID] = @LanguageID AND [URL] = @URL AND EditorID = @EditorID AND ServerID = @ServerID" & vbNewLine, _
                     New SqlClient.SqlConnection(Me.ConnectionString))
                 MyCmd.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
                 MyCmd.Parameters.Add("@LanguageID", SqlDbType.Int).Value = marketID
@@ -1858,19 +1858,19 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                 Dim ForeignControls As New ArrayList
                 For MyCounter As Integer = 0 To Me.Controls.Count - 1
                     Dim compareControl As UI.Control = Me.Controls(MyCounter)
-                    If compareControl Is editorMain OrElse
-                            compareControl Is txtHiddenActiveVersion OrElse
-                            compareControl Is txtHiddenLastVersion OrElse
-                            compareControl Is txtRequestedAction OrElse
-                            compareControl Is txtCurrentURL OrElse
-                            compareControl Is txtActivate OrElse
-                            compareControl Is txtBrowseToMarketVersion OrElse
-                            compareControl Is txtLastVersion OrElse
-                            compareControl Is txtCurrentlyLoadedVersion OrElse
-                            compareControl Is txtEditModeRequested OrElse
-                            compareControl Is lblCurrentEditInformation OrElse
-                            compareControl Is lblViewOnlyContent OrElse
-                            compareControl Is ibtnSwitchToEditMode OrElse
+                    If compareControl Is editorMain OrElse _
+                            compareControl Is txtHiddenActiveVersion OrElse _
+                            compareControl Is txtHiddenLastVersion OrElse _
+                            compareControl Is txtRequestedAction OrElse _
+                            compareControl Is txtCurrentURL OrElse _
+                            compareControl Is txtActivate OrElse _
+                            compareControl Is txtBrowseToMarketVersion OrElse _
+                            compareControl Is txtLastVersion OrElse _
+                            compareControl Is txtCurrentlyLoadedVersion OrElse _
+                            compareControl Is txtEditModeRequested OrElse _
+                            compareControl Is lblCurrentEditInformation OrElse _
+                            compareControl Is lblViewOnlyContent OrElse _
+                            compareControl Is ibtnSwitchToEditMode OrElse _
                             compareControl Is pnlEditorToolbar Then
 
                         'All is fine - this is an internally managed control
@@ -2543,7 +2543,7 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
 
         End Class
 
-        <DefaultProperty("Html"), ToolboxData("<{0}:PlainTextEditor1 runat=server></{0}:PlainTextEditor1>")>
+        <DefaultProperty("Html"), ToolboxData("<{0}:PlainTextEditor1 runat=server></{0}:PlainTextEditor1>")> _
         Friend Class PlainTextEditor
             Inherits System.Web.UI.WebControls.TextBox
             Implements IEditor
@@ -2595,17 +2595,17 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                                                                    "")
                     Me.Page.RegisterOnSubmitStatement( "EncodeRawData_" & Me.ClientID, String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}'));", Me.ClientID))
 #Else
-                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType, "EncodeRawData|Base", "function EncodeRawDataIfNotEncoded (item) " & vbNewLine &
-                                                                   "{ " & vbNewLine &
-                                                                   "if ((item.value != null) && (item.value.length >= 5) && (item.value.substring(0, 5) != String.fromCharCode(27) + 'ESC' + String.fromCharCode(27))) " & vbNewLine &
-                                                                   "    { " & vbNewLine &
-                                                                   "    item.value = EncodeRawData(item); " & vbNewLine &
-                                                                   "    } " & vbNewLine &
-                                                                   "}" & vbNewLine &
-                                                                   "function EncodeRawData (item) " & vbNewLine &
-                                                                   "{ " & vbNewLine &
-                                                                   "    return String.fromCharCode(27) + 'ESC' + String.fromCharCode(27) + item.value.replace(/%/g,escape('%')).replace(/</g,escape('<')).replace(/>/g,escape('>')); " & vbNewLine &
-                                                                   "}" & vbNewLine &
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType, "EncodeRawData|Base", "function EncodeRawDataIfNotEncoded (item) " & vbNewLine & _
+                                                                   "{ " & vbNewLine & _
+                                                                   "if ((item.value != null) && (item.value.length >= 5) && (item.value.substring(0, 5) != String.fromCharCode(27) + 'ESC' + String.fromCharCode(27))) " & vbNewLine & _
+                                                                   "    { " & vbNewLine & _
+                                                                   "    item.value = EncodeRawData(item); " & vbNewLine & _
+                                                                   "    } " & vbNewLine & _
+                                                                   "}" & vbNewLine & _
+                                                                   "function EncodeRawData (item) " & vbNewLine & _
+                                                                   "{ " & vbNewLine & _
+                                                                   "    return String.fromCharCode(27) + 'ESC' + String.fromCharCode(27) + item.value.replace(/%/g,escape('%')).replace(/</g,escape('<')).replace(/>/g,escape('>')); " & vbNewLine & _
+                                                                   "}" & vbNewLine & _
                                                                    "", True)
                     Me.Page.ClientScript.RegisterOnSubmitStatement(Me.GetType, "EncodeRawData_" & Me.ClientID, String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}'));", Me.ClientID))
 #End If
@@ -3025,13 +3025,13 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                     Me.FindSWcmsControlsOnThisPage(AllEditorControls, Me.Page.Controls)
                     Dim IsDirtyChecksJScriptSnippet As String = Nothing
                     For Each Editor As System.Web.UI.Control In AllEditorControls
-                        Dim EditorInstanceIsDirtyScript As String = "function isDirty_" & Editor.ClientID & "() " & vbNewLine &
-                                                                   "{  " & vbNewLine &
-                                                                   "var editor = document.getElementById('" & CType(Editor, SmartWcmsEditorCommonBase).EditorClientID & "'); " & vbNewLine &
-                                                                   "if(editor && (editor.defaultValue != editor.value) && (editor.defaultValue != EncodeRawData(editor)))" & vbNewLine &
-                                                                   "    return true; " & vbNewLine &
-                                                                   "else " & vbNewLine &
-                                                                   "    return false;  " & vbNewLine &
+                        Dim EditorInstanceIsDirtyScript As String = "function isDirty_" & Editor.ClientID & "() " & vbNewLine & _
+                                                                   "{  " & vbNewLine & _
+                                                                   "var editor = document.getElementById('" & CType(Editor, SmartWcmsEditorCommonBase).EditorClientID & "'); " & vbNewLine & _
+                                                                   "if(editor && (editor.defaultValue != editor.value) && (editor.defaultValue != EncodeRawData(editor)))" & vbNewLine & _
+                                                                   "    return true; " & vbNewLine & _
+                                                                   "else " & vbNewLine & _
+                                                                   "    return false;  " & vbNewLine & _
                                                                    "}" & vbNewLine
 #If NetFrameWork = "1_1" Then
                         Me.Page.RegisterClientScriptBlock("IsDirty_" & Editor.ClientID, EditorInstanceIsDirtyScript)
@@ -3041,10 +3041,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
                         If IsDirtyChecksJScriptSnippet <> "" Then IsDirtyChecksJScriptSnippet &= " && "
                         IsDirtyChecksJScriptSnippet &= "(isDirty_" & Editor.ClientID & "())"
                     Next
-                    Dim IsDirtySnippet As String = "function isDirty() " & vbNewLine &
-                                                                   "{  " & vbNewLine &
-                                                                   "    return (" & IsDirtyChecksJScriptSnippet & ");  " & vbNewLine &
-                                                                   "}" & vbNewLine &
+                    Dim IsDirtySnippet As String = "function isDirty() " & vbNewLine & _
+                                                                   "{  " & vbNewLine & _
+                                                                   "    return (" & IsDirtyChecksJScriptSnippet & ");  " & vbNewLine & _
+                                                                   "}" & vbNewLine & _
                                                                    ""
 #If NetFrameWork = "1_1" Then
                     Me.Page.RegisterClientScriptBlock("IsDirty", IsDirtySnippet)
@@ -3053,54 +3053,54 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
 #End If
 
                     'Single script instances
-                    Const ExecPostBackSnippet As String = "function ExecPostBack(caller, event, ensureUnbindedCloseCheck) " & vbNewLine &
-                                                                   "{ " & vbNewLine &
-                                                                   "    if(ensureUnbindedCloseCheck) unbindCloseCheck(); " & vbNewLine &
-                                                                   "    __doPostBack (caller, event);" & vbNewLine &
-                                                                   "} " & vbNewLine &
+                    Const ExecPostBackSnippet As String = "function ExecPostBack(caller, event, ensureUnbindedCloseCheck) " & vbNewLine & _
+                                                                   "{ " & vbNewLine & _
+                                                                   "    if(ensureUnbindedCloseCheck) unbindCloseCheck(); " & vbNewLine & _
+                                                                   "    __doPostBack (caller, event);" & vbNewLine & _
+                                                                   "} " & vbNewLine & _
                                                                    ""
-                    Dim UnbindCloseCheckSnippet As String = "function unbindCloseCheck() " & vbNewLine &
-                                                                   "{ " & vbNewLine &
-                                                                   "    if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); " & vbNewLine &
-                                                                   "} " & vbNewLine &
-                                                                   "var documentForm = document.forms['" & LookupParentServerFormName() & "']; " & vbNewLine &
-                                                                   "if(documentForm.addEventListener) " & vbNewLine &
-                                                                   "    documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });" & vbNewLine &
+                    Dim UnbindCloseCheckSnippet As String = "function unbindCloseCheck() " & vbNewLine & _
+                                                                   "{ " & vbNewLine & _
+                                                                   "    if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); " & vbNewLine & _
+                                                                   "} " & vbNewLine & _
+                                                                   "var documentForm = document.forms['" & LookupParentServerFormName() & "']; " & vbNewLine & _
+                                                                   "if(documentForm.addEventListener) " & vbNewLine & _
+                                                                   "    documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });" & vbNewLine & _
                                                                    ""
-                    Const ConfirmPageCloseSnippet As String = "function confirmPageClose() " & vbNewLine &
-                                                                   "{" & vbNewLine &
-                                                                   "var result = false; " & vbNewLine &
-                                                                   "if(isDirty()) " & vbNewLine &
-                                                                   "    result = confirm('Do you want to leave? All your changes will be lost'); " & vbNewLine &
-                                                                   "else " & vbNewLine &
-                                                                   "    { " & vbNewLine &
-                                                                   "    result = true " & vbNewLine &
-                                                                   "    } " & vbNewLine &
-                                                                   "if(result) " & vbNewLine &
-                                                                   "    unbindCloseCheck(); " & vbNewLine &
-                                                                   "return result; " & vbNewLine &
+                    Const ConfirmPageCloseSnippet As String = "function confirmPageClose() " & vbNewLine & _
+                                                                   "{" & vbNewLine & _
+                                                                   "var result = false; " & vbNewLine & _
+                                                                   "if(isDirty()) " & vbNewLine & _
+                                                                   "    result = confirm('Do you want to leave? All your changes will be lost'); " & vbNewLine & _
+                                                                   "else " & vbNewLine & _
+                                                                   "    { " & vbNewLine & _
+                                                                   "    result = true " & vbNewLine & _
+                                                                   "    } " & vbNewLine & _
+                                                                   "if(result) " & vbNewLine & _
+                                                                   "    unbindCloseCheck(); " & vbNewLine & _
+                                                                   "return result; " & vbNewLine & _
                                                                    "}" & vbNewLine
-                    Const ResetSelectBoxSnippet As String = "function resetSelectBox(box)" & vbNewLine &
-                                                                   "{ " & vbNewLine &
-                                                                   "for(var i = 0; i < box.options.length; i++) " & vbNewLine &
-                                                                   "    {	" & vbNewLine &
-                                                                   "    if(box.options[i].defaultSelected) " & vbNewLine &
-                                                                   "        {" & vbNewLine &
-                                                                   "        box.options[i].selected = true; " & vbNewLine &
-                                                                   "        return;	" & vbNewLine &
-                                                                   "        } " & vbNewLine &
-                                                                   "    }" & vbNewLine &
+                    Const ResetSelectBoxSnippet As String = "function resetSelectBox(box)" & vbNewLine & _
+                                                                   "{ " & vbNewLine & _
+                                                                   "for(var i = 0; i < box.options.length; i++) " & vbNewLine & _
+                                                                   "    {	" & vbNewLine & _
+                                                                   "    if(box.options[i].defaultSelected) " & vbNewLine & _
+                                                                   "        {" & vbNewLine & _
+                                                                   "        box.options[i].selected = true; " & vbNewLine & _
+                                                                   "        return;	" & vbNewLine & _
+                                                                   "        } " & vbNewLine & _
+                                                                   "    }" & vbNewLine & _
                                                                    "}" & vbNewLine
-                    Const CloseCheckSnippet As String = "function closeCheck(e) " & vbNewLine &
-                                                                       "{ " & vbNewLine &
-                                                                       "if(!isDirty())  " & vbNewLine &
-                                                                       "    return; " & vbNewLine &
-                                                                       "var confirmationMessage = 'Do you want to close this site without saving your changes?';  " & vbNewLine &
-                                                                       "e.returnValue = confirmationMessage; " & vbNewLine &
-                                                                       "return confirmationMessage;" & vbNewLine &
-                                                                       "} " & vbNewLine &
-                                                                       "if(window.addEventListener) " & vbNewLine &
-                                                                       "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine &
+                    Const CloseCheckSnippet As String = "function closeCheck(e) " & vbNewLine & _
+                                                                       "{ " & vbNewLine & _
+                                                                       "if(!isDirty())  " & vbNewLine & _
+                                                                       "    return; " & vbNewLine & _
+                                                                       "var confirmationMessage = 'Do you want to close this site without saving your changes?';  " & vbNewLine & _
+                                                                       "e.returnValue = confirmationMessage; " & vbNewLine & _
+                                                                       "return confirmationMessage;" & vbNewLine & _
+                                                                       "} " & vbNewLine & _
+                                                                       "if(window.addEventListener) " & vbNewLine & _
+                                                                       "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine & _
                                                                        ""
 #If NetFrameWork = "1_1" Then
                     Me.Page.RegisterClientScriptBlock("ExecPostBack", ExecPostBackSnippet)

@@ -156,7 +156,7 @@ function OpenNavDemo(LangID, ServerGroupID, UserID)
 									<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2"><asp:Label id="lblLoginFailures" runat="server" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
-									<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2">Login blocked until &nbsp;</FONT></P></TD>
+									<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2">Login blocked until<br /><em>(Current server time: <%= Me.CurrentDatabaseDateTime.ToString("yyyy-MM-dd HH:mm:ss") %>)</em> &nbsp;</FONT></P></TD>
 									<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2"><asp:Label id="lblLoginLockedTill" runat="server" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>

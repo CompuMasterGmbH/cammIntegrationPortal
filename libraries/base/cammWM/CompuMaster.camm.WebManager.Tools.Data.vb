@@ -39,7 +39,7 @@ Namespace CompuMaster.camm.WebManager.Tools.Data
         ''' <summary>
         '''     Common routines to query data from a sql server database
         ''' </summary>
-        <Obsolete("Use AnyIDataProvider instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use AnyIDataProvider instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Friend Class SqlClient
 
             ''' <summary>

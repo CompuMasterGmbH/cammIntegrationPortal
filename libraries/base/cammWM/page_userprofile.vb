@@ -333,30 +333,30 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
 
         Protected Overrides Function CreateUserInfo() As WebManager.IUserInformation
 
-            Dim MyUserInfo As New WMSystem.UserInformation(0&,
-                Trim(Mid(Trim(Me.TextboxLoginName.Text), 1, 20)),
-                Trim(Me.TextboxEMail.Text),
-                False,
-                Trim(Me.TextboxCompany.Text),
-                CType(IIf(Me.DropdownSalutation.SelectedValue = "Ms.", WMSystem.Sex.Feminine, IIf(Me.DropdownSalutation.SelectedValue = "Mr.", WMSystem.Sex.Masculine, WMSystem.Sex.Undefined)), WMSystem.Sex),
-                Trim(Me.TextboxNameAffix.Text),
-                Trim(Me.TextboxFirstName.Text),
-                Trim(Me.TextboxLastName.Text),
-                Trim(Me.TextboxAcademicTitle.Text),
-                Trim(Me.TextboxStreet.Text),
-                Trim(Me.TextboxZipCode.Text),
-                Trim(Me.TextboxLocation.Text),
-                Trim(Me.TextboxState.Text),
-                Trim(Me.TextboxCountry.Text),
-                CInt(Me.Dropdown1stPreferredLanguage.SelectedValue),
-                Utils.TryCInt(Me.Dropdown2ndPreferredLanguage.SelectedValue),
-                Utils.TryCInt(Me.Dropdown3rdPreferredLanguage.SelectedValue),
-                False,
-                False,
-                False,
-                Me.AccessLevelDefault,
-                CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem),
-                CType(Nothing, String),
+            Dim MyUserInfo As New WMSystem.UserInformation(0&, _
+                Trim(Mid(Trim(Me.TextboxLoginName.Text), 1, 20)), _
+                Trim(Me.TextboxEMail.Text), _
+                False, _
+                Trim(Me.TextboxCompany.Text), _
+                CType(IIf(Me.DropdownSalutation.SelectedValue = "Ms.", WMSystem.Sex.Feminine, IIf(Me.DropdownSalutation.SelectedValue = "Mr.", WMSystem.Sex.Masculine, WMSystem.Sex.Undefined)), WMSystem.Sex), _
+                Trim(Me.TextboxNameAffix.Text), _
+                Trim(Me.TextboxFirstName.Text), _
+                Trim(Me.TextboxLastName.Text), _
+                Trim(Me.TextboxAcademicTitle.Text), _
+                Trim(Me.TextboxStreet.Text), _
+                Trim(Me.TextboxZipCode.Text), _
+                Trim(Me.TextboxLocation.Text), _
+                Trim(Me.TextboxState.Text), _
+                Trim(Me.TextboxCountry.Text), _
+                CInt(Me.Dropdown1stPreferredLanguage.SelectedValue), _
+                Utils.TryCInt(Me.Dropdown2ndPreferredLanguage.SelectedValue), _
+                Utils.TryCInt(Me.Dropdown3rdPreferredLanguage.SelectedValue), _
+                False, _
+                False, _
+                False, _
+                Me.AccessLevelDefault, _
+                CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem), _
+                CType(Nothing, String), _
                 New Collections.Specialized.NameValueCollection)
             Return MyUserInfo
 

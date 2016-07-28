@@ -42,10 +42,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             strblr.Append("<table cellSpacing=""0"" cellPadding=""0"" border=""0"">")
             Dim sql As String
             If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
-                sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                               "SELECT ItemType, ID_Group, Name, ID_User, LoginDisabled, LoginName, DevelopmentTeamMember, IsDenyRule FROM view_ApplicationRights WHERE ID_Application = 6185 AND ID_AppRight Is NOT Null ORDER BY ItemType, Name, DevelopmentTeamMember, IsDenyRule"
             Else
-                sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                               "SELECT ItemType, ID_Group, Name, ID_User, LoginDisabled, LoginName, DevelopmentTeamMember, 0 AS IsDenyRule FROM view_ApplicationRights WHERE ID_Application = @ID AND ID_AppRight Is NOT Null ORDER BY ItemType, Name, DevelopmentTeamMember"
             End If
             Dim cmd2 As New SqlClient.SqlCommand(sql, New SqlConnection(cammWebManager.ConnectionString))
@@ -147,7 +147,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim dt As New DataTable
 
             Try
-                dt = FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                dt = FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT ServerGroup,id FROM System_ServerGroups ORDER BY ServerGroup", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                 cmbServerGroup.Items.Clear()
                 cmbServerGroup.Items.Insert(0, New ListItem("", ""))
@@ -158,7 +158,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
 
                 'for Market
-                dt = FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                dt = FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT Description,id FROM view_Languages WHERE IsActive = 1 ORDER BY Description", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                 cmbMarket.Items.Clear()
                 cmbMarket.Items.Insert(0, New ListItem("", ""))
@@ -198,14 +198,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 cmbServerGroup.SelectedIndex = cmbServerGroup.Items.IndexOf(cmbServerGroup.Items.FindByValue(cmbServerGroup.SelectedValue))
             End If
 
-            Dim sqlParams As SqlParameter() = {New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)),
-                New SqlParameter("@TitleAdminArea", txtApplication.Text.ToString.Trim.Replace(") '", "''").Replace("*", "%") & "%"),
-                New SqlParameter("@ServerGroup", cmbServerGroup.SelectedValue),
-                New SqlParameter("@LanguageID", cmbMarket.SelectedValue),
-                New SqlParameter("@ApplicationText", "%" & txtApplication.Text.Trim.Replace("'", "''").Replace("*", "%") & "%"),
+            Dim sqlParams As SqlParameter() = {New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)), _
+                New SqlParameter("@TitleAdminArea", txtApplication.Text.ToString.Trim.Replace(") '", "''").Replace("*", "%") & "%"), _
+                New SqlParameter("@ServerGroup", cmbServerGroup.SelectedValue), _
+                New SqlParameter("@LanguageID", cmbMarket.SelectedValue), _
+                New SqlParameter("@ApplicationText", "%" & txtApplication.Text.Trim.Replace("'", "''").Replace("*", "%") & "%"), _
                 New SqlParameter("@NavUrl", "%" & txtApplication.Text.Trim.Replace("'", "''").Replace("*", "%") & "%")}
             strWHERE.Append(" (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR 0 in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND AuthorizationType In ('SecurityMaster')) OR view_applications.id in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND AuthorizationType In ('Update','Owner')))")
-            Dim strQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+            Dim strQuery As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT " & Top50Constraint & " view_applications.*, system_servers.serverdescription, view_Languages.Description As Abbreviation, view_Languages.Description FROM ([view_Applications] left join System_Servers on view_applications.Locationid = system_servers.id) left join view_Languages on view_applications.languageid = view_Languages.id " & strWHERE.ToString & " ORDER BY Case When IsNull(TitleAdminArea, '') = '' Then Title Else TitleAdminArea End, Level1Title, Level2Title, Level3Title, NavURL"
 
             Try
@@ -438,7 +438,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Try
                 lblField_ID.Text = Server.HtmlEncode(Trim(Request.QueryString("ID")))
                 Dim MySecurityObjectInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(CInt(Trim(Request.QueryString("ID"))), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
-                Dim cmd As New SqlClient.SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                Dim cmd As New SqlClient.SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT * FROM dbo.Applications WHERE ID=@ID", New SqlConnection(cammWebManager.ConnectionString))
                 cmd.Parameters.Add("@ID", SqlDbType.Int).Value = CType(Request.QueryString("ID"), Integer)
                 dtUpdate = FillDataTable(cmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")

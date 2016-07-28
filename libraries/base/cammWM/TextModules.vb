@@ -783,7 +783,7 @@ Namespace CompuMaster.camm.WebManager.Modules.Text
                 End If
 
                 Dim query As System.Text.StringBuilder
-                query = New System.Text.StringBuilder("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                query = New System.Text.StringBuilder("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT [Key], [Value], [Version], [TypeID], [Released], [PublishedOn] " & vbNewLine)
                 query.Append("FROM [dbo].[TextModules] " & vbNewLine)
                 query.Append("where ( ([MarketID] = @MarketID and [WebsiteAreaID] = @WebsiteAreaID and [ServerGroupID] = @ServerGroupID " & vbNewLine)
@@ -803,7 +803,7 @@ Namespace CompuMaster.camm.WebManager.Modules.Text
                 ElseIf key <> Nothing AndAlso typeID = Nothing Then
                     'load all versions for a Key
                     query = Nothing
-                    query = New System.Text.StringBuilder("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                    query = New System.Text.StringBuilder("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT [Key], [Value], [Version], [Released], [TypeID], [PublishedOn] " & vbNewLine)
                     query.Append("FROM [dbo].[TextModules] " & vbNewLine)
                     query.Append("where [MarketID] = @MarketID and [WebsiteAreaID] = @WebsiteAreaID and [ServerGroupID] = @ServerGroupID " & vbNewLine)
@@ -865,11 +865,11 @@ Namespace CompuMaster.camm.WebManager.Modules.Text
                 End If
 
                 Dim query As String
-                query = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                  "SELECT [Key], [Value], [Version], [Released], [TypeID], [PublishedOn] " & vbNewLine &
-                  "FROM [dbo].[TextModules] " & vbNewLine &
-                  "where [MarketID] = @MarketID and [WebsiteAreaID] = @WebsiteAreaID and [ServerGroupID] = @ServerGroupID " & vbNewLine &
-                  "and [Key] = @Key and [Version] = @Version " & vbNewLine &
+                query = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                  "SELECT [Key], [Value], [Version], [Released], [TypeID], [PublishedOn] " & vbNewLine & _
+                  "FROM [dbo].[TextModules] " & vbNewLine & _
+                  "where [MarketID] = @MarketID and [WebsiteAreaID] = @WebsiteAreaID and [ServerGroupID] = @ServerGroupID " & vbNewLine & _
+                  "and [Key] = @Key and [Version] = @Version " & vbNewLine & _
                   " "
 
                 Dim MyCmd As New SqlClient.SqlCommand(query, New SqlClient.SqlConnection(ConnectionString))
@@ -909,11 +909,11 @@ Namespace CompuMaster.camm.WebManager.Modules.Text
                     End If
                 End If
 
-                Dim query As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                   "SELECT [Key] FROM [dbo].[TextModules] " & vbNewLine &
-                   "where [MarketID] = @MarketID and [WebsiteAreaID] = @WebsiteAreaID and [ServerGroupID] = @ServerGroupID " & vbNewLine &
-                   "GROUP BY [Key] " & vbNewLine &
-                   "Order by [Key] " & vbNewLine &
+                Dim query As String = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                   "SELECT [Key] FROM [dbo].[TextModules] " & vbNewLine & _
+                   "where [MarketID] = @MarketID and [WebsiteAreaID] = @WebsiteAreaID and [ServerGroupID] = @ServerGroupID " & vbNewLine & _
+                   "GROUP BY [Key] " & vbNewLine & _
+                   "Order by [Key] " & vbNewLine & _
                    " "
 
                 Dim MyCmd As New SqlClient.SqlCommand(query, New SqlClient.SqlConnection(ConnectionString))
@@ -967,20 +967,20 @@ Namespace CompuMaster.camm.WebManager.Modules.Text
                 End If
 
                 Dim query As String
-                query = "if (( SELECT count([Key])FROM [dbo].[TextModulesCache] " & vbNewLine &
-                  "where [MarketID] = @MarketID and [WebsiteAreaID] = @WebsiteAreaID and [ServerGroupID] = @ServerGroupID )  = 0 )" & vbNewLine &
-                  "BEGIN " & vbNewLine &
-                  "   INSERT INTO [dbo].[TextModulesCache]([MarketID], [WebsiteAreaID], [ServerGroupID], [Key], [Value], [Title], [TypeID]) " & vbNewLine &
-                  "   SELECT [MarketID], [WebsiteAreaID], [ServerGroupID], [Key], [Value], [Title], [TypeID] " & vbNewLine &
-                  "   FROM [dbo].[TextModules] " & vbNewLine &
-                  "   where [MarketID] = @MarketID and [WebsiteAreaID] = @WebsiteAreaID and [ServerGroupID] = @ServerGroupID " & vbNewLine &
-                  "   and [Released] = 1 and [PublishedOn] is not null " & vbNewLine &
-                  "END " & vbNewLine &
-                  " " & vbNewLine &
-                  "SELECT [Key], [Value], [TypeID] " & vbNewLine &
-                  "FROM [dbo].[TextModulesCache] " & vbNewLine &
-                  "where [MarketID] = @MarketID and [WebsiteAreaID] = @WebsiteAreaID and [ServerGroupID] = @ServerGroupID " & vbNewLine &
-                  "" & vbNewLine &
+                query = "if (( SELECT count([Key])FROM [dbo].[TextModulesCache] " & vbNewLine & _
+                  "where [MarketID] = @MarketID and [WebsiteAreaID] = @WebsiteAreaID and [ServerGroupID] = @ServerGroupID )  = 0 )" & vbNewLine & _
+                  "BEGIN " & vbNewLine & _
+                  "   INSERT INTO [dbo].[TextModulesCache]([MarketID], [WebsiteAreaID], [ServerGroupID], [Key], [Value], [Title], [TypeID]) " & vbNewLine & _
+                  "   SELECT [MarketID], [WebsiteAreaID], [ServerGroupID], [Key], [Value], [Title], [TypeID] " & vbNewLine & _
+                  "   FROM [dbo].[TextModules] " & vbNewLine & _
+                  "   where [MarketID] = @MarketID and [WebsiteAreaID] = @WebsiteAreaID and [ServerGroupID] = @ServerGroupID " & vbNewLine & _
+                  "   and [Released] = 1 and [PublishedOn] is not null " & vbNewLine & _
+                  "END " & vbNewLine & _
+                  " " & vbNewLine & _
+                  "SELECT [Key], [Value], [TypeID] " & vbNewLine & _
+                  "FROM [dbo].[TextModulesCache] " & vbNewLine & _
+                  "where [MarketID] = @MarketID and [WebsiteAreaID] = @WebsiteAreaID and [ServerGroupID] = @ServerGroupID " & vbNewLine & _
+                  "" & vbNewLine & _
                   " "
 
                 Dim MyCmd As New SqlClient.SqlCommand(query, New SqlClient.SqlConnection(ConnectionString))

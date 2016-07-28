@@ -99,17 +99,17 @@ Namespace CompuMaster.camm.WebManager
         ''' Load currently in database used flag names and their related setting value
         ''' </summary>
         Public Function GetLogTypes() As DictionaryEntry()
-            Dim Sql As String = " SELECT Type, Max(IsNull(Config.RemoveOnUserDeletion, 0))" & vbNewLine &
-                    "    FROM dbo.Log_users" & vbNewLine &
-                    "        LEFT JOIN " & vbNewLine &
-                    "            (" & vbNewLine &
-                    "                SELECT ValueNVarChar, 1 AS RemoveOnUserDeletion" & vbNewLine &
-                    "                FROM [dbo].System_GlobalProperties " & vbNewLine &
-                    "                WHERE ValueBoolean = 1 " & vbNewLine &
-                    "                    AND PropertyName='" & PropertyName_LogTypeDeletion & "'" & vbNewLine &
-                    "            ) AS Config" & vbNewLine &
-                    "            ON dbo.Log_users.Type = Config.ValueNVarChar" & vbNewLine &
-                    "    GROUP BY Type" & vbNewLine &
+            Dim Sql As String = " SELECT Type, Max(IsNull(Config.RemoveOnUserDeletion, 0))" & vbNewLine & _
+                    "    FROM dbo.Log_users" & vbNewLine & _
+                    "        LEFT JOIN " & vbNewLine & _
+                    "            (" & vbNewLine & _
+                    "                SELECT ValueNVarChar, 1 AS RemoveOnUserDeletion" & vbNewLine & _
+                    "                FROM [dbo].System_GlobalProperties " & vbNewLine & _
+                    "                WHERE ValueBoolean = 1 " & vbNewLine & _
+                    "                    AND PropertyName='" & PropertyName_LogTypeDeletion & "'" & vbNewLine & _
+                    "            ) AS Config" & vbNewLine & _
+                    "            ON dbo.Log_users.Type = Config.ValueNVarChar" & vbNewLine & _
+                    "    GROUP BY Type" & vbNewLine & _
                     "    ORDER BY Type"
             Dim cmd As New SqlClient.SqlCommand(Sql, New SqlClient.SqlConnection(Me.ConnectionString))
 

@@ -1770,11 +1770,11 @@ Namespace CompuMaster.camm.WebManager
                     If LinkEndPosByReturnChar = -1 Then LinkEndPosByReturnChar = Len(Msg)
                     LinkEndPos = CType(IIf(LinkEndPosBySpaceChar < LinkEndPosByReturnChar, LinkEndPosBySpaceChar, LinkEndPosByReturnChar), Integer)
                     'Exclude Satzzeichen
-                    If Mid(Msg, LinkEndPos, 1) = "." Or
-                            Mid(Msg, LinkEndPos, 1) = "!" Or
-                            Mid(Msg, LinkEndPos, 1) = "?" Or
-                            Mid(Msg, LinkEndPos, 1) = "," Or
-                            Mid(Msg, LinkEndPos, 1) = ";" Or
+                    If Mid(Msg, LinkEndPos, 1) = "." Or _
+                            Mid(Msg, LinkEndPos, 1) = "!" Or _
+                            Mid(Msg, LinkEndPos, 1) = "?" Or _
+                            Mid(Msg, LinkEndPos, 1) = "," Or _
+                            Mid(Msg, LinkEndPos, 1) = ";" Or _
                             Mid(Msg, LinkEndPos, 1) = ":" Then
                         LinkEndPos = LinkEndPos - 1
                     End If
@@ -1813,13 +1813,13 @@ Namespace CompuMaster.camm.WebManager
                     Else
                         LefterChar = " "
                     End If
-                    If LefterChar = " " Or
-                            LefterChar = Chr(13) Or
-                            LefterChar = Chr(10) Or
-                            LefterChar = "!" Or
-                            LefterChar = "?" Or
-                            LefterChar = "," Or
-                            LefterChar = ";" Or
+                    If LefterChar = " " Or _
+                            LefterChar = Chr(13) Or _
+                            LefterChar = Chr(10) Or _
+                            LefterChar = "!" Or _
+                            LefterChar = "?" Or _
+                            LefterChar = "," Or _
+                            LefterChar = ";" Or _
                             LefterChar = ":" Then
                         Exit Do
                     Else
@@ -1834,11 +1834,11 @@ Namespace CompuMaster.camm.WebManager
                     If LinkEndPosByReturnChar = -1 Then LinkEndPosByReturnChar = Len(Msg)
                     LinkEndPos = CType(IIf(LinkEndPosBySpaceChar < LinkEndPosByReturnChar, LinkEndPosBySpaceChar, LinkEndPosByReturnChar), Integer)
                     'Exclude Satzzeichen
-                    If Mid(Msg, LinkEndPos, 1) = "." Or
-                            Mid(Msg, LinkEndPos, 1) = "!" Or
-                            Mid(Msg, LinkEndPos, 1) = "?" Or
-                            Mid(Msg, LinkEndPos, 1) = "," Or
-                            Mid(Msg, LinkEndPos, 1) = ";" Or
+                    If Mid(Msg, LinkEndPos, 1) = "." Or _
+                            Mid(Msg, LinkEndPos, 1) = "!" Or _
+                            Mid(Msg, LinkEndPos, 1) = "?" Or _
+                            Mid(Msg, LinkEndPos, 1) = "," Or _
+                            Mid(Msg, LinkEndPos, 1) = ";" Or _
                             Mid(Msg, LinkEndPos, 1) = ":" Then
                         LinkEndPos = LinkEndPos - 1
                     End If
@@ -2896,24 +2896,24 @@ Namespace CompuMaster.camm.WebManager
     End Class
 
 #Region "Compatibility module"
-    <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+    <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
     Public Module UtilsCompatibility
         ''' <summary>
         '''     Redirect to another url by using regular html forms to post data
         ''' </summary>
         ''' <param name="url"></param>
         ''' <param name="postData"></param>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Sub RedirectWithPostData(ByVal context As System.Web.HttpContext, ByVal url As String, ByVal postData As Collections.Specialized.NameValueCollection)
             Utils.RedirectWithPostData(context, url, postData)
         End Sub
 
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Sub RedirectWithPostData(ByVal context As System.Web.HttpContext, ByVal url As String, ByVal postData As Collections.Specialized.NameValueCollection, ByVal httpMethod As String)
             Utils.RedirectWithPostData(context, url, postData, httpMethod)
         End Sub
 
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Sub RedirectWithPostData(ByVal context As System.Web.HttpContext, ByVal url As String, ByVal postData As Collections.Specialized.NameValueCollection, ByVal httpMethod As String, ByVal additionalFormAttributes As String)
             Utils.RedirectWithPostData(context, url, postData, httpMethod, additionalFormAttributes)
         End Sub
@@ -2923,7 +2923,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         '''     Get the first value of the IP address list or the workstation name if there are no IP addresses
         ''' </summary>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function GetWorkstationID() As String
 
             Dim host As System.Net.IPHostEntry = System.Net.Dns.Resolve(System.Net.Dns.GetHostName)
@@ -2947,7 +2947,7 @@ Namespace CompuMaster.camm.WebManager
         '''     Is the remote client connecting from a private network?
         ''' </summary>
         ''' <returns>True for private networks, false for localhost and public networks</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function IsRemoteClientFromLanOrPrivateNetwork() As Boolean
 
             If System.Web.HttpContext.Current Is Nothing Then
@@ -2977,7 +2977,7 @@ Namespace CompuMaster.camm.WebManager
         '''         <item>192.168.*.* <em>(all letters after the first star will be ignored)</em></item>
         '''     </list>
         ''' </example>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function IsHostOfAddressRange(ByVal IPv4Address As String, ByVal AddressRange As String()) As Boolean
 
             If IPv4Address = "" Then
@@ -3013,7 +3013,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="IPAddress">The IP address to validate</param>
         ''' <returns>True for private or LAN networks, otherwise false</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function IsHostFromLanOrPrivateNetwork(ByVal IPAddress As String) As Boolean
 
             Dim IP As System.Net.IPAddress
@@ -3078,7 +3078,7 @@ Namespace CompuMaster.camm.WebManager
         '''     Is the host a localhost?
         ''' </summary>
         ''' <param name="IPAddress">The IP address to validate</param>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function IsLoopBackDevice(ByVal IPAddress As String) As Boolean
             Return System.Net.IPAddress.IsLoopback(System.Net.IPAddress.Parse(IPAddress))
         End Function
@@ -3092,7 +3092,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function IfNull(ByVal CheckValueIfDBNull As Object, Optional ByVal ReplaceWithThis As Object = Nothing) As Object
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3105,7 +3105,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <returns>A value which is not DBNull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function Nz(ByVal CheckValueIfDBNull As Object) As Object
             If IsDBNull(CheckValueIfDBNull) Then
                 Return Nothing
@@ -3119,7 +3119,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Object) As Object
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3133,7 +3133,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Integer) As Integer
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3147,7 +3147,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Long) As Long
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3161,7 +3161,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Boolean) As Boolean
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3175,7 +3175,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As DateTime) As DateTime
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3189,7 +3189,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="CheckValueIfDBNull">The value to be checked</param>
         ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
         ''' <returns>A value which is not DBNull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As String) As String
             If IsDBNull(CheckValueIfDBNull) Then
                 Return (ReplaceWithThis)
@@ -3204,7 +3204,7 @@ Namespace CompuMaster.camm.WebManager
         '''     Return the string which is not nothing or else String.Empty
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function StringNotEmptyOrNothing(ByVal value As String) As String
             If value = Nothing Then
                 Return Nothing
@@ -3216,7 +3216,7 @@ Namespace CompuMaster.camm.WebManager
         '''     Return the string which is not nothing or else String.Empty
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function StringNotNothingOrEmpty(ByVal value As String) As String
             If value Is Nothing Then
                 Return String.Empty
@@ -3228,7 +3228,7 @@ Namespace CompuMaster.camm.WebManager
         '''     Return the string which is not empty or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function StringNotEmptyOrDBNull(ByVal value As String) As Object
             If value = Nothing Then
                 Return DBNull.Value
@@ -3240,7 +3240,7 @@ Namespace CompuMaster.camm.WebManager
         '''     Return the object which is not nothing or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function ObjectNotNothingOrEmptyString(ByVal value As Object) As Object
             If value Is Nothing Then
                 Return String.Empty
@@ -3252,7 +3252,7 @@ Namespace CompuMaster.camm.WebManager
         '''     Return the object which is not nothing or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function ObjectNotNothingOrDBNull(ByVal value As Object) As Object
             If value Is Nothing Then
                 Return DBNull.Value
@@ -3264,7 +3264,7 @@ Namespace CompuMaster.camm.WebManager
         '''     Return the object which is not an empty string or otherwise return Nothing
         ''' </summary>
         ''' <param name="value">The object to be validated</param>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function ObjectNotEmptyStringOrNothing(ByVal value As Object) As Object
             If value.GetType Is GetType(String) AndAlso CType(value, String) = "" Then
                 Return Nothing
@@ -3276,7 +3276,7 @@ Namespace CompuMaster.camm.WebManager
         '''     Return the string which is not nothing or otherwise return DBNull.Value 
         ''' </summary>
         ''' <param name="value">The string to be validated</param>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function StringNotNothingOrDBNull(ByVal value As String) As Object
             If value Is Nothing Then
                 Return DBNull.Value
@@ -3289,7 +3289,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <returns>The converted long value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function TryCLng(ByVal Expression As Object) As Long
             Return Utils.TryCLng(Expression, Nothing)
         End Function
@@ -3299,7 +3299,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="Expression">The expression to be converted</param>
         ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
         ''' <returns>The converted long value or the alternative value if the conversion was unsuccessfull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function TryCLng(ByVal Expression As Object, ByVal AlternativeValue As Long) As Long
             Try
                 Return CLng(Expression)
@@ -3312,7 +3312,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <returns>The converted integer value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function TryCInt(ByVal Expression As Object) As Integer
             Return Utils.TryCInt(Expression, Nothing)
         End Function
@@ -3322,7 +3322,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="Expression">The expression to be converted</param>
         ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
         ''' <returns>The converted integer value or the alternative value if the conversion was unsuccessfull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function TryCInt(ByVal Expression As Object, ByVal AlternativeValue As Integer) As Integer
             Try
                 Return CInt(Expression)
@@ -3335,7 +3335,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <returns>The converted double value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function TryCDbl(ByVal Expression As Object) As Double
             Return Utils.TryCDbl(Expression, Nothing)
         End Function
@@ -3345,7 +3345,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="Expression">The expression to be converted</param>
         ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
         ''' <returns>The converted double value or the alternative value if the conversion was unsuccessfull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function TryCDbl(ByVal Expression As Object, ByVal AlternativeValue As Integer) As Double
             Try
                 Return CDbl(Expression)
@@ -3358,7 +3358,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="Expression">The expression to be converted</param>
         ''' <returns>The converted decimal value or null (Nothing in VisualBasic) if the conversion was unsuccessfull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function TryCDec(ByVal Expression As Object) As Decimal
             Return Utils.TryCDec(Expression, Nothing)
         End Function
@@ -3368,7 +3368,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="Expression">The expression to be converted</param>
         ''' <param name="AlternativeValue">The alternative value in case of conversion errors</param>
         ''' <returns>The converted decimal value or the alternative value if the conversion was unsuccessfull</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function TryCDec(ByVal Expression As Object, ByVal AlternativeValue As Integer) As Decimal
             Try
                 Return CDec(Expression)
@@ -3385,7 +3385,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="removeParameters">Remove all values with this name form the query string</param>
         ''' <returns>A new string with all query string information without the starting questionmark character</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function QueryStringWithoutSpecifiedParameters(ByVal removeParameters As String()) As String
             Return Utils.NameValueCollectionWithoutSpecifiedKeys(System.Web.HttpContext.Current.Request.QueryString, removeParameters)
         End Function
@@ -3395,7 +3395,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="collection">A NameValueCollection, e. g. Request.QueryString</param>
         ''' <param name="removeKeys">Names of keys which shall not be in the output</param>
         ''' <returns>A string of the collection data which can be appended to any URL (with url encoding)</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function NameValueCollectionWithoutSpecifiedKeys(ByVal collection As System.Collections.Specialized.NameValueCollection, ByVal removeKeys As String()) As String
             Dim RedirectionParams As String = ""
             For Each ParamItem As String In collection
@@ -3423,7 +3423,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="text"></param>
         ''' <param name="separator"></param>
         ''' <param name="exceptLeadingCharacter"></param>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function SplitString(ByVal text As String, ByVal separator As Char, ByVal exceptLeadingCharacter As Char) As String()
             Dim Result As New ArrayList
             'Go through every char of the string
@@ -3454,7 +3454,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         '''     Supported line breaks are linebreaks of Windows, MacOS as well as Linux/Unix.
         ''' </remarks>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function HTMLEncodeLineBreaks(ByVal Text As String) As String
             Return Text.Replace(ControlChars.CrLf, "<br>").Replace(ControlChars.Cr, "<br>").Replace(ControlChars.Lf, "<br>")
         End Function
@@ -3463,7 +3463,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="source">The string where to search in</param>
         ''' <param name="searchFor">The searched string (binary comparison)</param>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function CountOfOccurances(ByVal source As String, ByVal searchFor As String) As Integer
             Return Utils.CountOfOccurances(source, searchFor, CompareMethod.Binary)
         End Function
@@ -3473,7 +3473,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="source">The string where to search in</param>
         ''' <param name="searchFor">The searched string</param>
         ''' <param name="compareMethod">Binary or text search</param>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function CountOfOccurances(ByVal source As String, ByVal searchFor As String, ByVal compareMethod As Microsoft.VisualBasic.CompareMethod) As Integer
 
             If searchFor = "" Then
@@ -3511,7 +3511,7 @@ Namespace CompuMaster.camm.WebManager
         '''     <para>Supported special character combinations are <code>\t</code>, <code>\r</code>, <code>\n</code>, <code>\\</code>, <code>\[</code></para>
         '''     <para>Supported placeholders are <code>[*]</code>, <code>[n:1..9]</code></para>
         ''' </remarks>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function sprintf(ByVal message As String, ByVal ParamArray values() As Object) As String
             Const errpfNoClosingBracket As Integer = vbObjectError + 1
             Const errpfMissingValue As Integer = vbObjectError + 2
@@ -3600,7 +3600,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="KeyValueSeparator">The string between key and value</param>
         ''' <param name="EndOfItem">The string to be placed at the end of a value</param>
         ''' <returns>A string containing all elements of the collection</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function JoinNameValueCollectionToString(ByVal NameValueCollectionToString As Collections.Specialized.NameValueCollection, ByVal BeginningOfItem As String, ByVal KeyValueSeparator As String, ByVal EndOfItem As String) As String
             Dim Result As String = Nothing
             For Each ParamItem As String In NameValueCollectionToString
@@ -3617,7 +3617,7 @@ Namespace CompuMaster.camm.WebManager
         '''     If you need to read the values directly from the returned string, pay attention that all names and values might be UrlEncoded and you have to decode them, first.
         ''' </remarks>
         ''' <see also="FillNameValueCollectionWith" />
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function JoinNameValueCollectionWithUrlEncodingToString(ByVal NameValueCollectionToString As Collections.Specialized.NameValueCollection) As String
             Dim Result As String = Nothing
             For Each ParamItem As String In NameValueCollectionToString
@@ -3637,7 +3637,7 @@ Namespace CompuMaster.camm.WebManager
         '''     Please note: existing values in the collection won't be appended, they'll be overridden
         ''' </remarks>
         ''' <see also="JoinNameValueCollectionWithUrlEncodingToString" />
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Sub ReFillNameValueCollection(ByVal nameValueCollection As System.Collections.Specialized.NameValueCollection, ByVal nameValueCollectionWithUrlEncoding As String)
 
             If nameValueCollection Is Nothing Then
@@ -3672,7 +3672,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="HTML">A string with HTML code</param>
         ''' <returns>The rendered output as plain text</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function ConvertHTMLToText(ByVal HTML As String) As String
             'TODO: 1. remove of all other HTML tags
             '      2. search case insensitive
@@ -3710,7 +3710,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="Text">The standard text without any HTML</param>
         ''' <returns>HTML with hyperlinks</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function HighlightLinksInMessage(ByVal Text As String) As String
             Return Utils.HighlightLinksInMessage(Text)
         End Function
@@ -3722,7 +3722,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="emailAddress">email address to be validated</param>
         ''' <returns>True if email address is syntactically valid else false</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function ValidateEmailAddress(ByVal emailAddress As String) As Boolean
             Return Utils.ValidateEmailAddress(emailAddress)
         End Function
@@ -3731,7 +3731,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="url">URL to be validated</param>
         ''' <returns>True if URL is syntactically valid else false</returns>
-        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use static methods in Utils instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function ValidateInternetUrl(ByVal url As String) As Boolean
             Return Utils.ValidateInternetUrl(url)
         End Function

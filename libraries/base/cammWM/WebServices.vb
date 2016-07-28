@@ -62,9 +62,9 @@ Namespace CompuMaster.camm.WebManager.WebServices
     ''' <summary>
     '''     camm Web-Manager core web service
     ''' </summary>
-    <Web.Services.WebService(Name:="camm Web-Manager core web services",
-                Description:="Core camm Web-Manager service for event triggering of queued or scheduled tasks",
-                [Namespace]:="http://www.camm.biz/webmanager/core/"), System.Runtime.InteropServices.ComVisible(False)>
+    <Web.Services.WebService(Name:="camm Web-Manager core web services", _
+                Description:="Core camm Web-Manager service for event triggering of queued or scheduled tasks", _
+                [Namespace]:="http://www.camm.biz/webmanager/core/"), System.Runtime.InteropServices.ComVisible(False)> _
     Public Class Core
         Inherits BaseWebService
 

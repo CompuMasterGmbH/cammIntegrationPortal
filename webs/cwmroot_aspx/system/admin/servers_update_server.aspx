@@ -106,14 +106,11 @@ function MyCheckURL()
 										<TD VAlign="Top" Colspan="2"><P> &nbsp;</P></TD>
 									</TR>
 									<TR>
-										<TD colspan="2" bgcolor="#C1C1C1"><P><FONT face="Arial" size="2"><b>Script engines</b></FONT></P></TD>
+										<TD colspan="2" bgcolor="#C1C1C1"><P><FONT face="Arial" size="2"><b>Script engines requiring session activation</b></FONT></P></TD>
 									</TR>
 									<TR>
-										<TD VAlign="Top" Colspan="2"><P> &nbsp;</P></TD>
 									</TR>
-									
-									
-									
+										<TD VAlign="Top" Colspan="2"><P>Session activation is required for all servers visible to the client machines/browsers. Additional servers in e.g. reverse proxy environments might be planned to be not visible to client browsers, then they must be set up without script engine activation. &nbsp;</P></TD>
 									<TR>
 									<TD VAlign="Top">
 									<asp:Repeater Id="rptEngine" runat="server" EnableViewState="True">
@@ -130,16 +127,13 @@ function MyCheckURL()
 										</ItemTemplate>
 									</asp:Repeater></TD>
 									</TR>
-									
-									
-																		
 
 									
 									<TR>
 										<TD colspan="2" bgcolor="#C1C1C1"><P><FONT face="Arial" size="2"><b>Server check</b></FONT></P></TD>
 									</TR>
 									<TR>
-									<TD VAlign="Top" width="400" colspan="2"><FONT face="Arial" size="2"><p>To ensure that the server is running without problems, a test connection to the given URL will be created. If the server is behind a firewall you might not get a connection.<p>If you get a positive response or if you are sure that the server will be accessible, you may update the server settings.</FONT></TD>
+										<TD VAlign="Top" width="400" colspan="2"><FONT face="Arial" size="2"><p>To ensure that the server is running without problems, a test connection to the given URL will be created. If the server is behind a firewall you might not get a connection.<p>If you get a positive response or if you are sure that the server will be accessible, you may update the server settings.</FONT></TD>
 									</TR>
 									<TR>
 										<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2"><input style="width: 155px" type="text" id="ServerTestURL" value="/sysdata/servercheck.aspx"></FONT></P></TD>

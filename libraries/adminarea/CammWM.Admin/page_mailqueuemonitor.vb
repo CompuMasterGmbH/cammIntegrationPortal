@@ -159,12 +159,12 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
 
             Dim userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation = Me.cammWebManager.CurrentUserInfo
 
-            Me.cammWebManager.MessagingEMails.QueueEMail(userInfo.FullName,
-                userInfo.EMailAddress,
-                Mail.Subject,
-                Mail.BodyPlainText,
-                Mail.BodyHtml,
-                userInfo.FullName,
+            Me.cammWebManager.MessagingEMails.QueueEMail(userInfo.FullName, _
+                userInfo.EMailAddress, _
+                Mail.Subject, _
+                Mail.BodyPlainText, _
+                Mail.BodyHtml, _
+                userInfo.FullName, _
                 userInfo.EMailAddress)
 
             'set status to Failure accepted
@@ -659,7 +659,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim bcc As String = Server.HtmlEncode(Utils.Nz(dRow("Bcc"), ""))
                 Dim ToType As ToType = dRow("ToType")
 
-                myCounter = Me.AddRowToAnalysisTable(AddHiddenArea, ToAddressCount, Counter, EMailID, Subject,
+                myCounter = Me.AddRowToAnalysisTable(AddHiddenArea, ToAddressCount, Counter, EMailID, Subject, _
                    State, Sender, ToAddress, SentTime, fromAddress, cc, bcc, ToType)
             Next
         End Sub
@@ -1415,13 +1415,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             If Me.DataToFilter Is Nothing Then
                 data = Me.GetDefaultAnalysis(cammWebManager.ConnectionString)
             Else
-                If Me.DataToFilter.EmailID = Nothing AndAlso
-                     Me.DataToFilter.FromAddress = Nothing AndAlso
-                     Me.DataToFilter.FromDate = Nothing AndAlso
-                     Me.DataToFilter.Subject = Nothing AndAlso
-                     Me.DataToFilter.ToAddress = Nothing AndAlso
-                     Me.DataToFilter.ToDate = Nothing AndAlso
-                     Me.DataToFilter.ToType = ToType.All AndAlso
+                If Me.DataToFilter.EmailID = Nothing AndAlso _
+                     Me.DataToFilter.FromAddress = Nothing AndAlso _
+                     Me.DataToFilter.FromDate = Nothing AndAlso _
+                     Me.DataToFilter.Subject = Nothing AndAlso _
+                     Me.DataToFilter.ToAddress = Nothing AndAlso _
+                     Me.DataToFilter.ToDate = Nothing AndAlso _
+                     Me.DataToFilter.ToType = ToType.All AndAlso _
                      Me.DataToFilter.State Is Nothing Then
 
                     data = Me.GetDefaultAnalysis(cammWebManager.ConnectionString)
@@ -1854,7 +1854,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ''' <param name="toDate">date to which emails to be filtered</param>
             Public Function LoadMailMessages(ByVal ConnectionString As String, ByVal emailID As Integer, ByVal statesToFilter As String, ByVal fromDate As DateTime, ByVal toDate As DateTime) As DataTable
                 Dim query As String
-                query = "SELECT [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine &
+                query = "SELECT [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine & _
                        ""
                 If emailID <> Nothing Then
                     If query.IndexOf("where") > 0 Then
@@ -1912,7 +1912,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Public Function LoadMailMessages(ByVal ConnString As String, ByVal emailID As Integer, ByVal statesToFilter As String, ByVal fromDate As DateTime, ByVal toDate As DateTime, ByVal iTop As Integer) As DataTable
                 Dim query As String
-                query = "SELECT Top 100 [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine &
+                query = "SELECT Top 100 [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine & _
                        ""
                 If emailID <> Nothing Then
                     If query.IndexOf("where") > 0 Then
@@ -1975,7 +1975,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ''' <param name="toDate">data to which email to be filtered</param>
             Public Function LoadMailMessages(ByVal ConnString As String, ByVal emailID As Integer, ByVal state As Byte, ByVal fromDate As DateTime, ByVal toDate As DateTime) As DataTable
                 Dim query As String
-                query = "SELECT [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine &
+                query = "SELECT [ID], [UserID], [Data], [State], [DateTime], ErrorDetails FROM [Log_eMailMessages] " & vbNewLine & _
                        ""
                 If emailID <> Nothing Then
                     If query.IndexOf("where") > 0 Then

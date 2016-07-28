@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="VB" Inherits="CompuMaster.camm.WebManager.Pages.Administration.ConfigurationDataProtection" %>
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<camm:WebManager PageTitle="Administration - Modify data protection rules" id="cammWebManager"
+<camm:WebManager PageTitle="Administration - Advanced Configuration - Modify data protection rules" id="cammWebManager"
     SecurityObject="System - User Administration - ServerSetup" runat="server" />
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockHeader" Src="adminblockheader.ascx" %>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminBlockFooter" Src="adminblockfooter.ascx" %>
@@ -14,7 +14,7 @@
 <h3>
 <font face="Arial">Administration - Data protection rules</font></h3>
 <asp:label runat="server" id="lblMsg" forecolor="green" />
-Choose the types that should be <b>deleted</b> in the log table after user deletion<br>
+Choose the additional flags and account data that should be <strong><em>deleted</em></strong> in the table of extended user details after user deletion<br>
 <asp:Placeholder runat="server" id="ltrlTypeList" />
 <br>	
 Delete deactivated users after<br>
