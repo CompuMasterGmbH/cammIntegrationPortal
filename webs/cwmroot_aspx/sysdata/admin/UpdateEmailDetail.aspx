@@ -1,1 +1,0 @@
-﻿<!--#include virtual="/system/admin/updateemaildetail.aspx" -->
