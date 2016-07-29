@@ -1171,7 +1171,7 @@ Namespace CompuMaster.camm.WebManager
         '''     System application types
         ''' </summary>
         ''' <remarks>
-        '''     Attached servers like SAP, DocWare are using SystemAppTypes IDs smaller than zero.
+        '''     Attached servers like SAP, DocWare are using SystemAppTypes IDs &lt; 0 (smaller than zero)
         ''' </remarks>
         Private Enum SystemAppTypes As Integer
             ''' <summary>
@@ -1182,10 +1182,18 @@ Namespace CompuMaster.camm.WebManager
             '''     Master server items are subject of changes while reconfiguration of master server setup
             ''' </summary>
             LoginServer = 1
-            '''             ''' <summary>
+            ''' <summary>
             '''     Admin server items are subject of changes while reconfiguration of admin server setup
             ''' </summary>
             AdminServer = 2
+            ''' <summary>
+            '''     Admin server items are subject of changes while reconfiguration of admin server setup
+            ''' </summary>
+            ''' <remarks>
+            ''' Status per 2016-07-29 JW: exact intention is unknown why to use ID values 2 and 3 - in SQL maybe a difference in how/when deleting auths, but at the end not the real matter?!?
+            ''' </remarks>
+            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+            AdminServerCategory3 = 3
         End Enum
 #End Region
 

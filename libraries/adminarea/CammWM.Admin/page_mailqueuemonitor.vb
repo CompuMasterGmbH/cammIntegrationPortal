@@ -200,17 +200,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Function
 
         Private Sub PageOnLoad(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-            ' Hier Benutzercode zur Seiteninitialisierung einf?gen
-
             Dim tbn As String = HttpContext.Current.Request.QueryString("tbn")
-            Dim myScript As String = "<script language=""javascript""> function ReturnDate() { window.opener.document.getElementById('" & tbn & "').value = document.getElementById('TextDate').value; } </script> "
-#If VS2015OrHigher = True Then
-#Disable Warning BC40000 ' Der Typ oder Member ist veraltet.
-#End If
-            Me.Page.RegisterClientScriptBlock("ReturnDate", myScript)
-#If VS2015OrHigher = True Then
-#Enable Warning BC40000 ' Der Typ oder Member ist veraltet.
-#End If
+            Dim myScript As String = "function ReturnDate() { window.opener.document.getElementById('" & tbn & "').value = document.getElementById('TextDate').value; }"
+            Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType, "ReturnDate", myScript, True)
             ButtonOK.Attributes.Add("onClick", "javascript:window.close();")
         End Sub
         ''' <summary>
