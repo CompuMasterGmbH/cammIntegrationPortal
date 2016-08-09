@@ -1481,7 +1481,7 @@ BEGIN
 
 			--Log the fact that user has been deleted.
 			INSERT INTO dbo.Log_Users (ID_USER, Type, VALUE, ModifiedOn)
-			SELECT ID, 'DeletedOn', GetDate(), GETDATE() FROM deleted
+			SELECT ID, 'DeletedOn', CONVERT(datetime, GETDATE(), 121), GETDATE() FROM deleted
 		END
 END
 GO

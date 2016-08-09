@@ -36,6 +36,16 @@ Namespace CompuMaster.camm.WebManager.Security
             MyBase.New(currentContextServerGroupID, currentContextGroupID, currentContextSecurityObjectID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev, webManager)
         End Sub
 
+        Friend Sub New(currentContextGroupID As Integer,
+                          currentContextSecurityObjectID As Integer,
+                          allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(),
+                          allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(),
+                          denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(),
+                          denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(),
+                          webManager As WMSystem)
+            MyBase.New(currentContextGroupID, currentContextSecurityObjectID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev, webManager)
+        End Sub
+
         Public ReadOnly Property EffectiveByDenyRuleStandard As SecurityObjectAuthorizationForGroup()
             Get
                 Return MyBase.EffectiveByDenyRuleStandardInternal(EffectivityType.GroupBySecurityObject)

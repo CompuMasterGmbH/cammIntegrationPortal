@@ -25,15 +25,24 @@ Namespace CompuMaster.camm.WebManager.Security
     Public Class UserAuthorizationItemsByRuleForSecurityObjects
         Inherits BaseUserAuthorizationItemsByRule
 
-        Friend Sub New(currentContextServerGroupID As Integer, _
-                          currentContextUserID As Long, _
-                          currentContextSecurityObjectID As Integer, _
-                          allowRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
-                          allowRuleItemsIsDev As SecurityObjectAuthorizationForUser(), _
-                          denyRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
-                          denyRuleItemsIsDev As SecurityObjectAuthorizationForUser(), _
+        Friend Sub New(currentContextServerGroupID As Integer,
+                          currentContextUserID As Long,
+                          currentContextSecurityObjectID As Integer,
+                          allowRuleItemsNonDev As SecurityObjectAuthorizationForUser(),
+                          allowRuleItemsIsDev As SecurityObjectAuthorizationForUser(),
+                          denyRuleItemsNonDev As SecurityObjectAuthorizationForUser(),
+                          denyRuleItemsIsDev As SecurityObjectAuthorizationForUser(),
                           webManager As WMSystem)
             MyBase.New(currentContextServerGroupID, currentContextUserID, currentContextSecurityObjectID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev, webManager)
+        End Sub
+        Friend Sub New(currentContextUserID As Long,
+                          currentContextSecurityObjectID As Integer,
+                          allowRuleItemsNonDev As SecurityObjectAuthorizationForUser(),
+                          allowRuleItemsIsDev As SecurityObjectAuthorizationForUser(),
+                          denyRuleItemsNonDev As SecurityObjectAuthorizationForUser(),
+                          denyRuleItemsIsDev As SecurityObjectAuthorizationForUser(),
+                          webManager As WMSystem)
+            MyBase.New(currentContextUserID, currentContextSecurityObjectID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev, webManager)
         End Sub
 
         Public ReadOnly Property EffectiveByDenyRuleStandard As SecurityObjectAuthorizationForUser()

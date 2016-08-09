@@ -23,13 +23,13 @@ Namespace CompuMaster.camm.WebManager.Security
     '''  GroupAuthorizationItemsByRule for usage in SecurityObjectInformation class
     ''' </summary>
     Public MustInherit Class BaseGroupAuthorizationItemsByRule
-        Friend Sub New(currentContextServerGroupID As Integer, _
-                           currentContextGroupID As Integer, _
-                           currentContextSecurityObjectID As Integer, _
-                           allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
-                           allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
-                           denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
-                           denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
+        Friend Sub New(currentContextServerGroupID As Integer,
+                           currentContextGroupID As Integer,
+                           currentContextSecurityObjectID As Integer,
+                           allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(),
+                           allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(),
+                           denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(),
+                           denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(),
                            webManager As WMSystem)
             Me._AllowRuleNonDev = allowRuleItemsNonDev
             Me._AllowRuleIsDev = allowRuleItemsIsDev
@@ -39,8 +39,26 @@ Namespace CompuMaster.camm.WebManager.Security
             Me._CurrentContextGroupID = currentContextGroupID
             Me._CurrentContextSecurityObjectID = currentContextSecurityObjectID
             Me._WebManager = webManager
+            Me.CurrentContextServerGroupIDInitialized = True
+        End Sub
+        Friend Sub New(currentContextGroupID As Integer,
+                           currentContextSecurityObjectID As Integer,
+                           allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(),
+                           allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(),
+                           denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(),
+                           denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(),
+                           webManager As WMSystem)
+            Me._AllowRuleNonDev = allowRuleItemsNonDev
+            Me._AllowRuleIsDev = allowRuleItemsIsDev
+            Me._DenyRuleNonDev = denyRuleItemsNonDev
+            Me._DenyRuleIsDev = denyRuleItemsIsDev
+            Me._CurrentContextGroupID = currentContextGroupID
+            Me._CurrentContextSecurityObjectID = currentContextSecurityObjectID
+            Me._WebManager = webManager
+            Me.CurrentContextServerGroupIDInitialized = False
         End Sub
 
+        Friend CurrentContextServerGroupIDInitialized As Boolean
         Private _WebManager As WMSystem
         Private _CurrentContextServerGroupID As Integer
         Private _CurrentContextGroupID As Integer
@@ -170,8 +188,11 @@ Namespace CompuMaster.camm.WebManager.Security
         ''' </remarks>
         Friend ReadOnly Property EffectiveByDenyRuleStandardInternal(filterType As EffectivityType) As SecurityObjectAuthorizationForGroup()
             Get
+                If Me.CurrentContextServerGroupIDInitialized = False Then
+                    Throw New Exception("Not initialized with a server group context")
+                End If
                 If Me._EffectiveByDenyRuleStandard Is Nothing Then
-                    Dim RuleResult As New ArrayList()
+                    Dim RuleResult As New List(Of SecurityObjectAuthorizationForGroup)
                     For AllowRuleCounter As Integer = 0 To Me._AllowRuleIsDev.Length - 1
                         If Me._AllowRuleIsDev(AllowRuleCounter).ServerGroupID = 0 OrElse Me._AllowRuleIsDev(AllowRuleCounter).ServerGroupID = _CurrentContextServerGroupID Then
                             Dim IsDenied As Boolean = False
@@ -200,7 +221,7 @@ Namespace CompuMaster.camm.WebManager.Security
                             End If
                         End If
                     Next
-                    Me._EffectiveByDenyRuleStandard = CType(RuleResult.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup())
+                    Me._EffectiveByDenyRuleStandard = RuleResult.ToArray()
                 End If
                 Return Me._EffectiveByDenyRuleStandard
             End Get
@@ -227,8 +248,11 @@ Namespace CompuMaster.camm.WebManager.Security
         ''' </returns>
         Friend ReadOnly Property EffectiveByDenyRuleForDevelopmentInternal(filterType As EffectivityType) As SecurityObjectAuthorizationForGroup()
             Get
+                If Me.CurrentContextServerGroupIDInitialized = False Then
+                    Throw New Exception("Not initialized with a server group context")
+                End If
                 If Me._EffectiveByDenyRuleForDevelopment Is Nothing Then
-                    Dim RuleResult As New ArrayList()
+                    Dim RuleResult As New List(Of SecurityObjectAuthorizationForGroup)
                     For AllowRuleCounter As Integer = 0 To Me._AllowRuleIsDev.Length - 1
                         If Me._AllowRuleIsDev(AllowRuleCounter).ServerGroupID = 0 OrElse Me._AllowRuleIsDev(AllowRuleCounter).ServerGroupID = _CurrentContextServerGroupID Then
                             Dim IsDenied As Boolean = False
@@ -242,7 +266,7 @@ Namespace CompuMaster.camm.WebManager.Security
                             End If
                         End If
                     Next
-                    Me._EffectiveByDenyRuleForDevelopment = CType(RuleResult.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup())
+                    Me._EffectiveByDenyRuleForDevelopment = RuleResult.ToArray()
                 End If
                 Return Me._EffectiveByDenyRuleForDevelopment
             End Get
@@ -268,12 +292,12 @@ Namespace CompuMaster.camm.WebManager.Security
                         MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = Me._CurrentContextGroupID
                     End If
                     Dim QueryResults As DataTable = Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "auths")
-                    Dim Results As New ArrayList
+                    Dim Results As New List(Of SecurityObjectAuthorizationForGroup)
                     For MyCounter As Integer = 0 To QueryResults.Rows.Count - 1
                         Dim item As New SecurityObjectAuthorizationForGroup(Me._WebManager, Nothing, CType(QueryResults.Rows(MyCounter)("ID_Group"), Integer), CType(QueryResults.Rows(MyCounter)("ID_SecurityObject"), Integer), CType(QueryResults.Rows(MyCounter)("ID_ServerGroup"), Integer), CType(QueryResults.Rows(MyCounter)("IsDevRule"), Boolean), False, Nothing, 0L, True)
                         Results.Add(item)
                     Next
-                    _EffectiveFinally = CType(Results.ToArray(GetType(SecurityObjectAuthorizationForGroup)), SecurityObjectAuthorizationForGroup())
+                    _EffectiveFinally = Results.ToArray()
                 End If
                 Return _EffectiveFinally
             End Get

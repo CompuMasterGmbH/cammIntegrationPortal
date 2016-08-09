@@ -37,12 +37,13 @@ Namespace CompuMaster.camm.WebManager.Setup
         ''' <param name="allowCaching">True allows usage of a cached value, False forces a direct query to the database</param>
         Public Shared Function Version(ByVal webManager As IWebManager, ByVal allowCaching As Boolean) As Version
             Static _System_DBVersion_Ex As Version
+            Static _webManager As IWebManager 'when used in not-http contexts, there might be multiple CWM instances in parallel use (e.g. on user profile restore from a first instance to a second instance)
             Const cacheItemKey As String = "WebManager.Version.Database"
             If allowCaching Then
-                If Not _System_DBVersion_Ex Is Nothing Then
+                If Not _System_DBVersion_Ex Is Nothing AndAlso webManager Is _webManager Then
                     Return _System_DBVersion_Ex
                 End If
-                If Not HttpContext.Current Is Nothing AndAlso Not HttpContext.Current.Cache(cacheItemKey) Is Nothing Then
+                If Not HttpContext.Current Is Nothing AndAlso Not HttpContext.Current.Cache(cacheItemKey) Is Nothing Then 'no check for another instance since it might not work to detect it if older a newer databases are accessed simultaneously (could only be detected if address of variable (pointer) is identified as being different - comparing database content might incorrectly indicate very same contents)
                     Return CType(HttpContext.Current.Cache(cacheItemKey), Version)
                 End If
             End If
@@ -164,6 +165,7 @@ Namespace CompuMaster.camm.WebManager.Setup
                 Utils.SetHttpCacheValue(cacheItemKey, Result, Caching.CacheItemPriority.NotRemovable)
             End If
             _System_DBVersion_Ex = Result
+            _webManager = webManager
 
             Return Result
 
