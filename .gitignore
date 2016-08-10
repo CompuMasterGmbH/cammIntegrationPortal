@@ -1,6 +1,5 @@
 /applications
 /documentation
-/tools
 /services
 /libraries/components
 /libraries/smarteditor/packages
@@ -164,3 +163,10 @@
 libraries/base/Internationalizations/bin/Internationalization.vshost.exe
 libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifest
 /quality-ensurance/NavAndAuthComparison
+/tools/CM.Data.Manipulation.Plugin.CwmSqls
+/tools/GetPassword
+/tools/LogExtractor
+/tools/UserRestoreFromOldCwmDB/packages
+/tools/UserRestoreFromOldCwmDB/.vs
+/tools/UserRestoreFromOldCwmDB/bin
+/tools/UserRestoreFromOldCwmDB/obj
