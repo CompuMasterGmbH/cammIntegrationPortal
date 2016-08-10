@@ -36,12 +36,12 @@ Namespace CompuMaster.camm.WebManager.Security
             MyBase.New(currentContextServerGroupID, currentContextGroupID, currentContextSecurityObjectID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev, webManager)
         End Sub
 
-        Friend Sub New(currentContextGroupID As Integer,
-                          currentContextSecurityObjectID As Integer,
-                          allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(),
-                          allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(),
-                          denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(),
-                          denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(),
+        Friend Sub New(currentContextGroupID As Integer, _
+                          currentContextSecurityObjectID As Integer, _
+                          allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
+                          allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
+                          denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
+                          denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
                           webManager As WMSystem)
             MyBase.New(currentContextGroupID, currentContextSecurityObjectID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev, webManager)
         End Sub

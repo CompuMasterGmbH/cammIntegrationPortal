@@ -40,12 +40,12 @@ Namespace CompuMaster.camm.WebManager.Security
             Me.CurrentContextServerGroupIDInitialized = True
         End Sub
 
-        Friend Sub New(currentContextUserID As Long,
-                       currentContextSecurityObjectID As Integer,
-                       allowRuleItemsNonDev As SecurityObjectAuthorizationForUser(),
-                       allowRuleItemsIsDev As SecurityObjectAuthorizationForUser(),
-                       denyRuleItemsNonDev As SecurityObjectAuthorizationForUser(),
-                       denyRuleItemsIsDev As SecurityObjectAuthorizationForUser(),
+        Friend Sub New(currentContextUserID As Long, _
+                       currentContextSecurityObjectID As Integer, _
+                       allowRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
+                       allowRuleItemsIsDev As SecurityObjectAuthorizationForUser(), _
+                       denyRuleItemsNonDev As SecurityObjectAuthorizationForUser(), _
+                       denyRuleItemsIsDev As SecurityObjectAuthorizationForUser(), _
                        webManager As WMSystem)
             Me._AllowRuleNonDev = allowRuleItemsNonDev
             Me._AllowRuleIsDev = allowRuleItemsIsDev

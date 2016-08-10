@@ -23,13 +23,13 @@ Namespace CompuMaster.camm.WebManager.Security
     '''  GroupAuthorizationItemsByRule for usage in SecurityObjectInformation class
     ''' </summary>
     Public MustInherit Class BaseGroupAuthorizationItemsByRule
-        Friend Sub New(currentContextServerGroupID As Integer,
-                           currentContextGroupID As Integer,
-                           currentContextSecurityObjectID As Integer,
-                           allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(),
-                           allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(),
-                           denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(),
-                           denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(),
+        Friend Sub New(currentContextServerGroupID As Integer, _
+                           currentContextGroupID As Integer, _
+                           currentContextSecurityObjectID As Integer, _
+                           allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
+                           allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
+                           denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
+                           denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
                            webManager As WMSystem)
             Me._AllowRuleNonDev = allowRuleItemsNonDev
             Me._AllowRuleIsDev = allowRuleItemsIsDev
@@ -41,12 +41,12 @@ Namespace CompuMaster.camm.WebManager.Security
             Me._WebManager = webManager
             Me.CurrentContextServerGroupIDInitialized = True
         End Sub
-        Friend Sub New(currentContextGroupID As Integer,
-                           currentContextSecurityObjectID As Integer,
-                           allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(),
-                           allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(),
-                           denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(),
-                           denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(),
+        Friend Sub New(currentContextGroupID As Integer, _
+                           currentContextSecurityObjectID As Integer, _
+                           allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
+                           allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
+                           denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
+                           denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
                            webManager As WMSystem)
             Me._AllowRuleNonDev = allowRuleItemsNonDev
             Me._AllowRuleIsDev = allowRuleItemsIsDev
