@@ -10,4 +10,4 @@ Imports System.Runtime.InteropServices
 <Assembly: CLSCompliant(True)>
 <Assembly: Guid("12D6D952-1201-47F0-A17B-430D407118B6")>
 
-<Assembly: AssemblyVersion("2016.07.04.*")>
+<Assembly: AssemblyVersion("2016.08.16.*")>

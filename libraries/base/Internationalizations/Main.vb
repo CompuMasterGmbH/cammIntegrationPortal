@@ -212,7 +212,7 @@ Module Main
 
     Sub Create_InternationlizationsScriptFile(ByVal ScriptFile As String, ByVal SpecialsColumnName As String, ByVal XSLFileName As String, Optional ByVal SourceXMLFile As String = "")
 
-        Dim OutputStream As System.IO.StreamWriter
+        Dim OutputStream As System.IO.StreamWriter = Nothing
         Try
             Console.WriteLine("Creating output file: " & Environment.CurrentDirectory & "\" & ScriptFile)
             If System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(Environment.CurrentDirectory & "\" & ScriptFile)) = False Then
@@ -227,7 +227,7 @@ Module Main
             End If
 
             'Create the XslTransform.
-            Dim xslt As XslTransform = New XslTransform
+            Dim xslt As New XslTransform
 
             Dim xslArgs As XsltArgumentList = New XsltArgumentList
             'xslargs.AddParam("acurrency", "", view_category_currency)
@@ -295,8 +295,6 @@ Module Main
 
 
     Private Function XMLizeString(ByVal sInput As String) As String
-        Dim s As String
-
         'SHORTENED VERSION TO REDUCE EXECUTION TIME
         'Return " <![CDATA[" & sInput & "]]>"
         'THIS WILL INCREASE THE SIZE OF YOUR XML String

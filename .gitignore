@@ -170,3 +170,11 @@ libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifes
 /tools/UserRestoreFromOldCwmDB/.vs
 /tools/UserRestoreFromOldCwmDB/bin
 /tools/UserRestoreFromOldCwmDB/obj
+/libraries/base/Internationalizations/country-list-download/obj
+/libraries/base/Internationalizations/country-list-download/bin/Debug/country-codes.plain.txt
+/libraries/base/Internationalizations/country-list-download/bin/Debug/country-codes.wiki.txt
+/libraries/base/Internationalizations/country-list-download/bin/Debug/country-codes.xml
+/libraries/base/Internationalizations/country-list-download/bin/Debug/country-list-download.vshost.exe
+/libraries/base/Internationalizations/country-list-download/bin/Debug/country-codes.csv
+/libraries/base/Internationalizations/country-list-download/bin/Debug/country-codes.fixedplain.txt
+/libraries/base/Internationalizations/country-list-download/bin/Debug/country-codes.html
