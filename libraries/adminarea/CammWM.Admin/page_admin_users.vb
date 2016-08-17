@@ -44,25 +44,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     ErrMsg = "Unknown login name """ & Request.Form("loginname") & """" & cammWebManager.System_GetUserID(Request.Form("loginname")).ToString
                 Else
                     Dim MyUserInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation = cammWebManager.System_GetUserInfo(LoginIDOfUser)
-
-                    Select Case cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).ValidatePasswordComplexity(Request.Form("newpassword"), MyUserInfo)
-                        Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_HigherPasswordComplexityRequired
-                            ErrMsg = cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).ErrorMessageComplexityPoints(1)
-                        Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_LengthMaximum
-                            ErrMsg = "The password requires to be not bigger than " & cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).RequiredMaximumPasswordLength & " characters!"
-                        Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_LengthMinimum
-                            ErrMsg = "The password requires to be not smaller than " & cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).RequiredPasswordLength & " characters!"
-                        Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_PartOfProfileInformation
-                            ErrMsg = "The password shouldn't contain pieces of the user account profile, especially login name, first or last name!"
-                        Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_Unspecified
-                            ErrMsg = "There are some unknown errors when validating with the security policy for passwords!"
-                        Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Success
-                            cammWebManager.System_SetUserPassword(MyUserInfo, Request.Form("newpassword"))
-                            displayloginname = ""
-
-                            'Send e-mail with new password to user
-                            ErrMsg = "Password successfully changed for user """ & MyUserInfo.LoginName & """ (" & MyUserInfo.FullName & ")!"
-                    End Select
+                    Try
+                        MyUserInfo.SetPassword(Request.Form("newpassword"))
+                        displayloginname = ""
+                        ErrMsg = "Password successfully changed for user """ & MyUserInfo.LoginName & """ (" & MyUserInfo.FullName & ")!"
+                    Catch ex As Exception
+                        ErrMsg = ex.Message
+                    End Try
                 End If
 
             ElseIf Request.Form("newpassword") = "" And Request.Form("loginname") <> "" Then
@@ -336,7 +324,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 ErrMsg = "User account already exists!"
                             Else
                                 Dim NewPassword As String = txtPassword1.Text
-                                NewUserID = cammWebManager.System_SetUserInfo(MyUserInfo, NewPassword)
+                                MyUserInfo.Save(NewPassword)
+                                NewUserID = MyUserInfo.IDLong
                                 Dim tempstr As String
 
                                 tempstr = ""
@@ -565,7 +554,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Return
                     End If
                     MyUserInfo.LoginDeleted = True
-                    cammWebManager.System_SetUserInfo(MyUserInfo)
+                    MyUserInfo.Save()
                 Catch ex As Exception
                     ErrMsg = "User erasing failed!"
                     If cammWebManager.System_DebugLevel >= 3 Then ErrMsg &= " (" & ex.Message & ")"
@@ -1801,7 +1790,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_Unspecified
                             ErrMsg = "There are some unknown errors when validating with the security policy for passwords!"
                         Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Success
-                            cammWebManager.System_SetUserPassword(MyUserInfo, Request.Form("txtNewPassword"))
+                            MyUserInfo.SetPassword(Request.Form("txtNewPassword"))
                             displayloginname = ""
                             ErrMsg = "Password successfully changed for user """ & MyUserInfo.LoginName & """ (" & MyUserInfo.FullName & ")!"
                     End Select

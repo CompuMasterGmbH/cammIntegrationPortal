@@ -2240,6 +2240,57 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
     '''     Common DataTable operations
     ''' </summary>
     Friend Class DataTables
+
+        ''' <summary>
+        ''' Copy the values of a data column into an arraylist
+        ''' </summary>
+        ''' <param name="column">The column which contains the data</param>
+        ''' <returns>An array containing data with type of the column's datatype OR with type of DBNull</returns>
+        ''' <remarks></remarks>
+        Public Shared Function ConvertColumnValuesIntoList(Of T)(ByVal column As DataColumn) As Generic.List(Of T)
+            Return ConvertDataTableToList(Of T)(column.Table, column.Ordinal)
+        End Function
+
+        ''' <summary>
+        '''     Convert a data table column to a generic list (except DBNull values)
+        ''' </summary>
+        ''' <param name="column">The column which shall be used to fill the arraylist</param>
+        ''' <returns>An array containing data with type of the column's datatype OR with type of DBNull</returns>
+        ''' <remarks>
+        ''' </remarks>
+        Public Shared Function ConvertDataTableToList(Of T)(ByVal column As DataColumn) As Generic.List(Of T)
+            Return ConvertDataTableToList(Of T)(column.Table, column.Ordinal)
+        End Function
+
+        ''' <summary>
+        '''     Convert a data table column to a generic list (except DBNull values)
+        ''' </summary>
+        ''' <param name="data">The first column of this data table will be used</param>
+        ''' <returns>An array containing data with type of the column's datatype OR with type of DBNull</returns>
+        ''' <remarks>
+        ''' </remarks>
+        Public Shared Function ConvertDataTableToList(Of T)(ByVal data As DataTable) As Generic.List(Of T)
+            Return ConvertDataTableToList(Of T)(data, 0)
+        End Function
+
+        ''' <summary>
+        '''     Convert a data table column to a generic list (except DBNull values)
+        ''' </summary>
+        ''' <param name="data">The data table with the content</param>
+        ''' <param name="selectedColumnIndex">The column which shall be used to fill the arraylist</param>
+        ''' <returns>An array containing data with type of the column's datatype OR with type of DBNull</returns>
+        ''' <remarks>
+        ''' </remarks>
+        Public Shared Function ConvertDataTableToList(Of T)(ByVal data As DataTable, ByVal selectedColumnIndex As Integer) As Generic.List(Of T)
+            Dim Result As New System.Collections.Generic.List(Of T)
+            For MyCounter As Integer = 0 To data.Rows.Count - 1
+                If Not IsDBNull(data.Rows(MyCounter)(selectedColumnIndex)) Then
+                    Result.Add(CType(data.Rows(MyCounter)(selectedColumnIndex), T))
+                End If
+            Next
+            Return Result
+        End Function
+
         ''' <summary>
         ''' Remove rows with duplicate values in a given column
         ''' </summary>
