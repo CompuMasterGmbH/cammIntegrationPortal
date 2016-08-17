@@ -19,6 +19,7 @@
     <a href="configuration_logging.aspx">Logging</a><br>
 	<a href="configuration_passwordencryption.aspx">Password Encryption</a><br>
 	<a href="configuration_dataprotection.aspx">Data protection rules</a><br>
+	<a href="configuration_allowedvalues_country.aspx">Allowed values: country (user profile)</a><br>
 
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="about.aspx" id="cammWebManagerAdminMenu" runat="server" />
