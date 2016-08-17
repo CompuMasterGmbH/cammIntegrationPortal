@@ -178,5 +178,6 @@ libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifes
 /libraries/base/Internationalizations/country-list-download/bin/Debug/country-codes.csv
 /libraries/base/Internationalizations/country-list-download/bin/Debug/country-codes.fixedplain.txt
 /libraries/base/Internationalizations/country-list-download/bin/Debug/country-codes.html
-libraries/base/Internationalizations/country-list-download/bin/Debug/country-list-download.exe
-libraries/base/Internationalizations/country-list-download/bin/Debug/country-list-download.pdb
+/libraries/base/Internationalizations/country-list-download/bin/Debug/country-list-download.exe
+/libraries/base/Internationalizations/country-list-download/bin/Debug/country-list-download.pdb
+/libraries/base/Internationalizations/country-list-download/bin
