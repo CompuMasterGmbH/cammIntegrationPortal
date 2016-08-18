@@ -378,7 +378,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
                         Valid = False
                     Else
                         ExistingUserAccountInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(ExistingUserAccountID, cammWebManager)
-                        If ExistingUserAccountInfo.ValidatePassword(Trim(LoginPasswordRegisterExisting.Text)) = False Then
+                        If ExistingUserAccountInfo.TestForPassword(Trim(LoginPasswordRegisterExisting.Text)) = False Then
                             AppendValidationErrorMessage("The password hasn't been retyped correctly")
                             Valid = False
                         End If
