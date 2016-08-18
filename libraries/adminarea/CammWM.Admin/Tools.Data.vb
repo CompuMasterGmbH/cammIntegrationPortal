@@ -1105,14 +1105,14 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
         Friend Shared Function ReadDataTableFromCsvFile(ByVal path As String, ByVal includesColumnHeaders As Boolean, ByVal columnWidths As Integer(), Optional ByVal encoding As String = "UTF-8", Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             Dim Result As New DataTable
-            Dim fi As FileInfo
 
             If File.Exists(path) Then
-                fi = New FileInfo(path)
+                Dim fi As FileInfo
+                fi = New FileInfo(path) 'Ensure path is valid
+                fi = Nothing
             Else
                 Throw New System.IO.FileNotFoundException("File not found", path)
             End If
-            fi = Nothing
 
             Dim reader As StreamReader = Nothing
             Try
@@ -1139,14 +1139,14 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
         Friend Shared Function ReadDataTableFromCsvFile(ByVal path As String, ByVal includesColumnHeaders As Boolean, ByVal columnWidths As Integer(), ByVal encoding As System.Text.Encoding, ByVal cultureFormatProvider As System.Globalization.CultureInfo, Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             Dim Result As New DataTable
-            Dim fi As FileInfo
 
             If File.Exists(path) Then
-                fi = New FileInfo(path)
+                Dim fi As FileInfo
+                fi = New FileInfo(path) 'Ensure path is valid
+                fi = Nothing
             Else
                 Throw New System.IO.FileNotFoundException("File not found", path)
             End If
-            fi = Nothing
 
             Dim reader As StreamReader = Nothing
             Try
@@ -1299,14 +1299,14 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
         Friend Shared Function ReadDataTableFromCsvFile(ByVal path As String, ByVal includesColumnHeaders As Boolean, Optional ByVal encoding As String = "UTF-8", Optional ByVal columnSeparator As Char = Nothing, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal recognizeDoubledColumnSeparatorCharAsOne As Boolean = True, Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             Dim Result As New DataTable
-            Dim fi As FileInfo
 
             If File.Exists(path) Then
-                fi = New FileInfo(path)
+                Dim fi As FileInfo
+                fi = New FileInfo(path) 'Ensure path is valid
+                fi = Nothing
             Else
                 Throw New System.IO.FileNotFoundException("File not found", path)
             End If
-            fi = Nothing
 
             Dim reader As StreamReader = Nothing
             Try
@@ -1334,14 +1334,13 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
         Friend Shared Function ReadDataTableFromCsvFile(ByVal path As String, ByVal includesColumnHeaders As Boolean, ByVal encoding As System.Text.Encoding, ByVal cultureFormatProvider As System.Globalization.CultureInfo, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal recognizeDoubledColumnSeparatorCharAsOne As Boolean = True, Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
 
             Dim Result As New DataTable
-            Dim fi As FileInfo
-
             If File.Exists(path) Then
-                fi = New FileInfo(path)
+                Dim fi As FileInfo
+                fi = New FileInfo(path) 'Ensure path is valid
+                fi = Nothing
             Else
                 Throw New System.IO.FileNotFoundException("File not found", path)
             End If
-            fi = Nothing
 
             Dim reader As StreamReader = Nothing
             Try
