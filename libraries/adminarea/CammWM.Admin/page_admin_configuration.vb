@@ -32,6 +32,97 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
     End Class
 
+    Public Class ConfigurationAllowedValuesUserProfileFieldCountry
+        Inherits Page
+
+        Protected WithEvents RadioButtonListSetupOfAllowRule As RadioButtonList
+        Protected WithEvents RadioButtonListValueSeparator As RadioButtonList
+        Protected WithEvents ButtonImportGithubDatasetsCountryCodesByName As Button
+        Protected WithEvents ButtonImportGithubDatasetsCountryCodesByISO3166_1_Alpha2 As Button
+        Protected WithEvents ButtonRefreshPreview As Button
+        Protected WithEvents ButtonSave As Button
+        Protected WithEvents CheckboxAllowEmptyValue As CheckBox
+        Protected WithEvents TextboxAllowedValues As TextBox
+
+        Private _AllowedValues As System.Collections.Generic.List(Of String)
+        Public ReadOnly Property AllowedValues As System.Collections.Generic.List(Of String)
+            Get
+                If _AllowedValues Is Nothing Then
+                    If Me.IsPostBack = False Then
+                        'Load current config
+                        'Me.AllowedValues =
+                        Throw New NotImplementedException
+                    Else
+                        'Fill based on current textarea data
+                        _AllowedValues = New System.Collections.Generic.List(Of String)(Me.TextboxAllowedValues.Text.Split(ControlChars.Cr, ControlChars.Lf, "|"c))
+                    End If
+                    'Cleanup empty entries
+                    For MyCounter As Integer = _AllowedValues.Count - 1 To 0 Step -1
+                        If Trim(_AllowedValues(MyCounter)) = "" Then
+                            _AllowedValues.RemoveAt(MyCounter)
+                        End If
+                    Next
+                    _AllowedValues.Sort()
+                    If IsBlankValueAllowed Then
+                        _AllowedValues.Insert(0, "")
+                    End If
+                End If
+                Return _AllowedValues
+            End Get
+        End Property
+
+        Private _IsBlankValueAllowed As TriState = TriState.UseDefault
+        Public Property IsBlankValueAllowed As Boolean
+            Get
+                If _IsBlankValueAllowed = TriState.UseDefault Then
+                    If Me.IsPostBack = False Then
+                        'Load current config
+                        'Me.AllowedValues =
+                        Throw New NotImplementedException
+                    Else
+                        'Fill based on current textarea data
+                        If Me.CheckboxAllowEmptyValue.Checked Then
+                            _IsBlankValueAllowed = TriState.True
+                        Else
+                            _IsBlankValueAllowed = TriState.False
+                        End If
+                    End If
+                End If
+                If _IsBlankValueAllowed = TriState.True Then
+                    Return True
+                Else
+                    Return False
+                End If
+            End Get
+            Set(value As Boolean)
+                If value Then
+                    _IsBlankValueAllowed = TriState.True
+                Else
+                    _IsBlankValueAllowed = TriState.False
+                End If
+            End Set
+        End Property
+
+
+        Private Sub ButtonImportGithubDatasetsCountryCodesByName_Click(sender As Object, e As EventArgs) Handles ButtonImportGithubDatasetsCountryCodesByName.Click
+            Dim CsvOriginUrl As String = "https://raw.githubusercontent.com/datasets/country-codes/master/data/country-codes.csv"
+            Dim CountryCodes As DataTable = CompuMaster.camm.WebManager.Administration.Tools.Data.Csv.ReadDataTableFromCsvFile(CsvOriginUrl, True, System.Text.Encoding.UTF8, System.Globalization.CultureInfo.InvariantCulture, """"c, False, False)
+            Dim AllowedValues As System.Collections.Generic.List(Of String) = CompuMaster.camm.WebManager.Administration.Tools.Data.DataTables.ConvertColumnValuesIntoList(Of String)(CountryCodes.Columns("name"))
+            For MyCounter As Integer = 0 To AllowedValues.Count - 1
+                Console.WriteLine(MyCounter.ToString("000") & ": " & AllowedValues(MyCounter))
+            Next
+        End Sub
+
+        Private Sub ConfigurationAllowedValuesUserProfileFieldCountry_Load(sender As Object, e As EventArgs) Handles Me.Load
+            Me.Form.DefaultButton = Me.ButtonRefreshPreview.UniqueID
+        End Sub
+
+        Private Sub ButtonRefreshPreview_Click(sender As Object, e As EventArgs) Handles ButtonRefreshPreview.Click
+            'Me.TextboxAllowedValues.Text = CompuMaster.camm.WebManager.Administration.Tools.Data.DataTables.ConvertToHtmlTable()
+        End Sub
+
+    End Class
+
     Public Class ConfigurationLogging
         Inherits Page
 
