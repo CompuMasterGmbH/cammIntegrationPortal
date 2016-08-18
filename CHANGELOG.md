@@ -62,6 +62,7 @@
 * :heavy_minus_sign:	view/sp/function encryption
 
 ###Build 202 → 205 (ASP.NET Engine)
+* :warning: the server for processing the asynchronous tasks (running the "core" webservice) must be able to connect directly to the internet (to www.camm.biz by https and http) for the introduced product registration service (without proxy support)
 * :heavy_plus_sign:	product registration service
 * :heavy_plus_sign:	support for simultaneous login
 * :heavy_plus_sign:	user administration overview: added support for searching for e-mail addresses
