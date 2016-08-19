@@ -312,10 +312,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Try
                             Dim dt As DataTable
                             Dim sqlParams As SqlParameter() = {New SqlParameter("@Loginname", Trim(txtLoginName.Text))}
-                            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "select count(*) from Benutzer where Loginname=@Loginname", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                             Dim sqlParamsNew As SqlParameter() = {New SqlParameter("@Loginname", Trim(txtLoginName.Text))}
-                            MyCount = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                            MyCount = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "select count(*) from Benutzer where Loginname=@Loginname", CommandType.Text, sqlParamsNew, Automations.AutoOpenAndCloseAndDisposeConnection)
 
                             If Utils.Nz(MyCount, 0) > 0 Then
@@ -348,6 +348,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 ErrMsg = "The profile has been created successfully!"
                                 UpdateSuccessfull = True
                             End If
+                        Catch ex As UserInfoDataException
+                            ErrMsg = ex.Message
                         Catch ex As Exception
                             Throw
                         End Try
@@ -1679,6 +1681,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     lblErrMsg.Style.Add("color", "#009900")
                     lblErrMsg.Text = "The record has been updated successfully!"
                 End If
+            Catch ex As UserInfoDataException
+                lblErrMsg.Text = ex.Message
             Catch ex As Exception
                 Throw New Exception("Cannot save changes to the user profile.", ex)
             End Try

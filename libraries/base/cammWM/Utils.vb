@@ -394,6 +394,98 @@ Namespace CompuMaster.camm.WebManager
 
 #End Region
 
+#Region "ReadString/ByteDataFromUri"
+
+        Public Shared Function ReadByteDataFromUri(ByVal uri As String) As Byte()
+            Dim client As New System.Net.WebClient
+            Return client.DownloadData(uri)
+        End Function
+
+        Public Shared Function ReadStringDataFromUri(ByVal uri As String, ByVal encodingName As String) As String
+            Return ReadStringDataFromUri(CType(Nothing, System.Net.WebClient), uri, encodingName)
+        End Function
+
+        Public Shared Function ReadStringDataFromUri(ByVal uri As String, ByVal encodingName As String, ByVal ignoreSslValidationExceptions As Boolean) As String
+            Return ReadStringDataFromUri(CType(Nothing, System.Net.WebClient), uri, encodingName, False)
+        End Function
+
+        Public Shared Function ReadStringDataFromUri(ByVal client As System.Net.WebClient, ByVal uri As String, ByVal encodingName As String) As String
+            Return ReadStringDataFromUri(client, uri, encodingName, False)
+        End Function
+
+        Public Shared Function ReadStringDataFromUri(ByVal client As System.Net.WebClient, ByVal uri As String, ByVal encodingName As String, ByVal ignoreSslValidationExceptions As Boolean) As String
+            Return ReadStringDataFromUri(client, uri, encodingName, False, CType(Nothing, String))
+        End Function
+
+        Public Shared Function ReadStringDataFromUri(ByVal client As System.Net.WebClient, ByVal uri As String, ByVal encodingName As String, ByVal ignoreSslValidationExceptions As Boolean, ByVal postData As String) As String
+            If client Is Nothing Then client = New System.Net.WebClient
+            'https://compumaster.dyndns.biz/.....asmx without trusted certificate
+#If Not NET_1_1 Then
+            Dim CurrentValidationCallback As System.Net.Security.RemoteCertificateValidationCallback = System.Net.ServicePointManager.ServerCertificateValidationCallback
+            Try
+                If ignoreSslValidationExceptions Then System.Net.ServicePointManager.ServerCertificateValidationCallback = New System.Net.Security.RemoteCertificateValidationCallback(AddressOf OnValidationCallback)
+#End If
+                If encodingName <> Nothing Then
+                    Dim bytes As Byte()
+                    If postData Is Nothing Then
+                        bytes = client.DownloadData(uri)
+                    Else
+                        bytes = client.UploadData(uri, System.Text.Encoding.GetEncoding(encodingName).GetBytes(postData))
+                    End If
+                    Return System.Text.Encoding.GetEncoding(encodingName).GetString(bytes)
+                Else
+#If NET_1_1 Then
+                Dim encoding As System.Text.Encoding
+                Try
+                    Dim encName As String = client.ResponseHeaders("Content-Type")
+                    If encName <> "" And encName.IndexOf("charset=") > -1 Then
+                        encName = encName.Substring(encName.IndexOf("charset=") + "charset=".Length)
+                        encoding = System.Text.Encoding.GetEncoding(encName)
+                    Else
+                        encoding = System.Text.Encoding.Default
+                    End If
+                Catch
+                    encoding = System.Text.Encoding.Default
+                End Try
+                Dim bytes As Byte()
+                If postData Is Nothing Then
+                    bytes = client.DownloadData(uri)
+                Else
+                    bytes = client.UploadData(uri, encoding.GetBytes(postData))
+                End If
+                Return encoding.GetString(bytes)
+#Else
+                    If postData Is Nothing Then
+                        Return client.DownloadString(uri)
+                    Else
+                        Return client.UploadString(uri, postData)
+                    End If
+#End If
+                End If
+#If Not NET_1_1 Then
+            Finally
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = CurrentValidationCallback
+            End Try
+#End If
+        End Function
+
+#If Not NET_1_1 Then
+        ''' <summary>
+        ''' Suppress all SSL certification requirements - just use the webservice SSL URL
+        ''' </summary>
+        ''' <param name="sender"></param>
+        ''' <param name="cert"></param>
+        ''' <param name="chain"></param>
+        ''' <param name="errors"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function OnValidationCallback(ByVal sender As Object, ByVal cert As System.Security.Cryptography.X509Certificates.X509Certificate, ByVal chain As System.Security.Cryptography.X509Certificates.X509Chain, ByVal errors As System.Net.Security.SslPolicyErrors) As Boolean
+            Return True
+        End Function
+#End If
+
+#End Region
+
 #Region "Network host information"
         ''' <summary>
         '''     Get the first value of the IP address list or the workstation name if there are no IP addresses
@@ -691,6 +783,92 @@ Namespace CompuMaster.camm.WebManager
                 Return CType(CheckValueIfDBNull, String)
             End If
         End Function
+
+        ''' <summary>
+        '''     Checks for DBNull and returns the second value alternatively
+        ''' </summary>
+        ''' <param name="CheckValueIfDBNull">The value to be checked</param>
+        ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
+        ''' <returns>A value which is not DBNull</returns>
+        Public Shared Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Integer?) As Integer?
+            If IsDBNull(CheckValueIfDBNull) Then
+                Return (ReplaceWithThis)
+            Else
+                Return CType(CheckValueIfDBNull, Integer?)
+            End If
+        End Function
+        ''' <summary>
+        '''     Checks for DBNull and returns the second value alternatively
+        ''' </summary>
+        ''' <param name="CheckValueIfDBNull">The value to be checked</param>
+        ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
+        ''' <returns>A value which is not DBNull</returns>
+        Public Shared Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Long?) As Long?
+            If IsDBNull(CheckValueIfDBNull) Then
+                Return (ReplaceWithThis)
+            Else
+                Return CType(CheckValueIfDBNull, Long?)
+            End If
+        End Function
+        ''' <summary>
+        '''     Checks for DBNull and returns the second value alternatively
+        ''' </summary>
+        ''' <param name="CheckValueIfDBNull">The value to be checked</param>
+        ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
+        ''' <returns>A value which is not DBNull</returns>
+        Public Shared Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As Boolean?) As Boolean?
+            If IsDBNull(CheckValueIfDBNull) Then
+                Return (ReplaceWithThis)
+            Else
+                Return CType(CheckValueIfDBNull, Boolean?)
+            End If
+        End Function
+        ''' <summary>
+        '''     Checks for DBNull and returns the second value alternatively
+        ''' </summary>
+        ''' <param name="CheckValueIfDBNull">The value to be checked</param>
+        ''' <param name="ReplaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
+        ''' <returns>A value which is not DBNull</returns>
+        Public Shared Function Nz(ByVal CheckValueIfDBNull As Object, ByVal ReplaceWithThis As DateTime?) As DateTime?
+            If IsDBNull(CheckValueIfDBNull) Then
+                Return (ReplaceWithThis)
+            Else
+                Return CType(CheckValueIfDBNull, DateTime?)
+            End If
+        End Function
+
+        ''' <summary>
+        '''     Checks for DBNull and returns the null (Nothing in VisualBasic) alternatively
+        ''' </summary>
+        ''' <param name="checkValueIfDBNull">The value to be checked</param>
+        ''' <returns>A value which is not DBNull, otherwise null (Nothing in VisualBasic)</returns>
+        <DebuggerHidden()> Public Shared Function Nz(Of T)(ByVal checkValueIfDBNull As Object) As T
+            If IsDBNull(checkValueIfDBNull) Then
+                Return Nothing
+            ElseIf checkValueIfDBNull Is Nothing Then
+                Return CType(Nothing, T)
+            ElseIf Nullable.GetUnderlyingType(GetType(T)) IsNot Nothing AndAlso checkValueIfDBNull.GetType.IsValueType AndAlso Nullable.GetUnderlyingType(GetType(T)) IsNot checkValueIfDBNull.GetType Then
+                Dim UnderlyingType As Type = Nullable.GetUnderlyingType(GetType(T))
+                Dim Result As T = CType(Activator.CreateInstance(GetType(T), checkValueIfDBNull), T)
+                Return Result
+            Else
+                Return CType(checkValueIfDBNull, T)
+            End If
+        End Function
+        ''' <summary>
+        '''     Checks for DBNull and returns the second value alternatively
+        ''' </summary>
+        ''' <param name="checkValueIfDBNull">The value to be checked</param>
+        ''' <param name="replaceWithThis">The alternative value, null (Nothing in VisualBasic) if not defined</param>
+        ''' <returns>A value which is not DBNull</returns>
+        <DebuggerHidden()> Public Shared Function Nz(Of T)(ByVal checkValueIfDBNull As Object, ByVal replaceWithThis As T) As T
+            If IsDBNull(checkValueIfDBNull) Then
+                Return (replaceWithThis)
+            Else
+                Return CType(checkValueIfDBNull, T)
+            End If
+        End Function
+
 #End Region
 
 #Region "InlineIf"
@@ -965,6 +1143,65 @@ Namespace CompuMaster.camm.WebManager
                 Return value
             End If
         End Function
+
+        ''' <summary>
+        '''     Return the value if there is a value or otherwise return DBNull.Value 
+        ''' </summary>
+        ''' <param name="value">The nullable type value to be validated</param>
+        Public Shared Function NullableTypeWithItsValueOrDBNull(Of T As Structure)(ByVal value As Nullable(Of T)) As Object
+            If value.HasValue = False Then
+                Return DBNull.Value
+            Else
+                Return value.Value
+            End If
+        End Function
+
+        ''' <summary>
+        '''     Return the array which is not nothing or otherwise return DBNull.Value 
+        ''' </summary>
+        ''' <param name="values">The array to be validated</param>
+        Public Shared Function ArrayNotNothingOrDBNull(ByVal values As Array) As Object
+            If values Is Nothing Then
+                Return DBNull.Value
+            Else
+                Return values
+            End If
+        End Function
+
+        ''' <summary>
+        '''     Return the array with at least 1 element or otherwise return DBNull.Value 
+        ''' </summary>
+        ''' <param name="values">The array to be validated</param>
+        Public Shared Function ArrayNotEmptyOrDBNull(ByVal values As Array) As Object
+            If values Is Nothing OrElse values.Length = 0 Then
+                Return DBNull.Value
+            Else
+                Return values
+            End If
+        End Function
+        ''' <summary>
+        '''     Return the array with at least 1 element or otherwise return Nothing
+        ''' </summary>
+        ''' <param name="values">The array to be validated</param>
+        Public Shared Function ArrayNotEmptyOrNothing(Of T)(ByVal values As T()) As T()
+            If values Is Nothing OrElse values.Length = 0 Then
+                Return Nothing
+            Else
+                Return values
+            End If
+        End Function
+        ''' <summary>
+        '''     Return the array with at least 0 elements in case it's Nothing
+        ''' </summary>
+        ''' <param name="values">The array to be validated</param>
+        Public Shared Function ArrayNotNothingOrEmpty(Of T)(ByVal values As T()) As T()
+            If values Is Nothing Then
+                Return New T() {}
+            Else
+                Return values
+            End If
+        End Function
+
         ''' <summary>
         '''     Return the string which is not nothing or otherwise return DBNull.Value 
         ''' </summary>

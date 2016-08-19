@@ -170,6 +170,10 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
 
                 Return True
 
+            Catch ex As UserInfoDataException
+                ShowErrorMessage(ex.Message)
+                Return False
+
             Catch ex As Exception
                 If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
                     ShowErrorMessage("Internal error: " & ex.ToString)
@@ -177,7 +181,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
                     ShowErrorMessage("Internal error: " & ex.Message)
                 End If
                 cammWebManager.Log.RuntimeException(ex, False, False, WMSystem.DebugLevels.NoDebug)
-
                 Return False
             End Try
 

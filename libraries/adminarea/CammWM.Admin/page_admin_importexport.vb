@@ -393,7 +393,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
         Private Function PrepareStep3() As Boolean
             Try
-                Me.ImportTable = CompuMaster.camm.WebManager.Administration.Tools.Data.Csv.ReadDataTableFromCsvFile(ImportFile, True, Me.TextboxStep2Charset.Text, , , , True)
+                Me.ImportTable = CompuMaster.camm.WebManager.Administration.Tools.Data.Csv.ReadDataTableFromCsvFile(ImportFile, True, Me.TextboxStep2Charset.Text, ","c, """"c, False, True)
                 LabelStep2Errors.Text = Nothing
                 LabelStep3Errors.Text = Nothing
                 Return True

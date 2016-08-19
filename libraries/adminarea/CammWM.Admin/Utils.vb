@@ -221,6 +221,97 @@ Namespace CompuMaster.camm.WebManager.Administration
             Return BitConverter.ToString(hash).Replace("-", "")
         End Function
 
+#Region "ReadString/ByteDataFromUri"
+
+        Public Shared Function ReadByteDataFromUri(ByVal uri As String) As Byte()
+            Dim client As New System.Net.WebClient
+            Return client.DownloadData(uri)
+        End Function
+
+        Public Shared Function ReadStringDataFromUri(ByVal uri As String, ByVal encodingName As String) As String
+            Return ReadStringDataFromUri(CType(Nothing, System.Net.WebClient), uri, encodingName)
+        End Function
+
+        Public Shared Function ReadStringDataFromUri(ByVal uri As String, ByVal encodingName As String, ByVal ignoreSslValidationExceptions As Boolean) As String
+            Return ReadStringDataFromUri(CType(Nothing, System.Net.WebClient), uri, encodingName, False)
+        End Function
+
+        Public Shared Function ReadStringDataFromUri(ByVal client As System.Net.WebClient, ByVal uri As String, ByVal encodingName As String) As String
+            Return ReadStringDataFromUri(client, uri, encodingName, False)
+        End Function
+
+        Public Shared Function ReadStringDataFromUri(ByVal client As System.Net.WebClient, ByVal uri As String, ByVal encodingName As String, ByVal ignoreSslValidationExceptions As Boolean) As String
+            Return ReadStringDataFromUri(client, uri, encodingName, False, CType(Nothing, String))
+        End Function
+
+        Public Shared Function ReadStringDataFromUri(ByVal client As System.Net.WebClient, ByVal uri As String, ByVal encodingName As String, ByVal ignoreSslValidationExceptions As Boolean, ByVal postData As String) As String
+            If client Is Nothing Then client = New System.Net.WebClient
+            'https://compumaster.dyndns.biz/.....asmx without trusted certificate
+#If Not NET_1_1 Then
+            Dim CurrentValidationCallback As System.Net.Security.RemoteCertificateValidationCallback = System.Net.ServicePointManager.ServerCertificateValidationCallback
+            Try
+                If ignoreSslValidationExceptions Then System.Net.ServicePointManager.ServerCertificateValidationCallback = New System.Net.Security.RemoteCertificateValidationCallback(AddressOf OnValidationCallback)
+#End If
+                If encodingName <> Nothing Then
+                    Dim bytes As Byte()
+                    If postData Is Nothing Then
+                        bytes = client.DownloadData(uri)
+                    Else
+                        bytes = client.UploadData(uri, System.Text.Encoding.GetEncoding(encodingName).GetBytes(postData))
+                    End If
+                    Return System.Text.Encoding.GetEncoding(encodingName).GetString(bytes)
+                Else
+#If NET_1_1 Then
+                Dim encoding As System.Text.Encoding
+                Try
+                    Dim encName As String = client.ResponseHeaders("Content-Type")
+                    If encName <> "" And encName.IndexOf("charset=") > -1 Then
+                        encName = encName.Substring(encName.IndexOf("charset=") + "charset=".Length)
+                        encoding = System.Text.Encoding.GetEncoding(encName)
+                    Else
+                        encoding = System.Text.Encoding.Default
+                    End If
+                Catch
+                    encoding = System.Text.Encoding.Default
+                End Try
+                Dim bytes As Byte()
+                If postData Is Nothing Then
+                    bytes = client.DownloadData(uri)
+                Else
+                    bytes = client.UploadData(uri, encoding.GetBytes(postData))
+                End If
+                Return encoding.GetString(bytes)
+#Else
+                    If postData Is Nothing Then
+                        Return client.DownloadString(uri)
+                    Else
+                        Return client.UploadString(uri, postData)
+                    End If
+#End If
+                End If
+#If Not NET_1_1 Then
+            Finally
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = CurrentValidationCallback
+            End Try
+#End If
+        End Function
+
+#If Not NET_1_1 Then
+        ''' <summary>
+        ''' Suppress all SSL certification requirements - just use the webservice SSL URL
+        ''' </summary>
+        ''' <param name="sender"></param>
+        ''' <param name="cert"></param>
+        ''' <param name="chain"></param>
+        ''' <param name="errors"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function OnValidationCallback(ByVal sender As Object, ByVal cert As System.Security.Cryptography.X509Certificates.X509Certificate, ByVal chain As System.Security.Cryptography.X509Certificates.X509Chain, ByVal errors As System.Net.Security.SslPolicyErrors) As Boolean
+            Return True
+        End Function
+#End If
+
+#End Region
 
     End Class
 

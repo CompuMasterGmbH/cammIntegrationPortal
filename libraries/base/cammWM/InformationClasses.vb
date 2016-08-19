@@ -97,8 +97,20 @@ Namespace CompuMaster.camm.WebManager
 
 #End Region
 
-    Public Class UserInfoConflictingUniqueKeysException
+    Public MustInherit Class UserInfoDataException
         Inherits Exception
+
+        Public Sub New()
+        End Sub
+
+        Public Sub New(ByVal message As String)
+            MyBase.New(message)
+        End Sub
+
+    End Class
+
+    Public Class UserInfoConflictingUniqueKeysException
+        Inherits UserInfoDataException
 
         Friend Sub New(uniqueKeyConflicts As UserInfoConflictingUniqueKeysKeyValues())
             MyBase.New()

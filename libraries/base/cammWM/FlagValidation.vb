@@ -248,6 +248,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="userinfo"></param>
         ''' <param name="requiredFlags"></param>
+        ''' <param name="filterForErrorsOnly">Report non-success items only</param>
         ''' <remarks></remarks>
         Public Shared Function ValidateRequiredFlags(ByVal userinfo As WMSystem.UserInformation, ByVal requiredFlags As String(), filterForErrorsOnly As Boolean) As FlagValidationResult()
             Dim result As New ArrayList
@@ -274,7 +275,7 @@ Namespace CompuMaster.camm.WebManager
         ''' An exception with details on the failed flag validation results
         ''' </summary>
         Public Class RequiredFlagException
-            Inherits Exception
+            Inherits UserInfoDataException
 
             Public Sub New(validationResult As FlagValidationResult)
                 If validationResult Is Nothing Then

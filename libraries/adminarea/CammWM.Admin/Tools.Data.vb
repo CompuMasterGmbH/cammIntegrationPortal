@@ -1102,14 +1102,16 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
         ''' <param name="columnWidths">An array of column widths in their order</param>
         ''' <param name="encoding">The text encoding of the file</param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        Friend Shared Function ReadDataTableFromCsvFile(ByVal path As String, ByVal includesColumnHeaders As Boolean, ByVal columnWidths As Integer(), Optional ByVal encoding As String = "UTF-8", Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
+        Friend Shared Function ReadDataTableFromCsvFile(path As String, includesColumnHeaders As Boolean, columnWidths As Integer(), encoding As String, convertEmptyStringsToDBNull As Boolean) As DataTable
 
             Dim Result As New DataTable
 
             If File.Exists(path) Then
-                Dim fi As FileInfo
-                fi = New FileInfo(path) 'Ensure path is valid
-                fi = Nothing
+            ElseIf path.ToLower.StartsWith("http://") OrElse path.ToLower.StartsWith("https://") Then
+                Dim LocalCopyOfFileContentFromRemoteUri As String = Utils.ReadStringDataFromUri(path, encoding)
+                Result = ReadDataTableFromCsvString(LocalCopyOfFileContentFromRemoteUri, includesColumnHeaders, columnWidths, convertEmptyStringsToDBNull)
+                Result.TableName = System.IO.Path.GetFileNameWithoutExtension(path)
+                Return Result
             Else
                 Throw New System.IO.FileNotFoundException("File not found", path)
             End If
@@ -1136,14 +1138,16 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
         ''' <param name="encoding">The text encoding of the file</param>
         ''' <param name="cultureFormatProvider"></param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        Friend Shared Function ReadDataTableFromCsvFile(ByVal path As String, ByVal includesColumnHeaders As Boolean, ByVal columnWidths As Integer(), ByVal encoding As System.Text.Encoding, ByVal cultureFormatProvider As System.Globalization.CultureInfo, Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
+        Friend Shared Function ReadDataTableFromCsvFile(path As String, includesColumnHeaders As Boolean, columnWidths As Integer(), encoding As System.Text.Encoding, cultureFormatProvider As System.Globalization.CultureInfo, convertEmptyStringsToDBNull As Boolean) As DataTable
 
             Dim Result As New DataTable
 
             If File.Exists(path) Then
-                Dim fi As FileInfo
-                fi = New FileInfo(path) 'Ensure path is valid
-                fi = Nothing
+            ElseIf path.ToLower.StartsWith("http://") OrElse path.ToLower.StartsWith("https://") Then
+                Dim LocalCopyOfFileContentFromRemoteUri As String = Utils.ReadStringDataFromUri(path, encoding.WebName)
+                Result = ReadDataTableFromCsvString(LocalCopyOfFileContentFromRemoteUri, includesColumnHeaders, columnWidths, convertEmptyStringsToDBNull)
+                Result.TableName = System.IO.Path.GetFileNameWithoutExtension(path)
+                Return Result
             Else
                 Throw New System.IO.FileNotFoundException("File not found", path)
             End If
@@ -1294,16 +1298,18 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
         ''' <param name="encoding">The text encoding of the file</param>
         ''' <param name="columnSeparator">Choose the required character for splitting the columns. Set to null (Nothing in VisualBasic) to enable fixed column widths mode</param>
         ''' <param name="recognizeTextBy">A character indicating the start and end of text strings</param>
-        ''' <param name="recognizeDoubledColumnSeparatorCharAsOne">Currently without purpose</param>
+        ''' <param name="recognizeMultipleColumnSeparatorCharsAsOne">Currently without purpose</param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        Friend Shared Function ReadDataTableFromCsvFile(ByVal path As String, ByVal includesColumnHeaders As Boolean, Optional ByVal encoding As String = "UTF-8", Optional ByVal columnSeparator As Char = Nothing, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal recognizeDoubledColumnSeparatorCharAsOne As Boolean = True, Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
+        Friend Shared Function ReadDataTableFromCsvFile(path As String, includesColumnHeaders As Boolean, encoding As String, columnSeparator As Char, recognizeTextBy As Char, recognizeMultipleColumnSeparatorCharsAsOne As Boolean, convertEmptyStringsToDBNull As Boolean) As DataTable
 
             Dim Result As New DataTable
 
             If File.Exists(path) Then
-                Dim fi As FileInfo
-                fi = New FileInfo(path) 'Ensure path is valid
-                fi = Nothing
+            ElseIf path.ToLower.StartsWith("http://") OrElse path.ToLower.StartsWith("https://") Then
+                Dim LocalCopyOfFileContentFromRemoteUri As String = Utils.ReadStringDataFromUri(path, encoding)
+                Result = ReadDataTableFromCsvString(LocalCopyOfFileContentFromRemoteUri, includesColumnHeaders, columnSeparator, recognizeTextBy, recognizeMultipleColumnSeparatorCharsAsOne, convertEmptyStringsToDBNull)
+                Result.TableName = System.IO.Path.GetFileNameWithoutExtension(path)
+                Return Result
             Else
                 Throw New System.IO.FileNotFoundException("File not found", path)
             End If
@@ -1311,7 +1317,7 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
             Dim reader As StreamReader = Nothing
             Try
                 reader = New StreamReader(path, System.Text.Encoding.GetEncoding(encoding))
-                Result = ReadDataTableFromCsvReader(reader, includesColumnHeaders, System.Globalization.CultureInfo.CurrentCulture, columnSeparator, recognizeTextBy, recognizeDoubledColumnSeparatorCharAsOne, convertEmptyStringsToDBNull)
+                Result = ReadDataTableFromCsvReader(reader, includesColumnHeaders, System.Globalization.CultureInfo.CurrentCulture, columnSeparator, recognizeTextBy, recognizeMultipleColumnSeparatorCharsAsOne, convertEmptyStringsToDBNull)
             Finally
                 If Not reader Is Nothing Then
                     reader.Close()
@@ -1329,15 +1335,18 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
         ''' <param name="Encoding">The text encoding of the file</param>
         ''' <param name="cultureFormatProvider"></param>
         ''' <param name="RecognizeTextBy">A character indicating the start and end of text strings</param>
-        ''' <param name="recognizeDoubledColumnSeparatorCharAsOne">Currently without purpose</param>
+        ''' <param name="recognizeMultipleColumnSeparatorCharsAsOne">Currently without purpose</param>
         ''' <param name="convertEmptyStringsToDBNull">Convert values with empty strings automatically to DbNull</param>
-        Friend Shared Function ReadDataTableFromCsvFile(ByVal path As String, ByVal includesColumnHeaders As Boolean, ByVal encoding As System.Text.Encoding, ByVal cultureFormatProvider As System.Globalization.CultureInfo, Optional ByVal recognizeTextBy As Char = """"c, Optional ByVal recognizeDoubledColumnSeparatorCharAsOne As Boolean = True, Optional ByVal convertEmptyStringsToDBNull As Boolean = False) As DataTable
+        Friend Shared Function ReadDataTableFromCsvFile(path As String, includesColumnHeaders As Boolean, encoding As System.Text.Encoding, cultureFormatProvider As System.Globalization.CultureInfo, recognizeTextBy As Char, recognizeMultipleColumnSeparatorCharsAsOne As Boolean, convertEmptyStringsToDBNull As Boolean) As DataTable
 
             Dim Result As New DataTable
+
             If File.Exists(path) Then
-                Dim fi As FileInfo
-                fi = New FileInfo(path) 'Ensure path is valid
-                fi = Nothing
+            ElseIf path.ToLower.StartsWith("http://") OrElse path.ToLower.StartsWith("https://") Then
+                Dim LocalCopyOfFileContentFromRemoteUri As String = Utils.ReadStringDataFromUri(path, encoding.WebName)
+                Result = ReadDataTableFromCsvString(LocalCopyOfFileContentFromRemoteUri, includesColumnHeaders, cultureFormatProvider, recognizeTextBy, recognizeMultipleColumnSeparatorCharsAsOne, convertEmptyStringsToDBNull)
+                Result.TableName = System.IO.Path.GetFileNameWithoutExtension(path)
+                Return Result
             Else
                 Throw New System.IO.FileNotFoundException("File not found", path)
             End If
@@ -1345,7 +1354,7 @@ Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
             Dim reader As StreamReader = Nothing
             Try
                 reader = New StreamReader(path, encoding)
-                Result = ReadDataTableFromCsvReader(reader, includesColumnHeaders, cultureFormatProvider, Nothing, recognizeTextBy, recognizeDoubledColumnSeparatorCharAsOne, convertEmptyStringsToDBNull)
+                Result = ReadDataTableFromCsvReader(reader, includesColumnHeaders, cultureFormatProvider, Nothing, recognizeTextBy, recognizeMultipleColumnSeparatorCharsAsOne, convertEmptyStringsToDBNull)
             Finally
                 If Not reader Is Nothing Then
                     reader.Close()
