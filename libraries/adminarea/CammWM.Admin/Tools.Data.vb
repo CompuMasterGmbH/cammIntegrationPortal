@@ -19,8 +19,6 @@ Option Strict On
 'Entschlackt von Code-Bestandteilen ohne Verwendung
 
 Imports System.IO
-Imports System.Data
-Imports System.Collections
 
 Namespace CompuMaster.camm.WebManager.Administration.Tools.Data
 

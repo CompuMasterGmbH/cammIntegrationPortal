@@ -12,11 +12,12 @@
 'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden für Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
 
+Option Explicit On
 Option Strict Off
-Imports System.Web
-Imports System.Web.UI
+
 Imports System.Web.UI.WebControls
 Imports System.Data.SqlClient
+
 Namespace CompuMaster.camm.WebManager.Controls.Administration
 
 #Region " Public Class ActionControl "

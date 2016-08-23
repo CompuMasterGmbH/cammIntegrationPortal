@@ -15,13 +15,11 @@
 Option Strict On
 Option Explicit On
 
-Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Web.UI.WebControls
 Imports System.Web.UI.HtmlControls
 Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider
 Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery
-Imports CompuMaster.camm.WebManager.Administration
 
 Namespace CompuMaster.camm.WebManager.Pages.Administration
 

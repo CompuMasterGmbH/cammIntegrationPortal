@@ -312,10 +312,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Try
                             Dim dt As DataTable
                             Dim sqlParams As SqlParameter() = {New SqlParameter("@Loginname", Trim(txtLoginName.Text))}
-                            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "select count(*) from Benutzer where Loginname=@Loginname", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                             Dim sqlParamsNew As SqlParameter() = {New SqlParameter("@Loginname", Trim(txtLoginName.Text))}
-                            MyCount = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                            MyCount = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "select count(*) from Benutzer where Loginname=@Loginname", CommandType.Text, sqlParamsNew, Automations.AutoOpenAndCloseAndDisposeConnection)
 
                             If Utils.Nz(MyCount, 0) > 0 Then

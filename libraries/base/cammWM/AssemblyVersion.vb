@@ -1,9 +1,7 @@
 Option Explicit On 
 Option Strict On
 
-Imports System
 Imports System.Reflection
-Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyVersion("4.10.206.110")>
 <Assembly: AssemblyInformationalVersion("4.10.206.110-beta")>
@@ -15,4 +13,5 @@ Namespace CompuMaster.camm.WebManager.Setup
     Friend Class AssemblyVersion
         Public Const Version As String = "4.10.206.110"
     End Class
+
 End Namespace

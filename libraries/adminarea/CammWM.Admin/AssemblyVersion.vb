@@ -1,3 +1,6 @@
+Option Explicit On
+Option Strict On
+
 Imports System.Reflection
 
 <Assembly: AssemblyVersion("4.10.206.108")>
@@ -10,4 +13,5 @@ Namespace CompuMaster.camm.WebManager.Administration
     Friend Class AssemblyVersion
         Public Const Version As String = "4.10.206.108"
     End Class
+
 End Namespace

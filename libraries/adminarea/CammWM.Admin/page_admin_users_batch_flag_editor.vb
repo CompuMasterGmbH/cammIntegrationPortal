@@ -13,14 +13,10 @@
 'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden für Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
 
 Option Strict On
-Option Explicit On 
+Option Explicit On
 
-Imports System.Web
-Imports System.Data
-Imports System.Reflection
 Imports System.Data.SqlClient
 Imports System.Web.UI.WebControls
-Imports System.Web.UI.HtmlControls
 Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider
 
 Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
@@ -669,6 +665,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration.BatchUserFlags
             UI.Save()
         End Sub
 #End Region
+
     End Class
 
 End Namespace
