@@ -13,41 +13,12 @@
 'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden für Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
 
 Option Strict Off
+Option Explicit On
+
 Imports System.Web.UI.WebControls
 Imports System.IO
 
 Namespace CompuMaster.camm.WebManager.Pages.Administration
-    Public Class CheckNotRequiredAdditionalFlags
-        Inherits Page
-#Region "Variable Declaration"
-        Protected NotRequiredFlags As DataGrid
-#End Region
-
-#Region "Page Events"
-        Private Sub Page_OnLoad(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
-            'Setup result datatable
-            Dim resultDt As New DataTable("result")
-            resultDt.Columns.Add("FlagName", GetType(String))
-
-            'Get all additional flags, which are not required by any security object
-            Dim FlagList() As String = CompuMaster.camm.WebManager.DataLayer.Current.ListOfAdditionalFlagsInUseByUserProfilesNotRequiredBySecurityObjects(cammWebManager)
-
-            For Each flag As String In FlagList
-                Dim row As DataRow = resultDt.NewRow
-                row("FlagName") = flag
-                resultDt.Rows.Add(row)
-            Next
-            NotRequiredFlags.DataSource = resultDt
-            NotRequiredFlags.DataBind()
-        End Sub
-
-        Private Function GetFlags(ByVal layer As CompuMaster.camm.WebManager.IDataLayer) As String()
-            Return layer.ListOfAdditionalFlagsInUseByUserProfilesNotRequiredBySecurityObjects(cammWebManager)
-        End Function
-
-#End Region
-
-    End Class
 
     Public Class SystemCheckup
         Inherits Page
