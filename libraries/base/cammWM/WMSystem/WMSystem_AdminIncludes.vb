@@ -57,10 +57,10 @@ Namespace CompuMaster.camm.WebManager
 
             For Each MySGInfo As ServerGroupInformation In UserAccessableServerGroups
                 For Each MyLangInfo As LanguageInformation In AvailableLanguages
-                    Result &= "<a href=""#"" onClick=""OpenNavDemo(" & MyLangInfo.ID & ", '" & System.Web.HttpUtility.UrlEncode(MySGInfo.MasterServer.IPAddressOrHostHeader) & "', '" & UserID & "');"">" &
-                        MySGInfo.Title &
-                        ", " &
-                        MyLangInfo.LanguageName_English &
+                    Result &= "<a href=""#"" onClick=""OpenNavDemo(" & MyLangInfo.ID & ", '" & System.Web.HttpUtility.UrlEncode(MySGInfo.MasterServer.IPAddressOrHostHeader) & "', '" & UserID & "');"">" & _
+                        MySGInfo.Title & _
+                        ", " & _
+                        MyLangInfo.LanguageName_English & _
                         "</a><br>"
                 Next
             Next
@@ -166,9 +166,9 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="RequiredAuth"></param>
         Public Function System_GetSubAuthorizationStatus(ByVal TableName As String, ByVal TablePrimID As Integer, ByVal UserID As Long, ByVal RequiredAuth As String) As Boolean
 
-            If AdminPrivate_GetSubAuthorizationStatus_TableName = TableName And
-              AdminPrivate_GetSubAuthorizationStatus_TablePrimID = TablePrimID And
-              AdminPrivate_GetSubAuthorizationStatus_UserID = UserID And
+            If AdminPrivate_GetSubAuthorizationStatus_TableName = TableName And _
+              AdminPrivate_GetSubAuthorizationStatus_TablePrimID = TablePrimID And _
+              AdminPrivate_GetSubAuthorizationStatus_UserID = UserID And _
               AdminPrivate_GetSubAuthorizationStatus_RequiredAuth = RequiredAuth Then
                 Return AdminPrivate_GetSubAuthorizationStatus_Result
             End If
@@ -269,13 +269,13 @@ Namespace CompuMaster.camm.WebManager
             Dim MyDBConn As New SqlConnection
             Dim MyCmd As New SqlCommand
 
-            If AdminPrivate_IsSecurityMaster_TableName = TableName And
-              AdminPrivate_IsSecurityMaster_UserID = UserID And
+            If AdminPrivate_IsSecurityMaster_TableName = TableName And _
+              AdminPrivate_IsSecurityMaster_UserID = UserID And _
               AdminPrivate_IsSecurityMaster_Result = 1 Then
                 System_IsSecurityMaster = True
                 Exit Function
-            ElseIf AdminPrivate_IsSecurityMaster_TableName = TableName And
-              AdminPrivate_IsSecurityMaster_UserID = UserID And
+            ElseIf AdminPrivate_IsSecurityMaster_TableName = TableName And _
+              AdminPrivate_IsSecurityMaster_UserID = UserID And _
               AdminPrivate_IsSecurityMaster_Result = 2 Then
                 System_IsSecurityMaster = False
                 Exit Function
@@ -483,7 +483,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="userInfo">The user information object which shall get a new password</param>
         ''' <param name="newPassword">A new password</param>
         ''' <param name="notificationProvider">An instance of a notification class which handles the distribution of all required mails</param>
-        <Obsolete("Use userInfo.SetPassword instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use userInfo.SetPassword instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Sub System_SetUserPassword(ByVal userInfo As UserInformation, ByVal newPassword As String, Optional ByVal notificationProvider As WMNotifications = Nothing)
             userInfo.SetPassword(newPassword, CType(notificationProvider, Notifications.INotifications))
         End Sub
@@ -494,7 +494,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="userInfo">The user information object which shall get a new password</param>
         ''' <param name="newPassword">A new password</param>
         ''' <param name="notificationProvider">An instance of a NotificationProvider class which handles the distribution of all required mails</param>
-        <Obsolete("Use userInfo.SetPassword instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use userInfo.SetPassword instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Sub System_SetUserPassword(ByVal userInfo As UserInformation, ByVal newPassword As String, ByVal notificationProvider As Notifications.INotifications)
             userInfo.SetPassword(newPassword, notificationProvider)
         End Sub

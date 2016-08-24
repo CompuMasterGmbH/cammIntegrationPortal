@@ -89,33 +89,33 @@ Namespace CompuMaster.camm.WebManager
                         If Setup.DatabaseUtils.Version(WebManager, True).Build >= 185 Then
                             _RequiredFlagsRemarks = Utils.Nz(MyReader("RequiredUserProfileFlagsRemarks"), CType(Nothing, String))
                         End If
-                        _NavigationItems = New Security.NavigationInformation() {New Security.NavigationInformation(
-                            _ID,
-                            Me,
-                            Utils.Nz(MyReader("Level1Title"), String.Empty),
-                            Utils.Nz(MyReader("Level2Title"), String.Empty),
-                            Utils.Nz(MyReader("Level3Title"), String.Empty),
-                            Utils.Nz(MyReader("Level4Title"), String.Empty),
-                            Utils.Nz(MyReader("Level5Title"), String.Empty),
-                            Utils.Nz(MyReader("Level6Title"), String.Empty),
-                            Utils.Nz(MyReader("Level1TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level2TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level3TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level4TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level5TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level6TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("NavURL"), String.Empty),
-                            Utils.Nz(MyReader("NavFrame"), String.Empty),
-                            Utils.Nz(MyReader("NavTooltipText"), String.Empty),
-                            Utils.Nz(MyReader("AddLanguageID2URL"), False),
-                            Utils.Nz(MyReader("LanguageID"), 0),
-                            Utils.Nz(MyReader("LocationID"), 0),
-                            Utils.Nz(MyReader("Sort"), 0),
-                            Utils.Nz(MyReader("IsNew"), False),
-                            Utils.Nz(MyReader("IsUpdated"), False),
-                            Utils.Nz(MyReader("ResetIsNewUpdatedStatusOn"), DateTime.MinValue),
-                            Utils.Nz(MyReader("OnMouseOver"), String.Empty),
-                            Utils.Nz(MyReader("OnMouseOut"), String.Empty),
+                        _NavigationItems = New Security.NavigationInformation() {New Security.NavigationInformation( _
+                            _ID, _
+                            Me, _
+                            Utils.Nz(MyReader("Level1Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level2Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level3Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level4Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level5Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level6Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level1TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level2TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level3TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level4TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level5TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level6TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("NavURL"), String.Empty), _
+                            Utils.Nz(MyReader("NavFrame"), String.Empty), _
+                            Utils.Nz(MyReader("NavTooltipText"), String.Empty), _
+                            Utils.Nz(MyReader("AddLanguageID2URL"), False), _
+                            Utils.Nz(MyReader("LanguageID"), 0), _
+                            Utils.Nz(MyReader("LocationID"), 0), _
+                            Utils.Nz(MyReader("Sort"), 0), _
+                            Utils.Nz(MyReader("IsNew"), False), _
+                            Utils.Nz(MyReader("IsUpdated"), False), _
+                            Utils.Nz(MyReader("ResetIsNewUpdatedStatusOn"), DateTime.MinValue), _
+                            Utils.Nz(MyReader("OnMouseOver"), String.Empty), _
+                            Utils.Nz(MyReader("OnMouseOut"), String.Empty), _
                             Utils.Nz(MyReader("OnClick"), String.Empty))}
                     Else
                         'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class
@@ -556,23 +556,23 @@ Namespace CompuMaster.camm.WebManager
                             End If
                         Next
                         If _WebManager.CurrentServerInfo Is Nothing Then
-                            _AuthorizationsForGroupsByRule = New Security.GroupAuthorizationItemsByRuleForSecurityObjects(
-                                0,
-                                Me._ID,
-                                AllowRuleAuthsNonDev.ToArray(),
-                                AllowRuleAuthsIsDev.ToArray(),
-                                DenyRuleAuthsNonDev.ToArray(),
-                                DenyRuleAuthsIsDev.ToArray(),
+                            _AuthorizationsForGroupsByRule = New Security.GroupAuthorizationItemsByRuleForSecurityObjects( _
+                                0, _
+                                Me._ID, _
+                                AllowRuleAuthsNonDev.ToArray(), _
+                                AllowRuleAuthsIsDev.ToArray(), _
+                                DenyRuleAuthsNonDev.ToArray(), _
+                                DenyRuleAuthsIsDev.ToArray(), _
                                 Me._WebManager)
                         Else
-                            _AuthorizationsForGroupsByRule = New Security.GroupAuthorizationItemsByRuleForSecurityObjects(
-                                _WebManager.CurrentServerInfo.ParentServerGroupID,
-                                0,
-                                Me._ID,
-                                AllowRuleAuthsNonDev.ToArray(),
-                                AllowRuleAuthsIsDev.ToArray(),
-                                DenyRuleAuthsNonDev.ToArray(),
-                                DenyRuleAuthsIsDev.ToArray(),
+                            _AuthorizationsForGroupsByRule = New Security.GroupAuthorizationItemsByRuleForSecurityObjects( _
+                                _WebManager.CurrentServerInfo.ParentServerGroupID, _
+                                0, _
+                                Me._ID, _
+                                AllowRuleAuthsNonDev.ToArray(), _
+                                AllowRuleAuthsIsDev.ToArray(), _
+                                DenyRuleAuthsNonDev.ToArray(), _
+                                DenyRuleAuthsIsDev.ToArray(), _
                                 Me._WebManager)
                         End If
                     End If
@@ -619,23 +619,23 @@ Namespace CompuMaster.camm.WebManager
                             End If
                         Next
                         If _WebManager.CurrentServerInfo Is Nothing Then
-                            _AuthorizationsForUsersByRule = New Security.UserAuthorizationItemsByRuleForSecurityObjects(
-                                0L,
-                                Me._ID,
-                                AllowRuleAuthsNonDev.ToArray(),
-                                AllowRuleAuthsIsDev.ToArray(),
-                                DenyRuleAuthsNonDev.ToArray(),
-                                DenyRuleAuthsIsDev.ToArray(),
+                            _AuthorizationsForUsersByRule = New Security.UserAuthorizationItemsByRuleForSecurityObjects( _
+                                0L, _
+                                Me._ID, _
+                                AllowRuleAuthsNonDev.ToArray(), _
+                                AllowRuleAuthsIsDev.ToArray(), _
+                                DenyRuleAuthsNonDev.ToArray(), _
+                                DenyRuleAuthsIsDev.ToArray(), _
                                 Me._WebManager)
                         Else
-                            _AuthorizationsForUsersByRule = New Security.UserAuthorizationItemsByRuleForSecurityObjects(
-                                _WebManager.CurrentServerInfo.ParentServerGroupID,
-                                0L,
-                                Me._ID,
-                                AllowRuleAuthsNonDev.ToArray(),
-                                AllowRuleAuthsIsDev.ToArray(),
-                                DenyRuleAuthsNonDev.ToArray(),
-                                DenyRuleAuthsIsDev.ToArray(),
+                            _AuthorizationsForUsersByRule = New Security.UserAuthorizationItemsByRuleForSecurityObjects( _
+                                _WebManager.CurrentServerInfo.ParentServerGroupID, _
+                                0L, _
+                                Me._ID, _
+                                AllowRuleAuthsNonDev.ToArray(), _
+                                AllowRuleAuthsIsDev.ToArray(), _
+                                DenyRuleAuthsNonDev.ToArray(), _
+                                DenyRuleAuthsIsDev.ToArray(), _
                                 Me._WebManager)
                         End If
                     End If
@@ -813,20 +813,20 @@ Namespace CompuMaster.camm.WebManager
                         End If
                         SqlFlagsEnumeration.Append("N'" & requiredFlags(MyCounter).Replace("'", "''") & "'")
                     Next
-                    Dim Sql As String = "    SELECT TOP 1 ID_User, COUNT(*) AS FoundFlagsCount" & vbNewLine &
-                            "    FROM dbo.Log_Users" & vbNewLine &
-                            "    WHERE Type IN (" & SqlFlagsEnumeration.ToString & ")" & vbNewLine &
-                            "    AND ID_User IN " & vbNewLine &
-                            "    (" & vbNewLine &
-                            "        SELECT [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].ID_User" & vbNewLine &
-                            "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine &
-                            "            INNER JOIN [dbo].[Memberships_EffectiveRulesWithClonesNthGrade]" & vbNewLine &
-                            "                ON [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].ID_Group" & vbNewLine &
-                            "        WHERE [dbo].[ApplicationsRightsByGroup].isdenyrule = 0" & vbNewLine &
-                            "            AND [dbo].[ApplicationsRightsByGroup].ID_Application = @SecObjID" & vbNewLine &
-                            "            AND [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine &
-                            "    )" & vbNewLine &
-                            "    GROUP BY ID_User" & vbNewLine &
+                    Dim Sql As String = "    SELECT TOP 1 ID_User, COUNT(*) AS FoundFlagsCount" & vbNewLine & _
+                            "    FROM dbo.Log_Users" & vbNewLine & _
+                            "    WHERE Type IN (" & SqlFlagsEnumeration.ToString & ")" & vbNewLine & _
+                            "    AND ID_User IN " & vbNewLine & _
+                            "    (" & vbNewLine & _
+                            "        SELECT [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].ID_User" & vbNewLine & _
+                            "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine & _
+                            "            INNER JOIN [dbo].[Memberships_EffectiveRulesWithClonesNthGrade]" & vbNewLine & _
+                            "                ON [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = [dbo].[Memberships_EffectiveRulesWithClonesNthGrade].ID_Group" & vbNewLine & _
+                            "        WHERE [dbo].[ApplicationsRightsByGroup].isdenyrule = 0" & vbNewLine & _
+                            "            AND [dbo].[ApplicationsRightsByGroup].ID_Application = @SecObjID" & vbNewLine & _
+                            "            AND [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine & _
+                            "    )" & vbNewLine & _
+                            "    GROUP BY ID_User" & vbNewLine & _
                             "    HAVING COUNT(*) <> @RequiredFlagsCount"
                     Dim MyCmd As New SqlCommand(Sql, New SqlConnection(webManager.ConnectionString))
                     MyCmd.CommandType = CommandType.Text

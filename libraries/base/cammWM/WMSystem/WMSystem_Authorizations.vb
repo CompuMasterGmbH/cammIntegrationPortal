@@ -552,14 +552,14 @@ Namespace CompuMaster.camm.WebManager
                         Else
                             MyIsDenyRule = Nothing
                         End If
-                        _AuthorizedUsers.Add(New UserAuthorizationInformation(_WebManager,
-                            CType(MyReader("ID"), Integer),
-                            CType(MyReader("ID_Application"), Integer),
-                            CType(MyReader("ID_GroupOrPerson"), Long),
-                            MyServerGroup,
-                            Utils.Nz(MyReader("DevelopmentTeamMember"), False),
-                            CType(MyReader("ReleasedOn"), DateTime),
-                            CType(MyReader("ReleasedBy"), Long),
+                        _AuthorizedUsers.Add(New UserAuthorizationInformation(_WebManager, _
+                            CType(MyReader("ID"), Integer), _
+                            CType(MyReader("ID_Application"), Integer), _
+                            CType(MyReader("ID_GroupOrPerson"), Long), _
+                            MyServerGroup, _
+                            Utils.Nz(MyReader("DevelopmentTeamMember"), False), _
+                            CType(MyReader("ReleasedOn"), DateTime), _
+                            CType(MyReader("ReleasedBy"), Long), _
                             MyIsDenyRule))
                     End While
                     MyReader.Close()
@@ -604,14 +604,14 @@ Namespace CompuMaster.camm.WebManager
                         Else
                             MyIsDev = False
                         End If
-                        _AuthorizedGroups.Add(New GroupAuthorizationInformation(_WebManager,
-                            CType(MyReader("ID"), Integer),
-                            CType(MyReader("ID_Application"), Integer),
-                            CType(MyReader("ID_GroupOrPerson"), Integer),
-                            MyServerGroup,
-                            MyIsDev,
-                            CType(MyReader("ReleasedOn"), DateTime),
-                            CType(MyReader("ReleasedBy"), Long),
+                        _AuthorizedGroups.Add(New GroupAuthorizationInformation(_WebManager, _
+                            CType(MyReader("ID"), Integer), _
+                            CType(MyReader("ID_Application"), Integer), _
+                            CType(MyReader("ID_GroupOrPerson"), Integer), _
+                            MyServerGroup, _
+                            MyIsDev, _
+                            CType(MyReader("ReleasedOn"), DateTime), _
+                            CType(MyReader("ReleasedBy"), Long), _
                             MyIsDenyRule))
                     End While
                     MyReader.Close()
@@ -746,7 +746,7 @@ Namespace CompuMaster.camm.WebManager
                     Return Nothing
                 End Get
             End Property
-            <Obsolete("UserID should be of type Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+            <Obsolete("UserID should be of type Int64"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
             Public ReadOnly Property UserAuthorizationInformations(ByVal UserID As Integer) As UserAuthorizationInformation()
                 Get
                     Return UserAuthorizationInformations(CLng(UserID))
@@ -864,8 +864,8 @@ Namespace CompuMaster.camm.WebManager
                 Dim MyCmd As New SqlCommand
                 MyCmd.Connection = MyConn
                 If _DBVersion.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND IsNull(ID_ServerGroup, 0) = @IDServerGroup AND IsDenyRule = @IsDenyRule AND DevelopmentTeamMember = @IsDevRule" & vbNewLine &
-                                        "INSERT INTO [dbo].[ApplicationsRightsByGroup] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, ID_ServerGroup, DevelopmentTeamMember, IsDenyRule) " &
+                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND IsNull(ID_ServerGroup, 0) = @IDServerGroup AND IsDenyRule = @IsDenyRule AND DevelopmentTeamMember = @IsDevRule" & vbNewLine & _
+                                        "INSERT INTO [dbo].[ApplicationsRightsByGroup] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, ID_ServerGroup, DevelopmentTeamMember, IsDenyRule) " & _
                                         "VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate(), @IDServerGroup, @IsDevRule, @IsDenyRule)"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = GroupID
@@ -881,7 +881,7 @@ Namespace CompuMaster.camm.WebManager
                     ElseIf IsDevRule = True Then
                         Throw New Exception("Parameter 'IsDevRule' not supported by the currently used database version")
                     End If
-                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson" & vbNewLine &
+                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByGroup] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson" & vbNewLine & _
                                         "INSERT INTO [dbo].[ApplicationsRightsByGroup] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn) VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate())"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = GroupID
@@ -950,7 +950,7 @@ Namespace CompuMaster.camm.WebManager
                 Dim MyCmd As New SqlCommand
                 MyCmd.Connection = MyConn
                 If _DBVersion.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND IsNull(ID_ServerGroup, 0) = @IDServerGroup AND DevelopmentTeamMember = @DevelopmentTeamMember AND IsDenyRule = @IsDenyRule" & vbNewLine &
+                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND IsNull(ID_ServerGroup, 0) = @IDServerGroup AND DevelopmentTeamMember = @DevelopmentTeamMember AND IsDenyRule = @IsDenyRule" & vbNewLine & _
                                         "INSERT INTO [dbo].[ApplicationsRightsByUser] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, ID_ServerGroup, DevelopmentTeamMember, IsDenyRule) VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate(), @IDServerGroup, @DevelopmentTeamMember, @IsDenyRule)"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = _WebManager.CurrentUserID(SpecialUsers.User_Code)
@@ -964,7 +964,7 @@ Namespace CompuMaster.camm.WebManager
                     ElseIf IsDenyRule = True Then
                         Throw New Exception("Parameter 'IsDenyRule' not supported by the currently used database version")
                     End If
-                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND DevelopmentTeamMember = @DevelopmentTeamMember" & vbNewLine &
+                    MyCmd.CommandText = "DELETE FROM [dbo].[ApplicationsRightsByUser] WHERE ID_Application = @IDSecurityObject AND ID_GroupOrPerson = @IDGroupOrPerson AND DevelopmentTeamMember = @DevelopmentTeamMember" & vbNewLine & _
                                         "INSERT INTO [dbo].[ApplicationsRightsByUser] (ID_Application, ID_GroupOrPerson, ReleasedBy, ReleasedOn, DevelopmentTeamMember) VALUES (@IDSecurityObject, @IDGroupOrPerson, @IDCurUser, GetDate(), @DevelopmentTeamMember)"
                     MyCmd.Parameters.Add("@IDSecurityObject", SqlDbType.Int).Value = _SecurityObjectID
                     MyCmd.Parameters.Add("@IDGroupOrPerson", SqlDbType.Int).Value = UserInfo.IDLong

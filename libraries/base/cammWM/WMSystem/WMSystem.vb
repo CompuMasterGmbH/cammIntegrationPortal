@@ -7194,24 +7194,24 @@ Namespace CompuMaster.camm.WebManager
                 Dim MyCounter As Integer = 0
                 If MyDataSet.Tables("Languages").Columns.Contains("DirectionOfLetters") Then
                     For Each MyDataRow As DataRow In MyDataSet.Tables("Languages").Rows
-                        _Languages(MyCounter) = New LanguageInformation(CType(MyDataRow("ID"), Integer),
-                        Utils.Nz(MyDataRow("Description"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("Description_OwnLang"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("IsActive"), False),
-                        Utils.Nz(MyDataRow("BrowserLanguageID"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("Abbreviation"), CType(Nothing, String)),
+                        _Languages(MyCounter) = New LanguageInformation(CType(MyDataRow("ID"), Integer), _
+                        Utils.Nz(MyDataRow("Description"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("Description_OwnLang"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("IsActive"), False), _
+                        Utils.Nz(MyDataRow("BrowserLanguageID"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("Abbreviation"), CType(Nothing, String)), _
                         Utils.Nz(MyDataRow("DirectionOfLetters"), CType(Nothing, String)), Me)
                         MyCounter += 1
                     Next
                 Else
                     'The additional column exist beginning with db build 171
                     For Each MyDataRow As DataRow In MyDataSet.Tables("Languages").Rows
-                        _Languages(MyCounter) = New LanguageInformation(CType(MyDataRow("ID"), Integer),
-                        Utils.Nz(MyDataRow("Description"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("Description_OwnLang"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("IsActive"), False),
-                        Utils.Nz(MyDataRow("BrowserLanguageID"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("Abbreviation"), CType(Nothing, String)),
+                        _Languages(MyCounter) = New LanguageInformation(CType(MyDataRow("ID"), Integer), _
+                        Utils.Nz(MyDataRow("Description"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("Description_OwnLang"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("IsActive"), False), _
+                        Utils.Nz(MyDataRow("BrowserLanguageID"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("Abbreviation"), CType(Nothing, String)), _
                         "ltr", Me)
                         MyCounter += 1
                     Next
@@ -7277,25 +7277,25 @@ Namespace CompuMaster.camm.WebManager
                 ReDim Preserve _ServerGroups(MyDataSet.Tables("ServerGroups").Rows.Count - 1)
                 Dim MyCounter As Integer = 0
                 For Each MyDataRow As DataRow In MyDataSet.Tables("ServerGroups").Rows
-                    _ServerGroups(MyCounter) = New ServerGroupInformation(CType(MyDataRow("ID"), Integer),
-                        Utils.Nz(MyDataRow("ServerGroup"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaNavTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AccessLevel_Default"), 0),
-                        Utils.Nz(MyDataRow("MasterServer"), 0),
-                        Utils.Nz(MyDataRow("UserAdminServer"), 0),
-                        Utils.Nz(MyDataRow("ID_Group_Anonymous"), 0),
-                        Utils.Nz(MyDataRow("ID_Group_Public"), 0), Utils.Nz(MyDataRow("AreaSecurityContactEMail"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaSecurityContactTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaDevelopmentContactTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaDevelopmentContactEMail"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaContentManagementContactTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaContentManagementContactEMail"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaUnspecifiedContactTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaUnspecifiedContactEMail"), CType(Nothing, String)),
+                    _ServerGroups(MyCounter) = New ServerGroupInformation(CType(MyDataRow("ID"), Integer), _
+                        Utils.Nz(MyDataRow("ServerGroup"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaNavTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AccessLevel_Default"), 0), _
+                        Utils.Nz(MyDataRow("MasterServer"), 0), _
+                        Utils.Nz(MyDataRow("UserAdminServer"), 0), _
+                        Utils.Nz(MyDataRow("ID_Group_Anonymous"), 0), _
+                        Utils.Nz(MyDataRow("ID_Group_Public"), 0), Utils.Nz(MyDataRow("AreaSecurityContactEMail"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaSecurityContactTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaDevelopmentContactTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaDevelopmentContactEMail"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaContentManagementContactTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaContentManagementContactEMail"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaUnspecifiedContactTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaUnspecifiedContactEMail"), CType(Nothing, String)), _
                                                                           _WebManager)
                     MyCounter += 1
                 Next
@@ -7382,14 +7382,14 @@ Namespace CompuMaster.camm.WebManager
                 ReDim Preserve _Servers(ServerData.Rows.Count - 1)
                 Dim MyCounter As Integer = 0
                 For Each MyDataRow As DataRow In ServerData.Rows
-                    _Servers(MyCounter) = New ServerInformation(CType(MyDataRow("ID"), Integer),
-                        CType(MyDataRow("IP"), String),
-                        Utils.Nz(MyDataRow("ServerDescription"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("ServerProtocol"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("ServerName"), CType(MyDataRow("IP"), String)),
-                        Utils.Nz(MyDataRow("ServerPort"), CType(Nothing, String)),
-                        CType(MyDataRow("Enabled"), Boolean),
-                        Utils.Nz(MyDataRow("ServerGroup"), 0),
+                    _Servers(MyCounter) = New ServerInformation(CType(MyDataRow("ID"), Integer), _
+                        CType(MyDataRow("IP"), String), _
+                        Utils.Nz(MyDataRow("ServerDescription"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("ServerProtocol"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("ServerName"), CType(MyDataRow("IP"), String)), _
+                        Utils.Nz(MyDataRow("ServerPort"), CType(Nothing, String)), _
+                        CType(MyDataRow("Enabled"), Boolean), _
+                        Utils.Nz(MyDataRow("ServerGroup"), 0), _
                         _WebManager)
                     MyCounter += 1
                 Next
@@ -7494,10 +7494,10 @@ Namespace CompuMaster.camm.WebManager
             Dim MyCmd As New System.Data.SqlClient.SqlCommand
             MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupID
             MyCmd.CommandType = CommandType.Text
-            MyCmd.CommandText = "BEGIN TRANSACTION" & vbNewLine &
-                "DELETE FROM dbo.Gruppen WHERE ID=@GroupID" & vbNewLine &
-                "DELETE FROM dbo.Memberships WHERE ID_Group=@GroupID" & vbNewLine &
-                "DELETE FROM dbo.ApplicationsRightsByGroup WHERE ID_GroupOrPerson=@GroupID" & vbNewLine &
+            MyCmd.CommandText = "BEGIN TRANSACTION" & vbNewLine & _
+                "DELETE FROM dbo.Gruppen WHERE ID=@GroupID" & vbNewLine & _
+                "DELETE FROM dbo.Memberships WHERE ID_Group=@GroupID" & vbNewLine & _
+                "DELETE FROM dbo.ApplicationsRightsByGroup WHERE ID_GroupOrPerson=@GroupID" & vbNewLine & _
                 "COMMIT"
             MyCmd.Connection = New System.Data.SqlClient.SqlConnection(Me.ConnectionString)
             CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
@@ -7515,7 +7515,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
         ''' </remarks>
-        <Obsolete("Use userInfo.Save instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use userInfo.Save instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_SetUserInfo(ByRef UserInfo As UserInformation, Optional ByRef NewPassword As String = Nothing, Optional ByVal Notifications As WMNotifications = Nothing) As Integer
             Return System_SetUserInfo(UserInfo, NewPassword, Notifications, False)
         End Function
@@ -7531,7 +7531,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
         ''' </remarks>
-        <Obsolete("Use userInfo.Save instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use userInfo.Save instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_SetUserInfo(ByRef userInfo As UserInformation, ByRef newPassword As String, ByVal notifications As WMNotifications, ByVal suppressNotifications As Boolean) As Integer
             Return System_SetUserInfo(userInfo, newPassword, CType(notifications, Notifications.INotifications), suppressNotifications)
         End Function
@@ -7548,7 +7548,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
         ''' </remarks>
-        <Obsolete("Use userInfo.Save instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use userInfo.Save instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_SetUserInfo(ByRef userInfo As UserInformation, ByRef newPassword As String, ByVal notifications As Notifications.INotifications, ByVal suppressAllNotifications As Boolean) As Integer
             Return CType(System_SetUserInfo(userInfo, newPassword, notifications, suppressAllNotifications, suppressAllNotifications), Integer)
         End Function
@@ -7565,7 +7565,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks>
         ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
         ''' </remarks>
-        <Obsolete("Use userInfo.Save instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Use userInfo.Save instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_SetUserInfo(ByRef userInfo As UserInformation, ByRef newPassword As String, ByVal notifications As Notifications.INotifications, ByVal suppressUserNotifications As Boolean, ByVal suppressSecurityAdminNotifications As Boolean) As Long
             Return userInfo.Save_Internal(newPassword, notifications, suppressUserNotifications, suppressSecurityAdminNotifications)
         End Function
@@ -7603,7 +7603,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserIDs">An arraylist of user IDs</param>
         ''' <returns>An array of user information</returns>
-        <Obsolete("use instead: System_GetUserInfos(ByVal UserIDs As Long()) As UserInformation())"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("use instead: System_GetUserInfos(ByVal UserIDs As Long()) As UserInformation())"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserInfos(ByVal UserIDs As ArrayList) As UserInformation()
             If UserIDs Is Nothing OrElse UserIDs.Count = 0 Then
                 'Where nothing is, there can only be returned nothing ;-)
@@ -7623,7 +7623,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="UserIDs">An array of user IDs</param>
         ''' <returns>An array of user information</returns>
-        <Obsolete("use instead: System_GetUserInfos(ByVal UserIDs As Long()) As UserInformation())"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("use instead: System_GetUserInfos(ByVal UserIDs As Long()) As UserInformation())"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserInfos(ByVal UserIDs As Integer()) As UserInformation()
             Dim UserLongIDs As Long() = Nothing
             If Not UserIDs Is Nothing Then
@@ -7706,29 +7706,29 @@ Namespace CompuMaster.camm.WebManager
                         Case Else
                             Gender = Sex.Undefined
                     End Select
-                    Result(MyCounter) = New CompuMaster.camm.WebManager.WMSystem.UserInformation(CType(MyDataRow("ID"), Long),
-                                    CType(MyDataRow("LoginName"), String),
-                                    CType(MyDataRow("E-Mail"), String),
-                                    False,
-                                    Utils.Nz(MyDataRow("Company"), CType(Nothing, String)),
-                                    Gender,
-                                    Utils.Nz(MyDataRow("Namenszusatz"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("Vorname"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("Nachname"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("Titel"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("Strasse"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("PLZ"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("Ort"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("State"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("Land"), CType(Nothing, String)),
-                                    Utils.Nz(MyDataRow("1stPreferredLanguage"), 0),
-                                    Utils.Nz(MyDataRow("2ndPreferredLanguage"), 0),
-                                    Utils.Nz(MyDataRow("3rdPreferredLanguage"), 0),
-                                    Utils.Nz(MyDataRow("LoginDisabled"), False),
-                                    Not IsDBNull(MyDataRow("LoginLockedTill")),
-                                    False,
-                                    CType(MyDataRow("AccountAccessability"), Integer),
-                                    _WebManager,
+                    Result(MyCounter) = New CompuMaster.camm.WebManager.WMSystem.UserInformation(CType(MyDataRow("ID"), Long), _
+                                    CType(MyDataRow("LoginName"), String), _
+                                    CType(MyDataRow("E-Mail"), String), _
+                                    False, _
+                                    Utils.Nz(MyDataRow("Company"), CType(Nothing, String)), _
+                                    Gender, _
+                                    Utils.Nz(MyDataRow("Namenszusatz"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("Vorname"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("Nachname"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("Titel"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("Strasse"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("PLZ"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("Ort"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("State"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("Land"), CType(Nothing, String)), _
+                                    Utils.Nz(MyDataRow("1stPreferredLanguage"), 0), _
+                                    Utils.Nz(MyDataRow("2ndPreferredLanguage"), 0), _
+                                    Utils.Nz(MyDataRow("3rdPreferredLanguage"), 0), _
+                                    Utils.Nz(MyDataRow("LoginDisabled"), False), _
+                                    Not IsDBNull(MyDataRow("LoginLockedTill")), _
+                                    False, _
+                                    CType(MyDataRow("AccountAccessability"), Integer), _
+                                    _WebManager, _
                                     Nothing)
                     If Result(MyCounter).Gender = Sex.Undefined AndAlso (Result(MyCounter).FirstName = Nothing OrElse Result(MyCounter).LastName = Nothing) Then
                         'Regard it as a group of persons without a specific name
@@ -7927,69 +7927,69 @@ Namespace CompuMaster.camm.WebManager
                 End If
                 While MyReader.Read
                     Dim secObj As SecurityObjectInformation
-                    Dim navItem As New Security.NavigationInformation(
-                            0,
-                            Nothing,
-                            Utils.Nz(MyReader("Level1Title"), String.Empty),
-                            Utils.Nz(MyReader("Level2Title"), String.Empty),
-                            Utils.Nz(MyReader("Level3Title"), String.Empty),
-                            Utils.Nz(MyReader("Level4Title"), String.Empty),
-                            Utils.Nz(MyReader("Level5Title"), String.Empty),
-                            Utils.Nz(MyReader("Level6Title"), String.Empty),
-                            Utils.Nz(MyReader("Level1TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level2TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level3TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level4TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level5TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("Level6TitleIsHtmlCoded"), False),
-                            Utils.Nz(MyReader("NavURL"), String.Empty),
-                            Utils.Nz(MyReader("NavFrame"), String.Empty),
-                            Utils.Nz(MyReader("NavTooltipText"), String.Empty),
-                            Utils.Nz(MyReader("AddLanguageID2URL"), False),
-                            Utils.Nz(MyReader("LanguageID"), 0),
-                            Utils.Nz(MyReader("LocationID"), 0),
-                            Utils.Nz(MyReader("Sort"), 0),
-                            Utils.Nz(MyReader("IsNew"), False),
-                            Utils.Nz(MyReader("IsUpdated"), False),
-                            Utils.Nz(MyReader("ResetIsNewUpdatedStatusOn"), DateTime.MinValue),
-                            Utils.Nz(MyReader("OnMouseOver"), String.Empty),
-                            Utils.Nz(MyReader("OnMouseOut"), String.Empty),
+                    Dim navItem As New Security.NavigationInformation( _
+                            0, _
+                            Nothing, _
+                            Utils.Nz(MyReader("Level1Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level2Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level3Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level4Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level5Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level6Title"), String.Empty), _
+                            Utils.Nz(MyReader("Level1TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level2TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level3TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level4TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level5TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("Level6TitleIsHtmlCoded"), False), _
+                            Utils.Nz(MyReader("NavURL"), String.Empty), _
+                            Utils.Nz(MyReader("NavFrame"), String.Empty), _
+                            Utils.Nz(MyReader("NavTooltipText"), String.Empty), _
+                            Utils.Nz(MyReader("AddLanguageID2URL"), False), _
+                            Utils.Nz(MyReader("LanguageID"), 0), _
+                            Utils.Nz(MyReader("LocationID"), 0), _
+                            Utils.Nz(MyReader("Sort"), 0), _
+                            Utils.Nz(MyReader("IsNew"), False), _
+                            Utils.Nz(MyReader("IsUpdated"), False), _
+                            Utils.Nz(MyReader("ResetIsNewUpdatedStatusOn"), DateTime.MinValue), _
+                            Utils.Nz(MyReader("OnMouseOver"), String.Empty), _
+                            Utils.Nz(MyReader("OnMouseOut"), String.Empty), _
                             Utils.Nz(MyReader("OnClick"), String.Empty))
                     If RequiredFlagsSupported Then
-                        secObj = New SecurityObjectInformation(
-                                    Utils.Nz(MyReader("ID"), 0),
-                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)),
-                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)),
-                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)),
-                                    Utils.Nz(MyReader("ModifiedBy"), 0&),
-                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)),
-                                    Utils.Nz(MyReader("ReleasedBy"), 0&),
-                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)),
-                                    Utils.Nz(MyReader("AppDisabled"), False),
-                                    Utils.Nz(MyReader("AppDeleted"), False),
-                                    Utils.Nz(MyReader("AuthsAsAppID"), 0),
-                                    Utils.Nz(MyReader("SystemAppType"), 0),
-                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""),
-                                    Utils.Nz(MyReader("RequiredUserProfileFlagsRemarks"), ""),
-                                    navItem,
+                        secObj = New SecurityObjectInformation( _
+                                    Utils.Nz(MyReader("ID"), 0), _
+                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("ModifiedBy"), 0&), _
+                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)), _
+                                    Utils.Nz(MyReader("ReleasedBy"), 0&), _
+                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)), _
+                                    Utils.Nz(MyReader("AppDisabled"), False), _
+                                    Utils.Nz(MyReader("AppDeleted"), False), _
+                                    Utils.Nz(MyReader("AuthsAsAppID"), 0), _
+                                    Utils.Nz(MyReader("SystemAppType"), 0), _
+                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""), _
+                                    Utils.Nz(MyReader("RequiredUserProfileFlagsRemarks"), ""), _
+                                    navItem, _
                                     Me)
                     Else
-                        secObj = New SecurityObjectInformation(
-                                    Utils.Nz(MyReader("ID"), 0),
-                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)),
-                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)),
-                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)),
-                                    Utils.Nz(MyReader("ModifiedBy"), 0&),
-                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)),
-                                    Utils.Nz(MyReader("ReleasedBy"), 0&),
-                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)),
-                                    Utils.Nz(MyReader("AppDisabled"), False),
-                                    Utils.Nz(MyReader("AppDeleted"), False),
-                                    Utils.Nz(MyReader("AuthsAsAppID"), 0),
-                                    Utils.Nz(MyReader("SystemAppType"), 0),
-                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""),
-                                    "",
-                                    navItem,
+                        secObj = New SecurityObjectInformation( _
+                                    Utils.Nz(MyReader("ID"), 0), _
+                                    Utils.Nz(MyReader("Title"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("TitleAdminArea"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("Remarks"), CType(Nothing, String)), _
+                                    Utils.Nz(MyReader("ModifiedBy"), 0&), _
+                                    Utils.Nz(MyReader("ModifiedOn"), CType(Nothing, DateTime)), _
+                                    Utils.Nz(MyReader("ReleasedBy"), 0&), _
+                                    Utils.Nz(MyReader("ReleasedOn"), CType(Nothing, DateTime)), _
+                                    Utils.Nz(MyReader("AppDisabled"), False), _
+                                    Utils.Nz(MyReader("AppDeleted"), False), _
+                                    Utils.Nz(MyReader("AuthsAsAppID"), 0), _
+                                    Utils.Nz(MyReader("SystemAppType"), 0), _
+                                    Utils.Nz(MyReader("RequiredUserProfileFlags"), ""), _
+                                    "", _
+                                    navItem, _
                                     Me)
                     End If
                     MyTempCollection.Add(secObj)

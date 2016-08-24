@@ -36,8 +36,8 @@ Namespace CompuMaster.camm.WebManager
                     MyConn = CType(dbConnection, SqlClient.SqlConnection)
                 End If
 
-                Dim sql As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDateTime=GetDate(), ValueNText = @VersionString WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager' " & vbNewLine &
-                    "IF @@ROWCOUNT = 0 " & vbNewLine &
+                Dim sql As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDateTime=GetDate(), ValueNText = @VersionString WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager' " & vbNewLine & _
+                    "IF @@ROWCOUNT = 0 " & vbNewLine & _
                     "INSERT INTO [dbo].[System_GlobalProperties] (PropertyName, ValueNVarChar, ValueNText, ValueDateTime) VALUES ('LastWebServiceExecutionDate', 'camm WebManager', @VersionString, GetDate()) "
                 Dim cmd As New System.Data.SqlClient.SqlCommand(sql, MyConn)
                 cmd.CommandType = CommandType.Text
@@ -651,94 +651,94 @@ Namespace CompuMaster.camm.WebManager
                 Throw New NotImplementedException("Support for database version " & _DBVersion.ToString & " is currently not supported. Please update the camm WebManager software, first!")
             End If
 
-            Const sqlTillDbBuild_4_11 As String =
-                "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                "-- Copy missing user authorizations --" & vbNewLine &
-                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine &
-                "           ([ID_Application]" & vbNewLine &
-                "           ,[ID_GroupOrPerson]" & vbNewLine &
-                "           ,[ReleasedOn]" & vbNewLine &
-                "           ,[ReleasedBy]" & vbNewLine &
-                "           ,[DevelopmentTeamMember])" & vbNewLine &
-                "SELECT @DestinationSecObjID" & vbNewLine &
-                "      ,[ID_GroupOrPerson]" & vbNewLine &
-                "      ,[ReleasedOn]" & vbNewLine &
-                "      ,[ReleasedBy]" & vbNewLine &
-                "      ,[DevelopmentTeamMember]" & vbNewLine &
-                "  FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine &
-                "where [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine &
-                "	(" & vbNewLine &
-                "	SELECT [ID_GroupOrPerson]" & vbNewLine &
-                "	FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine &
-                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine &
-                "	)" & vbNewLine &
-                "" & vbNewLine &
-                "-- Copy missing group authorizations --" & vbNewLine &
-                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
-                "           ([ID_Application]" & vbNewLine &
-                "           ,[ID_GroupOrPerson]" & vbNewLine &
-                "           ,[ReleasedOn]" & vbNewLine &
-                "           ,[ReleasedBy])" & vbNewLine &
-                "SELECT @DestinationSecObjID" & vbNewLine &
-                "      ,[ID_GroupOrPerson]" & vbNewLine &
-                "      ,[ReleasedOn]" & vbNewLine &
-                "      ,[ReleasedBy]" & vbNewLine &
-                "  FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
-                "where [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine &
-                "	(" & vbNewLine &
-                "	SELECT [ID_GroupOrPerson]" & vbNewLine &
-                "	FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
-                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine &
+            Const sqlTillDbBuild_4_11 As String = _
+                "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                "-- Copy missing user authorizations --" & vbNewLine & _
+                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
+                "           ([ID_Application]" & vbNewLine & _
+                "           ,[ID_GroupOrPerson]" & vbNewLine & _
+                "           ,[ReleasedOn]" & vbNewLine & _
+                "           ,[ReleasedBy]" & vbNewLine & _
+                "           ,[DevelopmentTeamMember])" & vbNewLine & _
+                "SELECT @DestinationSecObjID" & vbNewLine & _
+                "      ,[ID_GroupOrPerson]" & vbNewLine & _
+                "      ,[ReleasedOn]" & vbNewLine & _
+                "      ,[ReleasedBy]" & vbNewLine & _
+                "      ,[DevelopmentTeamMember]" & vbNewLine & _
+                "  FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
+                "where [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine & _
+                "	(" & vbNewLine & _
+                "	SELECT [ID_GroupOrPerson]" & vbNewLine & _
+                "	FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
+                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine & _
+                "	)" & vbNewLine & _
+                "" & vbNewLine & _
+                "-- Copy missing group authorizations --" & vbNewLine & _
+                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
+                "           ([ID_Application]" & vbNewLine & _
+                "           ,[ID_GroupOrPerson]" & vbNewLine & _
+                "           ,[ReleasedOn]" & vbNewLine & _
+                "           ,[ReleasedBy])" & vbNewLine & _
+                "SELECT @DestinationSecObjID" & vbNewLine & _
+                "      ,[ID_GroupOrPerson]" & vbNewLine & _
+                "      ,[ReleasedOn]" & vbNewLine & _
+                "      ,[ReleasedBy]" & vbNewLine & _
+                "  FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
+                "where [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine & _
+                "	(" & vbNewLine & _
+                "	SELECT [ID_GroupOrPerson]" & vbNewLine & _
+                "	FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
+                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine & _
                 "	)"
 
-            Const sqlSinceDbBuild_4_12 As String =
-                "Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                "-- Copy missing user authorizations --" & vbNewLine &
-                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine &
-                "           ([ID_Application]" & vbNewLine &
-                "           ,[ID_GroupOrPerson]" & vbNewLine &
-                "           ,[ID_ServerGroup]" & vbNewLine &
-                "           ,[ReleasedOn]" & vbNewLine &
-                "           ,[ReleasedBy]" & vbNewLine &
-                "           ,[DevelopmentTeamMember]" & vbNewLine &
-                "           ,[IsDenyRule])" & vbNewLine &
-                "SELECT @DestinationSecObjID" & vbNewLine &
-                "      ,[ID_GroupOrPerson]" & vbNewLine &
-                "      ,[ID_ServerGroup]" & vbNewLine &
-                "      ,[ReleasedOn]" & vbNewLine &
-                "      ,[ReleasedBy]" & vbNewLine &
-                "      ,[DevelopmentTeamMember]" & vbNewLine &
-                "      ,[IsDenyRule]" & vbNewLine &
-                "FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine &
-                "WHERE [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine &
-                "	(" & vbNewLine &
-                "	SELECT [ID_GroupOrPerson]" & vbNewLine &
-                "	FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine &
-                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine &
-                "	)" & vbNewLine &
-                "" & vbNewLine &
-                "-- Copy missing group authorizations --" & vbNewLine &
-                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
-                "           ([ID_Application]" & vbNewLine &
-                "           ,[ID_GroupOrPerson]" & vbNewLine &
-                "           ,[ID_ServerGroup]" & vbNewLine &
-                "           ,[ReleasedOn]" & vbNewLine &
-                "           ,[ReleasedBy]" & vbNewLine &
-                "           ,[DevelopmentTeamMember]" & vbNewLine &
-                "           ,[IsDenyRule])" & vbNewLine &
-                "SELECT @DestinationSecObjID" & vbNewLine &
-                "      ,[ID_GroupOrPerson]" & vbNewLine &
-                "      ,[ID_ServerGroup]" & vbNewLine &
-                "      ,[ReleasedOn]" & vbNewLine &
-                "      ,[ReleasedBy]" & vbNewLine &
-                "      ,[DevelopmentTeamMember]" & vbNewLine &
-                "      ,[IsDenyRule]" & vbNewLine &
-                "FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
-                "WHERE [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine &
-                "	(" & vbNewLine &
-                "	SELECT [ID_GroupOrPerson]" & vbNewLine &
-                "	FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
-                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine &
+            Const sqlSinceDbBuild_4_12 As String = _
+                "Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                "-- Copy missing user authorizations --" & vbNewLine & _
+                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
+                "           ([ID_Application]" & vbNewLine & _
+                "           ,[ID_GroupOrPerson]" & vbNewLine & _
+                "           ,[ID_ServerGroup]" & vbNewLine & _
+                "           ,[ReleasedOn]" & vbNewLine & _
+                "           ,[ReleasedBy]" & vbNewLine & _
+                "           ,[DevelopmentTeamMember]" & vbNewLine & _
+                "           ,[IsDenyRule])" & vbNewLine & _
+                "SELECT @DestinationSecObjID" & vbNewLine & _
+                "      ,[ID_GroupOrPerson]" & vbNewLine & _
+                "      ,[ID_ServerGroup]" & vbNewLine & _
+                "      ,[ReleasedOn]" & vbNewLine & _
+                "      ,[ReleasedBy]" & vbNewLine & _
+                "      ,[DevelopmentTeamMember]" & vbNewLine & _
+                "      ,[IsDenyRule]" & vbNewLine & _
+                "FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
+                "WHERE [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine & _
+                "	(" & vbNewLine & _
+                "	SELECT [ID_GroupOrPerson]" & vbNewLine & _
+                "	FROM [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
+                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine & _
+                "	)" & vbNewLine & _
+                "" & vbNewLine & _
+                "-- Copy missing group authorizations --" & vbNewLine & _
+                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
+                "           ([ID_Application]" & vbNewLine & _
+                "           ,[ID_GroupOrPerson]" & vbNewLine & _
+                "           ,[ID_ServerGroup]" & vbNewLine & _
+                "           ,[ReleasedOn]" & vbNewLine & _
+                "           ,[ReleasedBy]" & vbNewLine & _
+                "           ,[DevelopmentTeamMember]" & vbNewLine & _
+                "           ,[IsDenyRule])" & vbNewLine & _
+                "SELECT @DestinationSecObjID" & vbNewLine & _
+                "      ,[ID_GroupOrPerson]" & vbNewLine & _
+                "      ,[ID_ServerGroup]" & vbNewLine & _
+                "      ,[ReleasedOn]" & vbNewLine & _
+                "      ,[ReleasedBy]" & vbNewLine & _
+                "      ,[DevelopmentTeamMember]" & vbNewLine & _
+                "      ,[IsDenyRule]" & vbNewLine & _
+                "FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
+                "WHERE [ID_Application] = @SourceSecObjID AND ID_GroupOrPerson NOT IN " & vbNewLine & _
+                "	(" & vbNewLine & _
+                "	SELECT [ID_GroupOrPerson]" & vbNewLine & _
+                "	FROM [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
+                "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine & _
                 "	)"
 
             Dim sql As String

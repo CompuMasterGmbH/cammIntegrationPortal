@@ -27,12 +27,12 @@ Namespace CompuMaster.camm.WebManager
 
         ''' <param name="SessionTimeout">A value in minutes how long a user session is regarded as active when no logout and no further action have been performed</param>
         Public Function NumberOfUsersCurrentlyOnline(Optional ByVal SessionTimeout As Integer = -30) As Integer
-            Dim Sql As String = "select count (id_user) as NumberOfUsersCurrentlyOnline" & vbNewLine &
-                "from system_usersessions" & vbNewLine &
-                "where system_usersessions.id_session in " & vbNewLine &
-                "	(" & vbNewLine &
-                "    	select sessionid" & vbNewLine &
-                "    	from dbo.System_WebAreasAuthorizedForSession" & vbNewLine &
+            Dim Sql As String = "select count (id_user) as NumberOfUsersCurrentlyOnline" & vbNewLine & _
+                "from system_usersessions" & vbNewLine & _
+                "where system_usersessions.id_session in " & vbNewLine & _
+                "	(" & vbNewLine & _
+                "    	select sessionid" & vbNewLine & _
+                "    	from dbo.System_WebAreasAuthorizedForSession" & vbNewLine & _
                 "    	where lastsessionstaterefresh > dateadd(minute, -30, getdate())"
             Dim MyCmd As New SqlCommand(Sql, New SqlConnection(_WebManager.ConnectionString))
             MyCmd.CommandType = CommandType.Text

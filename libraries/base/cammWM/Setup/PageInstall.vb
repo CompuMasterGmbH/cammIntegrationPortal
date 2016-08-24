@@ -19,7 +19,7 @@ Imports System.Data.SqlClient
 
 Namespace CompuMaster.camm.WebManager.Setup.Pages
 
-    <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("use Webservice to install the camm Web-Manager database", True)>
+    <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never), Obsolete("use Webservice to install the camm Web-Manager database", True)> _
     Public Class Install
         Inherits CompuMaster.camm.WebManager.Pages.Page
 
@@ -60,13 +60,13 @@ Namespace CompuMaster.camm.WebManager.Setup.Pages
             ' This simple function tells us, if any data has been entered into the form. Sometimes this
             ' information could be really useful, if you don't want to get stuck with validation controls
             Return _
-                 TextBoxDBServer.Text <> "" Or TextBoxDBCatalog.Text <> "" Or
-                 TextBoxAuthUser.Text <> "" Or TextBoxAuthPassword.Text <> "" Or
-                 TextBoxServerIP.Text <> "" Or TextBoxProtocol.Text <> "" Or
-                 TextBoxServerName.Text <> "" Or TextBoxPort.Text <> "" Or
-                 TextBoxServerIP.Text <> "" Or TextBoxSGroupTitle.Text <> "" Or
-                 TextBoxSGroupNavTitle.Text <> "" Or TextBoxCompanyURL.Text <> "" Or
-                 TextBoxSGroupContact.Text <> "" Or TextBoxCompanyName.Text <> "" Or
+                 TextBoxDBServer.Text <> "" Or TextBoxDBCatalog.Text <> "" Or _
+                 TextBoxAuthUser.Text <> "" Or TextBoxAuthPassword.Text <> "" Or _
+                 TextBoxServerIP.Text <> "" Or TextBoxProtocol.Text <> "" Or _
+                 TextBoxServerName.Text <> "" Or TextBoxPort.Text <> "" Or _
+                 TextBoxServerIP.Text <> "" Or TextBoxSGroupTitle.Text <> "" Or _
+                 TextBoxSGroupNavTitle.Text <> "" Or TextBoxCompanyURL.Text <> "" Or _
+                 TextBoxSGroupContact.Text <> "" Or TextBoxCompanyName.Text <> "" Or _
                  TextBoxCompanyFormerName.Text <> ""
         End Function
 
@@ -214,10 +214,10 @@ Namespace CompuMaster.camm.WebManager.Setup.Pages
         End Function
 
         Private Function ConnectionStringServerAdministration() As String
-            Return (
-                 "SERVER=" & Me.TextBoxDBServer.Text & ";" &
-                 "PWD=" & Me.TextBoxAuthPassword.Text & ";" &
-                 "UID=" & Me.TextBoxAuthUser.Text & ";" &
+            Return ( _
+                 "SERVER=" & Me.TextBoxDBServer.Text & ";" & _
+                 "PWD=" & Me.TextBoxAuthPassword.Text & ";" & _
+                 "UID=" & Me.TextBoxAuthUser.Text & ";" & _
                  "Pooling=false;")
         End Function
 
@@ -227,10 +227,10 @@ Namespace CompuMaster.camm.WebManager.Setup.Pages
 
         Private Function ConnectionStringServerAdministrationSA() As String
             If TextBoxAuthUserAdmin.Text <> "" And TextBoxAuthPasswordAdmin.Text <> "" Then
-                Return (
-                     "SERVER=" & Me.TextBoxDBServer.Text & ";" &
-                     "PWD=" & Me.TextBoxAuthPasswordAdmin.Text & ";" &
-                     "UID=" & Me.TextBoxAuthUserAdmin.Text & ";" &
+                Return ( _
+                     "SERVER=" & Me.TextBoxDBServer.Text & ";" & _
+                     "PWD=" & Me.TextBoxAuthPasswordAdmin.Text & ";" & _
+                     "UID=" & Me.TextBoxAuthUserAdmin.Text & ";" & _
                      "Pooling=false;")
             Else
                 Return ""
@@ -243,11 +243,11 @@ Namespace CompuMaster.camm.WebManager.Setup.Pages
         End Function
 
         Private Function ConnectionString() As String
-            Return (
-                 "SERVER=" & Me.TextBoxDBServer.Text & ";" &
-                 "PWD=" & Me.TextBoxAuthPassword.Text & ";" &
-                 "UID=" & Me.TextBoxAuthUser.Text & ";" &
-                 "DATABASE=" & Me.TextBoxDBCatalog.Text & ";" &
+            Return ( _
+                 "SERVER=" & Me.TextBoxDBServer.Text & ";" & _
+                 "PWD=" & Me.TextBoxAuthPassword.Text & ";" & _
+                 "UID=" & Me.TextBoxAuthUser.Text & ";" & _
+                 "DATABASE=" & Me.TextBoxDBCatalog.Text & ";" & _
                  "Pooling=false;")
         End Function
 

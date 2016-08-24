@@ -98,19 +98,19 @@ Namespace CompuMaster.camm.WebManager.Setup.WebServices
         <WebMethod()> Public Function GetConnectionString() As String
             ' TODO: Returns a usable connection string to Database 
             Return _
-                 "SERVER=" & ";" &
-                 "DATABASE=" & ";" &
-                 "UID=" & ";" &
-                 "PWD=" & ";" &
+                 "SERVER=" & ";" & _
+                 "DATABASE=" & ";" & _
+                 "UID=" & ";" & _
+                 "PWD=" & ";" & _
                  "Pooling=false;"
         End Function
 
         <WebMethod()> Public Function GetConnectionString_ServerAdministration() As String
             ' TODO: Returns a usable connection string to Server 
             Return _
-                 "SERVER=" & ";" &
-                 "UID=" & ";" &
-                 "PWD=" & ";" &
+                 "SERVER=" & ";" & _
+                 "UID=" & ";" & _
+                 "PWD=" & ";" & _
                  "Pooling=false;"
         End Function
 
@@ -119,10 +119,10 @@ Namespace CompuMaster.camm.WebManager.Setup.WebServices
             ' purposes. returns a blank string if no admin account data available
             If True Then
                 Return _
-                    "SERVER=" & ";" &
-                    "DATABASE=" & ";" &
-                    "UID=" & ";" &
-                    "PWD=" & ";" &
+                    "SERVER=" & ";" & _
+                    "DATABASE=" & ";" & _
+                    "UID=" & ";" & _
+                    "PWD=" & ";" & _
                     "Pooling=false"
             Else
                 Return ""
