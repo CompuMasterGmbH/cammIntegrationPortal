@@ -47,7 +47,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Try
                 Trace.Warn("Start retrive data")
                 Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CLng(Val(Request.QueryString("ID") & "")))}
-                dtAccessLevel = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                dtAccessLevel = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT ID,Title FROM dbo.System_AccessLevels WHERE (ID NOT IN (SELECT ID_AccessLevel FROM dbo.System_ServerGroupsAndTheirUserAccessLevels WHERE  dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = @ID))", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                 Trace.Warn("End retrive data")
                 cmbAccessLevel.Items.Clear()
@@ -78,7 +78,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected Sub btnSubmit_click(ByVal sender As Object, ByVal e As EventArgs) Handles btnSubmit.Click
             If cmbAccessLevel.Items.Count > 0 AndAlso Utils.Nz(cmbAccessLevel.SelectedValue, 0) <> -1 AndAlso Request.QueryString("ID") <> "" Then
                 Try
-                    Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CLng(cmbAccessLevel.SelectedValue)),
+                    Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CLng(cmbAccessLevel.SelectedValue)), _
                         New SqlParameter("@ID_ServerGroup", CLng(Request.QueryString("ID")))}
                     ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), "INSERT INTO System_ServerGroupsAndTheirUserAccessLevels (ID_AccessLevel, ID_ServerGroup) SELECT @ID AS ID_AccessLevel, @ID_ServerGroup AS ID_ServerGroup", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection)
                     Response.Redirect("servers.aspx#ServerGroup" & Request.QueryString("ID"))

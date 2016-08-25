@@ -45,8 +45,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             If Request.QueryString("ID") <> "" AndAlso Request.QueryString("DEL") = "NOW" AndAlso Request.QueryString("token") = Session.SessionID Then
                 Dim CurUserID As Long = cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)
                 Try
-                    Dim sqlParams1 As SqlParameter() = {New SqlParameter("@ID", Request.QueryString("ID")),
-                        New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)),
+                    Dim sqlParams1 As SqlParameter() = {New SqlParameter("@ID", Request.QueryString("ID")), _
+                        New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)), _
                         New SqlParameter("@compare", CLng(cammWebManager.System_IsSecurityMaster("Groups", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))))}
                     Dim mySqlQuery As String
                     mySqlQuery = "DELETE FROM dbo.Memberships WHERE ID=@ID and (0 <> @compare OR id_group in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid=@UserID AND TableName = 'Groups' AND AuthorizationType In ('UpdateRelations','Owner')))"

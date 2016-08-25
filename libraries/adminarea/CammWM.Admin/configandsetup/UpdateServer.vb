@@ -65,7 +65,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                 Dim dtServer As DataTable
                 Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CLng(Request.QueryString("ID")))}
-                dtServer = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                dtServer = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT top 1 dbo.System_Servers.*, Case When System_ServerGroups_1.MasterServer Is Not Null Then 1 Else 0 End As IsMasterServer, Case When dbo.System_ServerGroups.UserAdminServer Is Not Null Then 1 Else 0 End As IsAdminServer FROM dbo.System_Servers LEFT OUTER JOIN dbo.System_ServerGroups ON dbo.System_Servers.ID = dbo.System_ServerGroups.UserAdminServer LEFT OUTER JOIN dbo.System_ServerGroups System_ServerGroups_1 ON dbo.System_Servers.ID = System_ServerGroups_1.MasterServer WHERE dbo.System_Servers.ID=@ID", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                 If Not dtServer Is Nothing Then
                     Field_ID = Utils.Nz(Request.QueryString("ID"), 0)
@@ -130,7 +130,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Sub FillServerGroupCombo()
             Dim dtServerGroup As DataTable
             cmbServerGroup.Items.Clear()
-            dtServerGroup = FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+            dtServerGroup = FillDataTable(New SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT * FROM System_ServerGroups", New SqlConnection(cammWebManager.ConnectionString)), Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
             If Not dtServerGroup Is Nothing AndAlso dtServerGroup.Rows.Count > 0 Then
@@ -181,32 +181,32 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             Exit Sub
                         End If
                     End If
-                    Dim sqlParams As SqlParameter() = {New SqlParameter("@Enabled", CBool(cmbEnabled.SelectedValue)),
-                                                   New SqlParameter("@IP", Mid(Trim(txtHostHeader.Text), 1, 256)),
-                                                   New SqlParameter("@ServerDescription", Mid(Trim(txtDescription.Text), 1, 200)),
-                                                   New SqlParameter("@ServerGroup", CLng(cmbServerGroup.SelectedValue)),
-                                                   New SqlParameter("@ServerProtocol", Mid(Trim(txtProtocal.Text), 1, 200)),
-                                                   New SqlParameter("@ServerName", Mid(Trim(txtServerName.Text), 1, 200)),
-                                                   New SqlParameter("@ServerPort", IIf(txtPortNumber.Text.Trim = "", DBNull.Value, txtPortNumber.Text.Trim)),
+                    Dim sqlParams As SqlParameter() = {New SqlParameter("@Enabled", CBool(cmbEnabled.SelectedValue)), _
+                                                   New SqlParameter("@IP", Mid(Trim(txtHostHeader.Text), 1, 256)), _
+                                                   New SqlParameter("@ServerDescription", Mid(Trim(txtDescription.Text), 1, 200)), _
+                                                   New SqlParameter("@ServerGroup", CLng(cmbServerGroup.SelectedValue)), _
+                                                   New SqlParameter("@ServerProtocol", Mid(Trim(txtProtocal.Text), 1, 200)), _
+                                                   New SqlParameter("@ServerName", Mid(Trim(txtServerName.Text), 1, 200)), _
+                                                   New SqlParameter("@ServerPort", IIf(txtPortNumber.Text.Trim = "", DBNull.Value, txtPortNumber.Text.Trim)), _
                                                    New SqlParameter("@ID", Request.QueryString("ID"))}
 
                     MyRec = ExecuteScalar(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_UpdateServer", CommandType.StoredProcedure, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection)
 
                     Dim i As Integer
                     For i = 0 To srtEngineDetail.Count - 1
-                        Dim sqlParam As SqlParameter() = {
-                                                           New SqlParameter("@ScriptEngineID", srtEngineDetail.GetKey(i)),
-                                                           New SqlParameter("@ServerID", Request.QueryString("ID")),
+                        Dim sqlParam As SqlParameter() = { _
+                                                           New SqlParameter("@ScriptEngineID", srtEngineDetail.GetKey(i)), _
+                                                           New SqlParameter("@ServerID", Request.QueryString("ID")), _
                                                            New SqlParameter("@Enabled", srtEngineDetail.GetByIndex(i))}
                         ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_SetScriptEngineActivation", CommandType.StoredProcedure, sqlParam, Automations.AutoOpenAndCloseAndDisposeConnection)
                     Next
 
 
                     srtEngineDetail = Nothing
-                    Dim sqlParamsScript As SqlParameter() = {
-                                                   New SqlParameter("@ScriptEngineID", "0"),
-                                                   New SqlParameter("@ServerID", Request.QueryString("ID")),
-                                                   New SqlParameter("@Enabled", False),
+                    Dim sqlParamsScript As SqlParameter() = { _
+                                                   New SqlParameter("@ScriptEngineID", "0"), _
+                                                   New SqlParameter("@ServerID", Request.QueryString("ID")), _
+                                                   New SqlParameter("@Enabled", False), _
                                                    New SqlParameter("@CheckMinimalActivations", True)}
 
                     Try

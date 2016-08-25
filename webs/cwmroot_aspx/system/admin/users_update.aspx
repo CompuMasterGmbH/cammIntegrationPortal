@@ -32,7 +32,7 @@
 								<TD BGCOLOR="#C1C1C1" ColSpan="2"><P><FONT face="Arial" size="2"><b>Personal data:</b></FONT></P></TD>
 								</TR><TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Company &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" id="Field_Company" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="100" id="Field_Company" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2"><nobr>Gender &nbsp;</nobr></FONT></P></TD>
@@ -41,59 +41,59 @@
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Academic Title (e. g. "Dr.")&nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="20" id="Field_Titel" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="40" id="Field_Titel" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">First name &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="30" id="Field_Vorname" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="60" id="Field_Vorname" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Last name &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="30" id="Field_Nachname" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="60" id="Field_Nachname" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Name addition &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="20" id="Field_Namenszusatz" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="40" id="Field_Namenszusatz" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2">e-mail <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2">E-Mail <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="50" id="Field_e_mail" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Street &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="30" id="Field_Strasse" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="60" id="Field_Strasse" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Zipcode &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="10" id="Field_PLZ" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="20" id="Field_PLZ" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Location &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="50" id="Field_Ort" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="100" id="Field_Ort" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">State &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="30" id="Field_State" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="60" id="Field_State" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Country &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="30" id="Field_Land" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="60" id="Field_Land" /><asp:DropdownList width="200px" runat="server" id="cmbCountry" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Phone &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="30" id="Field_Phone" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="255" id="Field_Phone" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Fax &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="30" id="Field_Fax" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="255" id="Field_Fax" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Mobile &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="30" id="Field_Mobile" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="255" id="Field_Mobile" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Position &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="30" id="Field_Position" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="255" id="Field_Position" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<camm:WebManagerAdminBlockFooter runat="server" /><TR>
 								<TD BGCOLOR="#C1C1C1" ColSpan="2"><P><FONT face="Arial" size="2"><b>Statistics and restrictions:</b></FONT></P></TD>
@@ -106,7 +106,7 @@
 								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Label runat="server" id="Field_LoginFailures" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2">Login blocked until<br /><em>(Current server time: <%= Me.CurrentDatabaseDateTime.ToString("yyyy-MM-dd HH:mm:ss") %>)</em> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2">Login blocked until &nbsp;</FONT></P></TD>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="20" id="Field_LoginLockedTill" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>

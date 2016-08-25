@@ -16,6 +16,7 @@ Option Strict On
 Option Explicit On
 
 Imports System.Web.UI.WebControls
+Imports System.Collections.Generic
 Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider
 
 Namespace CompuMaster.camm.WebManager.Pages.Administration
@@ -32,7 +33,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected Field_Company, Field_Titel, Field_Vorname, Field_Nachname, Field_Namenszusatz, Field_e_mail As TextBox
         Protected Field_Strasse, Field_PLZ, Field_Ort, Field_State, Field_Land, Field_LoginLockedTill As TextBox
         Protected Field_ExternalAccount, Field_Phone, Field_Fax, Field_Mobile, Field_Position As TextBox
-        Protected cmbAnrede, cmb1stPreferredLanguage, cmb2ndPreferredLanguage, cmb3rdPreferredLanguage, cmbLoginDisabled, cmbAccountAccessable As DropDownList
+        Protected cmbAnrede, cmb1stPreferredLanguage, cmb2ndPreferredLanguage, cmb3rdPreferredLanguage, cmbLoginDisabled, cmbAccountAccessable, cmbCountry As DropDownList
         Protected WithEvents Button_Submit As Button
         Protected UserInfo As WMSystem.UserInformation
         Protected pnlSpecialUsers As Panel
@@ -60,8 +61,59 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Property
 #End Region
 
+        ''' <summary>
+        ''' The list of allowed values for the country field (or empty list in case of no limitation)
+        ''' </summary>
+        ''' <returns></returns>
+        Private ReadOnly Property LimitedAllowedCountries As System.Collections.Generic.List(Of String)
+            Get
+                Static _LimitedAllowedCountries As System.Collections.Generic.List(Of String)
+                If _LimitedAllowedCountries Is Nothing Then
+                    _LimitedAllowedCountries = WMSystem.UserInformation.CentralConfig_AllowedValues_FieldCountry(Me.cammWebManager)
+                    If _LimitedAllowedCountries Is Nothing Then
+                        _LimitedAllowedCountries = New System.Collections.Generic.List(Of String)
+                    End If
+                End If
+                Return _LimitedAllowedCountries
+            End Get
+        End Property
+
+        Private Function ConvertStringsToListItems(values As System.Collections.Generic.List(Of String)) As List(Of ListItem)
+            Dim Result As New List(Of ListItem)
+            For MyCounter As Integer = 0 To values.Count - 1
+                Result.Add(New ListItem(values(MyCounter)))
+            Next
+            Return Result
+        End Function
+
 #Region "Page Events"
         Private Sub UsersUpdate_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
+            If Me.cmbCountry IsNot Nothing AndAlso Me.Field_Land Is Nothing Then
+                'dropdown box available, free text field not available
+                Me.cmbCountry.Visible = True
+                If Me.IsPostBack = False Then
+                    Me.cmbCountry.Items.AddRange(ConvertStringsToListItems(Me.LimitedAllowedCountries).ToArray)
+                End If
+                Me.Field_Land.Visible = False
+            ElseIf Me.cmbCountry Is Nothing AndAlso Me.Field_Land IsNot Nothing Then
+                'no dropdown control available --> use free text field
+            ElseIf Me.cmbCountry Is Nothing AndAlso Me.Field_Land Is Nothing Then
+                'no country field there?!? -> well, let's try to ignore this at this point
+            Else 'both controls available - show just the best fitting option
+                If LimitedAllowedCountries.Count = 0 Then
+                    'no limits --> free text field
+                    Me.cmbCountry.Visible = False
+                    Me.Field_Land.Visible = True
+                Else
+                    'limited to defined allow-values -> dropdown box
+                    Me.cmbCountry.Visible = True
+                    If Me.IsPostBack = False Then
+                        Me.cmbCountry.Items.AddRange(ConvertStringsToListItems(Me.LimitedAllowedCountries).ToArray)
+                    End If
+                    Me.Field_Land.Visible = False
+                End If
+            End If
+
             UserInfo = New WebManager.WMSystem.UserInformation(UserID, cammWebManager, False)
             lblErrMsg.Text = ""
 
@@ -99,6 +151,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                     "SELECT ID, Title FROM System_AccessLevels ORDER BY Title", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
 
+        Private Function LookupListItemWithValue(collection As ListItemCollection, value As String) As ListItem
+            For MyCounter As Integer = 0 To collection.Count - 1
+                If collection(MyCounter).Value.ToUpperInvariant = value.ToUpperInvariant Then
+                    Return collection(MyCounter)
+                End If
+            Next
+            Return Nothing
+        End Function
+
         Protected Sub AssignUserInfoDataToForm()
             Field_ID.Text = Server.HtmlEncode(UserInfo.IDLong.ToString)
             Field_LoginName.Text = Server.HtmlEncode(Utils.Nz(UserInfo.LoginName, String.Empty))
@@ -112,7 +173,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Field_PLZ.Text = Utils.Nz(UserInfo.ZipCode.ToString, String.Empty)
             Field_Ort.Text = Utils.Nz(UserInfo.Location.ToString, String.Empty)
             Field_State.Text = Utils.Nz(UserInfo.State.ToString, String.Empty)
-            Field_Land.Text = Utils.Nz(UserInfo.Country.ToString, String.Empty)
+            If Field_Land IsNot Nothing Then Field_Land.Text = Utils.Nz(UserInfo.Country.ToString, String.Empty)
+            If cmbCountry IsNot Nothing Then
+                Dim Item As ListItem = LookupListItemWithValue(cmbCountry.Items, Utils.Nz(UserInfo.Country.ToString, String.Empty))
+                If Item Is Nothing Then
+                    Item = New ListItem(Utils.Nz(UserInfo.Country.ToString, String.Empty))
+                    cmbCountry.Items.Add(Item)
+                End If
+                cmbCountry.SelectedValue = Item.Value
+            End If
 
             If UserInfo.PhoneNumber = Nothing Then Field_Phone.Text = "" Else Field_Phone.Text = Utils.Nz(UserInfo.PhoneNumber, String.Empty)
             If UserInfo.FaxNumber = Nothing Then Field_Fax.Text = "" Else Field_Fax.Text = Utils.Nz(UserInfo.FaxNumber.ToString, String.Empty)
@@ -138,7 +207,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Sub
 
         Protected Sub AssignFormDataToUserInfo()
-            UserInfo.Company = Trim(Mid(Me.Field_Company.Text, 1, 50))
+            UserInfo.Company = Trim(Me.Field_Company.Text)
             If cmbAnrede.SelectedValue <> Nothing Then
                 If Integer.Parse(cmbAnrede.SelectedValue) = CType(IUserInformation.GenderType.Feminine, Integer) Then
                     UserInfo.Gender = CType(IUserInformation.GenderType.Feminine, WMSystem.Sex)
@@ -148,21 +217,25 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Else
                 UserInfo.Gender = WMSystem.Sex.Undefined
             End If
-            UserInfo.AcademicTitle = Trim(Mid(Me.Field_Titel.Text, 1, 20))
-            UserInfo.FirstName = Trim(Mid(Me.Field_Vorname.Text, 1, 30))
-            UserInfo.LastName = Trim(Mid(Me.Field_Nachname.Text, 1, 30))
-            UserInfo.NameAddition = Trim(Mid(Me.Field_Namenszusatz.Text, 1, 20))
-            UserInfo.EMailAddress = Trim(Mid(Me.Field_e_mail.Text, 1, 50))
-            UserInfo.Street = Trim(Mid(Me.Field_Strasse.Text, 1, 30))
-            UserInfo.ZipCode = Trim(Mid(Me.Field_PLZ.Text, 1, 10))
-            UserInfo.Location = Trim(Mid(Me.Field_Ort.Text, 1, 50))
-            UserInfo.State = Trim(Mid(Me.Field_State.Text, 1, 30))
-            UserInfo.Country = Trim(Mid(Me.Field_Land.Text, 1, 30))
+            UserInfo.AcademicTitle = Trim(Me.Field_Titel.Text)
+            UserInfo.FirstName = Trim(Me.Field_Vorname.Text)
+            UserInfo.LastName = Trim(Me.Field_Nachname.Text)
+            UserInfo.NameAddition = Trim(Me.Field_Namenszusatz.Text)
+            UserInfo.EMailAddress = Trim(Me.Field_e_mail.Text)
+            UserInfo.Street = Trim(Me.Field_Strasse.Text)
+            UserInfo.ZipCode = Trim(Me.Field_PLZ.Text)
+            UserInfo.Location = Trim(Me.Field_Ort.Text)
+            UserInfo.State = Trim(Me.Field_State.Text)
+            If cmbCountry IsNot Nothing AndAlso cmbCountry.Visible = True Then
+                UserInfo.Country = Trim(Me.cmbCountry.SelectedValue)
+            Else
+                UserInfo.Country = Trim(Me.Field_Land.Text)
+            End If
 
-            UserInfo.PhoneNumber = Trim(Mid(Me.Field_Phone.Text, 1, 30))
-            UserInfo.FaxNumber = Trim(Mid(Me.Field_Fax.Text, 1, 50))
-            UserInfo.MobileNumber = Trim(Mid(Me.Field_Mobile.Text, 1, 30))
-            UserInfo.Position = Trim(Mid(Me.Field_Position.Text, 1, 30))
+            UserInfo.PhoneNumber = Trim(Me.Field_Phone.Text)
+            UserInfo.FaxNumber = Trim(Me.Field_Fax.Text)
+            UserInfo.MobileNumber = Trim(Me.Field_Mobile.Text)
+            UserInfo.Position = Trim(Me.Field_Position.Text)
 
             UserInfo.PreferredLanguage1 = New WMSystem.LanguageInformation(CInt(cmb1stPreferredLanguage.SelectedValue), cammWebManager)
             If Trim(cmb2ndPreferredLanguage.SelectedValue) = "" Then
@@ -196,6 +269,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ElseIf UserInfo.IDLong <> Nothing And UserInfo.LoginName <> String.Empty Then
                 Try
                     UserInfo.Save()
+                    UserInfo.ReloadFullUserData() 'in case e.g. some fields had been cut off
                 Catch ex As Exception
                     'unhandled exception.
                     If ex.Message.ToString.ToUpper = "UNIQUE KEY ERROR" Then
@@ -290,6 +364,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Throw New Exception("Cannot save changes to the user profile.", ex)
             End Try
         End Sub
+
+        Private Sub UsersUpdate_Init(sender As Object, e As EventArgs) Handles Me.Init
+            Me.lblErrMsg.EnableViewState = False 'waste-always any content between postbacks
+        End Sub
+
 #End Region
 
     End Class

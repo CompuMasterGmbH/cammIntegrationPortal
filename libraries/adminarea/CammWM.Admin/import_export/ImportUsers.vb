@@ -378,11 +378,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     End If
                 End If
                 'Verify that column "User_Authorizations_*Rule_IsDe*/SrvGroupID" has got array length or 0 (zero) or same length as User_Authorizations_*Rule_AppIDs array
-                If Result = True AndAlso (Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDevRule") OrElse
-                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDenyRule") OrElse
-                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_SrvGroupID") OrElse
-                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDevRule") OrElse
-                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDenyRule") OrElse
+                If Result = True AndAlso (Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDevRule") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_IsDenyRule") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_AllowRule_SrvGroupID") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDevRule") OrElse _
+                                Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_IsDenyRule") OrElse _
                                 Me.ImportTable.Columns.Contains("User_Authorizations_DenyRule_SrvGroupID")) Then
                     'TODO: further implementation required for import with columns User_Authorizations_*Rule_IsDe*/SrvGroupID
                     LabelStep3Errors.Text = "Error: column support not yet implemented for ""User_Authorizations_*Rule_IsDevRule"", ""User_Authorizations_*Rule_IsDenyRule"", ""User_Authorizations_*Rule_SrvGroupID""<br>"
@@ -763,6 +763,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Return False
                     End If
                 End If
+                'Additional tests based on individual columns 
+                If columnName.ToLowerInvariant = "user_country" Then
+                    If AllowedCountryValues.Count > 0 Then
+                        If AllowedCountryValues.Contains(Utils.Nz(cellValue, "")) = False Then
+                            If AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Row " & MyCounter + 1 & ": Invalid country: """ & Server.HtmlEncode(Utils.Nz(cellValue, "")) & """ (please review list of allowed values case-sensitive!)</font>") Then
+                                Return False
+                            End If
+                        End If
+                    End If
+                End If
             Next
 
             'Return success
@@ -780,6 +790,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
         End Function
 
+        Private ReadOnly Property AllowedCountryValues As System.Collections.Generic.List(Of String)
+            Get
+                Static AllowedValues As System.Collections.Generic.List(Of String)
+                If AllowedValues Is Nothing Then
+                    AllowedValues = WMSystem.UserInformation.CentralConfig_AllowedValues_FieldCountry(Me.cammWebManager)
+                    If AllowedValues Is Nothing Then AllowedValues = New System.Collections.Generic.List(Of String)
+                End If
+                Return AllowedValues
+            End Get
+        End Property
 #End Region
 
 #Region "Buttons GoBack"

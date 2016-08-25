@@ -48,7 +48,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                 Try
                     Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CLng(Request.QueryString("ID")))}
-                    dtServerDetail = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                    dtServerDetail = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT  dbo.System_ServerGroupsAndTheirUserAccessLevels.ID, dbo.System_AccessLevels.Title, dbo.System_ServerGroups.ServerGroup FROM dbo.System_ServerGroupsAndTheirUserAccessLevels LEFT OUTER JOIN dbo.System_AccessLevels ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = dbo.System_AccessLevels.ID LEFT OUTER JOIN dbo.System_ServerGroups ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = dbo.System_ServerGroups.ID WHERE dbo.System_ServerGroupsAndTheirUserAccessLevels.ID=@ID", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                     If dtServerDetail Is Nothing Then

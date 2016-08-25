@@ -156,6 +156,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Sub ButtonSave_Click(sender As Object, e As EventArgs) Handles ButtonSave.Click
             Try
                 If Me.RadioButtonListSetupOfAllowRule.SelectedValue = "1" Then
+                    'Check for max length of country field, current max = 60 chars
+                    For MyCounter As Integer = 0 To Me.AllowedValues.Count - 1
+                        If Me.AllowedValues(MyCounter).Length > 60 Then
+                            Throw New Exception("Country field is limited to max. 60 chars, following value requires " & Me.AllowedValues(MyCounter).Length & " chars: " & Me.AllowedValues(MyCounter))
+                        End If
+                    Next
+                    'Check for existing data collissions
                     Dim CurrentlyUsedValuesInUserInfosButNotAllowed As New System.Collections.Generic.List(Of String)
                     Dim CurrentlyUsedValuesInUserInfos As System.Collections.Generic.List(Of String) = Me.LoadCurrentlyUsedValuesAsInUserInfos
                     For MyCounter As Integer = 0 To CurrentlyUsedValuesInUserInfos.Count - 1
@@ -165,7 +172,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     Next
                     If CurrentlyUsedValuesInUserInfosButNotAllowed.Count > 0 Then
                         Throw New Exception("User profiles currently use these values which wouldn't be allowed: """ & Strings.Join(CurrentlyUsedValuesInUserInfosButNotAllowed.ToArray, """, """) & """")
-                    Else
+                        Else
                         WMSystem.UserInformation.CentralConfig_AllowedValues_FieldCountrySetup(Me.cammWebManager, Me.AllowedValues)
                     End If
                 Else

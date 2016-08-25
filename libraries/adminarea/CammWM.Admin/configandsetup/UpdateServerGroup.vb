@@ -31,10 +31,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #Region "Variable Declaration"
         Protected lblErrMsg, lblFieldID, lblGroupInfo As Label
         Protected _
-                txtFieldServerGroup, txtAreaNavTitle, txtAreaCompanyFormerTitle, txtAreaButton, txtAreaImage,
-                txtAreaCompanyTitle, txtAreaCopyRightSinceYear, txtAreaCompanyWebSiteURL,
-                txtAreaCompanyWebSiteTitle, txtAreaSecurityContactEMail, txtAreaSecurityContactTitle,
-                txtAreaContentManagementContactEMail, txtAreaContentManagementContactTitle, txtAreaUnspecifiedContactEMail,
+                txtFieldServerGroup, txtAreaNavTitle, txtAreaCompanyFormerTitle, txtAreaButton, txtAreaImage, _
+                txtAreaCompanyTitle, txtAreaCopyRightSinceYear, txtAreaCompanyWebSiteURL, _
+                txtAreaCompanyWebSiteTitle, txtAreaSecurityContactEMail, txtAreaSecurityContactTitle, _
+                txtAreaContentManagementContactEMail, txtAreaContentManagementContactTitle, txtAreaUnspecifiedContactEMail, _
                 txtAreaDevelopmentContactEMail, txtAreaDevelopmentContactTitle, txtAreaUnspecifiedContactTitle _
                 As TextBox
         Protected hiddenTxt_ID_Group_Public, hiddenTxt_GroupAnonymous As HtmlInputHidden
@@ -55,7 +55,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                 Try
                     Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CLng(Request.QueryString("ID")))}
-                    dtServerGroup = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                    dtServerGroup = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                      "SELECT  top 1 * FROM dbo.System_ServerGroups WHERE ID = @ID", CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                     lblFieldID.Text = Utils.Nz(dtServerGroup.Rows(0)("ID"), 0).ToString
@@ -144,53 +144,53 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 #Region "Control Events"
         Private Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
-            If lblFieldID.Text <> Nothing AndAlso
-             txtFieldServerGroup.Text.Trim <> "" AndAlso
-             hiddenTxt_ID_Group_Public.Value.Trim <> "" AndAlso
-             hiddenTxt_GroupAnonymous.Value.Trim <> "" AndAlso
-             cmbMasterServer.SelectedValue <> "" AndAlso
-             cmbUserAdminServer.SelectedValue <> "" AndAlso
-             txtAreaButton.Text.Trim <> "" AndAlso
-             txtAreaImage.Text.Trim <> "" AndAlso
-              txtAreaCompanyFormerTitle.Text.Trim <> "" AndAlso
-             txtAreaCompanyTitle.Text.Trim <> "" AndAlso
-             txtAreaSecurityContactEMail.Text.Trim <> "" AndAlso
-             txtAreaSecurityContactTitle.Text.Trim <> "" AndAlso
-             txtAreaDevelopmentContactEMail.Text.Trim <> "" AndAlso
-             txtAreaDevelopmentContactTitle.Text.Trim <> "" AndAlso
-             txtAreaContentManagementContactEMail.Text.Trim <> "" AndAlso
-             txtAreaContentManagementContactTitle.Text.Trim <> "" AndAlso
-             txtAreaUnspecifiedContactEMail.Text.Trim <> "" AndAlso
-             txtAreaUnspecifiedContactTitle.Text.Trim <> "" AndAlso
-             txtAreaCopyRightSinceYear.Text.Trim <> "" AndAlso
-             txtAreaCompanyWebSiteURL.Text.Trim <> "" AndAlso
-             txtAreaCompanyWebSiteTitle.Text.Trim <> "" AndAlso
+            If lblFieldID.Text <> Nothing AndAlso _
+             txtFieldServerGroup.Text.Trim <> "" AndAlso _
+             hiddenTxt_ID_Group_Public.Value.Trim <> "" AndAlso _
+             hiddenTxt_GroupAnonymous.Value.Trim <> "" AndAlso _
+             cmbMasterServer.SelectedValue <> "" AndAlso _
+             cmbUserAdminServer.SelectedValue <> "" AndAlso _
+             txtAreaButton.Text.Trim <> "" AndAlso _
+             txtAreaImage.Text.Trim <> "" AndAlso _
+              txtAreaCompanyFormerTitle.Text.Trim <> "" AndAlso _
+             txtAreaCompanyTitle.Text.Trim <> "" AndAlso _
+             txtAreaSecurityContactEMail.Text.Trim <> "" AndAlso _
+             txtAreaSecurityContactTitle.Text.Trim <> "" AndAlso _
+             txtAreaDevelopmentContactEMail.Text.Trim <> "" AndAlso _
+             txtAreaDevelopmentContactTitle.Text.Trim <> "" AndAlso _
+             txtAreaContentManagementContactEMail.Text.Trim <> "" AndAlso _
+             txtAreaContentManagementContactTitle.Text.Trim <> "" AndAlso _
+             txtAreaUnspecifiedContactEMail.Text.Trim <> "" AndAlso _
+             txtAreaUnspecifiedContactTitle.Text.Trim <> "" AndAlso _
+             txtAreaCopyRightSinceYear.Text.Trim <> "" AndAlso _
+             txtAreaCompanyWebSiteURL.Text.Trim <> "" AndAlso _
+             txtAreaCompanyWebSiteTitle.Text.Trim <> "" AndAlso _
              cmbAccessLevelDefault.SelectedValue <> "" Then
 
-                Dim sqlParams As SqlParameter() = {
-                                                            New SqlParameter("@ID", lblFieldID.Text),
-                                                            New SqlParameter("@ServerGroup", Mid(Trim(txtFieldServerGroup.Text.Trim), 1, 255)),
-                                                            New SqlParameter("@ID_Group_Public", CInt(hiddenTxt_ID_Group_Public.Value.Trim)),
-                                                            New SqlParameter("@ID_Group_Anonymous", CInt(hiddenTxt_GroupAnonymous.Value.Trim)),
-                                                            New SqlParameter("@MasterServer", CInt(cmbMasterServer.SelectedValue)),
-                                                            New SqlParameter("@UserAdminServer", CInt(cmbUserAdminServer.SelectedValue)),
-                                                            New SqlParameter("@AreaImage", Mid(Trim(txtAreaImage.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaButton", Mid(Trim(txtAreaButton.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaNavTitle", Mid(Trim(txtAreaNavTitle.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaCompanyFormerTitle", Mid(Trim(txtAreaCompanyFormerTitle.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaCompanyTitle", Mid(Trim(txtAreaCompanyTitle.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaSecurityContactEMail", Mid(Trim(txtAreaSecurityContactEMail.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaSecurityContactTitle", Mid(Trim(txtAreaSecurityContactTitle.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaDevelopmentContactEMail", Mid(Trim(txtAreaDevelopmentContactEMail.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaDevelopmentContactTitle", Mid(Trim(txtAreaDevelopmentContactTitle.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaContentManagementContactEMail", Mid(Trim(txtAreaContentManagementContactEMail.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaContentManagementContactTitle", Mid(Trim(txtAreaContentManagementContactTitle.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaUnspecifiedContactEMail", Mid(Trim(txtAreaUnspecifiedContactEMail.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaUnspecifiedContactTitle", Mid(Trim(txtAreaUnspecifiedContactTitle.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaCopyRightSinceYear", CInt(txtAreaCopyRightSinceYear.Text.Trim)),
-                                                            New SqlParameter("@AreaCompanyWebSiteURL", Mid(Trim(txtAreaCompanyWebSiteURL.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@AreaCompanyWebSiteTitle", Mid(Trim(txtAreaCompanyWebSiteTitle.Text.Trim), 1, 512)),
-                                                            New SqlParameter("@ModifiedBy", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)),
+                Dim sqlParams As SqlParameter() = { _
+                                                            New SqlParameter("@ID", lblFieldID.Text), _
+                                                            New SqlParameter("@ServerGroup", Mid(Trim(txtFieldServerGroup.Text.Trim), 1, 255)), _
+                                                            New SqlParameter("@ID_Group_Public", CInt(hiddenTxt_ID_Group_Public.Value.Trim)), _
+                                                            New SqlParameter("@ID_Group_Anonymous", CInt(hiddenTxt_GroupAnonymous.Value.Trim)), _
+                                                            New SqlParameter("@MasterServer", CInt(cmbMasterServer.SelectedValue)), _
+                                                            New SqlParameter("@UserAdminServer", CInt(cmbUserAdminServer.SelectedValue)), _
+                                                            New SqlParameter("@AreaImage", Mid(Trim(txtAreaImage.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaButton", Mid(Trim(txtAreaButton.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaNavTitle", Mid(Trim(txtAreaNavTitle.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaCompanyFormerTitle", Mid(Trim(txtAreaCompanyFormerTitle.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaCompanyTitle", Mid(Trim(txtAreaCompanyTitle.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaSecurityContactEMail", Mid(Trim(txtAreaSecurityContactEMail.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaSecurityContactTitle", Mid(Trim(txtAreaSecurityContactTitle.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaDevelopmentContactEMail", Mid(Trim(txtAreaDevelopmentContactEMail.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaDevelopmentContactTitle", Mid(Trim(txtAreaDevelopmentContactTitle.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaContentManagementContactEMail", Mid(Trim(txtAreaContentManagementContactEMail.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaContentManagementContactTitle", Mid(Trim(txtAreaContentManagementContactTitle.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaUnspecifiedContactEMail", Mid(Trim(txtAreaUnspecifiedContactEMail.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaUnspecifiedContactTitle", Mid(Trim(txtAreaUnspecifiedContactTitle.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaCopyRightSinceYear", CInt(txtAreaCopyRightSinceYear.Text.Trim)), _
+                                                            New SqlParameter("@AreaCompanyWebSiteURL", Mid(Trim(txtAreaCompanyWebSiteURL.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@AreaCompanyWebSiteTitle", Mid(Trim(txtAreaCompanyWebSiteTitle.Text.Trim), 1, 512)), _
+                                                            New SqlParameter("@ModifiedBy", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)), _
                                                             New SqlParameter("@AccessLevel_Default", CInt(cmbAccessLevelDefault.SelectedValue))}
 
                 Try

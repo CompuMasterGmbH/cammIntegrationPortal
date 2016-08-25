@@ -79,7 +79,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
 
             Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CInt(Request.QueryString("ID")))}
-            Dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+            Dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT * FROM [Benutzer] WHERE ID=@ID", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
             MyUserInfo = cammWebManager.System_GetUserInfo(CType(Request.QueryString("ID"), Long))
             If MyUserInfo Is Nothing Then
