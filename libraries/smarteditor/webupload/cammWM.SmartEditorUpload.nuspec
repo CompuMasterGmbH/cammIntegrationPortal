@@ -22,8 +22,8 @@
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Web" />	
 		</frameworkAssemblies>
-		<contentFiles>
 <!--		
+		<contentFiles>
 			<files include="se-webupload/**" buildAction="None" copyToOutput="true" flatten="false" />
 
 			<!- - Embed image resources - ->
@@ -36,8 +36,8 @@
 			<!- - Include everything in the scripts folder except exe files - ->
 			<files include="cs/uap10.0/scripts/*" exclude="**/*.exe"  buildAction="None" copyToOutput="true" />
 			<!- - All other files in shared are compiled and use the default options - ->
--->
     </contentFiles>
+-->
   </metadata>
 	<files>
 		<file src="se-webupload/**" target="se-webupload" />
