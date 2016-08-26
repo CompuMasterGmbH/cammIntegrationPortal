@@ -13,6 +13,8 @@
 'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden für Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
 
 Option Strict Off
+Option Explicit On
+
 Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Web
