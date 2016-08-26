@@ -1,7 +1,6 @@
 Option Explicit On 
 Option Strict On
 
-Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -9,7 +8,7 @@ Imports System.Runtime.InteropServices
 <Assembly: System.Web.UI.TagPrefix("CompuMaster.camm.SmartWebEditor.Controls", "cammWebEdit")>
 
 <Assembly: AssemblyTitle("camm SmartEditor PlainText")>
-<Assembly: AssemblyDescription("")>
+<Assembly: AssemblyDescription("Provides the camm SmartEditor for plain text")>
 <Assembly: AssemblyCompany("CompuMaster GmbH")>
 <Assembly: AssemblyProduct("camm Integration Portal (base on camm Web-Manager) SmartEditor")>
 <Assembly: AssemblyCopyright("2001-2016 CompuMaster GmbH")>

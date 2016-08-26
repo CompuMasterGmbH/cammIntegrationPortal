@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cammWM.SmartEditor.VS2012", "baseeditor\cammWM.SmartEditor.VS2012.vbproj", "{F9F88DEE-2014-4668-8C21-0C654D6F439F}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cammWM.SmartEditor", "baseeditor\cammWM.SmartEditor.vbproj", "{F9F88DEE-2014-4668-8C21-0C654D6F439F}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cammWM.CommonMarkEditor", "CommonMarkEditor\cammWM.CommonMarkEditor.vbproj", "{D4E08B73-C0D3-45AB-B0D4-152909C61FCD}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "cammWM.SmartEditorUpload", "webupload\cammWM.SmartEditorUpload.vbproj", "{E659DBED-C0F5-4088-AF6A-A68245C0B516}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
@@ -25,6 +27,10 @@ Global
 		{D4E08B73-C0D3-45AB-B0D4-152909C61FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4E08B73-C0D3-45AB-B0D4-152909C61FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4E08B73-C0D3-45AB-B0D4-152909C61FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E659DBED-C0F5-4088-AF6A-A68245C0B516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E659DBED-C0F5-4088-AF6A-A68245C0B516}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E659DBED-C0F5-4088-AF6A-A68245C0B516}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E659DBED-C0F5-4088-AF6A-A68245C0B516}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

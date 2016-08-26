@@ -17,7 +17,7 @@ Option Strict On
 
 Namespace CompuMaster.camm.SmartWebEditor
 
-    Friend Class ConfigurationWebManager
+    Friend Class ConfigurationUploadWebManager
 
         Public Class CwmConfigAccessor
             Inherits CompuMaster.camm.WebManager.Modules.WebEdit.Controls.SmartWcmsEditorBase
