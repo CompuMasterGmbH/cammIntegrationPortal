@@ -184,3 +184,8 @@ libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifes
 /libraries/smarteditor/webupload/obj
 /libraries/smarteditor/webupload/bin
 /libraries/smarteditor/webupload/*.user
+/sample-projects/webrootwithadmin/Bin
+/sample-projects/smarteditor/se-webupload
+/sample-projects/smarteditor/Bin
+/sample-projects/packages
+/libraries/smarteditor/webupload/New-NuGetPackages
