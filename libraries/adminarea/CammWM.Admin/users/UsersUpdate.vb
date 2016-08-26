@@ -138,7 +138,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <remarks>Intended for the preferred languages dropdown boxes
         ''' </remarks>
         Private Function AvailableLanguages(ByVal alwaysIncludeThisLanguage As Integer) As DictionaryEntry()
-            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT ID, Description_English FROM System_Languages WHERE (IsActive = 1 AND NOT ID = 10000) OR ID = " & alwaysIncludeThisLanguage & " ORDER BY Description_English", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
         ''' <summary>
@@ -147,7 +147,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <remarks>Intended for the preferred languages dropdown boxes
         ''' </remarks>
         Private Function AvailableAccessLevels() As DictionaryEntry()
-            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT ID, Title FROM System_AccessLevels ORDER BY Title", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
 
