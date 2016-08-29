@@ -33,7 +33,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected Field_Company, Field_Titel, Field_Vorname, Field_Nachname, Field_Namenszusatz, Field_e_mail As TextBox
         Protected Field_Strasse, Field_PLZ, Field_Ort, Field_State, Field_Land, Field_LoginLockedTill As TextBox
         Protected Field_ExternalAccount, Field_Phone, Field_Fax, Field_Mobile, Field_Position As TextBox
-        Protected cmbAnrede, cmb1stPreferredLanguage, cmb2ndPreferredLanguage, cmb3rdPreferredLanguage, cmbLoginDisabled, cmbAccountAccessable, cmbCountry As DropDownList
+        Protected cmbAnrede, cmb1stPreferredLanguage, cmb2ndPreferredLanguage, cmb3rdPreferredLanguage, cmbLoginDisabled, cmbAccountAccessable As DropDownList
+        Protected WithEvents cmbCountry As DropDownList
         Protected WithEvents Button_Submit As Button
         Protected UserInfo As WMSystem.UserInformation
         Protected pnlSpecialUsers As Panel
@@ -138,7 +139,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <remarks>Intended for the preferred languages dropdown boxes
         ''' </remarks>
         Private Function AvailableLanguages(ByVal alwaysIncludeThisLanguage As Integer) As DictionaryEntry()
-            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT ID, Description_English FROM System_Languages WHERE (IsActive = 1 AND NOT ID = 10000) OR ID = " & alwaysIncludeThisLanguage & " ORDER BY Description_English", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
         ''' <summary>
@@ -147,7 +148,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <remarks>Intended for the preferred languages dropdown boxes
         ''' </remarks>
         Private Function AvailableAccessLevels() As DictionaryEntry()
-            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            Return ExecuteReaderAndPutFirstTwoColumnsIntoDictionaryEntryArray(New SqlClient.SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT ID, Title FROM System_AccessLevels ORDER BY Title", CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Function
 
@@ -162,34 +163,34 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
         Protected Sub AssignUserInfoDataToForm()
             Field_ID.Text = Server.HtmlEncode(UserInfo.IDLong.ToString)
-            Field_LoginName.Text = Server.HtmlEncode(Utils.Nz(UserInfo.LoginName, String.Empty))
-            Field_Company.Text = Utils.Nz(UserInfo.Company.ToString, String.Empty)
-            Field_Titel.Text = Utils.Nz(UserInfo.AcademicTitle.ToString, String.Empty)
-            Field_Vorname.Text = Utils.Nz(UserInfo.FirstName.ToString, String.Empty)
-            Field_Nachname.Text = Utils.Nz(UserInfo.LastName.ToString, String.Empty)
-            Field_Namenszusatz.Text = Utils.Nz(UserInfo.NameAddition.ToString, String.Empty)
-            Field_e_mail.Text = Utils.Nz(UserInfo.EMailAddress.ToString, String.Empty)
-            Field_Strasse.Text = Utils.Nz(UserInfo.Street.ToString, String.Empty)
-            Field_PLZ.Text = Utils.Nz(UserInfo.ZipCode.ToString, String.Empty)
-            Field_Ort.Text = Utils.Nz(UserInfo.Location.ToString, String.Empty)
-            Field_State.Text = Utils.Nz(UserInfo.State.ToString, String.Empty)
-            If Field_Land IsNot Nothing Then Field_Land.Text = Utils.Nz(UserInfo.Country.ToString, String.Empty)
+            Field_LoginName.Text = Server.HtmlEncode(UserInfo.LoginName)
+            Field_Company.Text = UserInfo.Company
+            Field_Titel.Text = UserInfo.AcademicTitle
+            Field_Vorname.Text = UserInfo.FirstName
+            Field_Nachname.Text = UserInfo.LastName
+            Field_Namenszusatz.Text = UserInfo.NameAddition
+            Field_e_mail.Text = UserInfo.EMailAddress
+            Field_Strasse.Text = UserInfo.Street
+            Field_PLZ.Text = UserInfo.ZipCode
+            Field_Ort.Text = UserInfo.Location
+            Field_State.Text = UserInfo.State
+            If Field_Land IsNot Nothing Then Field_Land.Text = UserInfo.Country
             If cmbCountry IsNot Nothing Then
-                Dim Item As ListItem = LookupListItemWithValue(cmbCountry.Items, Utils.Nz(UserInfo.Country.ToString, String.Empty))
+                Dim Item As ListItem = LookupListItemWithValue(cmbCountry.Items, UserInfo.Country)
                 If Item Is Nothing Then
-                    Item = New ListItem(Utils.Nz(UserInfo.Country.ToString, String.Empty))
+                    Item = New ListItem(UserInfo.Country)
                     cmbCountry.Items.Add(Item)
                 End If
                 cmbCountry.SelectedValue = Item.Value
             End If
 
-            If UserInfo.PhoneNumber = Nothing Then Field_Phone.Text = "" Else Field_Phone.Text = Utils.Nz(UserInfo.PhoneNumber, String.Empty)
-            If UserInfo.FaxNumber = Nothing Then Field_Fax.Text = "" Else Field_Fax.Text = Utils.Nz(UserInfo.FaxNumber.ToString, String.Empty)
-            If UserInfo.MobileNumber = Nothing Then Field_Mobile.Text = "" Else Field_Mobile.Text = Utils.Nz(UserInfo.MobileNumber.ToString, String.Empty)
-            If UserInfo.Position = Nothing Then Field_Position.Text = "" Else Field_Position.Text = Utils.Nz(UserInfo.Position, String.Empty)
+            Field_Phone.Text = UserInfo.PhoneNumber
+            Field_Fax.Text = UserInfo.FaxNumber
+            Field_Mobile.Text = UserInfo.MobileNumber
+            Field_Position.Text = UserInfo.Position
 
-            Field_LoginCount.Text = Server.HtmlEncode(Utils.Nz(UserInfo.AccountSuccessfullLogins, 0).ToString)
-            Field_LoginFailures.Text = Server.HtmlEncode(Utils.Nz(UserInfo.AccountLoginFailures, 0).ToString)
+            Field_LoginCount.Text = Server.HtmlEncode(UserInfo.AccountSuccessfullLogins.ToString)
+            Field_LoginFailures.Text = Server.HtmlEncode(UserInfo.AccountLoginFailures.ToString)
             If UserInfo.LoginLockedTemporaryTill = Nothing Then
                 Field_LoginLockedTill.Text = String.Empty
             Else
