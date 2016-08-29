@@ -254,6 +254,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Login
                                 Me.cammWebManager.MessagingEMails.SendEMail(Me.cammWebManager.TechnicalServiceEMailAccountName, Me.cammWebManager.TechnicalServiceEMailAccountAddress, "SSO successfully created a new user account", LogData, Nothing, Me.cammWebManager.StandardEMailAccountName, Me.cammWebManager.StandardEMailAccountAddress)
                             End If
                             'Me.ButtonNext_Click(Nothing, Nothing)
+                        Catch ex As System.Threading.ThreadAbortException
+                            'Fixed issue #18 Failure notification on successful workflow https://github.com/CompuMasterGmbH/cammIntegrationPortal/issues/18
+                            'by adding this catch block to execute commands after Me.ValidateUserCredentialsAndLogon() from above
+                            If Me.cammWebManager.DebugLevel >= WMSystem.DebugLevels.Low_WarningMessagesOnAccessError_AdditionalDetails Then
+                                Dim LogData As String = "The Single-Sign-On module should have created a new camm Web-Manager user account """ & AdsUser.LoginName & """ (" & AdsUser.FullName() & ") from the external ADS user account """ & AdsUser.ExternalAccount & """"
+                                Me.cammWebManager.Log.Write(LogData)
+                                Me.cammWebManager.MessagingEMails.SendEMail(Me.cammWebManager.TechnicalServiceEMailAccountName, Me.cammWebManager.TechnicalServiceEMailAccountAddress, "SSO successfully created a new user account", LogData, Nothing, Me.cammWebManager.StandardEMailAccountName, Me.cammWebManager.StandardEMailAccountAddress)
+                            End If
                         Catch ex As Exception
                             'In case of errors (e. g. unique loginname can't be provided), do nothing
                             If Not Me.AdsUser Is Nothing Then Me.LogMissingAssignmentOfExternalUserAccount("MS ADS", Me.AdsUser.ExternalAccount, Me.AdsUser.FullName, Me.AdsUser.EMailAddress, ex.ToString)
