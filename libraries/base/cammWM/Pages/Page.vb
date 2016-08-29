@@ -19,64 +19,6 @@ Imports System.Web
 
 Namespace CompuMaster.camm.WebManager.Pages
 
-    ''' <summary>
-    '''     An interface for all controls which are implementing the cammWebManager property
-    ''' </summary>
-    Public Interface IPage
-        Property cammWebManager() As CompuMaster.camm.WebManager.Controls.cammWebManager
-        ReadOnly Property Page() As System.Web.UI.Page
-    End Interface
-
-#If NetFramework <> "1_1" Then
-    Public Class MasterPage
-        Inherits System.Web.UI.MasterPage
-
-        Private _WebManager As CompuMaster.camm.WebManager.Controls.cammWebManager
-        Private AlreadyTryedToLookUpCammWebManager As Boolean
-        ''' <summary>
-        ''' The cammWebManager instance created by a cammWebManager control on this master page or one of its parent master pages
-        ''' </summary>
-        ''' <value></value>
-        ''' <remarks></remarks>
-        Public Property cammWebManager As CompuMaster.camm.WebManager.Controls.cammWebManager
-            Get
-                If Not _WebManager Is Nothing Then 'Save a few checks in following code block
-                    Return _WebManager
-                End If
-                'Look in parent master pages
-                If _WebManager Is Nothing AndAlso Me.Master IsNot Nothing AndAlso GetType(MasterPage).IsInstanceOfType(Me.Master) AndAlso CType(Me.Master, MasterPage).cammWebManager IsNot Nothing Then
-                    _WebManager = CType(CType(Me.Master, MasterPage).cammWebManager, CompuMaster.camm.WebManager.Controls.cammWebManager)
-                End If
-                'Look in parent master pages with shadowed cammWebManager property (VS2010 designer automatically inserts protected property cammWebManager even if already existing by inheriting from this master page
-                If _WebManager Is Nothing AndAlso Me.Master IsNot Nothing AndAlso AlreadyTryedToLookUpCammWebManager = False Then
-                    Try
-                        _WebManager = CType(CompuMaster.camm.WebManager.Controls.cammWebManager.GetField(Me.Master, "cammWebManager", Nothing), Controls.cammWebManager)
-                        If _WebManager Is Nothing Then
-                            HttpContext.Current.Trace.Write("camm WebManager BaseControl (MasterPage)", "Auto lookup of camm WebManager failed: no CWM instance found")
-                        Else
-                            HttpContext.Current.Trace.Write("camm WebManager BaseControl (MasterPage)", "Auto lookup of camm WebManager successfull")
-                        End If
-                    Catch ex As Exception
-                        HttpContext.Current.Trace.Warn("camm WebManager BaseControl (MasterPage)", "Auto lookup of camm WebManager failed: " & ex.Message & ex.StackTrace)
-                    Finally
-                        AlreadyTryedToLookUpCammWebManager = True
-                    End Try
-                End If
-                'Look in main page - but without JIT creation there and without lookup again in master page
-                If _WebManager Is Nothing AndAlso Me.Page IsNot Nothing AndAlso GetType(Page).IsInstanceOfType(Me.Page) AndAlso CType(Me.Page, Page)._WebManager IsNot Nothing Then
-                    _WebManager = CType(Me.Page, Page)._WebManager
-                End If
-                Return _WebManager
-            End Get
-            Set(value As CompuMaster.camm.WebManager.Controls.cammWebManager)
-                _WebManager = value
-            End Set
-        End Property
-
-    End Class
-#End If
-
-#Region " Public Class Page"
     <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class Page
         Inherits System.Web.UI.Page
         Implements IPage
@@ -474,23 +416,5 @@ Namespace CompuMaster.camm.WebManager.Pages
         End Sub
 
     End Class
-
-     ''' <summary>
-    '''     A protected page which requires an access validation
-    ''' </summary>
-    ''' <remarks>
-    '''     If the security object name hasn't been set via the property cammWebManager.SecurityObject and it also hasn't been validated by performing an access check, this page will throw an exception in Render event.
-    '''     The security objects "Anonymous" or "@@Anonymous" would be accepted also when they allow access to everybody. This is okay since it is ensured by the non-empty string that the developer hasn't forgotten to add a security object check to his page.
-    ''' </remarks>
-    <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class ProtectedPage
-        Inherits Page
-
-        Protected Overrides Sub OnInit(e As EventArgs)
-            Me.EnableProtectedPageRequirement()
-            MyBase.OnInit(e)
-        End Sub
-
-    End Class
-#End Region
 
 End Namespace
