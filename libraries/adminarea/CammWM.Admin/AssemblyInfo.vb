@@ -10,7 +10,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyCompany("CompuMaster GmbH")> 
 <Assembly: AssemblyProduct("camm Web-Manager")>
 <Assembly: AssemblyCopyright("2001-2016 CompuMaster GmbH")>
-<Assembly: AssemblyTrademark("camm")> 
+<Assembly: AssemblyTrademark("")>
 <Assembly: CLSCompliant(True)> 
 
 'Die folgende GUID ist für die ID der Typbibliothek, wenn dieses Projekt in COM angezeigt wird
