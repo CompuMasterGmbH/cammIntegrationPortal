@@ -499,7 +499,7 @@ Namespace CompuMaster.camm.WebManager.Notifications
         ''' </summary>
         ''' <param name="userInfo">The user information object</param>
         Public Overridable Sub NotificationForUser_ForgottenPassword(ByVal userInfo As UserInformation) Implements INotifications.NotificationForUser_ForgottenPassword
-            Dim PW As String = cammWebManager.System_GetUserPassword(userInfo.LoginName, userInfo.EMailAddress)
+            Dim PW As String = cammWebManager.System_GetUserPassword(userInfo.LoginName)
             Dim MainSubject As String
             Dim eMailBody As String
             Dim eMailHTMLBody As String

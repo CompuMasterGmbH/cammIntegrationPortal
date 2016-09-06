@@ -55,12 +55,13 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
                 If AlgorithmInfo.CanDecrypt(transformationResult.Algorithm) Then
                     'Message verschicken
                     cammWebManager.Notifications.NotificationForUser_ForgottenPassword(UserInfo)
-                    Return
                 End If
+            Else
+                Dim resetLinkGenerator As New PassswordReset(cammWebManager, UserInfo)
+                cammWebManager.Notifications.NotificationForUser_PasswordResetLink(UserInfo, resetLinkGenerator.CreateResetUrl())
             End If
 
-            Dim resetLinkGenerator As New PassswordReset(cammWebManager, UserInfo)
-            cammWebManager.Notifications.NotificationForUser_PasswordResetLink(UserInfo, resetLinkGenerator.CreateResetUrl())
+
         End Sub
 
     End Class

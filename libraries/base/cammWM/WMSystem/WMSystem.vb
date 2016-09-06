@@ -1212,76 +1212,36 @@ Namespace CompuMaster.camm.WebManager
 
         End Function
 
+
         ''' <summary>
         '''     Recover the password of a user
         ''' </summary>
         ''' <param name="MyLoginName">Login name of the user</param>
-        ''' <param name="MyEMailAddress">The user's e-mail address</param>
-        ''' <returns>The demanded password</returns>
-        Public Function System_GetUserPassword(ByVal MyLoginName As String, ByVal MyEMailAddress As String) As String
-            Dim MyDBConn As New SqlConnection
-            Dim MyRecSet As SqlDataReader = Nothing
-            Dim MyCmd As New SqlCommand
-            Dim decryptedPassword As String
-
-            'Create connection
-            MyDBConn.ConnectionString = ConnectionString
-            Try
-                MyDBConn.Open()
-
-                'Get parameter value and append parameter
-                With MyCmd
-
-                    .CommandText = "Public_RestorePassword"
-                    .CommandType = CommandType.StoredProcedure
-
-                    .Parameters.Add("@Username", SqlDbType.NVarChar).Value = Trim(MyLoginName)
-                    .Parameters.Add("@EMail", SqlDbType.NVarChar).Value = Trim(MyEMailAddress)
-
-                End With
-
-                'Create recordset by executing the command
-                MyCmd.Connection = MyDBConn
-
-                Try
-                    MyRecSet = MyCmd.ExecuteReader()
-                    If MyRecSet.Read Then
-                        decryptedPassword = CType(MyRecSet(0), String)
-                    Else
-                        decryptedPassword = Nothing
-                    End If
-                Catch ex As Exception
-                    decryptedPassword = Nothing
-                End Try
-
-            Finally
-                If Not MyRecSet Is Nothing AndAlso Not MyRecSet.IsClosed Then
-                    MyRecSet.Close()
-                End If
-                If Not MyCmd Is Nothing Then
-                    MyCmd.Dispose()
-                End If
-                If Not MyDBConn Is Nothing Then
-                    If MyDBConn.State <> ConnectionState.Closed Then
-                        MyDBConn.Close()
-                    End If
-                    MyDBConn.Dispose()
-                End If
-            End Try
-            'TODO: in theory the following is all the function needs. System_GetUserPasswordTransformationResult returns the Transformationresult, which has the password there.
-            'however, it doesn't take into account e-mail, therefore the logic above still exists for now.
+        ''' <returns>The demanded password. If decryption isn't possible, an empty string</returns>
+        Public Function System_GetUserPassword(ByVal MyLoginName As String) As String
+            Dim result As String = Nothing
             Try
                 Dim transformationResult As CryptoTransformationResult = System_GetUserPasswordTransformationResult(MyLoginName)
                 Dim transformer As IWMPasswordTransformation = PasswordTransformerFactory.ProduceCryptographicTransformer(transformationResult.Algorithm)
                 If TypeOf transformer Is IWMPasswordTransformationBackwards Then
                     Dim reverseTransformer As IWMPasswordTransformationBackwards = CType(transformer, IWMPasswordTransformationBackwards)
-                    decryptedPassword = reverseTransformer.TransformStringBack(decryptedPassword, transformationResult.Noncevalue)
+                    result = reverseTransformer.TransformStringBack(transformationResult.TransformedText, transformationResult.Noncevalue)
                 End If
             Catch ex As Exception
-                decryptedPassword = Nothing
+                result = Nothing
             End Try
-            Return decryptedPassword
+            Return result
+        End Function
 
+        ''' <summary>
+        '''     Recover the password of a user
+        ''' </summary>
+        ''' <param name="MyLoginName">Login name of the user</param>
+        ''' <param name="MyEMailAddress">The user's e-mail address</param>
+        ''' <returns>The demanded password. If decryption isn't possible, an empty string</returns>
+        ''' <remarks>Keeping this around for now as I don't know whether there is code out there using this function and passing the email address which is of course unnecessary when you have unique usernames... </remarks>
+        Public Function System_GetUserPassword(ByVal MyLoginName As String, ByVal MyEMailAddress As String) As String
+            Return System_GetUserPassword(MyLoginName)
         End Function
 
         Private _DatabaseIsNewerBuildThanWebManagerApplication As TripleState
