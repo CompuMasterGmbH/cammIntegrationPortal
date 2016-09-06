@@ -1398,7 +1398,7 @@ Namespace CompuMaster.camm.WebManager
                 If newPassword = "" Then
                     Throw New ArgumentNullException("newPassword")
                 End If
-                Me.Validate(ValidationItem.PasswordComplexityRequirements, True)
+                Me.Validate(ValidationItem.PasswordComplexityRequirements, True, newPassword)
 
                 Dim MyDBConn As New SqlConnection(Me._WebManager.ConnectionString)
                 Dim MyCmd As New SqlCommand
