@@ -4,31 +4,31 @@
 <!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
 <script runat="server">
 
-	Private Sub CustomValidatorComesFrom_ServerValidate(ByVal source As Object, ByVal args As System.Web.UI.WebControls.ServerValidateEventArgs)
-		args.IsValid = IsValidFieldComesFrom
-	End Sub
 	Private Sub CustomValidatorMotivation_ServerValidate(ByVal source As Object, ByVal args As System.Web.UI.WebControls.ServerValidateEventArgs)
 		args.IsValid = IsValidFieldMotivation
 	End Sub
 	
-        Protected Overridable Function IsValidFieldMotivation() As Boolean
-            For Each item As Web.UI.WebControls.ListItem In Me.CheckboxListMotivation.Items
-                If item.Selected Then
-                    Return True
-                End If
-            Next
-            Return False
-        End Function
+	Protected Overridable Function IsValidFieldMotivation() As Boolean
+		For Each item As Web.UI.WebControls.ListItem In Me.CheckboxListMotivation.Items
+			If item.Selected Then
+				Return True
+			End If
+		Next
+		Return False
+	End Function
 
-        Protected Overridable Function IsValidFieldComesFrom() As Boolean
-            For Each item As Web.UI.WebControls.ListItem In Me.RadioListComesFrom.Items
-                If item.Selected Then
-                    Return True
-                End If
-            Next
-            Return False
-        End Function
+	Private Sub CustomValidatorComesFrom_ServerValidate(ByVal source As Object, ByVal args As System.Web.UI.WebControls.ServerValidateEventArgs)
+		args.IsValid = IsValidFieldComesFrom
+	End Sub
 
+	Protected Overridable Function IsValidFieldComesFrom() As Boolean
+		For Each item As Web.UI.WebControls.ListItem In Me.RadioListComesFrom.Items
+			If item.Selected Then
+				Return True
+			End If
+		Next
+		Return False
+	End Function
 
 </script>
 	<h3><font face="Arial" size="3"><%= Server.htmlencode(cammWebManager.Internationalization.OfficialServerGroup_Title) %><br>-&nbsp;<%= cammWebManager.Internationalization.CreateAccount_Descr_PageTitle %>&nbsp;-</font></h3>
@@ -46,7 +46,7 @@
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_NewLoginName %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
-								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxLoginName" maxLength="20" style="width: 200px" />&nbsp;<asp:CustomValidator Display="Dynamic" runat="server" id="ValidatorLoginName" /></FONT></P></TD>
+								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxLoginName" maxLength="50" style="width: 200px" />&nbsp;<asp:CustomValidator Display="Dynamic" runat="server" id="ValidatorLoginName" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_NewLoginPassword %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
@@ -60,7 +60,8 @@
 								<TD VAlign="Top" ColSpan="2"><P>&nbsp; </P></TD>
 								</TR><TR>
 								<TD BGCOLOR="#C1C1C1" ColSpan="2"><P><FONT face="Arial" size=2><b><%= cammWebManager.Internationalization.CreateAccount_Descr_Address %>:</b></FONT></P></TD>
-								</TR><TR>
+								</TR>
+								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_Company %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxCompany" maxLength="100" style="width: 200px" /> 
 								<asp:RequiredFieldValidator Display="Dynamic" runat="server" id="ValidatorCompany" ControlToValidate="TextboxCompany" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>

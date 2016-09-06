@@ -53,26 +53,43 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' </summary>
         ''' <remarks>If the creation is successful, method AfterUserUpdate will be executed</remarks>
         Protected Overridable Sub CollectDataAndUpdateAccount()
-            Dim UserInfo As CompuMaster.camm.WebManager.IUserInformation
-            UserInfo = Me.UpdateBasicUserInfoOfCurrentUser
-            'Fill (with possibility for custom overridings) the user info object
-            Me.FillUserAccount(UserInfo)
+            AssignFormDataToUserInfo()
 
             'Write account
             Dim UpdateSuccessfull As Boolean
-            UpdateSuccessfull = WriteUserAccount(UserInfo)
+            UpdateSuccessfull = WriteUserAccount(Me.cammWebManager.CurrentUserInfo)
 
             'Login and redirect to next page if successfull - otherwise keep here with the validation error messages
             If UpdateSuccessfull = True Then
-                AfterUserUpdate(UserInfo)
+                AfterUserUpdate(Me.cammWebManager.CurrentUserInfo)
+                AssignUserInfoDataToForm()
             End If
         End Sub
 
         ''' <summary>
-        ''' Fill an IUserInformation object based on current user info and provided basic data from user
+        ''' Try to find the specified list item case-insensitive
         ''' </summary>
-        ''' <remarks></remarks>
-        Protected MustOverride Function UpdateBasicUserInfoOfCurrentUser() As WebManager.IUserInformation
+        ''' <param name="collection"></param>
+        ''' <param name="value"></param>
+        ''' <returns>The list item or null (Nothing in VisualBasic) if not found</returns>
+        Protected Function LookupListItemWithValue(collection As System.Web.UI.WebControls.ListItemCollection, value As String) As System.Web.UI.WebControls.ListItem
+            For MyCounter As Integer = 0 To collection.Count - 1
+                If collection(MyCounter).Value.ToUpperInvariant = value.ToUpperInvariant Then
+                    Return collection(MyCounter)
+                End If
+            Next
+            Return Nothing
+        End Function
+
+        ''' <summary>
+        ''' Assign the current user's profile settings to controls of this page
+        ''' </summary>
+        Protected MustOverride Sub AssignUserInfoDataToForm()
+
+        ''' <summary>
+        ''' Assign data from controls of this page to the current user
+        ''' </summary>
+        Protected MustOverride Sub AssignFormDataToUserInfo()
 
         ''' <summary>
         ''' Overridable method for customized actions after the new user account has been written
@@ -92,11 +109,27 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
                 If CType(userInfo, WMSystem.UserInformation).IsSystemUser Then
                     Throw New Exception("Update of profiles only for real users")
                 End If
-
+                'Save user data and return with success
                 CType(userInfo, WMSystem.UserInformation).Save(SuppressUserNotifications)
-
                 Return True
-
+            Catch ex As FlagValidation.RequiredFlagException
+                Dim ErrDetails As String = ""
+                For Each result As FlagValidation.FlagValidationResult In ex.ValidationResults
+                    If ErrDetails <> Nothing Then ErrDetails &= ", "
+                    ErrDetails &= result.Flag & " (" & [Enum].GetName(GetType(FlagValidation.FlagValidationResultCode), result.ValidationResult) & ")"
+                Next
+                If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                    ShowErrorMessage("Internal error: " & ex.ToString & ": " & ErrDetails) 'NOTE: already the flag names might provide sensitive data, so don't show these flag names in low notification environments!
+                Else
+                    ShowErrorMessage("Internal error: " & ex.Message)
+                End If
+                Dim ReportEx As Exception = New Exception(ErrDetails, ex)
+                cammWebManager.Log.RuntimeWarning(ReportEx, True, WMSystem.DebugLevels.NoDebug)
+                cammWebManager.Log.ReportWarningByEMail(ReportEx, "Invalid user profile data detected") 'Report issue to responsible technician
+                Return False
+            Catch ex As wmsystem.UserInformation.FieldLimitedToAllowedValuesException
+                ShowErrorMessage(ex.Message)
+                Return False
             Catch ex As Exception
                 If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
                     ShowErrorMessage("Internal error: " & ex.ToString)
@@ -104,7 +137,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
                     ShowErrorMessage("Internal error: " & ex.Message)
                 End If
                 cammWebManager.Log.RuntimeException(ex, False, False, WMSystem.DebugLevels.NoDebug)
-
                 Return False
             End Try
         End Function
@@ -117,10 +149,35 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         Protected MustOverride Sub ShowErrorMessage(ByVal message As String)
 
         ''' <summary>
-        '''     Fill the user profile with the new data which shall be saved
+        ''' The list of allowed values for the country field (or empty list in case of no limitation)
         ''' </summary>
-        ''' <param name="userInfo">The current user profile which shall be updated</param>
-        Protected MustOverride Sub FillUserAccount(ByVal userInfo As WebManager.IUserInformation)
+        ''' <returns></returns>
+        Protected ReadOnly Property LimitedAllowedCountries As System.Collections.Generic.List(Of String)
+            Get
+                Static _LimitedAllowedCountries As System.Collections.Generic.List(Of String)
+                If _LimitedAllowedCountries Is Nothing Then
+                    _LimitedAllowedCountries = WMSystem.UserInformation.CentralConfig_AllowedValues_FieldCountry(Me.cammWebManager)
+                    If _LimitedAllowedCountries Is Nothing Then
+                        _LimitedAllowedCountries = New System.Collections.Generic.List(Of String)
+                    End If
+                End If
+                Return _LimitedAllowedCountries
+            End Get
+        End Property
+
+        Protected Function ConvertStringsToListItems(values As System.Collections.Generic.List(Of String)) As List(Of System.Web.UI.WebControls.ListItem)
+            Dim Result As New List(Of System.Web.UI.WebControls.ListItem)
+            For MyCounter As Integer = 0 To values.Count - 1
+                Result.Add(New System.Web.UI.WebControls.ListItem(values(MyCounter)))
+            Next
+            Return Result
+        End Function
+
+        Private Sub BaseUpdateUserProfile_Load(sender As Object, e As EventArgs) Handles Me.Load
+            If Not Page.IsPostBack Then
+                AssignUserInfoDataToForm()
+            End If
+        End Sub
 
     End Class
 

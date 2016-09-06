@@ -20,6 +20,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
     <System.Runtime.InteropServices.ComVisible(False)> Public Class UpdateUserProfile
         Inherits BaseUpdateUserProfile
 
+        Protected LabelLoginName As Web.UI.WebControls.Label
         Protected TextboxPassword1 As Web.UI.WebControls.TextBox
         Protected DropdownSalutation As Web.UI.WebControls.DropDownList
         Protected TextboxCompany As Web.UI.WebControls.TextBox
@@ -33,6 +34,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         Protected TextboxLocation As Web.UI.WebControls.TextBox
         Protected TextboxState As Web.UI.WebControls.TextBox
         Protected TextboxCountry As Web.UI.WebControls.TextBox
+        Protected WithEvents DropdownCountry As Web.UI.WebControls.DropDownList
         Protected TextboxPhone As Web.UI.WebControls.TextBox
         Protected TextboxFax As Web.UI.WebControls.TextBox
         Protected TextboxMobile As Web.UI.WebControls.TextBox
@@ -62,40 +64,6 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
             End Set
         End Property
 
-        ''' <summary>
-        '''     Fill the user profile with the new data which shall be saved
-        ''' </summary>
-        ''' <param name="userInfo">The current user profile which shall be updated</param>
-        Protected Overrides Sub FillUserAccount(ByVal userInfo As WebManager.IUserInformation)
-
-            'Already prefilled values
-            'userInfo.Gender = CType(IIf(CStr(Me.DropdownSalutation.SelectedValue) = "Ms.", WMSystem.Sex.Feminin, WMSystem.Sex.Masculin), WMSystem.Sex)
-            'userInfo.PreferredLanguage1 = New WMSystem.LanguageInformation(CType(Me.Dropdown1stPreferredLanguage.SelectedValue, Integer), cammWebManager)
-            'userInfo.PreferredLanguage2 = New WMSystem.LanguageInformation(CType(Utils.StringNotEmptyOrNothing(Me.Dropdown2ndPreferredLanguage.SelectedValue), Integer), cammWebManager)
-            'userInfo.PreferredLanguage3 = New WMSystem.LanguageInformation(CType(Utils.StringNotEmptyOrNothing(Me.Dropdown3rdPreferredLanguage.SelectedValue), Integer), cammWebManager)
-            'userInfo.Company = Me.TextboxCompany.Text
-            'userInfo.AcademicTitle = Me.TextboxAcademicTitle.Text
-            'userInfo.FirstName = Me.TextboxFirstName.Text
-            'userInfo.LastName = Me.TextboxLastName.Text
-            'userInfo.NameAddition = Me.TextboxNameAffix.Text
-            'userInfo.EMailAddress = Me.TextboxEMail.Text
-            'userInfo.Street = Me.TextboxStreet.Text
-            'userInfo.ZipCode = Me.TextboxZipCode.Text
-            'userInfo.Location = Me.TextboxLocation.Text
-            'userInfo.State = Me.TextboxState.Text
-            'userInfo.Country = Me.TextboxCountry.Text
-
-            'Additional fields
-            userInfo.PhoneNumber = Me.TextboxPhone.Text
-            userInfo.FaxNumber = Me.TextboxFax.Text
-            userInfo.MobileNumber = Me.TextboxMobile.Text
-            userInfo.Position = Me.TextboxPositionInCompany.Text
-            userInfo.AdditionalFlags("OnCreationComment") = Me.TextboxComment.Text
-            userInfo.AdditionalFlags("Motivation") = CollectMotivationDetails()
-            userInfo.AdditionalFlags("ComesFrom") = CollectComesFromDetails()
-
-        End Sub
-
         Private Function CollectMotivationDetails() As String
             Dim Result As String = Nothing
             If Not Me.CheckboxListMotivation Is Nothing Then
@@ -111,6 +79,114 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
                 If Me.MotivationOtherText.Text <> Nothing Then
                     Result &= " (" & Me.MotivationOtherText.Text & ")"
                 End If
+            End If
+            Return Result
+        End Function
+
+        ''' <summary>
+        ''' Fill the motivation control elements to fit with the current user profile data
+        ''' </summary>
+        ''' <param name="flagValue"></param>
+        Private Sub FillMotivationControlValues(flagValue As String)
+            If Not Me.CheckboxListMotivation Is Nothing Then
+                Dim SeparatedValues As List(Of String) = SplitFlagCommaSeparatedButWithParenthesisPriority(flagValue)
+                For Each item As Web.UI.WebControls.ListItem In Me.CheckboxListMotivation.Items
+                    If SeparatedValues.Contains(item.Value) Then
+                        item.Selected = True
+                        SeparatedValues.Remove(item.Value)
+                    Else
+                        item.Selected = False
+                    End If
+                Next
+                If SeparatedValues.Count > 0 Then
+                    Dim RemainingValues As String = Strings.Join(SeparatedValues.ToArray, ","c)
+                    If RemainingValues.StartsWith("Other (") AndAlso RemainingValues.EndsWith(")") Then
+                        Dim CleanedOtherValue As String = RemainingValues.Remove(0, "Other (".Length)
+                        CleanedOtherValue = CleanedOtherValue.Substring(0, CleanedOtherValue.Length - 1)
+                        Me.MotivationOtherText.Text = CleanedOtherValue
+                    Else
+                        Me.MotivationOtherText.Text = RemainingValues
+                    End If
+                    If LookupItemListElementOther(Me.CheckboxListMotivation.Items) IsNot Nothing Then
+                        LookupItemListElementOther(Me.CheckboxListMotivation.Items).Selected = True
+                    End If
+                Else
+                    Me.MotivationOtherText.Text = ""
+                End If
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' Fill the comes-from control elements to fit with the current user profile data
+        ''' </summary>
+        ''' <param name="flagValue"></param>
+        Private Sub FillComesFromControlValues(flagValue As String)
+            If Not Me.RadioListComesFrom Is Nothing Then
+                Dim SeparatedValues As List(Of String) = SplitFlagCommaSeparatedButWithParenthesisPriority(flagValue)
+                For Each item As Web.UI.WebControls.ListItem In Me.RadioListComesFrom.Items
+                    If SeparatedValues.Contains(item.Value) Then
+                        item.Selected = True
+                        SeparatedValues.Remove(item.Value)
+                    Else
+                        item.Selected = False
+                    End If
+                Next
+                If SeparatedValues.Count > 0 Then
+                    Dim RemainingValues As String = Strings.Join(SeparatedValues.ToArray, ","c)
+                    If RemainingValues.StartsWith("Other (") AndAlso RemainingValues.EndsWith(")") Then
+                        Dim CleanedOtherValue As String = RemainingValues.Remove(0, "Other (".Length)
+                        CleanedOtherValue = CleanedOtherValue.Substring(0, CleanedOtherValue.Length - 1)
+                        Me.ComesFromOtherText.Text = CleanedOtherValue
+                    Else
+                        Me.ComesFromOtherText.Text = RemainingValues
+                    End If
+                    If LookupItemListElementOther(Me.RadioListComesFrom.Items) IsNot Nothing Then
+                        LookupItemListElementOther(Me.RadioListComesFrom.Items).Selected = True
+                    End If
+                Else
+                    Me.ComesFromOtherText.Text = ""
+                End If
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' Lookup the element of the list with value &quot;Other&quot;
+        ''' </summary>
+        ''' <param name="list"></param>
+        ''' <returns></returns>
+        Private Function LookupItemListElementOther(list As System.Web.UI.WebControls.ListItemCollection) As System.Web.UI.WebControls.ListItem
+            Return MyBase.LookupListItemWithValue(list, "Other")
+        End Function
+
+        ''' <summary>
+        ''' Split a string by comma, but not if the comma is within parenthesis
+        ''' </summary>
+        ''' <param name="flagValue">Comma-separated list of values, e.g. &quot;Abc,Def,Other (Some,other,commas)&quot;</param>
+        ''' <returns>Separated text elements, e.g. &quot;Abc&quot;, &quot;Def&quot;, &quot;Other (Some,other,commas)&quot; </returns>
+        Private Function SplitFlagCommaSeparatedButWithParenthesisPriority(flagValue As String) As List(Of String)
+            Dim SplittedFlag As String() = flagValue.Split(","c)
+            Dim Result As New List(Of String)
+            Dim CurrentLogicLevel As Integer = 0
+            Dim CurrentBuffer As String = ""
+            For Each FlagPart As String In SplittedFlag
+                Dim LogicLevelChange As Integer = Utils.CountOfOccurances(FlagPart, "(") - Utils.CountOfOccurances(FlagPart, ")")
+                If CurrentLogicLevel = 0 And LogicLevelChange = 0 Then
+                    Result.Add(FlagPart)
+                Else
+                    If CurrentBuffer = "" Then
+                        CurrentBuffer = FlagPart
+                    Else
+                        CurrentBuffer &= "," & FlagPart
+                    End If
+                    CurrentLogicLevel = System.Math.Max(CurrentLogicLevel + LogicLevelChange, 0) 'never go into negative numbers
+                    If CurrentLogicLevel = 0 Then
+                        Result.Add(CurrentBuffer)
+                        CurrentBuffer = ""
+                    End If
+                End If
+            Next
+            If CurrentBuffer <> "" Then
+                Result.Add(CurrentBuffer)
             End If
             Return Result
         End Function
@@ -134,36 +210,39 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
             Return Result
         End Function
 
-        Protected Overrides Function UpdateBasicUserInfoOfCurrentUser() As WebManager.IUserInformation
-
-            Dim MyUserInfo As WMSystem.UserInformation = Me.cammWebManager.CurrentUserInfo
-            MyUserInfo.EMailAddress = Trim(Me.TextboxEMail.Text)
-            MyUserInfo.Company = Trim(Me.TextboxCompany.Text)
-            MyUserInfo.Gender = CType(IIf(Me.DropdownSalutation.SelectedValue = "Ms.", WMSystem.Sex.Feminine, IIf(Me.DropdownSalutation.SelectedValue = "Mr.", WMSystem.Sex.Masculine, WMSystem.Sex.Undefined)), WMSystem.Sex)
-            MyUserInfo.NameAddition = Trim(Me.TextboxNameAffix.Text)
-            MyUserInfo.FirstName = Trim(Me.TextboxFirstName.Text)
-            MyUserInfo.LastName = Trim(Me.TextboxLastName.Text)
-            MyUserInfo.AcademicTitle = Trim(Me.TextboxAcademicTitle.Text)
-            MyUserInfo.Street = Trim(Me.TextboxStreet.Text)
-            MyUserInfo.ZipCode = Trim(Me.TextboxZipCode.Text)
-            MyUserInfo.Location = Trim(Me.TextboxLocation.Text)
-            MyUserInfo.State = Trim(Me.TextboxState.Text)
-            MyUserInfo.Country = Trim(Me.TextboxCountry.Text)
-            MyUserInfo.PreferredLanguage1 = New WMSystem.LanguageInformation(CInt(Me.Dropdown1stPreferredLanguage.SelectedValue), Me.cammWebManager)
-            MyUserInfo.PreferredLanguage2 = New WMSystem.LanguageInformation(Utils.TryCInt(Me.Dropdown2ndPreferredLanguage.SelectedValue), Me.cammWebManager)
-            MyUserInfo.PreferredLanguage3 = New WMSystem.LanguageInformation(Utils.TryCInt(Me.Dropdown3rdPreferredLanguage.SelectedValue), Me.cammWebManager)
-            Return MyUserInfo
-
-        End Function
-
         Private Sub PageOnLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
-
-            'Perform actions only when this is a post back
-            If Page.IsPostBack Then
-                Page.Validate()
-                If Page.IsValid Then
-                    CollectDataAndUpdateAccount()
+            If Me.DropdownCountry IsNot Nothing AndAlso Me.TextboxCountry Is Nothing Then
+                'dropdown box available, free text field not available
+                Me.DropdownCountry.Visible = True
+                If Me.IsPostBack = False Then
+                    Me.DropdownCountry.Items.AddRange(ConvertStringsToListItems(Me.LimitedAllowedCountries).ToArray)
                 End If
+                Me.TextboxCountry.Visible = False
+            ElseIf Me.DropdownCountry Is Nothing AndAlso Me.TextboxCountry IsNot Nothing Then
+                'no dropdown control available --> use free text field
+            ElseIf Me.DropdownCountry Is Nothing AndAlso Me.TextboxCountry Is Nothing Then
+                'no country field there?!? -> well, let's try to ignore this at this point
+            Else 'both controls available - show just the best fitting option
+                If LimitedAllowedCountries.Count = 0 Then
+                    'no limits --> free text field
+                    Me.DropdownCountry.Visible = False
+                    Me.TextboxCountry.Visible = True
+                Else
+                    'limited to defined allow-values -> dropdown box
+                    Me.DropdownCountry.Visible = True
+                    If Me.IsPostBack = False Then
+                        Me.DropdownCountry.Items.AddRange(ConvertStringsToListItems(Me.LimitedAllowedCountries).ToArray)
+                    End If
+                    Me.TextboxCountry.Visible = False
+                End If
+            End If
+
+            If Page.IsPostBack Then
+                'Validate on post-back
+                Page.Validate()
+            Else
+                'prevent Google Chrome (and others) to auto-fill (the very last textbox before the password field would be considered as the username field - which is definitely wrong, here)
+                Me.Form.Attributes.Add("autocomplete", "false")
             End If
 
         End Sub
@@ -299,7 +378,90 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
             End If
         End Sub
 
+        Private Sub SubmitButton_Click(sender As Object, e As EventArgs) Handles SubmitButton.Click
+            Me.Validate()
+            If Page.IsValid Then
+                CollectDataAndUpdateAccount()
+            End If
+        End Sub
+
 #End Region
+        Private Sub SelectPreferredLanguage(dropdownList As System.Web.UI.WebControls.DropDownList, value As Integer)
+            If dropdownList IsNot Nothing AndAlso value <> 0 AndAlso LookupListItemWithValue(dropdownList.Items, value.ToString) IsNot Nothing Then
+                LookupListItemWithValue(dropdownList.Items, value.ToString).Selected = True
+                Dim EmptyValueItem As Web.UI.WebControls.ListItem = LookupListItemWithValue(dropdownList.Items, "")
+                If EmptyValueItem IsNot Nothing Then dropdownList.Items.Remove(EmptyValueItem)
+            End If
+        End Sub
+
+        Protected Overrides Sub AssignUserInfoDataToForm()
+            Me.LabelLoginName.Text = Server.HtmlEncode(Me.cammWebManager.CurrentUserInfo.LoginName)
+            Me.TextboxCompany.Text = Me.cammWebManager.CurrentUserInfo.Company
+            Select Case Me.cammWebManager.CurrentUserInfo.Gender
+                Case WMSystem.Sex.Masculine
+                    Me.DropdownSalutation.SelectedValue = "Mr."
+                Case WMSystem.Sex.Feminine
+                    Me.DropdownSalutation.SelectedValue = "Ms."
+                Case Else
+                    Me.DropdownSalutation.SelectedValue = ""
+            End Select
+            Me.TextboxAcademicTitle.Text = Me.cammWebManager.CurrentUserInfo.AcademicTitle
+            Me.TextboxFirstName.Text = Me.cammWebManager.CurrentUserInfo.FirstName
+            Me.TextboxLastName.Text = Me.cammWebManager.CurrentUserInfo.LastName
+            Me.TextboxNameAffix.Text = Me.cammWebManager.CurrentUserInfo.NameAddition
+            Me.TextboxEMail.Text = Me.cammWebManager.CurrentUserInfo.EMailAddress
+            Me.TextboxStreet.Text = Me.cammWebManager.CurrentUserInfo.Street
+            Me.TextboxZipCode.Text = Me.cammWebManager.CurrentUserInfo.ZipCode
+            Me.TextboxLocation.Text = Me.cammWebManager.CurrentUserInfo.Location
+            Me.TextboxState.Text = Me.cammWebManager.CurrentUserInfo.State
+            If TextboxCountry IsNot Nothing Then TextboxCountry.Text = Me.cammWebManager.CurrentUserInfo.Country
+            If DropdownCountry IsNot Nothing Then
+                Dim Item As System.Web.UI.WebControls.ListItem = LookupListItemWithValue(DropdownCountry.Items, Me.cammWebManager.CurrentUserInfo.Country)
+                If Item Is Nothing Then
+                    Item = New System.Web.UI.WebControls.ListItem(Me.cammWebManager.CurrentUserInfo.Country)
+                    DropdownCountry.Items.Add(Item)
+                End If
+                DropdownCountry.SelectedValue = Item.Value
+            End If
+            Me.SelectPreferredLanguage(Me.Dropdown1stPreferredLanguage, Me.cammWebManager.CurrentUserInfo.PreferredLanguage1.ID)
+            Me.SelectPreferredLanguage(Me.Dropdown2ndPreferredLanguage, Me.cammWebManager.CurrentUserInfo.PreferredLanguage2.ID)
+            Me.SelectPreferredLanguage(Me.Dropdown3rdPreferredLanguage, Me.cammWebManager.CurrentUserInfo.PreferredLanguage3.ID)
+            Me.TextboxPhone.Text = Me.cammWebManager.CurrentUserInfo.PhoneNumber
+            Me.TextboxFax.Text = Me.cammWebManager.CurrentUserInfo.FaxNumber
+            Me.TextboxMobile.Text = Me.cammWebManager.CurrentUserInfo.MobileNumber
+            Me.TextboxPositionInCompany.Text = Me.cammWebManager.CurrentUserInfo.Position
+            Me.FillMotivationControlValues(Me.cammWebManager.CurrentUserInfo.AdditionalFlags("Motivation"))
+            Me.FillComesFromControlValues(Me.cammWebManager.CurrentUserInfo.AdditionalFlags("ComesFrom"))
+        End Sub
+
+        Protected Overrides Sub AssignFormDataToUserInfo()
+            Me.cammWebManager.CurrentUserInfo.EMailAddress = Trim(Me.TextboxEMail.Text)
+            Me.cammWebManager.CurrentUserInfo.Company = Trim(Me.TextboxCompany.Text)
+            Me.cammWebManager.CurrentUserInfo.Gender = CType(IIf(Me.DropdownSalutation.SelectedValue = "Ms.", WMSystem.Sex.Feminine, IIf(Me.DropdownSalutation.SelectedValue = "Mr.", WMSystem.Sex.Masculine, WMSystem.Sex.Undefined)), WMSystem.Sex)
+            Me.cammWebManager.CurrentUserInfo.NameAddition = Trim(Me.TextboxNameAffix.Text)
+            Me.cammWebManager.CurrentUserInfo.FirstName = Trim(Me.TextboxFirstName.Text)
+            Me.cammWebManager.CurrentUserInfo.LastName = Trim(Me.TextboxLastName.Text)
+            Me.cammWebManager.CurrentUserInfo.AcademicTitle = Trim(Me.TextboxAcademicTitle.Text)
+            Me.cammWebManager.CurrentUserInfo.Street = Trim(Me.TextboxStreet.Text)
+            Me.cammWebManager.CurrentUserInfo.ZipCode = Trim(Me.TextboxZipCode.Text)
+            Me.cammWebManager.CurrentUserInfo.Location = Trim(Me.TextboxLocation.Text)
+            Me.cammWebManager.CurrentUserInfo.State = Trim(Me.TextboxState.Text)
+            If DropdownCountry IsNot Nothing AndAlso DropdownCountry.Visible = True Then
+                Me.cammWebManager.CurrentUserInfo.Country = Trim(Me.DropdownCountry.SelectedValue)
+            Else
+                Me.cammWebManager.CurrentUserInfo.Country = Trim(Me.TextboxCountry.Text)
+            End If
+            Me.cammWebManager.CurrentUserInfo.PreferredLanguage1 = New WMSystem.LanguageInformation(CInt(Me.Dropdown1stPreferredLanguage.SelectedValue), Me.cammWebManager)
+            Me.cammWebManager.CurrentUserInfo.PreferredLanguage2 = New WMSystem.LanguageInformation(Utils.TryCInt(Me.Dropdown2ndPreferredLanguage.SelectedValue), Me.cammWebManager)
+            Me.cammWebManager.CurrentUserInfo.PreferredLanguage3 = New WMSystem.LanguageInformation(Utils.TryCInt(Me.Dropdown3rdPreferredLanguage.SelectedValue), Me.cammWebManager)
+            Me.cammWebManager.CurrentUserInfo.PhoneNumber = Me.TextboxPhone.Text
+            Me.cammWebManager.CurrentUserInfo.FaxNumber = Me.TextboxFax.Text
+            Me.cammWebManager.CurrentUserInfo.MobileNumber = Me.TextboxMobile.Text
+            Me.cammWebManager.CurrentUserInfo.Position = Me.TextboxPositionInCompany.Text
+            Me.cammWebManager.CurrentUserInfo.AdditionalFlags("OnCreationComment") = Me.TextboxComment.Text
+            Me.cammWebManager.CurrentUserInfo.AdditionalFlags("Motivation") = CollectMotivationDetails()
+            Me.cammWebManager.CurrentUserInfo.AdditionalFlags("ComesFrom") = CollectComesFromDetails()
+        End Sub
 
     End Class
 

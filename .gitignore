@@ -189,3 +189,4 @@ libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifes
 /sample-projects/smarteditor/Bin
 /sample-projects/packages
 /libraries/smarteditor/webupload/New-NuGetPackages
+/quality-ensurance/TestClassLibraryNuGetAutoReferencing

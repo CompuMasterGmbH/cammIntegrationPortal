@@ -35,6 +35,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         Protected TextboxLocation As Web.UI.WebControls.TextBox
         Protected TextboxState As Web.UI.WebControls.TextBox
         Protected TextboxCountry As Web.UI.WebControls.TextBox
+        Protected WithEvents DropdownCountry As Web.UI.WebControls.DropDownList
         Protected TextboxPhone As Web.UI.WebControls.TextBox
         Protected TextboxFax As Web.UI.WebControls.TextBox
         Protected TextboxMobile As Web.UI.WebControls.TextBox
@@ -149,6 +150,13 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
 
         Protected Overrides Function CreateUserInfo() As WebManager.IUserInformation
 
+            Dim Country As String
+            If Me.DropdownCountry IsNot Nothing AndAlso Me.DropdownCountry.Visible = True Then
+                Country = Trim(Me.DropdownCountry.SelectedValue)
+            Else
+                Country = Trim(Me.TextboxCountry.Text)
+            End If
+
             Dim MyUserInfo As New WMSystem.UserInformation(0&,
                 Trim(Mid(Trim(Me.TextboxLoginName.Text), 1, 20)),
                 Trim(Me.TextboxEMail.Text),
@@ -163,7 +171,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
                 Trim(Me.TextboxZipCode.Text),
                 Trim(Me.TextboxLocation.Text),
                 Trim(Me.TextboxState.Text),
-                Trim(Me.TextboxCountry.Text),
+                Trim(Country),
                 CInt(Me.Dropdown1stPreferredLanguage.SelectedValue),
                 Utils.TryCInt(Me.Dropdown2ndPreferredLanguage.SelectedValue),
                 Utils.TryCInt(Me.Dropdown3rdPreferredLanguage.SelectedValue),
@@ -179,6 +187,31 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         End Function
 
         Private Sub PageOnLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
+            If Me.DropdownCountry IsNot Nothing AndAlso Me.TextboxCountry Is Nothing Then
+                'dropdown box available, free text field not available
+                Me.DropdownCountry.Visible = True
+                If Me.IsPostBack = False Then
+                    Me.DropdownCountry.Items.AddRange(ConvertStringsToListItems(Me.LimitedAllowedCountries).ToArray)
+                End If
+                Me.TextboxCountry.Visible = False
+            ElseIf Me.DropdownCountry Is Nothing AndAlso Me.TextboxCountry IsNot Nothing Then
+                'no dropdown control available --> use free text field
+            ElseIf Me.DropdownCountry Is Nothing AndAlso Me.TextboxCountry Is Nothing Then
+                'no country field there?!? -> well, let's try to ignore this at this point
+            Else 'both controls available - show just the best fitting option
+                If LimitedAllowedCountries.Count = 0 Then
+                    'no limits --> free text field
+                    Me.DropdownCountry.Visible = False
+                    Me.TextboxCountry.Visible = True
+                Else
+                    'limited to defined allow-values -> dropdown box
+                    Me.DropdownCountry.Visible = True
+                    If Me.IsPostBack = False Then
+                        Me.DropdownCountry.Items.AddRange(ConvertStringsToListItems(Me.LimitedAllowedCountries).ToArray)
+                    End If
+                    Me.TextboxCountry.Visible = False
+                End If
+            End If
 
             'Perform actions only when this is a post back
             If Page.IsPostBack Then

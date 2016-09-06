@@ -201,6 +201,31 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' <param name="userInfo">The current user profile which shall be created</param>
         Protected MustOverride Sub FillUserAccount(ByVal userInfo As WebManager.IUserInformation)
 
+        ''' <summary>
+        ''' The list of allowed values for the country field (or empty list in case of no limitation)
+        ''' </summary>
+        ''' <returns></returns>
+        Protected ReadOnly Property LimitedAllowedCountries As System.Collections.Generic.List(Of String)
+            Get
+                Static _LimitedAllowedCountries As System.Collections.Generic.List(Of String)
+                If _LimitedAllowedCountries Is Nothing Then
+                    _LimitedAllowedCountries = WMSystem.UserInformation.CentralConfig_AllowedValues_FieldCountry(Me.cammWebManager)
+                    If _LimitedAllowedCountries Is Nothing Then
+                        _LimitedAllowedCountries = New System.Collections.Generic.List(Of String)
+                    End If
+                End If
+                Return _LimitedAllowedCountries
+            End Get
+        End Property
+
+        Protected Function ConvertStringsToListItems(values As System.Collections.Generic.List(Of String)) As List(Of System.Web.UI.WebControls.ListItem)
+            Dim Result As New List(Of System.Web.UI.WebControls.ListItem)
+            For MyCounter As Integer = 0 To values.Count - 1
+                Result.Add(New System.Web.UI.WebControls.ListItem(values(MyCounter)))
+            Next
+            Return Result
+        End Function
+
     End Class
 
 End Namespace
