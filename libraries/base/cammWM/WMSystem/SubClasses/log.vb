@@ -1267,9 +1267,10 @@ Namespace CompuMaster.camm.WebManager
         ''' <summary>
         ''' Create an error log entry in camm Web-Manager's event log and do not throw it
         ''' </summary>
-        ''' <param name="Exception"></param>
-        ''' <param name="neverSendWarningMails"></param>
-        Friend Sub RuntimeWarning(ByVal Exception As Exception, Optional ByVal neverSendWarningMails As Boolean = False)
+        ''' <param name="exception">An exception which shall be logged</param>
+        ''' <param name="neverSendWarningMails">If set to false, there will be an e-mail notification to the TechnicalService contact</param>
+        ''' <param name="requiredDebugLevelBeforeLogging">Logging will happen if this debug level is set. (But throwing the exception will always happen)</param>
+        Friend Sub RuntimeWarning(ByVal Exception As Exception, Optional ByVal neverSendWarningMails As Boolean = False, Optional requiredDebugLevelBeforeLogging As CompuMaster.camm.WebManager.WMSystem.DebugLevels = DebugLevels.NoDebug)
             Dim ExDetails As String = Exception.ToString
 
             'Additional exception details
@@ -1278,7 +1279,7 @@ Namespace CompuMaster.camm.WebManager
                 ExDetails &= vbNewLine & AdditionalExceptionDetails
             End If
 
-            WriteLogItem(ExDetails, Logging_ConflictTypes.RuntimeWarning, DebugLevels.NoDebug, neverSendWarningMails)
+            WriteLogItem(ExDetails, Logging_ConflictTypes.RuntimeWarning, requiredDebugLevelBeforeLogging, neverSendWarningMails)
         End Sub
         ''' <summary>
         '''     Create an error log entry in camm Web-Manager's event log and do not throw it
