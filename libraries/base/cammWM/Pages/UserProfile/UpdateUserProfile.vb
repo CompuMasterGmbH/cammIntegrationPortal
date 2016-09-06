@@ -53,6 +53,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         Protected WithEvents ValidatorSalutation As Web.UI.WebControls.RequiredFieldValidator
         Protected WithEvents ValidatorPassword1 As Web.UI.WebControls.CustomValidator
         Protected WithEvents ValidatorEMail As Web.UI.WebControls.CustomValidator
+        Protected WithEvents ValidatorCountry As Web.UI.WebControls.RequiredFieldValidator
         Protected WithEvents SubmitButton As Web.UI.WebControls.Button
 
         Protected Overrides Property ConfirmationUserPassword() As String
@@ -210,7 +211,12 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
             Return Result
         End Function
 
-        Private Sub PageOnLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        ''' <summary>
+        ''' DropdownCountry must contain list of countries before AssignUserInfoDataToForm is called and which would add the user's previous country value for a 2nd time to the dropdown list
+        ''' </summary>
+        ''' <param name="sender"></param>
+        ''' <param name="e"></param>
+        Friend Overrides Sub BaseUpdateUserProfile_Load(sender As Object, e As EventArgs)
             If Me.DropdownCountry IsNot Nothing AndAlso Me.TextboxCountry Is Nothing Then
                 'dropdown box available, free text field not available
                 Me.DropdownCountry.Visible = True
@@ -236,7 +242,12 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
                     Me.TextboxCountry.Visible = False
                 End If
             End If
+            Me.ValidatorCountry.Enabled = Me.TextboxCountry.Visible
+            'Now it's safe to call the base load mechanism which calls AssignUserInfoDataToForm
+            MyBase.BaseUpdateUserProfile_Load(sender, e)
+        End Sub
 
+        Private Sub PageOnLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
             If Page.IsPostBack Then
                 'Validate on post-back
                 Page.Validate()

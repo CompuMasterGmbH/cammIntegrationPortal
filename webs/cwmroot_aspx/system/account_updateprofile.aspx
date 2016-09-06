@@ -87,7 +87,7 @@
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.UpdateProfile_Descr_Country %><font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
-								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:DropdownList width="200px" runat="server" id="cmbCountry" Visible="False" /><asp:Textbox runat="server" id="TextboxCountry" maxLength="60" style="width: 200px" />
+								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:DropdownList width="200px" runat="server" id="DropdownCountry" Visible="False" /><asp:Textbox runat="server" id="TextboxCountry" maxLength="60" style="width: 200px" />
 								<asp:RequiredFieldValidator Display="Dynamic" runat="server" id="ValidatorCountry" ControlToValidate="TextboxCountry" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
 								</TR>
 								<TR>
@@ -142,7 +142,8 @@
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.UpdateProfile_Descr_Password %> *&nbsp;</FONT></P></TD>
-								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxPassword1" TextMode="Password" maxLength="64" style="width: 200px" autocomplete="new-password" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxPassword1" TextMode="Password" maxLength="64" style="width: 200px" autocomplete="new-password" />
+								<asp:RequiredFieldValidator Display="Dynamic" runat="server" id="ValidatorPassword" ControlToValidate="TextboxPassword1" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2> &nbsp;</FONT></P></TD>

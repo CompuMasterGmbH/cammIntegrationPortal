@@ -56,6 +56,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         Protected WithEvents ValidatorPassword1 As Web.UI.WebControls.CustomValidator
         Protected WithEvents ValidatorPassword2 As Web.UI.WebControls.CustomValidator
         Protected WithEvents ValidatorEMail As Web.UI.WebControls.CustomValidator
+        Protected WithEvents ValidatorCountry As Web.UI.WebControls.RequiredFieldValidator
         Protected WithEvents SubmitButton As Web.UI.WebControls.Button
 
         Protected Overrides Property NewUserPassword() As String
@@ -212,6 +213,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
                     Me.TextboxCountry.Visible = False
                 End If
             End If
+            Me.ValidatorCountry.Enabled = Me.TextboxCountry.Visible
 
             'Perform actions only when this is a post back
             If Page.IsPostBack Then

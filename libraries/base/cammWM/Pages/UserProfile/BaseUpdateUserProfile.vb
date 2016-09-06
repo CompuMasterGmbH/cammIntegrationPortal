@@ -173,7 +173,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
             Return Result
         End Function
 
-        Private Sub BaseUpdateUserProfile_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Friend Overridable Sub BaseUpdateUserProfile_Load(sender As Object, e As EventArgs) Handles Me.Load
             If Not Page.IsPostBack Then
                 AssignUserInfoDataToForm()
             End If
