@@ -932,7 +932,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="appSettingName">The name of the appSetting item</param>
         ''' <param name="defaultValue">A default value if not configured of configured invalid</param>
         ''' <param name="suppressExceptions">True if exceptions shall be suppressed and default value returned or False if exception shall be thrown if there is an error</param>
-        Private Shared Function LoadIntegerSetting(ByVal appSettingName As String, ByVal defaultValue As Integer, ByVal suppressExceptions As Boolean) As Integer
+        Friend Shared Function LoadIntegerSetting(ByVal appSettingName As String, ByVal defaultValue As Integer, ByVal suppressExceptions As Boolean) As Integer
             Dim Result As Integer = defaultValue
             Try
                 Dim value As String = CType(WebManagerSettings.Item(appSettingName), String)

@@ -72,11 +72,12 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit
             ''' </remarks>
             Public Shared ReadOnly Property WebEditorContentOfServerID() As Integer
                 Get
-                    Dim WMConfigAccessor As New CwmConfigAccessor
-                    Return WMConfigAccessor.Configuration.ContentOfServerID
+                    'Dim WMConfigAccessor As New CwmConfigAccessor
+                    'Return WMConfigAccessor.Configuration.ContentOfServerID
 
-                    'Maybe a better way for future - but still inactive due to backwards-compatibility with CWM v4.10.192
-                    'Return LoadIntegerSetting("WebManager.WebEditor.ContentOfServerID", 0, False)
+                    ''Maybe a better way for future - but still inactive due to backwards-compatibility with CWM v4.10.192
+                    ''Return LoadIntegerSetting("WebManager.WebEditor.ContentOfServerID", 0, False)
+                    Return CompuMaster.camm.WebManager.Configuration.LoadIntegerSetting("WebManager.WebEditor.ContentOfServerID", 0, False)
                 End Get
             End Property
 
