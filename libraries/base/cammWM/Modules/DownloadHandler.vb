@@ -1504,6 +1504,16 @@ Namespace CompuMaster.camm.WebManager
                                         targetFi.Refresh()
                                         TestCount += 1
                                     Loop Until TestCount >= 5 OrElse targetFi.Exists = True
+#Else
+                                    'TEST TO FIX ISSUE: CWX & DownloadHandler: Providing file initially fails (2nd attempt with success) #16
+                                    'test if copy of target file to downloadhandler location was successful
+                                    'wait for file handle to end
+                                    TestCount = 0
+                                    Do
+                                        Threading.Thread.Sleep((250 * TestCount))
+                                        targetFi.Refresh()
+                                        TestCount += 1
+                                    Loop Until TestCount >= 5 OrElse targetFi.Exists = True
 #End If
                                     'test if the targetfile exists
                                     If targetFi.Exists = False Then
