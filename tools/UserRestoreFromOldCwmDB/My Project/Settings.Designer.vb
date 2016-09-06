@@ -66,9 +66,9 @@ Namespace My
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("server=localhost;database=camm Web-Manager PreRemoval;uid=sa;pwd=password")>  _
-        Public ReadOnly Property ConnectionStringSouceDB() As String
+        Public ReadOnly Property ConnectionStringSourceDB() As String
             Get
-                Return CType(Me("ConnectionStringSouceDB"),String)
+                Return CType(Me("ConnectionStringSourceDB"),String)
             End Get
         End Property
     End Class

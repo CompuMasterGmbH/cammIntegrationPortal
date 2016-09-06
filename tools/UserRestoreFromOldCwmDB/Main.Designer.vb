@@ -22,6 +22,8 @@ Partial Class Main
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Me.UsersGrid = New System.Windows.Forms.DataGridView()
         Me.TextBoxLoginName = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -32,7 +34,14 @@ Partial Class Main
         Me.TextBoxConnectionStringSourceDB = New System.Windows.Forms.TextBox()
         Me.TextBoxSql = New System.Windows.Forms.TextBox()
         Me.TextBoxConnectionStringCurrentDB = New System.Windows.Forms.TextBox()
+        Me.lblCount = New System.Windows.Forms.Label()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         CType(Me.UsersGrid, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel1.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'UsersGrid
@@ -42,31 +51,39 @@ Partial Class Main
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.UsersGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.UsersGrid.Location = New System.Drawing.Point(12, 125)
+        Me.UsersGrid.Location = New System.Drawing.Point(12, 181)
         Me.UsersGrid.Name = "UsersGrid"
-        Me.UsersGrid.Size = New System.Drawing.Size(657, 290)
+        Me.UsersGrid.Size = New System.Drawing.Size(657, 234)
         Me.UsersGrid.TabIndex = 0
         '
         'TextBoxLoginName
         '
-        Me.TextBoxLoginName.Location = New System.Drawing.Point(277, 90)
+        Me.TextBoxLoginName.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TextBoxLoginName.Location = New System.Drawing.Point(277, 128)
+        Me.TextBoxLoginName.MaxLength = 99999
+        Me.TextBoxLoginName.Multiline = True
         Me.TextBoxLoginName.Name = "TextBoxLoginName"
-        Me.TextBoxLoginName.Size = New System.Drawing.Size(186, 20)
+        Me.TextBoxLoginName.Size = New System.Drawing.Size(313, 20)
         Me.TextBoxLoginName.TabIndex = 1
         Me.TextBoxLoginName.Text = "admin*"
+        Me.ToolTip1.SetToolTip(Me.TextBoxLoginName, "e.g. ""admin*"" or ""admin|administrator|root""")
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(13, 93)
+        Me.Label1.Location = New System.Drawing.Point(13, 131)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(229, 13)
+        Me.Label1.Size = New System.Drawing.Size(262, 39)
         Me.Label1.TabIndex = 2
-        Me.Label1.Text = "Deleted user loginname which shall be restored"
+        Me.Label1.Text = "Deleted single user loginname which shall be restored " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(supports wildchar ""*"") o" &
+    "r list of loginnames separated " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "by pipe char ""|"" (exact name, no wildchar suppo" &
+    "rt)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
         '
         'ButtonGo
         '
-        Me.ButtonGo.Location = New System.Drawing.Point(485, 90)
+        Me.ButtonGo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonGo.Location = New System.Drawing.Point(596, 128)
         Me.ButtonGo.Name = "ButtonGo"
         Me.ButtonGo.Size = New System.Drawing.Size(73, 20)
         Me.ButtonGo.TabIndex = 3
@@ -75,9 +92,9 @@ Partial Class Main
         '
         'ButtonRestore
         '
-        Me.ButtonRestore.Location = New System.Drawing.Point(584, 90)
+        Me.ButtonRestore.Location = New System.Drawing.Point(277, 154)
         Me.ButtonRestore.Name = "ButtonRestore"
-        Me.ButtonRestore.Size = New System.Drawing.Size(86, 19)
+        Me.ButtonRestore.Size = New System.Drawing.Size(170, 19)
         Me.ButtonRestore.TabIndex = 4
         Me.ButtonRestore.Text = "Restore"
         Me.ButtonRestore.UseVisualStyleBackColor = True
@@ -103,11 +120,13 @@ Partial Class Main
         '
         'TextBoxConnectionStringSourceDB
         '
+        Me.TextBoxConnectionStringSourceDB.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBoxConnectionStringSourceDB.Location = New System.Drawing.Point(277, 38)
         Me.TextBoxConnectionStringSourceDB.Name = "TextBoxConnectionStringSourceDB"
         Me.TextBoxConnectionStringSourceDB.Size = New System.Drawing.Size(392, 20)
         Me.TextBoxConnectionStringSourceDB.TabIndex = 9
-        Me.TextBoxConnectionStringSourceDB.Text = Global.My.MySettings.Default.ConnectionStringSouceDB
+        Me.TextBoxConnectionStringSourceDB.Text = Global.My.MySettings.Default.ConnectionStringSourceDB
         '
         'TextBoxSql
         '
@@ -128,12 +147,53 @@ Partial Class Main
         Me.TextBoxConnectionStringCurrentDB.TabIndex = 5
         Me.TextBoxConnectionStringCurrentDB.Text = Global.My.MySettings.Default.ConnectionStringDestinationDB
         '
+        'lblCount
+        '
+        Me.lblCount.AutoSize = True
+        Me.lblCount.Location = New System.Drawing.Point(13, 131)
+        Me.lblCount.Name = "lblCount"
+        Me.lblCount.Size = New System.Drawing.Size(0, 13)
+        Me.lblCount.TabIndex = 12
+        '
+        'Panel1
+        '
+        Me.Panel1.Anchor = System.Windows.Forms.AnchorStyles.Top
+        Me.Panel1.Controls.Add(Me.Label3)
+        Me.Panel1.Controls.Add(Me.PictureBox1)
+        Me.Panel1.Location = New System.Drawing.Point(74, 78)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(544, 44)
+        Me.Panel1.TabIndex = 15
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(40, 1)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(490, 26)
+        Me.Label3.TabIndex = 16
+        Me.Label3.Text = "Restoration of user accounts includes profile data, memberships, authorization" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "N" &
+    "ot (yet) supported is the restoration of: user password, sub security adjustment" &
+    "s for administration area" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
+        Me.PictureBox1.Location = New System.Drawing.Point(2, 2)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(32, 29)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
+        Me.PictureBox1.TabIndex = 15
+        Me.PictureBox1.TabStop = False
+        '
         'Main
         '
         Me.AcceptButton = Me.ButtonGo
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(681, 427)
+        Me.Controls.Add(Me.Panel1)
+        Me.Controls.Add(Me.lblCount)
         Me.Controls.Add(Me.TextBoxSql)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.TextBoxConnectionStringSourceDB)
@@ -148,6 +208,9 @@ Partial Class Main
         Me.Name = "Main"
         Me.Text = "User Restore from old CWM database"
         CType(Me.UsersGrid, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -162,5 +225,9 @@ Partial Class Main
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents TextBoxConnectionStringSourceDB As System.Windows.Forms.TextBox
     Friend WithEvents TextBoxSql As System.Windows.Forms.TextBox
-
+    Friend WithEvents lblCount As Label
+    Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents Label3 As Label
+    Friend WithEvents PictureBox1 As PictureBox
 End Class

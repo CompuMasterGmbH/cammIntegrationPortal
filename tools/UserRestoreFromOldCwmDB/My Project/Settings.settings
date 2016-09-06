@@ -5,7 +5,7 @@
     <Setting Name="ConnectionStringDestinationDB" Type="System.String" Scope="Application">
       <Value Profile="(Default)">server=localhost;database=camm Web-Manager;uid=sa;pwd=password</Value>
     </Setting>
-    <Setting Name="ConnectionStringSouceDB" Type="System.String" Scope="Application">
+    <Setting Name="ConnectionStringSourceDB" Type="System.String" Scope="Application">
       <Value Profile="(Default)">server=localhost;database=camm Web-Manager PreRemoval;uid=sa;pwd=password</Value>
     </Setting>
   </Settings>

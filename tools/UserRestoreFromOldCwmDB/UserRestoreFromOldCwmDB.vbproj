@@ -67,8 +67,8 @@
       <HintPath>packages\cammWM.4.10.206.110-beta\lib\net20\cammWM.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompuMaster.Data, Version=2.8.2016.805, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\CompuMaster.Data.2.8.2016.805\lib\net20\CompuMaster.Data.dll</HintPath>
+    <Reference Include="CompuMaster.Data, Version=2.8.2016.824, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\CompuMaster.Data.2.8.2016.824\lib\net20\CompuMaster.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
