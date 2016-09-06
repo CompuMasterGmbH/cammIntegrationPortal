@@ -31,11 +31,11 @@ If HideForm = False Then
 					</TR>
 					<TR>
 					<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.UpdatePW_Descr_NewPW %> <font color="#C1C1C1"> *</font> </FONT></P></TD>
-					<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><input style="width: 200px" type="password" name="newpassword1" value=""></FONT></P></TD>
+					<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><input style="width: 200px" type="password" name="newpassword1" value="" maxlength="64" autocomplete="new-password"></FONT></P></TD>
 					</TR>
 					<TR>
 					<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.UpdatePW_Descr_NewPWConfirm %> <font color="#C1C1C1"> *</font> </FONT></P></TD>
-					<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><input style="width: 200px" type="password" name="newpassword2" value=""></FONT></P></TD>
+					<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><input style="width: 200px" type="password" name="newpassword2" value="" maxlength="64" autocomplete="new-password"></FONT></P></TD>
 					</TR>
 					<TR>
 					<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><input type="submit" name="submit" value="<%= Server.htmlencode(cammWebManager.Internationalization.UpdatePW_Descr_Submit) %>"></FONT></P></TD>
