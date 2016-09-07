@@ -51,11 +51,11 @@
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_NewLoginPassword %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
-								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxPassword1" TextMode="Password" maxLength="64" style="width: 200px" />&nbsp;<asp:CustomValidator arunat="server" id="ValidatorCreationErrors" /><asp:CustomValidator Display="Dynamic" runat="server" id="ValidatorPassword1" /></FONT></P></TD>
+								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxPassword1" TextMode="Password" maxLength="64" style="width: 200px" autocomplete="new-password" />&nbsp;<asp:CustomValidator arunat="server" id="ValidatorCreationErrors" /><asp:CustomValidator Display="Dynamic" runat="server" id="ValidatorPassword1" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_NewLoginPasswordConfirmation %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
-								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxPassword2" TextMode="Password" maxLength="64" style="width: 200px" />&nbsp;<asp:CustomValidator Display="Dynamic" runat="server" id="ValidatorPassword2" /></FONT></P></TD>
+								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxPassword2" TextMode="Password" maxLength="64" style="width: 200px" autocomplete="new-password" />&nbsp;<asp:CustomValidator Display="Dynamic" runat="server" id="ValidatorPassword2" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" ColSpan="2"><P>&nbsp; </P></TD>
