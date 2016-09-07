@@ -40,22 +40,22 @@
 	        <TBODY>
 
 
-			<% If ValidatorSummary.Visible Then %><TR><TD ColSpan="2"><P><FONT face="Arial" color="red" size=2><asp:ValidationSummary runat="server" id="ValidatorSummary" /></FONT></P></TD></TR><% End If %>
+			<% If ValidatorSummary.Visible Then %><TR><TD ColSpan="2"><P><FONT face="Arial" color="red" size=2><asp:ValidationSummary runat="server" ForeColor="Red" id="ValidatorSummary" /></FONT></P></TD></TR><% End If %>
 			<% If True Then %>
 								<TR>
 								<TD BGCOLOR="#C1C1C1" ColSpan="2"><P><FONT face="Arial" size=2><b><%= cammWebManager.Internationalization.CreateAccount_Descr_UserLogin %>:</b></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_NewLoginName %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
-								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxLoginName" maxLength="50" style="width: 200px" />&nbsp;<asp:CustomValidator Display="Dynamic" runat="server" id="ValidatorLoginName" /></FONT></P></TD>
+								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxLoginName" maxLength="50" style="width: 200px" />&nbsp;<asp:CustomValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorLoginName" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_NewLoginPassword %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
-								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxPassword1" TextMode="Password" maxLength="64" style="width: 200px" autocomplete="new-password" />&nbsp;<asp:CustomValidator arunat="server" id="ValidatorCreationErrors" /><asp:CustomValidator Display="Dynamic" runat="server" id="ValidatorPassword1" /></FONT></P></TD>
+								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxPassword1" TextMode="Password" maxLength="64" style="width: 200px" autocomplete="new-password" />&nbsp;<asp:CustomValidator arunat="server" ForeColor="Red" id="ValidatorCreationErrors" /><asp:CustomValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorPassword1" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_NewLoginPasswordConfirmation %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
-								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxPassword2" TextMode="Password" maxLength="64" style="width: 200px" autocomplete="new-password" />&nbsp;<asp:CustomValidator Display="Dynamic" runat="server" id="ValidatorPassword2" /></FONT></P></TD>
+								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxPassword2" TextMode="Password" maxLength="64" style="width: 200px" autocomplete="new-password" />&nbsp;<asp:CustomValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorPassword2" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" ColSpan="2"><P>&nbsp; </P></TD>
@@ -64,12 +64,12 @@
 								</TR><TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_Company %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxCompany" maxLength="100" style="width: 200px" /> 
-								<asp:RequiredFieldValidator Display="Dynamic" runat="server" id="ValidatorCompany" ControlToValidate="TextboxCompany" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
+								<asp:RequiredFieldValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorCompany" ControlToValidate="TextboxCompany" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><nobr><%= cammWebManager.Internationalization.CreateAccount_Descr_Addresses %> <font color="#C1C1C1"> *</font> &nbsp;</nobr></FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:DropdownList runat="server" id="DropdownSalutation" style="width: 200px" /> 
-								<asp:RequiredFieldValidator Display="Dynamic" runat="server" id="ValidatorSalutation" ControlToValidate="DropdownSalutation" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
+								<asp:RequiredFieldValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorSalutation" ControlToValidate="DropdownSalutation" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_AcademicTitle %> &nbsp;</FONT></P></TD>
@@ -78,12 +78,12 @@
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_FirstName %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxFirstName" maxLength="60" style="width: 200px" />
-								<asp:RequiredFieldValidator Display="Dynamic" runat="server" id="ValidatorFirstName" ControlToValidate="TextboxFirstName" /></FONT></P></TD>
+								<asp:RequiredFieldValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorFirstName" ControlToValidate="TextboxFirstName" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_LastName %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxLastName" maxLength="60" style="width: 200px" />
-								<asp:RequiredFieldValidator Display="Dynamic" runat="server" id="ValidatorLastName" ControlToValidate="TextboxLastName" /></FONT></P></TD>
+								<asp:RequiredFieldValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorLastName" ControlToValidate="TextboxLastName" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_NameAddition %> &nbsp;</FONT></P></TD>
@@ -92,22 +92,22 @@
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_EMail %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxEMail" maxLength="50" style="width: 200px" />
-								<asp:CustomValidator Display="Dynamic" runat="server" id="ValidatorEMail" /></FONT></P></TD>
+								<asp:CustomValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorEMail" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_Street %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxStreet" maxLength="60" style="width: 200px" />
-								<asp:RequiredFieldValidator Display="Dynamic" runat="server" id="ValidatorStreet" ControlToValidate="TextboxStreet" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
+								<asp:RequiredFieldValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorStreet" ControlToValidate="TextboxStreet" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_ZIPCode %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxZipCode" maxLength="20" style="width: 200px" />
-								<asp:RequiredFieldValidator Display="Dynamic" runat="server" id="ValidatorZipCode" ControlToValidate="TextboxZipCode" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
+								<asp:RequiredFieldValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorZipCode" ControlToValidate="TextboxZipCode" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_Location %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:Textbox runat="server" id="TextboxLocation" maxLength="100" style="width: 200px" />
-								<asp:RequiredFieldValidator Display="Dynamic" runat="server" id="ValidatorLocation" ControlToValidate="TextboxLocation" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
+								<asp:RequiredFieldValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorLocation" ControlToValidate="TextboxLocation" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_State %> &nbsp;</FONT></P></TD>
@@ -116,7 +116,7 @@
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_Country %><font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:DropdownList width="200px" runat="server" id="DropdownCountry" Visible="False" /><asp:Textbox runat="server" id="TextboxCountry" maxLength="60" style="width: 200px" />
-								<asp:RequiredFieldValidator Display="Dynamic" runat="server" id="ValidatorCountry" ControlToValidate="TextboxCountry" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
+								<asp:RequiredFieldValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorCountry" ControlToValidate="TextboxCountry" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.UpdateProfile_Descr_Phone %> &nbsp;</FONT></P></TD>
@@ -142,7 +142,7 @@
 								</TR>								
 								<TR><TD VAlign="Top" ColSpan="2"><FONT face=Arial size=2><asp:CheckboxList runat="server" id="CheckboxListMotivation" Font-Size="10pt" /></FONT></TD></TR>
 								<TR><TD VAlign="Top" ColSpan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<FONT face=Arial size=2><asp:Textbox runat="server" id="MotivationOtherText" maxLength="255" style="width: 200px" /> 
-								<asp:CustomValidator Display="Dynamic" runat="server" id="ValidatorMotivation" Text="<%# Me.LocalizedTextRequiredField %>" OnServerValidate="CustomValidatorMotivation_ServerValidate" /></FONT></TD></TR>
+								<asp:CustomValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorMotivation" Text="<%# Me.LocalizedTextRequiredField %>" OnServerValidate="CustomValidatorMotivation_ServerValidate" /></FONT></TD></TR>
 								<TR>
 								<TD VAlign="Top" ColSpan="2"><P>&nbsp; </P></TD>
 								</TR>
@@ -151,7 +151,7 @@
 								</TR>
 								<TR><TD VAlign="Top" ColSpan="2"><FONT face=Arial size=2><asp:RadioButtonList runat="server" id="RadioListComesFrom" Font-Size="10pt" /></FONT></TD></TR>
 								<TR><TD VAlign="Top" ColSpan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<FONT face=Arial size=2><asp:Textbox runat="server" id="ComesFromOtherText" maxLength="255" style="width: 200px" /> 
-								<asp:CustomValidator Display="Dynamic" runat="server" id="ValidatorComesFrom" Text="<%# Me.LocalizedTextRequiredField %>" OnServerValidate="CustomValidatorComesFrom_ServerValidate" /></FONT></TD></TR>
+								<asp:CustomValidator Display="Dynamic" runat="server" ForeColor="Red" id="ValidatorComesFrom" Text="<%# Me.LocalizedTextRequiredField %>" OnServerValidate="CustomValidatorComesFrom_ServerValidate" /></FONT></TD></TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P> &nbsp;</P></TD>
@@ -161,7 +161,7 @@
 								</TR><TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_1stPreferredLanguage %> <font color="#C1C1C1"> *</font> &nbsp;</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><asp:DropdownList runat="server" id="Dropdown1stPreferredLanguage" style="width: 200px" /> 
-								<asp:RequiredFieldValidator Display="Dynamic" runat="server" id="Validator1stPreferredLanguage" ControlToValidate="Dropdown1stPreferredLanguage" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
+								<asp:RequiredFieldValidator Display="Dynamic" runat="server" ForeColor="Red" id="Validator1stPreferredLanguage" ControlToValidate="Dropdown1stPreferredLanguage" Text="<%# Me.LocalizedTextRequiredField %>" /></FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= cammWebManager.Internationalization.CreateAccount_Descr_2ndPreferredLanguage %> &nbsp;</FONT></P></TD>
