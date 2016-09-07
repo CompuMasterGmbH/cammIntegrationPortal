@@ -91,6 +91,9 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         Private Sub FillMotivationControlValues(flagValue As String)
             If Not Me.CheckboxListMotivation Is Nothing Then
                 Dim SeparatedValues As List(Of String) = SplitFlagCommaSeparatedButWithParenthesisPriority(flagValue)
+                For MyCounter As Integer = 0 To SeparatedValues.Count - 1
+                    SeparatedValues(MyCounter) = Trim(SeparatedValues(MyCounter))
+                Next
                 For Each item As Web.UI.WebControls.ListItem In Me.CheckboxListMotivation.Items
                     If SeparatedValues.Contains(item.Value) Then
                         item.Selected = True
@@ -104,9 +107,9 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
                     If RemainingValues.StartsWith("Other (") AndAlso RemainingValues.EndsWith(")") Then
                         Dim CleanedOtherValue As String = RemainingValues.Remove(0, "Other (".Length)
                         CleanedOtherValue = CleanedOtherValue.Substring(0, CleanedOtherValue.Length - 1)
-                        Me.MotivationOtherText.Text = CleanedOtherValue
+                        Me.MotivationOtherText.Text = Trim(CleanedOtherValue)
                     Else
-                        Me.MotivationOtherText.Text = RemainingValues
+                        Me.MotivationOtherText.Text = Trim(RemainingValues)
                     End If
                     If LookupItemListElementOther(Me.CheckboxListMotivation.Items) IsNot Nothing Then
                         LookupItemListElementOther(Me.CheckboxListMotivation.Items).Selected = True
@@ -165,6 +168,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
         ''' <param name="flagValue">Comma-separated list of values, e.g. &quot;Abc,Def,Other (Some,other,commas)&quot;</param>
         ''' <returns>Separated text elements, e.g. &quot;Abc&quot;, &quot;Def&quot;, &quot;Other (Some,other,commas)&quot; </returns>
         Private Function SplitFlagCommaSeparatedButWithParenthesisPriority(flagValue As String) As List(Of String)
+            If flagValue Is Nothing Then Return New List(Of String)
             Dim SplittedFlag As String() = flagValue.Split(","c)
             Dim Result As New List(Of String)
             Dim CurrentLogicLevel As Integer = 0
@@ -441,6 +445,7 @@ Namespace CompuMaster.camm.WebManager.Pages.UserAccount
             Me.TextboxFax.Text = Me.cammWebManager.CurrentUserInfo.FaxNumber
             Me.TextboxMobile.Text = Me.cammWebManager.CurrentUserInfo.MobileNumber
             Me.TextboxPositionInCompany.Text = Me.cammWebManager.CurrentUserInfo.Position
+            Me.TextboxComment.Text = Me.cammWebManager.CurrentUserInfo.AdditionalFlags("OnCreationComment")
             Me.FillMotivationControlValues(Me.cammWebManager.CurrentUserInfo.AdditionalFlags("Motivation"))
             Me.FillComesFromControlValues(Me.cammWebManager.CurrentUserInfo.AdditionalFlags("ComesFrom"))
         End Sub
