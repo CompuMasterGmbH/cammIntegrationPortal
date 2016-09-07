@@ -22,6 +22,9 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit.Controls
     <Obsolete("Better use one of the cammWM.SmartEditor controls instead", True), System.ComponentModel.EditorBrowsable(EditorBrowsableState.Never)> Public Class sWcmsRadEditor3
         Inherits System.Web.UI.Control
 
+        'Moved RadEditor support into separate library sold separately
+        'Class remains for compatibility reasons
+
     End Class
 
 End Namespace
