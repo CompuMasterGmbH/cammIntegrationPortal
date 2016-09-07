@@ -47,10 +47,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         End Sub
 
 #Region " Protected Variables "
-        Protected AreaUploadImageAtWebServer As System.Web.UI.WebControls.TableRow
-        Protected AreaGeneralAdjustments As System.Web.UI.WebControls.TableRow
-        Protected AreaFrameType As System.Web.UI.WebControls.TableRow
-
 
         Protected LabelSelectImageToUpload As System.Web.UI.WebControls.Label
         Protected InputFileUploadImage As System.Web.UI.HtmlControls.HtmlInputFile
@@ -60,8 +56,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Protected WithEvents ButtonUploadImage As System.Web.UI.WebControls.Button
         Protected LabelProcessingTips As System.Web.UI.WebControls.Label
 
-        Protected LabelImageDataGeneralProcessing As System.Web.UI.WebControls.Label
-        Protected ImageSampleFile As System.Web.UI.WebControls.Image
         Protected LabelImageDimensionQuestion As System.Web.UI.WebControls.Label
         Protected LabelMiniatureView As System.Web.UI.WebControls.Label
         Protected CheckBoxMiniatureView As System.Web.UI.WebControls.CheckBox
@@ -74,7 +68,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Protected TextBoxMiniatureMaxHeight As System.Web.UI.WebControls.TextBox
         Protected TextBoxNormalMaxHeight As System.Web.UI.WebControls.TextBox
 
-        Protected LabelImageBorderType As System.Web.UI.WebControls.Label
+
 
 #End Region
 
@@ -164,18 +158,16 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             Me.LabelImageUploadFolder.Text = "Bild-Ablageort:"
 
             Me.LabelSelectImageToUpload.Text = "Wählen Sie eine Bilddatei zum Hochladen"
-            Me.CheckBoxImageReduction.Text = "Bildverkleinerung"
             Me.ButtonUploadImage.Text = "Hochladen"
             Me.LabelProcessingTips.Text = "<b>Bearbeitungshinweise:</b><br><br>" &
                                         "1. Es können nur folgende Datenformate auf den Server geladen werden: JPEGs, GIFs, PNGs und BMPs <br><br>" &
                                         "2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der " &
                                         "Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. <br><br>" &
-                                        "3. Bitte beacheten Sie, dass die Pixelanzahl der Bilddatei, welche hochgeladen wird, stets größer ist als die " &
+                                        "3. Bitte beachten Sie, dass die Pixelanzahl der Bilddatei, welche hochgeladen wird, stets größer ist als die " &
                                         "gewünschte Pixelgröße der Normalansicht. Ist dies nicht der Fall, werder die Dateien unverändert auf den Server hochgeladen. <br><br>" &
                                         ""
 
 
-            Me.LabelImageDataGeneralProcessing.Text = "Bilderdaten - Generelle Einstellungen"
             Me.LabelImageDimensionQuestion.Text = "<b>Welche Dimensionen benötigen Sie?</b><br>" &
                                                 "Beim Resampling bleibt das Seitenverhältnis erhalten"
 
@@ -183,8 +175,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             Me.LabelNormalView.Text = "Normalansicht"
             Me.LabelMaxWidth.Text = "Max. Breite"
             Me.LabelMaxHeight.Text = "Max. Höhe"
-
-            Me.LabelImageBorderType.Text = "Rahmenart (exemplarisch)"
 
             If HttpContext.Current.Session("ImageDataManagement.FileUploaded") Is Nothing Then
                 Me.LabelUploadedImageNames.Text = ""
@@ -204,15 +194,12 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         ''' </summary>
         Private Sub InitializeImageDataManagementSettings()
 
-            Me.ImageSampleFile.ImageUrl = Configuration.SampleFile
-
             If Not Me.IsPostBack Then
                 Me.TextBoxMiniatureMaxWidth.Text = CStr(Configuration.MiniatureViewMaxWidth)
                 Me.TextBoxMiniatureMaxHeight.Text = CStr(Configuration.MiniatureViewMaxHeight)
                 Me.TextBoxNormalMaxWidth.Text = CStr(Configuration.NormalViewMaxWidth)
                 Me.TextBoxNormalMaxHeight.Text = CStr(Configuration.NormalViewMaxHeight)
 
-                Me.CheckBoxImageReduction.Checked = Configuration.ImageReduction
                 Me.CheckBoxMiniatureView.Checked = Configuration.MiniatureView
                 Me.CheckBoxNormalView.Checked = Configuration.NormalView
 
@@ -287,7 +274,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             fs.Close()
 
             Dim files As New ArrayList
-            If Me.CheckBoxImageReduction.Checked Then
+            If Me.CheckBoxMiniatureView.Checked OrElse Me.CheckBoxNormalView.Checked Then
                 Dim miniatureViewWidth As Integer = Utils.TryCInt(Trim(HttpContext.Current.Request.Form(Me.TextBoxMiniatureMaxWidth.ID)))
                 Dim miniatureViewHeight As Integer = Utils.TryCInt(Trim(HttpContext.Current.Request.Form(Me.TextBoxMiniatureMaxHeight.ID)))
                 Dim normalViewWidth As Integer = Utils.TryCInt(Trim(HttpContext.Current.Request.Form(Me.TextBoxNormalMaxWidth.ID)))

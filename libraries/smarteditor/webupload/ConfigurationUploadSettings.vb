@@ -31,21 +31,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             End Get
         End Property
 
-        Private _SampleFile As String
-        Public Property SampleFile() As String
-            Get
-                If _SampleFile Is Nothing Then
-                    Try
-                        _SampleFile = WebEditorSettings("WebManager.Wcms.ImageUploads.SampleFile")
-                    Catch
-                    End Try
-                End If
-                Return _SampleFile
-            End Get
-            Set(ByVal Value As String)
-                _SampleFile = Value
-            End Set
-        End Property
+
         Private _NumberOfFrameTypes As Integer
         Public Property NumberOfFrameTypes() As Integer
             Get
@@ -126,37 +112,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             End Get
             Set(ByVal Value As Integer)
                 _NormalViewMaxHeight = Value
-            End Set
-        End Property
-
-        Private _ImageReduction As TriState = TriState.UseDefault
-        Public Property ImageReduction() As Boolean
-            Get
-                Dim Result As Boolean
-                If _ImageReduction = TriState.UseDefault Then
-                    Dim ConfigValue As String = LCase(WebEditorSettings("WebManager.Wcms.ImageUploads.ImageReduction"))
-                    If ConfigValue = "false" Then
-                        Result = False
-                    ElseIf ConfigValue = "true" Then
-                        Result = True
-                    ElseIf ConfigValue = "" Then
-                        Result = True
-                    Else
-                        Throw New Exception("Invalid configuration parameter is given! - Parameter: ImageReduction")
-                    End If
-                ElseIf _ImageReduction = TriState.True Then
-                    Result = True
-                Else
-                    Result = False
-                End If
-                Return Result
-            End Get
-            Set(ByVal Value As Boolean)
-                If Value = True Then
-                    _ImageReduction = TriState.True
-                Else
-                    _ImageReduction = TriState.False
-                End If
             End Set
         End Property
 
