@@ -16,6 +16,24 @@ WHERE ConflictType = 1 AND ApplicationID IS NOT NULL
 GO
 
 <%IGNORE_ERRORS%>
+-- Add column ServerGroupID for later improvements to track additional data for security analysts
+ALTER TABLE [dbo].[Log]
+ADD [ByUserID] int NULL
+GO
+
+<%IGNORE_ERRORS%>
+-- Add column for extended data for later improvements to track additional data for technicians
+ALTER TABLE [dbo].[Log]
+ADD [Data] ntext NULL
+GO
+
+<%IGNORE_ERRORS%>
+-- Add column ServerGroupID for later feature for SplitAppsIntoNav+SecObj milestone
+ALTER TABLE [dbo].[Log]
+ADD ServerGroupID int NULL
+GO
+
+<%IGNORE_ERRORS%>
 -- Add missing DevelopmentTeamMember column for consequency between auths for users and groups
 ALTER TABLE [dbo].[ApplicationsRightsByGroup]
 ADD DevelopmentTeamMember bit NOT NULL DEFAULT (0)
@@ -63,12 +81,6 @@ GO
 -- Add column IsSystemRule
 ALTER TABLE [dbo].[Memberships]
 ADD IsSystemRule bit NOT NULL DEFAULT (0)
-GO
-
-<%IGNORE_ERRORS%>
--- Add column ServerGroupID for later feature for SplitAppsIntoNav+SecObj milestone
-ALTER TABLE [dbo].[Log]
-ADD ServerGroupID int NULL
 GO
 
 -- Reset previously filled data since it's waste
