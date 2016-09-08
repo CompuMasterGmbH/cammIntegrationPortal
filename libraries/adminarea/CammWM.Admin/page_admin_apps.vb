@@ -13,15 +13,10 @@
 'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden für Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
 
 Option Strict On
-Option Explicit On 
+Option Explicit On
 
-Imports System.Web
-Imports System.Data
-Imports System.Reflection
 Imports System.Data.SqlClient
 Imports System.Web.UI.WebControls
-Imports System.Web.UI.HtmlControls
-Imports CompuMaster.camm.WebManager.Administration
 Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider
 
 Namespace CompuMaster.camm.WebManager.Pages.Administration
@@ -642,23 +637,21 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim invalidFlags As New ArrayList
 
                 Dim MyDBVersion As Version = cammWebManager.System_DBVersion_Ex()
-                If MyDBVersion.Build >= WMSystem.MilestoneDBBuildNumber_Build147 Then
+                If MyDBVersion.Build >= WMSystem.MilestoneDBBuildNumber_Build147 AndAlso txtField_RequiredUserFlags IsNot Nothing Then
                     Dim requiredApplicationFlags() As String = txtField_RequiredUserFlags.Text.Split(CChar(","))
+                    If requiredApplicationFlags.Length > 0 Then
+                        Dim cmd As SqlClient.SqlCommand
+                        If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                            cmd = New SqlClient.SqlCommand("Select ID_User From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID AND IsNull(IsDenyRule, 0) = 0 UNION select ID_User from Memberships_EffectiveRulesWithClonesNthGrade where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group is not null and ID_Application = @ID AND IsNull(IsDenyRule, 0) = 0)) as a GROUP BY ID_User", New SqlConnection(cammWebManager.ConnectionString))
+                        Else
+                            cmd = New SqlClient.SqlCommand("Select ID_User From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_User from Memberships where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a GROUP BY ID_User", New SqlConnection(cammWebManager.ConnectionString))
+                        End If
+                        cmd.Parameters.Add("@ID", SqlDbType.Int).Value = CType(Trim(lblField_ID.Text), Integer)
 
-                    Dim cmd As SqlClient.SqlCommand
-                    If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                        cmd = New SqlClient.SqlCommand("Select * From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_User from Memberships_EffectiveRulesWithClonesNthGrade where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a GROUP BY ID_User", New SqlConnection(cammWebManager.ConnectionString))
-                    Else
-                        cmd = New SqlClient.SqlCommand("Select * From (select ID_User from view_ApplicationRights where ID_User is not null and ID_Application = @ID union select ID_User from Memberships where ID_Group in (Select ID_Group from view_ApplicationRights where ID_Group  is not null and ID_Application = @ID)) as a GROUP BY ID_User", New SqlConnection(cammWebManager.ConnectionString))
-                    End If
-                    cmd.Parameters.Add("@ID", SqlDbType.Int).Value = CType(Trim(lblField_ID.Text), Integer)
+                        Dim tbleUsersAllowedForApplication As System.Collections.Generic.List(Of Long) = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoGenericList(Of Long)(cmd, Automations.AutoOpenAndCloseAndDisposeConnection)
+                        Dim UserAccountsToValidate As WMSystem.UserInformation() = cammWebManager.System_GetUserInfos(tbleUsersAllowedForApplication.ToArray)
 
-                    Dim tbleUsersAllowedForApplication As DataTable = FillDataTable(cmd, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
-
-                    For Each row As DataRow In tbleUsersAllowedForApplication.Rows
-                        Dim userId As Long = CType(Utils.Nz(row.Item("ID_User")), Long)
-                        Dim userInfo As WMSystem.UserInformation = cammWebManager.System_GetUserInfo(userId)
-                        If Not userInfo Is Nothing Then
+                        For Each userInfo As WMSystem.UserInformation In UserAccountsToValidate
                             Dim validationResults As CompuMaster.camm.WebManager.FlagValidation.FlagValidationResult() = CompuMaster.camm.WebManager.FlagValidation.ValidateRequiredFlags(userInfo, requiredApplicationFlags, True)
                             For Each validationResult As CompuMaster.camm.WebManager.FlagValidation.FlagValidationResult In validationResults
                                 If validationResult.ValidationResult <> CompuMaster.camm.WebManager.FlagValidation.FlagValidationResultCode.Success Then
@@ -667,14 +660,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                     End If
                                 End If
                             Next
+                        Next
+
+                        If invalidFlags.Count > 0 Then
+                            SetSubmitErrorText(invalidFlags)
+                            Exit Sub
                         End If
-                    Next
-
-                    If invalidFlags.Count > 0 Then
-                        SetSubmitErrorText(invalidFlags)
-                        Exit Sub
                     End If
-
                 End If
                 Try
                     UpdateApplication()
