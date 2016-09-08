@@ -1045,19 +1045,19 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit.Controls
             Dim ForeignControls As New ArrayList
             For MyCounter As Integer = 0 To Me.Controls.Count - 1
                 Dim compareControl As UI.Control = Me.Controls(MyCounter)
-                If compareControl Is editorMain OrElse
-                        compareControl Is txtHiddenActiveVersion OrElse
-                        compareControl Is txtHiddenLastVersion OrElse
-                        compareControl Is txtRequestedAction OrElse
-                        compareControl Is txtCurrentURL OrElse
-                        compareControl Is txtActivate OrElse
-                        compareControl Is txtBrowseToMarketVersion OrElse
-                        compareControl Is txtLastVersion OrElse
-                        compareControl Is txtCurrentlyLoadedVersion OrElse
-                        compareControl Is txtEditModeRequested OrElse
-                        compareControl Is lblCurrentEditInformation OrElse
-                        compareControl Is lblViewOnlyContent OrElse
-                        compareControl Is ibtnSwitchToEditMode OrElse
+                If compareControl Is editorMain OrElse _
+                        compareControl Is txtHiddenActiveVersion OrElse _
+                        compareControl Is txtHiddenLastVersion OrElse _
+                        compareControl Is txtRequestedAction OrElse _
+                        compareControl Is txtCurrentURL OrElse _
+                        compareControl Is txtActivate OrElse _
+                        compareControl Is txtBrowseToMarketVersion OrElse _
+                        compareControl Is txtLastVersion OrElse _
+                        compareControl Is txtCurrentlyLoadedVersion OrElse _
+                        compareControl Is txtEditModeRequested OrElse _
+                        compareControl Is lblCurrentEditInformation OrElse _
+                        compareControl Is lblViewOnlyContent OrElse _
+                        compareControl Is ibtnSwitchToEditMode OrElse _
                         compareControl Is pnlEditorToolbar Then
 
                     'All is fine - this is an internally managed control

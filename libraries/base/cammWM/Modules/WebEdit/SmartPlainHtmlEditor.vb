@@ -341,13 +341,13 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit.Controls
                 Me.FindSWcmsControlsOnThisPage(AllEditorControls, Me.Page.Controls)
                 Dim IsDirtyChecksJScriptSnippet As String = Nothing
                 For Each Editor As System.Web.UI.Control In AllEditorControls
-                    Dim EditorInstanceIsDirtyScript As String = "function isDirty_" & Editor.ClientID & "() " & vbNewLine &
-                                                               "{  " & vbNewLine &
-                                                               "var editor = document.getElementById('" & CType(Editor, SmartWcmsEditorCommonBase).EditorClientID & "'); " & vbNewLine &
-                                                               "if(editor && (editor.defaultValue != editor.value) && (editor.defaultValue != EncodeRawData(editor)))" & vbNewLine &
-                                                               "    return true; " & vbNewLine &
-                                                               "else " & vbNewLine &
-                                                               "    return false;  " & vbNewLine &
+                    Dim EditorInstanceIsDirtyScript As String = "function isDirty_" & Editor.ClientID & "() " & vbNewLine & _
+                                                               "{  " & vbNewLine & _
+                                                               "var editor = document.getElementById('" & CType(Editor, SmartWcmsEditorCommonBase).EditorClientID & "'); " & vbNewLine & _
+                                                               "if(editor && (editor.defaultValue != editor.value) && (editor.defaultValue != EncodeRawData(editor)))" & vbNewLine & _
+                                                               "    return true; " & vbNewLine & _
+                                                               "else " & vbNewLine & _
+                                                               "    return false;  " & vbNewLine & _
                                                                "}" & vbNewLine
 #If NetFrameWork = "1_1" Then
                         Me.Page.RegisterClientScriptBlock("IsDirty_" & Editor.ClientID, EditorInstanceIsDirtyScript)
@@ -357,10 +357,10 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit.Controls
                     If IsDirtyChecksJScriptSnippet <> "" Then IsDirtyChecksJScriptSnippet &= " && "
                     IsDirtyChecksJScriptSnippet &= "(isDirty_" & Editor.ClientID & "())"
                 Next
-                Dim IsDirtySnippet As String = "function isDirty() " & vbNewLine &
-                                                               "{  " & vbNewLine &
-                                                               "    return (" & IsDirtyChecksJScriptSnippet & ");  " & vbNewLine &
-                                                               "}" & vbNewLine &
+                Dim IsDirtySnippet As String = "function isDirty() " & vbNewLine & _
+                                                               "{  " & vbNewLine & _
+                                                               "    return (" & IsDirtyChecksJScriptSnippet & ");  " & vbNewLine & _
+                                                               "}" & vbNewLine & _
                                                                ""
 #If NetFrameWork = "1_1" Then
                     Me.Page.RegisterClientScriptBlock("IsDirty", IsDirtySnippet)
@@ -369,54 +369,54 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit.Controls
 #End If
 
                 'Single script instances
-                Const ExecPostBackSnippet As String = "function ExecPostBack(caller, event, ensureUnbindedCloseCheck) " & vbNewLine &
-                                                               "{ " & vbNewLine &
-                                                               "    if(ensureUnbindedCloseCheck) unbindCloseCheck(); " & vbNewLine &
-                                                               "    __doPostBack (caller, event);" & vbNewLine &
-                                                               "} " & vbNewLine &
+                Const ExecPostBackSnippet As String = "function ExecPostBack(caller, event, ensureUnbindedCloseCheck) " & vbNewLine & _
+                                                               "{ " & vbNewLine & _
+                                                               "    if(ensureUnbindedCloseCheck) unbindCloseCheck(); " & vbNewLine & _
+                                                               "    __doPostBack (caller, event);" & vbNewLine & _
+                                                               "} " & vbNewLine & _
                                                                ""
-                Dim UnbindCloseCheckSnippet As String = "function unbindCloseCheck() " & vbNewLine &
-                                                               "{ " & vbNewLine &
-                                                               "    if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); " & vbNewLine &
-                                                               "} " & vbNewLine &
-                                                               "var documentForm = document.forms['" & LookupParentServerFormName() & "']; " & vbNewLine &
-                                                               "if(documentForm.addEventListener) " & vbNewLine &
-                                                               "    documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });" & vbNewLine &
+                Dim UnbindCloseCheckSnippet As String = "function unbindCloseCheck() " & vbNewLine & _
+                                                               "{ " & vbNewLine & _
+                                                               "    if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); " & vbNewLine & _
+                                                               "} " & vbNewLine & _
+                                                               "var documentForm = document.forms['" & LookupParentServerFormName() & "']; " & vbNewLine & _
+                                                               "if(documentForm.addEventListener) " & vbNewLine & _
+                                                               "    documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });" & vbNewLine & _
                                                                ""
-                Const ConfirmPageCloseSnippet As String = "function confirmPageClose() " & vbNewLine &
-                                                               "{" & vbNewLine &
-                                                               "var result = false; " & vbNewLine &
-                                                               "if(isDirty()) " & vbNewLine &
-                                                               "    result = confirm('Do you want to leave? All your changes will be lost'); " & vbNewLine &
-                                                               "else " & vbNewLine &
-                                                               "    { " & vbNewLine &
-                                                               "    result = true " & vbNewLine &
-                                                               "    } " & vbNewLine &
-                                                               "if(result) " & vbNewLine &
-                                                               "    unbindCloseCheck(); " & vbNewLine &
-                                                               "return result; " & vbNewLine &
+                Const ConfirmPageCloseSnippet As String = "function confirmPageClose() " & vbNewLine & _
+                                                               "{" & vbNewLine & _
+                                                               "var result = false; " & vbNewLine & _
+                                                               "if(isDirty()) " & vbNewLine & _
+                                                               "    result = confirm('Do you want to leave? All your changes will be lost'); " & vbNewLine & _
+                                                               "else " & vbNewLine & _
+                                                               "    { " & vbNewLine & _
+                                                               "    result = true " & vbNewLine & _
+                                                               "    } " & vbNewLine & _
+                                                               "if(result) " & vbNewLine & _
+                                                               "    unbindCloseCheck(); " & vbNewLine & _
+                                                               "return result; " & vbNewLine & _
                                                                "}" & vbNewLine
-                Const ResetSelectBoxSnippet As String = "function resetSelectBox(box)" & vbNewLine &
-                                                               "{ " & vbNewLine &
-                                                               "for(var i = 0; i < box.options.length; i++) " & vbNewLine &
-                                                               "    {	" & vbNewLine &
-                                                               "    if(box.options[i].defaultSelected) " & vbNewLine &
-                                                               "        {" & vbNewLine &
-                                                               "        box.options[i].selected = true; " & vbNewLine &
-                                                               "        return;	" & vbNewLine &
-                                                               "        } " & vbNewLine &
-                                                               "    }" & vbNewLine &
+                Const ResetSelectBoxSnippet As String = "function resetSelectBox(box)" & vbNewLine & _
+                                                               "{ " & vbNewLine & _
+                                                               "for(var i = 0; i < box.options.length; i++) " & vbNewLine & _
+                                                               "    {	" & vbNewLine & _
+                                                               "    if(box.options[i].defaultSelected) " & vbNewLine & _
+                                                               "        {" & vbNewLine & _
+                                                               "        box.options[i].selected = true; " & vbNewLine & _
+                                                               "        return;	" & vbNewLine & _
+                                                               "        } " & vbNewLine & _
+                                                               "    }" & vbNewLine & _
                                                                "}" & vbNewLine
-                Const CloseCheckSnippet As String = "function closeCheck(e) " & vbNewLine &
-                                                                   "{ " & vbNewLine &
-                                                                   "if(!isDirty())  " & vbNewLine &
-                                                                   "    return; " & vbNewLine &
-                                                                   "var confirmationMessage = 'Do you want to close this site without saving your changes?';  " & vbNewLine &
-                                                                   "e.returnValue = confirmationMessage; " & vbNewLine &
-                                                                   "return confirmationMessage;" & vbNewLine &
-                                                                   "} " & vbNewLine &
-                                                                   "if(window.addEventListener) " & vbNewLine &
-                                                                   "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine &
+                Const CloseCheckSnippet As String = "function closeCheck(e) " & vbNewLine & _
+                                                                   "{ " & vbNewLine & _
+                                                                   "if(!isDirty())  " & vbNewLine & _
+                                                                   "    return; " & vbNewLine & _
+                                                                   "var confirmationMessage = 'Do you want to close this site without saving your changes?';  " & vbNewLine & _
+                                                                   "e.returnValue = confirmationMessage; " & vbNewLine & _
+                                                                   "return confirmationMessage;" & vbNewLine & _
+                                                                   "} " & vbNewLine & _
+                                                                   "if(window.addEventListener) " & vbNewLine & _
+                                                                   "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine & _
                                                                    ""
 #If NetFrameWork = "1_1" Then
                     Me.Page.RegisterClientScriptBlock("ExecPostBack", ExecPostBackSnippet)

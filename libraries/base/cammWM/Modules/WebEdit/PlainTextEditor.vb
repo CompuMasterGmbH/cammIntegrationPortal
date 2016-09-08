@@ -21,7 +21,7 @@ Imports System.ComponentModel
 
 Namespace CompuMaster.camm.WebManager.Modules.WebEdit.Controls
 
-    <DefaultProperty("Html"), ToolboxData("<{0}:PlainTextEditor1 runat=server></{0}:PlainTextEditor1>")>
+    <DefaultProperty("Html"), ToolboxData("<{0}:PlainTextEditor1 runat=server></{0}:PlainTextEditor1>")> _
     Friend Class PlainTextEditor
         Inherits System.Web.UI.WebControls.TextBox
         Implements IEditor
@@ -73,17 +73,17 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit.Controls
                                                                    "")
                     Me.Page.RegisterOnSubmitStatement( "EncodeRawData_" & Me.ClientID, String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}'));", Me.ClientID))
 #Else
-                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType, "EncodeRawData|Base", "function EncodeRawDataIfNotEncoded (item) " & vbNewLine &
-                                                               "{ " & vbNewLine &
-                                                               "if ((item.value != null) && (item.value.length >= 5) && (item.value.substring(0, 5) != String.fromCharCode(27) + 'ESC' + String.fromCharCode(27))) " & vbNewLine &
-                                                               "    { " & vbNewLine &
-                                                               "    item.value = EncodeRawData(item); " & vbNewLine &
-                                                               "    } " & vbNewLine &
-                                                               "}" & vbNewLine &
-                                                               "function EncodeRawData (item) " & vbNewLine &
-                                                               "{ " & vbNewLine &
-                                                               "    return String.fromCharCode(27) + 'ESC' + String.fromCharCode(27) + item.value.replace(/%/g,escape('%')).replace(/</g,escape('<')).replace(/>/g,escape('>')); " & vbNewLine &
-                                                               "}" & vbNewLine &
+                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType, "EncodeRawData|Base", "function EncodeRawDataIfNotEncoded (item) " & vbNewLine & _
+                                                               "{ " & vbNewLine & _
+                                                               "if ((item.value != null) && (item.value.length >= 5) && (item.value.substring(0, 5) != String.fromCharCode(27) + 'ESC' + String.fromCharCode(27))) " & vbNewLine & _
+                                                               "    { " & vbNewLine & _
+                                                               "    item.value = EncodeRawData(item); " & vbNewLine & _
+                                                               "    } " & vbNewLine & _
+                                                               "}" & vbNewLine & _
+                                                               "function EncodeRawData (item) " & vbNewLine & _
+                                                               "{ " & vbNewLine & _
+                                                               "    return String.fromCharCode(27) + 'ESC' + String.fromCharCode(27) + item.value.replace(/%/g,escape('%')).replace(/</g,escape('<')).replace(/>/g,escape('>')); " & vbNewLine & _
+                                                               "}" & vbNewLine & _
                                                                "", True)
                 Me.Page.ClientScript.RegisterOnSubmitStatement(Me.GetType, "EncodeRawData_" & Me.ClientID, String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}'));", Me.ClientID))
 #End If
