@@ -189,8 +189,8 @@ drop view [dbo].[view_ApplicationRights]
 GO
 
 CREATE  VIEW dbo.view_ApplicationRights
-
 AS
+-- ApplicationsRightsByGroup directly
 SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(Applications.TitleAdminArea, '') 
                       = '' THEN Applications.Title ELSE Applications.TitleAdminArea END AS TitleAdminAreaDisplay, dbo.Applications.Level1Title, 
                       dbo.Applications.Level2Title, dbo.Applications.Level3Title, dbo.Applications.Level4Title, dbo.Applications.Level5Title, dbo.Applications.Level6Title, 
@@ -198,21 +198,21 @@ SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(App
                       dbo.Applications.Level4TitleIsHTMLCoded, dbo.Applications.Level5TitleIsHTMLCoded, dbo.Applications.Level6TitleIsHTMLCoded, 
                       dbo.Applications.NavURL, dbo.Applications.Sort, dbo.Applications.NavFrame, dbo.Applications.IsNew, dbo.Applications.IsUpdated, 
                       dbo.Applications.NavToolTipText, Applications.LocationID, Applications.LanguageID, Applications.ID AS ID_Application, 
-                      Benutzer1.ID AS AppReleasedByID, Benutzer1.Vorname AS AppReleasedByVorname, Benutzer1.Nachname AS AppReleasedByNachname, 
+                      ReleaseBenutzer.ID AS AppReleasedByID, ReleaseBenutzer.Vorname AS AppReleasedByVorname, ReleaseBenutzer.Nachname AS AppReleasedByNachname, 
                       Applications.ReleasedOn AS AppReleasedOn, ApplicationsRightsByGroup.ID AS ID_AppRight, NULL AS ID_User, NULL AS LoginDisabled, NULL 
                       AS Loginname, NULL AS Vorname, NULL AS Nachname,null AS [Name1],
                       dbo.ApplicationsRightsByGroup.ID_GroupOrPerson AS ID_Group, Gruppen.Name, Gruppen.Description, 1 AS ItemType, 
                       Applications.AppDisabled AS AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, NULL AS ThisAuthIsFromAppID, 
                       dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, dbo.Applications.AddLanguageID2URL, 
                       SystemApp AS SystemApp, SystemAppType AS SystemAppType, IsNull(ApplicationsRightsByGroup.DevelopmentTeamMember, 0) AS DevelopmentTeamMember, 
-					  IsNull(ApplicationsRightsByGroup.IsDenyRule, 0) AS IsDenyRule, Benutzer1.Company as CompanyName,
+					  IsNull(ApplicationsRightsByGroup.IsDenyRule, 0) AS IsDenyRule, ReleaseBenutzer.Company as CompanyName,
 					  IsSupervisorAutoAccessRule, dbo.ApplicationsRightsByGroup.ID_ServerGroup
-FROM         dbo.Applications LEFT OUTER JOIN
-                      dbo.ApplicationsRightsByGroup LEFT OUTER JOIN
-                      dbo.Gruppen ON dbo.ApplicationsRightsByGroup.ID_GroupOrPerson = dbo.Gruppen.ID ON 
-                      dbo.Applications.ID = dbo.ApplicationsRightsByGroup.ID_Application LEFT OUTER JOIN
-                      dbo.Benutzer Benutzer1 ON dbo.Applications.ReleasedBy = Benutzer1.ID
+FROM         dbo.Applications 
+                      LEFT OUTER JOIN dbo.ApplicationsRightsByGroup ON dbo.Applications.ID = dbo.ApplicationsRightsByGroup.ID_Application 
+                      LEFT OUTER JOIN dbo.Gruppen ON dbo.ApplicationsRightsByGroup.ID_GroupOrPerson = dbo.Gruppen.ID 
+                      LEFT OUTER JOIN dbo.Benutzer ReleaseBenutzer ON dbo.Applications.ReleasedBy = ReleaseBenutzer.ID
 UNION
+-- ApplicationsRightsByGroup indirectly for inheriting apps 
 SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(Applications.TitleAdminArea, '') 
                       = '' THEN Applications.Title ELSE Applications.TitleAdminArea END, dbo.Applications.Level1Title, dbo.Applications.Level2Title, 
                       dbo.Applications.Level3Title, dbo.Applications.Level4Title, dbo.Applications.Level5Title, dbo.Applications.Level6Title, 
@@ -220,60 +220,62 @@ SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(App
                       dbo.Applications.Level4TitleIsHTMLCoded, dbo.Applications.Level5TitleIsHTMLCoded, dbo.Applications.Level6TitleIsHTMLCoded, 
                       dbo.Applications.NavURL, dbo.Applications.Sort, dbo.Applications.NavFrame, dbo.Applications.IsNew, dbo.Applications.IsUpdated, 
                       dbo.Applications.NavToolTipText, Applications.LocationID, Applications.LanguageID, Applications.ID AS ID_Application, 
-                      Benutzer1.ID AS AppReleasedByID, Benutzer1.Vorname AS AppReleasedByVorname, Benutzer1.Nachname AS AppReleasedByNachname, 
+                      ReleaseBenutzer.ID AS AppReleasedByID, ReleaseBenutzer.Vorname AS AppReleasedByVorname, ReleaseBenutzer.Nachname AS AppReleasedByNachname, 
                       Applications.ReleasedOn AS AppReleasedOn, ApplicationsRightsByGroup.ID AS ID_AppRight, NULL AS ID_User, NULL AS LoginDisabled, NULL 
                       AS Loginname, NULL AS Vorname, NULL AS Nachname, null AS [Name1], 
                       dbo.ApplicationsRightsByGroup.ID_GroupOrPerson AS ID_Group, Gruppen.Name, Gruppen.Description, 1 AS ItemType, 
                       Applications.AppDisabled AS AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, Applications.AuthsAsAppID AS ThisAuthIsFromAppID, 
                       dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, dbo.Applications.AddLanguageID2URL, SystemApp, 
-                      SystemAppType, IsNull(ApplicationsRightsByGroup.DevelopmentTeamMember, 0), IsNull(ApplicationsRightsByGroup.IsDenyRule, 0), Benutzer1.Company,
+                      SystemAppType, IsNull(ApplicationsRightsByGroup.DevelopmentTeamMember, 0), IsNull(ApplicationsRightsByGroup.IsDenyRule, 0), ReleaseBenutzer.Company,
 					  IsSupervisorAutoAccessRule, dbo.ApplicationsRightsByGroup.ID_ServerGroup
-FROM         dbo.Applications LEFT OUTER JOIN
-                      dbo.ApplicationsRightsByGroup LEFT OUTER JOIN
-                      dbo.Gruppen ON dbo.ApplicationsRightsByGroup.ID_GroupOrPerson = dbo.Gruppen.ID ON 
-                      dbo.Applications.AuthsAsAppID = dbo.ApplicationsRightsByGroup.ID_Application LEFT OUTER JOIN
-                      dbo.Benutzer Benutzer1 ON dbo.Applications.ReleasedBy = Benutzer1.ID
+FROM         dbo.Applications 
+					  LEFT OUTER JOIN [dbo].[ApplicationsRights_Inheriting] ON dbo.Applications.ID = [dbo].[ApplicationsRights_Inheriting].ID_Inheriting
+                      LEFT OUTER JOIN dbo.ApplicationsRightsByGroup ON [dbo].[ApplicationsRights_Inheriting].ID_Source = dbo.ApplicationsRightsByGroup.ID_Application 
+                      LEFT OUTER JOIN dbo.Gruppen ON dbo.ApplicationsRightsByGroup.ID_GroupOrPerson = dbo.Gruppen.ID 
+                      LEFT OUTER JOIN dbo.Benutzer ReleaseBenutzer ON dbo.Applications.ReleasedBy = ReleaseBenutzer.ID
 UNION
+-- ApplicationsRightsByUser directly
 SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(Applications.TitleAdminArea, '') 
                       = '' THEN Applications.Title ELSE Applications.TitleAdminArea END, dbo.Applications.Level1Title, dbo.Applications.Level2Title, 
                       dbo.Applications.Level3Title, dbo.Applications.Level4Title, dbo.Applications.Level5Title, dbo.Applications.Level6Title, 
                       dbo.Applications.Level1TitleIsHTMLCoded, dbo.Applications.Level2TitleIsHTMLCoded, dbo.Applications.Level3TitleIsHTMLCoded, 
                       dbo.Applications.Level4TitleIsHTMLCoded, dbo.Applications.Level5TitleIsHTMLCoded, dbo.Applications.Level6TitleIsHTMLCoded, 
                       dbo.Applications.NavURL, dbo.Applications.Sort, dbo.Applications.NavFrame, dbo.Applications.IsNew, dbo.Applications.IsUpdated, 
-                      dbo.Applications.NavToolTipText, Applications.LocationID, Applications.LanguageID, Applications.ID, Benutzer1.ID, Benutzer1.Vorname, 
-                      Benutzer1.Nachname, Applications.ReleasedOn, ApplicationsRightsByUser.ID, dbo.ApplicationsRightsByUser.ID_GroupOrPerson, Benutzer.LoginDisabled, Benutzer.Loginname, 
+                      dbo.Applications.NavToolTipText, Applications.LocationID, Applications.LanguageID, Applications.ID, ReleaseBenutzer.ID, ReleaseBenutzer.Vorname, 
+                      ReleaseBenutzer.Nachname, Applications.ReleasedOn, ApplicationsRightsByUser.ID, dbo.ApplicationsRightsByUser.ID_GroupOrPerson, Benutzer.LoginDisabled, Benutzer.Loginname, 
                       Benutzer.Vorname, Benutzer.Nachname,  
 					  ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname AS [Name1],
                       NULL, NULL, NULL, 2, Applications.AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, NULL 
                       AS ThisAuthIsFromAppID, dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, 
                       dbo.Applications.AddLanguageID2URL, SystemApp, SystemAppType, IsNull(dbo.ApplicationsRightsByUser.DevelopmentTeamMember, 0), 
-					  IsNull(ApplicationsRightsByUser.IsDenyRule, 0), Benutzer1.Company, 
+					  IsNull(ApplicationsRightsByUser.IsDenyRule, 0), ReleaseBenutzer.Company, 
 					  0 AS IsSupervisorAutoAccessRule, dbo.ApplicationsRightsByUser.ID_ServerGroup
-FROM         dbo.Benutzer RIGHT OUTER JOIN
-                      dbo.ApplicationsRightsByUser ON dbo.Benutzer.ID = dbo.ApplicationsRightsByUser.ID_GroupOrPerson RIGHT OUTER JOIN
-                      dbo.Applications ON dbo.ApplicationsRightsByUser.ID_Application = dbo.Applications.ID LEFT OUTER JOIN
-                      dbo.Benutzer Benutzer1 ON dbo.Applications.ReleasedBy = Benutzer1.ID
+FROM         dbo.Applications 
+                      LEFT OUTER JOIN dbo.ApplicationsRightsByUser ON dbo.ApplicationsRightsByUser.ID_Application = dbo.Applications.ID 
+                      LEFT OUTER JOIN dbo.Benutzer ON dbo.Benutzer.ID = dbo.ApplicationsRightsByUser.ID_GroupOrPerson 
+                      LEFT OUTER JOIN dbo.Benutzer ReleaseBenutzer ON dbo.Applications.ReleasedBy = ReleaseBenutzer.ID
 UNION
+-- ApplicationsRightsByUser indirectly for inheriting apps
 SELECT     Applications.Title, Applications.TitleAdminArea, CASE WHEN IsNull(Applications.TitleAdminArea, '') 
                       = '' THEN Applications.Title ELSE Applications.TitleAdminArea END, dbo.Applications.Level1Title, dbo.Applications.Level2Title, 
                       dbo.Applications.Level3Title, dbo.Applications.Level4Title, dbo.Applications.Level5Title, dbo.Applications.Level6Title, 
                       dbo.Applications.Level1TitleIsHTMLCoded, dbo.Applications.Level2TitleIsHTMLCoded, dbo.Applications.Level3TitleIsHTMLCoded, 
                       dbo.Applications.Level4TitleIsHTMLCoded, dbo.Applications.Level5TitleIsHTMLCoded, dbo.Applications.Level6TitleIsHTMLCoded, 
                       dbo.Applications.NavURL, dbo.Applications.Sort, dbo.Applications.NavFrame, dbo.Applications.IsNew, dbo.Applications.IsUpdated, 
-                      dbo.Applications.NavToolTipText, Applications.LocationID, Applications.LanguageID, Applications.ID, Benutzer1.ID, Benutzer1.Vorname, 
-                      Benutzer1.Nachname, Applications.ReleasedOn, ApplicationsRightsByUser.ID, dbo.ApplicationsRightsByUser.ID_GroupOrPerson, Benutzer.LoginDisabled, Benutzer.Loginname, 
+                      dbo.Applications.NavToolTipText, Applications.LocationID, Applications.LanguageID, Applications.ID, ReleaseBenutzer.ID, ReleaseBenutzer.Vorname, 
+                      ReleaseBenutzer.Nachname, Applications.ReleasedOn, ApplicationsRightsByUser.ID, dbo.ApplicationsRightsByUser.ID_GroupOrPerson, Benutzer.LoginDisabled, Benutzer.Loginname, 
                       Benutzer.Vorname, Benutzer.Nachname, 
 					  ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname AS [Name1],
                       NULL, NULL, NULL, 2, Applications.AppDisabled, Applications.AuthsAsAppID AS AuthsAsAppID, 
                       Applications.AuthsAsAppID AS ThisAuthIsFromAppID, dbo.Applications.OnMouseOver, dbo.Applications.OnMouseOut, dbo.Applications.OnClick, 
                       dbo.Applications.AddLanguageID2URL, SystemApp, SystemAppType, IsNull(dbo.ApplicationsRightsByUser.DevelopmentTeamMember, 0), 
-					  IsNull(ApplicationsRightsByUser.IsDenyRule, 0), Benutzer1.Company, 
+					  IsNull(ApplicationsRightsByUser.IsDenyRule, 0), ReleaseBenutzer.Company, 
 					  0 AS IsSupervisorAutoAccessRule, dbo.ApplicationsRightsByUser.ID_ServerGroup
-FROM         dbo.Benutzer RIGHT OUTER JOIN
-                      dbo.ApplicationsRightsByUser ON dbo.Benutzer.ID = dbo.ApplicationsRightsByUser.ID_GroupOrPerson RIGHT OUTER JOIN
-                      dbo.Applications ON dbo.ApplicationsRightsByUser.ID_Application = dbo.Applications.AuthsAsAppID LEFT OUTER JOIN
-                      dbo.Benutzer Benutzer1 ON dbo.Applications.ReleasedBy = Benutzer1.ID
-
+FROM         dbo.Applications 
+					  LEFT OUTER JOIN [dbo].[ApplicationsRights_Inheriting] ON dbo.Applications.ID = [dbo].[ApplicationsRights_Inheriting].ID_Inheriting
+                      LEFT OUTER JOIN dbo.ApplicationsRightsByUser ON [dbo].[ApplicationsRights_Inheriting].ID_Source = dbo.ApplicationsRightsByUser.ID_Application 
+                      LEFT OUTER JOIN dbo.Benutzer ON dbo.Benutzer.ID = dbo.ApplicationsRightsByUser.ID_GroupOrPerson 
+                      LEFT OUTER JOIN dbo.Benutzer ReleaseBenutzer ON dbo.Applications.ReleasedBy = ReleaseBenutzer.ID
 
 GO
 
