@@ -45,6 +45,22 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit.Controls
             End Get
         End Property
 
+        Public Shared ReadOnly Property ImagesUploadPath() As String
+            Get
+                Return CompuMaster.camm.WebManager.Configuration.LoadStringSetting("WebManager.WebEditor.ImagesUploadPath", String.Empty)
+            End Get
+        End Property
+
+        Public Shared ReadOnly Property UploadFormUrl() As String
+            Get
+                Return CompuMaster.camm.WebManager.Configuration.LoadStringSetting("WebManager.WebEditor.UploadFormUrl", String.Empty)
+            End Get
+        End Property
+
+
+
+
+
         '#Region "Load configuration setting helper methods"
 
         Friend Shared ReadOnly Property WebManagerSettings() As System.Collections.Specialized.NameValueCollection

@@ -956,7 +956,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="appSettingName">The name of the appSetting item</param>
         ''' <param name="defaultValue">A default value if not configured of configured invalid</param>
         ''' <param name="suppressExceptions">True if exceptions shall be suppressed and default value returned or False if exception shall be thrown if there is an error</param>
-        Private Shared Function LoadLongSetting(ByVal appSettingName As String, ByVal defaultValue As Long, ByVal suppressExceptions As Boolean) As Long
+        Friend Shared Function LoadLongSetting(ByVal appSettingName As String, ByVal defaultValue As Long, ByVal suppressExceptions As Boolean) As Long
             Dim Result As Long = defaultValue
             Try
                 Dim value As String = CType(WebManagerSettings.Item(appSettingName), String)
@@ -979,7 +979,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="appSettingName">The name of the appSetting item</param>
         ''' <param name="defaultValue">A default value if not configured of configured invalid</param>
-        Private Shared Function LoadStringSetting(ByVal appSettingName As String, ByVal defaultValue As String) As String
+        Friend Shared Function LoadStringSetting(ByVal appSettingName As String, ByVal defaultValue As String) As String
             Dim value As String = CType(WebManagerSettings.Item(appSettingName), String)
             If value = Nothing Then value = AdditionalConfiguration(appSettingName)
             If value = Nothing Then
