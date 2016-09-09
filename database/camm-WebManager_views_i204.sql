@@ -52,11 +52,11 @@ AS
 -- PLEASE NOTE: anonymous user is a user with a group ID -1 and user ID -1!
 ---------------------------------------------------------------------------------------------------
     SELECT AllowRules.ID_SecurityObject, AllowRules.ID_ServerGroup, AllowRules.ID_Group, AllowRules.IsDevRule
-    FROM dbo.[ApplicationsRightsByGroup_RulesCumulativeWithInherition] AS AllowRules
+    FROM dbo.ApplicationsRightsByGroup_PreStaging2Inheritions AS AllowRules
         LEFT JOIN 
             (
                 SELECT ID_SecurityObject, ID_ServerGroup, ID_Group, IsDevRule
-                FROM dbo.[ApplicationsRightsByGroup_RulesCumulativeWithInherition] 
+                FROM dbo.ApplicationsRightsByGroup_PreStaging2Inheritions 
                 WHERE IsDenyRule <> 0
             ) AS DenyRules
             ON AllowRules.ID_SecurityObject = DenyRules.ID_SecurityObject 
@@ -366,28 +366,11 @@ GO
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_AccessStatistics_Complete - Pre1]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_Log_AccessStatistics_Complete - Pre1]
 GO
-CREATE VIEW dbo.[view_Log_AccessStatistics_Complete - Pre1]
-
-AS
-SELECT     ServerGroup, Application, COUNT(1) AS [Count], LoginDate, UserID, YEAR(LoginDate) AS LoginYear, MONTH(LoginDate) AS LoginMonth, DAY(LoginDate) 
-                      AS LoginDay
-FROM         dbo.view_Log_Base4Analysis
-WHERE     (ConflictType = 0)
-GROUP BY Application, ServerGroup, LoginDate, UserID
-GO
 ----------------------------------------------------
 -- [dbo].[view_Log_AccessStatistics_Complete - Pre2]
 ----------------------------------------------------
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_AccessStatistics_Complete - Pre2]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_Log_AccessStatistics_Complete - Pre2]
-GO
-CREATE VIEW dbo.[view_Log_AccessStatistics_Complete - Pre2]
-
-AS
-SELECT     Min(dbo.system_ServerGroups.ServerGroup) as ServerGroup_Title, Application, SUM([Count]) AS Hits, CAST(LoginYear AS varchar(4)) 
-                      + '-' + CASE WHEN LoginMonth < 10 THEN '0' ELSE '' END + CAST(LoginMonth AS varchar(4)) AS LoginDate
-FROM         dbo.[view_Log_AccessStatistics_Complete - Pre1] left join dbo.system_servergroups on dbo.[view_Log_AccessStatistics_Complete - Pre1].servergroup = dbo.system_servergroups.id
-GROUP BY dbo.[view_Log_AccessStatistics_Complete - Pre1].ServerGroup, Application, CAST(LoginYear AS varchar(4)) + '-' + CASE WHEN LoginMonth < 10 THEN '0' ELSE '' END + CAST(LoginMonth AS varchar(4))
 GO
 ----------------------------------------------------
 -- [dbo].[view_Log_Base4Analysis]
@@ -395,50 +378,11 @@ GO
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Base4Analysis]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_Log_Base4Analysis]
 GO
-CREATE VIEW dbo.view_Log_Base4Analysis
-
-AS
-SELECT dbo.[Log].*, 
-	CASE 
-		WHEN dbo.Applications.TitleAdminArea IS NULL 
-			OR dbo.Applications.TitleAdminArea = '' 
-		THEN dbo.Applications.Title 
-		ELSE dbo.Applications.TitleAdminArea 
-	END AS Application, 
-	dbo.System_Servers.ServerGroup
-FROM dbo.[Log] 
-	LEFT OUTER JOIN dbo.Applications 
-		ON dbo.[Log].ApplicationID = dbo.Applications.ID
-	LEFT OUTER JOIN System_Servers 
-		ON Log.ServerIP = System_Servers.IP
-WHERE 
-	NOT dbo.Applications.SystemApp = 1
-	AND dbo.[Log].UserID NOT IN
-		(
-			SELECT     id_user
-			FROM       dbo.Memberships_EffectiveRulesWithClonesNthGrade
-			WHERE      ID_Group = 6
-		)
-	AND NOT dbo.[Log].ApplicationID IN
-		(
-			SELECT     id
-			FROM       applications
-			WHERE      systemapp = 1
-		)
-GO
 ----------------------------------------------------
 -- [dbo].[view_Log_Statistics_By_Application_Complete]
 ----------------------------------------------------
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_Application_Complete]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_Log_Statistics_By_Application_Complete]
-GO
-CREATE VIEW dbo.view_Log_Statistics_By_Application_Complete
-
-AS
-SELECT     ApplicationID, COUNT(1) AS [Count]
-FROM         dbo.view_Log_Base4Analysis
-WHERE     (ConflictType = 0)
-GROUP BY ApplicationID
 GO
 ----------------------------------------------------
 -- [dbo].[view_Log_Statistics_By_Application_CurrentMonth]
@@ -446,27 +390,11 @@ GO
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_Application_CurrentMonth]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_Log_Statistics_By_Application_CurrentMonth]
 GO
-CREATE VIEW dbo.view_Log_Statistics_By_Application_CurrentMonth
-
-AS
-SELECT     ApplicationID, COUNT(1) AS [Count]
-FROM         dbo.view_Log_Base4Analysis
-WHERE     (ConflictType = 0) AND (LoginDate > GETDATE() - DAY(GETDATE()))
-GROUP BY ApplicationID
-GO
 ----------------------------------------------------
 -- [dbo].[view_Log_Statistics_By_ServerApplication_Complete]
 ----------------------------------------------------
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_ServerApplication_Complete]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_Log_Statistics_By_ServerApplication_Complete]
-GO
-CREATE VIEW dbo.view_Log_Statistics_By_ServerApplication_Complete
-
-AS
-SELECT     dbo.view_Log_Base4Analysis.ServerGroup As ServerGroupID, Application, COUNT(1) AS [Count]
-FROM         dbo.view_Log_Base4Analysis 
-WHERE     (ConflictType = 0)
-GROUP BY Application, dbo.view_Log_Base4Analysis.ServerGroup
 GO
 ----------------------------------------------------
 -- [dbo].[view_Log_Statistics_By_ServerApplication_CurrentMonth]
@@ -474,32 +402,11 @@ GO
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_ServerApplication_CurrentMonth]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_Log_Statistics_By_ServerApplication_CurrentMonth]
 GO
-CREATE VIEW dbo.view_Log_Statistics_By_ServerApplication_CurrentMonth
-
-AS
-SELECT     dbo.view_Log_Base4Analysis.ServerGroup As ServerGroupID, Application, COUNT(1) AS [Count]
-FROM         dbo.view_Log_Base4Analysis 
-WHERE     (ConflictType = 0) AND (LoginDate > GETDATE() - DAY(GETDATE()))
-GROUP BY Application, dbo.view_Log_Base4Analysis.ServerGroup
-GO
 ----------------------------------------------------
 -- [dbo].[view_Log_Statistics_By_User_Complete]
 ----------------------------------------------------
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_User_Complete]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_Log_Statistics_By_User_Complete]
-GO
-CREATE VIEW dbo.view_Log_Statistics_By_User_Complete
-
-AS
-SELECT     dbo.view_Log_Base4Analysis.UserID, ISNULL(dbo.Benutzer.Namenszusatz, '')
-+ SPACE({ fn LENGTH(SUBSTRING(ISNULL(dbo.Benutzer.Namenszusatz, ''), 1, 1)) }) + dbo.Benutzer.Nachname + ', ' + dbo.Benutzer.Vorname AS Name,
-dbo.Benutzer.[E-MAIL], COUNT(1) AS [Count], dbo.Benutzer.Company
-FROM         dbo.view_Log_Base4Analysis LEFT OUTER JOIN
-dbo.Benutzer ON dbo.view_Log_Base4Analysis.UserID = dbo.Benutzer.ID
-WHERE     (dbo.view_Log_Base4Analysis.ConflictType = 0)
-GROUP BY dbo.view_Log_Base4Analysis.UserID, ISNULL(dbo.Benutzer.Namenszusatz, '')
-+ SPACE({ fn LENGTH(SUBSTRING(ISNULL(dbo.Benutzer.Namenszusatz, ''), 1, 1)) }) + dbo.Benutzer.Nachname + ', ' + dbo.Benutzer.Vorname,
-dbo.Benutzer.[E-MAIL], dbo.Benutzer.Company
 GO
 ----------------------------------------------------
 -- [dbo].[view_Log_Statistics_By_User_CurrentMonth]
@@ -507,33 +414,11 @@ GO
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_User_CurrentMonth]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_Log_Statistics_By_User_CurrentMonth]
 GO
-CREATE VIEW dbo.view_Log_Statistics_By_User_CurrentMonth
-
-AS
-SELECT     dbo.view_Log_Base4Analysis.UserID, ISNULL(dbo.Benutzer.Namenszusatz, '')
-	+ SPACE({ fn LENGTH(SUBSTRING(ISNULL(dbo.Benutzer.Namenszusatz, ''), 1, 1)) }) + dbo.Benutzer.Nachname + ', ' + dbo.Benutzer.Vorname AS Name,
-	dbo.Benutzer.[E-MAIL], COUNT(1) AS [Count], dbo.Benutzer.Company
-FROM dbo.view_Log_Base4Analysis 
-	LEFT OUTER JOIN dbo.Benutzer 
-		ON dbo.view_Log_Base4Analysis.UserID = dbo.Benutzer.ID
-WHERE     (dbo.view_Log_Base4Analysis.ConflictType = 0) 
-	AND (dbo.view_Log_Base4Analysis.LoginDate > GETDATE() - DAY(GETDATE()))
-GROUP BY dbo.view_Log_Base4Analysis.UserID, ISNULL(dbo.Benutzer.Namenszusatz, '')
-	+ SPACE({ fn LENGTH(SUBSTRING(ISNULL(dbo.Benutzer.Namenszusatz, ''), 1, 1)) }) + dbo.Benutzer.Nachname + ', ' + dbo.Benutzer.Vorname,
-	dbo.Benutzer.[E-MAIL], dbo.Benutzer.Company
-GO
 ----------------------------------------------------
 -- [dbo].[view_UserList]
 ----------------------------------------------------
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_UserList]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_UserList]
-GO
-CREATE VIEW dbo.view_UserList
-
-AS
-SELECT     ID, Loginname, ISNULL(Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Namenszusatz, ''), 1, 1)) }) + Nachname + ', ' + Vorname AS Name,
-[E-MAIL]
-FROM         dbo.Benutzer
 GO
 ----------------------------------------------------
 -- [dbo].[view_Log_Statistics_By_ServerUserApplication_Complete]
@@ -541,44 +426,17 @@ GO
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_ServerUserApplication_Complete]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_Log_Statistics_By_ServerUserApplication_Complete]
 GO
-CREATE VIEW dbo.view_Log_Statistics_By_ServerUserApplication_Complete
-
-AS
-SELECT     dbo.view_Log_Base4Analysis.ServerGroup As ServerGroupID, dbo.view_Log_Base4Analysis.UserID, dbo.view_UserList.Name, dbo.view_Log_Base4Analysis.Application, 
-                      COUNT(1) AS [Count], MAX(dbo.view_Log_Base4Analysis.LoginDate) AS LastAccessDate
-FROM         dbo.view_Log_Base4Analysis LEFT OUTER JOIN
-                      dbo.view_UserList ON dbo.view_Log_Base4Analysis.UserID = dbo.view_UserList.ID
-WHERE     (dbo.view_Log_Base4Analysis.ConflictType = 0)
-GROUP BY dbo.view_Log_Base4Analysis.ServerGroup, dbo.view_Log_Base4Analysis.Application, dbo.view_Log_Base4Analysis.UserID, dbo.view_UserList.Name
-GO
 ----------------------------------------------------
 -- [dbo].[view_Log_Statistics_By_ServerUserApplication_CurrentMonth]
 ----------------------------------------------------
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_Log_Statistics_By_ServerUserApplication_CurrentMonth]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_Log_Statistics_By_ServerUserApplication_CurrentMonth]
 GO
-CREATE VIEW dbo.view_Log_Statistics_By_ServerUserApplication_CurrentMonth
-
-AS
-SELECT     dbo.view_Log_Base4Analysis.ServerGroup As ServerGroupID, dbo.view_Log_Base4Analysis.UserID, dbo.view_UserList.Name, dbo.view_Log_Base4Analysis.Application, 
-                      COUNT(1) AS [Count], MAX(dbo.view_Log_Base4Analysis.LoginDate) AS LastAccessDate
-FROM         dbo.view_Log_Base4Analysis LEFT OUTER JOIN
-                      dbo.view_UserList ON dbo.view_Log_Base4Analysis.UserID = dbo.view_UserList.ID
-WHERE     (dbo.view_Log_Base4Analysis.ConflictType = 0) AND (dbo.view_Log_Base4Analysis.LoginDate > GETDATE() - DAY(GETDATE()))
-GROUP BY dbo.view_Log_Base4Analysis.ServerGroup, dbo.view_Log_Base4Analysis.Application, dbo.view_UserList.Name, dbo.view_Log_Base4Analysis.UserID
-GO
 ----------------------------------------------------
 -- [dbo].[view_User_Statistics_LastLogonDates]
 ----------------------------------------------------
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[view_User_Statistics_LastLogonDates]') and OBJECTPROPERTY(object_id, N'IsView') = 1) 
 drop view [dbo].[view_User_Statistics_LastLogonDates]
-GO
-CREATE VIEW dbo.view_User_Statistics_LastLogonDates
-
-AS
-SELECT     dbo.Benutzer.LastLoginOn, dbo.view_UserList.ID, dbo.view_UserList.Loginname, dbo.view_UserList.Name, dbo.view_UserList.[E-MAIL]
-FROM         dbo.view_UserList INNER JOIN
-dbo.Benutzer ON dbo.view_UserList.ID = dbo.Benutzer.ID
 GO
 
 
