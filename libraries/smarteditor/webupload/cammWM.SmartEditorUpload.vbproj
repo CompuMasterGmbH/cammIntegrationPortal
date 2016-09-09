@@ -69,6 +69,9 @@
   <ItemGroup>
     <Compile Include="ConfigurationUploadSettings.vb" />
     <Compile Include="ConfigurationUploadWebManager.vb" />
+    <Compile Include="ImageBrowser.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="ProtectedUploadPage.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -118,6 +121,9 @@
     <None Include="_CreateNewNuGetPackage\RunMeToUploadNuGetPackage.cmd" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ImageBrowser.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="se-webupload\images\height.gif" />
     <Content Include="se-webupload\images\langicon.bmp" />
     <Content Include="se-webupload\images\langicon.gif" />
@@ -125,14 +131,20 @@
     <Content Include="se-webupload\images\maxwidth.gif" />
     <Content Include="se-webupload\images\samplefile.jpg" />
     <Content Include="se-webupload\images\width.gif" />
-    <Content Include="se-webupload\upload.aspx" />
+    <Content Include="se-webupload\upload.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\baseeditor\cammWM.SmartEditor.vbproj">
       <Project>{f9f88dee-2014-4668-8c21-0c654d6f439f}</Project>
       <Name>cammWM.SmartEditor</Name>
+      <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{94E38DFF-614B-4CBD-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

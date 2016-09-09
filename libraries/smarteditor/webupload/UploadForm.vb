@@ -83,6 +83,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                 Static _ImageUploadFolder As String
                 If _ImageUploadFolder Is Nothing AndAlso Request.QueryString("imageupload") <> Nothing Then
                     Dim folder As String = Me.DecryptUrlParameters(Request.QueryString("imageupload"))
+
                     If folder.StartsWith("/") OrElse folder.StartsWith("~/") Then
                         _ImageUploadFolder = UploadTools.FullyInterpretedVirtualPath(folder)
                     Else
@@ -133,8 +134,21 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
 #End Region
 
-        Private Sub PageOnLoad(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Private Sub InitializeControls()
+            Dim imageBrowser As ImageBrowser = CType(Me.Page.FindControl("ImageBrowserControl"), ImageBrowser)
+            If Not imageBrowser Is Nothing Then
+                imageBrowser.ImageUploadFolderPath = Me.ImageUploadFolder
+                Dim editorId As String = Request("editorid")
+                If Not editorId = "" Then
+                    editorId = Me.DecryptUrlParameters(editorId)
+                End If
+                imageBrowser.EditorId = editorId
+            End If
 
+
+        End Sub
+
+        Private Sub PageOnLoad(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
             'Initialize text
             Me.InitializeText()
 
@@ -143,6 +157,11 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
             'Show configuration values for max. width, height, etc. in form
             Me.InitializeImageDataManagementSettings()
+
+            Me.InitializeControls()
+
+
+
 
         End Sub
 

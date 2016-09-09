@@ -1,5 +1,7 @@
 <%@ Page Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.SmartWebEditor.Pages.UploadForm"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
+<%@ Register TagPrefix="SmartWebEditor" TagName="ImageBrowser" Src="ImageBrowser.ascx" %>
+
 <camm:WebManager id="cammWebmanager" runat="server" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
@@ -17,7 +19,7 @@
 			{
 				if ((e.value == null) || (e.value == ""))
 				{
-					alert('Bitte wählen Sie ein Bilddatei zum hochladen.');
+					alert('Bitte wählen Sie eine Bilddatei zum hochladen aus.');
 					e.focus();
 					return false;		
 				}
@@ -45,7 +47,7 @@
 		<link href="/Styles.css" type="text/css" rel="stylesheet">
 	</HEAD>
 	<body>
-		<form id="Form1" method="post" runat="server" onsubmit="return checkImageValidity(this)" >
+		<form id="Form1" method="post" runat="server"  >
 		
 		<div class="pagearea" id="uploadarea">
 		<h1>Upload</h1>
@@ -91,13 +93,17 @@
 		<p style="clear: both;"><asp:Label Runat="server" ID="LabelWarning" ForeColor="#ff0033" /></p>
 		
 										
-		<p><asp:Button Runat="server" ID="ButtonUploadImage" /></p>
+		<p><asp:Button Runat="server" ID="ButtonUploadImage" OnClientClick="return checkImageValidity(document.forms[0]);" /></p>
 			
 		<p><asp:Label Runat="server" ID="LabelProcessingTips" /></p>
 		
 		</div>
+	<hr>		
 	
-				</form>
+		<SmartWebEditor:ImageBrowser  id="ImageBrowserControl" runat="server" />		
+			
+
+		</form>
 	</body>
 </HTML>
  
