@@ -1,6 +1,7 @@
 ﻿-- drop table because of dropped concept
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Apps2SecObj_SyncWarnLog]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 DROP TABLE [dbo].[Apps2SecObj_SyncWarnLog]
+GO
 
 -- add security access everything group (but without supervisor priviledges to do aministration)
 IF NOT EXISTS (SELECT ID FROM Gruppen WHERE ID = -5)
@@ -8,6 +9,7 @@ BEGIN
 INSERT INTO Gruppen (ID, Name, Description, ReleasedOn, ReleasedBy, SystemGroup, ModifiedOn, ModifiedBy) 
 VALUES(-6, 'Security Access Everything', 'System group: allowed to access all applications', GETDATE(), 1, 1, GETDATE(), 1) 
 END
+GO
 
 -- fix the log items in the history
 UPDATE dbo.Log
