@@ -118,6 +118,7 @@ BEGIN
 	-- Update table dbo.ApplicationsRightsByGroup to always allow Supervisors
 	IF IsNull(@RowDeletesCount, 0) > 0
 		BEGIN
+			--Remove auth records for dropped security objects
 			DELETE dbo.[ApplicationsRightsByGroup]
 			FROM dbo.[ApplicationsRightsByGroup]
 				INNER JOIN deleted
@@ -125,24 +126,42 @@ BEGIN
 						AND dbo.[ApplicationsRightsByGroup].ID_ServerGroup = 0
 						AND dbo.[ApplicationsRightsByGroup].ID_GroupOrPerson IN (-6, 6)
 						AND dbo.[ApplicationsRightsByGroup].DevelopmentTeamMember = 1
-						AND dbo.[ApplicationsRightsByGroup].IsDenyRule = 0;
+						AND dbo.[ApplicationsRightsByGroup].IsDenyRule = 0
+				LEFT JOIN inserted ON deleted.ID = inserted.ID
+			WHERE inserted.ID IS NULL;
 		END
 	IF IsNull(@RowInsertsCount, 0) > 0
 		BEGIN
+			--Add missing auth records for inserted/updated security objects
 			INSERT INTO dbo.[ApplicationsRightsByGroup] (ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, ReleasedBy, ReleasedOn, [IsSupervisorAutoAccessRule])
-			SELECT ID, 0, 6, 1, 0, IsNull(inserted.ModifiedBy, inserted.ReleasedBy), IsNull(inserted.ModifiedOn, inserted.ReleasedOn), 1
+			SELECT inserted.ID, 0, 6, 1, 0, IsNull(inserted.ModifiedBy, inserted.ReleasedBy), IsNull(inserted.ModifiedOn, inserted.ReleasedOn), 1
 			FROM inserted
-			WHERE AppDeleted = 0;
+				LEFT JOIN dbo.[ApplicationsRightsByGroup]
+					ON dbo.[ApplicationsRightsByGroup].ID_Application = inserted.ID
+						AND dbo.[ApplicationsRightsByGroup].ID_ServerGroup = 0
+						AND dbo.[ApplicationsRightsByGroup].ID_GroupOrPerson = 6
+						AND dbo.[ApplicationsRightsByGroup].DevelopmentTeamMember = 1
+						AND dbo.[ApplicationsRightsByGroup].IsDenyRule = 0
+			WHERE AppDeleted = 0
+				AND dbo.[ApplicationsRightsByGroup].ID IS NULL;
 			INSERT INTO dbo.[ApplicationsRightsByGroup] (ID_Application, ID_ServerGroup, ID_GroupOrPerson, DevelopmentTeamMember, IsDenyRule, ReleasedBy, ReleasedOn, [IsSupervisorAutoAccessRule])
-			SELECT ID, 0, -6, 1, 0, IsNull(inserted.ModifiedBy, inserted.ReleasedBy), IsNull(inserted.ModifiedOn, inserted.ReleasedOn), 1
+			SELECT inserted.ID, 0, -6, 1, 0, IsNull(inserted.ModifiedBy, inserted.ReleasedBy), IsNull(inserted.ModifiedOn, inserted.ReleasedOn), 1
 			FROM inserted
-			WHERE AppDeleted = 0;
+				LEFT JOIN dbo.[ApplicationsRightsByGroup]
+					ON dbo.[ApplicationsRightsByGroup].ID_Application = inserted.ID
+						AND dbo.[ApplicationsRightsByGroup].ID_ServerGroup = 0
+						AND dbo.[ApplicationsRightsByGroup].ID_GroupOrPerson = 6
+						AND dbo.[ApplicationsRightsByGroup].DevelopmentTeamMember = 1
+						AND dbo.[ApplicationsRightsByGroup].IsDenyRule = 0
+			WHERE AppDeleted = 0
+				AND dbo.[ApplicationsRightsByGroup].ID IS NULL;
 		END
 END 
 GO
+------------------------------------------------------------------------------------------------------------
 -- Force first table filling (or full update on repetitions)
-UPDATE [dbo].[Applications_CurrentAndInactiveOnes] 
-SET TitleAdminArea = TitleAdminArea
+------------------------------------------------------------------------------------------------------------
+-- SEE SEPARATE UPDATE COMMAND IN SEPARATE DB PATCH FILE - SCHEDULE RUN OF IT AS SOON AS ABOVE TRIGGERS HAVE BEEN CHANGED/UPDATED AND EFFECTIVE RESULT ROWS MIGHT CHANGE
 GO
 -- =========================================================================================================
 -- ===== MEMBERSHIPS TABLES - PRE-STAGED/PRE-CALCULATED, EFFECTIVE
@@ -166,37 +185,55 @@ BEGIN
 
 	DECLARE @UsersWithModifiedAccessLevel table (ID int); --means updated users with changed access level OR inserted users
 	INSERT INTO @UsersWithModifiedAccessLevel (ID)
-	SELECT inserted.ID
+	SELECT IsNull(inserted.ID, deleted.ID)
 	FROM inserted
-		LEFT JOIN deleted ON inserted.ID = deleted.ID
-	WHERE inserted.AccountAccessability <> deleted.AccountAccessability
+		FULL JOIN deleted ON inserted.ID = deleted.ID
+	WHERE inserted.ID IS NULL 
+		OR deleted.ID IS NULL
+		OR inserted.AccountAccessability <> deleted.AccountAccessability
 
 	-- check for real changes - in case of 0 updated rows, don't forward 0-row-updates to sub-sequent triggers (would be a waste of time)
 	DECLARE @RowAffectedCount bigint
 	SELECT @RowAffectedCount = IsNull(COUNT_BIG(*), 0) FROM @UsersWithModifiedAccessLevel;
 	IF IsNull(@RowAffectedCount, 0) > 0
 		BEGIN
-			-- reset all system rules (=rules for anonymous+public groups)
+			-- reset all system rules (=rules for anonymous+public groups for every accesslevel-servergroup-combination)
 			DELETE dbo.Memberships 
 			FROM dbo.Memberships 
-			WHERE dbo.Memberships.IsSystemRule <> 0
-				AND ID_User IN (SELECT ID FROM @UsersWithModifiedAccessLevel)
+			WHERE dbo.Memberships.IsSystemRuleOfServerGroupsAndTheirUserAccessLevelsID IS NOT NULL
+				AND ID_User IN 
+					(
+						SELECT deleted.ID 
+						FROM deleted LEFT JOIN inserted ON inserted.ID = deleted.ID
+						WHERE inserted.ID IS NULL 
+							OR inserted.AccountAccessability <> deleted.AccountAccessability
+					)
 			-- insert public groups memberships
-			INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRule)
-			SELECT [dbo].[System_ServerGroups].ID_Group_Public, [dbo].[Benutzer].ID AS ID_User, GETDATE(), -43, 0, 1
+			INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRuleOfServerGroupsAndTheirUserAccessLevelsID)
+			SELECT [dbo].[System_ServerGroups].ID_Group_Public, [dbo].[Benutzer].ID AS ID_User, GETDATE(), -43, 0, dbo.System_ServerGroupsAndTheirUserAccessLevels.ID
 			FROM dbo.System_ServerGroupsAndTheirUserAccessLevels
 				INNER JOIN [dbo].[Benutzer] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = [dbo].[Benutzer].AccountAccessability
 				INNER JOIN [dbo].[System_ServerGroups] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = [dbo].[System_ServerGroups].ID
-			WHERE [dbo].[Benutzer].ID IN (SELECT ID FROM @UsersWithModifiedAccessLevel)
-			GROUP BY [dbo].[System_ServerGroups].ID_Group_Public, [dbo].[Benutzer].ID
+			WHERE [dbo].[Benutzer].ID IN 
+				(
+					SELECT inserted.ID 
+					FROM inserted LEFT JOIN deleted ON inserted.ID = deleted.ID
+					WHERE deleted.ID IS NULL 
+						OR inserted.AccountAccessability <> deleted.AccountAccessability
+				)
 			-- insert anonymous groups memberships
-			INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRule)
-			SELECT [dbo].[System_ServerGroups].ID_Group_Anonymous, [dbo].[Benutzer].ID AS ID_User, GETDATE(), -43, 0, 1
+			INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRuleOfServerGroupsAndTheirUserAccessLevelsID)
+			SELECT [dbo].[System_ServerGroups].ID_Group_Anonymous, [dbo].[Benutzer].ID AS ID_User, GETDATE(), -43, 0, dbo.System_ServerGroupsAndTheirUserAccessLevels.ID
 			FROM dbo.System_ServerGroupsAndTheirUserAccessLevels
 				INNER JOIN [dbo].[Benutzer] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = [dbo].[Benutzer].AccountAccessability
 				INNER JOIN [dbo].[System_ServerGroups] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = [dbo].[System_ServerGroups].ID
-			WHERE [dbo].[Benutzer].ID IN (SELECT ID FROM @UsersWithModifiedAccessLevel)
-			GROUP BY [dbo].[System_ServerGroups].ID_Group_Anonymous, [dbo].[Benutzer].ID
+			WHERE [dbo].[Benutzer].ID IN 
+				(
+					SELECT inserted.ID 
+					FROM inserted LEFT JOIN deleted ON inserted.ID = deleted.ID
+					WHERE deleted.ID IS NULL 
+						OR inserted.AccountAccessability <> deleted.AccountAccessability
+				)
 		END
 END
 GO
@@ -210,47 +247,42 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-	-- on delete: reset all system rules (=rules for anonymous+public groups) of related users and re-create them
-	DECLARE @Users table (ID int);
-	INSERT INTO @Users (ID)
-	SELECT dbo.Benutzer.ID
-	FROM dbo.Benutzer
-	WHERE dbo.Benutzer.AccountAccessability IN 
+	-- reset all system rules (=rules for anonymous+public groups)
+	DELETE dbo.Memberships 
+	FROM dbo.Memberships 
+	WHERE dbo.Memberships.IsSystemRuleOfServerGroupsAndTheirUserAccessLevelsID IN
 		(
-			SELECT ID 
-			FROM deleted
-			UNION ALL 
-			SELECT ID 
-			FROM inserted -- only applies on row update (real new inserts haven't got any relations to users, yet)
+			SELECT deleted.ID
+			FROM deleted LEFT JOIN inserted ON deleted.ID = inserted.ID
+			WHERE inserted.ID IS NULL
+				OR deleted.ID_AccessLevel <> inserted.ID_AccessLevel OR deleted.ID_ServerGroup <> inserted.ID_ServerGroup
 		)
-
-	-- check for real changes - in case of 0 updated rows, don't forward 0-row-updates to sub-sequent triggers (would be a waste of time)
-	DECLARE @RowAffectedCount bigint
-	SELECT @RowAffectedCount = IsNull(COUNT_BIG(*), 0) FROM @Users;
-	IF IsNull(@RowAffectedCount, 0) > 0
-		BEGIN
-			-- reset all system rules (=rules for anonymous+public groups)
-			DELETE dbo.Memberships 
-			FROM dbo.Memberships 
-			WHERE dbo.Memberships.IsSystemRule <> 0
-				AND ID_User IN (SELECT ID FROM @Users)
-			-- insert public groups memberships
-			INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRule)
-			SELECT [dbo].[System_ServerGroups].ID_Group_Public, [dbo].[Benutzer].ID AS ID_User, GETDATE(), -43, 0, 1
-			FROM dbo.System_ServerGroupsAndTheirUserAccessLevels
-				INNER JOIN [dbo].[Benutzer] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = [dbo].[Benutzer].AccountAccessability
-				INNER JOIN [dbo].[System_ServerGroups] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = [dbo].[System_ServerGroups].ID
-			WHERE [dbo].[Benutzer].ID IN (SELECT ID FROM @Users)
-			GROUP BY [dbo].[System_ServerGroups].ID_Group_Public, [dbo].[Benutzer].ID
-			-- insert anonymous groups memberships
-			INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRule)
-			SELECT [dbo].[System_ServerGroups].ID_Group_Anonymous, [dbo].[Benutzer].ID AS ID_User, GETDATE(), -43, 0, 1
-			FROM dbo.System_ServerGroupsAndTheirUserAccessLevels
-				INNER JOIN [dbo].[Benutzer] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = [dbo].[Benutzer].AccountAccessability
-				INNER JOIN [dbo].[System_ServerGroups] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = [dbo].[System_ServerGroups].ID
-			WHERE [dbo].[Benutzer].ID IN (SELECT ID FROM @Users)
-			GROUP BY [dbo].[System_ServerGroups].ID_Group_Anonymous, [dbo].[Benutzer].ID
-		END
+	-- insert public groups memberships
+	INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRuleOfServerGroupsAndTheirUserAccessLevelsID)
+	SELECT [dbo].[System_ServerGroups].ID_Group_Public, [dbo].[Benutzer].ID AS ID_User, GETDATE(), -43, 0, dbo.System_ServerGroupsAndTheirUserAccessLevels.ID
+	FROM dbo.System_ServerGroupsAndTheirUserAccessLevels
+		INNER JOIN [dbo].[Benutzer] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = [dbo].[Benutzer].AccountAccessability
+		INNER JOIN [dbo].[System_ServerGroups] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = [dbo].[System_ServerGroups].ID
+	WHERE dbo.System_ServerGroupsAndTheirUserAccessLevels.ID IN 
+		(
+			SELECT inserted.ID
+			FROM inserted LEFT JOIN deleted ON deleted.ID = inserted.ID
+			WHERE deleted.ID IS NULL
+				OR deleted.ID_AccessLevel <> inserted.ID_AccessLevel OR deleted.ID_ServerGroup <> inserted.ID_ServerGroup
+		)
+	-- insert anonymous groups memberships
+	INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRuleOfServerGroupsAndTheirUserAccessLevelsID)
+	SELECT [dbo].[System_ServerGroups].ID_Group_Anonymous, [dbo].[Benutzer].ID AS ID_User, GETDATE(), -43, 0, dbo.System_ServerGroupsAndTheirUserAccessLevels.ID
+	FROM dbo.System_ServerGroupsAndTheirUserAccessLevels
+		INNER JOIN [dbo].[Benutzer] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = [dbo].[Benutzer].AccountAccessability
+		INNER JOIN [dbo].[System_ServerGroups] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = [dbo].[System_ServerGroups].ID
+	WHERE dbo.System_ServerGroupsAndTheirUserAccessLevels.ID IN 
+		(
+			SELECT inserted.ID
+			FROM inserted LEFT JOIN deleted ON deleted.ID = inserted.ID
+			WHERE deleted.ID IS NULL
+				OR deleted.ID_AccessLevel <> inserted.ID_AccessLevel OR deleted.ID_ServerGroup <> inserted.ID_ServerGroup
+		)
 END
 GO
 IF OBJECT_ID ('dbo.IUD_System_ServerGroups_ForAnonymousDefaultMemberships', 'TR') IS NOT NULL
@@ -263,37 +295,48 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
+	-- required to setup relation between anonymous group to user ID -1 for every server group
+	
 	-- check for real changes - in case of 0 updated rows, don't forward 0-row-updates to sub-sequent triggers (would be a waste of time)
 	DECLARE @RowInsertsCount bigint, @RowDeletesCount bigint
 	SELECT @RowInsertsCount = IsNull(COUNT_BIG(*), 0) FROM inserted;
 	SELECT @RowDeletesCount = IsNull(COUNT_BIG(*), 0) FROM deleted;
-	IF IsNull(@RowDeletesCount, 0) > 0 OR IsNull(@RowInsertsCount, 0) > 0
+	IF IsNull(@RowDeletesCount, 0) > 0
 		BEGIN
-			-- reset all system rules for anonymous group of changed server groups
-			DELETE dbo.Memberships 
+			-- drop all system rules for rules owned by deleted server groups
+			DELETE 
 			FROM dbo.Memberships 
-			WHERE dbo.Memberships.IsSystemRule <> 0
-				AND ID_User = -1
-				AND 
-					(
-						ID_Group IN (SELECT ID_Group_Anonymous FROM inserted)
-						OR ID_Group IN (SELECT ID_Group_Anonymous FROM deleted)
-					)
+			WHERE dbo.Memberships.IsSystemRuleOfServerGroupID IN 
+				(
+					SELECT deleted.ID 
+					FROM deleted LEFT JOIN inserted ON deleted.ID = inserted.ID
+					WHERE inserted.ID IS NULL 
+						OR deleted.ID_Group_Anonymous <> inserted.ID_Group_Anonymous
+				)
 		END
 	IF IsNull(@RowInsertsCount, 0) > 0
 		BEGIN
-			-- (re-)insert anonymous groups memberships to user with ID -1
-			INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRule)
-			SELECT ID_Group_Anonymous, -1, GETDATE(), -43, 0, 1
+			-- insert anonymous groups memberships to user with ID -1
+			INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRuleOfServerGroupID)
+			SELECT ID_Group_Anonymous, -1, GETDATE(), -43, 0, ID
 			FROM inserted
-			GROUP BY ID_Group_Anonymous
+			WHERE ID IN
+				(
+					SELECT inserted.ID 
+					FROM inserted LEFT JOIN deleted ON deleted.ID = inserted.ID
+					WHERE deleted.ID IS NULL 
+						OR deleted.ID_Group_Anonymous <> inserted.ID_Group_Anonymous
+				)
 		END
 END
 GO
 IF OBJECT_ID ('dbo.U_System_ServerGroups_ForDefaultMemberships', 'TR') IS NOT NULL
    DROP TRIGGER dbo.U_System_ServerGroups_ForDefaultMemberships;
 GO
-CREATE TRIGGER [dbo].[U_System_ServerGroups_ForDefaultMemberships] 
+IF OBJECT_ID ('dbo.U_System_ServerGroups_ForPublicDefaultMemberships', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.U_System_ServerGroups_ForPublicDefaultMemberships;
+GO
+CREATE TRIGGER [dbo].[U_System_ServerGroups_ForPublicDefaultMemberships] 
    ON  [dbo].[System_ServerGroups] 
    FOR UPDATE
    -- FOR INSERT: NOT REQUIRED since there haven't been any related users, yet
@@ -302,47 +345,28 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 	-- reset all system rules for users with access (=rules for anonymous+public groups)
-	DECLARE @Users table (ID int);
-	INSERT INTO @Users (ID)
-	SELECT dbo.Benutzer.ID
-	FROM dbo.Benutzer
-		INNER JOIN dbo.System_ServerGroupsAndTheirUserAccessLevels ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = [dbo].[Benutzer].AccountAccessability
-	WHERE dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup IN 
-		(
-			-- select ServerGroupIDs where a change happened at public or anonymous group ID
-			SELECT deleted.ID 
-			FROM deleted
-				INNER JOIN inserted ON deleted.ID = inserted.ID
-			WHERE deleted.ID_Group_Public <> inserted.ID_Group_Public
-				OR deleted.ID_Group_Anonymous <> inserted.ID_Group_Anonymous
-		)
+	DECLARE @ServerGroupIDsWithChangedPublicGroupID table (ID int);
+	INSERT INTO @ServerGroupIDsWithChangedPublicGroupID (ID)
+	SELECT deleted.ID
+	FROM deleted INNER JOIN inserted ON deleted.ID = inserted.ID
+	WHERE deleted.ID_Group_Public <> inserted.ID_Group_Public
 
 	-- check for real changes - in case of 0 updated rows, don't forward 0-row-updates to sub-sequent triggers (would be a waste of time)
 	DECLARE @RowAffectedCount bigint
-	SELECT @RowAffectedCount = IsNull(COUNT_BIG(*), 0) FROM @Users;
+	SELECT @RowAffectedCount = IsNull(COUNT_BIG(*), 0) FROM @ServerGroupIDsWithChangedPublicGroupID;
 	IF IsNull(@RowAffectedCount, 0) > 0
 		BEGIN
 			-- reset all system rules (=rules for anonymous+public groups)
 			DELETE dbo.Memberships 
 			FROM dbo.Memberships 
-			WHERE dbo.Memberships.IsSystemRule <> 0
-				AND ID_User IN (SELECT ID FROM @Users)
+			WHERE dbo.Memberships.IsSystemRuleOfServerGroupsAndTheirUserAccessLevelsID IN (SELECT ID FROM @ServerGroupIDsWithChangedPublicGroupID)
 			-- insert public groups memberships
-			INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRule)
-			SELECT [dbo].[System_ServerGroups].ID_Group_Public, [dbo].[Benutzer].ID AS ID_User, GETDATE(), -43, 0, 1
+			INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRuleOfServerGroupsAndTheirUserAccessLevelsID)
+			SELECT [dbo].[System_ServerGroups].ID_Group_Public, [dbo].[Benutzer].ID AS ID_User, GETDATE(), -43, 0, dbo.System_ServerGroupsAndTheirUserAccessLevels.ID
 			FROM dbo.System_ServerGroupsAndTheirUserAccessLevels
 				INNER JOIN [dbo].[Benutzer] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = [dbo].[Benutzer].AccountAccessability
 				INNER JOIN [dbo].[System_ServerGroups] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = [dbo].[System_ServerGroups].ID
-			WHERE [dbo].[Benutzer].ID IN (SELECT ID FROM @Users)
-			GROUP BY [dbo].[System_ServerGroups].ID_Group_Public, [dbo].[Benutzer].ID
-			-- insert anonymous groups memberships
-			INSERT INTO dbo.Memberships (ID_Group, ID_User, ReleasedOn, ReleasedBy, IsDenyRule, IsSystemRule)
-			SELECT [dbo].[System_ServerGroups].ID_Group_Anonymous, [dbo].[Benutzer].ID AS ID_User, GETDATE(), -43, 0, 1
-			FROM dbo.System_ServerGroupsAndTheirUserAccessLevels
-				INNER JOIN [dbo].[Benutzer] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = [dbo].[Benutzer].AccountAccessability
-				INNER JOIN [dbo].[System_ServerGroups] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = [dbo].[System_ServerGroups].ID
-			WHERE [dbo].[Benutzer].ID IN (SELECT ID FROM @Users)
-			GROUP BY [dbo].[System_ServerGroups].ID_Group_Anonymous, [dbo].[Benutzer].ID
+			WHERE [dbo].[System_ServerGroups].ID IN (SELECT ID FROM @ServerGroupIDsWithChangedPublicGroupID)
 		END
 END
 GO
@@ -631,11 +655,10 @@ BEGIN
 		END
 END
 GO
+------------------------------------------------------------------------------------------------------------
 -- Initial reset/filling of pre-calculated effective memberships
-ALTER TABLE dbo.Memberships DISABLE TRIGGER U_Memberships;
-UPDATE dbo.Memberships
-SET ReleasedBy = ReleasedBy;
-ALTER TABLE dbo.Memberships ENABLE TRIGGER U_Memberships;
+------------------------------------------------------------------------------------------------------------
+-- SEE SEPARATE UPDATE COMMAND IN SEPARATE DB PATCH FILE - SCHEDULE RUN OF IT AS SOON AS ABOVE TRIGGERS HAVE BEEN CHANGED/UPDATED AND EFFECTIVE RESULT ROWS MIGHT CHANGE
 GO
 -- =========================================================================================================
 -- ===== AUTHORIZATIONS TABLES - PRE-STAGED/PRE-CALCULATED, EFFECTIVE
@@ -1101,11 +1124,13 @@ BEGIN
 	SELECT @RowInsertsCount = IsNull(COUNT_BIG(*), 0) FROM inserted;
 	SELECT @RowDeletesCount = IsNull(COUNT_BIG(*), 0) FROM deleted;
 	SELECT @CurrentRowsCount = IsNull(COUNT_BIG(*), 0) FROM dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules;
+	/*
 	IF IsNull(@RowInsertsCount, 0) + IsNull(@RowDeletesCount, 0) = 0
 		BEGIN
 			-- empty amount of rows to be updated - just update required rows
 			-- PRINT 'empty amount of rows to be updated';
 		END
+	*/
 	IF IsNull(@RowInsertsCount, 0) + IsNull(@RowDeletesCount, 0) >= IsNull(@CurrentRowsCount, 0)
 		BEGIN
 			-- too many rows to be updated - just re-create the whole table in full
@@ -1299,14 +1324,7 @@ GO
 ---------------------------------------------------------------------------------------------------
 -- PRE-FILL ALL PRE-STAGING-LEVELS
 ---------------------------------------------------------------------------------------------------
-GO
--- Force first table filling (or full update on repetitions)
-  update [ApplicationsRightsByGroup]
-  set IsDenyRule = IsDenyRule
-GO
--- Force first table filling (or full update on repetitions)
-  update [ApplicationsRightsByUser]
-  set IsDenyRule = IsDenyRule
+-- SEE SEPARATE UPDATE COMMAND IN SEPARATE DB PATCH FILE - SCHEDULE RUN OF IT AS SOON AS ABOVE TRIGGERS HAVE BEEN CHANGED/UPDATED AND EFFECTIVE RESULT ROWS MIGHT CHANGE
 GO
 -- =========================================================================================================
 -- ===== CONTINUEOUS DATA INTEGRITY: on DELETE, do the required cleanup on depending foreign key rows
@@ -1534,7 +1552,7 @@ BEGIN
 			DELETE [dbo].[ApplicationsRights_Inheriting] WHERE ID_Inheriting IN ( SELECT ID FROM deleted ) OR ID_Source IN ( SELECT ID FROM deleted )
 		END
 END
-
+GO
 IF OBJECT_ID ('dbo.D_SecurityObjects_vs_NavItems', 'TR') IS NOT NULL
    DROP TRIGGER dbo.D_SecurityObjects_vs_NavItems;
 GO

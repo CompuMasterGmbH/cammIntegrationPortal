@@ -78,9 +78,15 @@ ADD IsDenyRule bit NOT NULL DEFAULT (0)
 GO
 
 <%IGNORE_ERRORS%>
--- Add column IsSystemRule
+-- Add column IsSystemRuleOfServerGroupsAndTheirUserAccessLevelsID required to identify anonymous+public group memberships owned by this relation
 ALTER TABLE [dbo].[Memberships]
-ADD IsSystemRule bit NOT NULL DEFAULT (0)
+ADD IsSystemRuleOfServerGroupsAndTheirUserAccessLevelsID int NULL
+GO
+
+<%IGNORE_ERRORS%>
+-- Add column IsSystemRuleOfServerGroupID required to identify anonymous user groups owned by ServerGroup
+ALTER TABLE [dbo].[Memberships]
+ADD IsSystemRuleOfServerGroupID int NULL
 GO
 
 -- Reset previously filled data since it's waste
@@ -317,3 +323,10 @@ CREATE TABLE [dbo].[Memberships_EffectiveRulesWithClonesNthGrade](
 GO
 ALTER TABLE dbo.Memberships_EffectiveRulesWithClonesNthGrade SET (LOCK_ESCALATION = TABLE)
 GO
+
+-- DROP MODULE Log analysis 
+UPDATE dbo.Applications
+SET AppDeleted = 1
+WHERE SystemApp = 1 And SystemAppType = 3 
+	AND Title = 'System - User Administration - LogAnalysis'
+
