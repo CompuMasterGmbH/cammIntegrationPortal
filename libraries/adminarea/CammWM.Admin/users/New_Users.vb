@@ -17,6 +17,7 @@ Option Explicit On
 
 Imports System.Data.SqlClient
 Imports System.Web.UI.WebControls
+Imports System.Collections.Generic
 Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider
 
 Namespace CompuMaster.camm.WebManager.Pages.Administration
@@ -25,25 +26,48 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     '''     A page to create a new user
     ''' </summary>
     Public Class New_Users
-        Inherits ImportBase
+        Inherits Page
 
+        ''' <summary>
+        ''' The list of allowed values for the country field (or empty list in case of no limitation)
+        ''' </summary>
+        ''' <returns></returns>
+        Private ReadOnly Property LimitedAllowedCountries As System.Collections.Generic.List(Of String)
+            Get
+                Static _LimitedAllowedCountries As System.Collections.Generic.List(Of String)
+                If _LimitedAllowedCountries Is Nothing Then
+                    _LimitedAllowedCountries = WMSystem.UserInformation.CentralConfig_AllowedValues_FieldCountry(Me.cammWebManager)
+                    If _LimitedAllowedCountries Is Nothing Then
+                        _LimitedAllowedCountries = New System.Collections.Generic.List(Of String)
+                    End If
+                End If
+                Return _LimitedAllowedCountries
+            End Get
+        End Property
+
+        Private Function ConvertStringsToListItems(values As System.Collections.Generic.List(Of String)) As List(Of ListItem)
+            Dim Result As New List(Of ListItem)
+            For MyCounter As Integer = 0 To values.Count - 1
+                Result.Add(New ListItem(values(MyCounter)))
+            Next
+            Return Result
+        End Function
 
 #Region "Variable Declaration"
-#Region "Control_Declaration"
+
         Protected lblMsg As Label
         Protected txtPhone, txtFax, txtMobile, txtPosition, txtLoginName, txtPassword1, txtPassword2, txtCompany As TextBox
         Protected cmbAnrede As DropDownList
         Protected WithEvents btnSubmit As Button
         Protected txtTitle, txtVorname, txtNachname, txtNamenszusatz, txtemail, txtStrasse, txtPLZ, txtOrt, txtState, txtLand As TextBox
-        Protected cmbFirstPreferredLanguage, cmbSecondPreferredLanguage, cmbThirdPreferredLanguage, cmbAccountAccessability As DropDownList
-#End Region
-#Region "Variable Declaration"
+        Protected cmbCountry, cmbFirstPreferredLanguage, cmbSecondPreferredLanguage, cmbThirdPreferredLanguage, cmbAccountAccessability As DropDownList
+
         Dim Field_Phone, Field_Fax, Field_Mobile, Field_Position, Field_LoginName, Field_Password1, Field_Password2 As String
         Dim Field_Company, Field_Anrede, Field_Titel, Field_Vorname, Field_Nachname, Field_Namenszusatz, Field_e_mail As String
         Dim Field_Strasse, Field_PLZ, Field_Ort, Field_State, Field_Land As String
         Dim Field_1stPreferredLanguage, Field_2ndPreferredLanguage, Field_3rdPreferredLanguage, Field_AccountAccessable As Integer
-#End Region
-#Region "Declaration For UpdateRecord"
+
+        'Declarations For UpdateRecord
         Dim MyCount As Object
         Dim ErrMsg As String
         Dim UpdateSuccessfull As Boolean
@@ -53,10 +77,35 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Dim MyUserInfoAdditionalFlags As New Collections.Specialized.NameValueCollection
         Dim MyUserInfoSex As CompuMaster.camm.WebManager.WMSystem.Sex
 #End Region
-#End Region
 
 #Region "Page Event"
         Private Sub New_Users_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
+            If Me.cmbCountry IsNot Nothing AndAlso Me.txtLand Is Nothing Then
+                'dropdown box available, free text field not available
+                Me.cmbCountry.Visible = True
+                If Me.IsPostBack = False Then
+                    Me.cmbCountry.Items.AddRange(ConvertStringsToListItems(Me.LimitedAllowedCountries).ToArray)
+                End If
+                Me.txtLand.Visible = False
+            ElseIf Me.cmbCountry Is Nothing AndAlso Me.txtLand IsNot Nothing Then
+                'no dropdown control available --> use free text field
+            ElseIf Me.cmbCountry Is Nothing AndAlso Me.txtLand Is Nothing Then
+                'no country field there?!? -> well, let's try to ignore this at this point
+            Else 'both controls available - show just the best fitting option
+                If LimitedAllowedCountries.Count = 0 Then
+                    'no limits --> free text field
+                    Me.cmbCountry.Visible = False
+                    Me.txtLand.Visible = True
+                Else
+                    'limited to defined allow-values -> dropdown box
+                    Me.cmbCountry.Visible = True
+                    If Me.IsPostBack = False Then
+                        Me.cmbCountry.Items.AddRange(ConvertStringsToListItems(Me.LimitedAllowedCountries).ToArray)
+                    End If
+                    Me.txtLand.Visible = False
+                End If
+            End If
+
             Try
                 Dim temp1 As String
                 If cmbAnrede.Items.Count > 0 Then
@@ -193,7 +242,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' </summary>
         ''' <returns></returns>
         Protected Overridable Function CreateNewUserInfo() As WMSystem.UserInformation
-            Dim MyUserInfo As New CompuMaster.camm.WebManager.WMSystem.UserInformation(Nothing, (Trim(txtLoginName.Text & "")), (Trim(txtemail.Text & "")), False, Trim(txtCompany.Text & ""), MyUserInfoSex, Trim(txtNamenszusatz.Text & ""), Trim(txtVorname.Text & ""), Trim(txtNachname.Text & ""), Trim(txtTitle.Text & ""), Trim(txtStrasse.Text & ""), Trim(txtPLZ.Text & ""), Trim(txtOrt.Text & ""), Trim(txtState.Text & ""), Trim(txtLand.Text & ""), Utils.Nz(IIf(cmbFirstPreferredLanguage.SelectedValue = "", 0, cmbFirstPreferredLanguage.SelectedValue), 0), Utils.Nz(IIf(cmbSecondPreferredLanguage.SelectedValue = "", 0, cmbSecondPreferredLanguage.SelectedValue), 0), Utils.Nz(IIf(cmbThirdPreferredLanguage.SelectedValue = "", 0, cmbThirdPreferredLanguage.SelectedValue), 0), False, False, False, CInt(Val(cmbAccountAccessability.SelectedValue & "")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem), "", CType(MyUserInfoAdditionalFlags, Collections.Specialized.NameValueCollection))
+            Dim CountryValue As String
+            If Me.cmbCountry IsNot Nothing AndAlso Me.cmbCountry.Visible = True Then
+                CountryValue = Me.cmbCountry.SelectedValue
+            Else
+                CountryValue = Me.txtLand.Text
+            End If
+            Dim MyUserInfo As New CompuMaster.camm.WebManager.WMSystem.UserInformation(Nothing, (Trim(txtLoginName.Text & "")), (Trim(txtemail.Text & "")), False, Trim(txtCompany.Text & ""), MyUserInfoSex, Trim(txtNamenszusatz.Text & ""), Trim(txtVorname.Text & ""), Trim(txtNachname.Text & ""), Trim(txtTitle.Text & ""), Trim(txtStrasse.Text & ""), Trim(txtPLZ.Text & ""), Trim(txtOrt.Text & ""), Trim(txtState.Text & ""), Trim(CountryValue & ""), Utils.Nz(IIf(cmbFirstPreferredLanguage.SelectedValue = "", 0, cmbFirstPreferredLanguage.SelectedValue), 0), Utils.Nz(IIf(cmbSecondPreferredLanguage.SelectedValue = "", 0, cmbSecondPreferredLanguage.SelectedValue), 0), Utils.Nz(IIf(cmbThirdPreferredLanguage.SelectedValue = "", 0, cmbThirdPreferredLanguage.SelectedValue), 0), False, False, False, CInt(Val(cmbAccountAccessability.SelectedValue & "")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem), "", CType(MyUserInfoAdditionalFlags, Collections.Specialized.NameValueCollection))
             MyUserInfo.AdditionalFlags("ComesFrom") = "Account created by Admin """ + cammWebManager.CurrentUserInfo.LoginName + """ (" + cammWebManager.CurrentUserInfo.FullName + ")"
             MyUserInfo.AdditionalFlags("Motivation") = "Account created by Admin"
             Return MyUserInfo

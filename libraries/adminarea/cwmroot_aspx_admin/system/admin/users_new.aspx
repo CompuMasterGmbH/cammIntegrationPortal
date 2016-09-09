@@ -79,7 +79,7 @@
 						</TR>
 						 <TR>
 							<TD VAlign="Top"><P><FONT face="Arial" size="2">Country &nbsp;</FONT></P></TD>
-							<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:TextBox id="txtLand" runat="server" maxLength="30" style="width: 200px" /> &nbsp;</FONT></P></TD>
+							<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:TextBox id="txtLand" runat="server" maxLength="30" style="width: 200px" /><asp:DropdownList width="200px" runat="server" id="cmbCountry" visible="false" /> &nbsp;</FONT></P></TD>
 						</TR>
 						 <TR>
 							<TD VAlign="Top"><P><FONT face="Arial" size="2">Phone &nbsp;</FONT></P></TD>
