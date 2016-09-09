@@ -853,6 +853,12 @@ Namespace CompuMaster.camm.SmartWebEditor
             Return HttpUtility.UrlEncode(result)
         End Function    'EncryptAStringForUrlUsement(ByVal sourceString As String) As String
 
+        Protected Function GenerateUploadFormUrl() As String
+
+            Return Me.UploadFormUrl & "?ref=" & Me.EncryptAStringForUrlUsement(DocumentID) & "&imageupload=" & Me.EncryptAStringForUrlUsement(Utils.FullyInterpretedVirtualPath(Me.ImagesUploadPath)) & "&securityobject=" & EncryptAStringForUrlUsement(Me.SecurityObjectEditMode) & "&editorid=" & EncryptAStringForUrlUsement(Me.editorMain.ClientID)
+        End Function
+
+
         ''' <summary>
         '''     Update an already existing document in given language or create a new language for the document, depends on several parameters
         ''' </summary>

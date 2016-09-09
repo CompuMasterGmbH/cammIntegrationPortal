@@ -32,6 +32,18 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Get
         End Property
 
+        Public ReadOnly Property ImagesUploadPath() As String
+            Get
+                Return ConfigurationWebManager.ImagesUploadPath
+            End Get
+        End Property
+
+        Public ReadOnly Property UploadFormUrl() As String
+            Get
+                Return ConfigurationWebManager.UploadFormUrl
+            End Get
+        End Property
+
         Public Shared Function WebManagerSettings(settingName As String) As String
             If settingName.StartsWith("WebManager.Wcms.") Then
                 Return ConfigurationWebManager.WebManagerSettings(settingName)

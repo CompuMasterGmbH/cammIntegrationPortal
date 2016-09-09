@@ -211,7 +211,56 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property 'SecurityObjectEditMode()
 
+
+
+        Private _UploadFormUrl As String
+        ''' <summary>
+        ''' The url to the upload form
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property UploadFormUrl As String
+            Get
+                If _UploadFormUrl = Nothing Then
+                    Dim configValue As String = Me.Configuration.UploadFormUrl
+                    If configValue = Nothing Then
+                        Return "/sysdata/modules/smartwcms/upload.aspx"
+                    End If
+                    Return configValue
+                End If
+                Return _UploadFormUrl
+
+            End Get
+            Set(value As String)
+                _UploadFormUrl = value
+            End Set
+        End Property
+
+
+        Private _ImagesUploadPath As String
+
+        ''' <summary>
+        ''' Path to the folder where images should be stored
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property ImagesUploadPath As String
+            Get
+                If _ImagesUploadPath = Nothing Then
+                    Dim configValue As String = Me.Configuration.ImagesUploadPath
+                    If configValue = Nothing Then
+                        Return "images/"
+                    End If
+                    Return configValue
+                End If
+                Return _ImagesUploadPath
+            End Get
+            Set(value As String)
+                _ImagesUploadPath = value
+            End Set
+        End Property
+
 #End Region
+
+
 
     End Class
 

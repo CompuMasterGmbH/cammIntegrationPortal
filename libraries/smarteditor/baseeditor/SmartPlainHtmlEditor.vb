@@ -105,6 +105,7 @@ Namespace CompuMaster.camm.SmartWebEditor
             Protected PreviewButton As System.Web.UI.WebControls.Button = Nothing
             Protected NewVersionButton As System.Web.UI.WebControls.Button = Nothing
             Protected DeleteLanguageButton As System.Web.UI.WebControls.Button = Nothing
+            Protected UploadFormOpenerButton As System.Web.UI.WebControls.Button = Nothing
 
             Protected VersionDifferenceLabel As System.Web.UI.WebControls.Label = Nothing
 
@@ -136,6 +137,10 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Me.NewVersionButton = New System.Web.UI.WebControls.Button()
                 AssignOnClientClickAttribute(Me.NewVersionButton, "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'newversion'; document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'true';  unbindCloseCheck(); ExecPostBack('NewVersionButton', 'Click', true);") '" & EncodeRawDataJScriptSnippet & "; document.forms['" & LookupParentServerFormName() & "'].submit(); return false;")
                 Me.NewVersionButton.Text = "New Version"
+
+                Me.UploadFormOpenerButton = New System.Web.UI.WebControls.Button()
+                AssignOnClientClickAttribute(Me.UploadFormOpenerButton, "var w = window.open('" & Me.GenerateUploadFormUrl() & "'); return false;")
+                Me.UploadFormOpenerButton.Text = "Upload"
 
                 Me.VersionDifferenceLabel = New System.Web.UI.WebControls.Label()
                 Me.VersionDifferenceLabel.EnableViewState = False
@@ -233,6 +238,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.pnlEditorToolbar.Controls.Add(SaveButton)
                     Me.pnlEditorToolbar.Controls.Add(ActivateButton)
                     Me.pnlEditorToolbar.Controls.Add(PreviewButton)
+                    Me.pnlEditorToolbar.Controls.Add(UploadFormOpenerButton)
                     If Me.MarketLookupMode <> MarketLookupModes.SingleMarket Then
                         InitializeLanguageDropDownList()
                         Me.pnlEditorToolbar.Controls.Add(Me.LanguagesDropDownBox)
@@ -420,6 +426,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                                                                        "if(window.addEventListener) " & vbNewLine &
                                                                        "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine &
                                                                        ""
+                    Dim pasteImage As String = "function pasteImageToEditor(editorid, imageurl) { document.getElementById(editorid).value += ""<img src='"" + imageurl + ""' />""; }"
 #If NetFrameWork = "1_1" Then
                     Me.Page.RegisterClientScriptBlock("ExecPostBack", ExecPostBackSnippet)
                     Me.Page.RegisterClientScriptBlock("UnbindCloseCheck", UnbindCloseCheckSnippet)
@@ -432,6 +439,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "confirmPageClose", ConfirmPageCloseSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ResetSelectBox", ResetSelectBoxSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CloseCheck", CloseCheckSnippet, True)
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteImageToEditor", pasteImage, True)
 #End If
 
                     'Enforce __doPostBack javascript function being existent
