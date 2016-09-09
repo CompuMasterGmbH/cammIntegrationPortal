@@ -74,6 +74,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             Update_Data(UpdateSuccessfull, ErrMsg)
 
+            Me.lblMsg.EnableViewState = False
             If ErrMsg <> "" Then lblMsg.Text = ErrMsg
             txtLoginName.Text = Utils.Nz(Field_LoginName, String.Empty)
             txtPassword1.Text = Utils.Nz(Field_Password1, String.Empty)
@@ -117,9 +118,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     MyUserInfoSex = WMSystem.Sex.Undefined
                 End If
 
-                MyUserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(Nothing, (Trim(txtLoginName.Text & "")), (Trim(txtemail.Text & "")), False, Trim(txtCompany.Text & ""), MyUserInfoSex, Trim(txtNamenszusatz.Text & ""), Trim(txtVorname.Text & ""), Trim(txtNachname.Text & ""), Trim(txtTitle.Text & ""), Trim(txtStrasse.Text & ""), Trim(txtPLZ.Text & ""), Trim(txtOrt.Text & ""), Trim(txtState.Text & ""), Trim(txtLand.Text & ""), Utils.Nz(IIf(cmbFirstPreferredLanguage.SelectedValue = "", 0, cmbFirstPreferredLanguage.SelectedValue), 0), Utils.Nz(IIf(cmbSecondPreferredLanguage.SelectedValue = "", 0, cmbSecondPreferredLanguage.SelectedValue), 0), Utils.Nz(IIf(cmbThirdPreferredLanguage.SelectedValue = "", 0, cmbThirdPreferredLanguage.SelectedValue), 0), False, False, False, CInt(Val(cmbAccountAccessability.SelectedValue & "")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem), "", CType(MyUserInfoAdditionalFlags, Collections.Specialized.NameValueCollection))
-                MyUserInfo.AdditionalFlags("ComesFrom") = "Account created by Admin """ + cammWebManager.CurrentUserInfo.LoginName + """ (" + cammWebManager.CurrentUserInfo.FullName + ")"
-                MyUserInfo.AdditionalFlags("Motivation") = "Account created by Admin"
+                MyUserInfo = Me.CreateNewUserInfo()
 
                 'Update record
                 Select Case cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).ValidatePasswordComplexity(txtPassword1.Text, MyUserInfo)
@@ -188,6 +187,17 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
         End Sub
 #End Region
+
+        ''' <summary>
+        ''' Create a new user information object from scratch and fill it with the details from of the form
+        ''' </summary>
+        ''' <returns></returns>
+        Protected Overridable Function CreateNewUserInfo() As WMSystem.UserInformation
+            Dim MyUserInfo As New CompuMaster.camm.WebManager.WMSystem.UserInformation(Nothing, (Trim(txtLoginName.Text & "")), (Trim(txtemail.Text & "")), False, Trim(txtCompany.Text & ""), MyUserInfoSex, Trim(txtNamenszusatz.Text & ""), Trim(txtVorname.Text & ""), Trim(txtNachname.Text & ""), Trim(txtTitle.Text & ""), Trim(txtStrasse.Text & ""), Trim(txtPLZ.Text & ""), Trim(txtOrt.Text & ""), Trim(txtState.Text & ""), Trim(txtLand.Text & ""), Utils.Nz(IIf(cmbFirstPreferredLanguage.SelectedValue = "", 0, cmbFirstPreferredLanguage.SelectedValue), 0), Utils.Nz(IIf(cmbSecondPreferredLanguage.SelectedValue = "", 0, cmbSecondPreferredLanguage.SelectedValue), 0), Utils.Nz(IIf(cmbThirdPreferredLanguage.SelectedValue = "", 0, cmbThirdPreferredLanguage.SelectedValue), 0), False, False, False, CInt(Val(cmbAccountAccessability.SelectedValue & "")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem), "", CType(MyUserInfoAdditionalFlags, Collections.Specialized.NameValueCollection))
+            MyUserInfo.AdditionalFlags("ComesFrom") = "Account created by Admin """ + cammWebManager.CurrentUserInfo.LoginName + """ (" + cammWebManager.CurrentUserInfo.FullName + ")"
+            MyUserInfo.AdditionalFlags("Motivation") = "Account created by Admin"
+            Return MyUserInfo
+        End Function
 
 #Region "User-Defined Methods"
         Sub Update_Data(ByVal Update_d As Boolean, ByVal ErrMsg As String)

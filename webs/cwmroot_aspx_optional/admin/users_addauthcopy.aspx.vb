@@ -11,9 +11,8 @@ Imports System.Web.UI.HtmlControls
 Imports CompuMaster.camm.WebManager
 Imports CompuMaster.Data
 Imports CompuMaster.camm.WebManager.Controls.Administration
-'Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider
 
-    Public Class User_RenameLoginname
+    Public Class User_AddAuthCopy
         Inherits CompuMaster.camm.WebManager.Pages.ProtectedPage
 
 #Region "Variable Declaration"
@@ -24,7 +23,7 @@ Imports CompuMaster.camm.WebManager.Controls.Administration
         Protected lblID, lblCompany, lblSupplierNO, lblUpdateSupplierNO, lblUpdateCustomerNO, lblCustomerNO, lblAnrede, lblTitel, lblVorname, lblNachname, lblNamenszusatz As Label
         Protected lblStrasse, lblPLZ, lblORT, lblState, lblLand, lblLoginCount, lblLoginFailures, lblLoginLockedTill, lblLoginDisabled As Label
         Protected lblAccountAccessability, lblCreatedOn, lblModifiedOn, lblLastLoginOn, lblLastLoginViaremoteIP, lblFirstPreferredLanguage, lblSecondPreferredLanguage, lblThirdPreferredLanguage As Label
-        Protected lblErrMsgPrevious, lblErrMsgFuture, lblFutureNameAvailable, lblTemporaryStatus, lblCustomerHadline, lblPermanentStatus, lblLoginAccessability, lblLoginAccountAccessability, lblLogonStatus, lblAdminBlockFooter As Label
+        Protected lblErrMsgPrevious, lblErrMsgFuture, lblTemporaryStatus, lblCustomerHadline, lblPermanentStatus, lblLoginAccessability, lblLoginAccountAccessability, lblLogonStatus, lblAdminBlockFooter As Label
         Protected WithEvents txtLoginNamePrevious As TextBox
         Protected WithEvents txtLoginNameFuture As TextBox
 		Protected MsgSuccessLabel, MsgEMailTemplate as Label
@@ -40,6 +39,9 @@ Imports CompuMaster.camm.WebManager.Controls.Administration
         Protected trErrMsgPrevious, trUserLinkPrevious As HtmlTableRow
         Protected trErrMsgFuture, trUserLinkFuture As HtmlTableRow
         Protected tableMemberships As HtmlControl
+        Protected WithEvents CheckboxSecAdminPriviledges As Checkbox
+        Protected WithEvents CheckboxGroupMemberships As Checkbox
+        Protected WithEvents CheckboxUserAuths As Checkbox
 #End Region
 		Protected UserInfoPrevious as CompuMaster.camm.WebManager.WMSystem.UserInformation
 		Protected UserInfoFuture as CompuMaster.camm.WebManager.WMSystem.UserInformation
@@ -84,9 +86,9 @@ Imports CompuMaster.camm.WebManager.Controls.Administration
 		End Sub
 		Private Sub ShowErrorUserloginnameFuture (loginName as string, errorInfo as string)
 			If loginName <> Nothing Then
-				lblErrMsgFuture.Text = "Already existing login name """ & Server.HtmlEncode(loginName) & """! Please try to get a free login login name via the normal"
+				lblErrMsgFuture.Text = "Unknown login name """ & Server.HtmlEncode(loginName) & """! Please try to get the correct login via the normal"
 			Else
-				lblErrMsgFuture.Text = "Error: " & Server.HtmlEncode(errorInfo) & "! Please try to get a free login name via the normal"
+				lblErrMsgFuture.Text = "Error: " & Server.HtmlEncode(errorInfo) & "! Please try to get the correct login via the normal"
 			End If
 			ancUserListFuture.HRef = "users.aspx"
 			ancUserListFuture.InnerHtml = "Users List"
@@ -100,38 +102,89 @@ Imports CompuMaster.camm.WebManager.Controls.Administration
 				ShowErrorUserloginnamePrevious("", "Invalid user name")
 				Return
 			End If
-
-			Dim LookupUserID As Long = 0
-			If txtLoginNameFuture.Text.Trim <> "" Then
-			    Try
-                    LookupUserID = CLng(cammWebManager.System_GetUserID(txtLoginNameFuture.Text.Trim, True))
-                Catch
-                    LookupUserID = -2 'error
-                End Try
-			Else
-			    LookupUserID = -3 'missing login name
-			End If
-			If LookupUserID <> -1 Then
-				'err - user already exists or missing login name or any other error
-				ViewUserProfile(True)
+			If UserInfoFuture Is Nothing Then
+				ShowErrorUserloginnameFuture("", "Invalid user name")
 				Return
-			Else
-				'ok - proceed
 			End If
 
+			'Copy group memberships, security administration priviledges as well as direct authorizations
+			Dim Sql As String = ""
+			if CheckboxGroupMemberships.Checked = True Then
+			sql &= _
+				"insert into memberships (id_group, id_user, releasedon, releasedby)" & vbNewLine & _
+				"select id_group, @NewUserID, getdate(), @AdminUserID" & vbNewLine & _
+				"from memberships" & vbNewLine & _
+				"where id_user = @PreviousUserID " & vbNewLine & _
+				"    and id_group not in" & vbNewLine & _
+				"    (" & vbNewLine & _
+				"        select id_group from memberships where id_user = @NewUserID" & vbNewLine & _
+				"    )" & vbNewLine & _
+				"" & vbNewLine
+			end if
+			if CheckboxUserAuths.Checked = True Then
+			sql &= _
+				"insert into [ApplicationsRightsByUser] (id_application, id_grouporperson, releasedon, releasedby, developmentteammember)" & vbNewLine & _
+				"select id_application, @NewUserID, getdate(), @AdminUserID, developmentteammember" & vbNewLine & _
+				"from [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
+				"where id_grouporperson = @PreviousUserID" & vbNewLine & _
+				"    and isnull(developmentteammember, 0) = 0" & vbNewLine & _
+				"    and id_application not in" & vbNewLine & _
+				"    (" & vbNewLine & _
+				"        select id_application " & vbNewLine & _
+				"        from [dbo].[ApplicationsRightsByUser] " & vbNewLine & _
+				"        where id_grouporperson = @NewUserID" & vbNewLine & _
+				"            and isnull(developmentteammember, 0) = 0" & vbNewLine & _
+				"    )" & vbNewLine & _
+				"" & vbNewLine & _
+				"insert into [ApplicationsRightsByUser] (id_application, id_grouporperson, releasedon, releasedby, developmentteammember)" & vbNewLine & _
+				"select id_application, @NewUserID, getdate(), @AdminUserID, developmentteammember" & vbNewLine & _
+				"from [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
+				"where id_grouporperson = @PreviousUserID" & vbNewLine & _
+				"    and isnull(developmentteammember, 0) = 1" & vbNewLine & _
+				"    and id_application not in" & vbNewLine & _
+				"    (" & vbNewLine & _
+				"        select id_application " & vbNewLine & _
+				"        from [dbo].[ApplicationsRightsByUser] " & vbNewLine & _
+				"        where id_grouporperson = @NewUserID" & vbNewLine & _
+				"            and isnull(developmentteammember, 0) = 1" & vbNewLine & _
+				"    )" & vbNewLine & _
+				"" & vbNewLine
+			end if
+			if CheckboxSecAdminPriviledges.Checked = True Then
+			sql &= _
+				"insert into [dbo].[System_SubSecurityAdjustments] (userid, tablename, tableprimaryidvalue, authorizationtype, releasedon, releasedby)" & vbNewLine & _
+				"select @NewUserID as userid, Soll.tablename, Soll.tableprimaryidvalue, Soll.authorizationtype, getdate(), @AdminUserID" & vbNewLine & _
+				"from" & vbNewLine & _
+				"(" & vbNewLine & _
+				"	select tablename, tableprimaryidvalue, authorizationtype" & vbNewLine & _
+				"	from [dbo].[System_SubSecurityAdjustments]" & vbNewLine & _
+				"	where userid = @PreviousUserID" & vbNewLine & _
+				") as Soll" & vbNewLine & _
+				"left join" & vbNewLine & _
+				"(" & vbNewLine & _
+				"	select id, tablename, tableprimaryidvalue, authorizationtype" & vbNewLine & _
+				"	from [dbo].[System_SubSecurityAdjustments]" & vbNewLine & _
+				"	where userid = @NewUserID" & vbNewLine & _
+				") as Ist" & vbNewLine & _
+				"on Soll.tablename = Ist.tablename AND Soll.tableprimaryidvalue = Ist.tableprimaryidvalue AND Soll.authorizationtype = Ist.authorizationtype" & vbNewLine & _
+				"where Ist.ID is null"
+			end if
+			Dim MyCmd as new SqlCommand()
+			MyCmd.Connection = New SqlConnection(cammWebManager.ConnectionString)
+			MyCmd.CommandText = sql
+			MyCmd.CommandType = CommandType.Text
+			MyCmd.Parameters.Add ("@PreviousUserID", GetType(Long)).Value = UserInfoPrevious.IDLong
+			MyCmd.Parameters.Add ("@NewUserID", GetType(Long)).Value = UserInfoFuture.IDLong
+			MyCmd.Parameters.Add ("@AdminUserID", GetType(Long)).Value = cammWebManager.CurrentUserInfo.IDLong
+			DataQuery.ExecuteNonQuery(MyCmd, DataQuery.Automations.AutoOpenAndCloseAndDisposeConnection)
 			'Finally create migration comment
-			UserInfoPrevious.LoginName = txtLoginNameFuture.Text.Trim
-			UserInfoPrevious.AdditionalFlags("LoginnameRenameComment") = "User name has been renamed by " & cammWebManager.CurrentUserInfo.FullName & " on " & Now.ToSTring("yyyy-MM-dd HH:mm:ss") & " from account """ & txtLoginNamePrevious.Text.Trim & """ (ID " & UserInfoPrevious.IDLong & ") to """ & txtLoginNameFuture.Text.Trim & """ (ID " & UserInfoPrevious.IDLong & ")"
-			UserInfoPrevious.Save
-			'Reset app and data caches
-			cammWebManager.System_GetUserID(" ") 'resets cammWebManager.System_GetUserID-buffer
-			UserInfoPrevious = Nothing '
-			UserInfoFuture = Nothing
+			UserInfoFuture.AdditionalFlags("MigrationComment") = "User authorizations copied by " & cammWebManager.CurrentUserInfo.FullName & " on " & Now.ToSTring("yyyy-MM-dd HH:mm:ss") & " from account """ & UserInfoPrevious.LoginName & """ (ID " & UserInfoPrevious.IDLong & ") to """ & UserInfoFuture.LoginName & """ (ID " & UserInfoFuture.IDLong & ")"
+			UserInfoFuture.Save
 			'UI update
-			ViewUserProfile(True, False)
+			ViewUserProfile(True)
 			cammWebManagerAdminUserInfoAdditionalFlagsPrevious.RefreshData
 			cammWebManagerAdminUserInfoAdditionalFlagsFuture.RefreshData
-			ShowSuccessMessage("User login name has been renamed successfully - please inform the user about consequences, too:")
+			ShowSuccessMessage("Authorizations and priviledges transferred successfully - please inform the user about consequences, too:")
         End Sub
 
         Private Sub rptUserShow_ItemBound(ByVal sender As Object, ByVal e As RepeaterItemEventArgs) Handles rptUserShowPrevious.ItemDataBound, rptUserShowFuture.ItemDataBound
@@ -248,26 +301,22 @@ Imports CompuMaster.camm.WebManager.Controls.Administration
 #End Region
 
 #Region "User-Defined Methods"
-        Sub ViewUserProfile(ByVal ShowUserDetailsComplete As Boolean, Optional ShowErrors as Boolean = True)
-			Dim EnableOkayButton as Boolean = ShowErrors
-			lblFutureNameAvailable.Visible = false
-			
+        Sub ViewUserProfile(ByVal ShowUserDetailsComplete As Boolean)
             If txtLoginNamePrevious.Text.Trim <> "" Then
                 Dim MyUserInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation = Nothing
 				Dim LookupUserID As Long
                 Try
                     LookupUserID = CLng(cammWebManager.System_GetUserID(txtLoginNamePrevious.Text))
-					MyUserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(LookupUserID), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
+                    MyUserInfo = New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(LookupUserID), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
 					UserInfoPrevious = MyUserInfo
                     Dim gCtl As New HtmlGenericControl
                     gCtl.InnerHtml = cammWebManager.System_WriteNavPreviewNav_TR2TR_2Cols(CLng(LookupUserID), MyUserInfo.FullName)
                     tdAddDataTable.Controls.Add(gCtl)
                 Catch
-                    if ShowErrors then ShowErrorUserloginnamePrevious (txtLoginNamePrevious.Text, "")
+                    ShowErrorUserloginnamePrevious (txtLoginNamePrevious.Text, "")
                 End Try
 
 				If LookupUserID <> 0 Then
-					'ok - proceed
 					cammWebManagerAdminUserInfoDetailsPrevious.MyUserInfo = MyUserInfo
 					cammWebManagerAdminUserInfoAdditionalFlagsPrevious.cammWebManager = Me.cammWebManager
 					cammWebManagerAdminUserInfoAdditionalFlagsPrevious.MyUserInfo = MyUserInfo
@@ -280,20 +329,9 @@ Imports CompuMaster.camm.WebManager.Controls.Administration
 						VisibleControlPrevious(True, True)
 						ErrorMsgPreviousVisible(False, False)
 					End If
-					EnableOkayButton = EnableOkayButton And True
-				Else
-					'missing valid user account
-					MyUserInfo = Nothing
-					UserInfoPrevious = Nothing
-					rptUserShowPrevious.DataSource = Nothing
-					rptUserShowPrevious.DataBind()
-					cammWebManagerAdminUserInfoDetailsPrevious.MyUserInfo = MyUserInfo
-					cammWebManagerAdminUserInfoAdditionalFlagsPrevious.cammWebManager = Me.cammWebManager
-					cammWebManagerAdminUserInfoAdditionalFlagsPrevious.MyUserInfo = MyUserInfo
-					EnableOkayButton = False
 				End If
             ElseIf Me.IsPostBack = True Then
-                if ShowErrors then ShowErrorUserloginnamePrevious ("", "missing login name")
+                ShowErrorUserloginnamePrevious ("", "missing login name")
 			End If
 
             If txtLoginNameFuture.Text.Trim <> "" Then
@@ -307,11 +345,10 @@ Imports CompuMaster.camm.WebManager.Controls.Administration
                     gCtl.InnerHtml = cammWebManager.System_WriteNavPreviewNav_TR2TR_2Cols(CLng(LookupUserID), MyUserInfo.FullName)
                     tdAddDataTable.Controls.Add(gCtl)
                 Catch
-                    if ShowErrors then ShowErrorUserloginnameFuture (txtLoginNameFuture.Text, "")
+                    ShowErrorUserloginnameFuture (txtLoginNameFuture.Text, "")
                 End Try
 
 				If LookupUserID <> 0 Then
-					'error: user already exists
 					cammWebManagerAdminUserInfoDetailsFuture.MyUserInfo = MyUserInfo
 					cammWebManagerAdminUserInfoAdditionalFlagsFuture.cammWebManager = Me.cammWebManager
 					cammWebManagerAdminUserInfoAdditionalFlagsFuture.MyUserInfo = MyUserInfo
@@ -322,21 +359,12 @@ Imports CompuMaster.camm.WebManager.Controls.Administration
 						rptUserShowFuture.DataSource = dt
 						rptUserShowFuture.DataBind()
 						VisibleControlFuture(True, True)
-						if ShowErrors then ErrorMsgFutureVisible(True, True)
+						ErrorMsgFutureVisible(False, False)
 					End If
-					EnableOkayButton = False
-				Else
-					'ok - proceed
-					VisibleControlFuture(False, False)
-					ErrorMsgFutureVisible(False, False)
-					lblFutureNameAvailable.Visible = True
-					EnableOkayButton = EnableOkayButton And True
 				End If
             ElseIf Me.IsPostBack = True Then
-                if ShowErrors then ShowErrorUserloginnameFuture ("", "missing login name")
+                ShowErrorUserloginnameFuture ("", "missing login name")
             End If
-			
-			btnStartTransfer.Visible = EnableOkayButton
 	End Sub
 
         Sub VisibleControlPrevious(ByVal IsVisible As Boolean, ByVal IsVisibleTrue As Boolean)
