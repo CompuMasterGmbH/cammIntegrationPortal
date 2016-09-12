@@ -116,7 +116,7 @@ BEGIN
 		BEGIN
 			--insert records for active security objects where required if not yet existing
 			INSERT INTO dbo.[ApplicationsRights_Inheriting] (ID_Inheriting, ID_Source, ReleasedBy, ModifiedBy, RuleSourceApplicationID)
-			SELECT ID, AuthsAsAppID, ModifiedBy, ModifiedBy, ID
+			SELECT inserted.ID, inserted.AuthsAsAppID, inserted.ModifiedBy, inserted.ModifiedBy, inserted.ID
 			FROM inserted 
 				LEFT JOIN dbo.[ApplicationsRights_Inheriting]
 					ON dbo.[ApplicationsRights_Inheriting].[ID_Inheriting] = inserted.ID
