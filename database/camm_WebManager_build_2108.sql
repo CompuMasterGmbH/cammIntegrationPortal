@@ -4,42 +4,42 @@
 ---------------------------------------------------------------------------------------------------
 -- CLEANUP OF ALL PRE-EXISTING DATA IN PRE-STAGING-TABLES
 ---------------------------------------------------------------------------------------------------
-TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules
-TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
-TRUNCATE TABLE dbo.ApplicationsRightsByGroup_PreStaging2Inheritions
-TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging2Inheritions
-TRUNCATE TABLE dbo.ApplicationsRightsByGroup_PreStaging1ForRealServerGroup
-TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging1ForRealServerGroup
+	TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules
+	TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
+	TRUNCATE TABLE dbo.ApplicationsRightsByGroup_PreStaging2Inheritions
+	TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging2Inheritions
+	TRUNCATE TABLE dbo.ApplicationsRightsByGroup_PreStaging1ForRealServerGroup
+	TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging1ForRealServerGroup
 GO
 ---------------------------------------------------------------------------------------------------
 -- PRE-FILL ALL PRE-STAGING-LEVELS
 ---------------------------------------------------------------------------------------------------
--- Force first table filling (or full update on repetitions)
-  update [ApplicationsRightsByGroup]
-  set IsDenyRule = IsDenyRule
-GO
--- Force first table filling (or full update on repetitions)
-  update [ApplicationsRightsByUser]
-  set IsDenyRule = IsDenyRule
+	-- Force first table filling (or full update on repetitions)
+	UPDATE [ApplicationsRightsByGroup]
+	SET IsDenyRule = IsDenyRule
+	GO
+	-- Force first table filling (or full update on repetitions)
+	UPDATE [ApplicationsRightsByUser]
+	SET IsDenyRule = IsDenyRule
 GO
 -- =========================================================================================================
 -- ===== SUPERVISOR'S ALWAYS ACCESS RULE
 -- =========================================================================================================
 ------------------------------------------------------------------------------------------------------------
--- Cleanup of old supervisor authorizations for system apps
+-- Cleanup of old supervisor authorizations for system apps (in same transactions as following rebuild command)
 ------------------------------------------------------------------------------------------------------------
-DELETE dbo.[ApplicationsRightsByGroup]
-FROM applications
-	INNER JOIN [dbo].[ApplicationsRightsByGroup] 
-		ON applications.id = [ApplicationsRightsByGroup].ID_Application
-WHERE IsSupervisorAutoAccessRule = 0
-	AND id_grouporperson = 6
-	AND SystemApp <> 0;
+	DELETE dbo.[ApplicationsRightsByGroup]
+	FROM applications
+		INNER JOIN [dbo].[ApplicationsRightsByGroup] 
+			ON applications.id = [ApplicationsRightsByGroup].ID_Application
+	WHERE IsSupervisorAutoAccessRule = 0
+		AND id_grouporperson = 6
+		AND SystemApp <> 0;
 ------------------------------------------------------------------------------------------------------------
 -- Force first table filling (or full update on repetitions)
 ------------------------------------------------------------------------------------------------------------
-UPDATE [dbo].[Applications_CurrentAndInactiveOnes] 
-SET TitleAdminArea = TitleAdminArea
+	UPDATE [dbo].[Applications_CurrentAndInactiveOnes] 
+	SET TitleAdminArea = TitleAdminArea
 GO
 -- =========================================================================================================
 -- ===== MEMBERSHIPS SYSTEM RULES
