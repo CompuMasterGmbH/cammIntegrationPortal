@@ -102,17 +102,28 @@ BEGIN
 	-- Update table dbo.[ApplicationsRights_Inheriting]
 	IF IsNull(@RowDeletesCount, 0) > 0
 		BEGIN
+			--remove records with missing or different insert-record
 			DELETE dbo.[ApplicationsRights_Inheriting]
 			FROM dbo.[ApplicationsRights_Inheriting]
 				INNER JOIN deleted
 					ON dbo.[ApplicationsRights_Inheriting].[RuleSourceApplicationID] = deleted.ID
+				LEFT JOIN inserted 
+					ON dbo.[ApplicationsRights_Inheriting].[ID_Inheriting] = inserted.ID
+						AND dbo.[ApplicationsRights_Inheriting].[ID_Source] = inserted.AuthsAsAppID
+			WHERE inserted.ID IS NULL OR IsNull(deleted.AuthsAsAppID, 0) <> IsNull(inserted.AuthsAsAppID, 0)
 		END
 	IF IsNull(@RowInsertsCount, 0) > 0
 		BEGIN
+			--insert records for active security objects where required if not yet existing
 			INSERT INTO dbo.[ApplicationsRights_Inheriting] (ID_Inheriting, ID_Source, ReleasedBy, ModifiedBy, RuleSourceApplicationID)
 			SELECT ID, AuthsAsAppID, ModifiedBy, ModifiedBy, ID
-			FROM inserted
-			WHERE AppDeleted = 0 AND AuthsAsAppID IS NOT NULL;
+			FROM inserted 
+				LEFT JOIN dbo.[ApplicationsRights_Inheriting]
+					ON dbo.[ApplicationsRights_Inheriting].[ID_Inheriting] = inserted.ID
+						AND dbo.[ApplicationsRights_Inheriting].[ID_Source] = inserted.AuthsAsAppID
+			WHERE inserted.AppDeleted = 0 
+				AND inserted.AuthsAsAppID IS NOT NULL
+				AND dbo.[ApplicationsRights_Inheriting].ID IS NULL;
 		END
 
 	-- Update table dbo.ApplicationsRightsByGroup to always allow Supervisors

@@ -17,6 +17,16 @@ GO
 -- ===== SUPERVISOR'S ALWAYS ACCESS RULE
 -- =========================================================================================================
 ------------------------------------------------------------------------------------------------------------
+-- Cleanup of old supervisor authorizations for system apps
+------------------------------------------------------------------------------------------------------------
+DELETE dbo.[ApplicationsRightsByGroup]
+FROM applications
+	INNER JOIN [dbo].[ApplicationsRightsByGroup] 
+		ON applications.id = [ApplicationsRightsByGroup].ID_Application
+WHERE IsSupervisorAutoAccessRule = 0
+	AND id_grouporperson = 6
+	AND SystemApp <> 0;
+------------------------------------------------------------------------------------------------------------
 -- Force first table filling (or full update on repetitions)
 ------------------------------------------------------------------------------------------------------------
 UPDATE [dbo].[Applications_CurrentAndInactiveOnes] 
