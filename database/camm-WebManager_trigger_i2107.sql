@@ -722,13 +722,10 @@ GO
 --> AND calculated remaining AllowRules after subtraction of DenyRules
 ---------------------------------------------------------------------------------------------------
 GO
+---------------------------------------------------------------------------------------------------
 -- CLEANUP OF ALL PRE-EXISTING DATA IN PRE-STAGING-TABLES
-TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules
-TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
-TRUNCATE TABLE dbo.ApplicationsRightsByGroup_PreStaging2Inheritions
-TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging2Inheritions
-TRUNCATE TABLE dbo.ApplicationsRightsByGroup_PreStaging1ForRealServerGroup
-TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging1ForRealServerGroup
+---------------------------------------------------------------------------------------------------
+-- SEE SEPARATE CLEANUP COMMANDS IN SEPARATE DB PATCH FILE - SCHEDULE RUN OF IT AS SOON AS FOLLOWING TRIGGERS HAVE BEEN CHANGED/UPDATED AND EFFECTIVE RESULT ROWS MIGHT CHANGE
 GO
 ---------------------------------------------------------------------------------------------------
 -- PRE-STAGING-LEVEL 1
