@@ -40,44 +40,51 @@ Namespace CompuMaster.camm.WebManager.Pages.Checks
                 HttpContext.Current.Response.Write("<table border=""0"" cellspacing=""10"" cellpadding=""0""><tr><td>")
                 HttpContext.Current.Response.Write("<FONT face=""Arial"" size=2>")
 
-                HttpContext.Current.Response.Write("<h4>Test environment</h4>")
-                HttpContext.Current.Response.Write("<p>Test for host """ & System.Web.HttpUtility.HtmlEncode(HttpContext.Current.Request.QueryString("Host")) & """</p>")
-                HttpContext.Current.Response.Write("<p>Current server IP: """ & HttpContext.Current.Request.ServerVariables("LOCAL_ADDR") & """<br>")
-                HttpContext.Current.Response.Write("Current server host name: """ & HttpContext.Current.Request.ServerVariables("SERVER_NAME") & """</p>")
-                HttpContext.Current.Response.Write("<p>Configured IP / Host Header: """ & cammWebManager.CurrentServerIdentString & """</p>")
+                Dim GlobalConfig As New GlobalConfiguration(Me.cammWebManager)
+                Dim DatabaseDatetime As DateTime? = GlobalConfig.QueryDateTimeConfigEntry("ServerCheck_TimeStamp")
+                If cammWebManager.DebugLevel <= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation AndAlso (DatabaseDatetime.HasValue = False OrElse DatabaseDatetime.Value = Nothing OrElse Not (DatabaseDatetime.Value < WebManager.Setup.DatabaseUtils.CurrentDateTime(Me.cammWebManager) AndAlso DatabaseDatetime.Value.AddMinutes(15) >= WebManager.Setup.DatabaseUtils.CurrentDateTime(Me.cammWebManager))) Then
+                    HttpContext.Current.Response.Write("<h4>Timeout</h4>")
+                Else 'If cammWebManager.DebugLevel >= Medium_LoggingOfDebugInformation_AdditionalDetails OrElse Within TimeFrame of ServerCheck_TimeStamp
+                    HttpContext.Current.Response.Write("<h4>Test environment</h4>")
+                    HttpContext.Current.Response.Write("<p>Test for host """ & System.Web.HttpUtility.HtmlEncode(HttpContext.Current.Request.QueryString("Host")) & """</p>")
+                    HttpContext.Current.Response.Write("<p>Current server IP: """ & HttpContext.Current.Request.ServerVariables("LOCAL_ADDR") & """<br>")
+                    HttpContext.Current.Response.Write("Current server host name: """ & HttpContext.Current.Request.ServerVariables("SERVER_NAME") & """</p>")
+                    HttpContext.Current.Response.Write("<p>Configured IP / Host Header: """ & cammWebManager.CurrentServerIdentString & """</p>")
 
-                Dim ErrorFound As Boolean = False
+                    Dim ErrorFound As Boolean = False
 
-                HttpContext.Current.Response.Write("<p>Database connection test and its version: ")
-                Try
-                    HttpContext.Current.Response.Write(Setup.DatabaseUtils.Version(cammWebManager, False).ToString)
-                Catch ex As Exception
-                    HttpContext.Current.Response.Write("N/A")
-                    HttpContext.Current.Response.Write(" <em><font color=""red"">[" & ex.Message & "]</em></font>")
-                    ErrorFound = True
-                End Try
-                Response.Write("</p>")
+                    HttpContext.Current.Response.Write("<p>Database connection test and its version: ")
+                    Try
+                        HttpContext.Current.Response.Write(Setup.DatabaseUtils.Version(cammWebManager, False).ToString)
+                    Catch ex As Exception
+                        HttpContext.Current.Response.Write("N/A")
+                        HttpContext.Current.Response.Write(" <em><font color=""red"">[" & ex.Message & "]</em></font>")
+                        ErrorFound = True
+                    End Try
+                    Response.Write("</p>")
 
-                HttpContext.Current.Response.Write("<p>Database connection successfully established: ")
-                Try
-                    If cammWebManager.System_GetServerInfo.ID <> 0 Then
-                        HttpContext.Current.Response.Write("True")
+                    HttpContext.Current.Response.Write("<p>Database connection for context of current server successfully established: ")
+                    Try
+                        If cammWebManager.System_GetServerInfo.ID <> 0 Then
+                            HttpContext.Current.Response.Write("True")
+                        End If
+                    Catch ex As Exception
+                        HttpContext.Current.Response.Write("False")
+                        HttpContext.Current.Response.Write(" <em><font color=""red"">[" & ex.Message & "]</em></font>")
+                        ErrorFound = True
+                    End Try
+                    HttpContext.Current.Response.Write("</p>")
+
+                    HttpContext.Current.Response.Write("<h4>Test results</h4>")
+                    If Not ErrorFound AndAlso HttpContext.Current.Request.QueryString("Host") = cammWebManager.CurrentServerIdentString Then
+                        HttpContext.Current.Response.Write("<p><font color=""green""><strong>The server is configured correctly.</strong></font> Before you break out the champagne...</p>")
+                        HttpContext.Current.Response.Write("<p>...ensure that this server is connectable from your visitors. If your server is running behind a firewall it might use another IP than it does from the other side you are currently testing.</p>")
+                    Else
+                        HttpContext.Current.Response.Write("<p><font color=""red""><strong>The server configuration doesn't match with the values configured on the remote server.</strong> If your server is running behind a firewall it might use another IP than it does from the other side you are currently testing. So, it might work fine from the other side of the firewall.</font></p>")
+                        HttpContext.Current.Response.Write("<p>To solve this issue please set up the files /sysdata/config.* on the remote server and try again.</font></p>")
                     End If
-                Catch ex As Exception
-                    HttpContext.Current.Response.Write("False")
-                    HttpContext.Current.Response.Write(" <em><font color=""red"">[" & ex.Message & "]</em></font>")
-                    ErrorFound = True
-                End Try
-                HttpContext.Current.Response.Write("</p>")
-
-                HttpContext.Current.Response.Write("<h4>Test results</h4>")
-                If Not ErrorFound AndAlso HttpContext.Current.Request.QueryString("Host") = cammWebManager.CurrentServerIdentString Then
-                    HttpContext.Current.Response.Write("<p><font color=""green""><strong>The server is configured correctly.</strong></font> Before you break out the champagne...</p>")
-                    HttpContext.Current.Response.Write("<p>...ensure that this server is connectable from your visitors. If your server is running behind a firewall it might use another IP than it does from the other side you are currently testing.</p>")
-                Else
-                    HttpContext.Current.Response.Write("<p><font color=""red""><strong>The server configuration doesn't match with the values configured on the remote server.</strong> If your server is running behind a firewall it might use another IP than it does from the other side you are currently testing. So, it might work fine from the other side of the firewall.</font></p>")
-                    HttpContext.Current.Response.Write("<p>To solve this issue please set up the files /sysdata/config.* on the remote server and try again.</font></p>")
                 End If
+
                 HttpContext.Current.Response.Write("</FONT></TD>")
                 HttpContext.Current.Response.Write("</tr>")
                 HttpContext.Current.Response.Write("</table>")

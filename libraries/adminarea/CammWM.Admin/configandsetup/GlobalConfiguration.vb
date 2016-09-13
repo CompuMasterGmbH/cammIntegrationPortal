@@ -22,7 +22,7 @@ Imports System.Collections.Generic
 '- cammWM (Core library)
 '- cammWM.Admin (Admin project)
 
-Namespace CompuMaster.camm.WebManager
+Namespace CompuMaster.camm.WebManager.Administration
 
     Public Class GlobalConfiguration
 
@@ -144,12 +144,12 @@ Namespace CompuMaster.camm.WebManager
 
             Friend ReadOnly Property IsWithoutAnyConfigData As Boolean
                 Get
-                    If Me.Int64Value.HasValue = False And _
-                        Me.DateTimeValue.HasValue = False And _
-                        Me.StringValue = Nothing And _
-                        (Me.ByteArrayValue Is Nothing OrElse Me.ByteArrayValue.Length = 0) And _
-                        Me.BooleanValue.HasValue = False And _
-                        Me.DecimalValue.HasValue = False And _
+                    If Me.Int64Value.HasValue = False And
+                        Me.DateTimeValue.HasValue = False And
+                        Me.StringValue = Nothing And
+                        (Me.ByteArrayValue Is Nothing OrElse Me.ByteArrayValue.Length = 0) And
+                        Me.BooleanValue.HasValue = False And
+                        Me.DecimalValue.HasValue = False And
                         Me.DateTimeValue.HasValue = False Then
                         Return True
                     Else
@@ -188,7 +188,7 @@ Namespace CompuMaster.camm.WebManager
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@key", SqlDbType.NVarChar).Value = key
             MyCmd.Connection = MyConn
-            Dim ValueSet As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "ConfigValueSet")
+            Dim ValueSet As DataTable = Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "ConfigValueSet")
             Dim ResultRecords As New List(Of ConfigRecord)
             For MyCounter As Integer = 0 To ValueSet.Rows.Count - 1
                 Dim ResultRecord As New ConfigRecord(CompuMaster.camm.WebManager.Utils.Nz(Of String)(ValueSet.Rows(0)("KeyName")))
@@ -214,7 +214,7 @@ Namespace CompuMaster.camm.WebManager
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@key", SqlDbType.NVarChar).Value = key.Replace("[", "[[]").Replace("_", "[_]").Replace("%", "[%]")
             MyCmd.Connection = MyConn
-            Dim ValueSet As DataTable = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "ConfigValueSet")
+            Dim ValueSet As DataTable = Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "ConfigValueSet")
             Dim ResultRecords As New List(Of ConfigRecord)
             For MyCounter As Integer = 0 To ValueSet.Rows.Count - 1
                 Dim ResultRecord As New ConfigRecord(CompuMaster.camm.WebManager.Utils.Nz(Of String)(ValueSet.Rows(0)("KeyName")))
@@ -253,34 +253,34 @@ Namespace CompuMaster.camm.WebManager
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand()
             MyCmd.Connection = MyConn
-            MyCmd.CommandText = "DECLARE @RowNumber int" & vbNewLine & _
-                        "SELECT @RowNumber = COUNT(*)" & vbNewLine & _
-                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "WHERE VALUENVarChar = @ProductName AND PropertyName = @key" & vbNewLine & _
-                        "SELECT @RowNumber" & vbNewLine & _
-                        vbNewLine & _
-                        "IF @RemoveOnly = 0 AND IsNull(@RowNumber,0) = 0 " & vbNewLine & _
-                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "		(ValueNVarChar, PropertyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime)" & vbNewLine & _
-                        "	VALUES (@ProductName, @key, @ValueInt, @ValueNText, @ValueBoolean, @ValueImage, @ValueDecimal, @ValueDateTime)" & vbNewLine & _
-                        "ELSE IF @RemoveOnly = 0 AND IsNull(@RowNumber,0) = 1" & vbNewLine & _
-                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "	SET ValueInt = @ValueInt, ValueNText = @ValueNText, ValueBoolean = @ValueBoolean, ValueImage = @ValueImage, ValueDecimal = @ValueDecimal, ValueDateTime = @ValueDateTime" & vbNewLine & _
-                        "	WHERE ValueNVarChar = @ProductName AND PropertyName = @key" & vbNewLine & _
-                        "ELSE IF @RemoveOnly <> 0 AND IsNull(@RowNumber,0) = 1" & vbNewLine & _
-                        "	DELETE FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
-                        "	WHERE ValueNVarChar = @ProductName AND PropertyName = @key" & vbNewLine & _
+            MyCmd.CommandText = "DECLARE @RowNumber int" & vbNewLine &
+                        "SELECT @RowNumber = COUNT(*)" & vbNewLine &
+                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "WHERE VALUENVarChar = @ProductName AND PropertyName = @key" & vbNewLine &
+                        "SELECT @RowNumber" & vbNewLine &
+                        vbNewLine &
+                        "IF @RemoveOnly = 0 AND IsNull(@RowNumber,0) = 0 " & vbNewLine &
+                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "		(ValueNVarChar, PropertyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime)" & vbNewLine &
+                        "	VALUES (@ProductName, @key, @ValueInt, @ValueNText, @ValueBoolean, @ValueImage, @ValueDecimal, @ValueDateTime)" & vbNewLine &
+                        "ELSE IF @RemoveOnly = 0 AND IsNull(@RowNumber,0) = 1" & vbNewLine &
+                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "	SET ValueInt = @ValueInt, ValueNText = @ValueNText, ValueBoolean = @ValueBoolean, ValueImage = @ValueImage, ValueDecimal = @ValueDecimal, ValueDateTime = @ValueDateTime" & vbNewLine &
+                        "	WHERE ValueNVarChar = @ProductName AND PropertyName = @key" & vbNewLine &
+                        "ELSE IF @RemoveOnly <> 0 AND IsNull(@RowNumber,0) = 1" & vbNewLine &
+                        "	DELETE FROM [dbo].[System_GlobalProperties]" & vbNewLine &
+                        "	WHERE ValueNVarChar = @ProductName AND PropertyName = @key" & vbNewLine &
                         "SELECT @RowNumber AS ExistingRowsCount" & vbNewLine
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@RemoveOnly", SqlDbType.Bit).Value = data.IsWithoutAnyConfigData
             MyCmd.Parameters.Add("@key", SqlDbType.VarChar).Value = data.Key
-            MyCmd.Parameters.Add("@ValueInt", SqlDbType.Int).Value = Utils.NullableTypeWithItsValueOrDBNull(data.Int64Value)
-            MyCmd.Parameters.Add("@ValueNText", SqlDbType.NText).Value = Utils.StringNotNothingOrDBNull(data.StringValue)
-            MyCmd.Parameters.Add("@ValueBoolean", SqlDbType.Bit).Value = Utils.NullableTypeWithItsValueOrDBNull(data.BooleanValue)
-            MyCmd.Parameters.Add("@ValueImage", SqlDbType.Image).Value = Utils.ArrayNotNothingOrDBNull(data.ByteArrayValue)
-            MyCmd.Parameters.Add("@ValueDecimal", SqlDbType.Decimal).Value = Utils.NullableTypeWithItsValueOrDBNull(data.DecimalValue)
-            MyCmd.Parameters.Add("@ValueDateTime", SqlDbType.DateTime).Value = Utils.NullableTypeWithItsValueOrDBNull(data.DateTimeValue)
-            Dim ExistingRowNumbers As Long = CompuMaster.camm.WebManager.Utils.Nz(Of Long)(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
+            MyCmd.Parameters.Add("@ValueInt", SqlDbType.Int).Value = CompuMaster.camm.WebManager.Utils.NullableTypeWithItsValueOrDBNull(data.Int64Value)
+            MyCmd.Parameters.Add("@ValueNText", SqlDbType.NText).Value = CompuMaster.camm.WebManager.Utils.StringNotNothingOrDBNull(data.StringValue)
+            MyCmd.Parameters.Add("@ValueBoolean", SqlDbType.Bit).Value = CompuMaster.camm.WebManager.Utils.NullableTypeWithItsValueOrDBNull(data.BooleanValue)
+            MyCmd.Parameters.Add("@ValueImage", SqlDbType.Image).Value = CompuMaster.camm.WebManager.Utils.ArrayNotNothingOrDBNull(data.ByteArrayValue)
+            MyCmd.Parameters.Add("@ValueDecimal", SqlDbType.Decimal).Value = CompuMaster.camm.WebManager.Utils.NullableTypeWithItsValueOrDBNull(data.DecimalValue)
+            MyCmd.Parameters.Add("@ValueDateTime", SqlDbType.DateTime).Value = CompuMaster.camm.WebManager.Utils.NullableTypeWithItsValueOrDBNull(data.DateTimeValue)
+            Dim ExistingRowNumbers As Long = CompuMaster.camm.WebManager.Utils.Nz(Of Long)(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
             If ExistingRowNumbers > 1 Then
                 'no data has been changed by SQL command above because of IF ELSE logic
                 Throw New Exception("Multiple config recordy already exist with the given key """ & data.Key & """, this method ConfigWriteEntry can't be used for saving multi-record configuration data")
@@ -308,27 +308,27 @@ Namespace CompuMaster.camm.WebManager
             Dim MyCmd As SqlCommand = New SqlCommand()
             MyCmd.Connection = MyConn
             Dim sql As New System.Text.StringBuilder
-            sql.AppendLine("DELETE" & vbNewLine & _
-                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
+            sql.AppendLine("DELETE" & vbNewLine &
+                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
                         "WHERE VALUENVarChar = @ProductName AND PropertyName = @key")
             For MyCounter As Integer = 0 To dataSet.Count - 1
                 If dataSet(MyCounter).IsWithoutAnyConfigData = False Then
-                    sql.AppendLine("INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
-                                "	(ValueNVarChar, PropertyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime)" & vbNewLine & _
+                    sql.AppendLine("INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine &
+                                "	(ValueNVarChar, PropertyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime)" & vbNewLine &
                                 "VALUES (@ProductName, @key, @Value" & MyCounter & "Int, @Value" & MyCounter & "NText, @Value" & MyCounter & "Boolean, @Value" & MyCounter & "Image, @Value" & MyCounter & "Decimal, @Value" & MyCounter & "DateTime)")
                     Dim data As ConfigRecord = dataSet(MyCounter)
-                MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Int", SqlDbType.Int)).Value = Utils.NullableTypeWithItsValueOrDBNull(data.Int64Value)
-                MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "NText", SqlDbType.NText)).Value = Utils.StringNotNothingOrDBNull(data.StringValue)
-                MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Boolean", SqlDbType.Bit)).Value = Utils.NullableTypeWithItsValueOrDBNull(data.BooleanValue)
-                MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Image", SqlDbType.Image)).Value = Utils.ArrayNotNothingOrDBNull(data.ByteArrayValue)
-                MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Decimal", SqlDbType.Decimal)).Value = Utils.NullableTypeWithItsValueOrDBNull(data.DecimalValue)
-                    MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "DateTime", SqlDbType.DateTime)).Value = Utils.NullableTypeWithItsValueOrDBNull(data.DateTimeValue)
+                    MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Int", SqlDbType.Int)).Value = CompuMaster.camm.WebManager.Utils.NullableTypeWithItsValueOrDBNull(data.Int64Value)
+                    MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "NText", SqlDbType.NText)).Value = CompuMaster.camm.WebManager.Utils.StringNotNothingOrDBNull(data.StringValue)
+                    MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Boolean", SqlDbType.Bit)).Value = CompuMaster.camm.WebManager.Utils.NullableTypeWithItsValueOrDBNull(data.BooleanValue)
+                    MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Image", SqlDbType.Image)).Value = CompuMaster.camm.WebManager.Utils.ArrayNotNothingOrDBNull(data.ByteArrayValue)
+                    MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Decimal", SqlDbType.Decimal)).Value = CompuMaster.camm.WebManager.Utils.NullableTypeWithItsValueOrDBNull(data.DecimalValue)
+                    MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "DateTime", SqlDbType.DateTime)).Value = CompuMaster.camm.WebManager.Utils.NullableTypeWithItsValueOrDBNull(data.DateTimeValue)
                 End If
             Next
             MyCmd.CommandText = sql.ToString
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@key", SqlDbType.VarChar).Value = key
-            CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
+            Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
         End Sub
 
         ''' <summary>
@@ -342,7 +342,7 @@ Namespace CompuMaster.camm.WebManager
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@key", SqlDbType.NVarChar).Value = key
             MyCmd.Connection = MyConn
-            Return CompuMaster.camm.WebManager.Utils.Nz(Of Nullable(Of Long))(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
+            Return CompuMaster.camm.WebManager.Utils.Nz(Of Nullable(Of Long))(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
         End Function
 
         ''' <summary>
@@ -356,7 +356,7 @@ Namespace CompuMaster.camm.WebManager
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@key", SqlDbType.NVarChar).Value = key
             MyCmd.Connection = MyConn
-            Return CompuMaster.camm.WebManager.Utils.Nz(Of String)(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
+            Return CompuMaster.camm.WebManager.Utils.Nz(Of String)(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
         End Function
         ''' <summary>
         ''' Read configuration value
@@ -369,7 +369,7 @@ Namespace CompuMaster.camm.WebManager
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@key", SqlDbType.NVarChar).Value = key
             MyCmd.Connection = MyConn
-            Return CompuMaster.camm.WebManager.Utils.Nz(Of Nullable(Of Boolean))(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
+            Return CompuMaster.camm.WebManager.Utils.Nz(Of Nullable(Of Boolean))(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
         End Function
         ''' <summary>
         ''' Read configuration value
@@ -382,7 +382,7 @@ Namespace CompuMaster.camm.WebManager
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@key", SqlDbType.NVarChar).Value = key
             MyCmd.Connection = MyConn
-            Return CompuMaster.camm.WebManager.Utils.Nz(Of Byte())(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
+            Return CompuMaster.camm.WebManager.Utils.Nz(Of Byte())(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
         End Function
         ''' <summary>
         ''' Read configuration value
@@ -395,7 +395,7 @@ Namespace CompuMaster.camm.WebManager
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@key", SqlDbType.NVarChar).Value = key
             MyCmd.Connection = MyConn
-            Return CompuMaster.camm.WebManager.Utils.Nz(Of Nullable(Of Double))(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
+            Return CompuMaster.camm.WebManager.Utils.Nz(Of Nullable(Of Double))(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
         End Function
         ''' <summary>
         ''' Read configuration value
@@ -408,7 +408,7 @@ Namespace CompuMaster.camm.WebManager
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@key", SqlDbType.NVarChar).Value = key
             MyCmd.Connection = MyConn
-            Return CompuMaster.camm.WebManager.Utils.Nz(Of Nullable(Of Decimal))(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
+            Return CompuMaster.camm.WebManager.Utils.Nz(Of Nullable(Of Decimal))(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
         End Function
         ''' <summary>
         ''' Read configuration value
@@ -421,7 +421,7 @@ Namespace CompuMaster.camm.WebManager
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@key", SqlDbType.NVarChar).Value = key
             MyCmd.Connection = MyConn
-            Return CompuMaster.camm.WebManager.Utils.Nz(Of Nullable(Of DateTime))(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
+            Return CompuMaster.camm.WebManager.Utils.Nz(Of Nullable(Of DateTime))(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection))
         End Function
 
     End Class

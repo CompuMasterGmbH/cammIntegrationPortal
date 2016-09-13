@@ -25,6 +25,17 @@ Namespace CompuMaster.camm.WebManager.Setup
         ''' Lookup the database version
         ''' </summary>
         ''' <param name="webManager">The camm Web-Manager instance to query a database</param>
+        Public Shared Function CurrentDateTime(ByVal webManager As IWebManager) As DateTime
+            Dim MyCmd As New SqlCommand("SELECT GETDATE()", New SqlConnection(webManager.ConnectionString))
+            Return CType(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), DateTime)
+        End Function
+
+        Private Shared _webManager As IWebManager 'when used in not-http contexts, there might be multiple CWM instances in parallel use (e.g. on user profile restore from a first instance to a second instance)
+
+        ''' <summary>
+        ''' Lookup the database version
+        ''' </summary>
+        ''' <param name="webManager">The camm Web-Manager instance to query a database</param>
         Public Shared Function Version(ByVal webManager As IWebManager) As Version
             Return Version(webManager, True)
         End Function
@@ -35,7 +46,6 @@ Namespace CompuMaster.camm.WebManager.Setup
         ''' <param name="allowCaching">True allows usage of a cached value, False forces a direct query to the database</param>
         Public Shared Function Version(ByVal webManager As IWebManager, ByVal allowCaching As Boolean) As Version
             Static _System_DBVersion_Ex As Version
-            Static _webManager As IWebManager 'when used in not-http contexts, there might be multiple CWM instances in parallel use (e.g. on user profile restore from a first instance to a second instance)
             Const cacheItemKey As String = "WebManager.Version.Database"
             If allowCaching Then
                 If Not _System_DBVersion_Ex Is Nothing AndAlso webManager Is _webManager Then

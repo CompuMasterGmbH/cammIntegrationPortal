@@ -21,9 +21,10 @@
 * :heavy_minus_sign::warning:	deactivate all active sessions for safety between user session handling phase 1 "single login" and phase 2 "multiple simultaneous logins"
 
 ###Build 178 → 206 (ASP Engine)
-* :heavy_plus_sign:	Splittet OfficialServerGroup_AdminURL to support separate value for e-mail notifications (OfficialServerGroup_AdminURL_SecurityAdminNotifications)
+* :heavy_plus_sign:	Splitted OfficialServerGroup_AdminURL to support separate value for e-mail notifications (OfficialServerGroup_AdminURL_SecurityAdminNotifications)
 
 ###Build 205 → 206 (ASP.NET Engine)
+* :arrows_clockwise::warning: security fix: public server check only under special circumstances
 * :heavy_plus_sign:	product registration service: added auth statistics
 * :heavy_plus_sign:	update DB build to a customizable DB version
 * :heavy_plus_sign:	authorization transmissions: support for copying auths while deleting authorization transmission

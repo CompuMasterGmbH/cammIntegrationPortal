@@ -110,6 +110,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     txtPortNumber.Text = Utils.Nz(dtServer.Rows(0)("ServerPort"), String.Empty)
                     hypServerURl.Text = "event log"
                     hypServerURl.NavigateUrl = GetServerURL(Field_ID) + "/sysdata/servereventlog.aspx"
+                    Me.GlobalConfig.WriteConfigRecord(New WebManager.Administration.GlobalConfiguration.ConfigRecord("ServerCheck_TimeStamp", Me.CurrentDatabaseDateTime))
                 Else
                     lblErrMsg.Text = "Server not found"
                 End If

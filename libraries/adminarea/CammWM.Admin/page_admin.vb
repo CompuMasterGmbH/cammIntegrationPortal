@@ -13,14 +13,9 @@
 'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden für Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
 
 Option Strict On
-Option Explicit On 
+Option Explicit On
 
-Imports System.Web
-Imports System.Data
-Imports System.Reflection
 Imports System.Data.SqlClient
-Imports System.Web.UI.WebControls
-Imports System.Web.UI.HtmlControls
 Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider
 
 Namespace CompuMaster.camm.WebManager.Pages.Administration
@@ -182,7 +177,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 'Query the database
                 Dim MyCmd As New SqlCommand
                 With MyCmd
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT ID FROM [dbo].[System_SubSecurityAdjustments] WHERE TableName = @TableName AND AuthorizationType = @AuthorizationType AND UserID = @UserID AND TablePrimaryIDValue = @TablePrimaryIDValue"
                     .CommandType = CommandType.Text
                     .Connection = New SqlConnection(cammWebManager.ConnectionString)
@@ -221,7 +216,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 'Query the database
                 Dim MyCmd As New SqlCommand
                 With MyCmd
-                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                    .CommandText = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                                     "SELECT ID FROM [dbo].[System_SubSecurityAdjustments] WHERE TableName = @TableName AND AuthorizationType = @AuthorizationType AND UserID = @UserID AND TablePrimaryIDValue = 0"
                     .CommandType = CommandType.Text
                     .Connection = New SqlConnection(cammWebManager.ConnectionString)
@@ -334,6 +329,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Return "[?:" & id & "] (" & ex.Message & ")"
             End Try
         End Function
+
+        Friend ReadOnly Property GlobalConfig As CompuMaster.camm.WebManager.Administration.GlobalConfiguration
+            Get
+                Static _Result As CompuMaster.camm.WebManager.Administration.GlobalConfiguration
+                If _Result Is Nothing Then
+                    _Result = New CompuMaster.camm.WebManager.Administration.GlobalConfiguration(Me.cammWebManager)
+                End If
+                Return _Result
+            End Get
+        End Property
 
     End Class
 
