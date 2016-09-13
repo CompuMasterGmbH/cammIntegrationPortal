@@ -1,4 +1,11 @@
-﻿-- drop table because of dropped concept
+﻿<%IGNORE_ERRORS%>
+-- ADD REQUIRED COLIMNS TO TRACK CHANGE HISTORY 
+ALTER TABLE dbo.System_ServerGroupsAndTheirUserAccessLevels ADD
+	CreatedOn datetime NOT NULL CONSTRAINT DF_System_ServerGroupsAndTheirUserAccessLevels_CreatedOn DEFAULT GETDATE(),
+	CreatedBy int NULL
+GO
+
+-- drop table because of dropped concept
 if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Apps2SecObj_SyncWarnLog]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 DROP TABLE [dbo].[Apps2SecObj_SyncWarnLog]
 GO
@@ -331,4 +338,3 @@ UPDATE dbo.Applications
 SET AppDeleted = 1
 WHERE SystemApp = 1 And SystemAppType = 3 
 	AND Title = 'System - User Administration - LogAnalysis'
-

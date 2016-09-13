@@ -372,6 +372,11 @@ CONSTRAINT PK__Kopie_von_System__2CF2ADDF PRIMARY KEY CLUSTERED (ID )
 );
 
 GO
+-- ADD REQUIRED COLIMNS TO TRACK CHANGE HISTORY 
+ALTER TABLE dbo.System_ServerGroupsAndTheirUserAccessLevels ADD
+	CreatedOn datetime NOT NULL CONSTRAINT DF_System_ServerGroupsAndTheirUserAccessLevels_CreatedOn DEFAULT GETDATE(),
+	CreatedBy int NULL
+GO
 
 ----------------------------------------------------
 -- dbo.System_Servers
