@@ -158,7 +158,7 @@ Friend Module CommandLineApp
                 DBSetup.InitDatabase(options.ConnectionString)
                 UpdateWebManagerInstance(options)
             Catch ex As CompuMaster.camm.WebManager.Setup.DatabaseSetup.DatabasePatchCommandException
-                QuitWithError("CRITICAL ERROR: " & ex.ToString & vbNewLine & "DB Patch Command: " & ex.AdditionalErrorDetails)
+                QuitWithError("CRITICAL ERROR: " & ex.ToString & vbNewLine & "DB PATCH COMMAND: " & ex.AdditionalErrorDetails)
             Catch ex As Exception
                 QuitWithError("CRITICAL ERROR: " & ex.ToString)
             End Try
@@ -189,7 +189,7 @@ Friend Module CommandLineApp
             Console.WriteLine("Database updates are available up to build no. " & CompuMaster.camm.WebManager.Setup.DatabaseSetup.LastBuildVersionInSetupFiles.ToString)
             Console.WriteLine("Database updates build no. currently installed: " & DBSetup.GetCurrentDBBuildNo(options.ConnectionString).ToString)
         Catch ex As CompuMaster.camm.WebManager.Setup.DatabaseSetup.DatabasePatchCommandException
-            QuitWithError("CRITICAL ERROR: " & ex.ToString & vbNewLine & "DB Patch Command: " & ex.AdditionalErrorDetails)
+            QuitWithError("CRITICAL ERROR: " & ex.ToString & vbNewLine & "DB PATCH COMMAND: " & ex.AdditionalErrorDetails)
         Catch ex As Exception
             QuitWithError("CRITICAL ERROR: " & ex.ToString)
         End Try
