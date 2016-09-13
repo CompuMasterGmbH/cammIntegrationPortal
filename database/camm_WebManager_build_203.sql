@@ -4,10 +4,12 @@ DROP TABLE [dbo].[Apps2SecObj_SyncWarnLog]
 GO
 
 -- add security access everything group (but without supervisor priviledges to do aministration)
-IF NOT EXISTS (SELECT ID FROM Gruppen WHERE ID = -5)
+IF NOT EXISTS (SELECT ID FROM dbo.Gruppen WHERE ID = -6)
 BEGIN
-INSERT INTO Gruppen (ID, Name, Description, ReleasedOn, ReleasedBy, SystemGroup, ModifiedOn, ModifiedBy) 
-VALUES(-6, 'Security Access Everything', 'System group: allowed to access all applications', GETDATE(), 1, 1, GETDATE(), 1) 
+	SET IDENTITY_INSERT dbo.Gruppen ON;
+	INSERT INTO Gruppen (ID, Name, Description, ReleasedOn, ReleasedBy, SystemGroup, ModifiedOn, ModifiedBy) 
+	VALUES(-6, 'Security Access Everything', 'System group: allowed to access all applications', GETDATE(), 1, 1, GETDATE(), 1);
+	SET IDENTITY_INSERT dbo.Gruppen OFF;
 END
 GO
 

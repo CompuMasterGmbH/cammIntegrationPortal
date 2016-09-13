@@ -102,17 +102,28 @@ BEGIN
 	-- Update table dbo.[ApplicationsRights_Inheriting]
 	IF IsNull(@RowDeletesCount, 0) > 0
 		BEGIN
+			--remove records with missing or different insert-record
 			DELETE dbo.[ApplicationsRights_Inheriting]
 			FROM dbo.[ApplicationsRights_Inheriting]
 				INNER JOIN deleted
 					ON dbo.[ApplicationsRights_Inheriting].[RuleSourceApplicationID] = deleted.ID
+				LEFT JOIN inserted 
+					ON dbo.[ApplicationsRights_Inheriting].[ID_Inheriting] = inserted.ID
+						AND dbo.[ApplicationsRights_Inheriting].[ID_Source] = inserted.AuthsAsAppID
+			WHERE inserted.ID IS NULL OR IsNull(deleted.AuthsAsAppID, 0) <> IsNull(inserted.AuthsAsAppID, 0)
 		END
 	IF IsNull(@RowInsertsCount, 0) > 0
 		BEGIN
+			--insert records for active security objects where required if not yet existing
 			INSERT INTO dbo.[ApplicationsRights_Inheriting] (ID_Inheriting, ID_Source, ReleasedBy, ModifiedBy, RuleSourceApplicationID)
-			SELECT ID, AuthsAsAppID, ModifiedBy, ModifiedBy, ID
-			FROM inserted
-			WHERE AppDeleted = 0 AND AuthsAsAppID IS NOT NULL;
+			SELECT inserted.ID, inserted.AuthsAsAppID, inserted.ModifiedBy, inserted.ModifiedBy, inserted.ID
+			FROM inserted 
+				LEFT JOIN dbo.[ApplicationsRights_Inheriting]
+					ON dbo.[ApplicationsRights_Inheriting].[ID_Inheriting] = inserted.ID
+						AND dbo.[ApplicationsRights_Inheriting].[ID_Source] = inserted.AuthsAsAppID
+			WHERE inserted.AppDeleted = 0 
+				AND inserted.AuthsAsAppID IS NOT NULL
+				AND dbo.[ApplicationsRights_Inheriting].ID IS NULL;
 		END
 
 	-- Update table dbo.ApplicationsRightsByGroup to always allow Supervisors
@@ -711,13 +722,10 @@ GO
 --> AND calculated remaining AllowRules after subtraction of DenyRules
 ---------------------------------------------------------------------------------------------------
 GO
+---------------------------------------------------------------------------------------------------
 -- CLEANUP OF ALL PRE-EXISTING DATA IN PRE-STAGING-TABLES
-TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules
-TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging3GroupsResolved
-TRUNCATE TABLE dbo.ApplicationsRightsByGroup_PreStaging2Inheritions
-TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging2Inheritions
-TRUNCATE TABLE dbo.ApplicationsRightsByGroup_PreStaging1ForRealServerGroup
-TRUNCATE TABLE dbo.ApplicationsRightsByUser_PreStaging1ForRealServerGroup
+---------------------------------------------------------------------------------------------------
+-- SEE SEPARATE CLEANUP COMMANDS IN SEPARATE DB PATCH FILE - SCHEDULE RUN OF IT AS SOON AS FOLLOWING TRIGGERS HAVE BEEN CHANGED/UPDATED AND EFFECTIVE RESULT ROWS MIGHT CHANGE
 GO
 ---------------------------------------------------------------------------------------------------
 -- PRE-STAGING-LEVEL 1

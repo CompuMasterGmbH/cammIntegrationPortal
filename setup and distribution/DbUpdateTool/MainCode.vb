@@ -28,6 +28,8 @@ Module MainCode
                 Environment.Exit(CommandLine.Parser.DefaultExitCodeFail)
             ElseIf options.DebugSession AndAlso WaitForUserToJoinDebugSession() Then
                 'never true, but waiting before continue: WaitForUserToJoinDebugSession
+            ElseIf CheckAndAssignForVerboseMode(options) Then
+                'never true, but assigning debug level if required
             ElseIf options.LatestAvailableDbPatchVersion Then
                 CommandLineApp.ShowLatestAvailableDbPatchVersion()
             ElseIf options.ListAvailablePatches Then
@@ -60,6 +62,18 @@ Module MainCode
             QuitWithError("Unexpected exception: " & ex.ToString)
         End Try
     End Sub
+
+    ''' <summary>
+    ''' Setup verbose mode and always return with False
+    ''' </summary>
+    ''' <param name="options"></param>
+    ''' <returns>False (always)</returns>
+    Private Function CheckAndAssignForVerboseMode(options As CommandlineOptions) As Boolean
+        If options.Verbose Then
+            DBSetup.DebugLevel = 3
+        End If
+        Return False
+    End Function
 
     Private Sub DBSetup_ProgressStepStatusChanged() Handles DBSetup.ProgressStepStatusChanged
         'Do Nothing or TODO: ProgressBar 2

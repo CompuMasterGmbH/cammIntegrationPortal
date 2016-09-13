@@ -157,6 +157,8 @@ Friend Module CommandLineApp
             Try
                 DBSetup.InitDatabase(options.ConnectionString)
                 UpdateWebManagerInstance(options)
+            Catch ex As CompuMaster.camm.WebManager.Setup.DatabaseSetup.DatabasePatchCommandException
+                QuitWithError("CRITICAL ERROR: " & ex.ToString & vbNewLine & "DB Patch Command: " & ex.AdditionalErrorDetails)
             Catch ex As Exception
                 QuitWithError("CRITICAL ERROR: " & ex.ToString)
             End Try
@@ -186,6 +188,8 @@ Friend Module CommandLineApp
             If options.LimitUpdatesToDbBuild <> 0 Then Console.WriteLine("Update has been limitied to database build no. " & options.LimitUpdatesToDbBuild.ToString)
             Console.WriteLine("Database updates are available up to build no. " & CompuMaster.camm.WebManager.Setup.DatabaseSetup.LastBuildVersionInSetupFiles.ToString)
             Console.WriteLine("Database updates build no. currently installed: " & DBSetup.GetCurrentDBBuildNo(options.ConnectionString).ToString)
+        Catch ex As CompuMaster.camm.WebManager.Setup.DatabaseSetup.DatabasePatchCommandException
+            QuitWithError("CRITICAL ERROR: " & ex.ToString & vbNewLine & "DB Patch Command: " & ex.AdditionalErrorDetails)
         Catch ex As Exception
             QuitWithError("CRITICAL ERROR: " & ex.ToString)
         End Try
