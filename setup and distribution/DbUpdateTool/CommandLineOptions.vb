@@ -119,6 +119,9 @@ Friend Class CommandlineOptions
     <CommandLine.Option("CurrentDbVersion", HelpText:="Show the current version of the database (requires -c)")>
     Public Property CurrentDbVersion As Boolean
 
+    <CommandLine.Option("v"c, "Verbose", HelpText:="Show detailled output")>
+    Public Property Verbose As Boolean
+
     '<CommandLine.Option("DebugSession", HelpText:="")>
     Public Property DebugSession As Boolean
 
