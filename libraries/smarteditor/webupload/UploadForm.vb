@@ -195,17 +195,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             Me.LabelMaxWidth.Text = "Max. Breite"
             Me.LabelMaxHeight.Text = "Max. Höhe"
 
-            If HttpContext.Current.Session("ImageDataManagement.FileUploaded") Is Nothing Then
-                Me.LabelUploadedImageNames.Text = ""
-            Else
-                Me.LabelUploadedImageNames.Text = "Das Bild wurde gespeichert unter "
-                Dim files As ArrayList = CType(HttpContext.Current.Session("ImageDataManagement.FileUploaded"), ArrayList)
-                For Each name As String In files
-                    Me.LabelUploadedImageNames.Text &= "<br>" & name
-                Next
-
-            End If
-
         End Sub
 
         ''' <summary>
@@ -357,13 +346,9 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
             'ToDo: localize following string
             Me.LabelUploadedImageNames.Text = "Das Bild wurde gespeichert unter "
-            'Dim files As ArrayList = CType(HttpContext.Current.Session("ImageDataManagement.FileUploaded"), ArrayList)
             For Each name As String In files
                 Me.LabelUploadedImageNames.Text &= "<br>" & name
             Next
-
-            'HttpContext.Current.Session("ImageDataManagement.FileUploaded") = files
-
         End Sub
 
 
