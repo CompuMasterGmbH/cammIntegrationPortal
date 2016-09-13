@@ -112,77 +112,177 @@
     <Import Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="accesslevels\page_admin_accesslevels.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AssemblyVersion.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="auths\page_admin_auths.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="commontools\Tools.Data.vb" />
+    <Compile Include="commontools\Utils.vb" />
+    <Compile Include="configandsetup\About.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\AddNewServer.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\Add_ServersAccesslevelrelation.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\CheckNotRequiredAdditionalFlags.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\ConfigurationAllowedValuesUserProfileFieldCountry.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\ConfigurationDataProtection.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\ConfigurationLogging.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\ConfigurationOverview.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\ConfigurationPasswordEncryption.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\DeleteServer.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\DeleteServerGroup.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\Delete_ServersAccesslevelrelation.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\GlobalConfiguration.vb" />
+    <Compile Include="configandsetup\MarketActivations.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\NewServerGroup.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\PasswordConvert.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\PasswordConvertAjax.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\ServerList.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\SystemCheckup.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\UpdateServer.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="configandsetup\UpdateServerGroup.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="groups\GroupDelete.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="groups\GroupList.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="groups\GroupNew.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="groups\GroupUpdate.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="import_export\export.vb" />
+    <Compile Include="import_export\ImportBase.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="import_export\ImportUsers.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="import_export\ImportUsersProcessing.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="memberships\MembershipList.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="memberships\MembershipsNew.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="memberships\MembershipsOverview.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="memberships\Membership_Delete.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="page_admin_apps.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Tools.Data.vb" />
-    <Compile Include="controls_admin.vb">
+    <Compile Include="securitydelegations\AdjustDelegates.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="import_export.vb">
-      <SubType>Code</SubType>
+    <Compile Include="controls_admin.vb">
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="page_admin.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_accesslevels.vb">
+    <Compile Include="troubleshootingandmodules\page_mailqueuemonitor.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_auths.vb">
+    <Compile Include="troubleshootingandmodules\page_redirector.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_check.vb">
+    <Compile Include="users\New_Users.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_configuration.vb">
+    <Compile Include="users\page_admin_rules.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_generalsetup.vb">
+    <Compile Include="users\page_admin_users_batch_flag_editor.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_groups.vb">
+    <Compile Include="users\ResetUserPassword.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_importexport.vb">
+    <Compile Include="users\UserList.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_memberships.vb">
+    <Compile Include="users\UsersClone.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_rules.vb">
+    <Compile Include="users\UsersOverview.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_securitydelegations.vb">
+    <Compile Include="users\UsersUpdate.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_servers.vb">
+    <Compile Include="users\Users_Navbar_Preview.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_users.vb">
+    <Compile Include="users\User_Delete.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_users_batch_flag_editor.vb">
+    <Compile Include="users\User_Hotline_Support.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_mailqueuemonitor.vb">
+    <Compile Include="users\User_Resetpw.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_redirector.vb">
+    <Compile Include="users\User_Update_Flag.vb">
       <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Utils.vb">
-      <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="fileConsistencyList.resx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="My Project\" />
+    <Folder Include="securityobjects\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
