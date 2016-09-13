@@ -325,8 +325,6 @@ CREATE TABLE [dbo].[Memberships_EffectiveRulesWithClonesNthGrade](
 )
 ) ON [PRIMARY]
 GO
-ALTER TABLE dbo.Memberships_EffectiveRulesWithClonesNthGrade SET (LOCK_ESCALATION = TABLE)
-GO
 
 -- DROP MODULE Log analysis 
 UPDATE dbo.Applications
