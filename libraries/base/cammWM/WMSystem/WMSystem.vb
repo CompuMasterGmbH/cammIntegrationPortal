@@ -7265,6 +7265,9 @@ Namespace CompuMaster.camm.WebManager
                         Utils.Nz(MyDataRow("AreaUnspecifiedContactTitle"), CType(Nothing, String)),
                         Utils.Nz(MyDataRow("AreaUnspecifiedContactEMail"), CType(Nothing, String)),
                         Utils.Nz(MyDataRow("AllowImpersonation"), False),
+                        CType(MyDataRow("AreaCopyRightSinceYear"), Integer),
+                        Utils.Nz(MyDataRow("AreaImage"), ""),
+                        Utils.Nz(MyDataRow("AreaButton"), ""),
                                                                           _WebManager)
                     MyCounter += 1
                 Next

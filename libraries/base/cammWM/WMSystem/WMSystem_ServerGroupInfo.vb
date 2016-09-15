@@ -55,9 +55,12 @@ Namespace CompuMaster.camm.WebManager
             Dim _GroupAnonymous As GroupInformation
             Dim _GroupPublic As GroupInformation
             Dim _Servers As ServerInformation()
+            Dim _CopyrightSinceYear As Integer
+            Dim _ImageUrlBig As String
+            Dim _ImageUrlSmall As String
 
             Friend Sub New(ByVal ServerGroupID As Integer, ByVal Title As String, ByVal NavTitle As String, ByVal OfficialCompanyWebSiteTitle As String, ByVal OfficialCompanyWebSiteURL As String, ByVal CompanyTitle As String, ByVal CompanyFormerTitle As String, ByVal AccessLevelDefaultID As Integer, ByVal MasterServerID As Integer, ByVal AdminServerID As Integer, ByVal GroupAnonymousID As Integer, ByVal GroupPublicID As Integer,
-                SecurityContactName As String, SecurityContactAddress As String, DevelopmentContactName As String, DevelopmentContractAddress As String, ContentManagementContactName As String, ContentManagementContactAddress As String, UnspecifiedContactName As String, UnspecifiedContactAddress As String, AllowImpersonation As Boolean, ByRef WebManager As WMSystem)
+                SecurityContactName As String, SecurityContactAddress As String, DevelopmentContactName As String, DevelopmentContractAddress As String, ContentManagementContactName As String, ContentManagementContactAddress As String, UnspecifiedContactName As String, UnspecifiedContactAddress As String, AllowImpersonation As Boolean, copyrightSinceYear As Integer, imageUrlBig As String, imageUrlSmall As String, ByRef WebManager As WMSystem)
                 _WebManager = WebManager
                 _ID = ServerGroupID
                 _Title = Title
@@ -80,6 +83,9 @@ Namespace CompuMaster.camm.WebManager
                 _UnspecifiedContactName = UnspecifiedContactName
                 _UnspecifiedContactAddress = UnspecifiedContactAddress
                 _AllowImpersonation = AllowImpersonation
+                _CopyrightSinceYear = copyrightSinceYear
+                _ImageUrlBig = imageUrlBig
+                _ImageUrlSmall = _ImageUrlSmall
             End Sub
             Public Sub New(ByVal ServerGroupID As Integer, ByRef WebManager As WMSystem)
                 _WebManager = WebManager
@@ -111,6 +117,14 @@ Namespace CompuMaster.camm.WebManager
                         _ContentManagementContactAddress = Utils.Nz(MyReader("AreaContentManagementContactEMail"), CType(Nothing, String))
                         _UnspecifiedContactName = Utils.Nz(MyReader("AreaUnspecifiedContactTitle"), CType(Nothing, String))
                         _UnspecifiedContactAddress = Utils.Nz(MyReader("AreaUnspecifiedContactEMail"), CType(Nothing, String))
+                        _CopyrightSinceYear = CType(MyReader("AreaCopyRightSinceYear"), Integer)
+                        _ImageUrlBig = Utils.Nz(MyReader("AreaImage"), "")
+                        _ImageUrlSmall = Utils.Nz(MyReader("AreaButton"), "")
+                        If Tools.Data.DataQuery.DataReaderUtils.ContainsColumn(MyReader, "AllowImpersonation") Then
+                            _AllowImpersonation = CType(MyReader("AllowImpersonation"), Boolean)
+                        Else
+                            _AllowImpersonation = False
+                        End If
                     End If
                 Finally
                     If Not MyReader Is Nothing AndAlso Not MyReader.IsClosed Then
@@ -434,6 +448,33 @@ Namespace CompuMaster.camm.WebManager
                 End Get
                 Set(value As Boolean)
                     _AllowImpersonation = value
+                End Set
+            End Property
+
+            Public Property CopyrightSinceYear As Integer
+                Get
+                    Return _CopyrightSinceYear
+                End Get
+                Set(value As Integer)
+                    _CopyrightSinceYear = value
+                End Set
+            End Property
+
+            Public Property ImageUrlBig As String
+                Get
+                    Return _ImageUrlBig
+                End Get
+                Set(value As String)
+                    _ImageUrlBig = value
+                End Set
+            End Property
+
+            Public Property ImageUrlSmall As String
+                Get
+                    Return _ImageUrlSmall
+                End Get
+                Set(value As String)
+                    _ImageUrlSmall = value
                 End Set
             End Property
 

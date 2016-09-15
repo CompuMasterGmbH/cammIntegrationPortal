@@ -43,65 +43,58 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected hypIdGroupAnonymous As HyperLink
         Protected CheckboxAllowImpersonationUsers As CheckBox
 
+        Private _ServerGroup As WMSystem.ServerGroupInformation
+        Protected ReadOnly Property ServerGroup As WMSystem.ServerGroupInformation
+            Get
+                If _ServerGroup Is Nothing Then
+                    _ServerGroup = New WMSystem.ServerGroupInformation(CInt(Request.QueryString("ID")), Me.cammWebManager)
+                End If
+                Return _ServerGroup
+            End Get
+        End Property
+
         Private Sub UpdateServerGroup_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
-            Dim Field_ID_Group_Public As Integer
-            Dim Field_ID_Group_Anonymous As Integer
 
             If Not Page.IsPostBack Then
                 FillDropDownLists(Utils.Nz(Request.QueryString("ID"), 0))
-                Dim dtServerGroup As DataTable
 
-                Try
-                    Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CLng(Request.QueryString("ID")))}
-                    dtServerGroup = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                                     "SELECT  top 1 * FROM dbo.System_ServerGroups WHERE ID = @ID", CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+                lblFieldID.Text = ServerGroup.ID.ToString
+                txtFieldServerGroup.Text = ServerGroup.Title
+                hiddenTxt_GroupAnonymous.Value = ServerGroup.GroupAnonymous.ID.ToString
+                If Not lblGroupInfo Is Nothing Then lblGroupInfo.Text = Server.HtmlEncode(ServerGroup.GroupAnonymous.Name)
+                If Not hypIdGroupAnonymous Is Nothing Then
+                    hypIdGroupAnonymous.Text = Server.HtmlEncode(ServerGroup.GroupAnonymous.Name)
+                    hypIdGroupAnonymous.NavigateUrl = "groups_update.aspx?ID=" + ServerGroup.GroupAnonymous.ID.ToString
+                End If
 
-                    lblFieldID.Text = Utils.Nz(dtServerGroup.Rows(0)("ID"), 0).ToString
-                    txtFieldServerGroup.Text = Utils.Nz(dtServerGroup.Rows(0)("ServerGroup"), String.Empty)
-                    Field_ID_Group_Public = Utils.Nz(dtServerGroup.Rows(0)("ID_Group_Public"), 0)
-                    Field_ID_Group_Anonymous = Utils.Nz(dtServerGroup.Rows(0)("ID_Group_Anonymous"), 0)
-                    Dim MyAnonymousGroupInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(Field_ID_Group_Anonymous, CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
-                    hiddenTxt_GroupAnonymous.Value = Utils.Nz(MyAnonymousGroupInfo.ID, 0).ToString
-                    If Not lblGroupInfo Is Nothing Then lblGroupInfo.Text = Server.HtmlEncode(MyAnonymousGroupInfo.Name)
-                    If Not hypIdGroupAnonymous Is Nothing Then
-                        hypIdGroupAnonymous.Text = Server.HtmlEncode(MyAnonymousGroupInfo.Name)
-                        hypIdGroupAnonymous.NavigateUrl = "groups_update.aspx?ID=" + MyAnonymousGroupInfo.ID.ToString
-                    End If
+                hiddenTxt_ID_Group_Public.Value = ServerGroup.GroupPublic.ID.ToString
+                hypIdGroupPublic.Text = Server.HtmlEncode(ServerGroup.GroupPublic.Name)
+                hypIdGroupPublic.NavigateUrl = "groups_update.aspx?ID=" + ServerGroup.GroupPublic.ID.ToString
 
-                    Dim MyPublicGroupInfo As New CompuMaster.camm.WebManager.WMSystem.GroupInformation(Field_ID_Group_Public, CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
-                    hiddenTxt_ID_Group_Public.Value = Utils.Nz(MyPublicGroupInfo.ID, 0).ToString
-                    hypIdGroupPublic.Text = Server.HtmlEncode(MyPublicGroupInfo.Name)
-                    hypIdGroupPublic.NavigateUrl = "groups_update.aspx?ID=" + MyPublicGroupInfo.ID.ToString
-
-                    cmbMasterServer.SelectedValue = Utils.Nz(dtServerGroup.Rows(0)("MasterServer"), String.Empty)
-                    cmbUserAdminServer.SelectedValue = Utils.Nz(dtServerGroup.Rows(0)("UserAdminServer"), String.Empty)
-                    txtAreaButton.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaButton"), String.Empty)
-                    txtAreaImage.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaImage"), String.Empty)
-                    txtAreaNavTitle.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaNavTitle"), String.Empty)
-                    txtAreaCompanyFormerTitle.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaCompanyFormerTitle"), String.Empty)
-                    txtAreaCompanyTitle.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaCompanyTitle"), String.Empty)
-                    txtAreaSecurityContactEMail.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaSecurityContactEMail"), String.Empty)
-                    txtAreaSecurityContactTitle.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaSecurityContactTitle"), String.Empty)
-                    txtAreaDevelopmentContactEMail.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaDevelopmentContactEMail"), String.Empty)
-                    txtAreaDevelopmentContactTitle.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaDevelopmentContactTitle"), String.Empty)
-                    txtAreaContentManagementContactEMail.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaContentManagementContactEMail"), String.Empty)
-                    txtAreaContentManagementContactTitle.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaContentManagementContactTitle"), String.Empty)
-                    txtAreaUnspecifiedContactEMail.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaUnspecifiedContactEMail"), String.Empty)
-                    txtAreaUnspecifiedContactTitle.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaUnspecifiedContactTitle"), String.Empty)
-                    txtAreaCopyRightSinceYear.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaCopyRightSinceYear"), String.Empty)
-                    txtAreaCompanyWebSiteURL.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaCompanyWebSiteURL"), String.Empty)
-                    txtAreaCompanyWebSiteTitle.Text = Utils.Nz(dtServerGroup.Rows(0)("AreaCompanyWebSiteTitle"), String.Empty)
-                    cmbAccessLevelDefault.SelectedValue = Utils.Nz(dtServerGroup.Rows(0)("AccessLevel_Default"), String.Empty)
-                    If Me.CheckboxAllowImpersonationUsers Is Nothing Then
-                        'do nothing - just ignore this situation until lib+webscripts are both updated to minimum required version
-                    ElseIf dtServerGroup.Columns.Contains("AllowImpersonation") Then
-                        Me.CheckboxAllowImpersonationUsers.Checked = Utils.Nz(dtServerGroup.Rows(0)("AccessLevel_Default"), False)
-                    Else
-                        Me.CheckboxAllowImpersonationUsers.Checked = False
-                    End If
-                Catch ex As Exception
-                    Throw
-                End Try
+                cmbMasterServer.SelectedValue = ServerGroup.MasterServer.ID.ToString
+                cmbUserAdminServer.SelectedValue = ServerGroup.AdminServer.ID.ToString
+                txtAreaButton.Text = ServerGroup.ImageUrlSmall
+                txtAreaImage.Text = ServerGroup.ImageUrlBig
+                txtAreaNavTitle.Text = ServerGroup.NavTitle
+                txtAreaCompanyFormerTitle.Text = ServerGroup.CompanyFormerTitle
+                txtAreaCompanyTitle.Text = ServerGroup.CompanyTitle
+                txtAreaSecurityContactEMail.Text = ServerGroup.SecurityContactAddress
+                txtAreaSecurityContactTitle.Text = ServerGroup.SecurityContactName
+                txtAreaDevelopmentContactEMail.Text = ServerGroup.DevelopmentContactAddress
+                txtAreaDevelopmentContactTitle.Text = ServerGroup.DevelopmentContactName
+                txtAreaContentManagementContactEMail.Text = ServerGroup.ContentManagementContactAddress
+                txtAreaContentManagementContactTitle.Text = ServerGroup.ContentManagementContactName
+                txtAreaUnspecifiedContactEMail.Text = ServerGroup.UnspecifiedContactAddress
+                txtAreaUnspecifiedContactTitle.Text = ServerGroup.UnspecifiedContactName
+                txtAreaCopyRightSinceYear.Text = ServerGroup.CopyrightSinceYear.ToString
+                txtAreaCompanyWebSiteURL.Text = ServerGroup.OfficialCompanyWebSiteURL
+                txtAreaCompanyWebSiteTitle.Text = ServerGroup.OfficialCompanyWebSiteTitle
+                cmbAccessLevelDefault.SelectedValue = ServerGroup.AccessLevelDefault.ID.ToString
+                If Me.CheckboxAllowImpersonationUsers Is Nothing Then
+                    'do nothing - just ignore this situation until lib+webscripts are both updated to minimum required version
+                Else
+                    Me.CheckboxAllowImpersonationUsers.Checked = ServerGroup.AllowImpersonation
+                End If
             End If
         End Sub
 
@@ -153,7 +146,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
              cmbUserAdminServer.SelectedValue <> "" AndAlso
              txtAreaButton.Text.Trim <> "" AndAlso
              txtAreaImage.Text.Trim <> "" AndAlso
-              txtAreaCompanyFormerTitle.Text.Trim <> "" AndAlso
+             txtAreaCompanyFormerTitle.Text.Trim <> "" AndAlso
              txtAreaCompanyTitle.Text.Trim <> "" AndAlso
              txtAreaSecurityContactEMail.Text.Trim <> "" AndAlso
              txtAreaSecurityContactTitle.Text.Trim <> "" AndAlso

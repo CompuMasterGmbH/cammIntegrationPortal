@@ -101,12 +101,12 @@
 							<TR><TD colspan="2" bgcolor="#C1C1C1"><P><FONT face="Arial" size="2"><b>Logos</b></FONT></P></TD></TR>
 							
 							<TR title="This logo will be displayed e. g. at the login form.">
-								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2">Logo of this website area (100 x 94 pixels)</FONT></P></TD>
+								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2">Logo of this website area (small, e.g. 100 x 100 pixels)</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2"><asp:TextBox style="width:200px" id="txtAreaButton" runat="server" /></FONT></P></TD>
 							</TR>
 							
 							<TR title="This image can be referenced by text documents, e. g. the welcome page.">
-								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2">Logo of this website area (243 x 242 pixels)</FONT></P></TD>
+								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2">Logo of this website area (big, full resolution)</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2"><asp:TextBox style="width:200px" id="txtAreaImage" runat="server"/></FONT></P></TD>
 							</TR>
 							
