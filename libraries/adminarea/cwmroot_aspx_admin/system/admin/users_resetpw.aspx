@@ -19,7 +19,7 @@
 				</TR>
 				<TR>
 					<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2">New password <font color="#C1C1C1"> *</font> </FONT></P></TD>
-					<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2"><asp:TextBox id="txtNewPassword" runat="server" style="width: 200px" /></FONT></P></TD>
+					<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2"><asp:TextBox id="txtNewPassword" runat="server" style="width: 200px" autocomplete="new-password" /></FONT></P></TD>
 				</TR>
 				<TR>
 					<input type="text" style="display:none" />

@@ -28,7 +28,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     Public Class UsersClone
         Inherits Page
 
-#Region "Variable Declaration"
         Protected notCopiedData As DataTable
         Protected lblStatusMsg, lblErrMsg, lbl_ID, lbl_LoginName As Label
         Protected lbl_Company, lbl_Titel, lbl_Vorname, lbl_Nachname, lbl_Namenszusatz, lbl_e_mail As Label
@@ -40,9 +39,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected cmbAnrede As DropDownList
         Protected WithEvents ValidatorNewUserLoginName As CustomValidator
 
-#End Region
-
-#Region "Property Declaration"
         Protected ReadOnly Property UserID() As Long
             Get
                 If Request.QueryString("ID") = "" Then
@@ -52,9 +48,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
             End Get
         End Property
-#End Region
 
-#Region "Page Events"
         Private Sub UsersClone_Init(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Init
             UserInfo = New WebManager.WMSystem.UserInformation(UserID, cammWebManager, False)
             initNotCopiedDataDatatable()
@@ -68,19 +62,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             lblErrMsg.Text = ""
         End Sub
 
-
-#End Region
-
-#Region "User-Defined Methods"
         ''' <summary>
         ''' Checks whether username is already in use
         ''' </summary>
         ''' <param name="source"></param>
         ''' <param name="args"></param>
         Public Sub ValidatorNewUserLoginName_ServerValidate(ByVal source As Object, ByVal args As System.Web.UI.WebControls.ServerValidateEventArgs)
-            If args.Value.Length > 20 Then
+            If args.Value.Length > 50 Then
                 args.IsValid = False
-                CType(source, CustomValidator).ErrorMessage = "Loginname is too long. Max. 20 characters."
+                CType(source, CustomValidator).ErrorMessage = "Loginname is too long. Max. 50 characters."
             Else
                 args.IsValid = True
             End If
@@ -320,47 +310,49 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim lit As Literal
             Dim HtmlCode As System.Text.StringBuilder
             For Each MyGroupInfo As CompuMaster.camm.WebManager.WMSystem.GroupInformation In myGroupInfos
-                Dim DisplayName As String = Nothing
-                Dim ID As Integer = Nothing
-                Try
-                    DisplayName = MyGroupInfo.Description
-                    ID = MyGroupInfo.ID
-                Catch
-                    DisplayName = "<em>(error)</em>"
-                    ID = Nothing
-                End Try
+                If MyGroupInfo.IsSystemGroupByServerGroup = False Then
+                    Dim DisplayName As String = Nothing
+                    Dim ID As Integer = Nothing
+                    Try
+                        DisplayName = MyGroupInfo.Description
+                        ID = MyGroupInfo.ID
+                    Catch
+                        DisplayName = "<em>(error)</em>"
+                        ID = Nothing
+                    End Try
 
-                HtmlCode = New System.Text.StringBuilder
-                HtmlCode.Append("<tr><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">")
-                If isDenyRule Then
-                    HtmlCode.Append("DENY: ")
-                Else
-                    HtmlCode.Append("GRANT: ")
+                    HtmlCode = New System.Text.StringBuilder
+                    HtmlCode.Append("<tr><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">")
+                    If isDenyRule Then
+                        HtmlCode.Append("DENY: ")
+                    Else
+                        HtmlCode.Append("GRANT: ")
+                    End If
+                    HtmlCode.Append("<a href=""groups_update.aspx?ID=" & ID & """>" & vbNewLine)
+                    HtmlCode.Append(Server.HtmlEncode(MyGroupInfo.Name))
+                    HtmlCode.Append("</a></font></td><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">" & vbNewLine)
+                    HtmlCode.Append(Server.HtmlEncode(DisplayName))
+                    HtmlCode.Append("</font></td><td><font face=""Arial"" size=""2"">" & vbNewLine)
+                    lit = New Literal
+                    lit.Text = HtmlCode.ToString
+                    PnlGroupsInformation.Controls.Add(lit)
+
+                    Dim Chk As New CheckBox
+                    If isDenyRule Then
+                        Chk.ID = "ChkMembershipsDeny_" & MyGroupInfo.ID
+                    Else
+                        Chk.ID = "ChkMemberships_" & MyGroupInfo.ID
+                    End If
+                    Chk.Text = Server.HtmlEncode(MyGroupInfo.Name)
+                    Chk.Checked = True
+                    PnlGroupsInformation.Controls.Add(Chk)
+
+                    HtmlCode = New System.Text.StringBuilder
+                    HtmlCode.Append("</font></td></tr>" & vbNewLine)
+                    lit = New Literal
+                    lit.Text = HtmlCode.ToString
+                    PnlGroupsInformation.Controls.Add(lit)
                 End If
-                HtmlCode.Append("<a href=""groups_update.aspx?ID=" & ID & """>" & vbNewLine)
-                HtmlCode.Append(Server.HtmlEncode(MyGroupInfo.Name))
-                HtmlCode.Append("</a></font></td><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">" & vbNewLine)
-                HtmlCode.Append(Server.HtmlEncode(DisplayName))
-                HtmlCode.Append("</font></td><td><font face=""Arial"" size=""2"">" & vbNewLine)
-                lit = New Literal
-                lit.Text = HtmlCode.ToString
-                PnlGroupsInformation.Controls.Add(lit)
-
-                Dim Chk As New CheckBox
-                If isDenyRule Then
-                    Chk.ID = "ChkMembershipsDeny_" & MyGroupInfo.ID
-                Else
-                    Chk.ID = "ChkMemberships_" & MyGroupInfo.ID
-                End If
-                Chk.Text = Server.HtmlEncode(MyGroupInfo.Name)
-                Chk.Checked = True
-                PnlGroupsInformation.Controls.Add(Chk)
-
-                HtmlCode = New System.Text.StringBuilder
-                HtmlCode.Append("</font></td></tr>" & vbNewLine)
-                lit = New Literal
-                lit.Text = HtmlCode.ToString
-                PnlGroupsInformation.Controls.Add(lit)
             Next
         End Sub
         ''' <summary>
@@ -526,6 +518,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 
 #End Region
+
         ''' <summary>
         ''' Get required flags for given securityobject
         ''' </summary>
@@ -698,9 +691,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
 #End Region
 
-#End Region
-
-#Region "Control Events"
         Sub BtnSubmitClick(ByVal sender As Object, ByVal e As EventArgs) Handles Button_Submit.Click
             notCopiedData = CType(Session("cwmCloneUserNotCopiedDataDt"), DataTable)
             Me.Page.Validate()
@@ -737,7 +727,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Session("cwmCloneUserNotCopiedDataDt") = Nothing
 
         End Sub
-#End Region
 
     End Class
 

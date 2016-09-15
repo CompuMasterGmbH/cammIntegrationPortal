@@ -27,7 +27,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     Public Class ServerList
         Inherits Page
 
-#Region "Variable Declaration"
         Protected lblGroupID, lblAreaNavTitle, lblMasterServerID, lblMemberServerID2 As Label
         Protected WithEvents rptServerList, rptServerSubList As Repeater
         Protected ancGroupID, ancServerGroup, ancAdminServer, ancMasterServer, ancDeleteServerGroup, ancAdd As HtmlAnchor
@@ -39,15 +38,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Dim OldServerGroupID, NewServerGroupID As Integer
         Dim TextColorOfLine As String
         Dim CurServerGroup As Object = Nothing
-#End Region
 
-#Region "Page Events"
         Private Sub ServerList_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.PreRender
             BindControls()
         End Sub
-#End Region
 
-#Region "User-Defined Methods"
         Private Sub BindControls()
             Try
                 CurServerGroup = cammWebManager.System_GetServerConfig(cammWebManager.CurrentServerIdentString, "ID_ServerGroup")
@@ -65,9 +60,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 MyDt.Dispose()
             End Try
         End Sub
-#End Region
 
-#Region "Control Events"
         Private Sub rptServerListItemBound(ByVal sender As Object, ByVal e As RepeaterItemEventArgs) Handles rptServerList.ItemDataBound
             If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
                 With MyDt.Rows(e.Item.ItemIndex)
@@ -153,7 +146,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End With
             End If
         End Sub
-#End Region
 
     End Class
 

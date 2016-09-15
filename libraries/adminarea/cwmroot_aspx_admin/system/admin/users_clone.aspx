@@ -53,8 +53,8 @@
 							</td>
 							<td valign="Top" width="240">
 									<font face="Arial" size="2">
-										<asp:textbox runat="server" width="200px" id="New_Field_LoginName" onfocus="this.select()" maxlength="20" />
-										<asp:RequiredFieldValidator runat="server" controltovalidate="New_Field_LoginName" errormessage="Missinglogin name" text="*" />
+										<asp:textbox runat="server" width="200px" id="New_Field_LoginName" onfocus="this.select()" maxlength="50" />
+										<asp:RequiredFieldValidator runat="server" controltovalidate="New_Field_LoginName" errormessage="Missing login name" text="*" />
 										<asp:customvalidator runat="server" onservervalidate="ValidatorNewUserLoginName_ServerValidate" id="ValidatorNewUserLoginName" errormessage="Login name already exists" controltovalidate="New_Field_LoginName">*</asp:customvalidator>
 									</font>
 							</td>
@@ -68,7 +68,7 @@
 							</td>
 							<td valign="Top" width="240">
 									<font face="Arial" size="2">
-										<asp:textbox runat="server" width="200px" textmode="Password" id="New_Field_Password" onfocus="this.select()" />
+										<asp:textbox runat="server" width="200px" textmode="Password" id="New_Field_Password" onfocus="this.select()" autocomplete="new-password" />
 										&nbsp;</font>
 							</td>
 						</tr>
@@ -120,7 +120,7 @@
 							</td>
 							<td valign="Top" width="240">
 									<font face="Arial" size="2">
-										<asp:textbox width="200px" runat="server" maxlength="20" id="New_Field_Titel" onfocus="this.select()" />
+										<asp:textbox width="200px" runat="server" maxlength="40" id="New_Field_Titel" onfocus="this.select()" />
 										&nbsp;</font>
 							</td>
 						</tr>
@@ -135,7 +135,7 @@
 							</td>
 							<td valign="Top" width="240">
 									<font face="Arial" size="2">
-										<asp:textbox width="200px" runat="server" maxlength="30" id="New_Field_Vorname" onfocus="this.select()" />
+										<asp:textbox width="200px" runat="server" maxlength="60" id="New_Field_Vorname" onfocus="this.select()" />
 									</font>
 							</td>
 						</tr>
@@ -150,7 +150,7 @@
 							</td>
 							<td valign="Top" width="240">
 									<font face="Arial" size="2">
-										<asp:textbox width="200px" runat="server" maxlength="30" id="New_Field_Nachname" onfocus="this.select()" />
+										<asp:textbox width="200px" runat="server" maxlength="60" id="New_Field_Nachname" onfocus="this.select()" />
 									</font>
 							</td>
 						</tr>
@@ -165,7 +165,7 @@
 							</td>
 							<td valign="Top" width="240">
 									<font face="Arial" size="2">
-										<asp:textbox width="200px" runat="server" maxlength="20" id="New_Field_Namenszusatz" onfocus="this.select()" />
+										<asp:textbox width="200px" runat="server" maxlength="40" id="New_Field_Namenszusatz" onfocus="this.select()" />
 										&nbsp;</font>
 							</td>
 						</tr>
