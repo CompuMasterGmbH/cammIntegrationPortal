@@ -1117,15 +1117,16 @@ ALTER PROCEDURE dbo.AdminPrivate_UpdateServerGroup
 @AreaCompanyWebSiteURL nvarchar(512),
 @AreaCompanyWebSiteTitle nvarchar(512),
 @ModifiedBy int,
-@AccessLevel_Default int
+@AccessLevel_Default int,
+@AllowImpersonationUsers bit = NULL
 )
 
 AS
 
 DECLARE @OldAdminServer int
 DECLARE @OldMasterServer int
-
-SELECT @OldAdminServer = UserAdminServer, @OldMasterServer = MasterServer FROM dbo.System_ServerGroups WHERE ID = @ID
+DECLARE @OldAllowImpersonationUsers bit
+SELECT @OldAdminServer = UserAdminServer, @OldMasterServer = MasterServer, @OldAllowImpersonationUsers = [AllowImpersonation] FROM dbo.System_ServerGroups WHERE ID = @ID
 
 UPDATE    dbo.System_ServerGroups
 SET              ServerGroup = @ServerGroup, ID_Group_Public = @ID_Group_Public, ID_Group_Anonymous = @ID_Group_Anonymous, 
@@ -1137,7 +1138,7 @@ SET              ServerGroup = @ServerGroup, ID_Group_Public = @ID_Group_Public,
                       AreaContentManagementContactTitle = @AreaContentManagementContactTitle, AreaUnspecifiedContactEMail = @AreaUnspecifiedContactEMail, 
                       AreaUnspecifiedContactTitle = @AreaUnspecifiedContactTitle, AreaCopyRightSinceYear = @AreaCopyRightSinceYear, 
                       AreaCompanyWebSiteURL = @AreaCompanyWebSiteURL, AreaCompanyWebSiteTitle = @AreaCompanyWebSiteTitle, ModifiedBy = @ModifiedBy, ModifiedOn = getdate(),
-                      AccessLevel_Default = @AccessLevel_Default
+                      AccessLevel_Default = @AccessLevel_Default, [AllowImpersonation] = IsNull(@AllowImpersonationUsers, @OldAllowImpersonationUsers)
 WHERE     (ID = @ID)
 
 If @OldAdminServer <> @UserAdminServer 

@@ -49,6 +49,23 @@ Namespace CompuMaster.camm.WebManager
             MyBase.New("User account with the requested ID " & userID.ToString & " can't be found")
         End Sub
 
+        Public Sub New(ByVal userName As String)
+            MyBase.New("User account with the requested login name " & userName & " can't be found")
+        End Sub
+
+    End Class
+
+    Public Class ImpersonationUserNotAbleToStartLoginProcessException
+        Inherits Exception
+
+        Public Sub New(ByVal userID As Long)
+            MyBase.New("User account with the requested ID " & userID.ToString & " can't be used to start the standard login process")
+        End Sub
+
+        Public Sub New(ByVal userName As String)
+            MyBase.New("User account with the requested login name " & userName & " can't be used to start the standard login process")
+        End Sub
+
     End Class
 
     ''' <summary>

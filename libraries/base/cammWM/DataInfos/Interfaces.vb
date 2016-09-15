@@ -44,6 +44,7 @@ Namespace CompuMaster.camm.WebManager
 
         'Optional fields
         Property Position() As String
+        Property IsImpersonationUser As Boolean
         Property Company() As String
         Property AcademicTitle() As String
         Property NameAddition() As String

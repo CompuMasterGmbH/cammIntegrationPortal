@@ -56,7 +56,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected WithEvents RadioStep3ActionUpdateOnly As RadioButton
         Protected WithEvents RadioStep3ActionInsertUpdate As RadioButton
         Protected WithEvents RadioStep3ActionRemoveOnly As RadioButton
-        Protected WithEvents CheckboxStep3SuppressAllNotificationMails As CheckBox
+        Protected WithEvents CheckboxStep3SuppressUserNotificationMails As CheckBox
+        Protected WithEvents CheckboxStep3SuppressAdminNotificationMails As CheckBox
         Protected WithEvents PanelStep3MembershipsImportType As Panel
         Protected WithEvents PanelStep3AuthorizationsImportType As Panel
         Protected WithEvents PanelStep3AdditionalFlagsImportType As Panel
@@ -342,7 +343,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
 
                 'Suppress notification mails?
-                Me.SuppressNotificationMails = Me.CheckboxStep3SuppressAllNotificationMails.Checked
+                Me.SuppressUserNotificationMails = Me.CheckboxStep3SuppressUserNotificationMails.Checked
+                Me.SuppressAdminNotificationMails = Me.CheckboxStep3SuppressAdminNotificationMails.Checked
                 'Check column by column for existance as well as correct type of content
                 'Note on critical chars: 
                 '- ChrW(160) = Alt + 0160 = WhiteSpace For Numerics -> won't be trimmed by standard TRIM methods -> handle with cause! = usually not used (but already seen in import files from FarEast/Asia)
@@ -468,15 +470,17 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 RequiredFlagsInfo.Columns.Add("Required flag", GetType(String))
                 RequiredFlagsInfo.Columns.Add("Required by group", GetType(String))
                 Dim GroupInfos As WMSystem.GroupInformation() = Me.cammWebManager.System_GetGroupInfos(ToAddGroupIDs.ToArray)
-                For MyGroupCounter As Integer = 0 To GroupInfos.Length - 1
-                    Dim RequiredFlags As String() = GroupInfos(MyGroupCounter).RequiredAdditionalFlags
-                    For MyCounter As Integer = 0 To RequiredFlags.Length - 1
-                        Dim row As DataRow = RequiredFlagsInfo.NewRow
-                        row(0) = RequiredFlags(MyCounter)
-                        row(1) = GroupInfos(MyGroupCounter).ID & ": " & GroupInfos(MyGroupCounter).Name
-                        RequiredFlagsInfo.Rows.Add(row)
+                If Not GroupInfos Is Nothing Then
+                    For MyGroupCounter As Integer = 0 To GroupInfos.Length - 1
+                        Dim RequiredFlags As String() = GroupInfos(MyGroupCounter).RequiredAdditionalFlags
+                        For MyCounter As Integer = 0 To RequiredFlags.Length - 1
+                            Dim row As DataRow = RequiredFlagsInfo.NewRow
+                            row(0) = RequiredFlags(MyCounter)
+                            row(1) = GroupInfos(MyGroupCounter).ID & ": " & GroupInfos(MyGroupCounter).Name
+                            RequiredFlagsInfo.Rows.Add(row)
+                        Next
                     Next
-                Next
+                End If
                 'Convert info datatable to HTML
                 Result = WebManager.Administration.Tools.Data.DataTables.ConvertToHtmlTable(RequiredFlagsInfo, "", "", "style=""border-width: 1px; border-style: solid; width: 100%;""")
             End If
@@ -506,15 +510,17 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 RequiredFlagsInfo.Columns.Add("Required flag", GetType(String))
                 RequiredFlagsInfo.Columns.Add("Required by security object", GetType(String))
                 Dim SecObjInfos As WMSystem.SecurityObjectInformation() = Me.cammWebManager.System_GetSecurityObjectInformations(ToAddSecObjIDs.ToArray)
-                For MyGroupCounter As Integer = 0 To SecObjInfos.Length - 1
-                    Dim RequiredFlags As String() = SecObjInfos(MyGroupCounter).RequiredAdditionalFlags
-                    For MyCounter As Integer = 0 To RequiredFlags.Length - 1
-                        Dim row As DataRow = RequiredFlagsInfo.NewRow
-                        row(0) = RequiredFlags(MyCounter)
-                        row(1) = SecObjInfos(MyGroupCounter).ID & ": " & SecObjInfos(MyGroupCounter).Name
-                        RequiredFlagsInfo.Rows.Add(row)
+                If Not SecObjInfos Is Nothing Then
+                    For MyGroupCounter As Integer = 0 To SecObjInfos.Length - 1
+                        Dim RequiredFlags As String() = SecObjInfos(MyGroupCounter).RequiredAdditionalFlags
+                        For MyCounter As Integer = 0 To RequiredFlags.Length - 1
+                            Dim row As DataRow = RequiredFlagsInfo.NewRow
+                            row(0) = RequiredFlags(MyCounter)
+                            row(1) = SecObjInfos(MyGroupCounter).ID & ": " & SecObjInfos(MyGroupCounter).Name
+                            RequiredFlagsInfo.Rows.Add(row)
+                        Next
                     Next
-                Next
+                End If
                 'Convert info datatable to HTML
                 Result = WebManager.Administration.Tools.Data.DataTables.ConvertToHtmlTable(RequiredFlagsInfo, "", "", "style=""border-width: 1px; border-style: solid; width: 100%;""")
             End If
@@ -613,10 +619,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Column must exist for selected action type</font>")
                 ElseIf Me.ImportAction = ImportBase.ImportActions.InsertOrUpdate And (requiredColumnForInsert = True Or requiredColumnForUpdate = True) Then
                     AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""red"">Column must exist for selected action type</font>")
-                ElseIf columnName.ToLowerInvariant = "user_password" AndAlso Me.CheckboxStep3SuppressAllNotificationMails.Checked = False Then
+                ElseIf columnName.ToLowerInvariant = "user_password" AndAlso Me.CheckboxStep3SuppressUserNotificationMails.Checked = False Then
                     AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""" & System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.DarkOliveGreen) & """>Column doesn't exist; password will be generated dynamically and user will get a notification e-mail</font>")
                     Return True
-                ElseIf columnName.ToLowerInvariant = "user_password" AndAlso Me.CheckboxStep3SuppressAllNotificationMails.Checked = True Then
+                ElseIf columnName.ToLowerInvariant = "user_password" AndAlso Me.CheckboxStep3SuppressUserNotificationMails.Checked = True Then
                     AddTestResultRowToTable(TestResultsWithErrors, TestResultsWithWarnings, True, checkTable, columnName, destinationType, "<font color=""" & System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.DarkOrange) & """>Column doesn't exist; new accounts can't be created</font>")
                     Return True
                 Else
@@ -892,7 +898,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Me.PrepareStep4(True)
         End Sub
 
-        Private Sub CheckboxStep3SuppressAllNotificationMails_CheckedChanged(sender As Object, e As EventArgs) Handles CheckboxStep3SuppressAllNotificationMails.CheckedChanged
+        Private Sub CheckboxStep3SuppressAllNotificationMails_CheckedChanged(sender As Object, e As EventArgs) Handles CheckboxStep3SuppressUserNotificationMails.CheckedChanged
             Me.PrepareStep4(True)
         End Sub
 

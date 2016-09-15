@@ -143,6 +143,16 @@ Namespace CompuMaster.camm.WebManager
         End Property
 
         ''' <summary>
+        ''' A user login name which shall be used for immediate login (requires additional server group setup)
+        ''' </summary>
+        ''' <value></value>
+        Public Shared ReadOnly Property ImpersonationLoginName() As String
+            Get
+                Return LoadStringSetting("WebManager.ImpersonationLoginName", "")
+            End Get
+        End Property
+
+        ''' <summary>
         '''     Is it allowed to create the cammWebManager object just on the fly?
         ''' </summary>
         ''' <value>Default value is "Off"</value>

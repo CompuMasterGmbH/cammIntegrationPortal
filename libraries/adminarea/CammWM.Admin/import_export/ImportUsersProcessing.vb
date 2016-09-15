@@ -173,25 +173,25 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         End If
                         Try
                             If userPassword = "" Then
-                                If Me.SuppressNotificationMails = True Then
+                                If Me.SuppressUserNotificationMails = True Then
                                     Throw New Exception("Must create a new password when suppressing all notifications to user") 'so, DO FAIL completely!
                                 Else
                                     Throw New CompuMaster.camm.WebManager.PasswordTooWeakException("Force creating a new password while notification of user is enabled")
                                 End If
                             End If
-                            MyUser.Save(userPassword, Me.SuppressNotificationMails)
+                            MyUser.Save(userPassword, Me.SuppressUserNotificationMails, Me.SuppressAdminNotificationMails)
                         Catch ex As CompuMaster.camm.WebManager.PasswordTooWeakException
                             'Password too weak - use a random password now
                             Dim userAccesslevel As Integer = CType(userData("User_AccessLevel"), Integer)
                             Dim newPW As String = cammWebManager.PasswordSecurity.InspectionSeverities(userAccesslevel).CreateRandomSecurePassword
                             If MyUser.IDLong <> Nothing Then
                                 'User account has already been created in the try block
-                                MyUser.SetPassword(newPW, SuppressNotificationMails)
+                                MyUser.SetPassword(newPW, Me.SuppressUserNotificationMails)
                             Else
-                                MyUser.Save(newPW, SuppressNotificationMails)
+                                MyUser.Save(newPW, Me.SuppressUserNotificationMails, Me.SuppressAdminNotificationMails)
                             End If
                             Dim passwordMessage As String
-                            If Me.SuppressNotificationMails Then
+                            If Me.SuppressUserNotificationMails Then
                                 'usually not called code blocksince throwing a regular exception in try-block above doesn't end up in this code block any more
                                 'this behaviour is desired by redesign of import tool by JW on 2016-01-08
                                 passwordMessage = "Password too weak; it originally was """ & userPassword & """ for login name """ & userLoginName & """, the new password is now """ & newPW & """."
@@ -202,7 +202,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         End Try
                     Else
                         'Existing account - never change the password
-                        MyUser.Save(Me.SuppressNotificationMails)
+                        MyUser.Save(Me.SuppressUserNotificationMails, Me.SuppressAdminNotificationMails)
                     End If
 
                     'Assign the memberships and authorizations as required (changes are made directly in the database, so no saving again required)
@@ -219,7 +219,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         Dim userToRemove As CompuMaster.camm.WebManager.WMSystem.UserInformation
                         userToRemove = cammWebManager.System_GetUserInfo(userIDToRemove)
                         userToRemove.LoginDeleted = True
-                        userToRemove.Save(SuppressNotificationMails)
+                        userToRemove.Save(Me.SuppressUserNotificationMails, Me.SuppressAdminNotificationMails)
                         Me.MessagesLog &= "Account """ & userLoginName & """ removed." & vbNewLine
                     End If
 
@@ -376,7 +376,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             'Prepare correct notifications class
             Dim MyNotifications As WebManager.Notifications.INotifications
-            If Me.SuppressNotificationMails = True Then
+            If Me.SuppressUserNotificationMails = True Then
                 MyNotifications = New WebManager.Notifications.NoNotifications(cammWebManager)
             Else
                 MyNotifications = cammWebManager.Notifications()

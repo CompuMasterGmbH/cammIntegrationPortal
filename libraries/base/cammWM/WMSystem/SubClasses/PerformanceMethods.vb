@@ -43,6 +43,30 @@ Namespace CompuMaster.camm.WebManager
         End Function
 
         ''' <summary>
+        ''' Query database for an existing user
+        ''' </summary>
+        ''' <param name="loginName"></param>
+        ''' <returns></returns>
+        Friend Function LookupExistingUserID(ByVal loginName As String) As Long
+            Dim UserID As Long = CType(Me._WebManager.System_GetUserID(loginName, True), Long)
+            If UserID = -1& Then
+                'User doesn't exist
+                Throw New UserNotFoundException(loginName)
+            Else
+                'User exists
+                Return UserID
+            End If
+        End Function
+
+        Friend Function UserFlag(userName As String, flagName As String) As String
+            Return Me.UserFlag(Me.LookupExistingUserID(userName), flagName)
+        End Function
+
+        Friend Function UserFlag(userID As Long, flagName As String) As String
+            Return CompuMaster.camm.WebManager.DataLayer.Current.GetUserDetail(Me._WebManager, userID, flagName)
+        End Function
+
+        ''' <summary>
         ''' Query a list of existing user IDs
         ''' </summary>
         Function ActiveUsers() As Long()

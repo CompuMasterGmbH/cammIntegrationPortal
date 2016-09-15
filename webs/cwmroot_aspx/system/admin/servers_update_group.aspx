@@ -29,6 +29,10 @@
 								<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size="2">Displayed title in the navigation frame</FONT></P></TD>
 								<TD VAlign="Top" Width="240"><P><FONT face="Arial" size="2"><asp:TextBox style="width:200px" id="txtAreaNavTitle" runat="server" /></FONT></P></TD>
 							</TR>
+
+							<TR title="You've got the possibilty to set up a separate title for the navigation frame because you might run in &quot;optical trouble&quot; with too long titles.">
+								<TD VAlign="Top" COLSPAN="2" align="center"><P><FONT face="Arial" size="2"><asp:CheckBox id="CheckboxAllowImpersonationUsers" Text="Allow user impersonation (never activate on production server groups!)" runat="server" /></FONT></P></TD>
+							</TR>
 							
 							<TR><TD VAlign="Top" Colspan="2"><P> &nbsp;</P></TD></TR>
 							<TR><TD colspan="2" bgcolor="#C1C1C1"><P><FONT face="Arial" size="2"><b>Special user groups</b></FONT></P></TD></TR>

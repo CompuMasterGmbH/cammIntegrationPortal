@@ -134,12 +134,24 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         '''     The import table with the user information
         ''' </summary>
         ''' <value></value>
-        Protected Property SuppressNotificationMails() As Boolean
+        Protected Property SuppressUserNotificationMails() As Boolean
             Get
-                Return CType(Session("WebManager.Administration.Import.UserList.SuppressNotificationMails"), Boolean)
+                Return CType(Session("WebManager.Administration.Import.UserList.SuppressNotificationMails.Users"), Boolean)
             End Get
             Set(ByVal Value As Boolean)
-                Session("WebManager.Administration.Import.UserList.SuppressNotificationMails") = Value
+                Session("WebManager.Administration.Import.UserList.SuppressNotificationMails.Users") = Value
+            End Set
+        End Property
+        ''' <summary>
+        '''     The import table with the user information
+        ''' </summary>
+        ''' <value></value>
+        Protected Property SuppressAdminNotificationMails() As Boolean
+            Get
+                Return CType(Session("WebManager.Administration.Import.UserList.SuppressNotificationMails.Admins"), Boolean)
+            End Get
+            Set(ByVal Value As Boolean)
+                Session("WebManager.Administration.Import.UserList.SuppressNotificationMails.Admins") = Value
             End Set
         End Property
         ''' <summary>

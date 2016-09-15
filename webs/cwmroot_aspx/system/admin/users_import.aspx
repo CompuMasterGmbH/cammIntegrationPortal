@@ -50,7 +50,8 @@
 				<asp:RadioButton runat="server" id="RadioStep3ActionUpdateOnly" groupname="Action" Text="Update only" autopostback="true" /><br>
 				<asp:RadioButton runat="server" id="RadioStep3ActionRemoveOnly" groupname="Action" Text="Remove only" autopostback="true" /><br>
 			</ul>
-			<asp:Checkbox runat="server" id="CheckboxStep3SuppressAllNotificationMails" text="Suppress all notification mails" checked="true" AutoPostBack="true" /><br>
+			<asp:Checkbox runat="server" id="CheckboxStep3SuppressUserNotificationMails" text="Suppress all notification mails to users" checked="true" AutoPostBack="true" /><br>
+			<asp:Checkbox runat="server" id="CheckboxStep3SuppressAdminNotificationMails" text="Suppress all notification mails to security administration team" checked="true" AutoPostBack="true" /><br>
 			<asp:Panel runat="server" id="PanelStep3MembershipsImportType">
 			<h5>Please choose the desired action type for the users' memberships:</h5>
 			<ul>

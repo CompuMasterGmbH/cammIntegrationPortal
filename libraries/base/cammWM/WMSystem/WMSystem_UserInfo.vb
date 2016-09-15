@@ -110,7 +110,13 @@ Namespace CompuMaster.camm.WebManager
                     Throw New InvalidOperationException("Can't assign user details to this special system user")
                 End If
                 If Len(LoginName) > 20 Then
-                    Throw New NotSupportedException("Login names can't be larger than 20 characters")
+                    If Len(LoginName) > 50 Then
+                        Throw New NotSupportedException("Login names can't be larger than 50 characters")
+                    ElseIf Setup.DatabaseUtils.Version(WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer (support already with earlier versions (build 178), but activated now)
+                        'up to 50 chars is supported
+                    Else
+                        Throw New NotSupportedException("Login names can't be larger than 20 characters")
+                    End If
                 End If
                 _ID = UserID
                 _LoginName = LoginName
@@ -224,7 +230,13 @@ Namespace CompuMaster.camm.WebManager
                     Throw New InvalidOperationException("Can't assign user details to this special system user")
                 End If
                 If Len(LoginName) > 20 Then
-                    Throw New NotSupportedException("Login names can't be larger than 20 characters")
+                    If Len(LoginName) > 50 Then
+                        Throw New NotSupportedException("Login names can't be larger than 50 characters")
+                    ElseIf Setup.DatabaseUtils.Version(WebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer (support already with earlier versions (build 178), but activated now)
+                        'up to 50 chars is supported
+                    Else
+                        Throw New NotSupportedException("Login names can't be larger than 20 characters")
+                    End If
                 End If
                 _ID = UserID
                 _LoginName = LoginName
@@ -481,7 +493,7 @@ Namespace CompuMaster.camm.WebManager
                 ReadCompleteUserInformation()
             End Sub
 
-            Friend Shared ReservedFlagNames As String() = New String() {"Type", "CompleteName", "CompleteNameInclAddresses", "email", "Sex", "Addresses", "1stPreferredLanguage", "2ndPreferredLanguage", "3rdPreferredLanguage", "Company", "FirstName", "LastName", "NameAddition", "Street", "ZIPCode", "Location", "State", "Country", "AccountProfileValidatedByEMailTest", "InitAuthorizationsDone", "ExternalAccount", "AutomaticLogonAllowedByMachineToMachineCommunication", "Phone", "Fax", "Mobile", "Position", "DeletedOn"}
+            Friend Shared ReservedFlagNames As String() = New String() {"Type", "CompleteName", "CompleteNameInclAddresses", "email", "Sex", "Addresses", "1stPreferredLanguage", "2ndPreferredLanguage", "3rdPreferredLanguage", "Company", "FirstName", "LastName", "NameAddition", "Street", "ZIPCode", "Location", "State", "Country", "AccountProfileValidatedByEMailTest", "InitAuthorizationsDone", "ExternalAccount", "AutomaticLogonAllowedByMachineToMachineCommunication", "Phone", "Fax", "Mobile", "Position", "IsImpersonationUser", "DeletedOn"}
 
             ''' <summary>
             '''     Read all the account data from database
@@ -824,6 +836,24 @@ Namespace CompuMaster.camm.WebManager
                 End Set
             End Property
             ''' <summary>
+            ''' Indicate a user account solely for the purpose of impersonation for test and development
+            ''' </summary>
+            ''' <value></value>
+            Public Property IsImpersonationUser() As Boolean Implements IUserInformation.IsImpersonationUser
+                Get
+                    If _PartiallyLoadedDataCurrently Then
+                        ReadCompleteUserInformation()
+                    End If
+                    Return (AdditionalFlags("IsImpersonationUser") = "1")
+                End Get
+                Set(ByVal Value As Boolean)
+                    If _PartiallyLoadedDataCurrently Then
+                        ReadCompleteUserInformation()
+                    End If
+                    _AdditionalFlags("IsImpersonationUser") = Utils.IIf(Of String)(Value, "1", Nothing)
+                End Set
+            End Property
+            ''' <summary>
             '''     The position in the company the user is working for
             ''' </summary>
             ''' <value></value>
@@ -962,6 +992,7 @@ Namespace CompuMaster.camm.WebManager
                 NewUser.MobileNumber = TemplateUser.MobileNumber
                 NewUser.PhoneNumber = TemplateUser.PhoneNumber
                 NewUser.Position = TemplateUser.Position
+                NewUser.IsImpersonationUser = TemplateUser.IsImpersonationUser
                 NewUser.Save(newPassword)  'Intermediate save point
 
                 'Following actions take place at database directly
@@ -1176,7 +1207,7 @@ Namespace CompuMaster.camm.WebManager
             ''' <param name="throwExceptions">True for throwing exception with details on first issue, False for suppressing exceptions and to just return the boolean result</param>
             ''' <returns>True for successful validation, False for failed validation</returns>
             Private Function Validate(checks As ValidationItem, throwExceptions As Boolean) As Boolean
-                Return Validate(checks, throwExceptions, "")
+                Return Validate(checks, throwExceptions, Nothing)
             End Function
 
             ''' <summary>
@@ -1248,7 +1279,7 @@ Namespace CompuMaster.camm.WebManager
                         End If
                     End If
                 End If
-                If (checks = ValidationItem.All AndAlso newPassword <> "") Or checks = ValidationItem.PasswordComplexityRequirements Then
+                If (checks = ValidationItem.All AndAlso (newPassword <> "" OrElse Me.IDLong = 0)) Or checks = ValidationItem.PasswordComplexityRequirements Then
                     If Trim(newPassword) = "" Then
                         Throw New PasswordRequiredException("User profile validation failed: password required")
                     End If
@@ -1336,7 +1367,7 @@ Namespace CompuMaster.camm.WebManager
             End Class
 
             ''' <summary>
-            '''     Set a new password for an user account and sends required notification messages
+            '''     Set a new password for an user account and send required notification messages
             ''' </summary>
             ''' <param name="newPassword">A new password</param>
             ''' <param name="notificationProvider">An instance of a NotificationProvider class which handles the distribution of all required mails</param>
@@ -1472,13 +1503,15 @@ Namespace CompuMaster.camm.WebManager
                 ElseIf userInfo.IDLong = Nothing AndAlso Not newPassword Is Nothing Then
                     'Validate password first
                     newPassword = Trim(newPassword)
-                    If Not Me._WebManager.PasswordSecurity(userInfo.AccessLevel.ID).ValidatePasswordComplexity(newPassword, userInfo) = WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Success Then
+                    If newPassword = "" Then
+                        Throw New CompuMaster.camm.WebManager.PasswordRequiredException("Password must be provided")
+                    ElseIf Not Me._WebManager.PasswordSecurity(userInfo.AccessLevel.ID).ValidatePasswordComplexity(newPassword, userInfo) = WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Success Then
                         Throw New PasswordTooWeakException("Password doesn't match the current policy for passwords")
                     End If
                 ElseIf userInfo.IDLong <> Nothing AndAlso Not newPassword Is Nothing Then
                     Throw New ArgumentException("Password cannot be set by this method. Please use System_SetUserPassword instead.", "NewPassword")
                 End If
-                Me.Validate(ValidationItem.All, True)
+                Me.Validate(ValidationItem.All, True, newPassword)
 
                 'Prepare data if action = delete
                 If userInfo.LoginDeleted = True Then
@@ -1760,6 +1793,7 @@ Namespace CompuMaster.camm.WebManager
                         DataLayer.Current.SetUserDetail(Me._WebManager, MyConn, WriteForUserID, "AccountProfileValidatedByEMailTest", CType(IIf(userInfo.AccountProfileValidatedByEMailTest = True, "1", Nothing), String), True)
                         DataLayer.Current.SetUserDetail(Me._WebManager, MyConn, WriteForUserID, "AutomaticLogonAllowedByMachineToMachineCommunication", CType(IIf(userInfo.AutomaticLogonAllowedByMachineToMachineCommunication = True, "1", Nothing), String), True)  'WARNING: flag name too long, saved in table as: "AutomaticLogonAllowedByMachineToMachineCommunicati"
                         DataLayer.Current.SetUserDetail(Me._WebManager, MyConn, WriteForUserID, "ExternalAccount", userInfo.ExternalAccount, True)
+                        DataLayer.Current.SetUserDetail(Me._WebManager, MyConn, WriteForUserID, "IsImpersonationUser", userInfo.AdditionalFlags("IsImpersonationUser"), True)
                     End If
                 Finally
                     CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(MyConn)

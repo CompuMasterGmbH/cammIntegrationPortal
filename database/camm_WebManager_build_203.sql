@@ -46,6 +46,12 @@ GO
 
 <%IGNORE_ERRORS%>
 -- Add missing DevelopmentTeamMember column for consequency between auths for users and groups
+ALTER TABLE [dbo].[System_ServerGroups]
+ADD AllowImpersonation bit NOT NULL DEFAULT (0)
+GO
+
+<%IGNORE_ERRORS%>
+-- Add missing DevelopmentTeamMember column for consequency between auths for users and groups
 ALTER TABLE [dbo].[ApplicationsRightsByGroup]
 ADD DevelopmentTeamMember bit NOT NULL DEFAULT (0)
 GO

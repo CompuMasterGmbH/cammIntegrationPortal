@@ -629,6 +629,8 @@ Namespace CompuMaster.camm.WebManager
                     Dim serverInfo As ServerInformation = Me.CurrentServerInfo
                     If serverInfo Is Nothing Then
                         Throw New Exception("Error: server information is nothing - invalidly configured server identifier?")
+                    ElseIf Configuration.ImpersonationLoginName <> "" AndAlso serverInfo.ParentServerGroup.AllowImpersonation Then
+                        Return Configuration.ImpersonationLoginName
                     End If
                     If HttpContext.Current.Request.ApplicationPath = "/" Then
                         'root application always uses user name in session variable
@@ -5305,7 +5307,7 @@ Namespace CompuMaster.camm.WebManager
             Return _ExecuteLogin(loginName, password, forceLogin)
         End Function
         ''' <summary>
-        '''     Login with login name and password
+        '''     Login with user name and password
         ''' </summary>
         ''' <param name="loginName">The login name of a user</param>
         ''' <param name="password">The password of this user</param>
@@ -5319,6 +5321,8 @@ Namespace CompuMaster.camm.WebManager
             ElseIf loginName = "" Then
                 Dim Message As String = "Loginname and password must not be empty for login"
                 Me.Log.RuntimeException(Message)
+            ElseIf Me.PerformanceMethods.UserFlag(loginName, "IsImpersonationUser") = "1" Then
+                Throw New ImpersonationUserNotAbleToStartLoginProcessException(loginName)
             End If
             If Me.IsLoggedOn Then
                 If forceLogin = True Then
@@ -7234,28 +7238,33 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Try
             If MyDataSet.Tables("ServerGroups").Rows.Count > 0 Then
+                'JIT-add required column if missing
+                If MyDataSet.Tables("ServerGroups").Columns.Contains("AllowImpersonation") = False Then
+                    MyDataSet.Tables("ServerGroups").Columns.Add("AllowImpersonation", GetType(Boolean))
+                End If
                 ReDim Preserve _ServerGroups(MyDataSet.Tables("ServerGroups").Rows.Count - 1)
                 Dim MyCounter As Integer = 0
                 For Each MyDataRow As DataRow In MyDataSet.Tables("ServerGroups").Rows
-                    _ServerGroups(MyCounter) = New ServerGroupInformation(CType(MyDataRow("ID"), Integer), _
-                        Utils.Nz(MyDataRow("ServerGroup"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AreaNavTitle"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteTitle"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AccessLevel_Default"), 0), _
-                        Utils.Nz(MyDataRow("MasterServer"), 0), _
-                        Utils.Nz(MyDataRow("UserAdminServer"), 0), _
-                        Utils.Nz(MyDataRow("ID_Group_Anonymous"), 0), _
-                        Utils.Nz(MyDataRow("ID_Group_Public"), 0), Utils.Nz(MyDataRow("AreaSecurityContactEMail"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AreaSecurityContactTitle"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AreaDevelopmentContactTitle"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AreaDevelopmentContactEMail"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AreaContentManagementContactTitle"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AreaContentManagementContactEMail"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AreaUnspecifiedContactTitle"), CType(Nothing, String)), _
-                        Utils.Nz(MyDataRow("AreaUnspecifiedContactEMail"), CType(Nothing, String)), _
+                    _ServerGroups(MyCounter) = New ServerGroupInformation(CType(MyDataRow("ID"), Integer),
+                        Utils.Nz(MyDataRow("ServerGroup"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AreaNavTitle"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteTitle"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AccessLevel_Default"), 0),
+                        Utils.Nz(MyDataRow("MasterServer"), 0),
+                        Utils.Nz(MyDataRow("UserAdminServer"), 0),
+                        Utils.Nz(MyDataRow("ID_Group_Anonymous"), 0),
+                        Utils.Nz(MyDataRow("ID_Group_Public"), 0), Utils.Nz(MyDataRow("AreaSecurityContactEMail"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AreaSecurityContactTitle"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AreaDevelopmentContactTitle"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AreaDevelopmentContactEMail"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AreaContentManagementContactTitle"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AreaContentManagementContactEMail"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AreaUnspecifiedContactTitle"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AreaUnspecifiedContactEMail"), CType(Nothing, String)),
+                        Utils.Nz(MyDataRow("AllowImpersonation"), False),
                                                                           _WebManager)
                     MyCounter += 1
                 Next

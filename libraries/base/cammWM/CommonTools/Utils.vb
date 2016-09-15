@@ -1036,6 +1036,17 @@ Namespace CompuMaster.camm.WebManager
             End If
         End Function
         ''' <summary>
+        ''' Check the expression and return a strongly typed value
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="expression">The expression for the check</param>
+        ''' <param name="trueValue">The return value if the expression is true</param>
+        ''' <param name="falseValue">The return value if the expression is false</param>
+        ''' <returns>A strongly typed return value</returns>
+        Public Shared Function IIf(Of T)(expression As Boolean, trueValue As T, falseValue As T) As T
+            If expression Then Return trueValue Else Return falseValue
+        End Function
+        ''' <summary>
         '''     Return the string which is not nothing or else String.Empty
         ''' </summary>
         ''' <param name="value">The string to be validated</param>

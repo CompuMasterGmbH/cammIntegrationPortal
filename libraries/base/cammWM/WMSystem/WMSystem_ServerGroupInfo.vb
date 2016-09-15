@@ -49,14 +49,15 @@ Namespace CompuMaster.camm.WebManager
             Dim _OfficialCompanyWebSiteURL As String
             Dim _CompanyTitle As String
             Dim _CompanyFormerTitle As String
+            Dim _AllowImpersonation As Boolean
             Dim _GroupAnonymousID As Integer
             Dim _GroupPublicID As Integer
             Dim _GroupAnonymous As GroupInformation
             Dim _GroupPublic As GroupInformation
             Dim _Servers As ServerInformation()
 
-            Friend Sub New(ByVal ServerGroupID As Integer, ByVal Title As String, ByVal NavTitle As String, ByVal OfficialCompanyWebSiteTitle As String, ByVal OfficialCompanyWebSiteURL As String, ByVal CompanyTitle As String, ByVal CompanyFormerTitle As String, ByVal AccessLevelDefaultID As Integer, ByVal MasterServerID As Integer, ByVal AdminServerID As Integer, ByVal GroupAnonymousID As Integer, ByVal GroupPublicID As Integer, _
-                SecurityContactName As String, SecurityContactAddress As String, DevelopmentContactName As String, DevelopmentContractAddress As String, ContentManagementContactName As String, ContentManagementContactAddress As String, UnspecifiedContactName As String, UnspecifiedContactAddress As String, ByRef WebManager As WMSystem)
+            Friend Sub New(ByVal ServerGroupID As Integer, ByVal Title As String, ByVal NavTitle As String, ByVal OfficialCompanyWebSiteTitle As String, ByVal OfficialCompanyWebSiteURL As String, ByVal CompanyTitle As String, ByVal CompanyFormerTitle As String, ByVal AccessLevelDefaultID As Integer, ByVal MasterServerID As Integer, ByVal AdminServerID As Integer, ByVal GroupAnonymousID As Integer, ByVal GroupPublicID As Integer,
+                SecurityContactName As String, SecurityContactAddress As String, DevelopmentContactName As String, DevelopmentContractAddress As String, ContentManagementContactName As String, ContentManagementContactAddress As String, UnspecifiedContactName As String, UnspecifiedContactAddress As String, AllowImpersonation As Boolean, ByRef WebManager As WMSystem)
                 _WebManager = WebManager
                 _ID = ServerGroupID
                 _Title = Title
@@ -78,6 +79,7 @@ Namespace CompuMaster.camm.WebManager
                 _ContentManagementContactName = ContentManagementContactName
                 _UnspecifiedContactName = UnspecifiedContactName
                 _UnspecifiedContactAddress = UnspecifiedContactAddress
+                _AllowImpersonation = AllowImpersonation
             End Sub
             Public Sub New(ByVal ServerGroupID As Integer, ByRef WebManager As WMSystem)
                 _WebManager = WebManager
@@ -425,6 +427,16 @@ Namespace CompuMaster.camm.WebManager
                     _UnspecifiedContactAddress = value
                 End Set
             End Property
+
+            Public Property AllowImpersonation As Boolean
+                Get
+                    Return _AllowImpersonation
+                End Get
+                Set(value As Boolean)
+                    _AllowImpersonation = value
+                End Set
+            End Property
+
         End Class
 
     End Class

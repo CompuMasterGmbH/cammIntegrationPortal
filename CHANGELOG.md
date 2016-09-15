@@ -47,8 +47,8 @@
   *	FlagName{Date/ISO}	String with a date/time in international ISO format, e.g. with format “yyyy-MM-dd HH:mm:ss” (independent of current culture of user)
 * :arrows_clockwise:	user administration: import UI notes on additional flags to default to replace only defined keys and not to always cleanup the whole collection
 * :arrows_clockwise:	fixed several errors in mail sub systems, especially regarding embedded attachments and general stability
-* :arrows_clockwise:	some minor fixes in administration area
-* :arrows_clockwise:	some minor fixes in general
+* :arrows_clockwise:	several fixes in administration area
+* :arrows_clockwise:	several fixes in general
 * :heavy_minus_sign:	removed QuikSoft.EasyMail component – replaced by stable System.Net.Mail mail sub system (new mail sub system will be used automatically without any changes required)
 * :heavy_minus_sign:	removed Telerik.Rad components – replaced by stable SmartPlainTextEditor with always-warning to technician asking for replacing by another SmartEditor control
 * :heavy_minus_sign:	removed obsolete assembly dependency to CompuMaster.Imaging
@@ -59,6 +59,7 @@
 * :heavy_plus_sign:	prepared memberships inherition
 * :heavy_plus_sign:	added membership deny rules
 * :heavy_plus_sign:	added pre-staging/pre-calculations of memberships and authorizations
+* :heavy_plus_sign:	added user impersonation feature for test and development users and server groups
 * :arrows_clockwise:	distributed delete on tables with foreign key relationship by triggers
 * :heavy_minus_sign:	view/sp/function encryption
 
