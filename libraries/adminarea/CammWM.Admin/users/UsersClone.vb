@@ -376,8 +376,35 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 PnlAuth.Controls.Add(lit)
 
                 For Each MyUserAuthInfo As CompuMaster.camm.WebManager.WMSystem.Authorizations.UserAuthorizationInformation In MyUserAuths
+                    Dim SecObjID As Integer = 0
                     Try
-                        Dim SecObjID As Integer = MyUserAuthInfo.SecurityObjectInfo.ID
+                        SecObjID = MyUserAuthInfo.SecurityObjectInfo.ID
+                    Catch
+                        cammWebManager.Log.Warn("Missing security object with ID " & MyUserAuthInfo.SecurityObjectID & " in authorizations for user ID " & UserInfo.IDLong)
+                        HtmlStr = New System.Text.StringBuilder
+                        HtmlStr.Append("<tr>" & vbNewLine)
+                        HtmlStr.Append("    <td colspan=""2"">" & vbNewLine)
+                        HtmlStr.Append("        <table width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"">" & vbNewLine)
+                        HtmlStr.Append("            <tr>" & vbNewLine)
+                        HtmlStr.Append("                <td width=""160"" valign=""Top"">" & vbNewLine)
+                        HtmlStr.Append("                    <p>" & vbNewLine)
+                        HtmlStr.Append("                        <font face=""Arial"" size=""2""><em>ID" & vbNewLine)
+                        HtmlStr.Append(MyUserAuthInfo.SecurityObjectID & "</em></font></p>" & vbNewLine)
+                        HtmlStr.Append("                </td>" & vbNewLine)
+                        HtmlStr.Append("                <td width=""240"" valign=""Top"">" & vbNewLine)
+                        HtmlStr.Append("                    <p>" & vbNewLine)
+                        HtmlStr.Append("                        <font face=""Arial"" size=""2""><em>Missing security object</em></font></p>" & vbNewLine)
+                        HtmlStr.Append("                </td>" & vbNewLine)
+                        HtmlStr.Append("            </tr>" & vbNewLine)
+                        HtmlStr.Append("        </table>" & vbNewLine)
+                        HtmlStr.Append("    </td>" & vbNewLine)
+                        HtmlStr.Append("</tr>" & vbNewLine)
+
+                        lit = New Literal
+                        lit.Text = HtmlStr.ToString
+                        PnlAuth.Controls.Add(lit)
+                    End Try
+                    If SecObjID <> 0 Then
                         Dim SecObjName As String = MyUserAuthInfo.SecurityObjectInfo.DisplayName
 
                         HtmlStr = New System.Text.StringBuilder
@@ -445,33 +472,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         lit = New Literal
                         lit.Text = HtmlStr.ToString
                         PnlAuth.Controls.Add(lit)
-
-                    Catch
-                        cammWebManager.Log.Warn("Missing security object with ID " & MyUserAuthInfo.SecurityObjectID & " in authorizations for user ID " & UserInfo.IDLong)
-                        HtmlStr = New System.Text.StringBuilder
-                        HtmlStr.Append("<tr>" & vbNewLine)
-                        HtmlStr.Append("    <td colspan=""2"">" & vbNewLine)
-                        HtmlStr.Append("        <table width=""100%"" border=""0"" cellpadding=""0"" cellspacing=""0"">" & vbNewLine)
-                        HtmlStr.Append("            <tr>" & vbNewLine)
-                        HtmlStr.Append("                <td width=""160"" valign=""Top"">" & vbNewLine)
-                        HtmlStr.Append("                    <p>" & vbNewLine)
-                        HtmlStr.Append("                        <font face=""Arial"" size=""2""><em>ID" & vbNewLine)
-                        HtmlStr.Append(MyUserAuthInfo.SecurityObjectID & "</em></font></p>" & vbNewLine)
-                        HtmlStr.Append("                </td>" & vbNewLine)
-                        HtmlStr.Append("                <td width=""240"" valign=""Top"">" & vbNewLine)
-                        HtmlStr.Append("                    <p>" & vbNewLine)
-                        HtmlStr.Append("                        <font face=""Arial"" size=""2""><em>Missing security object</em></font></p>" & vbNewLine)
-                        HtmlStr.Append("                </td>" & vbNewLine)
-                        HtmlStr.Append("            </tr>" & vbNewLine)
-                        HtmlStr.Append("        </table>" & vbNewLine)
-                        HtmlStr.Append("    </td>" & vbNewLine)
-                        HtmlStr.Append("</tr>" & vbNewLine)
-
-                        lit = New Literal
-                        lit.Text = HtmlStr.ToString
-                        PnlAuth.Controls.Add(lit)
-
-                    End Try
+                    End If
                 Next
             End If
         End Sub
