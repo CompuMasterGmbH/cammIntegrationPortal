@@ -1050,7 +1050,7 @@ Namespace CompuMaster.camm.WebManager
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
             Public Sub Save(ByVal notifications As CompuMaster.camm.WebManager.Notifications.INotifications)
-                Save(notifications, Nothing)
+                Save(notifications, CType(Nothing, String))
             End Sub
             ''' <summary>
             '''     Save this user information object
@@ -1060,7 +1060,7 @@ Namespace CompuMaster.camm.WebManager
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
             Public Sub Save(ByVal notifications As CompuMaster.camm.WebManager.WMNotifications)
-                Save(notifications, Nothing)
+                Save(notifications, CType(Nothing, String))
             End Sub
             ''' <summary>
             '''     Save this user information object
@@ -1153,7 +1153,7 @@ Namespace CompuMaster.camm.WebManager
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
             Public Sub Save(ByVal suppressAllNotifications As Boolean)
-                Save(_WebManager.Notifications, Nothing, suppressAllNotifications)
+                Save(_WebManager.Notifications, CType(Nothing, String), suppressAllNotifications)
             End Sub
 
             ''' <summary>
@@ -1165,7 +1165,7 @@ Namespace CompuMaster.camm.WebManager
             ''' ATTENTION: if the user profile hasn't been fully loaded, changes might be lost because of internally caused full load commands initiated by the save method
             ''' </remarks>
             Public Sub Save(ByVal suppressUserNotifications As Boolean, ByVal suppressSecurityAdminNotifications As Boolean)
-                Save(_WebManager.Notifications, Nothing, suppressUserNotifications, suppressSecurityAdminNotifications)
+                Save(_WebManager.Notifications, CType(Nothing, String), suppressUserNotifications, suppressSecurityAdminNotifications)
             End Sub
 
             ''' <summary>
