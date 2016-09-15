@@ -626,8 +626,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Function Clone(ByVal newLoginName As String, ByVal genderID As Short, ByVal newAcademicTitle As String, ByVal newFirstName As String, ByVal newNameAddition As String, ByVal newLastName As String, ByVal newEmailAddress As String, ByVal newPassword As String) As CompuMaster.camm.WebManager.WMSystem.UserInformation
             Me.Page.Validate()
             If Page.IsValid Then
-                If newLoginName.Length > 20 Then
-                    lblErrMsg.Text = "Loginname exeeded the length of max. 20 characters."
+                If newLoginName.Length > 50 Then
+                    lblErrMsg.Text = "Loginname exeeded the length of max. 50 characters."
                     Return Nothing
                 End If
                 Dim TemplateUser As New WebManager.WMSystem.UserInformation(UserID, cammWebManager, False)
