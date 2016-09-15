@@ -19,9 +19,15 @@
 		</asp:Panel>
 		<asp:Panel runat="server" id="PanelStep2">
 			<h4>Step 2 of 3 - Charset</h4>
-			<h5>Please choose the appropriate charset of the uploaded file</h5>
 			<asp:Label runat="server" id="LabelStep2Errors" forecolor="#FF0000" />
-			<p>Charset: <asp:Textbox runat="server" id="TextboxStep2Charset" text="UTF-8" /> (e. g. UTF-8, ISO-8859-1, WINDOWS-1252)</p>
+
+			<h5>Please choose the appropriate charset of the uploaded file</h5>
+			<p>Charset: <asp:Textbox runat="server" id="TextboxStep2Charset" text="UTF-8" /> (e. g. &quot;UTF-8&quot;, &quot;ISO-8859-1&quot;, &quot;WINDOWS-1252&quot;)</p>
+
+			<h5>Please choose the appropriate import culture settings</h5>
+			<p>Charset: <asp:Textbox runat="server" id="TextboxStep2ColumnSeparator" text="," maxlength="0" /> (e. g. &quot;,&quot; or &quot;;&quot; or &quot;TAB&quot;)</p>
+			<p>Charset: <asp:Textbox runat="server" id="TextboxStep2TextIdentifier" text="&quot;" maxlength="0" /> (e. g. &quot; or ' )</p>
+
 			<p><asp:Button runat="server" id="ButtonStep2PreviewData" text="Preview" /></p>
 			<asp:DataGrid runat="server" id="DatagridStep2DataPreview" />
 			<p>
@@ -65,18 +71,11 @@
 				<asp:RadioButton runat="server" id="RadioStep3ActionAdditionalFlagsDefinedKeysOnly" checked="true" groupname="ActionAdditionalFlags" Text="Setup declared additional flags only (add/update/remove defined keys only)" /><br>
 			</ul>
 			</asp:Panel>
-			<asp:Panel runat="server" id="PanelStep3OverrideWithEmptyValuesFromImportFile">
-			<h5>Please choose the desired action type for the import of empty text fields:</h5>
-			<ul>
-				<asp:RadioButton runat="server" id="RadioStep3OverrideWithEmptyValuesFromImportFileYes" groupname="OverrideWithEmptyValuesFromImportFile" Text="Import cells with filled or empty value" /><br>
-				<asp:RadioButton runat="server" id="RadioStep3OverrideWithEmptyValuesFromImportFileNo" checked="true" groupname="OverrideWithEmptyValuesFromImportFile" Text="Import cells if the value is present (don't update with empty value)" /><br>
-			</ul>
-			</asp:Panel>
 			<h5>Imported fields summary:</h5>
 			<asp:DataGrid runat="server" id="DatagridStep3ColumnsCheck" />
 			<p><em>Please note: Update actions will never update a user's password.</em></p>
 			<p>
-			<asp:Button runat="server" id="ButtonStep3Submit" text="Start Import" /> 
+			<asp:Button runat="server" id="ButtonStep3Submit" text="Next" /> 
 			<asp:Button runat="server" id="ButtonStep3PreviousStep" text="Previous step" /> 
 			</p>
 		</asp:Panel>

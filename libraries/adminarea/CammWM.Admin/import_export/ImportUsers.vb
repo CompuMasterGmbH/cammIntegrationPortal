@@ -243,9 +243,30 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
         End Function
 
+        Protected TextboxStep2TextIdentifier, TextboxStep2ColumnSeparator As TextBox
+        Private ReadOnly Property CsvColumnSeparator As Char
+            Get
+                If Me.TextboxStep2ColumnSeparator Is Nothing OrElse Me.TextboxStep2ColumnSeparator.Text = "" Then
+                    Return System.Threading.Thread.CurrentThread.CurrentUICulture.TextInfo.ListSeparator(0)
+                ElseIf Me.TextboxStep2ColumnSeparator.Text.ToUpperInvariant() = "TAB" Then
+                    Return ControlChars.Tab
+                Else
+                    Return Me.TextboxStep2ColumnSeparator.Text(0)
+                End If
+            End Get
+        End Property
+        Private ReadOnly Property CsvTextIdentifier As Char
+            Get
+                If Me.TextboxStep2TextIdentifier Is Nothing OrElse Me.TextboxStep2TextIdentifier.Text = "" Then
+                    Return System.Threading.Thread.CurrentThread.CurrentUICulture.TextInfo.ListSeparator(0)
+                Else
+                    Return Me.TextboxStep2TextIdentifier.Text(0)
+                End If
+            End Get
+        End Property
         Private Function PrepareStep3() As Boolean
             Try
-                Me.ImportTable = CompuMaster.camm.WebManager.Administration.Tools.Data.Csv.ReadDataTableFromCsvFile(ImportFile, True, Me.TextboxStep2Charset.Text, ","c, """"c, False, True)
+                Me.ImportTable = CompuMaster.camm.WebManager.Administration.Tools.Data.Csv.ReadDataTableFromCsvFile(ImportFile, True, Me.TextboxStep2Charset.Text, Me.CsvColumnSeparator, Me.CsvTextIdentifier, False, True)
                 LabelStep2Errors.Text = Nothing
                 LabelStep3Errors.Text = Nothing
                 Return True
