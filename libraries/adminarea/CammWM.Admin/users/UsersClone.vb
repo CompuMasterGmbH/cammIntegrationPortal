@@ -287,10 +287,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' Assigns the membership information of the source user to the webform
         ''' </summary>
         Private Sub AssignMembershipsToPnl()
-            Dim MyGroupInfosAllowRule As CompuMaster.camm.WebManager.WMSystem.GroupInformation() = UserInfo.MembershipsByRule().AllowRule
-            Dim MyGroupInfosDenyRule As CompuMaster.camm.WebManager.WMSystem.GroupInformation() = UserInfo.MembershipsByRule().DenyRule
+            Dim MyGroupInfosAllowRule As New System.Collections.Generic.List(Of CompuMaster.camm.WebManager.WMSystem.GroupInformation)(UserInfo.MembershipsByRule().AllowRule)
+            Dim MyGroupInfosDenyRule As New System.Collections.Generic.List(Of CompuMaster.camm.WebManager.WMSystem.GroupInformation)(UserInfo.MembershipsByRule().DenyRule)
+            DropAllSystemGroupsByServerGroup(MyGroupInfosAllowRule)
+            DropAllSystemGroupsByServerGroup(MyGroupInfosDenyRule)
 
-            If (Not MyGroupInfosAllowRule Is Nothing AndAlso MyGroupInfosAllowRule.Length > 0) OrElse (Not MyGroupInfosDenyRule Is Nothing AndAlso MyGroupInfosDenyRule.Length > 0) Then
+            If (Not MyGroupInfosAllowRule Is Nothing AndAlso MyGroupInfosAllowRule.Count > 0) OrElse (Not MyGroupInfosDenyRule Is Nothing AndAlso MyGroupInfosDenyRule.Count > 0) Then
                 Dim lit As Literal
                 Dim HtmlCode As System.Text.StringBuilder
 
@@ -301,58 +303,64 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 lit.Text = HtmlCode.ToString
                 PnlGroupsInformation.Controls.Add(lit)
 
-                AssignMembershipsToPnl_RuleAdd(MyGroupInfosAllowRule, False)
-                AssignMembershipsToPnl_RuleAdd(MyGroupInfosDenyRule, True)
+                AssignMembershipsToPnl_RuleAdd(MyGroupInfosAllowRule.ToArray, False)
+                AssignMembershipsToPnl_RuleAdd(MyGroupInfosDenyRule.ToArray, True)
             End If
+        End Sub
+
+        Private Sub DropAllSystemGroupsByServerGroup(groups As System.Collections.Generic.List(Of CompuMaster.camm.WebManager.WMSystem.GroupInformation))
+            For MyCounter As Integer = groups.Count - 1 To 0 Step -1
+                If groups(MyCounter).IsSystemGroupByServerGroup Then
+                    groups.RemoveAt(MyCounter)
+                End If
+            Next
         End Sub
 
         Private Sub AssignMembershipsToPnl_RuleAdd(myGroupInfos As CompuMaster.camm.WebManager.WMSystem.GroupInformation(), isDenyRule As Boolean)
             Dim lit As Literal
             Dim HtmlCode As System.Text.StringBuilder
             For Each MyGroupInfo As CompuMaster.camm.WebManager.WMSystem.GroupInformation In myGroupInfos
-                If MyGroupInfo.IsSystemGroupByServerGroup = False Then
-                    Dim DisplayName As String = Nothing
-                    Dim ID As Integer = Nothing
-                    Try
-                        DisplayName = MyGroupInfo.Description
-                        ID = MyGroupInfo.ID
-                    Catch
-                        DisplayName = "<em>(error)</em>"
-                        ID = Nothing
-                    End Try
+                Dim DisplayName As String = Nothing
+                Dim ID As Integer = Nothing
+                Try
+                    DisplayName = MyGroupInfo.Description
+                    ID = MyGroupInfo.ID
+                Catch
+                    DisplayName = "<em>(error)</em>"
+                    ID = Nothing
+                End Try
 
-                    HtmlCode = New System.Text.StringBuilder
-                    HtmlCode.Append("<tr><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">")
-                    If isDenyRule Then
-                        HtmlCode.Append("DENY: ")
-                    Else
-                        HtmlCode.Append("GRANT: ")
-                    End If
-                    HtmlCode.Append("<a href=""groups_update.aspx?ID=" & ID & """>" & vbNewLine)
-                    HtmlCode.Append(Server.HtmlEncode(MyGroupInfo.Name))
-                    HtmlCode.Append("</a></font></td><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">" & vbNewLine)
-                    HtmlCode.Append(Server.HtmlEncode(DisplayName))
-                    HtmlCode.Append("</font></td><td><font face=""Arial"" size=""2"">" & vbNewLine)
-                    lit = New Literal
-                    lit.Text = HtmlCode.ToString
-                    PnlGroupsInformation.Controls.Add(lit)
-
-                    Dim Chk As New CheckBox
-                    If isDenyRule Then
-                        Chk.ID = "ChkMembershipsDeny_" & MyGroupInfo.ID
-                    Else
-                        Chk.ID = "ChkMemberships_" & MyGroupInfo.ID
-                    End If
-                    Chk.Text = Server.HtmlEncode(MyGroupInfo.Name)
-                    Chk.Checked = True
-                    PnlGroupsInformation.Controls.Add(Chk)
-
-                    HtmlCode = New System.Text.StringBuilder
-                    HtmlCode.Append("</font></td></tr>" & vbNewLine)
-                    lit = New Literal
-                    lit.Text = HtmlCode.ToString
-                    PnlGroupsInformation.Controls.Add(lit)
+                HtmlCode = New System.Text.StringBuilder
+                HtmlCode.Append("<tr><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">")
+                If isDenyRule Then
+                    HtmlCode.Append("DENY: ")
+                Else
+                    HtmlCode.Append("GRANT: ")
                 End If
+                HtmlCode.Append("<a href=""groups_update.aspx?ID=" & ID & """>" & vbNewLine)
+                HtmlCode.Append(Server.HtmlEncode(MyGroupInfo.Name))
+                HtmlCode.Append("</a></font></td><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">" & vbNewLine)
+                HtmlCode.Append(Server.HtmlEncode(DisplayName))
+                HtmlCode.Append("</font></td><td><font face=""Arial"" size=""2"">" & vbNewLine)
+                lit = New Literal
+                lit.Text = HtmlCode.ToString
+                PnlGroupsInformation.Controls.Add(lit)
+
+                Dim Chk As New CheckBox
+                If isDenyRule Then
+                    Chk.ID = "ChkMembershipsDeny_" & MyGroupInfo.ID
+                Else
+                    Chk.ID = "ChkMemberships_" & MyGroupInfo.ID
+                End If
+                Chk.Text = Server.HtmlEncode(MyGroupInfo.Name)
+                Chk.Checked = True
+                PnlGroupsInformation.Controls.Add(Chk)
+
+                HtmlCode = New System.Text.StringBuilder
+                HtmlCode.Append("</font></td></tr>" & vbNewLine)
+                lit = New Literal
+                lit.Text = HtmlCode.ToString
+                PnlGroupsInformation.Controls.Add(lit)
             Next
         End Sub
         ''' <summary>
