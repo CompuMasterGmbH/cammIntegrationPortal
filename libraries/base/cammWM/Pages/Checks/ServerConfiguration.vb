@@ -41,7 +41,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Checks
                 HttpContext.Current.Response.Write("<FONT face=""Arial"" size=2>")
 
                 Dim GlobalConfig As New GlobalConfiguration(Me.cammWebManager)
-                Dim DatabaseDatetime As DateTime? = GlobalConfig.QueryDateTimeConfigEntry("ServerCheck_TimeStamp")
+                Dim DatabaseDatetime As Nullable(Of DateTime) = GlobalConfig.QueryDateTimeConfigEntry("ServerCheck_TimeStamp")
                 If cammWebManager.DebugLevel <= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation AndAlso (DatabaseDatetime.HasValue = False OrElse DatabaseDatetime.Value = Nothing OrElse Not (DatabaseDatetime.Value < WebManager.Setup.DatabaseUtils.CurrentDateTime(Me.cammWebManager) AndAlso DatabaseDatetime.Value.AddMinutes(15) >= WebManager.Setup.DatabaseUtils.CurrentDateTime(Me.cammWebManager))) Then
                     HttpContext.Current.Response.Write("<h4>Timeout</h4>")
                 Else 'If cammWebManager.DebugLevel >= Medium_LoggingOfDebugInformation_AdditionalDetails OrElse Within TimeFrame of ServerCheck_TimeStamp
