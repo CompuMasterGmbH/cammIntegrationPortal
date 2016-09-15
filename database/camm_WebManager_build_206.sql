@@ -1,4 +1,30 @@
 ﻿---------------------------------------------------------------------------------------------------------------------
+-- PREPARE DATA CHANGES BY FOLLOWING STATEMENTS BY TEMPORARY UPDATE OF TRIGGERS TO WORK AGAIN (FULL ROLL-OVER WILL FOLLOW IN LATER DB PATCHES)
+---------------------------------------------------------------------------------------------------------------------
+IF OBJECT_ID ('dbo.Gruppen_PostUserDeletionTrigger', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.Gruppen_PostUserDeletionTrigger;
+GO
+IF OBJECT_ID ('dbo.Gruppen_PostGroupDeletionTrigger', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.Gruppen_PostGroupDeletionTrigger;
+GO
+CREATE TRIGGER dbo.Gruppen_PostGroupDeletionTrigger
+   ON [dbo].Gruppen
+   AFTER DELETE
+AS 
+BEGIN
+	-- check for real changes - in case of 0 updated rows, don't forward 0-row-updates to sub-sequent triggers (would be a waste of time)
+	DECLARE @RowDeletesCount bigint
+	SELECT @RowDeletesCount = IsNull(COUNT_BIG(*), 0) FROM deleted;
+	IF IsNull(@RowDeletesCount, 0) > 0
+		BEGIN
+			--Remove references of deleted groups
+			DELETE FROM dbo.Memberships WHERE ID_Group IN ( SELECT ID FROM deleted ) 
+			DELETE FROM dbo.ApplicationsRightsByGroup WHERE ID_GroupOrPerson IN ( SELECT ID FROM deleted ) 
+			DELETE FROM dbo.System_SubSecurityAdjustments WHERE TableName = 'Groups' AND TablePrimaryIDValue IN ( SELECT ID FROM deleted ) 
+		END
+END
+GO
+---------------------------------------------------------------------------------------------------------------------
 -- SPLIT Anonymous GROUP 58 FOR ALL SERVER GROUPS INTO SEPARATE ANONYMOUS GROUPS
 ---------------------------------------------------------------------------------------------------------------------
 DECLARE @ServerGroupID int
