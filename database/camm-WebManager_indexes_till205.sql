@@ -299,14 +299,16 @@ CREATE NONCLUSTERED INDEX [IX_NavItems_1] ON [dbo].[NavItems]
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_SecurityObjects_1]    Script Date: 02.07.2015 15:06:08 ******/
-IF NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name='IX_SecurityObjects_1' AND object_id = OBJECT_ID('[dbo].[SecurityObjects_CurrentAndInactiveOnes]')) 
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[SecurityObjects_CurrentAndInactiveOnes]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) 
+	AND NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name='IX_SecurityObjects_1' AND object_id = OBJECT_ID('[dbo].[SecurityObjects_CurrentAndInactiveOnes]')) 
 CREATE NONCLUSTERED INDEX [IX_SecurityObjects_1] ON [dbo].[SecurityObjects_CurrentAndInactiveOnes]
 (
 	[AuthsAsSecObjID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
 GO
 /****** Object:  Index [IX_SecurityObjects_2]    Script Date: 02.07.2015 15:06:08 ******/
-IF NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name='IX_SecurityObjects_2' AND object_id = OBJECT_ID('[dbo].[SecurityObjects_CurrentAndInactiveOnes]')) 
+IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[SecurityObjects_CurrentAndInactiveOnes]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) 
+	AND NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name='IX_SecurityObjects_2' AND object_id = OBJECT_ID('[dbo].[SecurityObjects_CurrentAndInactiveOnes]')) 
 CREATE NONCLUSTERED INDEX [IX_SecurityObjects_2] ON [dbo].[SecurityObjects_CurrentAndInactiveOnes]
 (
 	[SystemAppType] ASC
