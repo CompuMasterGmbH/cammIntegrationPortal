@@ -224,27 +224,6 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_Log_TextMessages]    Script Date: 02.07.2015 15:06:08 ******/
-IF NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name='IX_Log_TextMessages' AND object_id = OBJECT_ID('[dbo].[Log_TextMessages]')) 
-CREATE NONCLUSTERED INDEX [IX_Log_TextMessages] ON [dbo].[Log_TextMessages]
-(
-	[MessageCategory] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
-GO
-/****** Object:  Index [IX_Log_TextMessages_1]    Script Date: 02.07.2015 15:06:08 ******/
-IF NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name='IX_Log_TextMessages_1' AND object_id = OBJECT_ID('[dbo].[Log_TextMessages]')) 
-CREATE NONCLUSTERED INDEX [IX_Log_TextMessages_1] ON [dbo].[Log_TextMessages]
-(
-	[UserID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
-GO
-/****** Object:  Index [IX_Log_TextMessages_2]    Script Date: 02.07.2015 15:06:08 ******/
-IF NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name='IX_Log_TextMessages_2' AND object_id = OBJECT_ID('[dbo].[Log_TextMessages]')) 
-CREATE NONCLUSTERED INDEX [IX_Log_TextMessages_2] ON [dbo].[Log_TextMessages]
-(
-	[GroupID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
-GO
 /****** Object:  Index [IX_Log_Users]    Script Date: 02.07.2015 15:06:08 ******/
 IF NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name='IX_Log_Users' AND object_id = OBJECT_ID('[dbo].[Log_Users]')) 
 CREATE NONCLUSTERED INDEX [IX_Log_Users] ON [dbo].[Log_Users]
