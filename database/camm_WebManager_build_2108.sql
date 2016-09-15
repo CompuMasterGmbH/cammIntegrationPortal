@@ -17,7 +17,7 @@ GO
 	-- Force first table filling (or full update on repetitions)
 	UPDATE [ApplicationsRightsByGroup]
 	SET IsDenyRule = IsDenyRule
-	GO
+GO
 	-- Force first table filling (or full update on repetitions)
 	UPDATE [ApplicationsRightsByUser]
 	SET IsDenyRule = IsDenyRule
