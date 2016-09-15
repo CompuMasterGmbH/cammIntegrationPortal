@@ -664,22 +664,29 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     CloneAdditionalFlags(TemplateUser.AdditionalFlags, NewUser)
                     SetStandardFlagValues(NewUser)
 
-                    If Trim(newPassword) = Nothing Then
-                        NewUser.Save()
-                    Else
-                        Try
+                    Try
+                        If Trim(newPassword) = Nothing Then
+                            NewUser.Save()
+                        Else
                             NewUser.Save(newPassword)
-                        Catch ex As CompuMaster.camm.WebManager.PasswordTooWeakException
-                            lblErrMsg.Text = ex.Message
-                        End Try
-                    End If
+                        End If
+                    Catch ex As CompuMaster.camm.WebManager.PasswordTooWeakException
+                        lblErrMsg.Text = ex.Message
+                    Catch ex As Exception
+                        lblErrMsg.Text = ex.Message
+                    End Try
 
                     If lblErrMsg.Text <> Nothing Then
                         Return Nothing
                     End If
 
-                    CloneMemberships(TemplateUser, NewUser)
-                    CloneAuthorizations(TemplateUser, NewUser)
+                    Try
+                        CloneMemberships(TemplateUser, NewUser)
+                        CloneAuthorizations(TemplateUser, NewUser)
+                    Catch ex As Exception
+                        lblErrMsg.Text = ex.Message
+                    End Try
+
                 End If
 
                 Return NewUser
