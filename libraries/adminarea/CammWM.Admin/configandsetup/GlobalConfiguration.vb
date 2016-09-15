@@ -144,12 +144,12 @@ Namespace CompuMaster.camm.WebManager.Administration
 
             Friend ReadOnly Property IsWithoutAnyConfigData As Boolean
                 Get
-                    If Me.Int64Value.HasValue = False And
-                        Me.DateTimeValue.HasValue = False And
-                        Me.StringValue = Nothing And
-                        (Me.ByteArrayValue Is Nothing OrElse Me.ByteArrayValue.Length = 0) And
-                        Me.BooleanValue.HasValue = False And
-                        Me.DecimalValue.HasValue = False And
+                    If Me.Int64Value.HasValue = False And _
+                        Me.DateTimeValue.HasValue = False And _
+                        Me.StringValue = Nothing And _
+                        (Me.ByteArrayValue Is Nothing OrElse Me.ByteArrayValue.Length = 0) And _
+                        Me.BooleanValue.HasValue = False And _
+                        Me.DecimalValue.HasValue = False And _
                         Me.DateTimeValue.HasValue = False Then
                         Return True
                     Else
@@ -253,23 +253,23 @@ Namespace CompuMaster.camm.WebManager.Administration
             Dim MyConn As New SqlConnection(_WebManager.ConnectionString)
             Dim MyCmd As SqlCommand = New SqlCommand()
             MyCmd.Connection = MyConn
-            MyCmd.CommandText = "DECLARE @RowNumber int" & vbNewLine &
-                        "SELECT @RowNumber = COUNT(*)" & vbNewLine &
-                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
-                        "WHERE VALUENVarChar = @ProductName AND PropertyName = @key" & vbNewLine &
-                        "SELECT @RowNumber" & vbNewLine &
-                        vbNewLine &
-                        "IF @RemoveOnly = 0 AND IsNull(@RowNumber,0) = 0 " & vbNewLine &
-                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine &
-                        "		(ValueNVarChar, PropertyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime)" & vbNewLine &
-                        "	VALUES (@ProductName, @key, @ValueInt, @ValueNText, @ValueBoolean, @ValueImage, @ValueDecimal, @ValueDateTime)" & vbNewLine &
-                        "ELSE IF @RemoveOnly = 0 AND IsNull(@RowNumber,0) = 1" & vbNewLine &
-                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine &
-                        "	SET ValueInt = @ValueInt, ValueNText = @ValueNText, ValueBoolean = @ValueBoolean, ValueImage = @ValueImage, ValueDecimal = @ValueDecimal, ValueDateTime = @ValueDateTime" & vbNewLine &
-                        "	WHERE ValueNVarChar = @ProductName AND PropertyName = @key" & vbNewLine &
-                        "ELSE IF @RemoveOnly <> 0 AND IsNull(@RowNumber,0) = 1" & vbNewLine &
-                        "	DELETE FROM [dbo].[System_GlobalProperties]" & vbNewLine &
-                        "	WHERE ValueNVarChar = @ProductName AND PropertyName = @key" & vbNewLine &
+            MyCmd.CommandText = "DECLARE @RowNumber int" & vbNewLine & _
+                        "SELECT @RowNumber = COUNT(*)" & vbNewLine & _
+                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "WHERE VALUENVarChar = @ProductName AND PropertyName = @key" & vbNewLine & _
+                        "SELECT @RowNumber" & vbNewLine & _
+                        vbNewLine & _
+                        "IF @RemoveOnly = 0 AND IsNull(@RowNumber,0) = 0 " & vbNewLine & _
+                        "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "		(ValueNVarChar, PropertyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime)" & vbNewLine & _
+                        "	VALUES (@ProductName, @key, @ValueInt, @ValueNText, @ValueBoolean, @ValueImage, @ValueDecimal, @ValueDateTime)" & vbNewLine & _
+                        "ELSE IF @RemoveOnly = 0 AND IsNull(@RowNumber,0) = 1" & vbNewLine & _
+                        "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "	SET ValueInt = @ValueInt, ValueNText = @ValueNText, ValueBoolean = @ValueBoolean, ValueImage = @ValueImage, ValueDecimal = @ValueDecimal, ValueDateTime = @ValueDateTime" & vbNewLine & _
+                        "	WHERE ValueNVarChar = @ProductName AND PropertyName = @key" & vbNewLine & _
+                        "ELSE IF @RemoveOnly <> 0 AND IsNull(@RowNumber,0) = 1" & vbNewLine & _
+                        "	DELETE FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
+                        "	WHERE ValueNVarChar = @ProductName AND PropertyName = @key" & vbNewLine & _
                         "SELECT @RowNumber AS ExistingRowsCount" & vbNewLine
             MyCmd.Parameters.Add("@ProductName", SqlDbType.NVarChar).Value = Me._ProductKey
             MyCmd.Parameters.Add("@RemoveOnly", SqlDbType.Bit).Value = data.IsWithoutAnyConfigData
@@ -308,13 +308,13 @@ Namespace CompuMaster.camm.WebManager.Administration
             Dim MyCmd As SqlCommand = New SqlCommand()
             MyCmd.Connection = MyConn
             Dim sql As New System.Text.StringBuilder
-            sql.AppendLine("DELETE" & vbNewLine &
-                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
+            sql.AppendLine("DELETE" & vbNewLine & _
+                        "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
                         "WHERE VALUENVarChar = @ProductName AND PropertyName = @key")
             For MyCounter As Integer = 0 To dataSet.Count - 1
                 If dataSet(MyCounter).IsWithoutAnyConfigData = False Then
-                    sql.AppendLine("INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine &
-                                "	(ValueNVarChar, PropertyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime)" & vbNewLine &
+                    sql.AppendLine("INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
+                                "	(ValueNVarChar, PropertyName, ValueInt, ValueNText, ValueBoolean, ValueImage, ValueDecimal, ValueDateTime)" & vbNewLine & _
                                 "VALUES (@ProductName, @key, @Value" & MyCounter & "Int, @Value" & MyCounter & "NText, @Value" & MyCounter & "Boolean, @Value" & MyCounter & "Image, @Value" & MyCounter & "Decimal, @Value" & MyCounter & "DateTime)")
                     Dim data As ConfigRecord = dataSet(MyCounter)
                     MyCmd.Parameters.Add(New SqlParameter("@Value" & MyCounter & "Int", SqlDbType.Int)).Value = CompuMaster.camm.WebManager.Utils.NullableTypeWithItsValueOrDBNull(data.Int64Value)
