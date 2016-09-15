@@ -47,25 +47,38 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Protected WithEvents btnDeleteImage As System.Web.UI.WebControls.Button
         Protected lblDeletionMessage As System.Web.UI.WebControls.Label
         Protected btnPasteToEditor As System.Web.UI.WebControls.Button
+        Protected txtBoxImagePath As System.Web.UI.WebControls.TextBox
 
+        ''' <summary>
+        ''' Recursively reads all files from a directory and adds them to the listbox 
+        ''' </summary>
+        ''' <param name="physicalPath">The physical path to read recursively from </param>
+        ''' <param name="virtualPath">The virtual path of the physical path</param>
+        Private Sub AddFilesToListBoxRecursively(ByVal physicalPath As String, ByVal virtualPath As String)
+            For Each file As String In System.IO.Directory.GetFiles(physicalPath, "*.*", IO.SearchOption.AllDirectories)
+                Dim relativePath As String = file.Replace(physicalPath, String.Empty)
+                Dim fileName As String = System.IO.Path.GetFileName(file)
+                Dim listItem As New System.Web.UI.WebControls.ListItem
+                listItem.Text = fileName
+                listItem.Value = System.IO.Path.Combine(virtualPath, relativePath).Replace("\"c, "/"c)
+                Me.listBoxUploadedFiles.Items.Add(listItem)
+
+            Next
+        End Sub
         Public Sub FillUploadedFilesListBox()
             Me.listBoxUploadedFiles.Items.Clear()
-            Dim path As String = Server.MapPath(Me.ImageUploadFolderPath)
-            If System.IO.Directory.Exists(path) Then
-                Dim files As String() = System.IO.Directory.GetFiles(path)
-                For Each filePath As String In files
-                    Dim fileName As String = System.IO.Path.GetFileName(filePath)
-                    Me.listBoxUploadedFiles.Items.Add(fileName)
-                Next
+            Dim physicalPath As String = Server.MapPath(Me.ImageUploadFolderPath)
+            If System.IO.Directory.Exists(physicalPath) Then
+                AddFilesToListBoxRecursively(physicalPath, Me.ImageUploadFolderPath)
             End If
 
         End Sub
 
         Private Sub btnDeleteImage_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles btnDeleteImage.Click
-            Dim selectedImage As String = Me.listBoxUploadedFiles.SelectedValue
-            If selectedImage <> Nothing Then
-                selectedImage = System.IO.Path.GetFileName(selectedImage)
-                Dim filePath As String = System.IO.Path.Combine(HttpContext.Current.Server.MapPath(Me.ImageUploadFolderPath), selectedImage)
+            Dim selectedImagePath As String = Me.listBoxUploadedFiles.SelectedValue
+            If selectedImagePath <> Nothing Then
+                'viewstate mac should prevent traversal attacks...
+                Dim filePath As String = Server.MapPath(selectedImagePath)
                 Try
                     System.IO.File.Delete(filePath)
                 Catch ex As Exception
@@ -80,12 +93,18 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
 
         End Sub
-        Private Sub PagePreRender(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.PreRender
+        Private Sub Control_Init(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
+            If Not Me.Page.EnableViewStateMac Then
+                Throw New Exception("ViewStateMac must be enabled")
+            End If
+        End Sub
+        Private Sub Control_PreRender(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.PreRender
             Me.FillUploadedFilesListBox()
-            Me.listBoxUploadedFiles.Attributes.Add("onchange", "document.getElementById('imagePath').value = getPathOfSelectedImage();")
+            Me.listBoxUploadedFiles.Attributes.Add("onchange", "document.getElementById('" & Me.txtBoxImagePath.ClientID & "').value = this.value")
             If Me.EditorId = "" Then
                 Me.btnPasteToEditor.Visible = False
             End If
+
         End Sub
 
 
