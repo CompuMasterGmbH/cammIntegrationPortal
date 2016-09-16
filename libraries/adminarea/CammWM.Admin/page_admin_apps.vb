@@ -36,8 +36,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim strblr As New System.Text.StringBuilder
             strblr.Append("<table cellSpacing=""0"" cellPadding=""0"" border=""0"">")
             Dim sql As String
-            If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_ApplicationsDividedIntoNavItemsAndSecurityObjects) >= 0 Then 'Newer
-                sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+            If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
                               "SELECT ItemType, ID_Group, Name, ID_User, LoginDisabled, LoginName, DevelopmentTeamMember, IsDenyRule FROM view_ApplicationRights WHERE ID_Application = 6185 AND ID_AppRight Is NOT Null ORDER BY ItemType, Name, DevelopmentTeamMember, IsDenyRule"
             Else
                 sql = "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
