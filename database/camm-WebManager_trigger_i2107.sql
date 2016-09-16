@@ -1589,7 +1589,7 @@ CREATE TRIGGER dbo.D_System_UserSessions
    AFTER DELETE
 AS 
 BEGIN
-  DELETE 
+  DELETE [dbo].[System_SessionValues] 
   FROM [dbo].[System_SessionValues] 
 	INNER JOIN deleted 
 		ON [dbo].[System_SessionValues].SessionID = deleted.[ID_Session]
