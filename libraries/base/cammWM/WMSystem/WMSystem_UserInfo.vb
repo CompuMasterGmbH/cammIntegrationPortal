@@ -946,6 +946,172 @@ Namespace CompuMaster.camm.WebManager
             End Property
 
             ''' <summary>
+            ''' Create a clone of this user account incl. all additional flags but without any relation data, saving required
+            ''' </summary>
+            ''' <param name="newLoginName"></param>
+            ''' <param name="newGender"></param>
+            ''' <param name="newAcademicTitle"></param>
+            ''' <param name="newFirstName"></param>
+            ''' <param name="newNameAddition"></param>
+            ''' <param name="newLastName"></param>
+            ''' <param name="newEmailAddress"></param>
+            ''' <returns>Additional flags &quot;ComesFrom&quot; and &quot;Motivation&quot; will be set to value &quot;Account cloned by Admin[...]&quot;</returns>
+            Public Function CloneWithoutRelationships(ByVal newLoginName As String, ByVal newGender As Sex, ByVal newAcademicTitle As String, ByVal newFirstName As String, ByVal newNameAddition As String, ByVal newLastName As String, ByVal newEmailAddress As String) As UserInformation
+                Dim TemplateUser As WebManager.WMSystem.UserInformation = Me
+                Dim NewUser As WebManager.WMSystem.UserInformation
+                NewUser = Me.CloneWithoutRelationshipsBaseData(newLoginName, newGender, newAcademicTitle, newFirstName, newNameAddition, newLastName, newEmailAddress)
+                TemplateUser.CloneAdditionalFlags(NewUser, True)
+                Return NewUser
+            End Function
+
+            ''' <summary>
+            ''' Create a clone of this user account incl. all additional flags but without any relation data, saving required
+            ''' </summary>
+            ''' <param name="newLoginName"></param>
+            ''' <param name="newGender"></param>
+            ''' <param name="newAcademicTitle"></param>
+            ''' <param name="newFirstName"></param>
+            ''' <param name="newNameAddition"></param>
+            ''' <param name="newLastName"></param>
+            ''' <param name="newEmailAddress"></param>
+            ''' <param name="cloneAllAdditionalFlags">True to copy all additional flags, False to not copy</param>
+            ''' <returns>Additional flags &quot;ComesFrom&quot; and &quot;Motivation&quot; will be set to value &quot;Account cloned by Admin[...]&quot;</returns>
+            Public Function CloneWithoutRelationships(ByVal newLoginName As String, ByVal newGender As Sex, ByVal newAcademicTitle As String, ByVal newFirstName As String, ByVal newNameAddition As String, ByVal newLastName As String, ByVal newEmailAddress As String, cloneAllAdditionalFlags As Boolean) As UserInformation
+                Dim TemplateUser As WebManager.WMSystem.UserInformation = Me
+                Dim NewUser As WebManager.WMSystem.UserInformation
+                NewUser = Me.CloneWithoutRelationshipsBaseData(newLoginName, newGender, newAcademicTitle, newFirstName, newNameAddition, newLastName, newEmailAddress)
+                TemplateUser.CloneAdditionalFlags(NewUser, cloneAllAdditionalFlags)
+                Return NewUser
+            End Function
+
+            ''' <summary>
+            ''' Create a clone of this user account incl. all additional flags but without any relation data, saving required
+            ''' </summary>
+            ''' <param name="newLoginName"></param>
+            ''' <param name="newGender"></param>
+            ''' <param name="newAcademicTitle"></param>
+            ''' <param name="newFirstName"></param>
+            ''' <param name="newNameAddition"></param>
+            ''' <param name="newLastName"></param>
+            ''' <param name="newEmailAddress"></param>
+            ''' <param name="cloneAdditionalFlags">Key names of additional flags which shall be cloned</param>
+            ''' <returns>Additional flags &quot;ComesFrom&quot; and &quot;Motivation&quot; will be set to value &quot;Account cloned by Admin[...]&quot;</returns>
+            Public Function CloneWithoutRelationships(ByVal newLoginName As String, ByVal newGender As Sex, ByVal newAcademicTitle As String, ByVal newFirstName As String, ByVal newNameAddition As String, ByVal newLastName As String, ByVal newEmailAddress As String, cloneAdditionalFlags As System.Collections.Generic.List(Of String)) As UserInformation
+                Dim TemplateUser As WebManager.WMSystem.UserInformation = Me
+                Dim NewUser As WebManager.WMSystem.UserInformation
+                NewUser = Me.CloneWithoutRelationshipsBaseData(newLoginName, newGender, newAcademicTitle, newFirstName, newNameAddition, newLastName, newEmailAddress)
+                TemplateUser.CloneAdditionalFlags(NewUser, cloneAdditionalFlags)
+                Return NewUser
+            End Function
+
+            ''' <summary>
+            ''' Create a clone of this user account incl. all additional flags but without any relation data, saving required
+            ''' </summary>
+            ''' <param name="newLoginName"></param>
+            ''' <param name="newGender"></param>
+            ''' <param name="newAcademicTitle"></param>
+            ''' <param name="newFirstName"></param>
+            ''' <param name="newNameAddition"></param>
+            ''' <param name="newLastName"></param>
+            ''' <param name="newEmailAddress"></param>
+            ''' <returns>Additional flags must be copied in another step</returns>
+            Private Function CloneWithoutRelationshipsBaseData(ByVal newLoginName As String, ByVal newGender As Sex, ByVal newAcademicTitle As String, ByVal newFirstName As String, ByVal newNameAddition As String, ByVal newLastName As String, ByVal newEmailAddress As String) As UserInformation
+                Dim TemplateUser As WebManager.WMSystem.UserInformation = Me
+                Dim NewUser As New WebManager.WMSystem.UserInformation(0&, newLoginName, newEmailAddress, False, TemplateUser.Company, newGender, newNameAddition, newFirstName, newLastName, newAcademicTitle, TemplateUser.Street, TemplateUser.ZipCode, TemplateUser.Location, TemplateUser.State, TemplateUser.Country, TemplateUser.PreferredLanguage1.ID, TemplateUser.PreferredLanguage2.ID, TemplateUser.PreferredLanguage3.ID, TemplateUser.LoginDisabled, False, False, TemplateUser.AccessLevel.ID, Me._WebManager, CType(Nothing, String), New System.Collections.Specialized.NameValueCollection())
+                NewUser.AccountAuthorizationsAlreadySet = False
+                NewUser.AccountProfileValidatedByEMailTest = False
+                NewUser.AutomaticLogonAllowedByMachineToMachineCommunication = TemplateUser.AutomaticLogonAllowedByMachineToMachineCommunication
+                NewUser.FaxNumber = TemplateUser.FaxNumber
+                NewUser.MobileNumber = TemplateUser.MobileNumber
+                NewUser.PhoneNumber = TemplateUser.PhoneNumber
+                NewUser.Position = TemplateUser.Position
+                NewUser.IsImpersonationUser = TemplateUser.IsImpersonationUser
+                Return NewUser
+            End Function
+
+            Private Sub CloneAdditionalFlags(targetUser As WMSystem.UserInformation, copyAllAdditionalFlags As Boolean)
+                If copyAllAdditionalFlags Then
+                    For Each flag As String In Me.AdditionalFlags.AllKeys
+                        If IsFlagExcludedFromCloning(flag) = False Then
+                            targetUser.AdditionalFlags(flag) = Me.AdditionalFlags(flag)
+                        End If
+                    Next
+                End If
+                targetUser.AdditionalFlags.Set("ComesFrom", "Account cloned by Admin """ & Me._WebManager.CurrentUserLoginName & """ (" & Me._WebManager.CurrentUserInfo.FirstName & " " & Me._WebManager.CurrentUserInfo.LastName & ")")
+                targetUser.AdditionalFlags.Set("Motivation", "Account cloned by Admin")
+            End Sub
+
+            Private Sub CloneAdditionalFlags(targetUser As WMSystem.UserInformation, copyAdditionalFlags As System.Collections.Generic.List(Of String))
+                For Each flag As String In copyAdditionalFlags
+                    If IsFlagExcludedFromCloning(flag) = False Then
+                        targetUser.AdditionalFlags(flag) = Me.AdditionalFlags(flag)
+                    End If
+                Next
+                If ListOfStringContainsCaseInsensitive(copyAdditionalFlags, "ComesFrom") = False Then
+                    targetUser.AdditionalFlags.Set("ComesFrom", "Account cloned by Admin """ & Me._WebManager.CurrentUserLoginName & """ (" & Me._WebManager.CurrentUserInfo.FirstName & " " & Me._WebManager.CurrentUserInfo.LastName & ")")
+                End If
+                If ListOfStringContainsCaseInsensitive(copyAdditionalFlags, "Motivation") = False Then
+                    targetUser.AdditionalFlags.Set("Motivation", "Account cloned by Admin")
+                End If
+            End Sub
+
+            Private Function ListOfStringContainsCaseInsensitive(list As System.Collections.Generic.List(Of String), key As String) As Boolean
+                For Each item As String In list
+                    If String.Compare(item, key, True) = 0 Then Return True
+                Next
+                Return False
+            End Function
+
+            Private Function IsFlagExcludedFromCloning(flagName As String) As Boolean
+                For Each flag As String In ReservedFlagNames
+                    If String.Compare(flag, flagName, True) = 0 Then Return True
+                Next
+                For Each flag As String In Me._WebManager.UserCloneExludedAdditionalFlags
+                    If String.Compare(flag, flagName, True) = 0 Then Return True
+                Next
+                Return False
+            End Function
+
+            ''' <summary>
+            ''' Clone memberships and authorization to the new user
+            ''' </summary>
+            ''' <param name="targetUser">An existing user account that shall get a copy of related data</param>
+            ''' <remarks>Existing relations won't be dropped, but extended</remarks>
+            Public Sub CloneRelations(targetUser As WMSystem.UserInformation)
+                If Me.IDLong = 0 OrElse targetUser.IDLong = 0 Then
+                    Throw New Exception("Template user and target user must be saved before cloning relations")
+                End If
+                Dim TemplateUser As WMSystem.UserInformation = Me
+                'Following actions take place at database directly
+                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule().AllowRule.Length - 1
+                    If TemplateUser.MembershipsByRule().AllowRule(MyCounter).IsSystemGroupByServerGroup = False Then
+                        targetUser.AddMembership(TemplateUser.MembershipsByRule().AllowRule(MyCounter).ID, False)
+                    End If
+                Next
+                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule().DenyRule.Length - 1
+                    If TemplateUser.MembershipsByRule().DenyRule(MyCounter).IsSystemGroupByServerGroup = False Then
+                        targetUser.AddMembership(TemplateUser.MembershipsByRule().DenyRule(MyCounter).ID, True)
+                    End If
+                Next
+                For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.AllowRuleDevelopers.Length - 1
+                    Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.AllowRuleDevelopers(MyCounter)
+                    targetUser.AddAuthorization(usrItem.SecurityObjectID, usrItem.ServerGroupID, usrItem.IsDeveloperAuthorization, usrItem.IsDenyRule)
+                Next
+                For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.AllowRuleStandard.Length - 1
+                    Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.AllowRuleStandard(MyCounter)
+                    targetUser.AddAuthorization(usrItem.SecurityObjectID, usrItem.ServerGroupID, usrItem.IsDeveloperAuthorization, usrItem.IsDenyRule)
+                Next
+                For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.DenyRuleDevelopers.Length - 1
+                    Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.DenyRuleDevelopers(MyCounter)
+                    targetUser.AddAuthorization(usrItem.SecurityObjectID, usrItem.ServerGroupID, usrItem.IsDeveloperAuthorization, usrItem.IsDenyRule)
+                Next
+                For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.DenyRuleStandard.Length - 1
+                    Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.DenyRuleStandard(MyCounter)
+                    targetUser.AddAuthorization(usrItem.SecurityObjectID, usrItem.ServerGroupID, usrItem.IsDeveloperAuthorization, usrItem.IsDenyRule)
+                Next
+            End Sub
+
+            ''' <summary>
             ''' Create a clone of a user account inclusive additional flags, memberships and authorizations
             ''' </summary>
             ''' <param name="newLoginName">The login name for the new user</param>
@@ -983,46 +1149,9 @@ Namespace CompuMaster.camm.WebManager
 
                 'TODO: outgoing email is missing yet
                 Dim TemplateUser As New WebManager.WMSystem.UserInformation(Me.IDLong, Me._WebManager, False)
-                Dim NewUser As New WebManager.WMSystem.UserInformation(0&, newLoginName, newEmailAddress, False, TemplateUser.Company, newGender, newNameAddition, newFirstName, newLastName, newAcademicTitle, TemplateUser.Street, TemplateUser.ZipCode, TemplateUser.Location, TemplateUser.State, TemplateUser.Country, TemplateUser.PreferredLanguage1.ID, TemplateUser.PreferredLanguage2.ID, TemplateUser.PreferredLanguage3.ID, TemplateUser.LoginDisabled, False, False, TemplateUser.AccessLevel.ID, Me._WebManager, CType(Nothing, String), New System.Collections.Specialized.NameValueCollection(TemplateUser.AdditionalFlags))
-
-                NewUser.AccountAuthorizationsAlreadySet = False
-                NewUser.AccountProfileValidatedByEMailTest = False
-                NewUser.AutomaticLogonAllowedByMachineToMachineCommunication = TemplateUser.AutomaticLogonAllowedByMachineToMachineCommunication
-                NewUser.FaxNumber = TemplateUser.FaxNumber
-                NewUser.MobileNumber = TemplateUser.MobileNumber
-                NewUser.PhoneNumber = TemplateUser.PhoneNumber
-                NewUser.Position = TemplateUser.Position
-                NewUser.IsImpersonationUser = TemplateUser.IsImpersonationUser
+                Dim NewUser As WebManager.WMSystem.UserInformation = Me.CloneWithoutRelationships(newLoginName, newGender, newAcademicTitle, newFirstName, newNameAddition, newLastName, newEmailAddress)
                 NewUser.Save(newPassword)  'Intermediate save point
-
-                'Following actions take place at database directly
-                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule().AllowRule.Length - 1
-                    If TemplateUser.MembershipsByRule().AllowRule(MyCounter).IsSystemGroupByServerGroup = False Then
-                        NewUser.AddMembership(TemplateUser.MembershipsByRule().AllowRule(MyCounter).ID, False)
-                    End If
-                Next
-                For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule().DenyRule.Length - 1
-                    If TemplateUser.MembershipsByRule().DenyRule(MyCounter).IsSystemGroupByServerGroup = False Then
-                        NewUser.AddMembership(TemplateUser.MembershipsByRule().DenyRule(MyCounter).ID, True)
-                    End If
-                Next
-                For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.AllowRuleDevelopers.Length - 1
-                    Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.AllowRuleDevelopers(MyCounter)
-                    NewUser.AddAuthorization(usrItem.SecurityObjectID, usrItem.ServerGroupID, usrItem.IsDeveloperAuthorization, usrItem.IsDenyRule)
-                Next
-                For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.AllowRuleStandard.Length - 1
-                    Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.AllowRuleStandard(MyCounter)
-                    NewUser.AddAuthorization(usrItem.SecurityObjectID, usrItem.ServerGroupID, usrItem.IsDeveloperAuthorization, usrItem.IsDenyRule)
-                Next
-                For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.DenyRuleDevelopers.Length - 1
-                    Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.DenyRuleDevelopers(MyCounter)
-                    NewUser.AddAuthorization(usrItem.SecurityObjectID, usrItem.ServerGroupID, usrItem.IsDeveloperAuthorization, usrItem.IsDenyRule)
-                Next
-                For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.DenyRuleStandard.Length - 1
-                    Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.DenyRuleStandard(MyCounter)
-                    NewUser.AddAuthorization(usrItem.SecurityObjectID, usrItem.ServerGroupID, usrItem.IsDeveloperAuthorization, usrItem.IsDenyRule)
-                Next
-
+                TemplateUser.CloneRelations(NewUser)
                 Return NewUser
 
             End Function

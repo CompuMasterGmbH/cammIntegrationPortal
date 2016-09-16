@@ -218,59 +218,63 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                 For MyCounter As Integer = 0 To UserInfo.AdditionalFlags.Count - 1
                     Dim MyKeyName As String = UserInfo.AdditionalFlags.Keys.Item(MyCounter)
-                    Dim MyItemValue As String = UserInfo.AdditionalFlags.Item(MyCounter)
 
-                    HtmlStr = New System.Text.StringBuilder
-                    HtmlStr.Append("<tr><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">" & vbNewLine)
-                    HtmlStr.Append(Server.HtmlEncode(MyKeyName))
-                    HtmlStr.Append("</font></td><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">" & vbNewLine)
-                    HtmlStr.Append(Server.HtmlEncode(MyItemValue))
-                    HtmlStr.Append("</font></p></td><td valign=""top""><font face=""Arial"" size=""2"">" & vbNewLine)
-                    lit = New Literal
-                    lit.Text = HtmlStr.ToString
-                    PnlAddFlags.Controls.Add(lit)
+                    If String.Compare(MyKeyName, "Position", True) <> 0 Then 'Never show up special-flag "Position" which appears in AdditionalFlags list for compatiblity reasons, but should not appear here beause Position if copied already by base cloning mechanisms and copying can't be switched off
+                        Dim MyItemValue As String = UserInfo.AdditionalFlags.Item(MyCounter)
 
-                    Dim Chk As New CheckBox
-                    Chk.ID = "AddFlags_" & MyKeyName
 
-                    'Check for protected additional flags
-                    If AdditionalFlagAllowCopy(MyKeyName) = False Then
-                        Chk.Text = Chk.Text & " (protected additional flag)"
-                        Chk.Checked = False
-                        Chk.Enabled = False
-                        'AdditionalFlag automatically cannot be copied. So we add it to our list, so we can inform the user later in the status message
-                        'A special case is when this protected flag is also a required flag of an authorization that should be copied
-                        'In this special case we only have to list this flag if the belonging authorization is checked (--> copy)
-                        'Pay attention to remove the flag from the list, if the user unchecks the belonging authorization 
-                        AddNotCopiedData(notCopiedDataEnum.AdditionalFlag, MyKeyName)
-                        PnlAddFlags.Controls.Add(Chk)
-                    Else
-                        Chk.Checked = True
-                        Chk.Text = Server.HtmlEncode(MyKeyName)
-                        'Edit value of flag
-                        Dim txtBox As New TextBox
-                        txtBox.ID = "EditFlags_" & MyKeyName
-                        If Not IsPostBack Then
-                            txtBox.Text = Server.HtmlEncode(MyItemValue).Replace("&#252;", "?").Replace("&#246;", "?").Replace("&#228;", "?").Replace("&#196;", "?").Replace("&#214;", "?").Replace("&#220;", "?")
+                        HtmlStr = New System.Text.StringBuilder
+                        HtmlStr.Append("<tr><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">" & vbNewLine)
+                        HtmlStr.Append(Server.HtmlEncode(MyKeyName))
+                        HtmlStr.Append("</font></td><td valign=""Top"" width=""200""><font face=""Arial"" size=""2"">" & vbNewLine)
+                        HtmlStr.Append(Server.HtmlEncode(MyItemValue))
+                        HtmlStr.Append("</font></p></td><td valign=""top""><font face=""Arial"" size=""2"">" & vbNewLine)
+                        lit = New Literal
+                        lit.Text = HtmlStr.ToString
+                        PnlAddFlags.Controls.Add(lit)
+
+                        Dim Chk As New CheckBox
+                        Chk.ID = "AddFlags_" & MyKeyName
+
+                        'Check for protected additional flags
+                        If IsFlagExcludedFromCloning(MyKeyName) = True OrElse AdditionalFlagAllowCopy(MyKeyName) = False Then
+                            Chk.Text = Chk.Text & " (protected additional flag)"
+                            Chk.Checked = False
+                            Chk.Enabled = False
+                            'AdditionalFlag automatically cannot be copied. So we add it to our list, so we can inform the user later in the status message
+                            'A special case is when this protected flag is also a required flag of an authorization that should be copied
+                            'In this special case we only have to list this flag if the belonging authorization is checked (--> copy)
+                            'Pay attention to remove the flag from the list, if the user unchecks the belonging authorization 
+                            AddNotCopiedData(notCopiedDataEnum.AdditionalFlag, MyKeyName)
+                            PnlAddFlags.Controls.Add(Chk)
+                        Else
+                            Chk.Checked = True
+                            Chk.Text = Server.HtmlEncode(MyKeyName)
+                            'Edit value of flag
+                            Dim txtBox As New TextBox
+                            txtBox.ID = "EditFlags_" & MyKeyName
+                            If Not IsPostBack Then
+                                txtBox.Text = Server.HtmlEncode(MyItemValue).Replace("&#252;", "?").Replace("&#246;", "?").Replace("&#228;", "?").Replace("&#196;", "?").Replace("&#214;", "?").Replace("&#220;", "?")
+                            End If
+                            Dim tmpLbl As New Label
+                            tmpLbl.Text = "<br />"
+                            PnlAddFlags.Controls.Add(Chk)
+                            PnlAddFlags.Controls.Add(tmpLbl)
+                            PnlAddFlags.Controls.Add(txtBox)
                         End If
-                        Dim tmpLbl As New Label
-                        tmpLbl.Text = "<br />"
-                        PnlAddFlags.Controls.Add(Chk)
-                        PnlAddFlags.Controls.Add(tmpLbl)
-                        PnlAddFlags.Controls.Add(txtBox)
+
+                        'Give ability to tell the user whether this flag is a required flag by a checked authorization
+                        'This is controled by AssignAuthToPnl, because in this case the additional flags belong to the authorizations and we have to handle the checkbox postback event
+                        Dim lblIsRequiredFlag As New Label
+                        lblIsRequiredFlag.ID = "LabelFlag:" & MyKeyName
+                        PnlAddFlags.Controls.Add(lblIsRequiredFlag)
+
+                        HtmlStr = New System.Text.StringBuilder
+                        HtmlStr.Append("</font></td></tr>" & vbNewLine)
+                        lit = New Literal
+                        lit.Text = HtmlStr.ToString
+                        PnlAddFlags.Controls.Add(lit)
                     End If
-
-                    'Give ability to tell the user whether this flag is a required flag by a checked authorization
-                    'This is controled by AssignAuthToPnl, because in this case the additional flags belong to the authorizations and we have to handle the checkbox postback event
-                    Dim lblIsRequiredFlag As New Label
-                    lblIsRequiredFlag.ID = "LabelFlag:" & MyKeyName
-                    PnlAddFlags.Controls.Add(lblIsRequiredFlag)
-
-                    HtmlStr = New System.Text.StringBuilder
-                    HtmlStr.Append("</font></td></tr>" & vbNewLine)
-                    lit = New Literal
-                    lit.Text = HtmlStr.ToString
-                    PnlAddFlags.Controls.Add(lit)
                 Next
             End If
 
@@ -524,8 +528,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
             Next
         End Sub
-
-
 #End Region
 
         ''' <summary>
@@ -618,22 +620,27 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Return False
         End Function
 
-        Private Sub SetStandardFlagValues(ByVal userInfo As WMSystem.UserInformation)
-            userInfo.AdditionalFlags.Set("ComesFrom", "Account cloned by Admin """ & cammWebManager.CurrentUserLoginName & """ (" & cammWebManager.CurrentUserInfo.FirstName & " " & cammWebManager.CurrentUserInfo.LastName & ")")
-            userInfo.AdditionalFlags.Set("Motivation", "Account cloned by Admin")
-        End Sub
+        Protected ReadOnly Property TemplateUser As WebManager.WMSystem.UserInformation
+            Get
+                Static _TemplateUser As WebManager.WMSystem.UserInformation
+                If _TemplateUser Is Nothing Then
+                    _TemplateUser = New WebManager.WMSystem.UserInformation(Me.UserID, cammWebManager, False)
+                End If
+                Return _TemplateUser
+            End Get
+        End Property
 
-        Private Function Clone(ByVal newLoginName As String, ByVal genderID As Short, ByVal newAcademicTitle As String, ByVal newFirstName As String, ByVal newNameAddition As String, ByVal newLastName As String, ByVal newEmailAddress As String, ByVal newPassword As String) As CompuMaster.camm.WebManager.WMSystem.UserInformation
+        Private Function Clone(ByVal newLoginName As String, newCompany As String, ByVal genderID As Short, ByVal newAcademicTitle As String, ByVal newFirstName As String, ByVal newNameAddition As String, ByVal newLastName As String, ByVal newEmailAddress As String, ByVal newPassword As String) As CompuMaster.camm.WebManager.WMSystem.UserInformation
             Me.Page.Validate()
             If Page.IsValid Then
                 If newLoginName.Length > 50 Then
                     lblErrMsg.Text = "Loginname exeeded the length of max. 50 characters."
                     Return Nothing
                 End If
-                Dim TemplateUser As New WebManager.WMSystem.UserInformation(UserID, cammWebManager, False)
-                Dim NewUser As WebManager.WMSystem.UserInformation = Nothing
+                Dim NewUser As WebManager.WMSystem.UserInformation
                 Try
-                    NewUser = New WebManager.WMSystem.UserInformation(Nothing, newLoginName, newEmailAddress, False, New_Field_Company.Text, CType(genderID, WMSystem.Sex), newNameAddition, newFirstName, newLastName, newAcademicTitle, TemplateUser.Street, TemplateUser.ZipCode, TemplateUser.Location, TemplateUser.State, TemplateUser.Country, TemplateUser.PreferredLanguage1.ID, TemplateUser.PreferredLanguage2.ID, TemplateUser.PreferredLanguage3.ID, TemplateUser.LoginDisabled, False, False, TemplateUser.AccessLevel.ID, cammWebManager, CType(Nothing, String))
+                    NewUser = TemplateUser.CloneWithoutRelationships(newLoginName, CType(genderID, WMSystem.Sex), newAcademicTitle, newFirstName, newNameAddition, newLastName, newEmailAddress, False)
+                    NewUser.Company = newCompany
                 Catch ex As System.NotSupportedException
                     If Me.cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
                         lblErrMsg.Text = Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br />")
@@ -671,17 +678,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         End If
                     End If
 
-                    NewUser.AccountAuthorizationsAlreadySet = False
-                    NewUser.AccountProfileValidatedByEMailTest = False
-                    NewUser.AutomaticLogonAllowedByMachineToMachineCommunication = TemplateUser.AutomaticLogonAllowedByMachineToMachineCommunication
-                    NewUser.FaxNumber = TemplateUser.FaxNumber
-                    NewUser.MobileNumber = TemplateUser.MobileNumber
-                    NewUser.PhoneNumber = TemplateUser.PhoneNumber
-                    NewUser.Position = TemplateUser.Position
-                    NewUser.IsImpersonationUser = TemplateUser.IsImpersonationUser
-
                     CloneAdditionalFlags(TemplateUser.AdditionalFlags, NewUser)
-                    SetStandardFlagValues(NewUser)
 
                     Try
                         If Trim(newPassword) = Nothing Then
@@ -732,7 +729,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             notCopiedData = CType(Session("cwmCloneUserNotCopiedDataDt"), DataTable)
             Me.Page.Validate()
             If Page.IsValid Then
-                Dim ClonedUser As CompuMaster.camm.WebManager.WMSystem.UserInformation = Clone(New_Field_LoginName.Text, CShort(IIf(cmbAnrede.SelectedValue = Nothing, 0, cmbAnrede.SelectedValue)), New_Field_Titel.Text, New_Field_Vorname.Text, New_Field_Namenszusatz.Text, New_Field_Nachname.Text, New_Field_e_mail.Text, New_Field_Password.Text)
+                Dim ClonedUser As CompuMaster.camm.WebManager.WMSystem.UserInformation = Clone(New_Field_LoginName.Text, New_Field_Company.Text, CShort(IIf(cmbAnrede.SelectedValue = Nothing, 0, cmbAnrede.SelectedValue)), New_Field_Titel.Text, New_Field_Vorname.Text, New_Field_Namenszusatz.Text, New_Field_Nachname.Text, New_Field_e_mail.Text, New_Field_Password.Text)
                 If Not ClonedUser Is Nothing Then
                     lblStatusMsg.ForeColor = Drawing.Color.Green
                     lblStatusMsg.Text = "Cloning was successful! New userID: " & ClonedUser.IDLong & ". <a href=""users_update.aspx?ID=" & ClonedUser.IDLong & """>>>Update UserProfile</a><br />"

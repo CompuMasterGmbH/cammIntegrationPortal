@@ -391,7 +391,15 @@ Namespace CompuMaster.camm.WebManager
         Public Property UserCloneExludedAdditionalFlags() As String()
             Get
                 If _UserCloneExludedAdditionalFlags Is Nothing Then
-                    _UserCloneExludedAdditionalFlags = CompuMaster.camm.WebManager.WMSystem.Configuration.UserCloneExludedAdditionalFlags
+                    Dim Buffer As New System.Collections.Generic.List(Of String)(WMSystem.UserInformation.ReservedFlagNames)
+                    If CompuMaster.camm.WebManager.WMSystem.Configuration.UserCloneExludedAdditionalFlags IsNot Nothing Then
+                        For Each flagName As String In CompuMaster.camm.WebManager.WMSystem.Configuration.UserCloneExludedAdditionalFlags
+                            If Buffer.Contains(flagName) = False Then
+                                Buffer.Add(flagName)
+                            End If
+                        Next
+                    End If
+                    _UserCloneExludedAdditionalFlags = Buffer.ToArray
                 End If
                 Return _UserCloneExludedAdditionalFlags
             End Get
