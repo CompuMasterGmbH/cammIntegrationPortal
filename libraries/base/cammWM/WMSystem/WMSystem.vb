@@ -7648,7 +7648,6 @@ Namespace CompuMaster.camm.WebManager
                 MyCmd = New SqlCommand(sqlCommand.ToString, MyConn)
                 Return System_GetUserInfos(MyCmd)
             End If
-
         End Function
 
         ''' <summary>
@@ -7801,17 +7800,21 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="GroupIDs">An array of group IDs</param>
         ''' <returns>An array of group information</returns>
         Public Function System_GetGroupInfos(ByVal GroupIDs As Integer()) As GroupInformation()
-            'only search for server groups allowed for the current user
-            Dim ListOfGroups As New System.Text.StringBuilder
-            For Each GroupID As Integer In GroupIDs
-                If ListOfGroups.Length = 0 Then
-                    ListOfGroups.Append(GroupID)
-                Else
-                    ListOfGroups.Append(", ")
-                    ListOfGroups.Append(GroupID)
-                End If
-            Next
-            Return _System_GetGroupInfos("select * from gruppen where id in (" & ListOfGroups.ToString & ")")
+            If GroupIDs Is Nothing OrElse GroupIDs.Length = 0 Then
+                Return New GroupInformation() {}
+            Else
+                'only search for server groups allowed for the current user
+                Dim ListOfGroups As New System.Text.StringBuilder
+                For Each GroupID As Integer In GroupIDs
+                    If ListOfGroups.Length = 0 Then
+                        ListOfGroups.Append(GroupID.ToString)
+                    Else
+                        ListOfGroups.Append(", ")
+                        ListOfGroups.Append(GroupID.ToString)
+                    End If
+                Next
+                Return _System_GetGroupInfos("select * from gruppen where id in (" & ListOfGroups.ToString & ")")
+            End If
         End Function
 
         ''' <summary>
