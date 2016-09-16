@@ -1577,3 +1577,21 @@ BEGIN
 			DELETE FROM dbo.NavItems WHERE ID IN ( SELECT ID_NavItem FROM deleted )
 		END
 END
+GO
+IF OBJECT_ID ('dbo.D_System_UserSessions', 'TR') IS NOT NULL
+   DROP TRIGGER dbo.D_System_UserSessions;
+GO
+------------------------------------------------------------------------------------------------------------
+-- AUTOMATIC CLEANUP OF OLD USER SESSION VALUES
+------------------------------------------------------------------------------------------------------------
+CREATE TRIGGER dbo.D_System_UserSessions
+   ON [dbo].System_UserSessions
+   AFTER DELETE
+AS 
+BEGIN
+  DELETE 
+  FROM [dbo].[System_SessionValues] 
+	INNER JOIN [System_UserSessions] as deleted 
+		ON [dbo].[System_SessionValues].SessionID = deleted.[ID_Session]
+END
+GO

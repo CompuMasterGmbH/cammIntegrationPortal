@@ -76,3 +76,13 @@ GO
 		INNER JOIN [dbo].[Benutzer] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_AccessLevel = [dbo].[Benutzer].AccountAccessability
 		INNER JOIN [dbo].[System_ServerGroups] ON dbo.System_ServerGroupsAndTheirUserAccessLevels.ID_ServerGroup = [dbo].[System_ServerGroups].ID
 GO
+-- =========================================================================================================
+-- ===== CLEANUP OF OLD USER SESSION VALUES
+-- =========================================================================================================
+DELETE 
+FROM [dbo].[System_SessionValues] 
+WHERE [dbo].[System_SessionValues].SessionID NOT IN 
+	(
+		SELECT [ID_Session] FROM [dbo].[System_UserSessions]
+	)
+   
