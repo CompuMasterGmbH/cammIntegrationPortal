@@ -327,6 +327,7 @@ SELECT dbo.Memberships_EffectiveRulesWithClonesNthGrade.ID_Group, dbo.Benutzer.[
 FROM dbo.Memberships_EffectiveRulesWithClonesNthGrade 
 	LEFT OUTER JOIN dbo.Benutzer 
 		ON dbo.Memberships_EffectiveRulesWithClonesNthGrade.ID_User = dbo.Benutzer.ID
+WHERE dbo.Benutzer.[E-MAIL] IS NOT NULL
 GROUP BY dbo.Memberships_EffectiveRulesWithClonesNthGrade.ID_Group, dbo.Benutzer.[E-MAIL]
 GO
 ----------------------------------------------------
