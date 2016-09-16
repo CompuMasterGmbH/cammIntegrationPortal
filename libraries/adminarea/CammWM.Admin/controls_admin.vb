@@ -13,22 +13,60 @@
 'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden für Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
 
 Option Strict On
-Option Explicit On 
+Option Explicit On
 
-Imports System.Web
-Imports System.Data
 Imports System.Reflection
-Imports System.Data.SqlClient
 Imports System.Web.UI.WebControls
 Imports System.Web.UI.HtmlControls
-Imports CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider
 
 Namespace CompuMaster.camm.WebManager.Controls.Administration
+
+    Public Class UserControl
+        Inherits CompuMaster.camm.WebManager.Controls.UserControl
+
+        ''' <summary>
+        ''' Safely lookup the name of a group
+        ''' </summary>
+        ''' <param name="id"></param>
+        ''' <returns></returns>
+        Protected Function SafeLookupGroupName(id As Integer) As String
+            Try
+                If id = -1 Then
+                    Return "{Anonymous}"
+                Else
+                    Return New CompuMaster.camm.WebManager.WMSystem.GroupInformation(id, CType(Me.cammWebManager, WMSystem)).Name
+                End If
+            Catch ex As Exception
+                Return "[?:" & id & "] (" & ex.Message & ")"
+            End Try
+        End Function
+
+        ''' <summary>
+        ''' Safely lookup the name of a user
+        ''' </summary>
+        ''' <param name="id"></param>
+        ''' <returns></returns>
+        Protected Function SafeLookupUserFullName(id As Long) As String
+            Return Me.SafeLookupUserFullName(id, False)
+        End Function
+
+        ''' <summary>
+        ''' Safely lookup the name of a user
+        ''' </summary>
+        ''' <param name="id"></param>
+        ''' <param name="additionallyWithLoginName">True to enable additional output of login name, e.g. &quot;User Full Name (Login name)&quot;</param>
+        ''' <returns></returns>
+        Protected Function SafeLookupUserFullName(id As Long, additionallyWithLoginName As Boolean) As String
+            Return CompuMaster.camm.WebManager.Administration.Utils.FormatUserNameSafely(CType(Me.cammWebManager, WMSystem), id, additionallyWithLoginName)
+        End Function
+
+    End Class
+
     ''' <summary>
     '''     The floating menu on the right bottom which allows navigation to top of the current page or a history go back
     ''' </summary>
     Public Class FloatingMenu
-        Inherits System.Web.UI.UserControl
+        Inherits UserControl
 
         Public Sub New()
             Me.AnchorText = "Overview"
@@ -90,7 +128,7 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
     End Class
 
     Public Class AdministrativeDelegates
-        Inherits CompuMaster.camm.WebManager.Controls.UserControl
+        Inherits UserControl
 
         Public adjustdelegates, adjustdelegatesSecurity As HtmlAnchor
         Public GroupInfo As CompuMaster.camm.WebManager.WMSystem.GroupInformation
@@ -102,13 +140,13 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
     End Class
 
     Public Class GroupsAdditionalInformation
-        Inherits CompuMaster.camm.WebManager.Controls.UserControl
+        Inherits UserControl
 
         Public MyGroupInfo As CompuMaster.camm.WebManager.WMSystem.GroupInformation
     End Class
 
     Public Class UsersAdditionalInformation
-        Inherits CompuMaster.camm.WebManager.Controls.UserControl
+        Inherits UserControl
 
         Public MyUserInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation
 
@@ -139,7 +177,7 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
 
     End Class
 
-    Public Class AsseblyInfo
+    Public Class AssemblyInfo
         '''<summary>
         '''Returns assembly (title and version) information
         '''</summary>

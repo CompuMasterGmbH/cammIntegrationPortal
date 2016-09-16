@@ -309,25 +309,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="additionallyWithLoginName">True to enable additional output of login name, e.g. &quot;User Full Name (Login name)&quot;</param>
         ''' <returns></returns>
         Protected Function SafeLookupUserFullName(id As Long, additionallyWithLoginName As Boolean) As String
-            Try
-                If id = WMSystem.SpecialUsers.User_Anonymous Then
-                    Return "{Anonymous}"
-                ElseIf id = WMSystem.SpecialUsers.User_Code Then
-                    Return "{Code}"
-                ElseIf id = WMSystem.SpecialUsers.User_Invalid Then
-                    Return "{Invalid}"
-                ElseIf id = WMSystem.SpecialUsers.User_Public Then
-                    Return "{Public}"
-                ElseIf id = WMSystem.SpecialUsers.User_UpdateProcessor Then
-                    Return "{UpdateProcessor}"
-                ElseIf id = 0 Then
-                    Return "{User ID 0}"
-                Else
-                    Return CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(New CompuMaster.camm.WebManager.WMSystem.UserInformation(id, Me.cammWebManager, True), additionallyWithLoginName)
-                End If
-            Catch ex As Exception
-                Return "[?:" & id & "] (" & ex.Message & ")"
-            End Try
+            Return CompuMaster.camm.WebManager.Administration.Utils.FormatUserNameSafely(Me.cammWebManager, id, additionallyWithLoginName)
         End Function
 
         Friend ReadOnly Property GlobalConfig As CompuMaster.camm.WebManager.Administration.GlobalConfiguration

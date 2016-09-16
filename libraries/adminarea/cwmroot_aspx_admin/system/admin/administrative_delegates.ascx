@@ -1,4 +1,4 @@
-﻿<%@ Control Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Controls.Administration.AdministrativeDelegates" %>
+﻿<%@ Control debug=true Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Controls.Administration.AdministrativeDelegates" %>
 <% 
 If Not GroupInfo Is Nothing then 
 %>
@@ -25,15 +25,7 @@ If Not GroupInfo Is Nothing then
 %>
 					<TR>
 					<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= MyRec("AuthorizationType") %></FONT></P></TD>
-					<% 
-					Dim UserNameFormatted as string 
-					Try
-						UserNameFormatted = CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(MyRec("UserID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem)))
-					Catch
-					End Try
-					If UserNameFormatted = "" Then UserNameFormatted = "[?]"
-					%>
-					<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><%=Server.HtmlEncode(UserNameFormatted)%></TEXTAREA></FONT></P></TD>
+					<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><%=Server.HtmlEncode(Me.SafeLookupUserFullName(CLng(MyRec("UserID"))))%></TEXTAREA></FONT></P></TD>
 					</TR>
 <%
 			End While
@@ -77,7 +69,7 @@ If Not SecurityObjectInfo Is Nothing then
 %>
 					<TR>
 					<TD VAlign="Top" WIDTH="160"><P><FONT face="Arial" size=2><%= MyRec("AuthorizationType") %></FONT></P></TD>
-					<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><%=Server.HtmlEncode(CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(New CompuMaster.camm.WebManager.WMSystem.UserInformation(CLng(MyRec("UserID")), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))))%></TEXTAREA></FONT></P></TD>
+					<TD VAlign="Top" Width="240"><P><FONT face="Arial" size=2><%=Server.HtmlEncode(Me.SafeLookupUserFullName(CLng(MyRec("UserID"))))%></TEXTAREA></FONT></P></TD>
 					</TR>
 <%
 			End While 

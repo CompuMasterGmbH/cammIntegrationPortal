@@ -22,6 +22,32 @@ Namespace CompuMaster.camm.WebManager.Administration
         ''' <summary>
         ''' Formats a username depending of which parts of the username exists.
         ''' </summary>
+        ''' <param name="userID">An active, deleted or never-existing user ID</param>
+        Public Shared Function FormatUserNameSafely(webManager As WMSystem, ByVal userID As Long, additionallyWithLoginName As Boolean) As String
+            Try
+                If userID = WMSystem.SpecialUsers.User_Anonymous Then
+                    Return "{Anonymous}"
+                ElseIf userID = WMSystem.SpecialUsers.User_Code Then
+                    Return "{Code}"
+                ElseIf userID = WMSystem.SpecialUsers.User_Invalid Then
+                    Return "{Invalid}"
+                ElseIf userID = WMSystem.SpecialUsers.User_Public Then
+                    Return "{Public}"
+                ElseIf userID = WMSystem.SpecialUsers.User_UpdateProcessor Then
+                    Return "{UpdateProcessor}"
+                ElseIf userID = 0 Then
+                    Return "{User ID 0}"
+                Else
+                    Return CompuMaster.camm.WebManager.Administration.Utils.FormatUserName(New CompuMaster.camm.WebManager.WMSystem.UserInformation(userID, webManager, True), additionallyWithLoginName)
+                End If
+            Catch ex As Exception
+                Return "[?:" & userID & "] (" & ex.Message & ")"
+            End Try
+        End Function
+
+        ''' <summary>
+        ''' Formats a username depending of which parts of the username exists.
+        ''' </summary>
         ''' <param name="userInfo">The userinformation object.</param>
         Public Shared Function FormatUserName(ByVal userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation) As String
             Return FormatUserName(userInfo, False)
