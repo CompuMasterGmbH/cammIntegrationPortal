@@ -704,20 +704,20 @@ Namespace CompuMaster.camm.WebManager
             Friend Shared Function RequiredAdditionalFlags(groupID As Integer, webManager As WMSystem) As String()
                 Dim Sql As String
                 If webManager.System_DBVersion_Ex(True).CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                    Sql = "        SELECT Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags" & vbNewLine & _
-                            "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine & _
-                            "            INNER JOIN dbo.Applications_CurrentAndInactiveOnes " & vbNewLine & _
-                            "                ON Applications_CurrentAndInactiveOnes.ID = [dbo].[ApplicationsRightsByGroup].ID_Application" & vbNewLine & _
-                            "        WHERE [dbo].[ApplicationsRightsByGroup].isdenyrule = 0" & vbNewLine & _
-                            "            AND [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine & _
-                            "            AND Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags IS NOT NULL"
+                    Sql = "        SELECT Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags" & vbNewLine &
+                            "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine &
+                            "            INNER JOIN dbo.Applications_CurrentAndInactiveOnes " & vbNewLine &
+                            "                ON Applications_CurrentAndInactiveOnes.ID = [dbo].[ApplicationsRightsByGroup].ID_Application" & vbNewLine &
+                            "        WHERE [dbo].[ApplicationsRightsByGroup].isdenyrule = 0" & vbNewLine &
+                            "            AND [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine &
+                            "            AND IsNull(Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags, N'') <> N''"
                 Else
-                    Sql = "        SELECT Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags" & vbNewLine & _
-                            "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine & _
-                            "            INNER JOIN dbo.Applications_CurrentAndInactiveOnes " & vbNewLine & _
-                            "                ON Applications_CurrentAndInactiveOnes.ID = [dbo].[ApplicationsRightsByGroup].ID_Application" & vbNewLine & _
-                            "        WHERE [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine & _
-                            "            AND Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags IS NOT NULL"
+                    Sql = "        SELECT Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags" & vbNewLine &
+                            "        FROM [dbo].[ApplicationsRightsByGroup] " & vbNewLine &
+                            "            INNER JOIN dbo.Applications_CurrentAndInactiveOnes " & vbNewLine &
+                            "                ON Applications_CurrentAndInactiveOnes.ID = [dbo].[ApplicationsRightsByGroup].ID_Application" & vbNewLine &
+                            "        WHERE [dbo].[ApplicationsRightsByGroup].ID_GroupOrPerson = @GroupID" & vbNewLine &
+                            "            AND IsNull(Applications_CurrentAndInactiveOnes.RequiredUserProfileFlags, N'') <> N''"
                 End If
                 Dim command As New SqlCommand(Sql, New SqlConnection(webManager.ConnectionString))
                 command.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupID
