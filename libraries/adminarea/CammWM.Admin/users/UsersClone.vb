@@ -635,9 +635,19 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Try
                     NewUser = New WebManager.WMSystem.UserInformation(Nothing, newLoginName, newEmailAddress, False, New_Field_Company.Text, CType(genderID, WMSystem.Sex), newNameAddition, newFirstName, newLastName, newAcademicTitle, TemplateUser.Street, TemplateUser.ZipCode, TemplateUser.Location, TemplateUser.State, TemplateUser.Country, TemplateUser.PreferredLanguage1.ID, TemplateUser.PreferredLanguage2.ID, TemplateUser.PreferredLanguage3.ID, TemplateUser.LoginDisabled, False, False, TemplateUser.AccessLevel.ID, cammWebManager, CType(Nothing, String))
                 Catch ex As System.NotSupportedException
-                    lblErrMsg.Text = ex.Message
-                Catch ex2 As CompuMaster.camm.WebManager.PasswordTooWeakException
-                    lblErrMsg.Text = ex2.Message
+                    If Me.cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                        lblErrMsg.Text = Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br />")
+                    Else
+                        lblErrMsg.Text = ex.Message
+                    End If
+                    Return Nothing
+                Catch ex As CompuMaster.camm.WebManager.PasswordTooWeakException
+                    If Me.cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                        lblErrMsg.Text = Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br />")
+                    Else
+                        lblErrMsg.Text = ex.Message
+                    End If
+                    Return Nothing
                 End Try
 
                 If Not NewUser Is Nothing Then
@@ -668,6 +678,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     NewUser.MobileNumber = TemplateUser.MobileNumber
                     NewUser.PhoneNumber = TemplateUser.PhoneNumber
                     NewUser.Position = TemplateUser.Position
+                    NewUser.IsImpersonationUser = TemplateUser.IsImpersonationUser
 
                     CloneAdditionalFlags(TemplateUser.AdditionalFlags, NewUser)
                     SetStandardFlagValues(NewUser)
@@ -679,9 +690,19 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             NewUser.Save(newPassword)
                         End If
                     Catch ex As CompuMaster.camm.WebManager.PasswordTooWeakException
-                        lblErrMsg.Text = ex.Message
+                        If Me.cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                            lblErrMsg.Text = Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br />")
+                        Else
+                            lblErrMsg.Text = ex.Message
+                        End If
+                        Return Nothing
                     Catch ex As Exception
-                        lblErrMsg.Text = ex.Message
+                        If Me.cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                            lblErrMsg.Text = Server.HtmlEncode(ex.ToString).Replace(vbNewLine, "<br />")
+                        Else
+                            lblErrMsg.Text = ex.Message
+                        End If
+                        Return Nothing
                     End Try
 
                     If lblErrMsg.Text <> Nothing Then
