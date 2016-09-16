@@ -1,4 +1,4 @@
-﻿<%@ Control debug=true Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Controls.Administration.AdministrativeDelegates" %>
+﻿<%@ Control Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Controls.Administration.AdministrativeDelegates" %>
 <% 
 If Not GroupInfo Is Nothing then 
 %>
