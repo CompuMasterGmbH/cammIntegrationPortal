@@ -1591,7 +1591,7 @@ AS
 BEGIN
   DELETE 
   FROM [dbo].[System_SessionValues] 
-	INNER JOIN [System_UserSessions] as deleted 
+	INNER JOIN deleted 
 		ON [dbo].[System_SessionValues].SessionID = deleted.[ID_Session]
 END
 GO
