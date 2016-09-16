@@ -187,6 +187,22 @@
     <Compile Include="configandsetup\UpdateServerGroup.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="controls\AdministrativeDelegates.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="controls\AssemblyInfo.vb" />
+    <Compile Include="controls\FloatingMenu.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="controls\GroupsAdditionalInformation.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="controls\UserControl.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="controls\UsersAdditionalInformation.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="groups\GroupDelete.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -221,16 +237,28 @@
     <Compile Include="memberships\Membership_Delete.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin_apps.vb">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="securitydelegations\AdjustDelegates.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="controls_admin.vb">
+    <Compile Include="page_admin.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="page_admin.vb">
+    <Compile Include="securityobjects\ApplicationBasePage.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="securityobjects\ApplicationClone.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="securityobjects\ApplicationDelete.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="securityobjects\ApplicationList.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="securityobjects\ApplicationNew.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="securityobjects\ApplicationUpdate.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="troubleshootingandmodules\page_mailqueuemonitor.vb">
@@ -282,7 +310,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="My Project\" />
-    <Folder Include="securityobjects\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
