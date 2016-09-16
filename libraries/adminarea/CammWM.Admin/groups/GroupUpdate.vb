@@ -109,17 +109,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         hypModifiedBy.Text = Server.HtmlEncode(Me.SafeLookupUserFullName(CLng(dtGroupInfo.Rows(0)("ModifiedByID"))))
                     End If
 
-                    Dim dtMembership As DataTable
-                    Dim sqlParams1 As SqlParameter() = {New SqlParameter("@ID", CInt(Val(Request.QueryString("ID") & "")))}
-                    dtMembership = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
-                                    "SELECT * FROM dbo.view_eMailAccounts_of_Groups WHERE ID_Group=@ID", CommandType.Text, sqlParams1, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
-                    Dim MembersEMailList As String = ""
-                    Dim iCount As Integer = 0
-                    While iCount < dtMembership.Rows.Count
-                        MembersEMailList = MembersEMailList & Server.HtmlDecode(Utils.Nz(dtMembership.Rows(iCount)("E-MAIL"), String.Empty)) & "; "
-                        iCount += 1
-                    End While
-                    txtBccMail.Text = MembersEMailList
+                    Dim MyCmd As New SqlClient.SqlCommand("SELECT [E-MAIL] FROM dbo.view_eMailAccounts_of_Groups WHERE ID_Group=@ID", New SqlConnection(cammWebManager.ConnectionString))
+                    MyCmd.Parameters.Add("@ID", SqlDbType.Int).Value = CInt(Val(Request.QueryString("ID") & ""))
+
+                    Dim EMailAddressesOfMembers As System.Collections.Generic.List(Of String)
+                    EMailAddressesOfMembers = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoGenericList(Of String)(mycmd, Automations.AutoOpenAndCloseAndDisposeConnection)
+                    txtBccMail.Text = Strings.Join(EMailAddressesOfMembers.ToArray, "; ")
                     If ViewOnlyMode = False Then trUpdateGroup.Visible = True
                 End If
             Catch ex As Exception

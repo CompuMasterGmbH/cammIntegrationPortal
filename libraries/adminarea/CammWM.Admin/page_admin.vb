@@ -36,6 +36,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End Set
         End Property
 
+        Private Function CombineAuthorizations(user As CompuMaster.camm.WebManager.WMSystem.UserInformation) As CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForUser()
+            Dim Result As New System.Collections.Generic.List(Of CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForUser)
+            Result.AddRange(user.AuthorizationsByRule.AllowRuleStandard)
+            Result.AddRange(user.AuthorizationsByRule.DenyRuleDevelopers)
+            Result.AddRange(user.AuthorizationsByRule.DenyRuleStandard)
+            Result.AddRange(user.AuthorizationsByRule.DenyRuleDevelopers)
+            Return Result.ToArray
+        End Function
+
         Private _CurrentAdminIsSecurityOperator As TriState = TriState.UseDefault
         ''' <summary>
         ''' Is the current user a security operator?

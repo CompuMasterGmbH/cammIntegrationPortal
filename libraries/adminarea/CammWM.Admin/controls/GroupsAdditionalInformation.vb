@@ -21,6 +21,43 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
         Inherits UserControl
 
         Public MyGroupInfo As CompuMaster.camm.WebManager.WMSystem.GroupInformation
+
+        Public Function SortAuthorizations(ByVal left As CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForGroup, ByVal right As CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForGroup) As Integer
+            Dim DisplayNameLeft As String, DisplayNameRight As String, IsDevRuleLeft As Boolean, IsAllowRuleLeft As Boolean, IsDevRuleRight As Boolean, IsAllowRuleRight As Boolean
+            Try
+                'following statement might fail on invalid references to security objects (e.g. security object deleted in table, but authorization entry never deleted for some reasons)
+                DisplayNameLeft = left.SecurityObjectInfo.DisplayName
+                IsAllowRuleLeft = Not left.IsDenyRule
+                IsDevRuleLeft = left.IsDevRule
+            Catch
+                DisplayNameLeft = "{ERROR: Invalid ID " & left.SecurityObjectID & "}"
+            End Try
+            Try
+                'following statement might fail on invalid references to security objects (e.g. security object deleted in table, but authorization entry never deleted for some reasons)
+                DisplayNameRight = right.SecurityObjectInfo.DisplayName
+                IsAllowRuleRight = Not right.IsDenyRule
+                IsDevRuleRight = right.IsDevRule
+            Catch
+                DisplayNameRight = "{ERROR: Invalid ID " & right.SecurityObjectID & "}"
+            End Try
+            If IsAllowRuleLeft.CompareTo(IsAllowRuleRight) <> 0 Then
+                Return IsAllowRuleRight.CompareTo(IsAllowRuleLeft)
+            ElseIf IsDevRuleLeft.CompareTo(IsDevRuleRight) <> 0 Then
+                Return IsDevRuleLeft.CompareTo(IsDevRuleRight)
+            Else
+                Return DisplayNameLeft.CompareTo(DisplayNameRight)
+            End If
+        End Function
+
+        Protected Function CombineAuthorizations(group As CompuMaster.camm.WebManager.WMSystem.GroupInformation) As CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForGroup()
+            Dim Result As New System.Collections.Generic.List(Of CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForGroup)
+            Result.AddRange(group.AuthorizationsByRule.AllowRuleStandard)
+            Result.AddRange(group.AuthorizationsByRule.AllowRuleDevelopers)
+            Result.AddRange(group.AuthorizationsByRule.DenyRuleStandard)
+            Result.AddRange(group.AuthorizationsByRule.DenyRuleDevelopers)
+            Return Result.ToArray
+        End Function
+
     End Class
 
 End Namespace

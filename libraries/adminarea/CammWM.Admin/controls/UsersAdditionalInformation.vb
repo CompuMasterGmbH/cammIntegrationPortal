@@ -22,30 +22,59 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
 
         Public MyUserInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation
 
-        Public Function SortAuthorizations(ByVal left As CompuMaster.camm.WebManager.WMSystem.Authorizations.UserAuthorizationInformation, ByVal right As CompuMaster.camm.WebManager.WMSystem.Authorizations.UserAuthorizationInformation) As Integer
-            Dim DisplayNameLeft As String, DisplayNameRight As String
+        Public Function SortAuthorizations(ByVal left As CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForUser, ByVal right As CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForUser) As Integer
+            Dim DisplayNameLeft As String, DisplayNameRight As String, IsDevRuleLeft As Boolean, IsAllowRuleLeft As Boolean, IsDevRuleRight As Boolean, IsAllowRuleRight As Boolean
             Try
                 'following statement might fail on invalid references to security objects (e.g. security object deleted in table, but authorization entry never deleted for some reasons)
                 DisplayNameLeft = left.SecurityObjectInfo.DisplayName
+                IsAllowRuleLeft = Not left.IsDenyRule
+                IsDevRuleLeft = left.IsDeveloperAuthorization
             Catch
                 DisplayNameLeft = "{ERROR: Invalid ID " & left.SecurityObjectID & "}"
             End Try
             Try
                 'following statement might fail on invalid references to security objects (e.g. security object deleted in table, but authorization entry never deleted for some reasons)
                 DisplayNameRight = right.SecurityObjectInfo.DisplayName
+                IsAllowRuleRight = Not right.IsDenyRule
+                IsDevRuleRight = right.IsDeveloperAuthorization
             Catch
                 DisplayNameRight = "{ERROR: Invalid ID " & right.SecurityObjectID & "}"
             End Try
-            Return DisplayNameLeft.CompareTo(DisplayNameRight)
+            If IsAllowRuleLeft.CompareTo(IsAllowRuleRight) <> 0 Then
+                Return IsAllowRuleRight.CompareTo(IsAllowRuleLeft)
+            ElseIf IsDevRuleLeft.CompareTo(IsDevRuleRight) <> 0 Then
+                Return IsDevRuleLeft.CompareTo(IsDevRuleRight)
+            Else
+                Return DisplayNameLeft.CompareTo(DisplayNameRight)
+            End If
         End Function
 
         Public Function SortMemberships(ByVal left As CompuMaster.camm.WebManager.WMSystem.GroupInformation, ByVal right As CompuMaster.camm.WebManager.WMSystem.GroupInformation) As Integer
             Return left.Description.CompareTo(right.Description)
         End Function
 
+        Protected Function SortedGroups(MyGroupInfos As CompuMaster.camm.WebManager.WMSystem.GroupInformation()) As System.Data.DataTable
+            Dim sortDt As New System.Data.DataTable("sortDT")
+            sortDt.Columns.Add("GroupInfo", GetType(CompuMaster.camm.WebManager.WMSystem.GroupInformation))
+            sortDt.Columns.Add("GroupName")
+            For Each tmpMyGroupInfo As CompuMaster.camm.WebManager.WMSystem.GroupInformation In MyGroupInfos
+                Dim tmpRow As Data.DataRow = sortDt.NewRow()
+                tmpRow("GroupInfo") = tmpMyGroupInfo
+                tmpRow("GroupName") = tmpMyGroupInfo.Name
+                sortDt.Rows.Add(tmpRow)
+            Next
+            sortDt.DefaultView.Sort = "GroupName"
+            Return sortDt
+        End Function
 
-
-
+        Protected Function CombineAuthorizations(user As CompuMaster.camm.WebManager.WMSystem.UserInformation) As CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForUser()
+            Dim Result As New System.Collections.Generic.List(Of CompuMaster.camm.WebManager.WMSystem.SecurityObjectAuthorizationForUser)
+            Result.AddRange(user.AuthorizationsByRule.AllowRuleStandard)
+            Result.AddRange(user.AuthorizationsByRule.AllowRuleDevelopers)
+            Result.AddRange(user.AuthorizationsByRule.DenyRuleStandard)
+            Result.AddRange(user.AuthorizationsByRule.DenyRuleDevelopers)
+            Return Result.ToArray
+        End Function
 
     End Class
 
