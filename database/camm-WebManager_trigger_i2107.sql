@@ -161,7 +161,7 @@ BEGIN
 				LEFT JOIN dbo.[ApplicationsRightsByGroup]
 					ON dbo.[ApplicationsRightsByGroup].ID_Application = inserted.ID
 						AND dbo.[ApplicationsRightsByGroup].ID_ServerGroup = 0
-						AND dbo.[ApplicationsRightsByGroup].ID_GroupOrPerson = 6
+						AND dbo.[ApplicationsRightsByGroup].ID_GroupOrPerson = -6
 						AND dbo.[ApplicationsRightsByGroup].DevelopmentTeamMember = 1
 						AND dbo.[ApplicationsRightsByGroup].IsDenyRule = 0
 			WHERE AppDeleted = 0
