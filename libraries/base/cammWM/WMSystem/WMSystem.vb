@@ -2156,12 +2156,35 @@ Namespace CompuMaster.camm.WebManager
             End If
         End Sub
 
+
+        Private Function System_GetInternalUserSessionId() As Integer
+            If Me.IsLoggedOn Then
+                Dim MyCmd As New SqlCommand
+                MyCmd.Connection = New SqlClient.SqlConnection(ConnectionString)
+                MyCmd.CommandType = CommandType.Text
+                MyCmd.CommandText = "SELECT SessionID FROM [dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes] WHERE Inactive = 0 AND ScriptEngine_SessionID = @ScriptEngine_SessionID AND ScriptEngine_ID = @ScriptEngine_ID AND Server = @ServerID"
+                MyCmd.Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = CurrentScriptEngineSessionID
+                MyCmd.Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.NetClient
+                MyCmd.Parameters.Add("@ServerID", SqlDbType.Int).Value = Me.System_GetServerID()
+
+                Dim result As Object = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), 0)
+                Return CType(result, Integer)
+            Else
+                Return 0
+            End If
+        End Function
+
         ''' <summary>
         '''     Is the user's camm Web-Manager session terminated?
         ''' </summary>
         ''' <param name="LoginNameOfUser">The login name to be checked</param>
         ''' <returns>True when the session has ended</returns>
         Public Function System_IsSessionTerminated(ByVal LoginNameOfUser As String) As Boolean
+
+            If HttpContext.Current Is Nothing Then
+                Return System_GetInternalUserSessionId() = 0
+            End If
+
             Dim MyDBConn As New SqlConnection
             Dim MyRecSet As SqlDataReader = Nothing
             Dim MyCmd As New SqlCommand
@@ -3158,6 +3181,8 @@ Namespace CompuMaster.camm.WebManager
             Dim MyRecSet As SqlDataReader = Nothing
             Dim MyCmd As New SqlCommand
 
+            Dim currentSessionId As Integer = System_GetInternalUserSessionId()
+
             'Create connection
             MyDBConn.ConnectionString = ConnectionString
             Try
@@ -3166,7 +3191,10 @@ Namespace CompuMaster.camm.WebManager
                 'Get parameter value and append parameter
                 With MyCmd
 
-                    .CommandText = "SELECT * FROM [System_SessionValues] WHERE SessionID IN (SELECT System_SessionID FROM Benutzer WHERE LoginName = N'" & Replace(Me.CurrentUserLoginName, "'", "''") & "') AND VarName = N'" & SettingName.Replace("'", "''") & "'"
+                    .CommandText = "SELECT * FROM [System_SessionValues] WHERE SessionID = @sessionid AND VarName = @settingsname"
+                    .Parameters.Add("@sessionid", SqlDbType.Int).Value = currentSessionId
+                    .Parameters.Add("@settingsname", SqlDbType.NVarChar).Value = SettingName
+
                     .CommandType = CommandType.Text
 
                 End With
@@ -3222,14 +3250,13 @@ Namespace CompuMaster.camm.WebManager
         Public Function System_SetSessionValue(ByVal SettingName As String, ByVal SettingValue As Object) As Object
             Dim Result As Boolean
             Dim MyDBConn As New SqlConnection
-            Dim MyCmd As New SqlCommand
             Dim MyDataAdapter As SqlDataAdapter
             Dim MyDataSet As New DataSet
             Dim MyDataTable As DataTable
             Dim MyRow As DataRow
             Dim MySQLCommandBuilder As SqlCommandBuilder
             Dim MyRecSet As SqlDataReader = Nothing
-            Dim CurUserSessionID As Integer
+
             Dim CurRowStatus As Byte = 0
 
             If Not Me.IsLoggedOn Then
@@ -3245,40 +3272,17 @@ Namespace CompuMaster.camm.WebManager
             Try
                 MyDBConn.Open()
 
-                'Get parameter value and append parameter
-                With MyCmd
+                Dim CurUserSessionID As Integer = System_GetInternalUserSessionId()
 
-                    .CommandText = "SELECT System_SessionID FROM Benutzer WHERE LoginName = N'" & Replace(Me.CurrentUserLoginName, "'", "''") & "'"
-                    .CommandType = CommandType.Text
 
-                End With
+                Dim cmd As New SqlCommand
+                cmd.CommandText = "SELECT * FROM [System_SessionValues] WHERE SessionID = @sessionid And VarName =  @settingsname"
+                cmd.CommandType = CommandType.Text
+                cmd.Parameters.Add("@sessionid", SqlDbType.Int).Value = CurUserSessionID
+                cmd.Parameters.Add("@settingsname", SqlDbType.NVarChar).Value = SettingName
+                cmd.Connection = MyDBConn
 
-                'Create recordset by executing the command
-                MyCmd.Connection = MyDBConn
-                MyRecSet = MyCmd.ExecuteReader()
-
-                'Get Last System_SessionID of user
-                'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class
-                Dim WorkaroundEx As New Exception("")
-                Dim WorkaroundStackTrace As String = WorkaroundEx.StackTrace 'contains only last few lines of stacktrace
-                Try
-                    WorkaroundStackTrace = System.Environment.StackTrace 'contains full stacktrace
-                Catch
-                End Try
-                If Not MyRecSet.Read() Then
-                    Me.Log.RuntimeWarning("User '" & Me.CurrentUserLoginName & "' does not exist (any more)", WorkaroundStackTrace, DebugLevels.NoDebug, False, False)
-                    Return False
-                ElseIf IsDBNull(MyRecSet("System_SessionID")) Then
-                    Me.Log.RuntimeWarning("Unexpected exception found: no user session available", WorkaroundStackTrace, DebugLevels.NoDebug, False, False)
-                    Return False
-                Else
-                    CurUserSessionID = CType(MyRecSet("System_SessionID"), Integer)
-                End If
-                MyRecSet.Close()
-                MyCmd.Dispose()
-
-                MyDataAdapter = New SqlDataAdapter("SELECT * FROM [System_SessionValues] WHERE SessionID = " & CurUserSessionID & " AND VarName = N'" & SettingName.Replace("'", "''") & "'", MyDBConn)
-                MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+                MyDataAdapter = New SqlDataAdapter(cmd)
                 MyDataAdapter.AcceptChangesDuringFill = True
                 MySQLCommandBuilder = New SqlCommandBuilder(MyDataAdapter)
                 MyDataAdapter.Fill(MyDataSet, "CurSessionValues")
@@ -3359,9 +3363,7 @@ Namespace CompuMaster.camm.WebManager
                 If Not MyRecSet Is Nothing AndAlso Not MyRecSet.IsClosed Then
                     MyRecSet.Close()
                 End If
-                If Not MyCmd Is Nothing Then
-                    MyCmd.Dispose()
-                End If
+
                 If Not MyDBConn Is Nothing Then
                     If MyDBConn.State <> ConnectionState.Closed Then
                         MyDBConn.Close()
