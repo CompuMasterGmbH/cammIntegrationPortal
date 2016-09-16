@@ -1,4 +1,4 @@
-<%@ Page Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.SmartWebEditor.Pages.UploadForm"%>
+<%@ Page Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.SmartWebEditor.Pages.DocsUploadForm"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <%@ Register TagPrefix="SmartWebEditor" TagName="ImageBrowser" Src="ImageBrowser.ascx" %>
 
@@ -6,9 +6,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 	<HEAD>
-		<title>Bilddaten - Management</title>
+		<title>Document - Management</title>
 		<script language="javascript" >
-	function checkImageValidity(thisForm)
+
+	function checkFileValidity(thisForm)
 	{
 
 		for (var i = 0; i < thisForm.length; i++)
@@ -57,43 +58,11 @@
 		<div style="width: 60%">
 			<p><asp:Label Runat=server ID="LabelImageUploadFolder" /> <asp:Label id="LabelImageUploadFolderValue" runat="server"></asp:Label></p>
 		</div>		
-		<p><asp:Label Runat="server" ID="LabelImageDimensionQuestion" /></p>
-	
-			<table border="0" cellpadding="0" cellspacing="0" width="100%">
-										<tr valign="bottom">
-											<td width="150"></td>
-											<td width="150">
-												<asp:Label Runat="server" ID="LabelMiniatureView" Font-Bold="True" />&nbsp;
-												<asp:CheckBox Runat="server" ID="CheckBoxMiniatureView" Checked="True" /></td>
-											<td width="50"></td>
-											<td>
-												<asp:Label Runat="server" ID="LabelNormalView" Font-Bold="True" />&nbsp;
-												<asp:CheckBox Runat="server" ID="CheckBoxNormalView" Checked="True" /></td>
-										</tr>
-										<tr valign="bottom">
-											<td width="150"><img src="/system/modules/smartwcms/images/maxwidth.gif" width="20" height="20">&nbsp;
-												<asp:Label Runat="server" ID="LabelMaxWidth" /></td>
-											<td>
-												<asp:TextBox Runat="server" ID="TextBoxMiniatureMaxWidth" Columns="9" />&nbsp;Pixel</td>
-											<td width="50"></td>
-											<td>
-												<asp:TextBox Runat="server" ID="TextBoxNormalMaxWidth" Columns="9" />&nbsp;Pixel</td>
-										</tr>
-										<tr valign="bottom">
-											<td><img src="/system/modules/smartwcms/images/maxheight.gif" width="20" height="20">&nbsp;
-												<asp:Label Runat="server" ID="LabelMaxHeight" /></td>
-											<td>
-												<asp:TextBox Runat="server" ID="TextBoxMiniatureMaxHeight" Columns="9" />&nbsp;Pixel</td>
-											<td width="50"></td>
-											<td>
-												<asp:TextBox Runat="server" ID="TextBoxNormalMaxHeight" Columns="9" />&nbsp;Pixel</td>
-										</tr>
-									</table>
-				
+						
 		<p style="clear: both;"><asp:Label Runat="server" ID="LabelWarning" ForeColor="#ff0033" /></p>
 		
 										
-		<p><asp:Button Runat="server" ID="ButtonUploadImage" OnClientClick="return checkImageValidity(document.forms[0]);" /></p>
+		<p><asp:Button Runat="server" ID="ButtonUploadImage" OnClientClick="return checkFileValidity(document.forms[0]);" /></p>
 			
 		<p><asp:Label Runat="server" ID="LabelProcessingTips" /></p>
 		

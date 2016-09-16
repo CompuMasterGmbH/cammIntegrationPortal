@@ -479,6 +479,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 'Switch version to edit version!
                 Me.CurrentVersion = Me.Database.MaxVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
                 editorMain.Editable = CanEditCurrentVersion()
+
             End If
         End Sub
 
@@ -836,13 +837,13 @@ Namespace CompuMaster.camm.SmartWebEditor
         End Function
 
         ''' <summary>
-        '''     Generates a url conform string to pass trough url as parameter for later usement
+        '''     Generates an encrypted url conform string 
         ''' </summary>
         ''' <param name="sourceString"></param>
         ''' <returns></returns>
         ''' <remarks>
         ''' </remarks>
-        Protected Function EncryptAStringForUrlUsement(ByVal sourceString As String) As String
+        Protected Function EncryptStringForUrlUsage(ByVal sourceString As String) As String
             Dim result As String = Nothing
             Try
                 Dim myCryptingEngine As CompuMaster.camm.WebManager.ICrypt = New CompuMaster.camm.WebManager.TripleDesBase64Encryption
@@ -854,8 +855,8 @@ Namespace CompuMaster.camm.SmartWebEditor
         End Function    'EncryptAStringForUrlUsement(ByVal sourceString As String) As String
 
         Protected Function GenerateUploadFormUrl() As String
-
-            Return Me.UploadFormUrl & "?ref=" & Me.EncryptAStringForUrlUsement(DocumentID) & "&imageupload=" & Me.EncryptAStringForUrlUsement(Utils.FullyInterpretedVirtualPath(Me.ImagesUploadPath)) & "&securityobject=" & EncryptAStringForUrlUsement(Me.SecurityObjectEditMode) & "&editorid=" & EncryptAStringForUrlUsement(Me.editorMain.ClientID)
+            'TOOD: consider a different way to pass the data, e. g. serialization of a class + hmac
+            Return Me.UploadFormUrl & "?ref=" & Me.EncryptStringForUrlUsage(DocumentID) & "&uploadpath=" & Me.EncryptStringForUrlUsage(Utils.FullyInterpretedVirtualPath(Me.ImagesUploadPath)) & "&securityobject=" & EncryptStringForUrlUsage(Me.SecurityObjectEditMode) & "&editorid=" & EncryptStringForUrlUsage(Me.editorMain.ClientID) & "&maxuploadsize=" & EncryptStringForUrlUsage(Me.ImagesUploadSizeMax.ToString()) & "&readonlydirs=" & EncryptStringForUrlUsage(String.Join(";", Me.ImagesReadOnly)) & "&callbackfunction=" & EncryptStringForUrlUsage("pasteImageToEditor")
         End Function
 
 

@@ -23,16 +23,13 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
     ''' <summary>
     ''' Image upload form (page is centrally positioned in /system/... folder)
     ''' </summary>
-    Public Class UploadForm
-        Inherits CompuMaster.camm.SmartWebEditor.ProtectedUploadPage
-
-        Protected WithEvents TableOptions As System.Web.UI.WebControls.Table
-        Protected WithEvents LabelImageUploadFolder As System.Web.UI.WebControls.Label
-        Protected WithEvents LabelImageUploadFolderValue As System.Web.UI.WebControls.Label
+    Public Class ImagesUploadForm
+        Inherits CompuMaster.camm.SmartWebEditor.Pages.Upload.GeneralUploadForm
 
         Private Configuration As New ConfigurationUploadSettings
 
         Private Sub PageOnInit(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
+            Me.AllowedFileExtensions = New String() {".jpg", ".jpeg", ".gif", ".png", ".bmp"}
 
             'Initializes the object security
             InitializeSecurityObject()
@@ -42,19 +39,15 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             CreateUploadFolders()
 
             'Initialize the label who are describing the upload locations targets
-            Me.LabelImageUploadFolderValue.Text = Me.ImageUploadFolder
+            Me.LabelFileUploadFolderValue.Text = Me.FileUploadFolder
 
         End Sub
 
 #Region " Protected Variables "
 
-        Protected LabelSelectImageToUpload As System.Web.UI.WebControls.Label
-        Protected InputFileUploadImage As System.Web.UI.HtmlControls.HtmlInputFile
+
         Protected CheckBoxImageReduction As System.Web.UI.WebControls.CheckBox
         Protected LabelUploadedImageNames As System.Web.UI.WebControls.Label
-        Protected LabelWarning As System.Web.UI.WebControls.Label
-        Protected WithEvents ButtonUploadImage As System.Web.UI.WebControls.Button
-        Protected LabelProcessingTips As System.Web.UI.WebControls.Label
 
         Protected LabelImageDimensionQuestion As System.Web.UI.WebControls.Label
         Protected LabelMiniatureView As System.Web.UI.WebControls.Label
@@ -74,81 +67,25 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
 #Region "Properties"
 
-
-        ''' <summary>
-        '''     The upload folder for images
-        ''' </summary>
-        Private ReadOnly Property ImageUploadFolder() As String
-            Get
-                Static _ImageUploadFolder As String
-                If _ImageUploadFolder Is Nothing AndAlso Request.QueryString("imageupload") <> Nothing Then
-                    Dim folder As String = Me.DecryptUrlParameters(Request.QueryString("imageupload"))
-
-                    If folder.StartsWith("/") OrElse folder.StartsWith("~/") Then
-                        _ImageUploadFolder = UploadTools.FullyInterpretedVirtualPath(folder)
-                    Else
-                        _ImageUploadFolder = UploadTools.CombineUnixPaths(GetReferencePath, folder)
-                    End If
-                End If
-                Return _ImageUploadFolder
-            End Get
-        End Property
-
-
-        ''' <summary>
-        '''     The upload folder for documents
-        ''' </summary>
-        Private ReadOnly Property DocumentUploadFolder() As String
-            Get
-                Static _DocumentUploadFolder As String
-                If _DocumentUploadFolder Is Nothing AndAlso Request.QueryString("docupload") <> Nothing Then
-                    Dim folder As String = Me.DecryptUrlParameters(Request.QueryString("docupload"))
-                    If folder.StartsWith("/") OrElse folder.StartsWith("~/") Then
-                        _DocumentUploadFolder = UploadTools.FullyInterpretedVirtualPath(folder)
-                    Else
-                        _DocumentUploadFolder = UploadTools.CombineUnixPaths(GetReferencePath, folder)
-                    End If
-                End If
-                Return _DocumentUploadFolder
-            End Get
-        End Property
-
-
-        ''' <summary>
-        '''     The upload folder for media
-        ''' </summary>
-        Private ReadOnly Property MediaUploadFolder() As String
-            Get
-                Static _MediaUploadFolder As String
-                If _MediaUploadFolder Is Nothing AndAlso Request.QueryString("mediaupload") <> Nothing Then
-                    Dim folder As String = Me.DecryptUrlParameters(Request.QueryString("mediaupload"))
-                    If folder.StartsWith("/") OrElse folder.StartsWith("~/") Then
-                        _MediaUploadFolder = UploadTools.FullyInterpretedVirtualPath(folder)
-                    Else
-                        _MediaUploadFolder = UploadTools.CombineUnixPaths(GetReferencePath, folder)
-                    End If
-                End If
-                Return _MediaUploadFolder
-            End Get
-        End Property
-
 #End Region
 
         Private Sub InitializeControls()
-            Dim imageBrowser As ImageBrowser = CType(Me.Page.FindControl("ImageBrowserControl"), ImageBrowser)
-            If Not imageBrowser Is Nothing Then
-                imageBrowser.ImageUploadFolderPath = Me.ImageUploadFolder
+            Dim fileBrowser As FileBrowser = CType(Me.Page.FindControl("FileBrowserControl"), FileBrowser)
+            If Not fileBrowser Is Nothing Then
+                fileBrowser.UploadFolderPath = Me.FileUploadFolder
+                fileBrowser.ReadonlyDirectories = Me.ReadOnlyDirectories
+                fileBrowser.ParentWindowCallbackFunction = Me.ParentWindowCallbackFunction
                 Dim editorId As String = Request("editorid")
                 If Not editorId = "" Then
                     editorId = Me.DecryptUrlParameters(editorId)
                 End If
-                imageBrowser.EditorId = editorId
+                fileBrowser.EditorId = editorId
             End If
-
-
         End Sub
 
         Private Sub PageOnLoad(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+
+
             'Initialize text
             Me.InitializeText()
 
@@ -170,14 +107,14 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         ''' <summary>
         '''     Initialize form text
         ''' </summary>
-        Private Sub InitializeText()
+        Protected Overrides Sub InitializeText()
 
             'ToDo: localize following strings
             'Localizations
-            Me.LabelImageUploadFolder.Text = "Bild-Ablageort:"
+            Me.LabelFileUploadFolder.Text = "Bild-Ablageort:"
 
-            Me.LabelSelectImageToUpload.Text = "Wählen Sie eine Bilddatei zum Hochladen"
-            Me.ButtonUploadImage.Text = "Hochladen"
+            Me.LabelSelectFileToUpload.Text = "Wählen Sie eine Bilddatei zum Hochladen"
+            Me.ButtonUploadFile.Text = "Hochladen"
             Me.LabelProcessingTips.Text = "<b>Bearbeitungshinweise:</b><br><br>" &
                                         "1. Es können nur folgende Datenformate auf den Server geladen werden: JPEGs, GIFs, PNGs und BMPs <br><br>" &
                                         "2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der " &
@@ -255,6 +192,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
 #End Region
 
+
 #Region "Events and functions"
 
         ''' <summary>
@@ -262,21 +200,27 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        Private Sub ButtonUploadImage_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles ButtonUploadImage.Click
-
+        Private Sub ButtonUploadImage_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles ButtonUploadFile.Click
             'Reinitialize the upload folder for pictures
-            If Not Me.InputFileUploadImage.PostedFile.ContentLength > 0 AndAlso Me.InputFileUploadImage.PostedFile.FileName = "" Then
+            If Not Me.InputFileUpload.PostedFile.ContentLength > 0 AndAlso Me.InputFileUpload.PostedFile.FileName = "" Then
                 Exit Sub
             End If
-            Dim ext As String = System.IO.Path.GetExtension(Me.InputFileUploadImage.PostedFile.FileName).ToLower
-            Select Case ext
-                Case ".jpg", ".jpeg", ".gif", ".png", ".bmp"
 
-                Case Else
+            Dim ext As String = System.IO.Path.GetExtension(Me.InputFileUpload.PostedFile.FileName).ToLower
+            If Not Me.IsAllowedExtension(ext) Then
+                Me.LabelWarning.Text = "Invalid file extension"
+                Exit Sub
+            End If
+
+            If Me.MaxFileUploadSize > 0 Then
+                Dim fileSize As Integer = Me.InputFileUpload.PostedFile.ContentLength
+                If fileSize > Me.MaxFileUploadSize Then
+                    LabelWarning.Text = "Uploaded file is too large."
                     Exit Sub
-            End Select
+                End If
+            End If
 
-            Dim fs As System.IO.Stream = Me.InputFileUploadImage.PostedFile.InputStream
+            Dim fs As System.IO.Stream = Me.InputFileUpload.PostedFile.InputStream
             Dim data(CType(fs.Length, Integer)) As Byte
             fs.Read(data, 0, CType(fs.Length, Integer))
             fs.Close()
@@ -296,8 +240,8 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                     Exit Sub
                 End Try
 
-                Dim fileName As String = System.IO.Path.GetFileNameWithoutExtension(Me.InputFileUploadImage.PostedFile.FileName) & "_" & miniatureViewWidth & "x" & miniatureViewHeight & "_" & Now.ToString("yyyyMMddHHmmss") & System.IO.Path.GetExtension(Me.InputFileUploadImage.PostedFile.FileName)
-                Dim fPath As String = HttpContext.Current.Server.MapPath(Me.ImageUploadFolder) & System.IO.Path.DirectorySeparatorChar & fileName
+                Dim fileName As String = System.IO.Path.GetFileNameWithoutExtension(Me.InputFileUpload.PostedFile.FileName) & "_" & miniatureViewWidth & "x" & miniatureViewHeight & "_" & Now.ToString("yyyyMMddHHmmss") & System.IO.Path.GetExtension(Me.InputFileUpload.PostedFile.FileName)
+                Dim fPath As String = HttpContext.Current.Server.MapPath(Me.FileUploadFolder) & System.IO.Path.DirectorySeparatorChar & fileName
                 If Me.CheckBoxMiniatureView.Checked Then
                     Try
                         resizer.Resize(miniatureViewWidth, miniatureViewHeight)
@@ -318,8 +262,8 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                     files.Add(System.IO.Path.GetFileName(fPath))
                 End If
 
-                fileName = System.IO.Path.GetFileNameWithoutExtension(Me.InputFileUploadImage.PostedFile.FileName) & "_" & normalViewWidth & "x" & normalViewHeight & "_" & Now.ToString("yyyyMMddHHmmss") & System.IO.Path.GetExtension(Me.InputFileUploadImage.PostedFile.FileName)
-                fPath = HttpContext.Current.Server.MapPath(Me.ImageUploadFolder) & System.IO.Path.DirectorySeparatorChar & fileName
+                fileName = System.IO.Path.GetFileNameWithoutExtension(Me.InputFileUpload.PostedFile.FileName) & "_" & normalViewWidth & "x" & normalViewHeight & "_" & Now.ToString("yyyyMMddHHmmss") & System.IO.Path.GetExtension(Me.InputFileUpload.PostedFile.FileName)
+                fPath = HttpContext.Current.Server.MapPath(Me.FileUploadFolder) & System.IO.Path.DirectorySeparatorChar & fileName
                 If Me.CheckBoxNormalView.Checked Then
                     resizer.Resize(normalViewWidth, normalViewHeight)
                     Try
@@ -330,8 +274,8 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                     files.Add(System.IO.Path.GetFileName(fPath))
                 End If
             Else
-                Dim fileName As String = System.IO.Path.GetFileNameWithoutExtension(Me.InputFileUploadImage.PostedFile.FileName) & "_" & Now.ToString("yyyyMMddHHmmss") & System.IO.Path.GetExtension(Me.InputFileUploadImage.PostedFile.FileName)
-                Dim fPath As String = HttpContext.Current.Server.MapPath(Me.ImageUploadFolder) & System.IO.Path.DirectorySeparatorChar & fileName
+                Dim fileName As String = System.IO.Path.GetFileNameWithoutExtension(Me.InputFileUpload.PostedFile.FileName) & "_" & Now.ToString("yyyyMMddHHmmss") & System.IO.Path.GetExtension(Me.InputFileUpload.PostedFile.FileName)
+                Dim fPath As String = HttpContext.Current.Server.MapPath(Me.FileUploadFolder) & System.IO.Path.DirectorySeparatorChar & fileName
 
                 Dim fi As New System.IO.FileInfo(fPath)
                 Dim writer As System.IO.Stream = fi.Create
@@ -352,65 +296,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         End Sub
 
 
-        ''' <summary>
-        '''     Decrypts a string passed as url parameter
-        ''' </summary>
-        ''' <param name="encryptedString"></param>
-        Private Function DecryptUrlParameters(ByVal encryptedString As String) As String
-            Dim result As String
-            Try
-                Try
-                    'try to decode base64 string
-                    Dim myCryptingEngine As CompuMaster.camm.WebManager.ICrypt = New CompuMaster.camm.WebManager.TripleDesBase64Encryption
-                    result = myCryptingEngine.DeCryptString(encryptedString)
-                Catch
-                    'try to decode old and buggy encrypted string (not base64 Encoded)
-                    Dim myCryptingEngine As CompuMaster.camm.WebManager.ICrypt = New CompuMaster.camm.WebManager.TripleDesEncryptionBase
-                    result = myCryptingEngine.DeCryptString(encryptedString)
-                End Try
-            Catch ex As Exception
-                Throw New Exception("Error while decrypting Url parameter. '" & ex.Message & "'")
-            End Try
-            Return result
-        End Function    'DecryptUrlParameters(ByVal encryptedString As String) As String
-
-
-        ''' <summary>
-        '''     Creates several upload folders, based on the formula which has redirected to the form
-        ''' </summary>
-        Private Sub CreateUploadFolders()
-            Dim result As Boolean = False
-
-            'Create the file systems full path for folder creation
-            Try
-                'Create the image upload folder if necessary
-                Dim myDirectoryInfo As System.IO.DirectoryInfo
-                If ImageUploadFolder <> Nothing Then
-                    myDirectoryInfo = New System.IO.DirectoryInfo(Server.MapPath(Me.ImageUploadFolder))
-                    If Not myDirectoryInfo.Exists Then
-                        myDirectoryInfo.Create()
-                    End If
-                End If
-
-                If DocumentUploadFolder <> Nothing Then
-                    myDirectoryInfo = New System.IO.DirectoryInfo(Server.MapPath(Me.DocumentUploadFolder))
-                    If Not myDirectoryInfo.Exists Then
-                        myDirectoryInfo.Create()
-                    End If
-                End If
-
-                If MediaUploadFolder <> Nothing Then
-                    myDirectoryInfo = New System.IO.DirectoryInfo(Server.MapPath(Me.MediaUploadFolder))
-                    If Not myDirectoryInfo.Exists Then
-                        myDirectoryInfo.Create()
-                    End If
-                End If
-
-                result = True
-            Catch ex As Exception
-                Me.cammWebManager.Log.Write("WCMSWebCtrl - Create upload folders" & vbNewLine & ex.ToString)
-            End Try
-        End Sub
 
 #End Region
 

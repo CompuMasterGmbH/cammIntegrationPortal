@@ -69,13 +69,16 @@
   <ItemGroup>
     <Compile Include="ConfigurationUploadSettings.vb" />
     <Compile Include="ConfigurationUploadWebManager.vb" />
-    <Compile Include="ImageBrowser.vb">
+    <Compile Include="GeneralUploadForm.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FileBrowser.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ProtectedUploadPage.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="UploadForm.vb">
+    <Compile Include="ImagesUploadForm.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="AssemblyInfo.vb" />
@@ -121,7 +124,7 @@
     <None Include="_CreateNewNuGetPackage\RunMeToUploadNuGetPackage.cmd" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ImageBrowser.ascx">
+    <Content Include="FileBrowser.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="se-webupload\images\height.gif" />
@@ -131,7 +134,10 @@
     <Content Include="se-webupload\images\maxwidth.gif" />
     <Content Include="se-webupload\images\samplefile.jpg" />
     <Content Include="se-webupload\images\width.gif" />
-    <Content Include="se-webupload\upload.aspx">
+    <Content Include="se-webupload\imagesupload.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="se-webupload\docsupload.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />

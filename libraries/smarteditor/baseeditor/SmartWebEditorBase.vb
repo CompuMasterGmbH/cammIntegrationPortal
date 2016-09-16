@@ -258,6 +258,44 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property
 
+
+        Private _ImagesUploadSizeMax As Integer = 512000
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Max. upload size for images in Bytes
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        Public Property ImagesUploadSizeMax As Integer
+            Get
+                Return _ImagesUploadSizeMax
+            End Get
+            Set(ByVal Value As Integer)
+                _ImagesUploadSizeMax = Value
+            End Set
+        End Property
+
+
+        Private _ImagesReadOnly As String() = New String() {}
+
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Contains the control specific readonly folders for images
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.TypeConverter(GetType(StringArrayConverter))> Public Property ImagesReadOnly As String()
+            Get
+                Return _ImagesReadOnly
+            End Get
+            Set(ByVal Value As String())
+                _ImagesReadOnly = Value
+            End Set
+        End Property
+
 #End Region
 
 

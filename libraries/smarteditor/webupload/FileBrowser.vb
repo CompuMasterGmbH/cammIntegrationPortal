@@ -18,18 +18,29 @@ Option Explicit On
 Imports System.Web
 
 Namespace CompuMaster.camm.SmartWebEditor.Pages
-    Public Class ImageBrowser
+    Public Class FileBrowser
         Inherits System.Web.UI.UserControl
 
-        Private _ImageUploadFolderPath As String
-        Public Property ImageUploadFolderPath As String
+        Private _UploadFolderPath As String
+        Public Property UploadFolderPath As String
             Get
-                Return _ImageUploadFolderPath
+                Return _UploadFolderPath
             End Get
             Set(value As String)
-                _ImageUploadFolderPath = value
+                _UploadFolderPath = value
             End Set
         End Property
+
+        Private _ReadOnlyDirectories As String()
+        Public Property ReadonlyDirectories As String()
+            Get
+                Return _ReadOnlyDirectories
+            End Get
+            Set(value As String())
+                _ReadOnlyDirectories = value
+            End Set
+        End Property
+
 
         Private _EditorId As String
         Public Property EditorId As String
@@ -41,13 +52,22 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             End Set
         End Property
 
+        Private _ParentWindowCallbackFunction As String
+        Public Property ParentWindowCallbackFunction As String
+            Get
+                Return _ParentWindowCallbackFunction
+            End Get
+            Set(value As String)
+                _ParentWindowCallbackFunction = value
+            End Set
+        End Property
 
 
         Protected listBoxUploadedFiles As System.Web.UI.WebControls.ListBox
-        Protected WithEvents btnDeleteImage As System.Web.UI.WebControls.Button
+        Protected WithEvents btnDeleteFile As System.Web.UI.WebControls.Button
         Protected lblDeletionMessage As System.Web.UI.WebControls.Label
         Protected btnPasteToEditor As System.Web.UI.WebControls.Button
-        Protected txtBoxImagePath As System.Web.UI.WebControls.TextBox
+        Protected txtBoxFilePath As System.Web.UI.WebControls.TextBox
 
         ''' <summary>
         ''' Recursively reads all files from a directory and adds them to the listbox 
@@ -60,25 +80,36 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                 Dim fileName As String = System.IO.Path.GetFileName(file)
                 Dim listItem As New System.Web.UI.WebControls.ListItem
                 listItem.Text = fileName
-                listItem.Value = System.IO.Path.Combine(virtualPath, relativePath).Replace("\"c, "/"c)
+                listItem.Value = UploadTools.FullyInterpretedVirtualPath(System.IO.Path.Combine(virtualPath, relativePath).Replace("\"c, "/"c))
                 Me.listBoxUploadedFiles.Items.Add(listItem)
 
             Next
         End Sub
+
+        Public Sub AddReadOnlyDirectores()
+            For Each directory As String In Me.ReadonlyDirectories
+                Dim physicalPath As String = Server.MapPath(directory)
+                If System.IO.Directory.Exists(physicalPath) Then
+                    AddFilesToListBoxRecursively(physicalPath, directory)
+                End If
+            Next
+        End Sub
         Public Sub FillUploadedFilesListBox()
             Me.listBoxUploadedFiles.Items.Clear()
-            Dim physicalPath As String = Server.MapPath(Me.ImageUploadFolderPath)
+            Dim physicalPath As String = Server.MapPath(Me.UploadFolderPath)
             If System.IO.Directory.Exists(physicalPath) Then
-                AddFilesToListBoxRecursively(physicalPath, Me.ImageUploadFolderPath)
+                AddFilesToListBoxRecursively(physicalPath, Me.UploadFolderPath)
             End If
+
+            AddReadOnlyDirectores()
 
         End Sub
 
-        Private Sub btnDeleteImage_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles btnDeleteImage.Click
-            Dim selectedImagePath As String = Me.listBoxUploadedFiles.SelectedValue
-            If selectedImagePath <> Nothing Then
+        Private Sub btnDeleteFile_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles btnDeleteFile.Click
+            Dim selectedFilePath As String = Me.listBoxUploadedFiles.SelectedValue
+            If selectedFilePath <> Nothing Then
                 'viewstate mac should prevent traversal attacks...
-                Dim filePath As String = Server.MapPath(selectedImagePath)
+                Dim filePath As String = Server.MapPath(selectedFilePath)
                 Try
                     System.IO.File.Delete(filePath)
                 Catch ex As Exception
@@ -100,7 +131,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         End Sub
         Private Sub Control_PreRender(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.PreRender
             Me.FillUploadedFilesListBox()
-            Me.listBoxUploadedFiles.Attributes.Add("onchange", "document.getElementById('" & Me.txtBoxImagePath.ClientID & "').value = this.value")
+            Me.listBoxUploadedFiles.Attributes.Add("onchange", "document.getElementById('" & Me.txtBoxFilePath.ClientID & "').value = this.value")
             If Me.EditorId = "" Then
                 Me.btnPasteToEditor.Visible = False
             End If

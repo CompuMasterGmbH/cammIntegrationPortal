@@ -24,29 +24,32 @@ Friend Class CommandlineOptions
         MsAzureSql = 2
     End Enum
 
-    <CommandLine.Option("d"c, "DatabaseServerType", HelpText:="MsSqlServer or MsAzureSql", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("d"c, "DatabaseServerType", HelpText:="MsSqlServer or MsAzureSql")>
     Public Property DatabaseServerType As DatabaseServerTypes
-
-    <CommandLine.Option("n"c, "CreateNewDatabaseInstance", HelpText:="Cleanup SQL database and create a new camm Web-Manager database instance", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("n"c, "CreateNewDatabaseInstance", HelpText:="Cleanup SQL database and create a new camm Web-Manager database instance", MutuallyExclusiveSet:="create/update")>
     Public Property CreateNewDatabaseInstance As Boolean
 
-    <CommandLine.Option("u"c, "UpdateDatabaseInstance", HelpText:="Update an existing camm Web-Manager database instance", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("u"c, "UpdateDatabaseInstance", HelpText:="Update an existing camm Web-Manager database instance", MutuallyExclusiveSet:="create/update")>
     Public Property UpdateDatabaseInstance As Boolean
 
-    <CommandLine.Option("c"c, "ConnectionString", HelpText:="The connectionstring to create/update the database schema in an existing SQL database", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("LicenseAccepted", HelpText:="Accepts the license")>
+    Public Property LicenseAccepted As Boolean
+
+
+    <CommandLine.Option("c"c, "ConnectionString", HelpText:="The connectionstring to create/update the database schema in an existing SQL database")>
     Public Property ConnectionString As String
 
-    <CommandLine.Option("ConnectionStringForSqlDatabaseCreation", HelpText:="The connectionstring to the SQL server to initially create an (empty) SQL database", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("ConnectionStringForSqlDatabaseCreation", HelpText:="The connectionstring to the SQL server to initially create an (empty) SQL database")>
     Public Property ConnectionStringForSqlDatabaseCreation As String
 
-    <CommandLine.Option("DatabaseNameForSqlDatabaseCreation", HelpText:="The new SQL database name which shall be created", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("DatabaseNameForSqlDatabaseCreation", HelpText:="The new SQL database name which shall be created")>
     Public Property DatabaseNameForSqlDatabaseCreation As String
 
-    <CommandLine.Option("i"c, "ServerID", HelpText:="Server ID As (to be) referenced in web.config (e. g. Server IP / Host Header Name)", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("i"c, "ServerID", HelpText:="Server ID As (to be) referenced in web.config (e. g. Server IP / Host Header Name)")>
     Public Property ServerID As String
 
     Private _ServerProtocol As String
-    <CommandLine.Option("s"c, "ServerProtocol", DefaultValue:="https", HelpText:="HTTPS or HTTP", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("s"c, "ServerProtocol", DefaultValue:="https", HelpText:="HTTPS or HTTP")>
     Public Property ServerProtocol As String
         Get
             Return _ServerProtocol
@@ -61,7 +64,7 @@ Friend Class CommandlineOptions
         End Set
     End Property
 
-    <CommandLine.Option("p"c, "ServerPort", HelpText:="Port (keep empty for Default)", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("p"c, "ServerPort", HelpText:="Port (keep empty for Default)")>
     Public Property Port As Integer
     Friend Function PortAsText() As String
         If Port = 0 Then
@@ -71,7 +74,7 @@ Friend Class CommandlineOptions
         End If
     End Function
 
-    <CommandLine.Option("o"c, "ServerOfficialDnsName", HelpText:="WebServer name for browser clients", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("o"c, "ServerOfficialDnsName", HelpText:="WebServer name for browser clients")>
     Public Property ServerOfficialDnsName As String
 
     <HelpOption()>
@@ -89,25 +92,25 @@ Friend Class CommandlineOptions
         'Return Help;
     End Function
 
-    <CommandLine.Option("t"c, "FirstServerGroupTitle", HelpText:="First server group title in administration area, e.g. ""YourCompany Extranet""", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("t"c, "FirstServerGroupTitle", HelpText:="First server group title in administration area, e.g. ""YourCompany Extranet""")>
     Public Property FirstServerGroupTitle As String
 
-    <CommandLine.Option("f"c, "FirstServerGroupTitleInNav", HelpText:="First server group title in navigation, e.g. ""Extranet""", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("f"c, "FirstServerGroupTitleInNav", HelpText:="First server group title in navigation, e.g. ""Extranet""")>
     Public Property FirstServerGroupTitleInNav As String
 
-    <CommandLine.Option("e"c, "StandardEMailContact", HelpText:="Standard contact e-mail address, e.g. ""webmaster@yourcompany.com""", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("e"c, "StandardEMailContact", HelpText:="Standard contact e-mail address, e.g. ""webmaster@yourcompany.com""")>
     Public Property StandardEMailContact As String
 
-    <CommandLine.Option("m"c, "CompanyName", HelpText:="Your company name, e.g. ""YourCompany""", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("m"c, "CompanyName", HelpText:="Your company name, e.g. ""YourCompany""")>
     Public Property CompanyName As String
 
-    <CommandLine.Option("x"c, "FormerCompanyName", HelpText:="Extended, former company name, e.g. ""YourCompany Ltd.""", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("x"c, "FormerCompanyName", HelpText:="Extended, former company name, e.g. ""YourCompany Ltd.""")>
     Public Property FormerCompanyName As String
 
-    <CommandLine.Option("w"c, "GeneralWebsiteUrl", HelpText:="The official URL of the regular website, e.g. ""http://www.yourcompany.com/""", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("w"c, "GeneralWebsiteUrl", HelpText:="The official URL of the regular website, e.g. ""http://www.yourcompany.com/""")>
     Public Property GeneralWebsiteUrl As String
 
-    <CommandLine.Option("l"c, "LimitUpdatesToDbBuild", HelpText:="Limit the update process to stop at a specific database build no., e.g. to update the datebase till build no. 206. Without this option, updates are always processed up to the latest available version", MutuallyExclusiveSet:="Setup/Update")>
+    <CommandLine.Option("l"c, "LimitUpdatesToDbBuild", HelpText:="Limit the update process to stop at a specific database build no., e.g. to update the datebase till build no. 206. Without this option, updates are always processed up to the latest available version")>
     Public Property LimitUpdatesToDbBuild As Integer
 
     <CommandLine.Option("ListAvailablePatches", HelpText:="List the patches that are provided by the current version of this update tool")>

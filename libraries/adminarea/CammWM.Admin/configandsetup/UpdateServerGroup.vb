@@ -138,27 +138,27 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Sub
 
         Private Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
-            If lblFieldID.Text <> Nothing AndAlso
-             txtFieldServerGroup.Text.Trim <> "" AndAlso
-             hiddenTxt_ID_Group_Public.Value.Trim <> "" AndAlso
-             hiddenTxt_GroupAnonymous.Value.Trim <> "" AndAlso
-             cmbMasterServer.SelectedValue <> "" AndAlso
-             cmbUserAdminServer.SelectedValue <> "" AndAlso
-             txtAreaButton.Text.Trim <> "" AndAlso
-             txtAreaImage.Text.Trim <> "" AndAlso
-             txtAreaCompanyFormerTitle.Text.Trim <> "" AndAlso
-             txtAreaCompanyTitle.Text.Trim <> "" AndAlso
-             txtAreaSecurityContactEMail.Text.Trim <> "" AndAlso
-             txtAreaSecurityContactTitle.Text.Trim <> "" AndAlso
-             txtAreaDevelopmentContactEMail.Text.Trim <> "" AndAlso
-             txtAreaDevelopmentContactTitle.Text.Trim <> "" AndAlso
-             txtAreaContentManagementContactEMail.Text.Trim <> "" AndAlso
-             txtAreaContentManagementContactTitle.Text.Trim <> "" AndAlso
-             txtAreaUnspecifiedContactEMail.Text.Trim <> "" AndAlso
-             txtAreaUnspecifiedContactTitle.Text.Trim <> "" AndAlso
-             txtAreaCopyRightSinceYear.Text.Trim <> "" AndAlso
-             txtAreaCompanyWebSiteURL.Text.Trim <> "" AndAlso
-             txtAreaCompanyWebSiteTitle.Text.Trim <> "" AndAlso
+            If lblFieldID.Text <> Nothing AndAlso _
+             txtFieldServerGroup.Text.Trim <> "" AndAlso _
+             hiddenTxt_ID_Group_Public.Value.Trim <> "" AndAlso _
+             hiddenTxt_GroupAnonymous.Value.Trim <> "" AndAlso _
+             cmbMasterServer.SelectedValue <> "" AndAlso _
+             cmbUserAdminServer.SelectedValue <> "" AndAlso _
+             txtAreaButton.Text.Trim <> "" AndAlso _
+             txtAreaImage.Text.Trim <> "" AndAlso _
+             txtAreaCompanyFormerTitle.Text.Trim <> "" AndAlso _
+             txtAreaCompanyTitle.Text.Trim <> "" AndAlso _
+             txtAreaSecurityContactEMail.Text.Trim <> "" AndAlso _
+             txtAreaSecurityContactTitle.Text.Trim <> "" AndAlso _
+             txtAreaDevelopmentContactEMail.Text.Trim <> "" AndAlso _
+             txtAreaDevelopmentContactTitle.Text.Trim <> "" AndAlso _
+             txtAreaContentManagementContactEMail.Text.Trim <> "" AndAlso _
+             txtAreaContentManagementContactTitle.Text.Trim <> "" AndAlso _
+             txtAreaUnspecifiedContactEMail.Text.Trim <> "" AndAlso _
+             txtAreaUnspecifiedContactTitle.Text.Trim <> "" AndAlso _
+             txtAreaCopyRightSinceYear.Text.Trim <> "" AndAlso _
+             txtAreaCompanyWebSiteURL.Text.Trim <> "" AndAlso _
+             txtAreaCompanyWebSiteTitle.Text.Trim <> "" AndAlso _
              cmbAccessLevelDefault.SelectedValue <> "" Then
 
                 Dim MyCmd As New SqlCommand("AdminPrivate_UpdateServerGroup", New SqlConnection(cammWebManager.ConnectionString))

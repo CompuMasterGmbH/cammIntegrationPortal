@@ -44,6 +44,20 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Get
         End Property
 
+        Public Shared ReadOnly Property ImagesUploadPath() As String
+            Get
+                Dim WMConfigAccessor As New CwmConfigAccessor
+                Return WMConfigAccessor.Configuration.ImagesUploadPath
+            End Get
+        End Property
+
+        Public Shared ReadOnly Property UploadFormUrl() As String
+            Get
+                Dim WMConfigAccessor As New CwmConfigAccessor
+                Return WMConfigAccessor.Configuration.UploadFormUrl
+            End Get
+        End Property
+
         '#Region "Load configuration setting helper methods"
 
         Friend Shared ReadOnly Property WebManagerSettings() As System.Collections.Specialized.NameValueCollection

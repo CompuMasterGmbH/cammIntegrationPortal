@@ -7245,29 +7245,29 @@ Namespace CompuMaster.camm.WebManager
                 ReDim Preserve _ServerGroups(MyDataSet.Tables("ServerGroups").Rows.Count - 1)
                 Dim MyCounter As Integer = 0
                 For Each MyDataRow As DataRow In MyDataSet.Tables("ServerGroups").Rows
-                    _ServerGroups(MyCounter) = New ServerGroupInformation(CType(MyDataRow("ID"), Integer),
-                        Utils.Nz(MyDataRow("ServerGroup"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaNavTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AccessLevel_Default"), 0),
-                        Utils.Nz(MyDataRow("MasterServer"), 0),
-                        Utils.Nz(MyDataRow("UserAdminServer"), 0),
-                        Utils.Nz(MyDataRow("ID_Group_Anonymous"), 0),
-                        Utils.Nz(MyDataRow("ID_Group_Public"), 0), Utils.Nz(MyDataRow("AreaSecurityContactEMail"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaSecurityContactTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaDevelopmentContactTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaDevelopmentContactEMail"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaContentManagementContactTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaContentManagementContactEMail"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaUnspecifiedContactTitle"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AreaUnspecifiedContactEMail"), CType(Nothing, String)),
-                        Utils.Nz(MyDataRow("AllowImpersonation"), False),
-                        CType(MyDataRow("AreaCopyRightSinceYear"), Integer),
-                        Utils.Nz(MyDataRow("AreaImage"), ""),
-                        Utils.Nz(MyDataRow("AreaButton"), ""),
+                    _ServerGroups(MyCounter) = New ServerGroupInformation(CType(MyDataRow("ID"), Integer), _
+                        Utils.Nz(MyDataRow("ServerGroup"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaNavTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaCompanyWebSiteURL"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AccessLevel_Default"), 0), _
+                        Utils.Nz(MyDataRow("MasterServer"), 0), _
+                        Utils.Nz(MyDataRow("UserAdminServer"), 0), _
+                        Utils.Nz(MyDataRow("ID_Group_Anonymous"), 0), _
+                        Utils.Nz(MyDataRow("ID_Group_Public"), 0), Utils.Nz(MyDataRow("AreaSecurityContactEMail"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaSecurityContactTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaDevelopmentContactTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaDevelopmentContactEMail"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaContentManagementContactTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaContentManagementContactEMail"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaUnspecifiedContactTitle"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AreaUnspecifiedContactEMail"), CType(Nothing, String)), _
+                        Utils.Nz(MyDataRow("AllowImpersonation"), False), _
+                        CType(MyDataRow("AreaCopyRightSinceYear"), Integer), _
+                        Utils.Nz(MyDataRow("AreaImage"), ""), _
+                        Utils.Nz(MyDataRow("AreaButton"), ""), _
                                                                           _WebManager)
                     MyCounter += 1
                 Next

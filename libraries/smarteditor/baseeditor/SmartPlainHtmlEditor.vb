@@ -139,7 +139,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Me.NewVersionButton.Text = "New Version"
 
                 Me.UploadFormOpenerButton = New System.Web.UI.WebControls.Button()
-                AssignOnClientClickAttribute(Me.UploadFormOpenerButton, "var w = window.open('" & Me.GenerateUploadFormUrl() & "'); return false;")
+                AssignOnClientClickAttribute(Me.UploadFormOpenerButton, "window.open('" & Me.GenerateUploadFormUrl() & "','UploadForm','location=no,hotkeys=no,toolbar=no,dependent=yes,scrollbars=yes'); return false;")
                 Me.UploadFormOpenerButton.Text = "Upload"
 
                 Me.VersionDifferenceLabel = New System.Web.UI.WebControls.Label()

@@ -21,7 +21,15 @@ Module MainCode
     Public Sub Main()
         Try
             Dim options As New CommandlineOptions()
-            If Not CommandLine.Parser.Default.ParseArguments(System.Environment.GetCommandLineArgs, options) Then
+            Dim parser As New CommandLine.Parser(Sub(sett)
+                                                     sett.CaseSensitive = False
+                                                     sett.IgnoreUnknownArguments = False
+                                                     sett.MutuallyExclusive = True
+                                                 End Sub)
+
+
+            If Not parser.ParseArguments(System.Environment.GetCommandLineArgs, options) Then
+                Console.WriteLine(options.GetUsage)
                 Environment.Exit(CommandLine.Parser.DefaultExitCodeFail)
             ElseIf System.Environment.GetCommandLineArgs.Length = 1 Then
                 Console.WriteLine(options.GetUsage)

@@ -858,7 +858,7 @@ Namespace CompuMaster.camm.WebManager.Setup
 
                                     'Status field update
                                     MyStepCounter += 1
-                                    SwitchToStep("Applying patch " & fileSQLCommands & "..." & ControlChars.NewLine &
+                                    SwitchToStep("Applying patch " & fileSQLCommands & "..." & ControlChars.NewLine & _
                                       "Current step: " & MyStepCounter & " / " & MyCurSQLCmdCollection.Count)
                                     UpdateProgressOfSteps("Current step:", MyStepCounter, MyCurSQLCmdCollection.Count)
 
@@ -907,10 +907,10 @@ Namespace CompuMaster.camm.WebManager.Setup
                                                  & CType(IIf(DebugLevel >= 3, "SQL BEGIN ==>" & ControlChars.NewLine & MyCurSQLCmdText & ControlChars.NewLine & ControlChars.NewLine & "<== SQL END" & ControlChars.NewLine, ""), String) _
                                                  & ControlChars.NewLine
                                             Next i
-                                            WriteToLog("==============================================" & ControlChars.NewLine &
-                                             Now() & ControlChars.NewLine &
-                                             "==============================================" & ControlChars.NewLine &
-                                             ControlChars.NewLine &
+                                            WriteToLog("==============================================" & ControlChars.NewLine & _
+                                             Now() & ControlChars.NewLine & _
+                                             "==============================================" & ControlChars.NewLine & _
+                                             ControlChars.NewLine & _
                                              errorMessages)
                                             If SqlServerVersion.ProductName = "" Then
                                                 WriteToLog(vbNewLine & vbNewLine & "==============================================" & vbNewLine & "FULL SQL AZURE STATEMENTS" & "========================================" & vbNewLine & MySQLCmdText & vbNewLine & vbNewLine)
@@ -950,10 +950,10 @@ Namespace CompuMaster.camm.WebManager.Setup
                                                 errorMessages += "Message: " & e.GetBaseException.ToString _
                                                  & ControlChars.NewLine
                                             Next i
-                                            WriteToLog("==============================================" & ControlChars.NewLine &
-                                             Now() & ControlChars.NewLine &
-                                             "==============================================" & ControlChars.NewLine &
-                                             ControlChars.NewLine &
+                                            WriteToLog("==============================================" & ControlChars.NewLine & _
+                                             Now() & ControlChars.NewLine & _
+                                             "==============================================" & ControlChars.NewLine & _
+                                             ControlChars.NewLine & _
                                              errorMessages)
                                             If Me._LogFileEnabled Then
                                                 RaiseWarning("Error #68 found - please check the log file " & _LogFile & "!")
@@ -986,7 +986,7 @@ Namespace CompuMaster.camm.WebManager.Setup
                                     For Each MySQLExecCmdText In MyCurSQLExecCmdCollection
                                         'Status field update
                                         MyExecStepCounter += 1
-                                        SwitchToStep("Configure database..." & ControlChars.NewLine &
+                                        SwitchToStep("Configure database..." & ControlChars.NewLine & _
                                           "Current step: " & MyExecStepCounter & " / " & MyCurSQLExecCmdCollection.Count)
                                         UpdateProgressOfSteps("Configure database...", MyExecStepCounter, MyCurSQLExecCmdCollection.Count)
 
@@ -1016,10 +1016,10 @@ Namespace CompuMaster.camm.WebManager.Setup
                                             '"Current task: " & Me.ProgressOfTasks.CurrentStepTitle & vbNewLine & _
                                             '"Current sub task: " & Me.ProgressOfSteps.CurrentStepTitle & vbNewLine & _
                                             '"Current step description: " & Me.CurrentStepTitle & vbNewLine & _
-                                            WriteToLog("==============================================" & ControlChars.NewLine &
-                                             Now() & ControlChars.NewLine &
-                                             "==============================================" & ControlChars.NewLine &
-                                             ControlChars.NewLine &
+                                            WriteToLog("==============================================" & ControlChars.NewLine & _
+                                             Now() & ControlChars.NewLine & _
+                                             "==============================================" & ControlChars.NewLine & _
+                                             ControlChars.NewLine & _
                                              errorMessages)
                                             If Me._LogFileEnabled Then
                                                 RaiseWarning("Error #69 found - please check the log file " & _LogFile & "!")
@@ -1040,19 +1040,19 @@ Namespace CompuMaster.camm.WebManager.Setup
 
                                 'Update DB build status
                                 Dim FinishDBUpdateStepSQLCmdText As String
-                                FinishDBUpdateStepSQLCmdText = "-----------------------------------------------------------" & vbNewLine &
-                                 "-- Update table content to match new definition " & vbNewLine &
-                                 "-- (to allow multiple camm products in one database)" & vbNewLine &
-                                 "-----------------------------------------------------------" & vbNewLine &
-                                 "UPDATE [dbo].[System_GlobalProperties]" & vbNewLine &
-                                 "SET [ValueNVarChar] = (SELECT TOP 1 ValueNVarChar FROM [dbo].[System_GlobalProperties] WHERE PropertyName = N'DBProductName')" & vbNewLine &
-                                 "WHERE ID in (1, 2, 3) AND ValueNVarChar Is Null And PropertyName like N'DBVersion_%'" & vbNewLine &
-                                 vbNewLine &
-                                 "-----------------------------------------------------------" & vbNewLine &
-                                 "-- Update data in dbo.System_GlobalProperties" & vbNewLine &
-                                 "-----------------------------------------------------------" & vbNewLine &
-                                 "UPDATE [dbo].[System_GlobalProperties] SET [ValueInt] = " & SQLCodeMajorVer & " WHERE PropertyName = N'DBVersion_Major' AND ValueNVarChar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine &
-                                 "UPDATE [dbo].[System_GlobalProperties] SET [ValueInt] = " & SQLCodeMinorVer & " WHERE PropertyName = N'DBVersion_Minor' AND ValueNVarChar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine &
+                                FinishDBUpdateStepSQLCmdText = "-----------------------------------------------------------" & vbNewLine & _
+                                 "-- Update table content to match new definition " & vbNewLine & _
+                                 "-- (to allow multiple camm products in one database)" & vbNewLine & _
+                                 "-----------------------------------------------------------" & vbNewLine & _
+                                 "UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
+                                 "SET [ValueNVarChar] = (SELECT TOP 1 ValueNVarChar FROM [dbo].[System_GlobalProperties] WHERE PropertyName = N'DBProductName')" & vbNewLine & _
+                                 "WHERE ID in (1, 2, 3) AND ValueNVarChar Is Null And PropertyName like N'DBVersion_%'" & vbNewLine & _
+                                 vbNewLine & _
+                                 "-----------------------------------------------------------" & vbNewLine & _
+                                 "-- Update data in dbo.System_GlobalProperties" & vbNewLine & _
+                                 "-----------------------------------------------------------" & vbNewLine & _
+                                 "UPDATE [dbo].[System_GlobalProperties] SET [ValueInt] = " & SQLCodeMajorVer & " WHERE PropertyName = N'DBVersion_Major' AND ValueNVarChar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine & _
+                                 "UPDATE [dbo].[System_GlobalProperties] SET [ValueInt] = " & SQLCodeMinorVer & " WHERE PropertyName = N'DBVersion_Minor' AND ValueNVarChar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine & _
                                  "UPDATE [dbo].[System_GlobalProperties] SET [ValueInt] = " & SQLCodeBuildNo & " WHERE PropertyName = N'DBVersion_Build' AND ValueNVarChar = N'camm " & _SetupPackageName.Replace("'", "''") & "'" & vbNewLine
                                 Try
                                     DBCmd = New SqlClient.SqlCommand
@@ -1077,10 +1077,10 @@ Namespace CompuMaster.camm.WebManager.Setup
                                          & CType(IIf(DebugLevel >= 3, "SQL BEGIN ==>" & ControlChars.NewLine & FinishDBUpdateStepSQLCmdText & ControlChars.NewLine & ControlChars.NewLine & "<== SQL END" & ControlChars.NewLine, ""), String) _
                                          & ControlChars.NewLine
                                     Next i
-                                    WriteToLog("==============================================" & ControlChars.NewLine &
-                                     Now() & ControlChars.NewLine &
-                                     "==============================================" & ControlChars.NewLine &
-                                     ControlChars.NewLine &
+                                    WriteToLog("==============================================" & ControlChars.NewLine & _
+                                     Now() & ControlChars.NewLine & _
+                                     "==============================================" & ControlChars.NewLine & _
+                                     ControlChars.NewLine & _
                                      errorMessages)
                                     If Me._LogFileEnabled Then
                                         RaiseWarning("Error #67 found - please check the log file " & _LogFile & "!")
