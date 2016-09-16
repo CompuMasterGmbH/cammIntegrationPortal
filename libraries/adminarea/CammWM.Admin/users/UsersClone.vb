@@ -87,11 +87,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' Does NOT contain values that are manually unchecked
         ''' </summary>
         Private Sub initNotCopiedDataDatatable()
-            If Session("cwmCloneUserNotCopiedDataDt") Is Nothing Then
+            If ViewState("cwmCloneUserNotCopiedDataDt") Is Nothing Then
                 notCopiedData = New DataTable("NotCopiedData")
                 notCopiedData.Columns.Add("Key")
                 notCopiedData.Columns.Add("Value")
-                Session("cwmCloneUserNotCopiedDataDt") = notCopiedData
+                ViewState("cwmCloneUserNotCopiedDataDt") = notCopiedData
             End If
         End Sub
         ''' <summary>
@@ -108,14 +108,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="dataType">Type of data, e.g. AdditionalFlag</param>
         ''' <param name="value">The value, e.g. value of additional flag or name of membership</param>
         Protected Overridable Sub AddNotCopiedData(ByVal dataType As notCopiedDataEnum, ByVal value As String)
-            notCopiedData = CType(Session("cwmCloneUserNotCopiedDataDt"), DataTable)
+            notCopiedData = CType(ViewState("cwmCloneUserNotCopiedDataDt"), DataTable)
             If notCopiedData.Select("Key = '" & dataType.ToString() & "' and Value = '" & value & "'").Length <= 0 Then
                 Dim row As DataRow = notCopiedData.NewRow
                 row("Key") = dataType.ToString
                 row("Value") = value
                 notCopiedData.Rows.Add(row)
             End If
-            Session("cwmCloneUserNotCopiedDataDt") = notCopiedData
+            ViewState("cwmCloneUserNotCopiedDataDt") = notCopiedData
         End Sub
         ''' <summary>
         ''' Removes an entry, e.g. authorization has required flags, but its a protected flag
@@ -124,14 +124,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="dataType"></param>
         ''' <param name="value"></param>
         Private Sub RemoveNotCopiedData(ByVal dataType As notCopiedDataEnum, ByVal value As String)
-            notCopiedData = CType(Session("cwmCloneUserNotCopiedDataDt"), DataTable)
+            notCopiedData = CType(ViewState("cwmCloneUserNotCopiedDataDt"), DataTable)
             If Not value = "" Then
                 Dim rows() As DataRow = notCopiedData.Select("Key = '" & dataType.ToString & "' and Value = '" & value & "'")
                 For Each row As DataRow In rows
                     notCopiedData.Rows.Remove(row)
                 Next
             End If
-            Session("cwmCloneUserNotCopiedDataDt") = notCopiedData
+            ViewState("cwmCloneUserNotCopiedDataDt") = notCopiedData
         End Sub
 
 #End Region
@@ -726,7 +726,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 #End Region
 
         Sub BtnSubmitClick(ByVal sender As Object, ByVal e As EventArgs) Handles Button_Submit.Click
-            notCopiedData = CType(Session("cwmCloneUserNotCopiedDataDt"), DataTable)
+            notCopiedData = CType(ViewState("cwmCloneUserNotCopiedDataDt"), DataTable)
             Me.Page.Validate()
             If Page.IsValid Then
                 Dim ClonedUser As CompuMaster.camm.WebManager.WMSystem.UserInformation = Clone(New_Field_LoginName.Text, New_Field_Company.Text, CShort(IIf(cmbAnrede.SelectedValue = Nothing, 0, cmbAnrede.SelectedValue)), New_Field_Titel.Text, New_Field_Vorname.Text, New_Field_Namenszusatz.Text, New_Field_Nachname.Text, New_Field_e_mail.Text, New_Field_Password.Text)
@@ -758,7 +758,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
             End If
             'Cleanup
-            Session("cwmCloneUserNotCopiedDataDt") = Nothing
+            ViewState("cwmCloneUserNotCopiedDataDt") = Nothing
 
         End Sub
 
