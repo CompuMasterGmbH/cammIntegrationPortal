@@ -997,10 +997,14 @@ Namespace CompuMaster.camm.WebManager
 
                 'Following actions take place at database directly
                 For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule().AllowRule.Length - 1
-                    NewUser.AddMembership(TemplateUser.MembershipsByRule().AllowRule(MyCounter).ID, False)
+                    If TemplateUser.MembershipsByRule().AllowRule(MyCounter).IsSystemGroupByServerGroup = False Then
+                        NewUser.AddMembership(TemplateUser.MembershipsByRule().AllowRule(MyCounter).ID, False)
+                    End If
                 Next
                 For MyCounter As Integer = 0 To TemplateUser.MembershipsByRule().DenyRule.Length - 1
-                    NewUser.AddMembership(TemplateUser.MembershipsByRule().DenyRule(MyCounter).ID, True)
+                    If TemplateUser.MembershipsByRule().DenyRule(MyCounter).IsSystemGroupByServerGroup = False Then
+                        NewUser.AddMembership(TemplateUser.MembershipsByRule().DenyRule(MyCounter).ID, True)
+                    End If
                 Next
                 For MyCounter As Integer = 0 To TemplateUser.AuthorizationsByRule.AllowRuleDevelopers.Length - 1
                     Dim usrItem As SecurityObjectAuthorizationForUser = TemplateUser.AuthorizationsByRule.AllowRuleDevelopers(MyCounter)
@@ -1497,6 +1501,17 @@ Namespace CompuMaster.camm.WebManager
                     Throw New Exception("Can't set user details for system users")
                 End If
 
+                'Notifications class
+                Dim CurNotifications As CompuMaster.camm.WebManager.Notifications.INotifications
+                If notifications Is Nothing Then
+                    CurNotifications = Me._WebManager.Notifications
+                Else
+                    CurNotifications = notifications
+                End If
+
+                'Notification of password
+                Dim PasswordMustBeSend As Boolean
+
                 'Validate the information before writing back to the database
                 If userInfo.LoginDeleted = True And userInfo.IDLong = Nothing Then
                     Throw New Exception("Login cannot be deleted when the Login ID is not existent")
@@ -1508,6 +1523,13 @@ Namespace CompuMaster.camm.WebManager
                     ElseIf Not Me._WebManager.PasswordSecurity(userInfo.AccessLevel.ID).ValidatePasswordComplexity(newPassword, userInfo) = WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Success Then
                         Throw New PasswordTooWeakException("Password doesn't match the current policy for passwords")
                     End If
+                ElseIf userInfo.IDLong = Nothing AndAlso newPassword = "" Then
+                    If suppressUserNotifications = True OrElse GetType(CompuMaster.camm.WebManager.Notifications.NoNotifications).IsInstanceOfType(CurNotifications) Then
+                        'No e-mails will go out; no auto-generated password could be communicated
+                        Throw New PasswordRequiredException("Password required when creating account with e-mails suppressed by using the CompuMaster.camm.WebManager.Notifications.NoNotifications class")
+                    End If
+                    newPassword = Trim(Me._WebManager.PasswordSecurity(userInfo.AccessLevel.ID).CreateRandomSecurePassword)
+                    PasswordMustBeSend = True
                 ElseIf userInfo.IDLong <> Nothing AndAlso Not newPassword Is Nothing Then
                     Throw New ArgumentException("Password cannot be set by this method. Please use System_SetUserPassword instead.", "NewPassword")
                 End If
@@ -1630,24 +1652,7 @@ Namespace CompuMaster.camm.WebManager
                         MyCmd.Dispose()
                         MyCmd = Nothing
 
-                        'Notifications class
-                        Dim CurNotifications As CompuMaster.camm.WebManager.Notifications.INotifications
-                        If notifications Is Nothing Then
-                            CurNotifications = Me._WebManager.Notifications
-                        Else
-                            CurNotifications = notifications
-                        End If
-
                         'Set password
-                        Dim PasswordMustBeSend As Boolean
-                        If newPassword = "" Then
-                            If suppressUserNotifications = True OrElse GetType(CompuMaster.camm.WebManager.Notifications.NoNotifications).IsInstanceOfType(CurNotifications) Then
-                                'No e-mails will go out; no auto-generated password could be communicated
-                                Throw New PasswordRequiredException("Password required when creating account with e-mails suppressed by using the CompuMaster.camm.WebManager.Notifications.NoNotifications class")
-                            End If
-                            newPassword = Trim(Me._WebManager.PasswordSecurity(userInfo.AccessLevel.ID).CreateRandomSecurePassword)
-                            PasswordMustBeSend = True
-                        End If
                         Me.SetUserPassword_Internal(newPassword, True) 'previously reloaded userInfo - but not clear why: New CompuMaster.camm.WebManager.WMSystem.UserInformation(WriteForUserID, Me._WebManager)
 
                         'Send e-mail
