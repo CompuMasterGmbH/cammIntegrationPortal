@@ -74,7 +74,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Try
                 lblField_ID.Text = Server.HtmlEncode(Trim(Request.QueryString("ID")))
                 Dim MySecurityObjectInfo As New CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation(CInt(Trim(Request.QueryString("ID"))), CType(cammWebManager, CompuMaster.camm.WebManager.WMSystem))
-                Dim cmd As New SqlClient.SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                Dim cmd As New SqlClient.SqlCommand("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "SELECT * FROM dbo.Applications WHERE ID=@ID", New SqlConnection(cammWebManager.ConnectionString))
                 cmd.Parameters.Add("@ID", SqlDbType.Int).Value = CType(Request.QueryString("ID"), Integer)
                 dtUpdate = FillDataTable(cmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
@@ -173,7 +173,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 'bind location dropdownlist
                 cmbLocation.Items.Clear()
                 If Field_LocationID = Nothing Then cmbLocation.Items.Add(New ListItem("(Please select!)", ""))
-                dtUpdate = FillDataTable(New SqlCommand("Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                dtUpdate = FillDataTable(New SqlCommand("Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "Select * FROM System_Servers WHERE Enabled = 1 ORDER BY ServerDescription", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                 If Not dtUpdate Is Nothing Then
@@ -191,7 +191,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 'bind language dropdownlist
                 cmbLanguage.Items.Clear()
                 If Field_Language = Nothing Then cmbLanguage.Items.Add(New ListItem("(Please select!)", ""))
-                dtUpdate = FillDataTable(New SqlCommand("Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
+                dtUpdate = FillDataTable(New SqlCommand("Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
                                     "Select * FROM view_Languages WHERE IsActive = 1 ORDER BY Description", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                 If Not dtUpdate Is Nothing Then
@@ -247,12 +247,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub UpdateApplication()
-            Dim sqlParams As SqlParameter() = {New SqlParameter("@Title", Trim(txtField_Title.Text)), New SqlParameter("@TitleAdminArea", Trim(txtField_TitleAdminArea.Text)),
-                   New SqlParameter("@Level1Title", Trim(txtField_Level1Title.Text)), New SqlParameter("@Level2Title", Trim(txtField_Level2Title.Text)), New SqlParameter("@Level3Title", Trim(txtField_Level3Title.Text)), New SqlParameter("@Level4Title", Trim(txtField_Level4Title.Text)), New SqlParameter("@Level5Title", Trim(txtField_Level5Title.Text)), New SqlParameter("@Level6Title", Trim(txtField_Level6Title.Text)),
-                   New SqlParameter("@Level1TitleIsHTMLCoded", IIf(rbLevel1TitleHTML.Checked = True, True, False)), New SqlParameter("@Level2TitleIsHTMLCoded", IIf(rbLevel2TitleHTML.Checked = True, True, False)), New SqlParameter("@Level3TitleIsHTMLCoded", IIf(rbLevel3TitleHTML.Checked = True, True, False)), New SqlParameter("@Level4TitleIsHTMLCoded", IIf(rbLevel4TitleHTML.Checked = True, True, False)), New SqlParameter("@Level5TitleIsHTMLCoded", IIf(rbLevel5TitleHTML.Checked = True, True, False)), New SqlParameter("@Level6TitleIsHTMLCoded", IIf(rbLevel6TitleHTML.Checked = True, True, False)),
-                   New SqlParameter("@NavURL", Mid(Trim(txtField_NavURL.Text), 1, 512)), New SqlParameter("@NavFrame", Mid(Trim(txtField_NavFrame.Text), 1, 50)), New SqlParameter("@NavTooltipText", Mid(Trim(txtField_NavTooltip.Text), 1, 1024)),
-                   New SqlParameter("@IsNew", IIf(rbNew.Checked = True, True, False)), New SqlParameter("@IsUpdated", IIf(rbUpdate.Checked = True, True, False)), New SqlParameter("@LocationID", cmbLocation.SelectedValue), New SqlParameter("@LanguageID", cmbLanguage.SelectedValue), New SqlParameter("@ModifiedBy", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)),
-                   New SqlParameter("@AppDisabled", IIf(CLng(cmbAppDisabled.SelectedValue) - 1 = 0, False, True)), New SqlParameter("@Sort", IIf(Trim(txtField_Sort.Text) = "", DBNull.Value, Trim(txtField_Sort.Text))), New SqlParameter("@ResetIsNewUpdatedStatusOn", IIf(Trim(txtField_ResetIsNewUpdatedStatusOn.Text) = "", DBNull.Value, Mid(Trim(txtField_ResetIsNewUpdatedStatusOn.Text), 1, 30))), New SqlParameter("@OnMouseOver", Mid(Trim(txtField_NavJSOnMOver.Text), 1, 512)), New SqlParameter("@OnMouseOut", Mid(Trim(txtField_NavJSOnMOut.Text), 1, 512)),
+            Dim sqlParams As SqlParameter() = {New SqlParameter("@Title", Trim(txtField_Title.Text)), New SqlParameter("@TitleAdminArea", Trim(txtField_TitleAdminArea.Text)), _
+                   New SqlParameter("@Level1Title", Trim(txtField_Level1Title.Text)), New SqlParameter("@Level2Title", Trim(txtField_Level2Title.Text)), New SqlParameter("@Level3Title", Trim(txtField_Level3Title.Text)), New SqlParameter("@Level4Title", Trim(txtField_Level4Title.Text)), New SqlParameter("@Level5Title", Trim(txtField_Level5Title.Text)), New SqlParameter("@Level6Title", Trim(txtField_Level6Title.Text)), _
+                   New SqlParameter("@Level1TitleIsHTMLCoded", IIf(rbLevel1TitleHTML.Checked = True, True, False)), New SqlParameter("@Level2TitleIsHTMLCoded", IIf(rbLevel2TitleHTML.Checked = True, True, False)), New SqlParameter("@Level3TitleIsHTMLCoded", IIf(rbLevel3TitleHTML.Checked = True, True, False)), New SqlParameter("@Level4TitleIsHTMLCoded", IIf(rbLevel4TitleHTML.Checked = True, True, False)), New SqlParameter("@Level5TitleIsHTMLCoded", IIf(rbLevel5TitleHTML.Checked = True, True, False)), New SqlParameter("@Level6TitleIsHTMLCoded", IIf(rbLevel6TitleHTML.Checked = True, True, False)), _
+                   New SqlParameter("@NavURL", Mid(Trim(txtField_NavURL.Text), 1, 512)), New SqlParameter("@NavFrame", Mid(Trim(txtField_NavFrame.Text), 1, 50)), New SqlParameter("@NavTooltipText", Mid(Trim(txtField_NavTooltip.Text), 1, 1024)), _
+                   New SqlParameter("@IsNew", IIf(rbNew.Checked = True, True, False)), New SqlParameter("@IsUpdated", IIf(rbUpdate.Checked = True, True, False)), New SqlParameter("@LocationID", cmbLocation.SelectedValue), New SqlParameter("@LanguageID", cmbLanguage.SelectedValue), New SqlParameter("@ModifiedBy", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous)), _
+                   New SqlParameter("@AppDisabled", IIf(CLng(cmbAppDisabled.SelectedValue) - 1 = 0, False, True)), New SqlParameter("@Sort", IIf(Trim(txtField_Sort.Text) = "", DBNull.Value, Trim(txtField_Sort.Text))), New SqlParameter("@ResetIsNewUpdatedStatusOn", IIf(Trim(txtField_ResetIsNewUpdatedStatusOn.Text) = "", DBNull.Value, Mid(Trim(txtField_ResetIsNewUpdatedStatusOn.Text), 1, 30))), New SqlParameter("@OnMouseOver", Mid(Trim(txtField_NavJSOnMOver.Text), 1, 512)), New SqlParameter("@OnMouseOut", Mid(Trim(txtField_NavJSOnMOut.Text), 1, 512)), _
                    New SqlParameter("@OnClick", Mid(Trim(txtField_NavJSOnClick.Text), 1, 512)), New SqlParameter("@AddLanguageID2URL", IIf(Utils.Nz(cmbAddLanguageID2URL.SelectedValue, 0) <> 1, True, False)), New SqlParameter("@ID", CInt(Request.QueryString("ID")))}
 
             ExecuteNonQuery(New SqlConnection(cammWebManager.ConnectionString), "AdminPrivate_UpdateApp", CommandType.StoredProcedure, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)

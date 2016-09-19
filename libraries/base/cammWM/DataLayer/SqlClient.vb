@@ -691,59 +691,59 @@ Namespace CompuMaster.camm.WebManager
                 "	WHERE ID_Application = @DestinationSecObjID" & vbNewLine & _
                 "	)"
 
-            Const sqlSinceDbBuild_4_12 As String =
-                "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine &
-                "-- Copy missing user authorizations --" & vbNewLine &
-                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine &
-                "           ([ID_Application]" & vbNewLine &
-                "           ,[ID_GroupOrPerson]" & vbNewLine &
-                "           ,[ID_ServerGroup]" & vbNewLine &
-                "           ,[ReleasedOn]" & vbNewLine &
-                "           ,[ReleasedBy]" & vbNewLine &
-                "           ,[DevelopmentTeamMember]" & vbNewLine &
-                "           ,[IsDenyRule])" & vbNewLine &
-                "SELECT @DestinationSecObjID" & vbNewLine &
-                "      ,NewAuths.[ID_GroupOrPerson]" & vbNewLine &
-                "      ,NewAuths.[ID_ServerGroup]" & vbNewLine &
-                "      ,NewAuths.[ReleasedOn]" & vbNewLine &
-                "      ,NewAuths.[ReleasedBy]" & vbNewLine &
-                "      ,NewAuths.[DevelopmentTeamMember]" & vbNewLine &
-                "      ,NewAuths.[IsDenyRule]" & vbNewLine &
-                "FROM [dbo].[ApplicationsRightsByUser] AS NewAuths" & vbNewLine &
-                "    LEFT JOIN [dbo].[ApplicationsRightsByUser] AS ExistingAuths" & vbNewLine &
-                "        ON ExistingAuths.ID_Application = @DestinationSecObjID" & vbNewLine &
-                "            AND ExistingAuths.ID_GroupOrPerson = NewAuths.ID_GroupOrPerson" & vbNewLine &
-                "            AND ExistingAuths.ID_ServerGroup = NewAuths.ID_ServerGroup" & vbNewLine &
-                "            AND ExistingAuths.IsDenyRule = NewAuths.IsDenyRule" & vbNewLine &
-                "            AND ExistingAuths.DevelopmentTeamMember = NewAuths.DevelopmentTeamMember" & vbNewLine &
-                "WHERE NewAuths.[ID_Application] = @SourceSecObjID " & vbNewLine &
-                "    AND ExistingAuths.ID IS NULL" & vbNewLine &
-                "    " & vbNewLine &
-                "-- Copy missing group authorizations --" & vbNewLine &
-                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine &
-                "           ([ID_Application]" & vbNewLine &
-                "           ,[ID_GroupOrPerson]" & vbNewLine &
-                "           ,[ID_ServerGroup]" & vbNewLine &
-                "           ,[ReleasedOn]" & vbNewLine &
-                "           ,[ReleasedBy]" & vbNewLine &
-                "           ,[DevelopmentTeamMember]" & vbNewLine &
-                "           ,[IsDenyRule])" & vbNewLine &
-                "SELECT @DestinationSecObjID" & vbNewLine &
-                "      ,NewAuths.[ID_GroupOrPerson]" & vbNewLine &
-                "      ,NewAuths.[ID_ServerGroup]" & vbNewLine &
-                "      ,NewAuths.[ReleasedOn]" & vbNewLine &
-                "      ,NewAuths.[ReleasedBy]" & vbNewLine &
-                "      ,NewAuths.[DevelopmentTeamMember]" & vbNewLine &
-                "      ,NewAuths.[IsDenyRule]" & vbNewLine &
-                "FROM [dbo].[ApplicationsRightsByGroup] AS NewAuths" & vbNewLine &
-                "    LEFT JOIN [dbo].[ApplicationsRightsByGroup] AS ExistingAuths" & vbNewLine &
-                "        ON ExistingAuths.ID_Application = @DestinationSecObjID" & vbNewLine &
-                "            AND ExistingAuths.ID_GroupOrPerson = NewAuths.ID_GroupOrPerson" & vbNewLine &
-                "            AND ExistingAuths.ID_ServerGroup = NewAuths.ID_ServerGroup" & vbNewLine &
-                "            AND ExistingAuths.IsDenyRule = NewAuths.IsDenyRule" & vbNewLine &
-                "            AND ExistingAuths.DevelopmentTeamMember = NewAuths.DevelopmentTeamMember" & vbNewLine &
-                "WHERE NewAuths.[ID_Application] = @SourceSecObjID " & vbNewLine &
-                "    AND NewAuths.[IsSupervisorAutoAccessRule] = 0" & vbNewLine &
+            Const sqlSinceDbBuild_4_12 As String = _
+                "SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; " & vbNewLine & _
+                "-- Copy missing user authorizations --" & vbNewLine & _
+                "INSERT INTO [dbo].[ApplicationsRightsByUser]" & vbNewLine & _
+                "           ([ID_Application]" & vbNewLine & _
+                "           ,[ID_GroupOrPerson]" & vbNewLine & _
+                "           ,[ID_ServerGroup]" & vbNewLine & _
+                "           ,[ReleasedOn]" & vbNewLine & _
+                "           ,[ReleasedBy]" & vbNewLine & _
+                "           ,[DevelopmentTeamMember]" & vbNewLine & _
+                "           ,[IsDenyRule])" & vbNewLine & _
+                "SELECT @DestinationSecObjID" & vbNewLine & _
+                "      ,NewAuths.[ID_GroupOrPerson]" & vbNewLine & _
+                "      ,NewAuths.[ID_ServerGroup]" & vbNewLine & _
+                "      ,NewAuths.[ReleasedOn]" & vbNewLine & _
+                "      ,NewAuths.[ReleasedBy]" & vbNewLine & _
+                "      ,NewAuths.[DevelopmentTeamMember]" & vbNewLine & _
+                "      ,NewAuths.[IsDenyRule]" & vbNewLine & _
+                "FROM [dbo].[ApplicationsRightsByUser] AS NewAuths" & vbNewLine & _
+                "    LEFT JOIN [dbo].[ApplicationsRightsByUser] AS ExistingAuths" & vbNewLine & _
+                "        ON ExistingAuths.ID_Application = @DestinationSecObjID" & vbNewLine & _
+                "            AND ExistingAuths.ID_GroupOrPerson = NewAuths.ID_GroupOrPerson" & vbNewLine & _
+                "            AND ExistingAuths.ID_ServerGroup = NewAuths.ID_ServerGroup" & vbNewLine & _
+                "            AND ExistingAuths.IsDenyRule = NewAuths.IsDenyRule" & vbNewLine & _
+                "            AND ExistingAuths.DevelopmentTeamMember = NewAuths.DevelopmentTeamMember" & vbNewLine & _
+                "WHERE NewAuths.[ID_Application] = @SourceSecObjID " & vbNewLine & _
+                "    AND ExistingAuths.ID IS NULL" & vbNewLine & _
+                "    " & vbNewLine & _
+                "-- Copy missing group authorizations --" & vbNewLine & _
+                "INSERT INTO [dbo].[ApplicationsRightsByGroup]" & vbNewLine & _
+                "           ([ID_Application]" & vbNewLine & _
+                "           ,[ID_GroupOrPerson]" & vbNewLine & _
+                "           ,[ID_ServerGroup]" & vbNewLine & _
+                "           ,[ReleasedOn]" & vbNewLine & _
+                "           ,[ReleasedBy]" & vbNewLine & _
+                "           ,[DevelopmentTeamMember]" & vbNewLine & _
+                "           ,[IsDenyRule])" & vbNewLine & _
+                "SELECT @DestinationSecObjID" & vbNewLine & _
+                "      ,NewAuths.[ID_GroupOrPerson]" & vbNewLine & _
+                "      ,NewAuths.[ID_ServerGroup]" & vbNewLine & _
+                "      ,NewAuths.[ReleasedOn]" & vbNewLine & _
+                "      ,NewAuths.[ReleasedBy]" & vbNewLine & _
+                "      ,NewAuths.[DevelopmentTeamMember]" & vbNewLine & _
+                "      ,NewAuths.[IsDenyRule]" & vbNewLine & _
+                "FROM [dbo].[ApplicationsRightsByGroup] AS NewAuths" & vbNewLine & _
+                "    LEFT JOIN [dbo].[ApplicationsRightsByGroup] AS ExistingAuths" & vbNewLine & _
+                "        ON ExistingAuths.ID_Application = @DestinationSecObjID" & vbNewLine & _
+                "            AND ExistingAuths.ID_GroupOrPerson = NewAuths.ID_GroupOrPerson" & vbNewLine & _
+                "            AND ExistingAuths.ID_ServerGroup = NewAuths.ID_ServerGroup" & vbNewLine & _
+                "            AND ExistingAuths.IsDenyRule = NewAuths.IsDenyRule" & vbNewLine & _
+                "            AND ExistingAuths.DevelopmentTeamMember = NewAuths.DevelopmentTeamMember" & vbNewLine & _
+                "WHERE NewAuths.[ID_Application] = @SourceSecObjID " & vbNewLine & _
+                "    AND NewAuths.[IsSupervisorAutoAccessRule] = 0" & vbNewLine & _
                 "    AND ExistingAuths.ID IS NULL"
 
             Dim sql As String
