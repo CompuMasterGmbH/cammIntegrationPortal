@@ -855,8 +855,27 @@ Namespace CompuMaster.camm.SmartWebEditor
         End Function    'EncryptAStringForUrlUsement(ByVal sourceString As String) As String
 
         Protected Function GenerateUploadFormUrl() As String
-            'TOOD: consider a different way to pass the data, e. g. serialization of a class + hmac
-            Return Me.UploadFormUrl & "?ref=" & Me.EncryptStringForUrlUsage(DocumentID) & "&uploadpath=" & Me.EncryptStringForUrlUsage(Utils.FullyInterpretedVirtualPath(Me.ImagesUploadPath)) & "&securityobject=" & EncryptStringForUrlUsage(Me.SecurityObjectEditMode) & "&editorid=" & EncryptStringForUrlUsage(Me.editorMain.ClientID) & "&maxuploadsize=" & EncryptStringForUrlUsage(Me.ImagesUploadSizeMax.ToString()) & "&readonlydirs=" & EncryptStringForUrlUsage(String.Join(";", Me.ImagesReadOnly)) & "&callbackfunction=" & EncryptStringForUrlUsage("pasteImageToEditor")
+            Dim parameters As New UploadFormParameters
+            parameters.RefPath = DocumentID 'I am just using the old logic for now, it used document id for ref...
+            parameters.DocumentID = DocumentID
+            parameters.UploadPath = Utils.FullyInterpretedVirtualPath(Me.ImagesUploadPath)
+            parameters.SecurityObject = Me.SecurityObjectEditMode
+            parameters.EditorClientId = Me.editorMain.ClientID
+            parameters.MaxUploadSize = Me.ImagesUploadSizeMax
+            parameters.ReadOnlyDirectories = Me.ImagesReadOnly
+            parameters.JavaScriptCallBackFunctionName = "pasteImageToEditor"
+
+            Dim guid As Guid = New Guid()
+            Dim guidStr As String = Guid.NewGuid().ToString().Replace("-"c, "")
+            Dim memStream As New System.IO.MemoryStream()
+            Dim formatter As New System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            formatter.Serialize(memStream, parameters)
+
+            Dim base64 As String = Convert.ToBase64String(memStream.ToArray())
+            Dim key As String = "WebEditorUpload_" & guidStr
+            Me.cammWebManager.System_SetSessionValue(key, base64)
+
+            Return Me.UploadFormUrl & "?key=" & key
         End Function
 
 

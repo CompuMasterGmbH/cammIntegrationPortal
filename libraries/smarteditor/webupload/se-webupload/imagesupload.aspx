@@ -15,7 +15,7 @@
 		{
 			var e = thisForm.elements[i];
 			
-			if ((e.type == 'file') && (e.name = 'InputFileUpload'))
+			if ((e.type == 'file') && (e.name == 'InputFileUpload'))
 			{
 				if ((e.value == null) || (e.value == ""))
 				{

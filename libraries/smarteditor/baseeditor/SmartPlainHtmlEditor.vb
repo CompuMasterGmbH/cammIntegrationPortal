@@ -191,7 +191,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Dim selectedValue As String = Me.CurrentVersion & ";" & LanguageToShow.ToString()
 
                 If currentVersionExists Then
-                    Me.VersionDropDownBox.SelectedValue = Me.CurrentVersion & ";" & LanguageToShow.ToString()
+                    Me.VersionDropDownBox.SelectedValue = selectedValue
                 Else
                     Me.VersionDropDownBox.Items.Add("(new)")
                     Me.VersionDropDownBox.SelectedValue = "(new)"

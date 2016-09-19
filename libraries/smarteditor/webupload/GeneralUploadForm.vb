@@ -33,7 +33,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages.Upload
             cammWebManager.AuthorizeDocumentAccess(cammWebManager.SecurityObject)
             CreateUploadFolders()
 
-            Me.LabelFileUploadFolderValue.Text = Me.FileUploadFolder
+            Me.LabelFileUploadFolderValue.Text = Me.UploadParamters.UploadPath
 
         End Sub
 
@@ -53,58 +53,27 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages.Upload
 
 #Region "Properties"
 
+        Protected UploadParamters As CompuMaster.camm.SmartWebEditor.UploadFormParameters
 
-        Private _FileUploadFolder As String
-        ''' <summary>
-        '''     The upload folder for files
-        ''' </summary>
-        Protected ReadOnly Property FileUploadFolder() As String
-            Get
-                If _FileUploadFolder Is Nothing AndAlso Request.QueryString("uploadpath") <> Nothing Then
-                    Dim folder As String = Me.DecryptUrlParameters(Request.QueryString("uploadpath"))
+        Private Sub SetUploadParamters()
+            Dim guid As String = Request.QueryString("key")
+            If guid Is Nothing Then
+                Throw New Exception("Missing uid paramater")
+            End If
+            Dim base64Data As Object = Utils.Nz(Me.cammWebManager.System_GetSessionValue(guid))
+            If base64Data Is Nothing Then
+                Throw New Exception("Error while trying to retrieve upload paramaters")
+            End If
+            Dim serializedBytes As Byte() = Convert.FromBase64String(CType(base64Data, String))
+            Dim memStreams As New System.IO.MemoryStream(serializedBytes)
+            Dim formatter As New System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
 
-                    If folder.StartsWith("/") OrElse folder.StartsWith("~/") Then
-                        _FileUploadFolder = UploadTools.FullyInterpretedVirtualPath(folder)
-                    Else
-                        _FileUploadFolder = UploadTools.CombineUnixPaths(GetReferencePath, folder)
-                    End If
-                End If
-                Return _FileUploadFolder
-            End Get
-        End Property
+            Me.UploadParamters = CType(formatter.Deserialize(memStreams), UploadFormParameters)
+        End Sub
 
-        Protected ReadOnly Property MaxFileUploadSize() As Integer
-            Get
-                Dim key As String = "maxfileuploadsize"
-                If Request.QueryString(key) <> Nothing Then
-                    Return Integer.Parse(Me.DecryptUrlParameters(Request.QueryString(key)))
-                End If
-                Return 0
-            End Get
-        End Property
-
-        Protected ReadOnly Property ReadOnlyDirectories() As String()
-            Get
-                Dim key As String = "readonlydirs"
-                If Request.QueryString(key) <> Nothing Then
-                    Dim decryptedParam As String = Me.DecryptUrlParameters(Request.QueryString(key))
-                    Return decryptedParam.Split(";"c)
-                End If
-                Return Nothing
-            End Get
-        End Property
-
-
-        Public ReadOnly Property ParentWindowCallbackFunction As String
-            Get
-                Dim key As String = "callbackfunction"
-                If Request.QueryString(key) <> Nothing Then
-                    Dim decryptedParam As String = Me.DecryptUrlParameters(Request.QueryString(key))
-                    Return decryptedParam
-                End If
-                Return Nothing
-            End Get
-        End Property
+        Private Sub PagePreInit(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.PreInit
+            SetUploadParamters()
+        End Sub
 
 
 #End Region
@@ -126,36 +95,12 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages.Upload
         End Sub
 
 
-        Private _GetReferencePath As String
-
-        ''' <summary>
-        '''     Contains the ref var passed by url
-        ''' </summary>
-        Private Property GetReferencePath() As String
-            Get
-                If _GetReferencePath Is Nothing Then
-                    _GetReferencePath = Utils.RemoveFilenameInUnixPath(DecryptUrlParameters(Request.QueryString("ref")))
-                End If
-                If _GetReferencePath <> Nothing AndAlso Not _GetReferencePath.EndsWith("/") Then
-                    _GetReferencePath &= "/"
-                End If
-                If Trim(_GetReferencePath) = Nothing Then
-                    Throw New Exception("Missing path reference")
-                End If
-                Return _GetReferencePath
-            End Get
-            Set(ByVal Value As String)
-                _GetReferencePath = Value
-            End Set
-        End Property
-
-
         ''' <summary>
         '''     Initializes the property and also checks for invalid parameters
         ''' </summary>
-        Private Sub InitializeSecurityObject()
+        Protected Sub InitializeSecurityObject()
             Dim result As Boolean = False
-            Dim mySecurityObject As String = DecryptUrlParameters(Request.QueryString("securityobject"))
+            Dim mySecurityObject As String = UploadParamters.SecurityObject
             'Check for invalid application names, passed by url
             If Trim(mySecurityObject) = Nothing OrElse LCase(mySecurityObject) = "@@anonymous" OrElse LCase(mySecurityObject) = "anonymous" Then
                 Throw New Exception("Access denied in sWcms upload form because of non given/valid security object.")
@@ -183,35 +128,12 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages.Upload
         End Function
 
         ''' <summary>
-        '''     Decrypts a string passed as url parameter
-        ''' </summary>
-        ''' <param name="encryptedString"></param>
-        Protected Function DecryptUrlParameters(ByVal encryptedString As String) As String
-            Dim result As String
-            Try
-                Try
-                    'try to decode base64 string
-                    Dim myCryptingEngine As CompuMaster.camm.WebManager.ICrypt = New CompuMaster.camm.WebManager.TripleDesBase64Encryption
-                    result = myCryptingEngine.DeCryptString(encryptedString)
-                Catch
-                    'try to decode old and buggy encrypted string (not base64 Encoded)
-                    Dim myCryptingEngine As CompuMaster.camm.WebManager.ICrypt = New CompuMaster.camm.WebManager.TripleDesEncryptionBase
-                    result = myCryptingEngine.DeCryptString(encryptedString)
-                End Try
-            Catch ex As Exception
-                Throw New Exception("Error while decrypting Url parameter. '" & ex.Message & "'")
-            End Try
-            Return result
-        End Function    'DecryptUrlParameters(ByVal encryptedString As String) As String
-
-
-        ''' <summary>
         '''     Creates several upload folders, based on the formula which has redirected to the form
         ''' </summary>
         Protected Sub CreateUploadFolders()
             Try
-                If Me.FileUploadFolder <> Nothing Then
-                    Dim myDirectoryInfo As New System.IO.DirectoryInfo(Server.MapPath(Me.FileUploadFolder))
+                If Me.UploadParamters.UploadPath <> Nothing Then
+                    Dim myDirectoryInfo As New System.IO.DirectoryInfo(Server.MapPath(Me.UploadParamters.UploadPath))
                     If Not myDirectoryInfo.Exists Then
                         myDirectoryInfo.Create()
                     End If

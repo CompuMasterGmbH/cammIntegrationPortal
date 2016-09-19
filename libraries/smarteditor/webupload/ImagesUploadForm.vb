@@ -39,7 +39,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             CreateUploadFolders()
 
             'Initialize the label who are describing the upload locations targets
-            Me.LabelFileUploadFolderValue.Text = Me.FileUploadFolder
+            Me.LabelFileUploadFolderValue.Text = Me.UploadParamters.UploadPath
 
         End Sub
 
@@ -72,14 +72,10 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Private Sub InitializeControls()
             Dim fileBrowser As FileBrowser = CType(Me.Page.FindControl("FileBrowserControl"), FileBrowser)
             If Not fileBrowser Is Nothing Then
-                fileBrowser.UploadFolderPath = Me.FileUploadFolder
-                fileBrowser.ReadonlyDirectories = Me.ReadOnlyDirectories
-                fileBrowser.ParentWindowCallbackFunction = Me.ParentWindowCallbackFunction
-                Dim editorId As String = Request("editorid")
-                If Not editorId = "" Then
-                    editorId = Me.DecryptUrlParameters(editorId)
-                End If
-                fileBrowser.EditorId = editorId
+                fileBrowser.UploadFolderPath = Me.UploadParamters.UploadPath
+                fileBrowser.ReadonlyDirectories = Me.UploadParamters.ReadOnlyDirectories
+                fileBrowser.ParentWindowCallbackFunction = Me.UploadParamters.JavaScriptCallBackFunctionName
+                fileBrowser.EditorId = Me.UploadParamters.EditorClientId
             End If
         End Sub
 
@@ -116,7 +112,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             Me.LabelSelectFileToUpload.Text = "Wählen Sie eine Bilddatei zum Hochladen"
             Me.ButtonUploadFile.Text = "Hochladen"
             Me.LabelProcessingTips.Text = "<b>Bearbeitungshinweise:</b><br><br>" &
-                                        "1. Es können nur folgende Datenformate auf den Server geladen werden: JPEGs, GIFs, PNGs und BMPs <br><br>" &
+                                        "1. Es können nur folgende Datenformate auf den Server geladen werden: " & String.Join(", ", Me.AllowedFileExtensions) & "<br><br>" &
                                         "2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der " &
                                         "Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. <br><br>" &
                                         "3. Bitte beachten Sie, dass die Pixelanzahl der Bilddatei, welche hochgeladen wird, stets größer ist als die " &
@@ -152,43 +148,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
         End Sub
 
-        Private _GetReferencePath As String
-
-        ''' <summary>
-        '''     Contains the ref var passed by url
-        ''' </summary>
-        Private Property GetReferencePath() As String
-            Get
-                If _GetReferencePath Is Nothing Then
-                    _GetReferencePath = Utils.RemoveFilenameInUnixPath(DecryptUrlParameters(Request.QueryString("ref")))
-                End If
-                If _GetReferencePath <> Nothing AndAlso Not _GetReferencePath.EndsWith("/") Then
-                    _GetReferencePath &= "/"
-                End If
-                If Trim(_GetReferencePath) = Nothing Then
-                    Throw New Exception("Missing path reference")
-                End If
-                Return _GetReferencePath
-            End Get
-            Set(ByVal Value As String)
-                _GetReferencePath = Value
-            End Set
-        End Property
-
-
-        ''' <summary>
-        '''     Initializes the property and also checks for invalid parameters
-        ''' </summary>
-        Private Sub InitializeSecurityObject()
-            Dim result As Boolean = False
-            Dim mySecurityObject As String = DecryptUrlParameters(Request.QueryString("securityobject"))
-            'Check for invalid application names, passed by url
-            If Trim(mySecurityObject) = Nothing OrElse LCase(mySecurityObject) = "@@anonymous" OrElse LCase(mySecurityObject) = "anonymous" Then
-                Throw New Exception("Access denied in sWcms upload form because of non given/valid security object.")
-            Else
-                SecurityObject = mySecurityObject
-            End If
-        End Sub
 
 #End Region
 
@@ -212,9 +171,9 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                 Exit Sub
             End If
 
-            If Me.MaxFileUploadSize > 0 Then
+            If Me.UploadParamters.MaxUploadSize > 0 Then
                 Dim fileSize As Integer = Me.InputFileUpload.PostedFile.ContentLength
-                If fileSize > Me.MaxFileUploadSize Then
+                If fileSize > Me.UploadParamters.MaxUploadSize Then
                     LabelWarning.Text = "Uploaded file is too large."
                     Exit Sub
                 End If
@@ -241,7 +200,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                 End Try
 
                 Dim fileName As String = System.IO.Path.GetFileNameWithoutExtension(Me.InputFileUpload.PostedFile.FileName) & "_" & miniatureViewWidth & "x" & miniatureViewHeight & "_" & Now.ToString("yyyyMMddHHmmss") & System.IO.Path.GetExtension(Me.InputFileUpload.PostedFile.FileName)
-                Dim fPath As String = HttpContext.Current.Server.MapPath(Me.FileUploadFolder) & System.IO.Path.DirectorySeparatorChar & fileName
+                Dim fPath As String = HttpContext.Current.Server.MapPath(Me.UploadParamters.UploadPath) & System.IO.Path.DirectorySeparatorChar & fileName
                 If Me.CheckBoxMiniatureView.Checked Then
                     Try
                         resizer.Resize(miniatureViewWidth, miniatureViewHeight)
@@ -263,7 +222,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                 End If
 
                 fileName = System.IO.Path.GetFileNameWithoutExtension(Me.InputFileUpload.PostedFile.FileName) & "_" & normalViewWidth & "x" & normalViewHeight & "_" & Now.ToString("yyyyMMddHHmmss") & System.IO.Path.GetExtension(Me.InputFileUpload.PostedFile.FileName)
-                fPath = HttpContext.Current.Server.MapPath(Me.FileUploadFolder) & System.IO.Path.DirectorySeparatorChar & fileName
+                fPath = HttpContext.Current.Server.MapPath(Me.UploadParamters.UploadPath) & System.IO.Path.DirectorySeparatorChar & fileName
                 If Me.CheckBoxNormalView.Checked Then
                     resizer.Resize(normalViewWidth, normalViewHeight)
                     Try
@@ -275,7 +234,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                 End If
             Else
                 Dim fileName As String = System.IO.Path.GetFileNameWithoutExtension(Me.InputFileUpload.PostedFile.FileName) & "_" & Now.ToString("yyyyMMddHHmmss") & System.IO.Path.GetExtension(Me.InputFileUpload.PostedFile.FileName)
-                Dim fPath As String = HttpContext.Current.Server.MapPath(Me.FileUploadFolder) & System.IO.Path.DirectorySeparatorChar & fileName
+                Dim fPath As String = HttpContext.Current.Server.MapPath(Me.UploadParamters.UploadPath) & System.IO.Path.DirectorySeparatorChar & fileName
 
                 Dim fi As New System.IO.FileInfo(fPath)
                 Dim writer As System.IO.Stream = fi.Create
