@@ -50,7 +50,11 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
         End Function
 
         Public Function SortMemberships(ByVal left As CompuMaster.camm.WebManager.WMSystem.GroupInformation, ByVal right As CompuMaster.camm.WebManager.WMSystem.GroupInformation) As Integer
-            Return left.Description.CompareTo(right.Description)
+            Dim LeftText As String = ""
+            Dim RightText As String = ""
+            If left IsNot Nothing Then LeftText = left.Description
+            If right IsNot Nothing Then RightText = right.Description
+            Return LeftText.CompareTo(RightText)
         End Function
 
         Protected Function SortedGroups(MyGroupInfos As CompuMaster.camm.WebManager.WMSystem.GroupInformation()) As System.Data.DataTable
