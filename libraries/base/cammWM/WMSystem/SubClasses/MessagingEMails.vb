@@ -907,6 +907,7 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' <param name="name">The name of the receipient</param>
         ''' <param name="address">The e-mail address of the receipient</param>
         ''' <remarks>
+        '''     <para>In case of an empty address, an empty string will be returned, too (no ArgumentNullException).</para>
         '''     <para>RFC-821 standard describes as following:</para>
         '''	    <para>&lt;special&gt; ::= "&lt;" | "&gt;" | "(" | ")" | "[" | "]" | "\" | "."
         '''	              | "," | ";" | ":" | "@"  """ | the control
@@ -914,6 +915,7 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''	              127)</para>
         ''' </remarks>
         Public Shared Function CreateReceipientString(ByVal name As String, ByVal address As String) As String
+            If address = Nothing Then Return ""
             If name <> "" Then
                 name = name.Replace("\", "\\")
                 name = name.Replace("<", "\<").Replace(">", "\>").Replace("(", "\(").Replace(")", "\)").Replace("[", "\[").Replace("]", "\]")
@@ -932,6 +934,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     Create a valid receipient string for the address lists parameters of method SendEMail
         ''' </summary>
         ''' <param name="address">The e-mail address of the receipient</param>
+        ''' <remarks>
+        '''     <para>In case of an empty address, an empty string will be returned, too (no ArgumentNullException).</para>
+        ''' </remarks>
         Public Shared Function CreateReceipientString(ByVal address As String) As String
             Return CreateReceipientString(Nothing, address)
         End Function
@@ -1720,10 +1725,10 @@ Namespace CompuMaster.camm.WebManager.Messaging
                 'Setup additional headers
                 If Not AdditionalHeaders Is Nothing Then
                     For Each MyKey As String In AdditionalHeaders
-                        If MyKey.ToLower() = "reply-to" Then
+                        If MyKey.ToLower() = "reply-to" AndAlso AdditionalHeaders(MyKey) <> "<>" Then 'between lib version approx. 199 up to approx. 209.101 (excl.) there was an issue that additional header reply-to might contain non-empty value but meant as empty (value="<>")
                             Dim rcpt As EMailReceipient = SplitEMailAddressesIntoAddressParts(AdditionalHeaders(MyKey))
                             MyMail.ReplyTo = New System.Net.Mail.MailAddress(rcpt.Address, rcpt.Name)
-                        Else
+                        ElseIf AdditionalHeaders(MyKey) <> "<>" Then 'don't add invalid header value
                             MyMail.Headers.Add(MyKey, AdditionalHeaders(MyKey))
                         End If
                     Next
