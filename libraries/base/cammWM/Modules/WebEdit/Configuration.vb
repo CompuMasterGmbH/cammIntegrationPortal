@@ -35,11 +35,24 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit.Controls
             End Get
         End Property
 
-        Public ReadOnly Property UploadFormUrl() As String
+        Public ReadOnly Property DocumentsUploadPath() As String
             Get
-                Return ConfigurationWebManager.UploadFormUrl
+                Return ConfigurationWebManager.DocumentsUploadPath
             End Get
         End Property
+
+        Public ReadOnly Property ImagesUploadFormUrl() As String
+            Get
+                Return ConfigurationWebManager.ImagesUploadFormUrl
+            End Get
+        End Property
+
+        Public ReadOnly Property DocumentsUploadFormUrl() As String
+            Get
+                Return ConfigurationWebManager.DocumentsUploadFormUrl
+            End Get
+        End Property
+
 
         Public Shared Function WebManagerSettings(settingName As String) As String
             If settingName.StartsWith("WebManager.Wcms.") Then

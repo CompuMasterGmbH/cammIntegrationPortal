@@ -16,19 +16,23 @@
 		    {
 		        alert('Please select a file');
 		        return;
-		    }
-		    if (window.opener.<%=ParentWindowCallbackFunction%>)
+	        }
+            var altText = document.getElementById('<%=txtBoxAltText.ClientID%>').value;
+
+            If (window.opener.<%=ParentWindowCallbackFunction%>)
 		    {
-		        window.opener.<%=ParentWindowCallbackFunction%>("<%= Me.EditorId %>", filePath);
+		        window.opener.<%=ParentWindowCallbackFunction%>("<%= Me.EditorId %>", filePath, altText);
 		    }
 		}
 		
 		</script>
 		<div id="imagebrowser">
-		<b><asp:Literal runat="server" ID="ltrlUploadedFiles" Text="Uploaded files"/></b><br>
+		<b><asp:Literal runat="server" ID="ltrlUploadedFiles" Text="Uploaded images"/></b><br>
 		<asp:ListBox runat="server" id="listBoxUploadedFiles" ClientIdMode="Static" style="width: 600px;" Rows=10  />
 	
-		<p><b>File Path:</b> <asp:TextBox runat="server" ID="txtBoxFilePath" width="400px" ReadOnly="true" /></p>
+		<p><b>Image Path:</b> <asp:TextBox runat="server" ID="txtBoxFilePath" width="400px" ReadOnly="true" /></p>
+           
+        <p><b>Alt Text:</b> <input type="text" runat="server" id="txtBoxAltText" /></p>
 
 		<p><asp:Label runat="server" id="lblDeletionMessage" EnableViewState="false"></asp:Label></p>
 

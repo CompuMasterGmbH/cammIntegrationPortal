@@ -111,6 +111,7 @@
     </Compile>
     <Compile Include="SmartWebEditorDatabaseAccessLayer.vb" />
     <Compile Include="SmartWebEditorCommonBase.vb" />
+    <Compile Include="UploadFormParameters.vb" />
     <Compile Include="Utils.vb" />
     <Compile Include="SmartWebEditorBase.vb" />
     <Compile Include="PlainTextEditor.vb" />

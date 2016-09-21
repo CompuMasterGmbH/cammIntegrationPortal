@@ -1,14 +1,13 @@
-<%@ Page Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.SmartWebEditor.Pages.DocsUploadForm"%>
+<%@ Page Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.SmartWebEditor.Pages.DocumentsUploadForm"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<%@ Register TagPrefix="SmartWebEditor" TagName="ImageBrowser" Src="ImageBrowser.ascx" %>
+<%@ Register TagPrefix="SmartWebEditor" TagName="FileBrowser" Src="DocumentsBrowser.ascx" %>
 
 <camm:WebManager id="cammWebmanager" runat="server" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 	<HEAD>
-		<title>Document - Management</title>
+		<title>Documents - Management</title>
 		<script language="javascript" >
-
 	function checkFileValidity(thisForm)
 	{
 
@@ -16,23 +15,23 @@
 		{
 			var e = thisForm.elements[i];
 			
-			if ((e.type == 'file') && (e.name = 'InputFileUploadImage'))
+			if ((e.type == 'file') && (e.name == 'InputFileUpload'))
 			{
 				if ((e.value == null) || (e.value == ""))
 				{
-					alert('Bitte wählen Sie eine Bilddatei zum hochladen aus.');
+				    alert('Please choose a document to upload.');
 					e.focus();
 					return false;		
 				}
 				else {
-					var ext = e.value;
-					ext = ext.substr((ext.length - 4), 4).toLowerCase();
-					if ( (ext == '.jpg') || (ext == '.gif') || (ext == '.png') || (ext == '.bmp') || (ext == 'jpeg'))
+					var ext = e.value.split('.').pop();
+			
+					if ( (ext == 'doc') || (ext == 'docx') || (ext == 'pdf') || (ext == 'odt') || (ext == 'rtf'))
 					{
 						return true;
 					}
 					else {
-						alert('Es können nur folgende Datenformate auf den Server geladen werden: JPEGs, GIFs, PNGs und BMPs.');
+						alert('Invalid format');
 						e.value = "";
 						thisForm.reset();
 						e.focus();
@@ -52,24 +51,26 @@
 		
 		<div class="pagearea" id="uploadarea">
 		<h1>Upload</h1>
-		<p>		<asp:Label Runat="server" ID="LabelSelectImageToUpload" Font-Bold="True" /><b>:</b></p>
-		<p><input runat="server" type="file" id="InputFileUploadImage" NAME="InputFileUploadImage"/>  </p>
+		<p>		<asp:Label Runat="server" ID="LabelSelectFileToUpload" Font-Bold="True" /><b>:</b></p>
+		<p><input runat="server" type="file" id="InputFileUpload" name="InputFileUpload"/>  </p>
 		<p><asp:Label Runat=server ID="LabelUploadedImageNames" /></p>
 		<div style="width: 60%">
-			<p><asp:Label Runat=server ID="LabelImageUploadFolder" /> <asp:Label id="LabelImageUploadFolderValue" runat="server"></asp:Label></p>
+			<p><asp:Label Runat=server ID="LabelFileUploadFolder" /> <asp:Label id="LabelFileUploadFolderValue" runat="server"></asp:Label></p>
 		</div>		
-						
+		
+	
+				
 		<p style="clear: both;"><asp:Label Runat="server" ID="LabelWarning" ForeColor="#ff0033" /></p>
 		
 										
-		<p><asp:Button Runat="server" ID="ButtonUploadImage" OnClientClick="return checkFileValidity(document.forms[0]);" /></p>
+		<p><asp:Button Runat="server" ID="ButtonUploadFile" OnClientClick="return checkFileValidity(document.forms[0]);" /></p>
 			
 		<p><asp:Label Runat="server" ID="LabelProcessingTips" /></p>
 		
 		</div>
 	<hr>		
 	
-		<SmartWebEditor:ImageBrowser  id="ImageBrowserControl" runat="server" />		
+		<SmartWebEditor:FileBrowser  id="FileBrowserControl" runat="server" />		
 			
 
 		</form>

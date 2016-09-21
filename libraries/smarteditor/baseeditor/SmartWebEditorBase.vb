@@ -213,28 +213,50 @@ Namespace CompuMaster.camm.SmartWebEditor
 
 
 
-        Private _UploadFormUrl As String
+        Private _ImagesUploadFormUrl As String
         ''' <summary>
         ''' The url to the upload form
         ''' </summary>
         ''' <returns></returns>
-        Public Property UploadFormUrl As String
+        Public Property ImagesUploadFormUrl As String
             Get
-                If _UploadFormUrl = Nothing Then
-                    Dim configValue As String = Me.Configuration.UploadFormUrl
+                If _ImagesUploadFormUrl = Nothing Then
+                    Dim configValue As String = Me.Configuration.ImagesUploadFormUrl
                     If configValue = Nothing Then
-                        Return "/sysdata/modules/smartwcms/upload.aspx"
+                        Return "/sysdata/modules/smartwcms/imagesupload.aspx"
                     End If
                     Return configValue
                 End If
-                Return _UploadFormUrl
+                Return _ImagesUploadFormUrl
 
             End Get
             Set(value As String)
-                _UploadFormUrl = value
+                _ImagesUploadFormUrl = value
             End Set
         End Property
 
+
+        Private __DocumentsUploadFormUrl As String
+        ''' <summary>
+        ''' The url to the upload form
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property DocumentsUploadFormUrl As String
+            Get
+                If __DocumentsUploadFormUrl = Nothing Then
+                    Dim configValue As String = Me.Configuration.DocumentsUploadFormUrl
+                    If configValue = Nothing Then
+                        Return "/sysdata/modules/smartwcms/documentssupload.aspx"
+                    End If
+                    Return configValue
+                End If
+                Return __DocumentsUploadFormUrl
+
+            End Get
+            Set(value As String)
+                __DocumentsUploadFormUrl = value
+            End Set
+        End Property
 
         Private _ImagesUploadPath As String
 
@@ -258,6 +280,28 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property
 
+        Private _DocumentsUploadPath As String
+
+        ''' <summary>
+        ''' Path to the folder where images should be stored
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property DocumentsUploadPath As String
+            Get
+                If _DocumentsUploadPath = Nothing Then
+                    Dim configValue As String = Me.Configuration.DocumentsUploadPath
+                    If configValue = Nothing Then
+                        Return "documents/"
+                    End If
+                    Return configValue
+                End If
+                Return _DocumentsUploadPath
+            End Get
+            Set(value As String)
+                _DocumentsUploadPath = value
+            End Set
+        End Property
+
 
         Private _ImagesUploadSizeMax As Integer = 512000
         ''' -----------------------------------------------------------------------------
@@ -275,6 +319,25 @@ Namespace CompuMaster.camm.SmartWebEditor
                 _ImagesUploadSizeMax = Value
             End Set
         End Property
+
+
+        Private _DocumentsUploadSizeMax As Integer = 512000
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Max. upload size for documents in Bytes
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        Public Property DocumentsUploadSizeMax As Integer
+            Get
+                Return _DocumentsUploadSizeMax
+            End Get
+            Set(ByVal Value As Integer)
+                _DocumentsUploadSizeMax = Value
+            End Set
+        End Property
+
 
 
         Private _ImagesReadOnly As String() = New String() {}
@@ -295,6 +358,28 @@ Namespace CompuMaster.camm.SmartWebEditor
                 _ImagesReadOnly = Value
             End Set
         End Property
+
+
+        Private _DocumentsReadOnly As String() = New String() {}
+
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Contains the control specific readonly folders for documents
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.TypeConverter(GetType(StringArrayConverter))> Public Property DocumentsReadOnly As String()
+            Get
+                Return _DocumentsReadOnly
+            End Get
+            Set(ByVal Value As String())
+                _DocumentsReadOnly = Value
+            End Set
+        End Property
+
+
 
 #End Region
 

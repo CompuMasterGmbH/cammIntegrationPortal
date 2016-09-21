@@ -69,6 +69,9 @@
   <ItemGroup>
     <Compile Include="ConfigurationUploadSettings.vb" />
     <Compile Include="ConfigurationUploadWebManager.vb" />
+    <Compile Include="DocumentsUploadForm.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="GeneralUploadForm.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -124,6 +127,12 @@
     <None Include="_CreateNewNuGetPackage\RunMeToUploadNuGetPackage.cmd" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DocumentsBrowser.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="ImageBrowser.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="FileBrowser.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>

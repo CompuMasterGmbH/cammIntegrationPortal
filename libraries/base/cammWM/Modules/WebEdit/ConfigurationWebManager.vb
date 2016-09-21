@@ -51,12 +51,24 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit.Controls
             End Get
         End Property
 
-        Public Shared ReadOnly Property UploadFormUrl() As String
+        Public Shared ReadOnly Property DocumentsUploadPath() As String
             Get
-                Return CompuMaster.camm.WebManager.Configuration.LoadStringSetting("WebManager.WebEditor.UploadFormUrl", String.Empty)
+                Return CompuMaster.camm.WebManager.Configuration.LoadStringSetting("WebManager.WebEditor.DocumentsUploadPath", String.Empty)
             End Get
         End Property
 
+        Public Shared ReadOnly Property ImagesUploadFormUrl() As String
+            Get
+                Return CompuMaster.camm.WebManager.Configuration.LoadStringSetting("WebManager.WebEditor.ImagesUploadFormUrl", String.Empty)
+            End Get
+        End Property
+
+
+        Public Shared ReadOnly Property DocumentsUploadFormUrl() As String
+            Get
+                Return CompuMaster.camm.WebManager.Configuration.LoadStringSetting("WebManager.WebEditor.DocumentsUploadFormUrl", String.Empty)
+            End Get
+        End Property
 
 
 

@@ -16,20 +16,33 @@
 		    {
 		        alert('Please select a file');
 		        return;
-		    }
-		    if (window.opener.<%=ParentWindowCallbackFunction%>)
+	        }
+            var descriptionText = document.getElementById('<%=txtBoxDescription.ClientID%>').value;
+	        var target = document.getElementById('<%= dropDownTarget.ClientID%>').value;
+            if (window.opener.<%=ParentWindowCallbackFunction%>)
 		    {
-		        window.opener.<%=ParentWindowCallbackFunction%>("<%= Me.EditorId %>", filePath);
+		        window.opener.<%=ParentWindowCallbackFunction%>("<%= Me.EditorId %>", filePath, descriptionText, target);
 		    }
 		}
 		
 		</script>
 		<div id="imagebrowser">
-		<b><asp:Literal runat="server" ID="ltrlUploadedFiles" Text="Uploaded files"/></b><br>
+		<b><asp:Literal runat="server" ID="ltrlUploadedFiles" Text="Uploaded documents"/></b><br>
 		<asp:ListBox runat="server" id="listBoxUploadedFiles" ClientIdMode="Static" style="width: 600px;" Rows=10  />
 	
-		<p><b>File Path:</b> <asp:TextBox runat="server" ID="txtBoxFilePath" width="400px" ReadOnly="true" /></p>
+		<p><b>Document Path:</b> <asp:TextBox runat="server" ID="txtBoxFilePath" width="400px" ReadOnly="true" /></p>
+           
+        <p><b>Description Text:</b> <input type="text" runat="server" id="txtBoxDescription" /></p>
 
+        <p><b>Target</b> <asp:DropDownList runat="server" ID ="dropDownTarget">
+            <asp:ListItem>_blank</asp:ListItem>
+            <asp:ListItem>_parent</asp:ListItem>
+            <asp:ListItem>_self</asp:ListItem>
+            <asp:ListItem>_top</asp:ListItem>
+
+                         </asp:DropDownList>
+
+        </p>
 		<p><asp:Label runat="server" id="lblDeletionMessage" EnableViewState="false"></asp:Label></p>
 
 		<p><asp:Button runat="server" ID="btnPasteToEditor" Text="Insert to editor" OnClientClick="passPathToEditor(); return false;" /> <asp:Button runat="server" id="btnDeleteFile" onClientClick="return confirmDeletion();" Text="Delete"></asp:Button></p>

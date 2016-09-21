@@ -105,7 +105,8 @@ Namespace CompuMaster.camm.SmartWebEditor
             Protected PreviewButton As System.Web.UI.WebControls.Button = Nothing
             Protected NewVersionButton As System.Web.UI.WebControls.Button = Nothing
             Protected DeleteLanguageButton As System.Web.UI.WebControls.Button = Nothing
-            Protected UploadFormOpenerButton As System.Web.UI.WebControls.Button = Nothing
+            Protected ImageUploadFormOpenerButton As System.Web.UI.WebControls.Button = Nothing
+            Protected DocsUploadFormOpenerButton As System.Web.UI.WebControls.Button = Nothing
 
             Protected VersionDifferenceLabel As System.Web.UI.WebControls.Label = Nothing
 
@@ -138,9 +139,15 @@ Namespace CompuMaster.camm.SmartWebEditor
                 AssignOnClientClickAttribute(Me.NewVersionButton, "document.getElementById('" & Me.txtRequestedAction.ClientID & "').value = 'newversion'; document.getElementById('" & Me.txtEditModeRequested.ClientID & "').value = 'true';  unbindCloseCheck(); ExecPostBack('NewVersionButton', 'Click', true);") '" & EncodeRawDataJScriptSnippet & "; document.forms['" & LookupParentServerFormName() & "'].submit(); return false;")
                 Me.NewVersionButton.Text = "New Version"
 
-                Me.UploadFormOpenerButton = New System.Web.UI.WebControls.Button()
-                AssignOnClientClickAttribute(Me.UploadFormOpenerButton, "window.open('" & Me.GenerateUploadFormUrl() & "','UploadForm','location=no,hotkeys=no,toolbar=no,dependent=yes,scrollbars=yes'); return false;")
-                Me.UploadFormOpenerButton.Text = "Upload"
+                Me.ImageUploadFormOpenerButton = New System.Web.UI.WebControls.Button()
+                AssignOnClientClickAttribute(Me.ImageUploadFormOpenerButton, "window.open('" & Me.GenerateImageUploadFormUrl() & "','UploadForm','location=no,hotkeys=no,toolbar=no,dependent=yes,scrollbars=yes'); return false;")
+                Me.ImageUploadFormOpenerButton.Text = "Upload image"
+
+                Me.DocsUploadFormOpenerButton = New System.Web.UI.WebControls.Button()
+                AssignOnClientClickAttribute(Me.DocsUploadFormOpenerButton, "window.open('" & Me.GenerateDocumentsUploadUrl() & "','UploadForm','location=no,hotkeys=no,toolbar=no,dependent=yes,scrollbars=yes'); return false;")
+                Me.DocsUploadFormOpenerButton.Text = "Upload document"
+
+
 
                 Me.VersionDifferenceLabel = New System.Web.UI.WebControls.Label()
                 Me.VersionDifferenceLabel.EnableViewState = False
@@ -238,7 +245,8 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.pnlEditorToolbar.Controls.Add(SaveButton)
                     Me.pnlEditorToolbar.Controls.Add(ActivateButton)
                     Me.pnlEditorToolbar.Controls.Add(PreviewButton)
-                    Me.pnlEditorToolbar.Controls.Add(UploadFormOpenerButton)
+                    Me.pnlEditorToolbar.Controls.Add(ImageUploadFormOpenerButton)
+                    Me.pnlEditorToolbar.Controls.Add(DocsUploadFormOpenerButton)
                     If Me.MarketLookupMode <> MarketLookupModes.SingleMarket Then
                         InitializeLanguageDropDownList()
                         Me.pnlEditorToolbar.Controls.Add(Me.LanguagesDropDownBox)
@@ -426,13 +434,36 @@ Namespace CompuMaster.camm.SmartWebEditor
                                                                        "if(window.addEventListener) " & vbNewLine &
                                                                        "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine &
                                                                        ""
-                    Dim pasteImage As String = "function pasteImageToEditor(editorid, imageurl) { document.getElementById(editorid).value += ""<img src='"" + imageurl + ""' />""; }"
+                    Dim pasteImage As String = "function pasteImageToEditor(editorid, imageurl, alttext) { " & vbNewLine &
+                                 "if(alttext != null && alttext != ''){" & vbNewLine &
+                                "document.getElementById(editorid).value += ""<img src='"" + imageurl + ""'  alt='"" + alttext + ""' />""; }" & vbNewLine &
+                                "else { document.getElementById(editorid).value += ""<img src='"" + imageurl + ""' />"";  }" & vbNewLine &
+                                "}"
+
+                    Dim pasteDocument As String = "function pasteDocumentToEditor(editorId, url, title, target, linktext)" & vbNewLine &
+"{" & vbNewLine &
+    "var link = '<a href=""' + url + '""';" & vbNewLine &
+    "if(title != null && title != '')" & vbNewLine &
+    "{" & vbNewLine &
+        "link += ' title=""' + title + '""';" & vbNewLine &
+    "}" & vbNewLine &
+    "if(target != null && target != '')" & vbNewLine &
+    "{" & vbNewLine &
+        "link += ' target=""' + target + '""';" & vbNewLine &
+    "}" & vbNewLine &
+    "link += '>' + linktext + '</a>'" & vbNewLine &
+    "document.getElementById(editorId.)value += link;" & vbNewLine &
+"}"
+
+
 #If NetFrameWork = "1_1" Then
                     Me.Page.RegisterClientScriptBlock("ExecPostBack", ExecPostBackSnippet)
                     Me.Page.RegisterClientScriptBlock("UnbindCloseCheck", UnbindCloseCheckSnippet)
                     Me.Page.RegisterClientScriptBlock("confirmPageClose", ConfirmPageCloseSnippet)
                     Me.Page.RegisterClientScriptBlock("ResetSelectBox", ResetSelectBoxSnippet)
                     Me.Page.RegisterClientScriptBlock("CloseCheck", CloseCheckSnippet)
+                     Me.Page.RegisterClientScriptBlock("pasteImageToEditor", pasteImage)
+                     Me.Page.RegisterClientScriptBlock("pasteDocument", pasteDocument)
 #Else
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ExecPostBack", ExecPostBackSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "UnbindCloseCheck", UnbindCloseCheckSnippet, True)
@@ -440,6 +471,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ResetSelectBox", ResetSelectBoxSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CloseCheck", CloseCheckSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteImageToEditor", pasteImage, True)
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteDocument", pasteDocument, True)
 #End If
 
                     'Enforce __doPostBack javascript function being existent

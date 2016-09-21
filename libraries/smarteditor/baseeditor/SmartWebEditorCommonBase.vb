@@ -854,7 +854,7 @@ Namespace CompuMaster.camm.SmartWebEditor
             Return HttpUtility.UrlEncode(result)
         End Function    'EncryptAStringForUrlUsement(ByVal sourceString As String) As String
 
-        Protected Function GenerateUploadFormUrl() As String
+        Protected Function GenerateImageUploadFormUrl() As String
             Dim parameters As New UploadFormParameters
             parameters.RefPath = DocumentID 'I am just using the old logic for now, it used document id for ref...
             parameters.DocumentID = DocumentID
@@ -875,7 +875,31 @@ Namespace CompuMaster.camm.SmartWebEditor
             Dim key As String = "WebEditorUpload_" & guidStr
             Me.cammWebManager.System_SetSessionValue(key, base64)
 
-            Return Me.UploadFormUrl & "?key=" & key
+            Return Me.ImagesUploadFormUrl & "?key=" & key
+        End Function
+
+        Protected Function GenerateDocumentsUploadUrl() As String
+            Dim parameters As New UploadFormParameters
+            parameters.RefPath = DocumentID 'I am just using the old logic for now, it used document id for ref...
+            parameters.DocumentID = DocumentID
+            parameters.UploadPath = Utils.FullyInterpretedVirtualPath(Me.DocumentsUploadPath)
+            parameters.SecurityObject = Me.SecurityObjectEditMode
+            parameters.EditorClientId = Me.editorMain.ClientID
+            parameters.MaxUploadSize = Me.DocumentsUploadSizeMax
+            parameters.ReadOnlyDirectories = Me.DocumentsReadOnly
+            parameters.JavaScriptCallBackFunctionName = "pasteDocumentToEditor"
+
+            Dim guid As Guid = New Guid()
+            Dim guidStr As String = Guid.NewGuid().ToString().Replace("-"c, "")
+            Dim memStream As New System.IO.MemoryStream()
+            Dim formatter As New System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            formatter.Serialize(memStream, parameters)
+
+            Dim base64 As String = Convert.ToBase64String(memStream.ToArray())
+            Dim key As String = "WebEditorUpload_" & guidStr
+            Me.cammWebManager.System_SetSessionValue(key, base64)
+
+            Return Me.DocumentsUploadFormUrl & "?key=" & key
         End Function
 
 

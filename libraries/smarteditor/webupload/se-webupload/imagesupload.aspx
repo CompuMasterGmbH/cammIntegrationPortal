@@ -1,6 +1,6 @@
 <%@ Page Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.SmartWebEditor.Pages.ImagesUploadForm"%>
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
-<%@ Register TagPrefix="SmartWebEditor" TagName="FileBrowser" Src="FileBrowser.ascx" %>
+<%@ Register TagPrefix="SmartWebEditor" TagName="FileBrowser" Src="ImageBrowser.ascx" %>
 
 <camm:WebManager id="cammWebmanager" runat="server" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -24,9 +24,9 @@
 					return false;		
 				}
 				else {
-					var ext = e.value;
-					ext = ext.substr((ext.length - 4), 4).toLowerCase();
-					if ( (ext == '.jpg') || (ext == '.gif') || (ext == '.png') || (ext == '.bmp') || (ext == 'jpeg'))
+					var ext = e.value.split('.').pop();
+			
+					if ( (ext == 'jpg') || (ext == 'gif') || (ext == 'png') || (ext == 'bmp') || (ext == 'jpeg'))
 					{
 						return true;
 					}
