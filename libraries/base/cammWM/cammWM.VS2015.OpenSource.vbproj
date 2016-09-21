@@ -132,6 +132,11 @@
     <Compile Include="Global.asax.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Messaging\EMailAttachment.vb" />
+    <Compile Include="Messaging\EMails.vb" />
+    <Compile Include="Messaging\MailMessage.vb" />
+    <Compile Include="Messaging\MessagingEMails.vb" />
+    <Compile Include="Messaging\QueueMonitoring.vb" />
     <Compile Include="Modules\DownloadHandler.vb" />
     <Compile Include="Modules\mimetypes.vb" />
     <Compile Include="Modules\Navigation.vb" />
@@ -278,7 +283,6 @@
     <Compile Include="WMSystem\SubClasses\internationalization.vb" />
     <Compile Include="WMSystem\SubClasses\Licence.vb" />
     <Compile Include="WMSystem\SubClasses\log.vb" />
-    <Compile Include="WMSystem\SubClasses\MessagingEMails.vb" />
     <Compile Include="WMSystem\SubClasses\Notifications.vb" />
     <Compile Include="WMSystem\SubClasses\PerformanceMethods.vb" />
     <Compile Include="WMSystem\SubClasses\ProductRegistration.vb" />
