@@ -15,9 +15,7 @@
 Option Explicit On
 Option Strict On
 
-Imports System.Data
 Imports System.Data.SqlClient
-Imports System.Web
 
 Namespace CompuMaster.camm.WebManager.Messaging
 
@@ -35,12 +33,12 @@ Namespace CompuMaster.camm.WebManager.Messaging
         Friend _MailSendingSystem As MailSendingSystem = MailSendingSystem.Auto
         Public Enum MailSendingSystem As Integer
             [Auto] = -1
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> ChilkatActiveX = 0
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> ChilkatNet = 1
+            <Obsolete(), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> ChilkatActiveX = 0
+            <Obsolete(), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> ChilkatNet = 1
             Queue = 2
             <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> NetFramework1 = -3
             NetFramework = 3
-            <System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> EasyMail = 4
+            <Obsolete(), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> EasyMail = 4
         End Enum
         ''' <summary>
         '''     The preferred system for sending e-mails
@@ -472,7 +470,13 @@ Namespace CompuMaster.camm.WebManager.Messaging
                 End If
 
                 'Now, delegate the call to the corresponding mail method
+#If VS2015OrHigher = True Then
+#Disable Warning BC40008 'obsolete warnings (elements)
+#End If
                 If _MailSendingSystem = CompuMaster.camm.WebManager.Messaging.EMails.MailSendingSystem.EasyMail Then
+#If VS2015OrHigher = True Then
+#Enable Warning BC40008 'obsolete warnings (elements)
+#End If
                     Result = System_SendEMail_MultipleRcpts_NetFramework(rcptAddresses_To, rcptAddresses_Cc, rcptAddresses_Bcc, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, msgCharset, bufErrorDetails, attachments, priority, sensitivity, requestTransmissionConfirmation, requestReadingConfirmation, additionalHeaders)
                 ElseIf _MailSendingSystem = WMSystem.MailSendingSystem.NetFramework Then
                     Result = System_SendEMail_MultipleRcpts_NetFramework(rcptAddresses_To, rcptAddresses_Cc, rcptAddresses_Bcc, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, msgCharset, bufErrorDetails, attachments, priority, sensitivity, requestTransmissionConfirmation, requestReadingConfirmation, additionalHeaders)

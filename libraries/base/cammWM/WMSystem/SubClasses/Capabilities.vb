@@ -19,7 +19,6 @@ Imports CompuMaster.camm.WebManager.WMSystem
 
 Namespace CompuMaster.camm.WebManager
 
-#Region "Capabilities"
     ''' <summary>
     '''     Capabilities of this configured camm Web-Manager instance
     ''' </summary>
@@ -266,6 +265,5 @@ Namespace CompuMaster.camm.WebManager
         End Class
 
     End Class
-#End Region
 
 End Namespace
