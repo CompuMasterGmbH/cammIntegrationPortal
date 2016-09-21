@@ -1729,10 +1729,10 @@ Namespace CompuMaster.camm.WebManager.Messaging
                 'Setup additional headers
                 If Not AdditionalHeaders Is Nothing Then
                     For Each MyKey As String In AdditionalHeaders
-                        If MyKey.ToLower() = "reply-to" AndAlso AdditionalHeaders(MyKey) <> "<>" Then 'between lib version approx. 199 up to approx. 209.101 (excl.) there was an issue that additional header reply-to might contain non-empty value but meant as empty (value="<>")
+                        If MyKey.ToLower() = "reply-to" AndAlso AdditionalHeaders(MyKey) <> "" AndAlso AdditionalHeaders(MyKey) <> "<>" Then 'between lib version approx. 199 up to approx. 209.101 (excl.) there was an issue that additional header reply-to might contain non-empty value but meant as empty (value="<>")
                             Dim rcpt As EMailReceipient = SplitEMailAddressesIntoAddressParts(AdditionalHeaders(MyKey))
                             MyMail.ReplyTo = New System.Net.Mail.MailAddress(rcpt.Address, rcpt.Name)
-                        ElseIf AdditionalHeaders(MyKey) <> "<>" Then 'don't add invalid header value
+                        ElseIf AdditionalHeaders(MyKey) <> "" AndAlso AdditionalHeaders(MyKey) <> "<>" Then 'don't add invalid header value
                             MyMail.Headers.Add(MyKey, AdditionalHeaders(MyKey))
                         End If
                     Next
