@@ -53,7 +53,7 @@
 * :heavy_minus_sign:	removed Telerik.Rad components – replaced by stable SmartPlainTextEditor with always-warning to technician asking for replacing by another SmartEditor control
 * :heavy_minus_sign:	removed obsolete assembly dependency to CompuMaster.Imaging
 
-###Build 205 → 2108 (DB Engine)
+###Build 205 → 2109 (DB Engine)
 * :warning:	requires restart of all web applications (e.g. by iisreset or re-saving/re-upload of web.config on all connected servers and web applications)
 * :arrows_clockwise::warning:	splitted anonymous group ID 58 into separate ones for each server group
 * :heavy_plus_sign:	prepared memberships inherition
@@ -62,6 +62,7 @@
 * :heavy_plus_sign:	added user impersonation feature for test and development users and server groups
 * :arrows_clockwise:	distributed delete on tables with foreign key relationship by triggers
 * :heavy_minus_sign:	view/sp/function encryption
+* :heavy_minus_sign:	separated/removed module for log analysis from standard for reduced dependencies
 
 ###Build 202 → 205 (ASP.NET Engine)
 * :warning: the server for processing the asynchronous tasks (running the "core" webservice) must be able to connect directly to the internet (to www.camm.biz by https and http) for the introduced product registration service (without proxy support)
@@ -69,11 +70,12 @@
 * :heavy_plus_sign:	support for simultaneous login
 * :heavy_plus_sign:	user administration overview: added support for searching for e-mail addresses
 * :heavy_plus_sign:	user administration overview: changed to logical AND search (instead of logical OR/ANY previously)
+* :arrows_clockwise:	fixed issue in mail queue with empty reply-to header
 * :arrows_clockwise:	fixed several minor bugs 
 * :heavy_minus_sign:	separated/removed module for log analysis from standard for reduced dependencies
 * :heavy_minus_sign:	separated/removed navigation tools for 3rd party components ComponentArt and CyberAkt
 * :heavy_minus_sign:	removed ComponentArt dependency (except AppKey setup) 
-  * STILL MISSING/TODO: tabbing at system\modules\smartwcms\upload.aspx
+* :heavy_minus_sign:	removed integraded upload for internal smart editors (system\modules\smartwcms\upload.aspx) which is a separate module, now
 * :heavy_minus_sign:	removed CyberAkt dependency
 * :heavy_minus_sign:	removed RadChart dependency
 
