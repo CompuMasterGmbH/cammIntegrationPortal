@@ -33,7 +33,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected Field_Company, Field_Titel, Field_Vorname, Field_Nachname, Field_Namenszusatz, Field_e_mail As TextBox
         Protected Field_Strasse, Field_PLZ, Field_Ort, Field_State, Field_Land, Field_LoginLockedTill As TextBox
         Protected Field_ExternalAccount, Field_Phone, Field_Fax, Field_Mobile, Field_Position As TextBox
-        Protected cmbAnrede, cmb1stPreferredLanguage, cmb2ndPreferredLanguage, cmb3rdPreferredLanguage, cmbLoginDisabled, cmbAccountAccessable As DropDownList
+        Protected cmbAnrede, cmb1stPreferredLanguage, cmb2ndPreferredLanguage, cmb3rdPreferredLanguage, cmbLoginDisabled, cmbAccountAccessable, cmbIsImpersonationUser As DropDownList
         Protected WithEvents cmbCountry As DropDownList
         Protected WithEvents Button_Submit As Button
         Protected UserInfo As WMSystem.UserInformation
@@ -251,6 +251,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
             UserInfo.AccessLevel = New WMSystem.AccessLevelInformation(Utils.Nz(cmbAccountAccessable.SelectedValue, 0), cammWebManager)
             UserInfo.LoginDisabled = CBool(CInt(cmbLoginDisabled.SelectedValue))
+            If Me.cmbIsImpersonationUser IsNot Nothing Then
+                UserInfo.IsImpersonationUser = CBool(CInt(cmbIsImpersonationUser.SelectedValue))
+            End If
             If Trim(Me.Field_LoginLockedTill.Text) = "" Then
                 UserInfo.LoginLockedTemporary = False
             Else
@@ -267,7 +270,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Throw New Exception("Missing login name")
             ElseIf UserInfo.EMailAddress = Nothing Then
                 Throw New Exception("Missing e-mail address")
-            ElseIf UserInfo.IDLong <> Nothing And UserInfo.LoginName <> String.Empty Then
+            Else
                 Try
                     UserInfo.Save()
                     UserInfo.ReloadFullUserData() 'in case e.g. some fields had been cut off
@@ -280,10 +283,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     End If
                     Return False
                 End Try
-            Else
-                Throw New Exception("Please specify a user id an login name.!")
             End If
-
             Return True
         End Function
 
@@ -305,6 +305,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             cmbLoginDisabled.Items.Add(New ListItem("Yes", "1"))
             cmbLoginDisabled.Items.Add(New ListItem("No", "0"))
             If UserInfo.LoginDisabled = True Then cmbLoginDisabled.SelectedValue = "1" Else cmbLoginDisabled.SelectedValue = "0"
+            'bind IsImpersonationUser dropdownlist
+            If Me.cmbIsImpersonationUser IsNot Nothing Then
+                cmbIsImpersonationUser.Items.Clear()
+                cmbIsImpersonationUser.Items.Add(New ListItem("Yes", "1"))
+                cmbIsImpersonationUser.Items.Add(New ListItem("No", "0"))
+                If UserInfo.IsImpersonationUser = True Then cmbIsImpersonationUser.SelectedValue = "1" Else cmbIsImpersonationUser.SelectedValue = "0"
+            End If
             'bind AvailableAccessLevels dropdownlist
             cmbAccountAccessable.Items.Clear()
             Dim AccessLevels As DictionaryEntry() = AvailableAccessLevels()

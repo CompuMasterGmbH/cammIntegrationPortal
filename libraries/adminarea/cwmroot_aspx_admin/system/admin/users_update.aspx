@@ -77,7 +77,7 @@
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Country &nbsp;</FONT></P></TD>
-								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="60" id="Field_Land" /><asp:DropdownList width="200px" runat="server" id="cmbCountry" Visible="False" /> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="60" id="Field_Land" /><asp:DropdownList width="200px" runat="server" id="cmbCountry" /> &nbsp;</FONT></P></TD>
 								</TR>
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">Phone &nbsp;</FONT></P></TD>
@@ -134,6 +134,11 @@
 								<TR>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2">External account &nbsp;</FONT></P></TD>
 								<TD VAlign="Top"><P><FONT face="Arial" size="2"><asp:Textbox width="200px" runat="server" maxLength="255" id="Field_ExternalAccount" /> &nbsp;</FONT></P></TD>
+								</TR>
+								<TR>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2">Impersonation user account for development and test <font color="#C1C1C1"> </font> &nbsp;</FONT></P></TD>
+								<TD VAlign="Top"><P><FONT face="Arial" size="2">
+									<asp:dropdownlist id="cmbIsImpersonationUser" runat="Server" style="width: 200px" size="1" /></font></p></td>
 								</TR>
 								<camm:WebManagerAdminBlockFooter runat="server" /><TR>
 								<TD BGCOLOR="#C1C1C1" ColSpan="2"><P><FONT face="Arial" size="2"><b>Language/market preferences:</b></FONT></P></TD>
