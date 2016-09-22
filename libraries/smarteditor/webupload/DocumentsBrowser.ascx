@@ -21,7 +21,7 @@
 	        var target = document.getElementById('<%= dropDownTarget.ClientID%>').value;
             if (window.opener.<%=ParentWindowCallbackFunction%>)
 		    {
-		        window.opener.<%=ParentWindowCallbackFunction%>("<%= Me.EditorId %>", filePath, descriptionText, target);
+		        window.opener.<%=ParentWindowCallbackFunction%>("<%= Me.EditorId %>", filePath, descriptionText, target, filePath.split('/').pop());
 		    }
 		}
 		
