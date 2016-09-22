@@ -357,7 +357,7 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     A result of true means that there haven't been detected any errors while sending. But this doesn't mean that there are no errors while transmission (SMTP server can't route e-mails, receipient's address doesn't exist, etc.)
         ''' </remarks>
         ''' <seealso>CreateReceipientString</seealso>
-        <Obsolete(), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete(), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function SendEMail(ByVal RcptAddresses_To As String, ByVal RcptAddresses_CC As String, ByVal RcptAddresses_BCC As String, ByVal MsgSubject As String, ByVal MsgTextBody As String, ByVal MsgHTMLBody As String, ByVal SenderName As String, ByVal SenderAddress As String, ByVal Attachments As WMSystem.EMailAttachement(), Optional ByVal Priority As WMSystem.MailImportance = Nothing, Optional ByVal Sensitivity As WMSystem.MailSensitivity = Nothing, Optional ByVal RequestTransmissionConfirmation As Boolean = False, Optional ByVal RequestReadingConfirmation As Boolean = False, Optional ByVal AdditionalHeaders As Collections.Specialized.NameValueCollection = Nothing, Optional ByVal MsgCharset As String = Nothing, Optional ByRef bufErrorDetails As String = Nothing) As Boolean
             Return SendEMail(True, RcptAddresses_To, RcptAddresses_CC, RcptAddresses_BCC, MsgSubject, MsgTextBody, MsgHTMLBody, SenderName, SenderAddress, ConvertWMSystemEMailAttachmentToMessagingEMailAttachment(Attachments), CType(Priority, Messaging.EMails.Priority), CType(Sensitivity, Messaging.EMails.Sensitivity), RequestTransmissionConfirmation, RequestReadingConfirmation, AdditionalHeaders, MsgCharset, bufErrorDetails)
         End Function
@@ -1141,10 +1141,10 @@ Namespace CompuMaster.camm.WebManager.Messaging
 
             Dim MyCmd As New SqlCommand
             MyCmd.Connection = CType(connection, SqlConnection)
-            MyCmd.CommandText =
-                    "CREATE TABLE #mqueuetransids (ID int)" & vbNewLine &
-                    Me.QueueTransactionSqlRelatedIDs & vbNewLine &
-                    "UPDATE dbo.Log_eMailMessages SET State = " & CType(QueueMonitoring.QueueStates.Queued, Byte).ToString & " FROM dbo.Log_eMailMessages INNER JOIN #mqueuetransids ON dbo.Log_eMailMessages.ID = #mqueuetransids.ID" & vbNewLine &
+            MyCmd.CommandText = _
+                    "CREATE TABLE #mqueuetransids (ID int)" & vbNewLine & _
+                    Me.QueueTransactionSqlRelatedIDs & vbNewLine & _
+                    "UPDATE dbo.Log_eMailMessages SET State = " & CType(QueueMonitoring.QueueStates.Queued, Byte).ToString & " FROM dbo.Log_eMailMessages INNER JOIN #mqueuetransids ON dbo.Log_eMailMessages.ID = #mqueuetransids.ID" & vbNewLine & _
                     "DROP TABLE #mqueuetransids"
             MyCmd.CommandType = CommandType.Text
 
@@ -1175,10 +1175,10 @@ Namespace CompuMaster.camm.WebManager.Messaging
 
             Dim MyCmd As New SqlCommand
             MyCmd.Connection = CType(connection, SqlConnection)
-            MyCmd.CommandText =
-                    "CREATE TABLE #mqueuetransids (ID int)" & vbNewLine &
-                    Me.QueueTransactionSqlRelatedIDs & vbNewLine &
-                    "DELETE dbo.Log_eMailMessages FROM dbo.Log_eMailMessages INNER JOIN #mqueuetransids ON dbo.Log_eMailMessages.ID = #mqueuetransids.ID" & vbNewLine &
+            MyCmd.CommandText = _
+                    "CREATE TABLE #mqueuetransids (ID int)" & vbNewLine & _
+                    Me.QueueTransactionSqlRelatedIDs & vbNewLine & _
+                    "DELETE dbo.Log_eMailMessages FROM dbo.Log_eMailMessages INNER JOIN #mqueuetransids ON dbo.Log_eMailMessages.ID = #mqueuetransids.ID" & vbNewLine & _
                     "DROP TABLE #mqueuetransids"
             MyCmd.CommandType = CommandType.Text
             If ReUseDBConnection = True Then

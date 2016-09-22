@@ -33,7 +33,7 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' </summary>
         Public Function MailsInQueue() As Integer
             Dim Result As Object
-            Result = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(_WebManager.ConnectionString),
+            Result = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(_WebManager.ConnectionString), _
                             "SELECT COUNT(*) AS NumberOfItems FROM [dbo].[Log_eMailMessages] WHERE State = " & CType(QueueStates.Queued, Byte).ToString & " OR (State = " & CType(QueueStates.FailureAfter1Trial, Byte).ToString & " AND DATEDIFF (mi,[DateTime],GetDate()) > 15) OR (State IN (" & CType(QueueStates.FailureAfter2Trials, Byte) & "," & CType(QueueStates.Sending, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 1)", CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             SetLastActivityDate(New SqlConnection(_WebManager.ConnectionString), Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
             Return Utils.Nz(Result, 0)
@@ -50,14 +50,14 @@ Namespace CompuMaster.camm.WebManager.Messaging
             Dim MyReader As IDataReader = Nothing
             Dim MyMailID As Integer, MyMailData As String, MyMailState As QueueStates, MyMailDateTime As DateTime
             Try
-                MyReader = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReader(
-                        MyConn,
-                        "declare @ID int, @OriginState int" & vbNewLine &
-                            "SELECT TOP 1 @ID = [ID], @OriginState = State FROM [dbo].[Log_eMailMessages] WHERE State = " & CType(QueueStates.Queued, Byte).ToString & " OR (State = " & CType(QueueStates.FailureAfter1Trial, Byte).ToString & " AND DATEDIFF (mi,[DateTime],GetDate()) > 15) OR (State IN (" & CType(QueueStates.FailureAfter2Trials, Byte) & "," & CType(QueueStates.Sending, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 1) ORDER BY State" & vbNewLine &
-                            "UPDATE [dbo].[Log_eMailMessages] SET State = " & CType(QueueStates.Sending, Byte).ToString & ", [DateTime] = GETDATE() WHERE ID = @ID" & vbNewLine &
-                            "SELECT [ID], [UserID], [data], [State], [DateTime], @OriginState As OriginState FROM [dbo].[Log_eMailMessages] WHERE ID = @ID",
-                        CommandType.Text,
-                        Nothing,
+                MyReader = CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReader( _
+                        MyConn, _
+                        "declare @ID int, @OriginState int" & vbNewLine & _
+                            "SELECT TOP 1 @ID = [ID], @OriginState = State FROM [dbo].[Log_eMailMessages] WHERE State = " & CType(QueueStates.Queued, Byte).ToString & " OR (State = " & CType(QueueStates.FailureAfter1Trial, Byte).ToString & " AND DATEDIFF (mi,[DateTime],GetDate()) > 15) OR (State IN (" & CType(QueueStates.FailureAfter2Trials, Byte) & "," & CType(QueueStates.Sending, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 1) ORDER BY State" & vbNewLine & _
+                            "UPDATE [dbo].[Log_eMailMessages] SET State = " & CType(QueueStates.Sending, Byte).ToString & ", [DateTime] = GETDATE() WHERE ID = @ID" & vbNewLine & _
+                            "SELECT [ID], [UserID], [data], [State], [DateTime], @OriginState As OriginState FROM [dbo].[Log_eMailMessages] WHERE ID = @ID", _
+                        CommandType.Text, _
+                        Nothing, _
                         Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenConnection)
                 'Read one data row
                 If Not MyReader.Read Then
@@ -285,24 +285,24 @@ Namespace CompuMaster.camm.WebManager.Messaging
         ''' </summary>
         Private Sub SetLastActivityDate(ByVal connection As SqlConnection, ByVal automations As CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.Automations)
             Try
-                CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(
-                        connection,
-                        "DECLARE @RowNumber int" & vbNewLine &
-                            "SELECT @RowNumber = COUNT(*)" & vbNewLine &
-                            "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
-                            "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing'" & vbNewLine &
-                            "SELECT @RowNumber" & vbNewLine &
-                            vbNewLine &
-                            "IF @RowNumber = 0 " & vbNewLine &
-                            "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine &
-                            "		(ValueNVarChar, PropertyName, ValueDateTime)" & vbNewLine &
-                            "	VALUES (N'camm WebManager', N'LastMailQueueProcessing', GetDate())" & vbNewLine &
-                            "ELSE" & vbNewLine &
-                            "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine &
-                            "	SET ValueDateTime = GetDate()" & vbNewLine &
-                            "	WHERE ValueNVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing'" & vbNewLine,
-                        CommandType.Text,
-                        Nothing,
+                CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery( _
+                        connection, _
+                        "DECLARE @RowNumber int" & vbNewLine & _
+                            "SELECT @RowNumber = COUNT(*)" & vbNewLine & _
+                            "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
+                            "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing'" & vbNewLine & _
+                            "SELECT @RowNumber" & vbNewLine & _
+                            vbNewLine & _
+                            "IF @RowNumber = 0 " & vbNewLine & _
+                            "	INSERT INTO [dbo].[System_GlobalProperties]" & vbNewLine & _
+                            "		(ValueNVarChar, PropertyName, ValueDateTime)" & vbNewLine & _
+                            "	VALUES (N'camm WebManager', N'LastMailQueueProcessing', GetDate())" & vbNewLine & _
+                            "ELSE" & vbNewLine & _
+                            "	UPDATE [dbo].[System_GlobalProperties]" & vbNewLine & _
+                            "	SET ValueDateTime = GetDate()" & vbNewLine & _
+                            "	WHERE ValueNVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing'" & vbNewLine, _
+                        CommandType.Text, _
+                        Nothing, _
                         automations)
             Catch
             End Try
@@ -314,13 +314,13 @@ Namespace CompuMaster.camm.WebManager.Messaging
 
             Dim Result As Integer
             Try
-                Result = CType(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(
-                        New SqlConnection(_WebManager.ConnectionString),
-                            "SELECT COUNT(*)" & vbNewLine &
-                            "FROM [dbo].[System_GlobalProperties]" & vbNewLine &
-                            "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing' AND DATEDIFF (mi,[ValueDateTime],GetDate()) < 30",
-                        CommandType.Text,
-                        Nothing,
+                Result = CType(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar( _
+                        New SqlConnection(_WebManager.ConnectionString), _
+                            "SELECT COUNT(*)" & vbNewLine & _
+                            "FROM [dbo].[System_GlobalProperties]" & vbNewLine & _
+                            "WHERE VALUENVarChar = N'camm WebManager' AND PropertyName = N'LastMailQueueProcessing' AND DATEDIFF (mi,[ValueDateTime],GetDate()) < 30", _
+                        CommandType.Text, _
+                        Nothing, _
                         Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
             Catch
                 Result = 0
@@ -371,9 +371,9 @@ Namespace CompuMaster.camm.WebManager.Messaging
         '''     An additional new log entry will be created to log the truncation
         ''' </remarks>
         Private Sub CleanUpOldQueueElements(ByVal connection As SqlConnection)
-            CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(
-                        connection,
-                        "DELETE [dbo].[Log_eMailMessages] FROM (SELECT ID FROM [dbo].[Log_eMailMessages] WHERE State IN (" & CType(QueueStates.Cancelled, Byte) & "," & CType(QueueStates.Successfull, Byte) & "," & CType(QueueStates.FailureAfterLastTrial, Byte) & "," & CType(QueueStates.FailureAccepted, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 90) AS toremove WHERE dbo.Log_eMailMessages.ID = toremove.ID",
+            CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery( _
+                        connection, _
+                        "DELETE [dbo].[Log_eMailMessages] FROM (SELECT ID FROM [dbo].[Log_eMailMessages] WHERE State IN (" & CType(QueueStates.Cancelled, Byte) & "," & CType(QueueStates.Successfull, Byte) & "," & CType(QueueStates.FailureAfterLastTrial, Byte) & "," & CType(QueueStates.FailureAccepted, Byte) & ") AND DATEDIFF (d,[DateTime],GetDate()) > 90) AS toremove WHERE dbo.Log_eMailMessages.ID = toremove.ID", _
                         CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.None, 300)
         End Sub
 #End Region
