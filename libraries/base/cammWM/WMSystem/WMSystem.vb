@@ -1,4 +1,4 @@
-'Copyright 2001-2016 CompuMaster GmbH, http://www.compumaster.de and/or its affiliates. All rights reserved.
+ï»¿'Copyright 2001-2016 CompuMaster GmbH, http://www.compumaster.de and/or its affiliates. All rights reserved.
 '---------------------------------------------------------------
 'This file is part of camm Integration Portal (camm Web-Manager).
 'camm Integration Portal (camm Web-Manager) is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -7,10 +7,10 @@
 'Alternatively, the camm Integration Portal (or camm Web-Manager) can be licensed for closed-source / commercial projects from CompuMaster GmbH, <http://www.camm.biz/>.
 '
 'Diese Datei ist Teil von camm Integration Portal (camm Web-Manager).
-'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie können es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren veröffentlichten Version, weiterverbreiten und/oder modifizieren.
-'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nützlich sein wird, aber OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License für weitere Details.
+'camm Integration Portal (camm Web-Manager) ist Freie Software: Sie kÃ¶nnen es unter den Bedingungen der GNU Affero General Public License, wie von der Free Software Foundation, Version 3 der Lizenz oder (nach Ihrer Wahl) jeder spÃ¤teren verÃ¶ffentlichten Version, weiterverbreiten und/oder modifizieren.
+'camm Integration Portal (camm Web-Manager) wird in der Hoffnung, dass es nÃ¼tzlich sein wird, aber OHNE JEDE GEWÃ„HRLEISTUNG, bereitgestellt; sogar ohne die implizite GewÃ¤hrleistung der MARKTFÃ„HIGKEIT oder EIGNUNG FÃœR EINEN BESTIMMTEN ZWECK. Siehe die GNU Affero General Public License fÃ¼r weitere Details.
 'Sie sollten eine Kopie der GNU Affero General Public License zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
-'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden für Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
+'Alternativ kann camm Integration Portal (oder camm Web-Manager) lizenziert werden fÃ¼r Closed-Source / kommerzielle Projekte von  CompuMaster GmbH, <http://www.camm.biz/>.
 
 Option Explicit On
 Option Strict On
@@ -830,21 +830,21 @@ Namespace CompuMaster.camm.WebManager
             ''' <remarks>
             '''     Warning messages will be sent to the developer contact configured in your config files.
             ''' </remarks>
-            Low_WarningMessagesOnAccessError = 1 'Warn-Messages über Access Errors an Developer Contact
+            Low_WarningMessagesOnAccessError = 1 'Warn-Messages Ã¼ber Access Errors an Developer Contact
             ''' <summary>
             '''     More access error warnings
             ''' </summary>
             ''' <remarks>
             '''     Additional warning messages will be sent to the developer contact configured in your config files.
             ''' </remarks>
-            Low_WarningMessagesOnAccessError_AdditionalDetails = 2 'Protokollierung von zusätzlichen Informationen
+            Low_WarningMessagesOnAccessError_AdditionalDetails = 2 'Protokollierung von zusÃ¤tzlichen Informationen
             ''' <summary>
             '''     Actively collect data for debugging
             ''' </summary>
             ''' <remarks>
             '''     Even more additional warning messages will be sent to the developer contact configured in your config files.
             ''' </remarks>
-            Medium_LoggingOfDebugInformation = 3 'Protokollierung von zusätzlichen Debug-Informationen
+            Medium_LoggingOfDebugInformation = 3 'Protokollierung von zusÃ¤tzlichen Debug-Informationen
             ''' <summary>
             '''     Send all e-mails to developer account - never use in production environments!
             ''' </summary>
@@ -1023,11 +1023,11 @@ Namespace CompuMaster.camm.WebManager
             ''' </summary>
             ServerNotFound = -10
             ''' <summary>
-            '''     Benutzer hat (keine) Anmeldeerlaubnis auf diesem Server (oder unvollständige Parameterliste)
+            '''     Benutzer hat (keine) Anmeldeerlaubnis auf diesem Server (oder unvollstÃ¤ndige Parameterliste)
             ''' </summary>
             NoLoginRightForThisServer = -9
             ''' <summary>
-            '''     Keine Berechtigung für angeforderte Anwendung, Login jedoch erfolgreich
+            '''     Keine Berechtigung fÃ¼r angeforderte Anwendung, Login jedoch erfolgreich
             ''' </summary>
             ValidationSuccessfull_ButNoAuthorizationForRequiredSecurityObject = -5
             ''' <summary>
@@ -1552,7 +1552,7 @@ Namespace CompuMaster.camm.WebManager
                     CurrentRequest = HttpContext.Current.Request
                 Catch
                     'above statement might fail in certain circumstances (e.g. build failures?!?) with
-                    'Anforderung steht in diesem Kontext nicht zur Verfügung bei System.Web.HttpContext.get_Request()
+                    'Anforderung steht in diesem Kontext nicht zur VerfÃ¼gung bei System.Web.HttpContext.get_Request()
                 End Try
                 If Me.CurrentServerIdentString <> Nothing Then
                     AssemblyLocation = "ServerIdentString=" & Me.CurrentServerIdentString & ControlChars.NewLine
@@ -3982,7 +3982,7 @@ Namespace CompuMaster.camm.WebManager
         'Ersteller: Jochen Wezel, CompuMaster GmbH, 2001-03-23
         '
         'MyUserID   : ID des Benutzers als Long
-        'MyProperty : Gewünschte Eigenschaft als String
+        'MyProperty : GewÃ¼nschte Eigenschaft als String
         'MyNewValue : Zu speichernder Wert als String/Null
         '
         'Return     : Bei Erfolg True, ansonsten False
@@ -4017,9 +4017,9 @@ Namespace CompuMaster.camm.WebManager
         'Ersteller: Jochen Wezel, CompuMaster GmbH, 2001-03-23
         '
         'MyUserID   : ID des Benutzers als Long
-        'MyProperty : Gewünschte Eigenschaft als String
+        'MyProperty : GewÃ¼nschte Eigenschaft als String
         '
-        'Return     : Liefert das Ergebnis als String/Null zurück
+        'Return     : Liefert das Ergebnis als String/Null zurÃ¼ck
         '--------------------------------------------------------------------------------------
         <Obsolete("Use UserInformation class instead"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_GetUserDetail(ByVal MyUserID As Object, ByVal MyProperty As Object) As Object
@@ -5092,7 +5092,7 @@ Namespace CompuMaster.camm.WebManager
             HttpContext.Current.Session.Timeout = 240 '4 h
 
             '***************************************************
-            '*** Überprüft die Berechtigung für das aktuelle ***
+            '*** ÃœberprÃ¼ft die Berechtigung fÃ¼r das aktuelle ***
             '*** Dokument, welches diese Prozedur aufruft    ***
             '***************************************************
 
@@ -5572,7 +5572,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         Private Sub _ExecuteLogout(ByVal publishLogoutStatusToAllRelatedServers As Boolean)
 
-            'Profile zurücksetzen
+            'Profile zurÃ¼cksetzen
             Dim strServerIP As String, strRemoteIP As String
             strServerIP = Me.CurrentServerIdentString
             strRemoteIP = Me.CurrentRemoteClientAddress
@@ -5677,7 +5677,7 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End Try
 
-            'Session-Objekte zurücksetzen
+            'Session-Objekte zurÃ¼cksetzen
             Me.ResetUserLoginName()
 
             'Publish the logout status to all related servers
@@ -6502,7 +6502,7 @@ Namespace CompuMaster.camm.WebManager
                 "			AND ScriptEngine_ID = @CurrentScriptEngineID" & vbNewLine & _
                 "			AND Server = @CurrentServerID" & vbNewLine & _
                 "    If @CurrentSessionID IS NOT NULL" & vbNewLine & _
-                "		-- gewünschten Session ID Wert ausliefern" & vbNewLine & _
+                "		-- gewÃ¼nschten Session ID Wert ausliefern" & vbNewLine & _
                 "        select System_WebAreasAuthorizedForSession.ScriptEngine_SessionID" & vbNewLine & _
                 "  		FROM System_WebAreasAuthorizedForSession " & vbNewLine & _
                 "          where System_WebAreasAuthorizedForSession.Server = @RequiredServerID" & vbNewLine & _
