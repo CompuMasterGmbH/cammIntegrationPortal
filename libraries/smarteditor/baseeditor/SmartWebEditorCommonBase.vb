@@ -323,9 +323,9 @@ Namespace CompuMaster.camm.SmartWebEditor
             Get
                 If ViewState("WebEditorXXL.showlanguage") Is Nothing Then
                     If Me.MarketLookupMode = MarketLookupModes.SingleMarket Then
-                        LanguageToShow = 0
+                        Me.LanguageToShow = 0
                     Else
-                        LanguageToShow = Me.cammWebManager.UI.MarketID
+                        Me.LanguageToShow = Me.cammWebManager.UI.MarketID
                     End If
                 End If
                 Return CType(ViewState("WebEditorXXL.showlanguage"), Integer)
@@ -426,6 +426,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                             If Me.MarketLookupMode = MarketLookupModes.SingleMarket Then
                                 Return "Language/Market - Neutral / " & "<font color=""red"">Edit version</font>"
                             Else
+
                                 If LanguageToShow < 0 Then
                                     Throw New Exception("Invalid language/market " & LanguageToShow)
                                 End If
@@ -1149,7 +1150,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 AlreadyRun = True
             End If
 
-            LanguageToShow = 0
+            ' LanguageToShow = 0
 
             'Initialze the editors id for internal usage right now
             If Me.ID = "" Then
@@ -1482,10 +1483,13 @@ Namespace CompuMaster.camm.SmartWebEditor
                 lblCurrentEditInformation.Visible = Me.editorMain.Visible
                 Me.lblCurrentEditInformation.ForeColor = System.Drawing.Color.Black
                 Me.lblCurrentEditInformation.Font.Bold = True
-                If Trim(HtmlCodeCurrentEditInformation) = Nothing Then
+
+                Dim currentEditInformation As String = HtmlCodeCurrentEditInformation
+
+                If Trim(currentEditInformation) = Nothing Then
                     Me.lblCurrentEditInformation.Text = Nothing
                 Else
-                    Me.lblCurrentEditInformation.Text = HtmlCodeCurrentEditInformation & "<br>"
+                    Me.lblCurrentEditInformation.Text = currentEditInformation & "<br>"
                 End If
                 If Trim(Me.NoteForEditor) <> Nothing Then
                     Me.lblCurrentEditInformation.Text = Me.NoteForEditor & "<br>" & Me.lblCurrentEditInformation.Text
