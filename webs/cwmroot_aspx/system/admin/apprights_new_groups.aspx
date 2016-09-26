@@ -40,6 +40,15 @@
 					</TD>
 					</TR>
 					<TR>
+					<TD VAlign="Top" ><P><FONT face="Arial" size="2">Server group</FONT></P></TD>
+					<TD VAlign="Top" ><P><FONT face="Arial" size="2">
+					
+					<div>
+						<asp:dropdownlist runat="server" id="drp_servergroups" />
+						</div></FONT></P>
+					</TD>
+					</TR>
+					<TR>
 					<TD VAlign="Top"><P><FONT face="Arial" size="2">Group name</FONT></P></TD>
 					<TD VAlign="Top"><P><FONT face="Arial" size="2">
 					

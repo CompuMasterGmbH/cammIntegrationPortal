@@ -33,7 +33,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected lblErr As Label
         Protected lblMsg As Label
         Protected WithEvents btnOK As Button
-        Protected WithEvents drp_apps, drp_groups As DropDownList
+        Protected WithEvents drp_apps, drp_groups, drp_servergroups As DropDownList
         Protected WithEvents chk_deny As CheckBox
         Protected WithEvents chk_devteam As CheckBox
 #End Region
@@ -44,6 +44,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             lblMsg.Text = ""
             If Not IsPostBack Then
                 ListApps()
+                ListServerGroups()
                 LoadGroups()
             End If
 
@@ -66,7 +67,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim GrpTable As New DataTable
 
             If HttpContext.Current.Cache("CammWM.Admin.Table.AllGroups") Is Nothing Then
-                GrpTable = FillDataTable(New SqlCommand("SELECT * FROM Gruppen ORDER BY Name", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+                GrpTable = FillDataTable(New SqlCommand("Select * FROM Gruppen ORDER BY Name", New SqlConnection(cammWebManager.ConnectionString)), CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                 HttpContext.Current.Cache.Insert("CammWM.Admin.Table.AllGroups", GrpTable, Nothing, Now.AddMinutes(20), Caching.Cache.NoSlidingExpiration)
             Else
                 GrpTable = CType(HttpContext.Current.Cache("CammWM.Admin.Table.AllGroups"), DataTable)
@@ -83,7 +84,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' </summary>
         Private Sub ListApps()
             Dim sqlParams As SqlParameter() = {New SqlParameter("@UserID", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))}
-            Dim WhereClause As String = "WHERE (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " OR Applications.ID in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND Applications.ID in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND AuthorizationType In ('UpdateRelations','Owner')))) "
+            Dim WhereClause As String = "WHERE (0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " Or Applications.ID In (Select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID And TableName = 'Applications' AND Applications.ID in (select tableprimaryidvalue from System_SubSecurityAdjustments where userid = @UserID AND TableName = 'Applications' AND AuthorizationType In ('UpdateRelations','Owner')))) "
             Dim sql As String = "SELECT Applications.ID, Applications.Title, Applications.AppDisabled, System_Servers.ServerDescription, Languages.Description FROM (Applications LEFT JOIN Languages ON Applications.LanguageID = Languages.ID) LEFT JOIN System_Servers ON Applications.LocationID = System_Servers.ID " & WhereClause & " ORDER BY Title"
             Dim AppTable As DataTable = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), sql, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
@@ -101,6 +102,23 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
 
         End Sub
+
+        ''' <summary>
+        ''' List all available servergroups and bind them on the DropDownList. PreSelect servergroup 0 (=all-item)
+        ''' </summary>
+        Private Sub ListServerGroups()
+            Me.drp_servergroups.Items.Clear()
+            Me.drp_servergroups.Items.Add(New ListItem("(All server groups)", "0"))
+            If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                For Each SGroup As WMSystem.ServerGroupInformation In Me.cammWebManager.System_GetServerGroupsInfo
+                    Me.drp_servergroups.Items.Add(New ListItem(SGroup.Title, SGroup.ID.ToString))
+                Next
+            End If
+            If Not Request.QueryString("ID") = "" Then
+                Me.drp_servergroups.SelectedValue = "0"
+            End If
+        End Sub
+
 #End Region
 
         ''' <summary>
@@ -128,15 +146,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="groupId"></param>
         ''' <param name="applicationId"></param>
         ''' <remarks></remarks>
-        Private Function IsGroupAuthorizedForApplication(ByVal groupID As Integer, ByVal applicationID As Integer, isDev As Boolean, isDenyRule As Boolean) As Boolean
+        Private Function IsGroupAuthorizedForApplication(ByVal groupID As Integer, ByVal applicationID As Integer, serverGroupID As Integer, isDev As Boolean, isDenyRule As Boolean) As Boolean
             If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
                 Throw New NotSupportedException("DbVersion.Build < " & WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule.ToString & " requires calling an overloaded version of this method")
             End If
-            Dim commandText As String = "SELECT count([ID]) FROM [dbo].[ApplicationsRightsByGroup] WHERE [ID_GroupOrPerson] = @GroupId AND [ID_Application] =  @AppID AND IsNull(IsDenyRule, 0) = @IsDenyRule AND IsNull(DevelopmentTeamMember, 0) = @IsDev"
+            Dim commandText As String = "SELECT count([ID]) FROM [dbo].[ApplicationsRightsByGroup] WHERE [ID_GroupOrPerson] = @GroupId AND [ID_Application] =  @AppID AND [ID_ServerGroup] =  @ServerGroupID AND IsNull(IsDenyRule, 0) = @IsDenyRule AND IsNull(DevelopmentTeamMember, 0) = @IsDev"
             Dim MyCmd As New System.Data.SqlClient.SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
             MyCmd.CommandType = CommandType.Text
             MyCmd.Parameters.Add("@GroupID", SqlDbType.Int).Value = groupID
             MyCmd.Parameters.Add("@AppID", SqlDbType.Int).Value = applicationID
+            MyCmd.Parameters.Add("@ServerGroupID", SqlDbType.Int).Value = serverGroupID
             MyCmd.Parameters.Add("@IsDev", SqlDbType.Bit).Value = isDev
             MyCmd.Parameters.Add("@IsDenyRule", SqlDbType.Bit).Value = isDenyRule
             Dim RecordCount As Integer = CType(ExecuteScalar(MyCmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
@@ -175,6 +194,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim AppTable As New DataTable
             Dim dropGroupText, dropAppText As String
             Dim dropGroupID, dropAppID As Integer
+            Dim dropServerGroupID As Integer = CInt(drp_servergroups.SelectedValue)
 
             dropAppText = Utils.Nz(drp_apps.SelectedItem.Text, String.Empty)
             dropAppID = CInt(Utils.Nz(drp_apps.SelectedValue, String.Empty))
@@ -188,9 +208,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ' - If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Equal OR Newer
             If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 AndAlso IsGroupAuthorizedForApplication(dropGroupID, dropAppID) Then
                 lblErr.Text = "Group " + dropGroupText.ToString.Trim + " is already authorized for application " + dropAppText.Trim
-            ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso Me.chk_devteam IsNot Nothing AndAlso Me.chk_deny IsNot Nothing AndAlso IsGroupAuthorizedForApplication(dropGroupID, dropAppID, Me.chk_devteam.Checked, Me.chk_deny.Checked) Then
+            ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso Me.chk_devteam IsNot Nothing AndAlso Me.chk_deny IsNot Nothing AndAlso IsGroupAuthorizedForApplication(dropGroupID, dropAppID, dropServerGroupID, Me.chk_devteam.Checked, Me.chk_deny.Checked) Then
                 lblErr.Text = "Group " & dropGroupText.ToString.Trim & " (development access: " & IsChecked(Me.chk_devteam).ToString.ToLower & ", deny rule: " & IsChecked(Me.chk_deny).ToString.ToLower & ") is already authorized for application " & dropAppText.Trim
-            ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso IsGroupAuthorizedForApplication(dropGroupID, dropAppID, False, False) Then
+            ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso Me.chk_devteam Is Nothing AndAlso Me.chk_deny Is Nothing AndAlso IsGroupAuthorizedForApplication(dropGroupID, dropAppID, dropServerGroupID, False, False) Then
                 lblErr.Text = "Group " + dropGroupText.ToString.Trim + " is already authorized for application " + dropAppText.Trim
             ElseIf Not ((cammWebManager.System_GetSubAuthorizationStatus("Applications", CInt(Request("ID")), cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "Owner") Or cammWebManager.System_GetSubAuthorizationStatus("Applications", CInt(Request("ID")), cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "UpdateRelations"))) Then
                 Response.Write("No authorization to administrate this application.")
@@ -204,7 +224,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                     Dim commandText As String
                     If Setup.DatabaseUtils.Version(Me.cammWebManager, True).CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
-                        commandText = "SELECT A.ID_USER [ID], (Select   ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname FROM Benutzer Where ID = A.ID_USER) AS [Name] From ApplicationsRightsByUser_RulesCumulativeWithInherition AS A Where ID_Group = @GroupID" '+ CStr(id_grouporperson.SelectedItem.Id)
+                        commandText = "SELECT A.ID_USER [ID], (Select   ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname FROM Benutzer Where ID = A.ID_USER) AS [Name] From [Memberships_EffectiveRulesWithClonesNthGrade] AS A Where ID_Group = @GroupID" '+ CStr(id_grouporperson.SelectedItem.Id)
                     Else
                         commandText = "SELECT A.ID_USER [ID], (Select   ISNULL(Benutzer.Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Benutzer.Namenszusatz, ''), 1, 1))}) + Benutzer.Nachname + ', ' + Benutzer.Vorname FROM Benutzer Where ID = A.ID_USER) AS [Name] From Memberships A Where ID_Group =  @GroupID" '+ CStr(id_grouporperson.SelectedItem.Id)
                     End If
@@ -235,7 +255,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     'Use implemented workflow of camm WebManager to send Authorization-Mail if user is authorized the first time
                     'HINT: SapFlag checks will be checked continually, but no information on missing flag name is given here any more
                     Dim grpInfo As New WebManager.WMSystem.GroupInformation(dropGroupID, cammWebManager)
-                    grpInfo.AddAuthorization(dropAppID, CType(Nothing, Integer), IsChecked(Me.chk_devteam), IsChecked(Me.chk_deny))
+                    grpInfo.AddAuthorization(dropAppID, dropServerGroupID, IsChecked(Me.chk_devteam), IsChecked(Me.chk_deny))
                     lblErr.Text = ""
                     lblMsg.Text = dropGroupText.Trim + " has been authorized for application " + dropAppText
                 Catch ex As Exception
