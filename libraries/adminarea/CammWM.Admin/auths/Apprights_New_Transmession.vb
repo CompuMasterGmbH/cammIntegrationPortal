@@ -79,7 +79,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
 
             Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", MyAppID)}
-            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString),
+            dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), _
                                     "SELECT Applications.*, System_Servers.ServerDescription, Languages.Description FROM (Applications LEFT JOIN Languages ON Applications.LanguageID = Languages.ID) LEFT JOIN System_Servers ON Applications.LocationID = System_Servers.ID WHERE Applications.ID <> @ID ORDER BY Title", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
             If Not dt Is Nothing AndAlso dt.Rows.Count > 0 Then

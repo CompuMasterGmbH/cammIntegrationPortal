@@ -79,7 +79,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Field_Description = ""
 
                 Dim sqlParams2 As SqlParameter() = {New SqlParameter("@ID", CInt(Val(Field_GroupID & "")))}
-                MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString),
+                MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), _
                                     "SELECT * FROM dbo.Gruppen Where ID=@ID", CommandType.Text, sqlParams2, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                 If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then

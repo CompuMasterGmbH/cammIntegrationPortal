@@ -64,10 +64,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End Try
                 If Success AndAlso Request.QueryString("CopyAuths") = "1" Then
                     Try
-                        Dim Sql As String = "-- Add Group Authorizations" & vbNewLine &
-                                            "INSERT INTO dbo.ApplicationsRightsByGroup (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])" & vbNewLine &
-                                            "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application" & vbNewLine &
-                                            "FROM         dbo.ApplicationsRightsByGroup" & vbNewLine &
+                        Dim Sql As String = "-- Add Group Authorizations" & vbNewLine & _
+                                            "INSERT INTO dbo.ApplicationsRightsByGroup (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])" & vbNewLine & _
+                                            "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application" & vbNewLine & _
+                                            "FROM         dbo.ApplicationsRightsByGroup" & vbNewLine & _
                                             "WHERE     (ID_Application = @SourceAppID)"
                         Dim MyCmd As New System.Data.SqlClient.SqlCommand(Sql, New SqlConnection(cammWebManager.ConnectionString))
                         MyCmd.CommandType = CommandType.Text
@@ -91,7 +91,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim strBuilder As New Text.StringBuilder
                 Dim dtResult As DataTable
                 Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CLng(Request.QueryString("ID")))}
-                dtResult = FillDataTable(New SqlConnection(cammWebManager.ConnectionString),
+                dtResult = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), _
                                      "SELECT Applications.*, Languages.Description FROM Applications LEFT JOIN Languages ON Applications.LanguageID = Languages.ID WHERE Applications.ID = @ID ORDER BY Applications.Title", CommandType.Text, sqlParams, Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                 Dim iCount As Integer = 0
                 While iCount < dtResult.Rows.Count
