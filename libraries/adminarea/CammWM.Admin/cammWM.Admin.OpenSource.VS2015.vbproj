@@ -121,7 +121,34 @@
     <Compile Include="AssemblyVersion.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="auths\page_admin_auths.vb">
+    <Compile Include="auths\AppCheckUsersForMissingFlags.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="auths\AppRightsDeleteGroups.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="auths\AppRightsDeleteTransmission.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="auths\AppRightsDeleteUsers.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="auths\AppRightsList.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="auths\AppRightsNewGroups.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="auths\AppRightsNewUsers.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="auths\Apprights_New_Transmession.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="auths\AuthorizationsOverview.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="auths\CleanUpUserAuthorization.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="commontools\Tools.Data.vb" />
