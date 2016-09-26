@@ -343,6 +343,42 @@ Namespace CompuMaster.camm.SmartWebEditor
 
             End Sub
 
+
+            Protected Overridable Sub AddUploadInsertionsJavaScript()
+                Const pasteImage As String = "function pasteImageToEditor(editorid, imageurl, alttext) { " & vbNewLine &
+                              "if(alttext != null && alttext != ''){" & vbNewLine &
+                             "document.getElementById(editorid).value += ""<img src='"" + imageurl + ""'  alt='"" + alttext + ""' />""; }" & vbNewLine &
+                             "else { document.getElementById(editorid).value += ""<img src='"" + imageurl + ""' />"";  }" & vbNewLine &
+                             "}" & vbNewLine
+
+                Const pasteDocument As String = "function pasteDocumentToEditor(editorId, url, title, target, linktext)" & vbNewLine &
+            "{" & vbNewLine &
+            "var link = '<a href=""' + url + '""';" & vbNewLine &
+            "if(title != null && title != '')" & vbNewLine &
+            "{" & vbNewLine &
+                "link += ' title=""' + title + '""';" & vbNewLine &
+            "}" & vbNewLine &
+            "if(target != null && target != '')" & vbNewLine &
+            "{" & vbNewLine &
+                "link += ' target=""' + target + '""';" & vbNewLine &
+            "}" & vbNewLine &
+            "link += '>' + linktext + '</a>';" & vbNewLine &
+            "document.getElementById(editorId).value += link;" & vbNewLine &
+            "}" & vbNewLine
+#If NetFrameWork = "1_1" Then
+                
+                    Me.Page.RegisterClientScriptBlock("pasteImageToEditor", pasteImage)
+                    Me.Page.RegisterClientScriptBlock("pasteDocument", pasteDocument)
+#Else
+
+                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteImageToEditor", pasteImage, True)
+                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteDocument", pasteDocument, True)
+#End If
+
+
+
+            End Sub
+
             ''' <summary>
             ''' Always provide client scripts (only in Edit mode) for IsDirty detection
             ''' </summary>
@@ -434,26 +470,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                                                                        "if(window.addEventListener) " & vbNewLine &
                                                                        "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine &
                                                                        ""
-                    Dim pasteImage As String = "function pasteImageToEditor(editorid, imageurl, alttext) { " & vbNewLine &
-                                 "if(alttext != null && alttext != ''){" & vbNewLine &
-                                "document.getElementById(editorid).value += ""<img src='"" + imageurl + ""'  alt='"" + alttext + ""' />""; }" & vbNewLine &
-                                "else { document.getElementById(editorid).value += ""<img src='"" + imageurl + ""' />"";  }" & vbNewLine &
-                                "}"
 
-                    Dim pasteDocument As String = "function pasteDocumentToEditor(editorId, url, title, target, linktext)" & vbNewLine &
-"{" & vbNewLine &
-    "var link = '<a href=""' + url + '""';" & vbNewLine &
-    "if(title != null && title != '')" & vbNewLine &
-    "{" & vbNewLine &
-        "link += ' title=""' + title + '""';" & vbNewLine &
-    "}" & vbNewLine &
-    "if(target != null && target != '')" & vbNewLine &
-    "{" & vbNewLine &
-        "link += ' target=""' + target + '""';" & vbNewLine &
-    "}" & vbNewLine &
-    "link += '>' + linktext + '</a>'" & vbNewLine &
-    "document.getElementById(editorId.)value += link;" & vbNewLine &
-"}"
 
 
 #If NetFrameWork = "1_1" Then
@@ -462,17 +479,19 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.Page.RegisterClientScriptBlock("confirmPageClose", ConfirmPageCloseSnippet)
                     Me.Page.RegisterClientScriptBlock("ResetSelectBox", ResetSelectBoxSnippet)
                     Me.Page.RegisterClientScriptBlock("CloseCheck", CloseCheckSnippet)
-                     Me.Page.RegisterClientScriptBlock("pasteImageToEditor", pasteImage)
-                     Me.Page.RegisterClientScriptBlock("pasteDocument", pasteDocument)
+                    Me.Page.RegisterClientScriptBlock("pasteImageToEditor", pasteImage)
+                    Me.Page.RegisterClientScriptBlock("pasteDocument", pasteDocument)
 #Else
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ExecPostBack", ExecPostBackSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "UnbindCloseCheck", UnbindCloseCheckSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "confirmPageClose", ConfirmPageCloseSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ResetSelectBox", ResetSelectBoxSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CloseCheck", CloseCheckSnippet, True)
-                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteImageToEditor", pasteImage, True)
-                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteDocument", pasteDocument, True)
+
 #End If
+
+                    AddUploadInsertionsJavaScript()
+
 
                     'Enforce __doPostBack javascript function being existent
 #If NetFrameWork = "1_1" Then

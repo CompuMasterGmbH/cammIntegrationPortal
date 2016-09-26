@@ -31,7 +31,7 @@
 						return true;
 					}
 					else {
-						alert('Invalid format');
+						alert('Invalid file format');
 						e.value = "";
 						thisForm.reset();
 						e.focus();

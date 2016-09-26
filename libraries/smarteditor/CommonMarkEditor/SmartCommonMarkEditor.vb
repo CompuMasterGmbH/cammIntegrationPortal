@@ -75,6 +75,34 @@ Namespace CompuMaster.camm.SmartWebEditor.Controls
             Me.lblViewOnlyContent.Text = CommonMark.CommonMarkConverter.Convert(Me.MainEditor.Html)
         End Sub
 
+        Protected Overrides Sub AddUploadInsertionsJavaScript()
+            Const pasteImage As String = "function pasteImageToEditor(editorid, imageurl, alttext) { " & vbNewLine &
+                                "document.getElementById(editorid).value += ""!["" + alttext + ""]("" + imageurl + "")""; }" & vbNewLine
+
+            Const pasteDocument As String = "function pasteDocumentToEditor(editorId, url, title, target, linktext)" & vbNewLine &
+            "{" & vbNewLine &
+                 "var link = '';" & vbNewLine &
+                "if(title != null)" & vbNewLine &
+                 "{" & vbNewLine &
+                    "link = '[' + linktext + '](' + url + ' ""' + title + '"")';" & vbNewLine &
+                 "}" & vbNewLine &
+                "else" & vbNewLine &
+                "{" & vbNewLine &
+                    "link = '[' + linktext + '](' + url + ')';" & vbNewLine &
+                "}" & vbNewLine &
+                "document.getElementById(editorId).value += link;" & vbNewLine &
+            "}" & vbNewLine
+#If NetFrameWork = "1_1" Then
+                
+                    Me.Page.RegisterClientScriptBlock("pasteImageToEditor", pasteImage)
+                    Me.Page.RegisterClientScriptBlock("pasteDocument", pasteDocument)
+#Else
+
+            Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteImageToEditor", pasteImage, True)
+            Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteDocument", pasteDocument, True)
+#End If
+        End Sub
+
     End Class
 
 End Namespace

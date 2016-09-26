@@ -62,6 +62,16 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             End Set
         End Property
 
+        Private _CloseWindowAfterInsertion As Boolean
+        Public Property CloseWindowAfterInsertion() As Boolean
+            Get
+                Return _CloseWindowAfterInsertion
+            End Get
+            Set(value As Boolean)
+                _CloseWindowAfterInsertion = value
+            End Set
+        End Property
+
 
         Protected listBoxUploadedFiles As System.Web.UI.WebControls.ListBox
         Protected WithEvents btnDeleteFile As System.Web.UI.WebControls.Button
@@ -108,6 +118,12 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Private Sub btnDeleteFile_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles btnDeleteFile.Click
             Dim selectedFilePath As String = Me.listBoxUploadedFiles.SelectedValue
             If selectedFilePath <> Nothing Then
+                If Not selectedFilePath.StartsWith(Me.UploadFolderPath) Then
+                    lblDeletionMessage.Text = "Can't delete read only files"
+                    lblDeletionMessage.ForeColor = System.Drawing.Color.Red
+                    Return
+                End If
+
                 'viewstate mac should prevent traversal attacks...
                 Dim filePath As String = Server.MapPath(selectedFilePath)
                 Try
@@ -129,13 +145,23 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                 Throw New Exception("ViewStateMac must be enabled")
             End If
         End Sub
-        Private Sub Control_PreRender(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.PreRender
-            Me.FillUploadedFilesListBox()
-            Me.listBoxUploadedFiles.Attributes.Add("onchange", "document.getElementById('" & Me.txtBoxFilePath.ClientID & "').value = this.value")
-            If Me.EditorId = "" Then
-                Me.btnPasteToEditor.Visible = False
+
+        Private Sub SetPasteToEditorButtonAttributes()
+
+            If Me.CloseWindowAfterInsertion Then
+                Me.btnPasteToEditor.OnClientClick = "if(passPathToEditor()) window.close(); else return false;"
+            Else
+                Me.btnPasteToEditor.OnClientClick = "passPathToEditor(); return false;"
             End If
 
+
+            Me.btnPasteToEditor.Visible = Not Me.EditorId = ""
+        End Sub
+        Private Sub Control_PreRender(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.PreRender
+            Me.FillUploadedFilesListBox()
+            Me.listBoxUploadedFiles.Attributes.Add("onchange", "listBoxOnChange(this.value)")
+
+            SetPasteToEditorButtonAttributes()
         End Sub
 
 

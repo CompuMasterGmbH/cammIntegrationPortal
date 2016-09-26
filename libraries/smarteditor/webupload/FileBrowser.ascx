@@ -17,11 +17,19 @@
 		        alert('Please select a file');
 		        return;
 		    }
-		    if (window.opener.<%=ParentWindowCallbackFunction%>)
+		   
+	        if (window.opener.<%=ParentWindowCallbackFunction%>)
 		    {
 		        window.opener.<%=ParentWindowCallbackFunction%>("<%= Me.EditorId %>", filePath);
 		    }
-		}
+	    }
+
+            function listBoxOnChange(value)
+            {
+                document.getElementById('<%@ Me.txtBoxFilePath.ClientID%>').value = value;
+                var button = document.getElementById('<%=Me.btnDeleteFile.ClientId%>');
+                button.disabled = value.indexOf('<%=Me.UploadFolderPath%>') !== 0;
+            }
 		
 		</script>
 		<div id="imagebrowser">

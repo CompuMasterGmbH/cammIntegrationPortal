@@ -66,6 +66,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                 fileBrowser.ReadonlyDirectories = Me.UploadParamters.ReadOnlyDirectories
                 fileBrowser.ParentWindowCallbackFunction = Me.UploadParamters.JavaScriptCallBackFunctionName
                 fileBrowser.EditorId = Me.UploadParamters.EditorClientId
+                fileBrowser.CloseWindowAfterInsertion = True
             End If
         End Sub
 
