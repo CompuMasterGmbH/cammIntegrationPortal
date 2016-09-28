@@ -198,3 +198,8 @@ libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifes
 /libraries/cammWM.WebRootApp/obj
 /libraries/cammWM.WebRootApp/bin
 /libraries/cammWM.WebApp/New-NuGetPackages
+/libraries/cammWM.WebRootAdminApp/New-NuGetPackages
+/libraries/cammWM.WebRootApp/New-NuGetPackages
+/libraries/cammWM.WebApp/packages
+/libraries/cammWM.WebRootAdminApp/packages
+/libraries/cammWM.WebRootApp/packages

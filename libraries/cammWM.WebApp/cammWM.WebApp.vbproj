@@ -43,8 +43,8 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="cammWM, Version=4.12.209.100, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\base\cammWM\packages\cammWM.4.12.209.100-beta\lib\net20\cammWM.dll</HintPath>
+    <Reference Include="cammWM, Version=4.12.209.102, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.4.12.209.102\lib\net20\cammWM.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

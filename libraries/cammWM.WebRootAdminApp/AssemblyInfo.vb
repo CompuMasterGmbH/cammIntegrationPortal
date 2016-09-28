@@ -6,7 +6,7 @@ Imports System.Runtime.InteropServices
 <Assembly: System.Web.UI.TagPrefix("CompuMaster.camm.WebManager.Controls", "camm")>
 
 <Assembly: AssemblyTitle("cammWM.WebRootAdminApp")>
-<Assembly: AssemblyDescription("camm Integration Portal Core Library")>
+<Assembly: AssemblyDescription("camm Integration Portal WebRootAdminApp Library")>
 <Assembly: AssemblyCompany("CompuMaster GmbH")>
 <Assembly: AssemblyProduct("camm Integration Portal (based on camm Web-Manager)")>
 <Assembly: AssemblyCopyright("2001-2016 CompuMaster GmbH")>
