@@ -15,13 +15,14 @@
     <copyright>2001-2016 CompuMaster GmbH</copyright>
     <tags>CompuMaster camm Integration Portal Web-Manager Web Manager CIP CWM cammIPortal IPortal</tags>
     <dependencies>
-      <dependency id="cammWM" version="[4.10.206, 4.13)" />
+      <dependency id="cammWM" version="[4.12.209, 4.13)" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Web" targetFramework="" />
     </frameworkAssemblies>
     <contentFiles>
-      <files include="system/*" buildAction="None" copyToOutput="true" />
+      <files include="sysdata/admin/**" buildAction="None" copyToOutput="true" />
+      <files include="system/admin/**" buildAction="None" copyToOutput="true" />
     </contentFiles>
   </metadata>
 </package>
