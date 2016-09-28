@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<metadata>
+		<id>$id$</id>
+		<version>$version$</version>
+		<title>$title$</title>
+		<authors>$author$</authors>
+		<owners>$author$</owners>
+		<licenseUrl>https://raw.githubusercontent.com/CompuMasterGmbH/cammIntegrationPortal/master/LICENSE.md</licenseUrl>
+		<projectUrl>https://github.com/CompuMasterGmbH/cammIntegrationPortal</projectUrl>
+		<iconUrl>https://raw.githubusercontent.com/CompuMasterGmbH/cammIntegrationPortal/master/logo_64x64.png</iconUrl>
+		<requireLicenseAcceptance>true</requireLicenseAcceptance>
+		<description>WebScripts for all WebApplications using camm Integration Portal (based on camm Web-Manager) for Web Applications</description>
+		<releaseNotes/>
+		<copyright>2001-2016 CompuMaster GmbH</copyright>
+		<tags>CompuMaster camm Integration Portal Web-Manager Web Manager CIP CWM cammIPortal IPortal</tags>
+		<dependencies>
+		  <dependency id="cammWM" version="[4.10.209,4.11)" />
+		</dependencies>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Web" />	
+		</frameworkAssemblies>
+		<contentFiles>
+			<files include="system/*" buildAction="None" copyToOutput="true" />
+		</contentFiles>
+	</metadata>
+	<files>
+	</files>
+</package>
