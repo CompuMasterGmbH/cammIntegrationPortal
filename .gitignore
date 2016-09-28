@@ -191,3 +191,9 @@ libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifes
 /libraries/smarteditor/webupload/New-NuGetPackages
 /quality-ensurance/TestClassLibraryNuGetAutoReferencing
 /libraries/base/cammWM/*.user
+/libraries/cammWM.WebApp/obj
+/libraries/cammWM.WebApp/bin
+/libraries/cammWM.WebRootAdminApp/bin
+/libraries/cammWM.WebRootAdminApp/obj
+/libraries/cammWM.WebRootApp/obj
+/libraries/cammWM.WebRootApp/bin
