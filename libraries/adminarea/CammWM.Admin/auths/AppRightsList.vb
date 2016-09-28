@@ -28,7 +28,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     Public Class AppRightsList
         Inherits AuthorizationsOverview
 
-#Region "Variable Declaration"
         Protected WithEvents rptAppList, rptShowUsers As Repeater
         Protected txtSearchApp, txtSearchUser As TextBox
         Protected btnSubmit As Button
@@ -46,9 +45,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Dim strQuery As String
         Public strShowAllUsers, strDeleteLink, strDeleteUserLink As String
         Dim tempStr As Text.StringBuilder
-#End Region
 
-#Region "Page Events"
         Private Sub AppRightsListLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
             Server.ScriptTimeout = 300
             tdErrMsg.InnerHtml = ""
@@ -58,9 +55,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ListOfRecords()
             BindControls()
         End Sub
-#End Region
 
-#Region "User-Defined Methods"
         Protected Sub ListOfRecords()
             Dim WhereClause As New Text.StringBuilder
             Dim TopClause As String
@@ -116,10 +111,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             TopClause = ""
 
-            strQuery = _
-                "select " & TopClause & " ID_Application,AppDisabled,AuthsAsAppID,TitleAdminArea,Title,AppReleasedByVorname,AppReleasedByID," & _
-                "AppReleasedByNachname,AppReleasedOn,NavURL,(select top 1 Description from Languages l where l.ID=view_ApplicationRights.LanguageID) As Abbreviation,(select top 1 ServerDescription from System_Servers s where s.ID=view_ApplicationRights.LocationID) as ServerDescription " & _
-                ",(SELECT top 1 AuthsAsAppID FROM Applications a WHERE a.ID = view_ApplicationRights.[AuthsAsAppID]) as NextAuthsAsAppID from [view_ApplicationRights] " & WhereClause.ToString & " group by ID_Application,AppDisabled,AuthsAsAppID,TitleAdminArea,Title,AppReleasedByVorname," & _
+            strQuery =
+                "select " & TopClause & " ID_Application,AppDisabled,AuthsAsAppID,TitleAdminArea,Title,AppReleasedByVorname,AppReleasedByID," &
+                "AppReleasedByNachname,AppReleasedOn,NavURL,(select top 1 Description from Languages l where l.ID=view_ApplicationRights.LanguageID) As Abbreviation,(select top 1 ServerDescription from System_Servers s where s.ID=view_ApplicationRights.LocationID) as ServerDescription " &
+                ",(SELECT top 1 AuthsAsAppID FROM Applications a WHERE a.ID = view_ApplicationRights.[AuthsAsAppID]) as NextAuthsAsAppID from [view_ApplicationRights] " & WhereClause.ToString & " group by ID_Application,AppDisabled,AuthsAsAppID,TitleAdminArea,Title,AppReleasedByVorname," &
                 "AppReleasedByID,AppReleasedByNachname,AppReleasedOn,NavURL,languageid,LocationID,TitleAdminAreaDisplay order by TitleAdminAreaDisplay,LocationID,id_application"
 
             Dim cmd As New SqlCommand(strQuery, New SqlConnection(cammWebManager.ConnectionString))
@@ -173,9 +168,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 MyDt.Dispose()
             End If
         End Sub
-#End Region
 
-#Region "Control Events"
         ''' <summary>
         ''' Bind the data of application/security object headers (and query depending users/groups JIT, too)
         ''' </summary>
@@ -337,38 +330,38 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 'Show all member users of current group
                                 If Not Request.QueryString("ShowAllUsers") Is Nothing AndAlso Utils.Nz(Request.QueryString("ShowAllUsers"), 0) = 1 Then
                                     MyDt = New DataTable
-                                    strQuery = "SELECT * " & vbNewLine & _
-                                        "FROM [view_Memberships] " & vbNewLine & _
-                                        "WHERE ID_Group = " & Utils.Nz(dt.Rows(j)("ID_Group"), 0).ToString & " " & vbNewLine & _
-                                        "   And ID_Group not in " & vbNewLine & _
-                                        "       (" & vbNewLine & _
-                                        "           Select id_group_public " & vbNewLine & _
-                                        "           from system_servergroups" & vbNewLine & _
-                                        "       ) " & vbNewLine & _
-                                        "   and ID_Group not in " & vbNewLine & _
-                                        "       (" & vbNewLine & _
-                                        "           Select id_group_anonymous " & vbNewLine & _
-                                        "           from system_servergroups" & vbNewLine & _
-                                        "       ) " & vbNewLine & _
-                                        "   and (" & vbNewLine & _
-                                        "       0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " " & vbNewLine & _
-                                        "       OR 0 in " & vbNewLine & _
-                                        "           (" & vbNewLine & _
-                                        "               select tableprimaryidvalue " & vbNewLine & _
-                                        "               from System_SubSecurityAdjustments " & vbNewLine & _
-                                        "               Where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " " & vbNewLine & _
-                                        "                   AND TableName = 'Applications' " & vbNewLine & _
-                                        "                   AND AuthorizationType In ('SecurityMaster','ViewAllRelations')" & vbNewLine & _
-                                        "           ) " & vbNewLine & _
-                                        "       OR id_group in " & vbNewLine & _
-                                        "           (" & vbNewLine & _
-                                        "               select tableprimaryidvalue " & vbNewLine & _
-                                        "               from System_SubSecurityAdjustments " & vbNewLine & _
-                                        "               where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " " & vbNewLine & _
-                                        "                   AND TableName = 'Applications' " & vbNewLine & _
-                                        "                   AND AuthorizationType In ('UpdateRelations','ViewRelations','Owner')" & vbNewLine & _
-                                        "           )" & vbNewLine & _
-                                        "       ) " & vbNewLine & _
+                                    strQuery = "SELECT * " & vbNewLine &
+                                        "FROM [view_Memberships] " & vbNewLine &
+                                        "WHERE ID_Group = " & Utils.Nz(dt.Rows(j)("ID_Group"), 0).ToString & " " & vbNewLine &
+                                        "   And ID_Group not in " & vbNewLine &
+                                        "       (" & vbNewLine &
+                                        "           Select id_group_public " & vbNewLine &
+                                        "           from system_servergroups" & vbNewLine &
+                                        "       ) " & vbNewLine &
+                                        "   and ID_Group not in " & vbNewLine &
+                                        "       (" & vbNewLine &
+                                        "           Select id_group_anonymous " & vbNewLine &
+                                        "           from system_servergroups" & vbNewLine &
+                                        "       ) " & vbNewLine &
+                                        "   and (" & vbNewLine &
+                                        "       0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & " " & vbNewLine &
+                                        "       OR 0 in " & vbNewLine &
+                                        "           (" & vbNewLine &
+                                        "               select tableprimaryidvalue " & vbNewLine &
+                                        "               from System_SubSecurityAdjustments " & vbNewLine &
+                                        "               Where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " " & vbNewLine &
+                                        "                   AND TableName = 'Applications' " & vbNewLine &
+                                        "                   AND AuthorizationType In ('SecurityMaster','ViewAllRelations')" & vbNewLine &
+                                        "           ) " & vbNewLine &
+                                        "       OR id_group in " & vbNewLine &
+                                        "           (" & vbNewLine &
+                                        "               select tableprimaryidvalue " & vbNewLine &
+                                        "               from System_SubSecurityAdjustments " & vbNewLine &
+                                        "               where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & " " & vbNewLine &
+                                        "                   AND TableName = 'Applications' " & vbNewLine &
+                                        "                   AND AuthorizationType In ('UpdateRelations','ViewRelations','Owner')" & vbNewLine &
+                                        "           )" & vbNewLine &
+                                        "       ) " & vbNewLine &
                                         "ORDER BY Nachname, Name, ID_Group, Vorname"
                                     MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
                                     If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 AndAlso Not (MyDt.Rows.Count = 1 AndAlso IsDBNull(MyDt.Rows(0)("ID_User"))) Then
@@ -531,7 +524,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Return _BufferedResult
             End Get
         End Property
-#End Region
 
     End Class
 
