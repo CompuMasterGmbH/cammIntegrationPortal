@@ -43,12 +43,12 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="cammWM, Version=4.10.206.104, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\base\cammWM\packages\cammWM.4.10.206.104-unstable\lib\net20\cammWM.dll</HintPath>
+    <Reference Include="cammWM, Version=4.12.209.102, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.4.12.209.102\lib\net20\cammWM.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cammWM.WebApp, Version=4.12.209.101, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\base\cammWM\packages\cammWM.WebApp.2.0.8-alpha4\lib\net20\cammWM.WebApp.dll</HintPath>
+      <HintPath>..\base\cammWM\packages\cammWM.WebApp.4.12.209.101-beta\lib\net20\cammWM.WebApp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -107,8 +107,10 @@
     <None Include="_CreateNewNuGetPackage\RunMeToUploadNuGetPackage.cmd" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="system\cammWebManager.ascx" />
     <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="system\cammWebManager.ascx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

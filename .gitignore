@@ -203,3 +203,5 @@ libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifes
 /libraries/cammWM.WebApp/packages
 /libraries/cammWM.WebRootAdminApp/packages
 /libraries/cammWM.WebRootApp/packages
+/webs/sample_rootapp/system
+/webs/sample_rootapp/Bin
