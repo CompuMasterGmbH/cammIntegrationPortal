@@ -152,29 +152,23 @@ INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,Releas
 VALUES('System - User Administration - AccessLevels',NULL,getdate(),@ModifiedBy,'Web Administration','Setup','Access levels',NULL,NULL,NULL,'[ADMINURL]accesslevels.aspx',NULL,NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
 SELECT @AppID_AccessLevels = SCOPE_IDENTITY()
 
--- Authorizations
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Trouble,'7',getdate(),@ModifiedBy)
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Authorizations ,'7',getdate(),@ModifiedBy)
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Groups ,'7',getdate(),@ModifiedBy)
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Memberships ,'7',getdate(),@ModifiedBy)
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_ResetPassword ,'7',getdate(),@ModifiedBy)
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_NavPreview ,'7',getdate(),@ModifiedBy)
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Users ,'7',getdate(),@ModifiedBy)
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_AccessLevels ,'6',getdate(),@ModifiedBy)
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_ServerSetup ,'6',getdate(),@ModifiedBy)
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Applications ,'6',getdate(),@ModifiedBy)
+-- Authorizations for security operators
+INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Trouble,7,getdate(),@ModifiedBy)
+INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Authorizations,7,getdate(),@ModifiedBy)
+INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Groups,7,getdate(),@ModifiedBy)
+INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Memberships,7,getdate(),@ModifiedBy)
+INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_ResetPassword,7,getdate(),@ModifiedBy)
+INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_NavPreview,7,getdate(),@ModifiedBy)
+INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Users,7,getdate(),@ModifiedBy)
 
 -- Redirections - English: not a system app to allow modification of authorizations
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Redirections',NULL,getdate(),@ModifiedBy,'Web Administration','Setup','Redirections',NULL,NULL,NULL,'[ADMINURL]redir/index.aspx',NULL,NULL,0,0,@NewServerID,1,1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,3)
 SELECT @AppID_Redirections = SCOPE_IDENTITY()
--- Authorizations
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Redirections ,6,getdate(),@ModifiedBy)
 -- Move old authorizations and old admin delegation settings to new security object
 IF @OldAppID_Redirections IS NOT NULL 
 	BEGIN
-	UPDATE dbo.ApplicationsRightsByGroup SET ID_Application = @AppID_Redirections WHERE ID_Application = @OldAppID_Redirections 
-		AND ID_GroupOrPerson NOT IN (6) -- these ones have already been addded
+	UPDATE dbo.ApplicationsRightsByGroup SET ID_Application = @AppID_Redirections WHERE ID_Application = @OldAppID_Redirections AND [IsSupervisorAutoAccessRule] = 0
 	UPDATE dbo.ApplicationsRightsByUser SET ID_Application = @AppID_Redirections WHERE ID_Application = @OldAppID_Redirections 
 	UPDATE [dbo].[System_SubSecurityAdjustments] SET [TablePrimaryIDValue] = @AppID_Redirections WHERE [TableName] = 'Applications' AND [TablePrimaryIDValue] = @OldAppID_Redirections 
 	END
@@ -183,21 +177,17 @@ IF @OldAppID_Redirections IS NOT NULL
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Markets',NULL,getdate(),@ModifiedBy,'Web Administration','Setup','Markets/Languages',NULL,NULL,NULL,'[ADMINURL]markets.aspx',NULL,NULL,0,0,@NewServerID,1,1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
 SELECT @AppID_Markets = SCOPE_IDENTITY()
--- Authorizations
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Markets ,6,getdate(),@ModifiedBy)
 
 -- Mail queue monitor - English: not a system app to allow modification of authorizations
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Mail Queue Monitor','',getdate(),@ModifiedBy,'Web Administration','Trouble Center','Mail queue monitor',NULL,NULL,NULL,'[ADMINURL]mailqueue_monitor.aspx','',NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,3)
 SELECT @AppID_QueueMonitor = SCOPE_IDENTITY()
--- Authorizations
+-- Authorizations for security operators
 INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_QueueMonitor,'7',getdate(),@ModifiedBy)
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_QueueMonitor,'6',getdate(),@ModifiedBy)
 -- Move old authorizations and old admin delegation settings to new security object
 IF @OldAppID_QueueMonitor IS NOT NULL 
 	BEGIN
-	UPDATE dbo.ApplicationsRightsByGroup SET ID_Application = @AppID_QueueMonitor WHERE ID_Application = @OldAppID_QueueMonitor 
-		AND ID_GroupOrPerson NOT IN (6,7) -- these ones have already been addded
+	UPDATE dbo.ApplicationsRightsByGroup SET ID_Application = @AppID_QueueMonitor WHERE ID_Application = @OldAppID_QueueMonitor AND [IsSupervisorAutoAccessRule] = 0 AND ID_GroupOrPerson NOT IN (7) -- these ones have already been addded
 	UPDATE dbo.ApplicationsRightsByUser SET ID_Application = @AppID_QueueMonitor WHERE ID_Application = @OldAppID_QueueMonitor 
 	UPDATE [dbo].[System_SubSecurityAdjustments] SET [TablePrimaryIDValue] = @AppID_QueueMonitor WHERE [TableName] = 'Applications' AND [TablePrimaryIDValue] = @OldAppID_QueueMonitor 
 	END
@@ -206,13 +196,10 @@ IF @OldAppID_QueueMonitor IS NOT NULL
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - TextModules',NULL,getdate(),@ModifiedBy,'Web Administration','Setup','Text Modules',NULL,NULL,NULL,'[ADMINURL]textmodules.aspx',NULL,NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,3)
 SELECT @AppID_TextModules = SCOPE_IDENTITY()
--- Authorizations
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_TextModules ,'6',getdate(),@ModifiedBy)
 -- Move old authorizations and old admin delegation settings to new security object
 IF @OldAppID_TextModules IS NOT NULL 
 	BEGIN
-	UPDATE dbo.ApplicationsRightsByGroup SET ID_Application = @AppID_TextModules WHERE ID_Application = @OldAppID_TextModules 
-		AND ID_GroupOrPerson NOT IN (6) -- these ones have already been addded
+	UPDATE dbo.ApplicationsRightsByGroup SET ID_Application = @AppID_TextModules WHERE ID_Application = @OldAppID_TextModules AND [IsSupervisorAutoAccessRule] = 0
 	UPDATE dbo.ApplicationsRightsByUser SET ID_Application = @AppID_TextModules WHERE ID_Application = @OldAppID_TextModules 
 	UPDATE [dbo].[System_SubSecurityAdjustments] SET [TablePrimaryIDValue] = @AppID_TextModules WHERE [TableName] = 'Applications' AND [TablePrimaryIDValue] = @OldAppID_TextModules 
 	END
