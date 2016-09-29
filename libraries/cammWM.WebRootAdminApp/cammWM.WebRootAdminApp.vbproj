@@ -47,6 +47,10 @@
       <HintPath>..\base\cammWM\packages\cammWM.4.12.209.102\lib\net20\cammWM.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="cammWM.Admin, Version=4.12.209.102, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.Admin.4.12.209.102\lib\net20\cammWM.Admin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="cammWM.WebApp, Version=4.12.209.101, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\base\cammWM\packages\cammWM.WebApp.4.12.209.101-beta\lib\net20\cammWM.WebApp.dll</HintPath>
       <Private>True</Private>
