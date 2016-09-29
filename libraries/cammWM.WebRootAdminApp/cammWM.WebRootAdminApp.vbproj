@@ -43,8 +43,21 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="cammWM, Version=4.12.209.102, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.4.12.209.102\lib\net20\cammWM.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="cammWM.WebApp, Version=4.12.209.101, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.WebApp.4.12.209.101-beta\lib\net20\cammWM.WebApp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="cammWM.WebRootApp, Version=4.12.209.101, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.WebRootApp.4.12.209.101-beta2\lib\net20\cammWM.WebRootApp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +84,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="sysdata\config.vb" />
+    <None Include="sysdata\custom_internationalization.vb" />
+    <None Include="system\nav\index_base.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -101,6 +117,12 @@
     <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="sysdata\access_error.aspx" />
+    <Content Include="sysdata\account_register.aspx" />
+    <Content Include="sysdata\account_resetpassword.aspx" />
+    <Content Include="sysdata\account_sendpassword.aspx" />
+    <Content Include="sysdata\account_updatepassword.aspx" />
+    <Content Include="sysdata\account_updateprofile.aspx" />
     <Content Include="sysdata\admin\about.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -369,6 +391,114 @@
     <Content Include="sysdata\admin\users_update_flag.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="sysdata\disclaimer.aspx" />
+    <Content Include="sysdata\editorial.aspx" />
+    <Content Include="sysdata\error.aspx" />
+    <Content Include="sysdata\feedback.aspx" />
+    <Content Include="sysdata\feedback_gotit.aspx" />
+    <Content Include="sysdata\frames\cont_banner.aspx" />
+    <Content Include="sysdata\frames\cont_statusline.aspx" />
+    <Content Include="sysdata\frames\frame_banner.aspx" />
+    <Content Include="sysdata\frames\frame_main.aspx" />
+    <Content Include="sysdata\frames\frame_sub.aspx" />
+    <Content Include="sysdata\help.aspx" />
+    <Content Include="sysdata\images\banner\bg_stripe_extranet.gif" />
+    <Content Include="sysdata\images\banner\flags_on_earth.gif" />
+    <Content Include="sysdata\images\banner\logo_extranet.gif" />
+    <Content Include="sysdata\images\feedback\abteilung.gif" />
+    <Content Include="sysdata\images\feedback\background.gif" />
+    <Content Include="sysdata\images\feedback\background_question.gif" />
+    <Content Include="sysdata\images\feedback\email.gif" />
+    <Content Include="sysdata\images\feedback\kommentar.gif" />
+    <Content Include="sysdata\images\feedback\name.gif" />
+    <Content Include="sysdata\images\feedback\smiley_happy.gif" />
+    <Content Include="sysdata\images\feedback\smiley_sorry.gif" />
+    <Content Include="sysdata\images\feedback\thema.gif" />
+    <Content Include="sysdata\images\global\button_csa.gif" />
+    <Content Include="sysdata\images\global\logo_csa.jpg" />
+    <Content Include="sysdata\images\sub\hg_navi_quer.gif" />
+    <Content Include="sysdata\images\sub\hg_navi_quer_links.gif" />
+    <Content Include="sysdata\images\sub\hg_navi_quer_rechts.gif" />
+    <Content Include="sysdata\includes\loginarea.ascx" />
+    <Content Include="sysdata\includes\loginarea.aspx" />
+    <Content Include="sysdata\includes\metalink.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_frameset_serverform.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_frameset_serverform_body.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_frameset_serverform_html.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_frameset_wo_form.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_frameset_wo_form.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_nonframeset_serverform.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_nonframeset_serverform_body.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_nonframeset_serverform_html.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_nonframeset_wo_form.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_nonframeset_wo_form.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_serverform.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_serverform.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_wo_form.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_wo_form.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top_frameset_serverform.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top_frameset_serverform_body.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_frameset_serverform_html.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_frameset_wo_form.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_frameset_wo_form.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top_nonframeset_serverform.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top_nonframeset_serverform_body.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_nonframeset_serverform_html.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_nonframeset_wo_form.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_nonframeset_wo_form.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top_serverform.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_serverform.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top_wo_form.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_wo_form.aspx" />
+    <Content Include="sysdata\login\checklogin.aspx" />
+    <Content Include="sysdata\login\forcelogin.aspx" />
+    <Content Include="sysdata\login\ldirect.aspx" />
+    <Content Include="sysdata\login\ldirectsubapp.aspx" />
+    <Content Include="sysdata\login\loginprocedurefinished.aspx" />
+    <Content Include="sysdata\login\refreshlogin.aspx" />
+    <Content Include="sysdata\logon.aspx" />
+    <Content Include="sysdata\modules\redir\index.aspx" />
+    <Content Include="sysdata\nav\images\bg_navigation_1690x1.gif" />
+    <Content Include="sysdata\nav\images\bg_progressbar_grey_172x2.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_down_lev2_12x13.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_down_lev2_9x12.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_down_lev3_12x13.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_right_bgyellow_13x13.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_right_lev2_12x13.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_right_lev2_9x12.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_up_bggrey_13x13.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_up_bgyellow_13x13.gif" />
+    <Content Include="sysdata\nav\images\button_disabled_or_underconstruction_13x10.gif" />
+    <Content Include="sysdata\nav\images\button_navpoints_172x23.gif" />
+    <Content Include="sysdata\nav\images\button_new_29x14.gif" />
+    <Content Include="sysdata\nav\images\button_sitename_167x23.jpg" />
+    <Content Include="sysdata\nav\images\button_sitename_177x23.jpg" />
+    <Content Include="sysdata\nav\images\button_sitename_190x23.jpg" />
+    <Content Include="sysdata\nav\images\button_update_40x14.gif" />
+    <Content Include="sysdata\nav\images\button_update_4x13.gif" />
+    <Content Include="sysdata\nav\images\button_update_5x13.gif" />
+    <Content Include="sysdata\nav\images\navline_separator.gif" />
+    <Content Include="sysdata\nav\images\space.gif" />
+    <Content Include="sysdata\nav\images\subnavline_separator.gif" />
+    <Content Include="sysdata\nav\images_style_3\button_red_arrow_right_bgyellow_13x13.gif" />
+    <Content Include="sysdata\nav\images_style_3\button_red_arrow_right_lev2_9x12.gif" />
+    <Content Include="sysdata\nav\index.aspx" />
+    <Content Include="sysdata\servercheck.aspx" />
+    <Content Include="sysdata\servereventlog.aspx" />
+    <Content Include="sysdata\sharedcontent\disclaimer.aspx" />
+    <Content Include="sysdata\sharedcontent\editorial.aspx" />
+    <Content Include="sysdata\style_standard.css" />
+    <Content Include="sysdata\userjustcreated.aspx" />
+    <Content Include="system\access_error.aspx" />
+    <Content Include="system\account_register.aspx" />
+    <Content Include="system\account_resetpassword.aspx" />
+    <Content Include="system\account_sendpassword.aspx" />
+    <Content Include="system\account_updatepassword.aspx" />
+    <Content Include="system\account_updateprofile.aspx" />
     <Content Include="system\admin\about.aspx">
       <SubType>ASPXCodeBehind</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -678,6 +808,46 @@
     <Content Include="system\admin\users_update_flag.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="system\definitions.aspx" />
+    <Content Include="system\download.aspx" />
+    <Content Include="system\error.aspx" />
+    <Content Include="system\feedback.aspx" />
+    <Content Include="system\feedback_gotit.aspx" />
+    <Content Include="system\frames\cont_banner.aspx" />
+    <Content Include="system\frames\cont_statusline.aspx" />
+    <Content Include="system\frames\frame_banner.aspx" />
+    <Content Include="system\frames\frame_main.aspx" />
+    <Content Include="system\frames\frame_sub.aspx" />
+    <Content Include="system\help.aspx" />
+    <Content Include="system\images\handshake.gif" />
+    <Content Include="system\images\help.gif" />
+    <Content Include="system\images\passwort.gif" />
+    <Content Include="system\images\space.gif" />
+    <Content Include="system\includes\disclaimer.deu.inc" />
+    <Content Include="system\includes\disclaimer.eng.inc" />
+    <Content Include="system\includes\metalink.aspx" />
+    <Content Include="system\login\checklogin.aspx" />
+    <Content Include="system\login\forcelogin.aspx" />
+    <Content Include="system\login\images\darkbluepixel.gif" />
+    <Content Include="system\login\images\progres.gif" />
+    <Content Include="system\login\images\space.gif" />
+    <Content Include="system\login\ldirect.aspx" />
+    <Content Include="system\login\ldirectsubapp.aspx" />
+    <Content Include="system\login\loginprocedurefinished.aspx" />
+    <Content Include="system\login\refreshlogin.aspx" />
+    <Content Include="system\logon.aspx" />
+    <Content Include="system\modules\redir\index.aspx" />
+    <Content Include="system\nav\index_base.ascx" />
+    <Content Include="system\nav\index_style3.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="system\nav\index_style3_headhtml.ascx" />
+    <Content Include="system\nav\index_style3_jscript.ascx" />
+    <Content Include="system\servercheck.aspx" />
+    <Content Include="system\servereventlog.aspx" />
+    <Content Include="system\userdetails.aspx" />
+    <Content Include="system\userjustcreated.aspx" />
+    <Content Include="system\validate_document.aspx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

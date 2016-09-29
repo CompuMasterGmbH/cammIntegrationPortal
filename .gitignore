@@ -205,3 +205,10 @@ libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifes
 /libraries/cammWM.WebRootApp/packages
 /webs/sample_rootapp/system
 /webs/sample_rootapp/Bin
+/webs/debug_rootadminapp/web.config
+/webs/debug_rootadminapp/system
+/webs/debug_rootadminapp/App_Code
+/webs/debug_rootadminapp/Bin
+/webs/debug_rootadminapp/sysdata
+/webs/debug_rootadminapp/*.aspx
+/webs/debug_rootadminapp/*.asax
