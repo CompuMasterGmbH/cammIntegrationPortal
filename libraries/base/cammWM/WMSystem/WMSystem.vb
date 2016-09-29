@@ -817,7 +817,45 @@ Namespace CompuMaster.camm.WebManager
 
         Private Function EnsureSession(scriptEngineID As ScriptEngines, scriptEngineSessionID As String, userID As Long, serverID As Integer) As Long
             Dim MyCmd As New SqlClient.SqlCommand("[dbo].[Public_EnsureSession]", New SqlConnection(Me.ConnectionString))
-            MyCmd.CommandType = CommandType.StoredProcedure
+            If Me.System_DBVersion_Ex.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
+                MyCmd.CommandType = CommandType.StoredProcedure
+            Else
+                Dim Sql As String = "-- Deklaration Variablen/Konstanten" & vbNewLine &
+                        "DECLARE @CurrentSessionID int" & vbNewLine &
+                        "" & vbNewLine &
+                        "---------------------------------------------------------------------------------" & vbNewLine &
+                        "-- Versuch der Auffindung einer vorhandenen Session" & vbNewLine &
+                        "---------------------------------------------------------------------------------" & vbNewLine &
+                        "-- Lookup internal session ID" & vbNewLine &
+                        "SELECT TOP 1 @CurrentSessionID = SessionID" & vbNewLine &
+                        "	FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) " & vbNewLine &
+                        "	WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID " & vbNewLine &
+                        "		AND ScriptEngine_ID = @ScriptEngine_ID" & vbNewLine &
+                        "		AND Server = @ServerID" & vbNewLine &
+                        "		AND SessionID IN (" & vbNewLine &
+                        "							SELECT ID_Session " & vbNewLine &
+                        "							FROM [dbo].[System_UserSessions] WITH (NOLOCK) " & vbNewLine &
+                        "							WHERE ID_User = @CurUserID" & vbNewLine &
+                        "							)" & vbNewLine &
+                        "If @CurrentSessionID IS NULL" & vbNewLine &
+                        "	BEGIN" & vbNewLine &
+                        "		-- Interne SessionID erstellen" & vbNewLine &
+                        "		INSERT INTO System_UserSessions (ID_User) VALUES (@CurUserID)" & vbNewLine &
+                        "		SELECT @CurrentSessionID = SCOPE_IDENTITY()" & vbNewLine &
+                        "		-- An welchen Systemen ist noch eine Anmeldung erforderlich?" & vbNewLine &
+                        "		INSERT INTO dbo.System_WebAreasAuthorizedForSession" & vbNewLine &
+                        "								(ServerGroup, Server, ScriptEngine_ID, SessionID, ScriptEngine_LogonGUID, ScriptEngine_SessionID)" & vbNewLine &
+                        "		SELECT     dbo.System_Servers.ServerGroup, dbo.System_servers.id, @ScriptEngine_ID, @CurrentSessionID AS InternalSessionID, cast(rand() * 1000000000 as int) AS RandomGUID, @ScriptEngine_SessionID" & vbNewLine &
+                        "		FROM         dbo.System_Servers " & vbNewLine &
+                        "		WHERE     (dbo.System_Servers.Enabled <> 0) AND (dbo.System_Servers.ID = @ServerID)" & vbNewLine &
+                        "	END" & vbNewLine &
+                        "" & vbNewLine &
+                        "-- return the current/new inernal session ID" & vbNewLine &
+                        "SELECT @CurrentSessionID;" & vbNewLine &
+                        ""
+                MyCmd.CommandText = Sql
+                MyCmd.CommandType = CommandType.Text
+            End If
             MyCmd.Parameters.Add("@CurUserID", SqlDbType.Int).Value = userID
             MyCmd.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
             MyCmd.Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = CType(scriptEngineID, Integer)
