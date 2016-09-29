@@ -2172,7 +2172,11 @@ Namespace CompuMaster.camm.WebManager
                 MyCmd.CommandType = CommandType.Text
                 MyCmd.CommandText = "SELECT SessionID FROM [dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes] WHERE Inactive = 0 AND ScriptEngine_SessionID = @ScriptEngine_SessionID AND ScriptEngine_ID = @ScriptEngine_ID AND Server = @ServerID"
                 MyCmd.Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = CurrentScriptEngineSessionID
-                MyCmd.Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.NetClient
+                If HttpContext.Current Is Nothing Then
+                    MyCmd.Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.NetClient
+                Else
+                    MyCmd.Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.ASPNet
+                End If
                 MyCmd.Parameters.Add("@ServerID", SqlDbType.Int).Value = Me.System_GetServerID()
 
                 Dim result As Object = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), 0)
@@ -3268,11 +3272,12 @@ Namespace CompuMaster.camm.WebManager
 
             Dim CurRowStatus As Byte = 0
 
+            Dim CurUserSessionID As Integer = System_GetInternalUserSessionId()
+
             If Not Me.IsLoggedOn Then
                 Me.Log.RuntimeWarning(New Exception("SetSessionValue: No valid logon in this user session yet."))
                 Return False
-            ElseIf System_IsSessionTerminated(Me.CurrentUserLoginName) Then
-                ResetUserLoginName()
+            ElseIf CurUserSessionID <= 0 Then
                 Return False
             End If
 
@@ -3281,7 +3286,7 @@ Namespace CompuMaster.camm.WebManager
             Try
                 MyDBConn.Open()
 
-                Dim CurUserSessionID As Integer = System_GetInternalUserSessionId()
+
 
 
                 Dim cmd As New SqlCommand
