@@ -39,18 +39,18 @@ Sub SetupAdditionalConfiguration()
 	'==== Note: the database user must a dbo     ====
 	'====       (= database owner)               ====
 	'================================================
-	Dim ConfigurationSettings As New System.Configuration.AppSettingsReader
-	Me.SMTPServerName = ConfigurationSettings.GetValue("WebManager.SMTPServerName", GetType(String))
-	Me.SMTPServerPort = ConfigurationSettings.GetValue("WebManager.SMTPServerPort", GetType(Integer))
-	Me.StandardEMailAccountName = ConfigurationSettings.GetValue("WebManager.StandardEMailAccountName", GetType(String))
-	Me.StandardEMailAccountAddress = ConfigurationSettings.GetValue("WebManager.StandardEMailAccountAddress", GetType(String))
-	Me.DevelopmentEMailAccountAddress = ConfigurationSettings.GetValue("WebManager.DevelopmentEMailAccountAddress", GetType(String))
-	Me.TechnicalServiceEMailAccountName = ConfigurationSettings.GetValue("WebManager.TechnicalServiceEMailAccountName", GetType(String))
-	Me.TechnicalServiceEMailAccountAddress = ConfigurationSettings.GetValue("WebManager.TechnicalServiceEMailAccountAddress", GetType(String))
+	'Dim ConfigurationSettings As New System.Configuration.AppSettingsReader
+	'Me.SMTPServerName = ConfigurationSettings.GetValue("WebManager.SMTPServerName", GetType(String))
+	'Me.SMTPServerPort = ConfigurationSettings.GetValue("WebManager.SMTPServerPort", GetType(Integer))
+	'Me.StandardEMailAccountName = ConfigurationSettings.GetValue("WebManager.StandardEMailAccountName", GetType(String))
+	'Me.StandardEMailAccountAddress = ConfigurationSettings.GetValue("WebManager.StandardEMailAccountAddress", GetType(String))
+	'Me.DevelopmentEMailAccountAddress = ConfigurationSettings.GetValue("WebManager.DevelopmentEMailAccountAddress", GetType(String))
+	'Me.TechnicalServiceEMailAccountName = ConfigurationSettings.GetValue("WebManager.TechnicalServiceEMailAccountName", GetType(String))
+	'Me.TechnicalServiceEMailAccountAddress = ConfigurationSettings.GetValue("WebManager.TechnicalServiceEMailAccountAddress", GetType(String))
 
-	Me.Internationalization = New CustomSettingsAndData
-	Me.System_DebugLevel = ConfigurationSettings.GetValue("WebManager.DebugLevel", GetType(Integer))
-	Me.ConnectionString = ConfigurationSettings.GetValue("WebManager.Connectionstring", GetType(String))
+	'Me.Internationalization = New CustomSettingsAndData
+	'Me.System_DebugLevel = ConfigurationSettings.GetValue("WebManager.DebugLevel", GetType(Integer))
+	'Me.ConnectionString = ConfigurationSettings.GetValue("WebManager.Connectionstring", GetType(String))
 
 	'=======================================================================
 	'== The usage of the IP address is recommended. The server name
@@ -62,7 +62,7 @@ Sub SetupAdditionalConfiguration()
 	'==            errors.
 	'=======================================================================
 	'Me.CurrentServerIdentString = ConfigurationSettings.GetValue("WebManager.ServerIdentification", GetType(String))
-	Me.CurrentServerIdentString = Request.ServerVariables("LOCAL_ADDR")
+	'Me.CurrentServerIdentString = Request.ServerVariables("LOCAL_ADDR")
 
 	'================================================
 	'==== Place for user defined variables,      ====
