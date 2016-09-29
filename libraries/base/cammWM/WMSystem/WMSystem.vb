@@ -769,12 +769,13 @@ Namespace CompuMaster.camm.WebManager
                     Return _CurrentScriptEngineSessionID
                 Else
                     'Web applications
-                    'Code for IIS-Inter-Application-SessionID-Sharing
+                    Dim Result As String = Nothing
                     If Configuration.CookieLess = True Then
+                        'Code for IIS-Inter-Application-SessionID-Sharing
                         If HttpContext.Current.Session Is Nothing Then
                             Throw New Exception("HttpContext.Current.Session Is Nothing")
                         End If
-                        Return HttpContext.Current.Session.SessionID
+                        Result = HttpContext.Current.Session.SessionID
                     Else
                         'Cookies activated
                         '1. Try to read SessionID from cookie (inclusive some validation)
@@ -784,22 +785,45 @@ Namespace CompuMaster.camm.WebManager
                                 'looks like a faulty session ID --> better ignore it!
                             Else
                                 'looks like a valid session ID --> cryptography security is high enough
-                                Return possibleValue
+                                Result = possibleValue
                             End If
                         End If
-                        '2. Otherwise use normal SessionID, but save this SessionID in cookie for readability by other independent IIS-applications
-                        If HttpContext.Current.Session Is Nothing Then
-                            Throw New Exception("HttpContext.Current.Session Is Nothing")
+                        If Result = Nothing Then
+                            '2. Otherwise use normal SessionID, but save this SessionID in cookie for readability by other independent IIS-applications
+                            If HttpContext.Current.Session Is Nothing Then
+                                Throw New Exception("HttpContext.Current.Session Is Nothing")
+                            End If
+                            Dim AspNetSessionID As String
+                            AspNetSessionID = HttpContext.Current.Session.SessionID
+                            HttpContext.Current.Response.Cookies("CwmAuthNet").Value = AspNetSessionID
+                            HttpContext.Current.Response.Cookies("CwmAuthNet").Path = "/"
+                            Result = AspNetSessionID
                         End If
-                        Dim AspNetSessionID As String
-                        AspNetSessionID = HttpContext.Current.Session.SessionID
-                        HttpContext.Current.Response.Cookies("CwmAuthNet").Value = AspNetSessionID
-                        HttpContext.Current.Response.Cookies("CwmAuthNet").Path = "/"
-                        Return AspNetSessionID
                     End If
+                    Dim serverInfo As ServerInformation = Me.CurrentServerInfo
+                    If serverInfo Is Nothing Then
+                        Throw New Exception("Error: server information is nothing - invalidly configured server identifier?")
+                    ElseIf Configuration.ImpersonationLoginName <> "" AndAlso serverInfo.ParentServerGroup.AllowImpersonation Then
+                        Static AlreadyCheckedFor As String
+                        If AlreadyCheckedFor <> ScriptEngines.ASPNet & "|" & Me.CurrentUserID(SpecialUsers.User_Invalid) & "|" & Me.CurrentServerInfo.ID & "|" & Result Then
+                            EnsureSession(ScriptEngines.ASPNet, Result, Me.CurrentUserID(SpecialUsers.User_Invalid), Me.CurrentServerInfo.ID)
+                            AlreadyCheckedFor = ScriptEngines.ASPNet & "|" & Me.CurrentUserID(SpecialUsers.User_Invalid) & "|" & Me.CurrentServerInfo.ID & "|" & Result
+                        End If
+                    End If
+                    Return Result
                 End If
             End Get
         End Property
+
+        Private Function EnsureSession(scriptEngineID As ScriptEngines, scriptEngineSessionID As String, userID As Long, serverID As Integer) As Long
+            Dim MyCmd As New SqlClient.SqlCommand("[dbo].[Public_EnsureSession]", New SqlConnection(Me.ConnectionString))
+            MyCmd.CommandType = CommandType.StoredProcedure
+            MyCmd.Parameters.Add("@CurUserID", SqlDbType.Int).Value = userID
+            MyCmd.Parameters.Add("@ServerID", SqlDbType.Int).Value = serverID
+            MyCmd.Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = CType(scriptEngineID, Integer)
+            MyCmd.Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = scriptEngineSessionID
+            Return CType(Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Long)
+        End Function
 
         ''' <summary>
         ''' The identification string of the current web server instance
@@ -5200,6 +5224,12 @@ Namespace CompuMaster.camm.WebManager
                 RequestDetails("SecurityObjectName") = securityObjectName
                 RequestDetails("ServerIP") = CType(IIf(serverIP <> "", serverIP, "<em>(current server)</em>"), String)
                 RedirectToLogonPage(System_AccessAuthorizationChecks_LoginPageForwarderIDs.ErrorUserOrPasswordWrong, RedirectionCause, RequestDetails)
+            ElseIf Result = System_AccessAuthorizationChecks_DBResults.SessionClosed Then
+                Dim RedirectionCause As String = "This has been because the validation result is " & Result.ToString
+                Dim RequestDetails As New Collections.Specialized.NameValueCollection
+                RequestDetails("SecurityObjectName") = securityObjectName
+                RequestDetails("ServerIP") = CType(IIf(serverIP <> "", serverIP, "<em>(current server)</em>"), String)
+                RedirectToErrorPage(System_AccessAuthorizationChecks_ErrorPageForwarderIDs.ErrorUndefined, "SessionClosed", RedirectionCause, RequestDetails)
             Else 'System_AccessAuthorizationChecks_DBResults.UnexpectedError
                 Dim RedirectionCause As String = "This has been because the validation result is " & Result.ToString
                 Dim RequestDetails As New Collections.Specialized.NameValueCollection

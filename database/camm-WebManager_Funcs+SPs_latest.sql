@@ -3921,3 +3921,59 @@ GO
 IF EXISTS (select * from sys.objects where object_id = object_id(N'[dbo].[ApplicationRights_CumulatedPerUserAndServerGroup]') and OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
 DROP PROCEDURE dbo.ApplicationRights_CumulatedPerUserAndServerGroup
 GO
+
+
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Public_EnsureSession]') AND OBJECTPROPERTY(object_id, N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[Public_EnsureSession]
+GO
+----------------------------------------------------
+-- dbo.Public_EnsureSession
+----------------------------------------------------
+CREATE PROCEDURE [dbo].[Public_EnsureSession]
+(
+	@CurUserID int,
+	@ServerID int,
+	@ScriptEngine_ID int,
+	@ScriptEngine_SessionID nvarchar(512)
+)
+
+AS
+
+-- Deklaration Variablen/Konstanten
+DECLARE @CurrentSessionID int
+
+SET NOCOUNT ON
+
+	---------------------------------------------------------------------------------
+	-- Versuch der Auffindung einer vorhandenen Session
+	---------------------------------------------------------------------------------
+	-- Lookup internal session ID
+	SELECT TOP 1 @CurrentSessionID = SessionID
+		FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) 
+		WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID 
+			AND ScriptEngine_ID = @ScriptEngine_ID
+			AND Server = @ServerID
+			AND SessionID IN (
+								SELECT ID_Session 
+								FROM [dbo].[System_UserSessions] WITH (NOLOCK) 
+								WHERE ID_User = @CurUserID
+							 )
+	If @CurrentSessionID IS NULL
+		BEGIN
+			-- Interne SessionID erstellen
+			INSERT INTO System_UserSessions (ID_User) VALUES (@CurUserID)
+			SELECT @CurrentSessionID = SCOPE_IDENTITY()
+			-- An welchen Systemen ist noch eine Anmeldung erforderlich?
+			INSERT INTO dbo.System_WebAreasAuthorizedForSession
+									(ServerGroup, Server, ScriptEngine_ID, SessionID, ScriptEngine_LogonGUID, ScriptEngine_SessionID)
+			SELECT     dbo.System_Servers.ServerGroup, dbo.System_servers.id, @ScriptEngine_ID, @CurrentSessionID AS InternalSessionID, cast(rand() * 1000000000 as int) AS RandomGUID, @ScriptEngine_SessionID
+			FROM         dbo.System_Servers 
+			WHERE     (dbo.System_Servers.Enabled <> 0) AND (dbo.System_Servers.ID = @ServerID)
+		END
+
+-- return the current/new inernal session ID
+SET NOCOUNT OFF
+SELECT @CurrentSessionID;
+
+GO
