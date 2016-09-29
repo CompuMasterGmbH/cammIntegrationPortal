@@ -2187,6 +2187,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="LoginNameOfUser">The login name to be checked</param>
         ''' <returns>True when the session has ended</returns>
+        <Obsolete("Doesn't work as expected"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_IsSessionTerminated(ByVal LoginNameOfUser As String) As Boolean
 
             If HttpContext.Current Is Nothing Then
