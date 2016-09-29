@@ -198,8 +198,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Try
                     ExecuteNonQuery(MyCmd, Automations.AutoOpenAndCloseAndDisposeConnection)
                     Response.Redirect("servers.aspx")
-                Catch
-                    lblErrMsg.Text = "Server group update failed!"
+                Catch ex As Exception
+                    If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                        lblErrMsg.Text = "Server group update failed! (" & ex.ToString.Replace(vbNewLine, "<br />").Replace(" ", "&nbsp;") & ")"
+                    Else
+                        lblErrMsg.Text = "Server group update failed! (" & ex.Message & ")"
+                    End If
                 End Try
             Else
                 lblErrMsg.Text = "Please specify all relevant server group details to proceed."

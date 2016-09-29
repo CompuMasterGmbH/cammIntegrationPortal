@@ -746,10 +746,10 @@
 			CurUserID = cammWebManager.CurrentUserID(CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous)
         End If
 
-        If Request.QueryString("GroupID") <> "" AndAlso Request.QueryString("GroupID") <> "undefined" Then
+        If AdditionalFeaturesEnabled = True AndAlso Request.QueryString("GroupID") <> "" AndAlso Request.QueryString("GroupID") <> "undefined" Then
             MyDataTable = cammWebManager.System_GetGroupNavigationElements(CType(Request.QueryString("GroupID"), Long), Nothing, strServerIP)
         Else
-            MyDataTable = cammWebManager.System_GetUserNavigationElements(CurUserID, Nothing, strServerIP)
+            MyDataTable = cammWebManager.System_GetUserNavigationElements(CurUserID, 0, strServerIP)
         End If
         
         'Get additional navigation information

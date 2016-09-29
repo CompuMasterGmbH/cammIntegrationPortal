@@ -6065,9 +6065,8 @@ Namespace CompuMaster.camm.WebManager
                     End If
                 End If
 
-                'Optionally TODO: when needed, add that to the method
-                '==================================================== _
-                ', Optional ByVal GetItemsOfAlternativeLanguageToo As Boolean = True
+                'if needed to specify @SearchForAlternativeLanguages, comment out the following lines
+                'Required additional MethodParameter: Optional ByVal GetItemsOfAlternativeLanguageToo As Boolean = True
                 'If GetItemsOfAlternativeLanguageToo = False AndAlso Me.System_DBVersion_Ex.Build >= 109 Then
                 '    MyCmd.Parameters.Add("@SearchForAlternativeLanguages", SqlDbType.Bit).Value = False
                 'End If
