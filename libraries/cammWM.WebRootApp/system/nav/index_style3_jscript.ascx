@@ -1,4 +1,4 @@
-<%@ Control Language="vb" AutoEventWireup="false" %>
+<%@ Control Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Controls.UserControl" %>
 <script language="vb" runat="server">
 public LanguageID as integer
 </script>
@@ -6,7 +6,7 @@ public LanguageID as integer
         window.onunload = function(){saveState(menuId);}
         var openDisplay = "block";
         var closedDisplay = "none";
-        var MenuStateCookieName = "<% If Session("System_Username") <> "" Then Response.Write ("MenuStateSecured" & LanguageID) Else Response.Write ("MenuStateAnonymous" & LanguageID) %>";
+        var MenuStateCookieName = "<% If cammWebManager.IsLoggedOn Then Response.Write ("MenuStateSecured" & LanguageID) Else Response.Write ("MenuStateAnonymous" & LanguageID) %>";
         getState(menuId);
 
         // expandit function

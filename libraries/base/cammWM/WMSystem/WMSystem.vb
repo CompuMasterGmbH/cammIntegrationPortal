@@ -624,6 +624,23 @@ Namespace CompuMaster.camm.WebManager
                 HttpContext.Current.Items("System_UserName") = loginName
             End If
         End Sub
+        Public ReadOnly Property IsLoggedOnImpersonationUser As Boolean
+            Get
+                If HttpContext.Current Is Nothing OrElse HttpContext.Current.Session Is Nothing Then
+                    'Console/Windows application
+                    Return False
+                Else
+                    Dim serverInfo As ServerInformation = Me.CurrentServerInfo
+                    If serverInfo Is Nothing Then
+                        Throw New Exception("Error: server information is nothing - invalidly configured server identifier?")
+                    ElseIf Configuration.ImpersonationLoginName <> "" AndAlso serverInfo.ParentServerGroup.AllowImpersonation Then
+                        Return True
+                    Else
+                        Return False
+                    End If
+                End If
+            End Get
+        End Property
         ''' <summary>
         ''' The currently logged on user
         ''' </summary>
