@@ -46,11 +46,11 @@ Namespace CompuMaster.camm.WebManager
         Inherits Exception
 
         Public Sub New(ByVal userID As Long)
-            MyBase.New("User account with the requested ID " & userID.ToString & " can't be found")
+            MyBase.New("User account with the requested ID can't be found: " & userID.ToString)
         End Sub
 
         Public Sub New(ByVal userName As String)
-            MyBase.New("User account with the requested login name " & userName & " can't be found")
+            MyBase.New("User account with the requested login name can't be found: " & userName)
         End Sub
 
     End Class
@@ -59,11 +59,11 @@ Namespace CompuMaster.camm.WebManager
         Inherits Exception
 
         Public Sub New(ByVal userID As Long)
-            MyBase.New("User account with the requested ID " & userID.ToString & " can't be used to start the standard login process")
+            MyBase.New("User account with the requested ID can't be used to start the standard login process: " & userID.ToString)
         End Sub
 
         Public Sub New(ByVal userName As String)
-            MyBase.New("User account with the requested login name " & userName & " can't be used to start the standard login process")
+            MyBase.New("User account with the requested login name can't be used to start the standard login process: " & userName)
         End Sub
 
     End Class
