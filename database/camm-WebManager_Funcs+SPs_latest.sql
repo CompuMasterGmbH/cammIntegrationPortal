@@ -3371,7 +3371,7 @@ BEGIN
 				values (@CurUserID, GetDate(), @ServerIP, @RemoteIP, -98, 'Browser/client session not found: ' + @ScriptEngine_SessionID + ', ReAuthSuccessfull = 0, Login denied')
 			-- Rückgabewert
 			SET NOCOUNT OFF
-			SELECT Result = -4
+			SELECT Result = 42 -- session closed
 			-- Abbruch
 			Return
 		END

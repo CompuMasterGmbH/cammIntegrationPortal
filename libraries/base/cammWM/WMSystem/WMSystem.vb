@@ -4463,6 +4463,7 @@ Namespace CompuMaster.camm.WebManager
             <Obsolete("Logins on other servers are allowed, now")> LoginFromAnotherSystem = 57
             LoginRequired = 58
             LoginFailed = 0
+            SessionClosed = 42
             UnexpectedError = 2
         End Enum
         Public Enum System_AccessAuthorizationChecks_ErrorPageForwarderIDs
