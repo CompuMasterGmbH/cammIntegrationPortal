@@ -30,6 +30,11 @@ Namespace CompuMaster.camm.SmartWebEditor
         Public ReadOnlyDirectories As String()
 
         ''' <summary>
+        ''' Extensions that are allowed to be uploaded
+        ''' </summary>
+        Public AllowedFileExtensions As String()
+
+        ''' <summary>
         ''' Client id of the editor (textarea)
         ''' </summary>
         Public EditorClientId As String

@@ -223,7 +223,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 If _ImagesUploadFormUrl = Nothing Then
                     Dim configValue As String = Me.Configuration.ImagesUploadFormUrl
                     If configValue = Nothing Then
-                        Return "/sysdata/modules/smartwcms/imagesupload.aspx"
+                        Return "/sysdata/modules/smarteditor/imagesupload.aspx"
                     End If
                     Return configValue
                 End If
@@ -246,7 +246,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 If __DocumentsUploadFormUrl = Nothing Then
                     Dim configValue As String = Me.Configuration.DocumentsUploadFormUrl
                     If configValue = Nothing Then
-                        Return "/sysdata/modules/smartwcms/documentssupload.aspx"
+                        Return "/sysdata/modules/smarteditor/docsupload.aspx"
                     End If
                     Return configValue
                 End If
@@ -359,6 +359,25 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property
 
+        Private _ImagesAllowedFileExtensions As String() = New String() {}
+
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Contains the control specific readonly folders for documents
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.TypeConverter(GetType(StringArrayConverter))> Public Property ImagesAllowedFileExtensions As String()
+            Get
+                Return _ImagesAllowedFileExtensions
+            End Get
+            Set(ByVal Value As String())
+                _ImagesAllowedFileExtensions = Value
+            End Set
+        End Property
+
 
         Private _DocumentsReadOnly As String() = New String() {}
 
@@ -379,6 +398,24 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property
 
+        Private _DocumentsAllowedFileExtensions As String() = New String() {}
+
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Contains the control specific readonly folders for documents
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.TypeConverter(GetType(StringArrayConverter))> Public Property DocumentsAllowedFileExtensions As String()
+            Get
+                Return _DocumentsAllowedFileExtensions
+            End Get
+            Set(ByVal Value As String())
+                _DocumentsAllowedFileExtensions = Value
+            End Set
+        End Property
 
 
 #End Region

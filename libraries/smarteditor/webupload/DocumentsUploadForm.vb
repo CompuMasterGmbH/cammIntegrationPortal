@@ -29,7 +29,10 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Private Configuration As New ConfigurationUploadSettings
 
         Private Sub PageOnInit(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
-            Me.AllowedFileExtensions = New String() {".docx", ".doc", ".odt", ".pdf", ".rtf"}
+            If Me.UploadParamters.AllowedFileExtensions.Length = 0 Then
+                Me.UploadParamters.AllowedFileExtensions = New String() {".docx", ".doc", ".odt", ".pdf", ".rtf"}
+            End If
+
 
             'Initializes the object security
             InitializeSecurityObject()
@@ -101,7 +104,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             Me.LabelSelectFileToUpload.Text = "Wählen Sie ein Dokument zum Hochladen aus"
             Me.ButtonUploadFile.Text = "Hochladen"
             Me.LabelProcessingTips.Text = "<b>Bearbeitungshinweise:</b><br><br>" &
-                                        "1. Es können nur folgende Datenformate auf den Server geladen werden: " & String.Join(", ", Me.AllowedFileExtensions) & "<br><br>" &
+                                        "1. Es können nur folgende Datenformate auf den Server geladen werden: " & String.Join(", ", Me.UploadParamters.AllowedFileExtensions) & "<br><br>" &
                                         "2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der " &
                                         "Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. <br><br>"
 

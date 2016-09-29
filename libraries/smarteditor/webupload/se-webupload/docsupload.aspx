@@ -24,9 +24,9 @@
 					return false;		
 				}
 				else {
-					var ext = e.value.split('.').pop();
-			
-					if ( (ext == 'doc') || (ext == 'docx') || (ext == 'pdf') || (ext == 'odt') || (ext == 'rtf'))
+					var ext = '.' + e.value.split('.').pop();
+			        var allowedExtensions = ["<%=String.Join(""",""", Me.UploadParamters.AllowedFileExtensions)%>"];
+					if ( allowedExtensions.indexOf(ext) > -1)
 					{
 						return true;
 					}

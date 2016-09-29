@@ -109,22 +109,12 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages.Upload
             End If
         End Sub
 
-        Private _AllowedFileExtensions As String()
-        Protected Property AllowedFileExtensions As String()
-            Get
-                Return _AllowedFileExtensions
-            End Get
-            Set(value As String())
-                _AllowedFileExtensions = value
-            End Set
-        End Property
-
 #End Region
 
 #Region "Events and functions"
 
         Protected Function IsAllowedExtension(ByVal extension As String) As Boolean
-            Return Array.IndexOf(_AllowedFileExtensions, extension) > -1
+            Return Array.IndexOf(Me.UploadParamters.AllowedFileExtensions, extension) > -1
         End Function
 
         ''' <summary>

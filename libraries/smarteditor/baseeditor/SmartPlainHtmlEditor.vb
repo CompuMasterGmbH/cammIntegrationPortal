@@ -390,7 +390,7 @@ Namespace CompuMaster.camm.SmartWebEditor
 #Else
                     Dim AllEditorControls As New List(Of System.Web.UI.Control)
 #End If
-                    Me.FindSWcmsControlsOnThisPage(AllEditorControls, Me.Page.Controls)
+                    Me.FindEditors(AllEditorControls, Me.Page.Controls)
                     Dim IsDirtyChecksJScriptSnippet As String = Nothing
                     For Each Editor As System.Web.UI.Control In AllEditorControls
                         Dim EditorInstanceIsDirtyScript As String = "function isDirty_" & Editor.ClientID & "() " & vbNewLine &
