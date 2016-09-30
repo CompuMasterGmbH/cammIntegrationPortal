@@ -1,4 +1,21 @@
 ﻿-- =========================================================================================================
+-- ===== DROP AUTO-AUTHS OF OLD AUTH-DESIGN (WILL BE REINSERTED ON NEXT DB PATCH)
+-- =========================================================================================================
+-- delete all previous supervisor auths for system apps (will be re-inserted with IsSupervisorAutoAccessRule on next db patch
+DELETE [dbo].[ApplicationsRightsByGroup]
+FROM [dbo].[ApplicationsRightsByGroup]
+WHERE ID_GroupOrPerson IN (-6,6) 
+	AND [IsSupervisorAutoAccessRule] = 0
+	AND [IsDenyRule] = 0
+	AND ID_Application IN 
+	(
+		SELECT [ID]
+		FROM [dbo].[Applications_CurrentAndInactiveOnes]
+		where systemapptype in (2,3)
+)
+GO
+
+-- =========================================================================================================
 -- ===== AUTHORIZATIONS TABLES - PRE-STAGED/PRE-CALCULATED, EFFECTIVE
 -- =========================================================================================================
 ---------------------------------------------------------------------------------------------------
