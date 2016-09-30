@@ -12,6 +12,16 @@ param ([string]$ProjectFilePath, [string]$OutputDirectory, [string]$BuildConfigu
 # 	Forces a function to be the first non-comment code to appear in a PowerShell Module.
 Set-StrictMode -Version Latest
 
+# Print all input arguments
+$allArgs = $PsBoundParameters.Values + $args
+Write-Verbose "New-NuGetPackage.ps1 called with arguments: $allArgs"
+foreach ($key in $MyInvocation.BoundParameters.keys)
+{
+    $value = ""
+	try	{ $value = (get-variable -EA SilentlyContinue -ValueOnly -name $key) } catch { }
+    Write-Verbose "	$key -> $value"
+}
+
 # PowerShell v2.0 compatible version of [string]::IsNullOrWhitespace.
 function Test-StringIsNullOrWhitespace([string]$string)
 {
@@ -292,4 +302,5 @@ if ($appendConfigurationAndPlatformToNuGetPackageFileName)
 }
 
 # Display the path to the NuGet package file.
+Write-Verbose "Path to the NuGet package file: $nuGetPackageFilePath"
 Write-Output $nuGetPackageFilePath
