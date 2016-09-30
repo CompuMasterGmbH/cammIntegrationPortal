@@ -298,7 +298,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                     RuleTitleForGroup = "DENY"
                                 Else
                                     RuleTitleForGroup = "GRANT"
-                                    MyDt
                                 End If
                                 tempStr.Append("<TD" & RowSeparator & "><P class=""normalFont"" title=""Authorization for this group is set up as " & Server.HtmlEncode(RuleTitleForGroup) & """>" & Server.HtmlEncode(RuleTitleForGroup) & "</P></TD>")
                                 tempStr.Append("<TD" & RowSeparator & " WIDTH=""170""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(dt.Rows(j)("Name"), String.Empty)) & "</P></TD>")
