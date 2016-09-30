@@ -118,54 +118,54 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Label_DeactivateDeleteMarket" xml:space="preserve">
-    <value>Delete/Deactivate this market</value>
+    <value>Diesen Markt löschen/deaktiveren</value>
   </data>
   <data name="Label_InsertDocument" xml:space="preserve">
-    <value>Insert document</value>
+    <value>Dokument einfügen</value>
   </data>
   <data name="Label_InsertImage" xml:space="preserve">
-    <value>Insert image</value>
+    <value>Bild einfügen</value>
   </data>
   <data name="Label_JSString_AreYouSureToClose" xml:space="preserve">
-    <value>Do you want to close this site without saving your changes?</value>
+    <value>Möchten Sie diese Seite wirklich schließen ohne die Änderungen zu speichern?</value>
   </data>
   <data name="Label_JSString_AreYouSureToLeave" xml:space="preserve">
-    <value>Do you want to leave? All your changes will be lost!</value>
+    <value>Möchten Sie wirklich diese Seite verlassen? Alle Ihre Änderungen gehen verloren!</value>
   </data>
   <data name="Label_NewVersion" xml:space="preserve">
-    <value>New Version</value>
+    <value>Neue Version</value>
   </data>
   <data name="Label_NoVersionsAvailable" xml:space="preserve">
-    <value>No versions available</value>
+    <value>Keine Versionen verfügbar</value>
   </data>
   <data name="Label_Option_NeutralMarket" xml:space="preserve">
-    <value>Neutral / All</value>
+    <value>Neutral / Alle</value>
   </data>
   <data name="Label_Option_New" xml:space="preserve">
-    <value>(new)</value>
+    <value>(neu)</value>
   </data>
   <data name="Label_Option_NoRelease" xml:space="preserve">
-    <value>(no release)</value>
+    <value>(ohne Freigabe)</value>
   </data>
   <data name="Label_Preview" xml:space="preserve">
-    <value>Preview</value>
+    <value>Vorschau</value>
   </data>
   <data name="Label_Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Speichern</value>
   </data>
   <data name="Label_SaveNActivate" xml:space="preserve">
-    <value>Save &amp; Activate</value>
+    <value>Speichern &amp; Aktivieren</value>
   </data>
   <data name="Label_SaveNActivate_Tooltip" xml:space="preserve">
-    <value>Save &amp; Activate all languages/markets of this version</value>
+    <value>Speichern &amp; Aktivieren aller Sprachen/Märkte dieser Version</value>
   </data>
   <data name="Label_Suffix_Inactive" xml:space="preserve">
-    <value> (inactive)</value>
+    <value> (inaktiv)</value>
   </data>
   <data name="Label_WithChanges" xml:space="preserve">
-    <value>With changes</value>
+    <value>Mit Änderungen</value>
   </data>
   <data name="Label_WithoutChangesSinceVersion" xml:space="preserve">
-    <value>Without changes since version </value>
+    <value>Ohne Änderungen seit Version </value>
   </data>
 </root>

@@ -212,3 +212,4 @@ libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifes
 /webs/debug_rootadminapp/sysdata
 /webs/debug_rootadminapp/*.aspx
 /webs/debug_rootadminapp/*.asax
+/libraries/smarteditor/CommonMarkEditor/system
