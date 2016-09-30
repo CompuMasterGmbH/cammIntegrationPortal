@@ -225,10 +225,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If configValue = Nothing Then
                         Return "/sysdata/modules/smarteditor/imagesupload.aspx"
                     End If
-                    Return configValue
+                    Return VirtualPathUtility.ToAbsolute(configValue)
                 End If
-                Return _ImagesUploadFormUrl
-
+                Return VirtualPathUtility.ToAbsolute(_ImagesUploadFormUrl)
             End Get
             Set(value As String)
                 _ImagesUploadFormUrl = value
@@ -248,10 +247,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If configValue = Nothing Then
                         Return "/sysdata/modules/smarteditor/docsupload.aspx"
                     End If
-                    Return configValue
+                    Return VirtualPathUtility.ToAbsolute(configValue)
                 End If
-                Return __DocumentsUploadFormUrl
-
+                Return VirtualPathUtility.ToAbsolute(__DocumentsUploadFormUrl)
             End Get
             Set(value As String)
                 __DocumentsUploadFormUrl = value
@@ -271,9 +269,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If configValue = Nothing Then
                         Return ""
                     End If
-                    Return configValue
+                    Return VirtualPathUtility.ToAbsolute(configValue)
                 End If
-                Return _ImagesUploadPath
+                Return VirtualPathUtility.ToAbsolute(_ImagesUploadPath)
             End Get
             Set(value As String)
                 _ImagesUploadPath = value
@@ -293,9 +291,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If configValue = Nothing Then
                         Return ""
                     End If
-                    Return configValue
+                    Return VirtualPathUtility.ToAbsolute(configValue)
                 End If
-                Return _DocumentsUploadPath
+                Return VirtualPathUtility.ToAbsolute(_DocumentsUploadPath)
             End Get
             Set(value As String)
                 _DocumentsUploadPath = value
