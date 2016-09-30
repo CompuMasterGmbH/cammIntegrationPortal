@@ -143,3 +143,22 @@ An identifier of the current document, by default its URL
       securityobjecteditmode="{Security Object for Editors}" 
       DocumentID="HttpServerError404DefaultMessage" />
 ```
+
+### Enabling upload feature for images and documents
+Requires a deployed cammWM.SmartEditorUpload at root web application at /sysdata/modules/smarteditor
+```asp
+<cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
+      securityobjecteditmode="{Security Object for Editors}" 
+	Images="~/images" Docs="~/docs"
+	>{enter here...}</cammWebEdit:SmartCommonMarkEditor>
+```
+
+### Customize upload form URLs to further reduce potenial risks of vulnerabilities/hacks
+Requires a deployed cammWM.SmartEditorUpload 
+```asp
+<cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
+      securityobjecteditmode="{Security Object for Editors}" 
+	Images="~/images" Docs="~/docs"
+	ImagesUploadFormUrl="~/smarteditor/imagesupload.aspx" DocumentsUploadFormUrl="~/smarteditor/docsupload.aspx"
+	>{enter here...}</cammWebEdit:SmartCommonMarkEditor>
+```
