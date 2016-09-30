@@ -294,10 +294,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 tempStr.Append("<TD>&nbsp;</TD>")
                                 tempStr.Append("<TD" & RowSeparator & "><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(dt.Rows(j)("ID_Group"), 0).ToString) & IIf(Utils.Nz(dt.Rows(j)("DevelopmentTeamMember"), False), "<b title=""Authorization for test and development purposes and for inactive security objects"">{Dev}</b>", "").ToString & "&nbsp;</P></TD>")
                                 Dim RuleTitleForGroup As String
-                                If MyDt.Columns.Contains("IsDenyRule") = True AndAlso Utils.Nz(dt.Rows(j).Item("IsDenyRule"), False) = True Then
+                                If dt.Columns.Contains("IsDenyRule") = True AndAlso Utils.Nz(dt.Rows(j).Item("IsDenyRule"), False) = True Then
                                     RuleTitleForGroup = "DENY"
                                 Else
                                     RuleTitleForGroup = "GRANT"
+                                    MyDt
                                 End If
                                 tempStr.Append("<TD" & RowSeparator & "><P class=""normalFont"" title=""Authorization for this group is set up as " & Server.HtmlEncode(RuleTitleForGroup) & """>" & Server.HtmlEncode(RuleTitleForGroup) & "</P></TD>")
                                 tempStr.Append("<TD" & RowSeparator & " WIDTH=""170""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(dt.Rows(j)("Name"), String.Empty)) & "</P></TD>")
