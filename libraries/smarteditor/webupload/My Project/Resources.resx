@@ -120,8 +120,17 @@
   <data name="Label_AltText" xml:space="preserve">
     <value>Alt(ternative) Text:</value>
   </data>
+  <data name="Label_AreYouSureToDeleteThisFile" xml:space="preserve">
+    <value>Are you sure you want to delete the following file:</value>
+  </data>
+  <data name="Label_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
   <data name="Label_DescriptionText" xml:space="preserve">
     <value>Link Description:</value>
+  </data>
+  <data name="Label_DocProcessingTips" xml:space="preserve">
+    <value>&lt;b&gt;Edit hints:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Only the following files can be uploaded: {0}&lt;br&gt;&lt;br&gt;2. The time it takes to upload the image depends on the bandwith of your internet connection. &lt;br&gt;&lt;br&gt;</value>
   </data>
   <data name="Label_DocumentPath" xml:space="preserve">
     <value>Documents Path:</value>
@@ -135,8 +144,20 @@
   <data name="Label_ImagePath" xml:space="preserve">
     <value>Image Path:</value>
   </data>
+  <data name="Label_ImageProcessingTips" xml:space="preserve">
+    <value>&lt;b&gt;Edit hints:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Only the following files can be uploaded: {0}&lt;br&gt;&lt;br&gt;2. The time it takes to upload the image depends on the bandwith of your internet connection. &lt;br&gt;&lt;br&gt;3. The dimensions of the file you are uploading should be higher than the selected dimensions. Otherwise the file will be uploaded without chnages.  &lt;br&gt;&lt;br&gt;</value>
+  </data>
+  <data name="Label_InsertDocument" xml:space="preserve">
+    <value>Insert document</value>
+  </data>
   <data name="Label_InsertSectionHeadline" xml:space="preserve">
     <value>Insert existing image</value>
+  </data>
+  <data name="Label_InsertToEditor" xml:space="preserve">
+    <value>Insert to editor</value>
+  </data>
+  <data name="Label_InvalidFileExtension" xml:space="preserve">
+    <value>Invalid file extension</value>
   </data>
   <data name="Label_LinkText" xml:space="preserve">
     <value>Link Text:</value>
@@ -159,11 +180,20 @@
   <data name="Label_OnlyFollowingExtensionsAreAllowed" xml:space="preserve">
     <value>Only the following file formats are allowed:</value>
   </data>
-  <data name="Label_ProcessingTips" xml:space="preserve">
-    <value>&lt;b&gt;Edit hints:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Only the following files can be uploaded: {0}&lt;br&gt;&lt;br&gt;2. The time it takes to upload the image depends on the bandwith of your internet connection. &lt;br&gt;&lt;br&gt;3. The dimensions of the file you are uploading should be higher than the selected dimensions. Otherwise the file will be uploaded without chnages.  &lt;br&gt;&lt;br&gt;</value>
+  <data name="Label_PleaseSelectFile" xml:space="preserve">
+    <value>Please select a file</value>
   </data>
-  <data name="Label_SelectFileToUpload" xml:space="preserve">
+  <data name="Label_SelectDocFileToUpload" xml:space="preserve">
+    <value>Please choose the document you want to upload</value>
+  </data>
+  <data name="Label_SelectImageFileToUpload" xml:space="preserve">
     <value>Please choose an image to upload</value>
+  </data>
+  <data name="Label_UploadedFiles" xml:space="preserve">
+    <value>Uploaded files</value>
+  </data>
+  <data name="Label_UploadedFileTooLarge" xml:space="preserve">
+    <value>Uploaded file is too large.</value>
   </data>
   <data name="Label_UploadFile" xml:space="preserve">
     <value>Upload</value>

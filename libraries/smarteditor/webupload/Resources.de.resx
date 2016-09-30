@@ -123,6 +123,9 @@
   <data name="Label_DescriptionText" xml:space="preserve">
     <value>Link Beschreibung:</value>
   </data>
+  <data name="Label_DocProcessingTips" xml:space="preserve">
+    <value>&lt;b&gt;Bearbeitungshinweise:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Es können nur folgende Datenformate auf den Server geladen werden: {0}&lt;br&gt;&lt;br&gt;2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. &lt;br&gt;&lt;br&gt;</value>
+  </data>
   <data name="Label_DocumentPath" xml:space="preserve">
     <value>Dokumenten Pfad:</value>
   </data>
@@ -135,8 +138,17 @@
   <data name="Label_ImagePath" xml:space="preserve">
     <value>Bild Pfad:</value>
   </data>
+  <data name="Label_ImageProcessingTips" xml:space="preserve">
+    <value>&lt;b&gt;Bearbeitungshinweise:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Es können nur folgende Datenformate auf den Server geladen werden: {0}&lt;br&gt;&lt;br&gt;2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. &lt;br&gt;&lt;br&gt;3. Bitte beachten Sie, dass die Pixelanzahl der Bilddatei, welche hochgeladen wird, stets größer sein sollte als die gewünschte Pixelgröße der Normalansicht. Ist dies nicht der Fall, werder die Dateien unverändert auf den Server hochgeladen. &lt;br&gt;&lt;br&gt;</value>
+  </data>
+  <data name="Label_InsertDocument" xml:space="preserve">
+    <value>Dokument einfügen</value>
+  </data>
   <data name="Label_InsertSectionHeadline" xml:space="preserve">
     <value>Bild einfügen</value>
+  </data>
+  <data name="Label_InvalidFileExtension" xml:space="preserve">
+    <value>Ungültige Datei-Erweiterung</value>
   </data>
   <data name="Label_LinkText" xml:space="preserve">
     <value>Link Text:</value>
@@ -159,13 +171,31 @@
   <data name="Label_OnlyFollowingExtensionsAreAllowed" xml:space="preserve">
     <value>Es können nur folgende Datenformate auf den Server geladen werden:</value>
   </data>
-  <data name="Label_ProcessingTips" xml:space="preserve">
-    <value>&lt;b&gt;Bearbeitungshinweise:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Es können nur folgende Datenformate auf den Server geladen werden: {0}&lt;br&gt;&lt;br&gt;2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. &lt;br&gt;&lt;br&gt;3. Bitte beachten Sie, dass die Pixelanzahl der Bilddatei, welche hochgeladen wird, stets größer sein sollte als die gewünschte Pixelgröße der Normalansicht. Ist dies nicht der Fall, werder die Dateien unverändert auf den Server hochgeladen. &lt;br&gt;&lt;br&gt;</value>
+  <data name="Label_SelectDocFileToUpload" xml:space="preserve">
+    <value>Wählen Sie eine Dokument zum Hochladen aus</value>
   </data>
-  <data name="Label_SelectFileToUpload" xml:space="preserve">
+  <data name="Label_SelectImageFileToUpload" xml:space="preserve">
     <value>Wählen Sie eine Bilddatei zum Hochladen aus</value>
+  </data>
+  <data name="Label_UploadedFileTooLarge" xml:space="preserve">
+    <value>Hochgeladene Datei ist zu groß.</value>
   </data>
   <data name="Label_UploadFile" xml:space="preserve">
     <value>Hochladen</value>
+  </data>
+  <data name="Label_AreYouSureToDeleteThisFile" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie folgende Datei löschen möchten:</value>
+  </data>
+  <data name="Label_Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Label_InsertToEditor" xml:space="preserve">
+    <value>Im Editor einfügen</value>
+  </data>
+  <data name="Label_PleaseSelectFile" xml:space="preserve">
+    <value>Bitte wählen Sie ein Datei aus</value>
+  </data>
+  <data name="Label_UploadedFiles" xml:space="preserve">
+    <value>Hochgeladene Dateien</value>
   </data>
 </root>

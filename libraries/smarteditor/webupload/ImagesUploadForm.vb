@@ -29,10 +29,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Private Configuration As New ConfigurationUploadSettings
 
         Private Sub PageOnInit(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
-            If Me.UploadParamters.AllowedFileExtensions.Length = 0 Then
-                Me.UploadParamters.AllowedFileExtensions = New String() {".jpg", ".jpeg", ".gif", ".png", ".bmp"}
-            End If
-
 
             'Initializes the object security
             InitializeSecurityObject()
@@ -103,9 +99,9 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
             'Localizations
             Me.LabelFileUploadFolder.Text = My.Resources.Label_FileUploadFolder
-            Me.LabelSelectFileToUpload.Text = My.Resources.Label_SelectFileToUpload
+            Me.LabelSelectFileToUpload.Text = My.Resources.Label_SelectImageFileToUpload
             Me.ButtonUploadFile.Text = My.Resources.Label_UploadFile
-            Me.LabelProcessingTips.Text = String.Format(My.Resources.Label_ProcessingTips, String.Join(", ", Me.UploadParamters.AllowedFileExtensions))
+            Me.LabelProcessingTips.Text = String.Format(My.Resources.Label_ImageProcessingTips, String.Join(", ", Me.UploadParamters.AllowedFileExtensions))
             Me.LabelImageDimensionQuestion.Text = My.Resources.Label_ImageDimensionQuestion
 
             Me.LabelMiniatureView.Text = My.Resources.Label_MiniatureView

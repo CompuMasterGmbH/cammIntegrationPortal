@@ -407,6 +407,9 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' -----------------------------------------------------------------------------
         <System.ComponentModel.TypeConverter(GetType(StringArrayConverter))> Public Property ImagesAllowedFileExtensions As String()
             Get
+                If _ImagesAllowedFileExtensions Is Nothing OrElse _DocumentsAllowedFileExtensions.Length = 0 Then
+                    _ImagesAllowedFileExtensions = New String() {".jpg", ".jpeg", ".gif", ".png", ".bmp"}
+                End If
                 Return _ImagesAllowedFileExtensions
             End Get
             Set(ByVal Value As String())
@@ -446,6 +449,9 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' -----------------------------------------------------------------------------
         <System.ComponentModel.TypeConverter(GetType(StringArrayConverter))> Public Property DocumentsAllowedFileExtensions As String()
             Get
+                If _DocumentsAllowedFileExtensions Is Nothing OrElse _DocumentsAllowedFileExtensions.Length = 0 Then
+                    _DocumentsAllowedFileExtensions = New String() {".docx", ".doc", ".odt", ".pdf", ".rtf"}
+                End If
                 Return _DocumentsAllowedFileExtensions
             End Get
             Set(ByVal Value As String())

@@ -18,7 +18,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             Me.ltrlLinkText.Text = My.Resources.Label_LinkText
         End Sub
 
-
     End Class
 
 End Namespace

@@ -9,18 +9,13 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
         Protected ltrlAltText As System.Web.UI.WebControls.Literal
         Protected ltrlImagePath As System.Web.UI.WebControls.Literal
+
         Protected Overrides Sub InternationalizeText()
             MyBase.InternationalizeText()
-            If Me.UILanguage = 2 Then
 
-                Me.ltrlAltText.Text = "Alt text:"
-                Me.ltrlImagePath.Text = "Bild Pfad:"
+            Me.ltrlAltText.Text = My.Resources.Label_AltText
+            Me.ltrlImagePath.Text = My.Resources.Label_ImagePath
 
-            Else
-                Me.ltrlAltText.Text = "Alt text:"
-                Me.ltrlImagePath.Text = "Image path:"
-
-            End If
         End Sub
 
 

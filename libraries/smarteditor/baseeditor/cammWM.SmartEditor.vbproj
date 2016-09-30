@@ -123,7 +123,7 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources.de-DE.resx" />
+    <EmbeddedResource Include="Resources.de.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="My Project\Application.myapp">

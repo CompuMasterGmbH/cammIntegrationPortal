@@ -55,7 +55,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages.Upload
 
 #Region "Properties"
 
-        Protected UploadParamters As CompuMaster.camm.SmartWebEditor.UploadFormParameters
+        Protected Friend UploadParamters As CompuMaster.camm.SmartWebEditor.UploadFormParameters
 
         Private Sub SetUploadParamters()
             Dim guid As String = Request.QueryString("key")

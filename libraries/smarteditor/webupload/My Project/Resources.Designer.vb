@@ -70,11 +70,38 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Are you sure you want to delete the following file: ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_AreYouSureToDeleteThisFile() As String
+            Get
+                Return ResourceManager.GetString("Label_AreYouSureToDeleteThisFile", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Delete ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_Delete() As String
+            Get
+                Return ResourceManager.GetString("Label_Delete", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Link Description: ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_DescriptionText() As String
             Get
                 Return ResourceManager.GetString("Label_DescriptionText", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die &lt;b&gt;Edit hints:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Only the following files can be uploaded: {0}&lt;br&gt;&lt;br&gt;2. The time it takes to upload the image depends on the bandwith of your internet connection. &lt;br&gt;&lt;br&gt; ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_DocProcessingTips() As String
+            Get
+                Return ResourceManager.GetString("Label_DocProcessingTips", resourceCulture)
             End Get
         End Property
         
@@ -115,11 +142,47 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die &lt;b&gt;Edit hints:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Only the following files can be uploaded: {0}&lt;br&gt;&lt;br&gt;2. The time it takes to upload the image depends on the bandwith of your internet connection. &lt;br&gt;&lt;br&gt;3. The dimensions of the file you are uploading should be higher than the selected dimensions. Otherwise the file will be uploaded without chnages.  &lt;br&gt;&lt;br&gt; ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_ImageProcessingTips() As String
+            Get
+                Return ResourceManager.GetString("Label_ImageProcessingTips", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Insert document ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_InsertDocument() As String
+            Get
+                Return ResourceManager.GetString("Label_InsertDocument", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Insert existing image ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_InsertSectionHeadline() As String
             Get
                 Return ResourceManager.GetString("Label_InsertSectionHeadline", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Insert to editor ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_InsertToEditor() As String
+            Get
+                Return ResourceManager.GetString("Label_InsertToEditor", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Invalid file extension ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_InvalidFileExtension() As String
+            Get
+                Return ResourceManager.GetString("Label_InvalidFileExtension", resourceCulture)
             End Get
         End Property
         
@@ -187,20 +250,47 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die &lt;b&gt;Edit hints:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Only the following files can be uploaded: {0}&lt;br&gt;&lt;br&gt;2. The time it takes to upload the image depends on the bandwith of your internet connection. &lt;br&gt;&lt;br&gt;3. The dimensions of the file you are uploading should be higher than the selected dimensions. Otherwise the file will be uploaded without chnages.  &lt;br&gt;&lt;br&gt; ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Please select a file ähnelt.
         '''</summary>
-        Friend ReadOnly Property Label_ProcessingTips() As String
+        Friend ReadOnly Property Label_PleaseSelectFile() As String
             Get
-                Return ResourceManager.GetString("Label_ProcessingTips", resourceCulture)
+                Return ResourceManager.GetString("Label_PleaseSelectFile", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Please choose the document you want to upload ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_SelectDocFileToUpload() As String
+            Get
+                Return ResourceManager.GetString("Label_SelectDocFileToUpload", resourceCulture)
             End Get
         End Property
         
         '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Please choose an image to upload ähnelt.
         '''</summary>
-        Friend ReadOnly Property Label_SelectFileToUpload() As String
+        Friend ReadOnly Property Label_SelectImageFileToUpload() As String
             Get
-                Return ResourceManager.GetString("Label_SelectFileToUpload", resourceCulture)
+                Return ResourceManager.GetString("Label_SelectImageFileToUpload", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Uploaded files ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_UploadedFiles() As String
+            Get
+                Return ResourceManager.GetString("Label_UploadedFiles", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Uploaded file is too large. ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_UploadedFileTooLarge() As String
+            Get
+                Return ResourceManager.GetString("Label_UploadedFileTooLarge", resourceCulture)
             End Get
         End Property
         

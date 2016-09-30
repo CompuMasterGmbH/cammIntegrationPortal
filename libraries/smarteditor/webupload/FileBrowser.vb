@@ -18,7 +18,7 @@ Option Explicit On
 Imports System.Web
 
 Namespace CompuMaster.camm.SmartWebEditor.Pages
-    Public Class FileBrowser
+    Public MustInherit Class FileBrowser
         Inherits System.Web.UI.UserControl
 
         Private _UploadFolderPath As String
@@ -93,7 +93,11 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Protected ltrlUploadedFiles As System.Web.UI.WebControls.Literal
 
 
-
+        Protected ReadOnly Property AllowedFileExtensions As String()
+            Get
+                Return CType(Me.Page, Pages.Upload.GeneralUploadForm).UploadParamters.AllowedFileExtensions
+            End Get
+        End Property
 
         ''' <summary>
         ''' Recursively reads all files from a directory and adds them to the listbox 
@@ -107,44 +111,54 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                 relativePath = relativePath.TrimStart(New Char() {"/"c, "\"c})
 
                 Dim fileName As String = System.IO.Path.GetFileName(file)
-                Dim listItem As New System.Web.UI.WebControls.ListItem
-                listItem.Text = fileName
 
-                Dim fullVirtualPathToFile As String
-                If virtualPath.EndsWith("/") Then
-                    fullVirtualPathToFile = virtualPath & relativePath
-                Else
-                    fullVirtualPathToFile = virtualPath & "/" & relativePath
+                If IsValidExtensionCaseInsensitive(Me.AllowedFileExtensions, System.IO.Path.GetExtension(fileName)) Then
+                    Dim listItem As New System.Web.UI.WebControls.ListItem
+                    listItem.Text = fileName
+
+                    Dim fullVirtualPathToFile As String
+                    If virtualPath.EndsWith("/") Then
+                        fullVirtualPathToFile = virtualPath & relativePath
+                    Else
+                        fullVirtualPathToFile = virtualPath & "/" & relativePath
+                    End If
+                    listItem.Value = UploadTools.FullyInterpretedVirtualPath(fullVirtualPathToFile.Replace("\"c, "/"c))
+                    Me.listBoxUploadedFiles.Items.Add(listItem)
                 End If
-                listItem.Value = UploadTools.FullyInterpretedVirtualPath(fullVirtualPathToFile.Replace("\"c, "/"c))
-                Me.listBoxUploadedFiles.Items.Add(listItem)
-
             Next
         End Sub
+
+        ''' <summary>
+        ''' Only show files matching of the white list (Attention: if no file extensions are set up as allowed, it's allowed to show all files)
+        ''' </summary>
+        ''' <param name="allowedFileExtensions"></param>
+        ''' <param name="fileExtension"></param>
+        ''' <returns></returns>
+        Private Function IsValidExtensionCaseInsensitive(allowedFileExtensions As String(), fileExtension As String) As Boolean
+            If allowedFileExtensions Is Nothing OrElse allowedFileExtensions.Length = 0 Then
+                Return True
+            ElseIf fileExtension = Nothing Then
+                Return False
+            Else
+                For MyCounter As Integer = 0 To allowedFileExtensions.Length - 1
+                    If allowedFileExtensions(MyCounter).ToLowerInvariant = fileExtension.ToLowerInvariant Then
+                        Return True
+                    End If
+                Next
+                Return False
+            End If
+        End Function
 
         Protected ConfirmDeletionText As String
         Protected PleaseSelectAFile As String
 
-
-        'TODO: maybe inherit for images and documents a filebrowser so we do not have this all here...
         Protected Overridable Sub InternationalizeText()
-            If Me.UILanguage = 2 Then
-                Me.ConfirmDeletionText = "Sind Sie sicher, dass Sie folgende Datei löschen möchten:"
-                Me.PleaseSelectAFile = "Bitte wählen Sie ein Datei aus"
-                Me.btnPasteToEditor.Text = "Im Editor einfügen"
+            Me.ConfirmDeletionText = My.Resources.Label_AreYouSureToDeleteThisFile
+            Me.PleaseSelectAFile = My.Resources.Label_PleaseSelectFile
+            Me.btnPasteToEditor.Text = My.Resources.Label_InsertToEditor
 
-                Me.ltrlUploadedFiles.Text = "Hochgeladene Dateien"
-                Me.btnDeleteFile.Text = "Löschen"
-
-            Else
-                Me.ConfirmDeletionText = "Are you sure you want to delete the following file:"
-                Me.PleaseSelectAFile = "Please select a file"
-                Me.btnPasteToEditor.Text = "Insert to editor"
-
-                Me.ltrlUploadedFiles.Text = "Uploaded files"
-                Me.btnDeleteFile.Text = "Delete"
-
-            End If
+            Me.ltrlUploadedFiles.Text = My.Resources.Label_UploadedFiles
+            Me.btnDeleteFile.Text = My.Resources.Label_Delete
         End Sub
 
         Public Sub AddReadOnlyDirectores()

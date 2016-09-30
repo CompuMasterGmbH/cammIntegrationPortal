@@ -29,10 +29,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Private Configuration As New ConfigurationUploadSettings
 
         Private Sub PageOnInit(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
-            If Me.UploadParamters.AllowedFileExtensions.Length = 0 Then
-                Me.UploadParamters.AllowedFileExtensions = New String() {".docx", ".doc", ".odt", ".pdf", ".rtf"}
-            End If
-
 
             'Initializes the object security
             InitializeSecurityObject()
@@ -66,63 +62,33 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
         Private Sub PageOnLoad(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
 
-
             'Initialize text
             Me.InitializeText()
 
             'Reset warnings
             Me.LabelWarning.Text = Nothing
 
-
             Me.InitializeControls()
-
-
-
 
         End Sub
 
-#Region " Initialize "
+#Region "Initialize "
 
         ''' <summary>
         '''     Initialize form text
         ''' </summary>
         Protected Overrides Sub InitializeText()
 
-            'ToDo: localize following strings
             'Localizations
-
-            If Me.cammWebManager.UI.LanguageID = 2 Then
-
-                Me.LabelSelectFileToUpload.Text = "Wählen Sie ein Dokument zum Hochladen aus"
-                Me.ButtonUploadFile.Text = "Hochladen"
-                Me.LabelProcessingTips.Text = "<b>Bearbeitungshinweise:</b><br><br>" &
-                                        "1. Es können nur folgende Datenformate auf den Server geladen werden: " & String.Join(", ", Me.UploadParamters.AllowedFileExtensions) & "<br><br>" &
-                                        "2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der " &
-                                        "Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. <br><br>"
-                Me.LabelFileUploadFolder.Text = "Dokument-Ablageort:"
-                Me.NoImageChosenJavascriptMessageText = "Bitte wählen Sie ein Dokument zum Hochladen aus."
-                Me.OnlyFollowingExtensionsAreAllowed = "Es können nur folgende Datenformate auf den Server geladen werden:"
-                Me.ltrlInsertSectionHeadline.Text = "Dokument einfügen"
-            Else
-                Me.LabelSelectFileToUpload.Text = "Please choose the document you want to upload"
-                Me.ButtonUploadFile.Text = "Upload"
-                Me.LabelProcessingTips.Text = "<b>Edit hints:</b><br><br>" &
-                                            "1. Only the following files can be uploaded: " & String.Join(", ", Me.UploadParamters.AllowedFileExtensions) & "<br><br>" &
-                                            "2. The time it takes to upload the image depends on the bandwith of your internet connection. <br><br>"
-
-                Me.LabelFileUploadFolder.Text = "Upload folder:"
-                Me.NoImageChosenJavascriptMessageText = "Please select the file which should be uploaded."
-                Me.OnlyFollowingExtensionsAreAllowed = "Only the following file formats are allowed:"
-                Me.ltrlInsertSectionHeadline.Text = "Insert document"
-            End If
-
-
-
-
-
+            Me.LabelSelectFileToUpload.Text = My.Resources.Label_SelectDocFileToUpload
+            Me.ButtonUploadFile.Text = My.Resources.Label_UploadFile
+            Me.LabelProcessingTips.Text = String.Format(My.Resources.Label_DocProcessingTips, String.Join(", ", Me.UploadParamters.AllowedFileExtensions))
+            Me.LabelFileUploadFolder.Text = My.Resources.Label_FileUploadFolder
+            Me.NoImageChosenJavascriptMessageText = My.Resources.Label_NoImageChosenJavascriptMessageText
+            Me.OnlyFollowingExtensionsAreAllowed = My.Resources.Label_OnlyFollowingExtensionsAreAllowed
+            Me.ltrlInsertSectionHeadline.Text = My.Resources.Label_InsertDocument
 
         End Sub
-
 
 #End Region
 
@@ -142,14 +108,14 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
             Dim ext As String = System.IO.Path.GetExtension(Me.InputFileUpload.PostedFile.FileName).ToLower
             If Not Me.IsAllowedExtension(ext) Then
-                Me.LabelWarning.Text = "Invalid file extension"
+                Me.LabelWarning.Text = My.Resources.Label_InvalidFileExtension
                 Exit Sub
             End If
 
             If Me.UploadParamters.MaxUploadSize > 0 Then
                 Dim fileSize As Integer = Me.InputFileUpload.PostedFile.ContentLength
                 If fileSize > Me.UploadParamters.MaxUploadSize Then
-                    LabelWarning.Text = "Uploaded file is too large."
+                    LabelWarning.Text = My.Resources.Label_UploadedFileTooLarge
                     Exit Sub
                 End If
             End If

@@ -16,6 +16,7 @@ Option Explicit On
 Option Strict On
 
 Namespace CompuMaster.camm.SmartWebEditor
+
     <Serializable()>
     Public Class UploadFormParameters
 
