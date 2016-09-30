@@ -37,14 +37,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected trAddBlank, trSubUser, trHeaders, trNoUserFound, trMain, trAddUserGroupDetails, trAddUserDetails As HtmlTableRow
         Protected gcDisabled As HtmlGenericControl
         Public iFieldCount As Integer
-        Dim MyDt, dt, dtApps As DataTable
-        Dim DA As SqlDataAdapter
-        Dim NewAppID, OldAppID As Integer
-        Dim FirstAppLine, DisplayNewHeaderUsers, DisplayNewHeaderGroups, DisplayShowAllUserLink, DisplayNewHeaderGroupsUsers As Boolean
-        Dim CurUserIsSecurityOperator, CurUserIsSecurityMaster, CurUserIsSupervisor As Boolean
-        Dim strQuery As String
         Public strShowAllUsers, strDeleteLink, strDeleteUserLink As String
-        Dim tempStr As Text.StringBuilder
+        Private MyDt As DataTable
+        Private dtApps As DataTable
 
         Private Sub AppRightsListLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
             Server.ScriptTimeout = 300
@@ -111,7 +106,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             TopClause = ""
 
-            strQuery =
+            Dim strQuery As String =
                 "select " & TopClause & " ID_Application,AppDisabled,AuthsAsAppID,TitleAdminArea,Title,AppReleasedByVorname,AppReleasedByID," &
                 "AppReleasedByNachname,AppReleasedOn,NavURL,(select top 1 Description from Languages l where l.ID=view_ApplicationRights.LanguageID) As Abbreviation,(select top 1 ServerDescription from System_Servers s where s.ID=view_ApplicationRights.LocationID) as ServerDescription " &
                 ",(SELECT top 1 AuthsAsAppID FROM Applications a WHERE a.ID = view_ApplicationRights.[AuthsAsAppID]) as NextAuthsAsAppID from [view_ApplicationRights] " & WhereClause.ToString & " group by ID_Application,AppDisabled,AuthsAsAppID,TitleAdminArea,Title,AppReleasedByVorname," &
@@ -129,7 +124,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Next
             dtApps = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(cmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
-            MyDt.Dispose()
+            'MyDt.Dispose()
             WhereClause = Nothing
         End Sub
 
@@ -177,7 +172,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Sub rptAppListItemBound(ByVal sender As Object, ByVal e As RepeaterItemEventArgs) Handles rptAppList.ItemDataBound
             If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
                 With dtApps.Rows(e.Item.ItemIndex)
-                    NewAppID = Utils.Nz(.Item("ID_Application"), 0)
+                    Dim NewAppID As Integer = Utils.Nz(.Item("ID_Application"), 0)
 
                     'If FirstAppLine Then FirstAppLine = False Else CType(e.Item.FindControl("trAddBlank"), HtmlTableRow).Style.Add("display", "")
                     If Not IsDBNull(.Item("AppDisabled")) Then If Utils.Nz(.Item("AppDisabled"), False) = True Then CType(e.Item.FindControl("gcDisabled"), HtmlGenericControl).Style.Add("display", "")
@@ -228,7 +223,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         End If
                     End If
 
-                    If Trim(Request.QueryString("Showall")) <> "" OrElse Trim(Request.QueryString("Application")) <> "" OrElse CurUserIsSecurityOperator Then
+                    If Trim(Request.QueryString("Showall")) <> "" OrElse Trim(Request.QueryString("Application")) <> "" OrElse Me.CurrentAdminIsSecurityOperator Then
                         If Me.CurrentAdminIsPrivilegedForItemAdministration(AdministrationItemType.Applications, AuthorizationTypeEffective.UpdateRelations, CType(.Item("ID_Application"), Integer)) Then
                             CType(e.Item.FindControl("ancAddGroupShowDetails"), HtmlAnchor).HRef = "apprights_new_groups.aspx?ID=" & Utils.Nz(.Item("ID_Application"), 0).ToString & "&AuthsAsAppID=" & CInt(Request.QueryString("AuthsAsAppID"))
                             CType(e.Item.FindControl("ancAddGroupShowDetails"), HtmlAnchor).InnerHtml = "Add Group"
@@ -240,7 +235,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         CType(e.Item.FindControl("ancAddGroupShowDetails"), HtmlAnchor).InnerHtml = "Show Details"
                     End If
 
-                    If CurUserIsSecurityMaster Or cammWebManager.System_GetSubAuthorizationStatus("Applications", CInt(.Item("ID_Application")), cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "Owner") Then
+                    If Me.CurrentAdminIsSecurityMaster(AdministrationItemType.Applications) OrElse cammWebManager.System_GetSubAuthorizationStatus("Applications", CInt(.Item("ID_Application")), cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "Owner") Then
                         If IsDBNull(.Item("TitleAdminArea")) Then
                             CType(e.Item.FindControl("ancSecurity"), HtmlAnchor).HRef = "adjust_delegates.aspx?ID=" & .Item("ID_Application").ToString & "&Type=Applications&Title=" & Server.UrlEncode(Utils.Nz(.Item("Title"), String.Empty))
                         ElseIf Utils.Nz(.Item("TitleAdminArea"), String.Empty) = "" Then
@@ -253,10 +248,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     End If
 
 
-                    If (Trim(Request.QueryString("Application")) <> "" OrElse Utils.Nz(Request.QueryString("Showall"), 0) = 1 OrElse CurUserIsSecurityOperator OrElse Trim(txtSearchUser.Text & "") <> "") Then
+                    If (Trim(Request.QueryString("Application")) <> "" OrElse Utils.Nz(Request.QueryString("Showall"), 0) = 1 OrElse Me.CurrentAdminIsSecurityOperator OrElse Trim(txtSearchUser.Text & "") <> "") Then
                         'Show all groups
-                        dt = New DataTable
-                        tempStr = New Text.StringBuilder
+                        Dim dt As New DataTable
+                        Dim tempStr As New Text.StringBuilder
+                        Dim strQuery As String
 
                         Dim sqlParams As SqlParameter() = {New SqlParameter("@AppID", NewAppID)}
                         If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
