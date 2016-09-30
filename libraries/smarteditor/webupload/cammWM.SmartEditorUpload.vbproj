@@ -69,6 +69,9 @@
   <ItemGroup>
     <Compile Include="ConfigurationUploadSettings.vb" />
     <Compile Include="ConfigurationUploadWebManager.vb" />
+    <Compile Include="DocumentsBrowser.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="DocumentsUploadForm.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -76,6 +79,9 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="FileBrowser.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ImageBrowser.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ProtectedUploadPage.vb">

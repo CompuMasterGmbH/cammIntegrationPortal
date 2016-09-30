@@ -25,10 +25,12 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages.Upload
 
         Protected WithEvents LabelFileUploadFolder As System.Web.UI.WebControls.Label
         Protected WithEvents LabelFileUploadFolderValue As System.Web.UI.WebControls.Label
+        Protected ltrlInsertSectionHeadline As System.Web.UI.WebControls.Literal
 
         Private Configuration As New ConfigurationUploadSettings
 
         Private Sub PageOnInit(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
+            SetUploadParamters()
             InitializeSecurityObject()
             cammWebManager.AuthorizeDocumentAccess(cammWebManager.SecurityObject)
             CreateUploadFolders()
@@ -70,11 +72,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages.Upload
 
             Me.UploadParamters = CType(formatter.Deserialize(memStreams), UploadFormParameters)
         End Sub
-
-        Private Sub PagePreInit(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.PreInit
-            SetUploadParamters()
-        End Sub
-
 
 #End Region
         Private Sub PageOnLoad(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load

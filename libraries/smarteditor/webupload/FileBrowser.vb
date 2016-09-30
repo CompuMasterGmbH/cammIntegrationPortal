@@ -72,12 +72,28 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             End Set
         End Property
 
+        Private _UILanguage As Integer
+        Public Property UILanguage() As Integer
+            Get
+                Return _UILanguage
+            End Get
+            Set(value As Integer)
+                _UILanguage = value
+            End Set
+        End Property
+
 
         Protected listBoxUploadedFiles As System.Web.UI.WebControls.ListBox
         Protected WithEvents btnDeleteFile As System.Web.UI.WebControls.Button
         Protected lblDeletionMessage As System.Web.UI.WebControls.Label
         Protected btnPasteToEditor As System.Web.UI.WebControls.Button
         Protected txtBoxFilePath As System.Web.UI.WebControls.TextBox
+
+
+        Protected ltrlUploadedFiles As System.Web.UI.WebControls.Literal
+
+
+
 
         ''' <summary>
         ''' Recursively reads all files from a directory and adds them to the listbox 
@@ -87,13 +103,48 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Private Sub AddFilesToListBoxRecursively(ByVal physicalPath As String, ByVal virtualPath As String)
             For Each file As String In System.IO.Directory.GetFiles(physicalPath, "*.*", IO.SearchOption.AllDirectories)
                 Dim relativePath As String = file.Replace(physicalPath, String.Empty)
+                'nobody assures that physicalpath contains a trailing slash...
+                relativePath = relativePath.TrimStart(New Char() {"/"c, "\"c})
+
                 Dim fileName As String = System.IO.Path.GetFileName(file)
                 Dim listItem As New System.Web.UI.WebControls.ListItem
                 listItem.Text = fileName
-                listItem.Value = UploadTools.FullyInterpretedVirtualPath(System.IO.Path.Combine(virtualPath, relativePath).Replace("\"c, "/"c))
+
+                Dim fullVirtualPathToFile As String
+                If virtualPath.EndsWith("/") Then
+                    fullVirtualPathToFile = virtualPath & relativePath
+                Else
+                    fullVirtualPathToFile = virtualPath & "/" & relativePath
+                End If
+                listItem.Value = UploadTools.FullyInterpretedVirtualPath(fullVirtualPathToFile.Replace("\"c, "/"c))
                 Me.listBoxUploadedFiles.Items.Add(listItem)
 
             Next
+        End Sub
+
+        Protected ConfirmDeletionText As String
+        Protected PleaseSelectAFile As String
+
+
+        'TODO: maybe inherit for images and documents a filebrowser so we do not have this all here...
+        Protected Overridable Sub InternationalizeText()
+            If Me.UILanguage = 2 Then
+                Me.ConfirmDeletionText = "Sind Sie sicher, dass Sie folgende Datei löschen möchten:"
+                Me.PleaseSelectAFile = "Bitte wählen Sie ein Datei aus"
+                Me.btnPasteToEditor.Text = "Im Editor einfügen"
+
+                Me.ltrlUploadedFiles.Text = "Hochgeladene Dateien"
+                Me.btnDeleteFile.Text = "Löschen"
+
+            Else
+                Me.ConfirmDeletionText = "Are you sure you want to delete the following file:"
+                Me.PleaseSelectAFile = "Please select a file"
+                Me.btnPasteToEditor.Text = "Insert to editor"
+
+                Me.ltrlUploadedFiles.Text = "Uploaded files"
+                Me.btnDeleteFile.Text = "Delete"
+
+            End If
         End Sub
 
         Public Sub AddReadOnlyDirectores()
@@ -141,6 +192,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
         End Sub
         Private Sub Control_Init(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
+
             If Not Me.Page.EnableViewStateMac Then
                 Throw New Exception("ViewStateMac must be enabled")
             End If
@@ -158,6 +210,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
             Me.btnPasteToEditor.Visible = Not Me.EditorId = ""
         End Sub
         Private Sub Control_PreRender(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.PreRender
+            InternationalizeText()
             Me.FillUploadedFilesListBox()
             Me.listBoxUploadedFiles.Attributes.Add("onchange", "listBoxOnChange(this.value)")
 

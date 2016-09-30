@@ -52,6 +52,8 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Protected CheckBoxImageReduction As System.Web.UI.WebControls.CheckBox
         Protected LabelUploadedImageNames As System.Web.UI.WebControls.Label
 
+        Protected NoImageChosenJavascriptMessageText As String
+        Protected OnlyFollowingExtensionsAreAllowed As String
 
 
 
@@ -70,6 +72,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                 fileBrowser.ParentWindowCallbackFunction = Me.UploadParamters.JavaScriptCallBackFunctionName
                 fileBrowser.EditorId = Me.UploadParamters.EditorClientId
                 fileBrowser.CloseWindowAfterInsertion = True
+                fileBrowser.UILanguage = Me.cammWebManager.UI.LanguageID
             End If
         End Sub
 
@@ -99,14 +102,33 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
             'ToDo: localize following strings
             'Localizations
-            Me.LabelFileUploadFolder.Text = "Dokument-Ablageort:"
 
-            Me.LabelSelectFileToUpload.Text = "Wählen Sie ein Dokument zum Hochladen aus"
-            Me.ButtonUploadFile.Text = "Hochladen"
-            Me.LabelProcessingTips.Text = "<b>Bearbeitungshinweise:</b><br><br>" &
+            If Me.cammWebManager.UI.LanguageID = 2 Then
+
+                Me.LabelSelectFileToUpload.Text = "Wählen Sie ein Dokument zum Hochladen aus"
+                Me.ButtonUploadFile.Text = "Hochladen"
+                Me.LabelProcessingTips.Text = "<b>Bearbeitungshinweise:</b><br><br>" &
                                         "1. Es können nur folgende Datenformate auf den Server geladen werden: " & String.Join(", ", Me.UploadParamters.AllowedFileExtensions) & "<br><br>" &
                                         "2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der " &
                                         "Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. <br><br>"
+                Me.LabelFileUploadFolder.Text = "Dokument-Ablageort:"
+                Me.NoImageChosenJavascriptMessageText = "Bitte wählen Sie ein Dokument zum Hochladen aus."
+                Me.OnlyFollowingExtensionsAreAllowed = "Es können nur folgende Datenformate auf den Server geladen werden:"
+                Me.ltrlInsertSectionHeadline.Text = "Dokument einfügen"
+            Else
+                Me.LabelSelectFileToUpload.Text = "Please choose the document you want to upload"
+                Me.ButtonUploadFile.Text = "Upload"
+                Me.LabelProcessingTips.Text = "<b>Edit hints:</b><br><br>" &
+                                            "1. Only the following files can be uploaded: " & String.Join(", ", Me.UploadParamters.AllowedFileExtensions) & "<br><br>" &
+                                            "2. The time it takes to upload the image depends on the bandwith of your internet connection. <br><br>"
+
+                Me.LabelFileUploadFolder.Text = "Upload folder:"
+                Me.NoImageChosenJavascriptMessageText = "Please select the file which should be uploaded."
+                Me.OnlyFollowingExtensionsAreAllowed = "Only the following file formats are allowed:"
+                Me.ltrlInsertSectionHeadline.Text = "Insert document"
+            End If
+
+
 
 
 

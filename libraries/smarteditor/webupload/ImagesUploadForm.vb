@@ -64,6 +64,11 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Protected TextBoxMiniatureMaxHeight As System.Web.UI.WebControls.TextBox
         Protected TextBoxNormalMaxHeight As System.Web.UI.WebControls.TextBox
 
+        Protected LabelOriginalView As System.Web.UI.WebControls.Label
+        Protected CheckBoxOriginalView As System.Web.UI.WebControls.CheckBox
+
+
+
 
 
 #End Region
@@ -80,6 +85,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                 fileBrowser.ParentWindowCallbackFunction = Me.UploadParamters.JavaScriptCallBackFunctionName
                 fileBrowser.EditorId = Me.UploadParamters.EditorClientId
                 fileBrowser.CloseWindowAfterInsertion = True
+                fileBrowser.UILanguage = Me.cammWebManager.UI.LanguageID
             End If
         End Sub
 
@@ -104,6 +110,9 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
 #Region " Initialize "
 
+        Protected NoImageChosenJavascriptMessageText As String
+        Protected OnlyFollowingExtensionsAreAllowed As String
+
         ''' <summary>
         '''     Initialize form text
         ''' </summary>
@@ -111,26 +120,55 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
             'ToDo: localize following strings
             'Localizations
-            Me.LabelFileUploadFolder.Text = "Bild-Ablageort:"
 
-            Me.LabelSelectFileToUpload.Text = "Wählen Sie eine Bilddatei zum Hochladen"
-            Me.ButtonUploadFile.Text = "Hochladen"
-            Me.LabelProcessingTips.Text = "<b>Bearbeitungshinweise:</b><br><br>" &
-                                        "1. Es können nur folgende Datenformate auf den Server geladen werden: " & String.Join(", ", Me.UploadParamters.AllowedFileExtensions) & "<br><br>" &
-                                        "2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der " &
-                                        "Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. <br><br>" &
-                                        "3. Bitte beachten Sie, dass die Pixelanzahl der Bilddatei, welche hochgeladen wird, stets größer ist als die " &
-                                        "gewünschte Pixelgröße der Normalansicht. Ist dies nicht der Fall, werder die Dateien unverändert auf den Server hochgeladen. <br><br>" &
-                                        ""
+            If Me.cammWebManager.UI.LanguageID = 2 Then
+                Me.LabelFileUploadFolder.Text = "Bild-Ablageort:"
+
+                Me.LabelSelectFileToUpload.Text = "Wählen Sie eine Bilddatei zum Hochladen aus"
+                Me.ButtonUploadFile.Text = "Hochladen"
+                Me.LabelProcessingTips.Text = "<b>Bearbeitungshinweise:</b><br><br>" &
+                                            "1. Es können nur folgende Datenformate auf den Server geladen werden: " & String.Join(", ", Me.UploadParamters.AllowedFileExtensions) & "<br><br>" &
+                                            "2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der " &
+                                            "Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. <br><br>" &
+                                            "3. Bitte beachten Sie, dass die Pixelanzahl der Bilddatei, welche hochgeladen wird, stets größer sein sollte als die " &
+                                            "gewünschte Pixelgröße der Normalansicht. Ist dies nicht der Fall, werder die Dateien unverändert auf den Server hochgeladen. <br><br>" &
+                                            ""
 
 
-            Me.LabelImageDimensionQuestion.Text = "<b>Welche Dimensionen benötigen Sie?</b><br>" &
-                                                "Beim Resampling bleibt das Seitenverhältnis erhalten"
+                Me.LabelImageDimensionQuestion.Text = "<b>Welche Dimensionen benötigen Sie?</b><br>" &
+                                                    "Beim Resampling bleibt das Seitenverhältnis erhalten"
 
-            Me.LabelMiniatureView.Text = "Miniaturansicht"
-            Me.LabelNormalView.Text = "Normalansicht"
-            Me.LabelMaxWidth.Text = "Max. Breite"
-            Me.LabelMaxHeight.Text = "Max. Höhe"
+                Me.LabelMiniatureView.Text = "Miniaturansicht"
+                Me.LabelNormalView.Text = "Normalansicht"
+                Me.LabelMaxWidth.Text = "Max. Breite"
+                Me.LabelMaxHeight.Text = "Max. Höhe"
+                Me.NoImageChosenJavascriptMessageText = "Bitte wählen Sie eine Bilddatei zum Hochladen aus."
+                Me.OnlyFollowingExtensionsAreAllowed = "Es können nur folgende Datenformate auf den Server geladen werden:"
+                Me.ltrlInsertSectionHeadline.Text = "Bild einfügen"
+            Else
+                Me.LabelFileUploadFolder.Text = "Upload Folder:"
+
+                Me.LabelSelectFileToUpload.Text = "Please choose an image to upload"
+                Me.ButtonUploadFile.Text = "Upload"
+                Me.LabelProcessingTips.Text = "<b>Edit hints:</b><br><br>" &
+                                            "1. Only the following files can be uploaded: " & String.Join(", ", Me.UploadParamters.AllowedFileExtensions) & "<br><br>" &
+                                            "2. The time it takes to upload the image depends on the bandwith of your internet connection. <br><br>" &
+                                            "3. The dimensions of the file you are uploading should be higher than the selected dimensions. Otherwise the file will be uploaded without chnages.  <br><br>" &
+                                            ""
+
+
+                Me.LabelImageDimensionQuestion.Text = "<b>Which dimensions do you need?</b><br>" &
+                                                    "The resampling retains the aspect ratio"
+
+                Me.LabelMiniatureView.Text = "Miniature view"
+                Me.LabelNormalView.Text = "Normal view"
+                Me.LabelMaxWidth.Text = "Max. Width"
+                Me.LabelMaxHeight.Text = "Max. Height"
+                Me.NoImageChosenJavascriptMessageText = "Please select the file which should be uploaded."
+                Me.OnlyFollowingExtensionsAreAllowed = "Only the following file formats are allowed:"
+                Me.ltrlInsertSectionHeadline.Text = "Insert existing image"
+            End If
+
 
         End Sub
 
@@ -236,7 +274,8 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
                     End Try
                     files.Add(System.IO.Path.GetFileName(fPath))
                 End If
-            Else
+            End If
+            If Me.CheckBoxOriginalView.Checked Then
                 Dim fileName As String = System.IO.Path.GetFileNameWithoutExtension(Me.InputFileUpload.PostedFile.FileName) & "_" & Now.ToString("yyyyMMddHHmmss") & System.IO.Path.GetExtension(Me.InputFileUpload.PostedFile.FileName)
                 Dim fPath As String = HttpContext.Current.Server.MapPath(Me.UploadParamters.UploadPath) & System.IO.Path.DirectorySeparatorChar & fileName
 

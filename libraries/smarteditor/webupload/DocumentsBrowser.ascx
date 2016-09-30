@@ -1,12 +1,12 @@
 ﻿<%@ import Namespace="System.Drawing" %>
 <%@ import Namespace="System.IO" %>
 <%@ import Namespace="System.Web.UI.WebControls" %>
-<%@ Control Language="VB" Inherits=" CompuMaster.camm.SmartWebEditor.Pages.FileBrowser" %>
+<%@ Control Language="VB" Inherits=" CompuMaster.camm.SmartWebEditor.Pages.DocumentsBrowser" %>
         <script>
 	    function confirmDeletion()
 		{
 			var selectedFile = document.getElementById('listBoxUploadedFiles').value;
-			return confirm('Are you sure you want to delete the following file: ' + selectedFile + '?')
+			return confirm('<%=Me.ConfirmDeletionText%> ' + selectedFile + '?');
 		}
 		
 	    function passPathToEditor()
@@ -14,7 +14,7 @@
 	        var filePath = document.getElementById('<%=txtBoxFilePath.ClientID%>').value;
 	        if (filePath == '')
 		    {
-		        alert('Please select a file');
+		          alert('<%=Me.PleaseSelectAFile%>');
 		        return false;
 	        }
             var descriptionText = document.getElementById('<%=txtBoxDescription.ClientID%>').value;
@@ -37,25 +37,26 @@
          }
 		</script>
 		<div id="imagebrowser">
-		<b><asp:Literal runat="server" ID="ltrlUploadedFiles" Text="Uploaded documents"/></b><br>
+		<b><asp:Literal runat="server" ID="ltrlUploadedFiles" /></b><br>
 		<asp:ListBox runat="server" id="listBoxUploadedFiles" ClientIdMode="Static" style="width: 600px;" Rows=10  />
 	
-		<p><b>Document Path:</b> <asp:TextBox runat="server" ID="txtBoxFilePath" width="400px" ReadOnly="true" /></p>
-           
-        <p><b>Description Text:</b> <input type="text" runat="server" id="txtBoxDescription" /></p>
+            
+		<p><b> <asp:Literal runat="server" ID="ltrlDocumentPath" /></b> <asp:TextBox runat="server" ID="txtBoxFilePath" width="400px" ReadOnly="true" /></p>
+        <p><b> <asp:Literal runat="server" ID="ltrlDescriptionText" /></b> <input type="text" runat="server" id="txtBoxDescription" /></p>
 
-        <p><b>Link text:</b> <input type="text" runat="server" id="txtBoxLinkText" /></p>
+        <p><b><asp:Literal runat="server" ID="ltrlLinkText" /></b> <input type="text" runat="server" id="txtBoxLinkText" /></p>
 
         <p><b>Target</b> <asp:DropDownList runat="server" ID ="dropDownTarget">
+            <asp:ListItem></asp:ListItem>
             <asp:ListItem>_blank</asp:ListItem>
             <asp:ListItem>_parent</asp:ListItem>
             <asp:ListItem>_self</asp:ListItem>
             <asp:ListItem>_top</asp:ListItem>
 
-                         </asp:DropDownList>
+                   </asp:DropDownList>
 
         </p>
 		<p><asp:Label runat="server" id="lblDeletionMessage" EnableViewState="false"></asp:Label></p>
 
-		<p><asp:Button runat="server" ID="btnPasteToEditor" Text="Insert to editor"  /> <asp:Button runat="server" id="btnDeleteFile" onClientClick="return confirmDeletion();" Text="Delete"></asp:Button></p>
+		<p><asp:Button runat="server" ID="btnPasteToEditor"  /> <asp:Button runat="server" id="btnDeleteFile" onClientClick="return confirmDeletion();"></asp:Button></p>
 		</div>

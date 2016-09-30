@@ -19,7 +19,7 @@
 			{
 				if ((e.value == null) || (e.value == ""))
 				{
-					alert('Bitte wählen Sie eine Bilddatei zum hochladen aus.');
+					alert('<%=Me.NoImageChosenJavascriptMessageText%>');
 					e.focus();
 					return false;		
 				}
@@ -31,7 +31,7 @@
 						return true;
 					}
 					else {
-						alert('Es können nur folgende Datenformate auf den Server geladen werden: JPEGs, GIFs, PNGs und BMPs.');
+						alert('<%=Me.OnlyFollowingExtensionsAreAllowed%> <%=String.Join(""",""", Me.UploadParamters.AllowedFileExtensions)%>');
 						e.value = "";
 						thisForm.reset();
 						e.focus();
@@ -42,7 +42,14 @@
 		}
 		return true;
 	}
-		
+			
+			
+		function setUploadButtonState()
+		{
+			var oneCheckBoxChecked = document.getElementById('<%=Me.CheckBoxMiniatureView.ClientId%>').checked || document.getElementById('<%=Me.CheckBoxNormalView.ClientId%>').checked || document.getElementById('<%=Me.CheckBoxOriginalView.ClientId%>').checked; 
+			document.getElementById('<%=Me.ButtonUploadFile.ClientId%>').disabled = !oneCheckBoxChecked; 
+
+		}
 		</script>
 		<link href="/Styles.css" type="text/css" rel="stylesheet">
 	</HEAD>
@@ -64,11 +71,15 @@
 											<td width="150"></td>
 											<td width="150">
 												<asp:Label Runat="server" ID="LabelMiniatureView" Font-Bold="True" />&nbsp;
-												<asp:CheckBox Runat="server" ID="CheckBoxMiniatureView" Checked="True" /></td>
+												<asp:CheckBox Runat="server" ID="CheckBoxMiniatureView" Checked="True" onclick="setUploadButtonState()" /></td>
+											<td width="50"></td>
+											<td width="150">
+												<asp:Label Runat="server" ID="LabelNormalView" Font-Bold="True" />&nbsp;
+												<asp:CheckBox Runat="server" ID="CheckBoxNormalView" Checked="True" onclick="setUploadButtonState()" /></td>
 											<td width="50"></td>
 											<td>
-												<asp:Label Runat="server" ID="LabelNormalView" Font-Bold="True" />&nbsp;
-												<asp:CheckBox Runat="server" ID="CheckBoxNormalView" Checked="True" /></td>
+												<asp:Label Runat="server" ID="LabelOriginalView" Font-Bold="True" Text="Original" />&nbsp;
+												<asp:CheckBox Runat="server" ID="CheckBoxOriginalView" Checked="True" onclick="setUploadButtonState()" /></td>
 										</tr>
 										<tr valign="bottom">
 											<td width="150"><img src="/system/modules/smartwcms/images/maxwidth.gif" width="20" height="20">&nbsp;
@@ -76,8 +87,10 @@
 											<td>
 												<asp:TextBox Runat="server" ID="TextBoxMiniatureMaxWidth" Columns="9" />&nbsp;Pixel</td>
 											<td width="50"></td>
-											<td>
+											<td width="150">
 												<asp:TextBox Runat="server" ID="TextBoxNormalMaxWidth" Columns="9" />&nbsp;Pixel</td>
+											<td width="50"></td>
+											<td>&nbsp;</td>
 										</tr>
 										<tr valign="bottom">
 											<td><img src="/system/modules/smartwcms/images/maxheight.gif" width="20" height="20">&nbsp;
@@ -85,8 +98,10 @@
 											<td>
 												<asp:TextBox Runat="server" ID="TextBoxMiniatureMaxHeight" Columns="9" />&nbsp;Pixel</td>
 											<td width="50"></td>
-											<td>
+											<td width="150">
 												<asp:TextBox Runat="server" ID="TextBoxNormalMaxHeight" Columns="9" />&nbsp;Pixel</td>
+											<td width="50"></td>
+											<td>&nbsp;</td>
 										</tr>
 									</table>
 				
@@ -98,8 +113,10 @@
 		<p><asp:Label Runat="server" ID="LabelProcessingTips" /></p>
 		
 		</div>
-	<hr>		
+
+		<hr>		
 	
+		<h1><asp:Literal runat="server" ID="ltrlInsertSectionHeadline" /></h1>
 		<SmartWebEditor:FileBrowser  id="FileBrowserControl" runat="server" />		
 			
 

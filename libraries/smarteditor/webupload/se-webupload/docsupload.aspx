@@ -19,7 +19,7 @@
 			{
 				if ((e.value == null) || (e.value == ""))
 				{
-				    alert('Please choose a document to upload.');
+				    alert('<%=Me.NoImageChosenJavascriptMessageText%>');
 					e.focus();
 					return false;		
 				}
@@ -31,7 +31,7 @@
 						return true;
 					}
 					else {
-						alert('Invalid file format');
+							alert('<%=Me.OnlyFollowingExtensionsAreAllowed%> <%=String.Join(""",""", Me.UploadParamters.AllowedFileExtensions)%>');
 						e.value = "";
 						thisForm.reset();
 						e.focus();
@@ -68,9 +68,11 @@
 		<p><asp:Label Runat="server" ID="LabelProcessingTips" /></p>
 		
 		</div>
-	<hr>		
+
+		<hr>		
 	
-		<SmartWebEditor:FileBrowser  id="FileBrowserControl" runat="server" />		
+		<h1><asp:Literal runat="server" ID="ltrlInsertSectionHeadline" /></h1>
+        <SmartWebEditor:FileBrowser  id="FileBrowserControl" runat="server" />		
 			
 
 		</form>
