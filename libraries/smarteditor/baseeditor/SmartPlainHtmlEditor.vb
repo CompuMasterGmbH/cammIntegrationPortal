@@ -141,11 +141,11 @@ Namespace CompuMaster.camm.SmartWebEditor
 
                 Me.ImageUploadFormOpenerButton = New System.Web.UI.WebControls.Button()
                 AssignOnClientClickAttribute(Me.ImageUploadFormOpenerButton, "window.open('" & Me.GenerateImageUploadFormUrl() & "','UploadForm','location=no,hotkeys=no,toolbar=no,dependent=yes,scrollbars=yes'); return false;")
-                Me.ImageUploadFormOpenerButton.Text = "Upload image"
+                Me.ImageUploadFormOpenerButton.Text = "Insert image"
 
                 Me.DocsUploadFormOpenerButton = New System.Web.UI.WebControls.Button()
                 AssignOnClientClickAttribute(Me.DocsUploadFormOpenerButton, "window.open('" & Me.GenerateDocumentsUploadUrl() & "','UploadForm','location=no,hotkeys=no,toolbar=no,dependent=yes,scrollbars=yes'); return false;")
-                Me.DocsUploadFormOpenerButton.Text = "Upload document"
+                Me.DocsUploadFormOpenerButton.Text = "Insert document"
 
 
 
