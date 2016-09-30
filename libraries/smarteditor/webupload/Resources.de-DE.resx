@@ -117,40 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Label_AltText" xml:space="preserve">
+    <value>Alt(ternative) Text:</value>
+  </data>
+  <data name="Label_DescriptionText" xml:space="preserve">
+    <value>Link Beschreibung:</value>
+  </data>
+  <data name="Label_DocumentPath" xml:space="preserve">
+    <value>Dokumenten Pfad:</value>
+  </data>
   <data name="Label_FileUploadFolder" xml:space="preserve">
-    <value>Upload Folder:</value>
+    <value>Bild-Ablageort:</value>
   </data>
   <data name="Label_ImageDimensionQuestion" xml:space="preserve">
-    <value>&lt;b&gt;Which dimensions do you need?&lt;/b&gt;&lt;br&gt;The resampling retains the aspect ratio</value>
+    <value>&lt;b&gt;Welche Dimensionen benötigen Sie?&lt;/b&gt;&lt;br&gt;Beim Resampling bleibt das Seitenverhältnis erhalten</value>
+  </data>
+  <data name="Label_ImagePath" xml:space="preserve">
+    <value>Bild Pfad:</value>
   </data>
   <data name="Label_InsertSectionHeadline" xml:space="preserve">
-    <value>Insert existing image</value>
+    <value>Bild einfügen</value>
+  </data>
+  <data name="Label_LinkText" xml:space="preserve">
+    <value>Link Text:</value>
   </data>
   <data name="Label_MaxHeight" xml:space="preserve">
-    <value>Max. Height</value>
+    <value>Max. Höhe</value>
   </data>
   <data name="Label_MaxWidth" xml:space="preserve">
-    <value>Max. Width</value>
+    <value>Max. Breite</value>
   </data>
   <data name="Label_MiniatureView" xml:space="preserve">
-    <value>Miniature view</value>
+    <value>Miniaturansicht</value>
   </data>
   <data name="Label_NoImageChosenJavascriptMessageText" xml:space="preserve">
-    <value>Please select the file which should be uploaded.</value>
+    <value>Bitte wählen Sie eine Bilddatei zum Hochladen aus.</value>
   </data>
   <data name="Label_NormalView" xml:space="preserve">
-    <value>Normal view</value>
+    <value>Normalansicht</value>
   </data>
   <data name="Label_OnlyFollowingExtensionsAreAllowed" xml:space="preserve">
-    <value>Only the following file formats are allowed:</value>
+    <value>Es können nur folgende Datenformate auf den Server geladen werden:</value>
   </data>
   <data name="Label_ProcessingTips" xml:space="preserve">
-    <value>&lt;b&gt;Edit hints:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Only the following files can be uploaded: {0}&lt;br&gt;&lt;br&gt;2. The time it takes to upload the image depends on the bandwith of your internet connection. &lt;br&gt;&lt;br&gt;3. The dimensions of the file you are uploading should be higher than the selected dimensions. Otherwise the file will be uploaded without chnages.  &lt;br&gt;&lt;br&gt;</value>
+    <value>&lt;b&gt;Bearbeitungshinweise:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Es können nur folgende Datenformate auf den Server geladen werden: {0}&lt;br&gt;&lt;br&gt;2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. &lt;br&gt;&lt;br&gt;3. Bitte beachten Sie, dass die Pixelanzahl der Bilddatei, welche hochgeladen wird, stets größer sein sollte als die gewünschte Pixelgröße der Normalansicht. Ist dies nicht der Fall, werder die Dateien unverändert auf den Server hochgeladen. &lt;br&gt;&lt;br&gt;</value>
   </data>
   <data name="Label_SelectFileToUpload" xml:space="preserve">
-    <value>Please choose an image to upload</value>
+    <value>Wählen Sie eine Bilddatei zum Hochladen aus</value>
   </data>
   <data name="Label_UploadFile" xml:space="preserve">
-    <value>Upload</value>
+    <value>Hochladen</value>
   </data>
 </root>

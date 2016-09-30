@@ -61,7 +61,34 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Bild-Ablageort: ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Alt(ternative) Text: ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_AltText() As String
+            Get
+                Return ResourceManager.GetString("Label_AltText", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Link Description: ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_DescriptionText() As String
+            Get
+                Return ResourceManager.GetString("Label_DescriptionText", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Documents Path: ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_DocumentPath() As String
+            Get
+                Return ResourceManager.GetString("Label_DocumentPath", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Upload Folder: ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_FileUploadFolder() As String
             Get
@@ -70,7 +97,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die &lt;b&gt;Welche Dimensionen benötigen Sie?&lt;/b&gt;&lt;br&gt;Beim Resampling bleibt das Seitenverhältnis erhalten ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die &lt;b&gt;Which dimensions do you need?&lt;/b&gt;&lt;br&gt;The resampling retains the aspect ratio ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_ImageDimensionQuestion() As String
             Get
@@ -79,7 +106,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Bild einfügen ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Image Path: ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_ImagePath() As String
+            Get
+                Return ResourceManager.GetString("Label_ImagePath", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Insert existing image ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_InsertSectionHeadline() As String
             Get
@@ -88,7 +124,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Max. Höhe ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Link Text: ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_LinkText() As String
+            Get
+                Return ResourceManager.GetString("Label_LinkText", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Max. Height ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_MaxHeight() As String
             Get
@@ -97,7 +142,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Max. Breite ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Max. Width ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_MaxWidth() As String
             Get
@@ -106,7 +151,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Miniaturansicht ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Miniature view ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_MiniatureView() As String
             Get
@@ -115,7 +160,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Bitte wählen Sie eine Bilddatei zum Hochladen aus. ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Please select the file which should be uploaded. ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_NoImageChosenJavascriptMessageText() As String
             Get
@@ -124,7 +169,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Normalansicht ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Normal view ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_NormalView() As String
             Get
@@ -133,7 +178,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Es können nur folgende Datenformate auf den Server geladen werden: ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Only the following file formats are allowed: ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_OnlyFollowingExtensionsAreAllowed() As String
             Get
@@ -142,7 +187,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die &lt;b&gt;Bearbeitungshinweise:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Es können nur folgende Datenformate auf den Server geladen werden: {0}&lt;br&gt;&lt;br&gt;2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. &lt;br&gt;&lt;br&gt;3. Bitte beachten Sie, dass die Pixelanzahl der Bilddatei, welche hochgeladen wird, stets größer sein sollte als die gewünschte Pixelgröße der Normalansic [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die &lt;b&gt;Edit hints:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Only the following files can be uploaded: {0}&lt;br&gt;&lt;br&gt;2. The time it takes to upload the image depends on the bandwith of your internet connection. &lt;br&gt;&lt;br&gt;3. The dimensions of the file you are uploading should be higher than the selected dimensions. Otherwise the file will be uploaded without chnages.  &lt;br&gt;&lt;br&gt; ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_ProcessingTips() As String
             Get
@@ -151,7 +196,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Wählen Sie eine Bilddatei zum Hochladen aus ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Please choose an image to upload ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_SelectFileToUpload() As String
             Get
@@ -160,7 +205,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Hochladen ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Upload ähnelt.
         '''</summary>
         Friend ReadOnly Property Label_UploadFile() As String
             Get
