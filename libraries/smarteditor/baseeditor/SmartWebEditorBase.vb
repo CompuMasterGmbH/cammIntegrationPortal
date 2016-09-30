@@ -225,15 +225,22 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If configValue = Nothing Then
                         Return "/sysdata/modules/smarteditor/imagesupload.aspx"
                     End If
-                    Return VirtualPathUtility.ToAbsolute(configValue)
+                    Return VirtualPathUtilityToAbsolute(configValue)
                 End If
-                Return VirtualPathUtility.ToAbsolute(_ImagesUploadFormUrl)
+                Return VirtualPathUtilityToAbsolute(_ImagesUploadFormUrl)
             End Get
             Set(value As String)
                 _ImagesUploadFormUrl = value
             End Set
         End Property
 
+        Private Function VirtualPathUtilityToAbsolute(path As String) As String
+            If path <> Nothing AndAlso path.StartsWith("~/") Then
+                Return VirtualPathUtility.ToAbsolute(path)
+            Else
+                Return path
+            End If
+        End Function
 
         Private __DocumentsUploadFormUrl As String
         ''' <summary>
@@ -247,9 +254,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If configValue = Nothing Then
                         Return "/sysdata/modules/smarteditor/docsupload.aspx"
                     End If
-                    Return VirtualPathUtility.ToAbsolute(configValue)
+                    Return VirtualPathUtilityToAbsolute(configValue)
                 End If
-                Return VirtualPathUtility.ToAbsolute(__DocumentsUploadFormUrl)
+                Return VirtualPathUtilityToAbsolute(__DocumentsUploadFormUrl)
             End Get
             Set(value As String)
                 __DocumentsUploadFormUrl = value
@@ -269,9 +276,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If configValue = Nothing Then
                         Return ""
                     End If
-                    Return VirtualPathUtility.ToAbsolute(configValue)
+                    Return VirtualPathUtilityToAbsolute(configValue)
                 End If
-                Return VirtualPathUtility.ToAbsolute(_ImagesUploadPath)
+                Return VirtualPathUtilityToAbsolute(_ImagesUploadPath)
             End Get
             Set(value As String)
                 _ImagesUploadPath = value
@@ -291,9 +298,9 @@ Namespace CompuMaster.camm.SmartWebEditor
                     If configValue = Nothing Then
                         Return ""
                     End If
-                    Return VirtualPathUtility.ToAbsolute(configValue)
+                    Return VirtualPathUtilityToAbsolute(configValue)
                 End If
-                Return VirtualPathUtility.ToAbsolute(_DocumentsUploadPath)
+                Return VirtualPathUtilityToAbsolute(_DocumentsUploadPath)
             End Get
             Set(value As String)
                 _DocumentsUploadPath = value
