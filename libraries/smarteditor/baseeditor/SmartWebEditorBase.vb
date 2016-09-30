@@ -302,6 +302,29 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property
 
+        Private _Docs As String
+
+
+        Public Property Docs As String
+            Get
+                Return Me.DocumentsUploadPath
+            End Get
+            Set(value As String)
+                Me.DocumentsUploadPath = value
+            End Set
+        End Property
+
+        Private _images As String
+
+        Public Property Images As String
+            Get
+                Return Me.ImagesUploadPath
+            End Get
+            Set(value As String)
+                Me.ImagesUploadPath = value
+            End Set
+        End Property
+
 
         Private _ImagesUploadSizeMax As Integer = 512000
         ''' -----------------------------------------------------------------------------
@@ -338,6 +361,14 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property
 
+        Public Property DocsUploadSizeMax As Integer
+            Get
+                Return Me.DocumentsUploadSizeMax
+            End Get
+            Set(value As Integer)
+                Me.DocumentsUploadSizeMax = value
+            End Set
+        End Property
 
 
         Private _ImagesReadOnly As String() = New String() {}
