@@ -245,8 +245,12 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.pnlEditorToolbar.Controls.Add(SaveButton)
                     Me.pnlEditorToolbar.Controls.Add(ActivateButton)
                     Me.pnlEditorToolbar.Controls.Add(PreviewButton)
-                    Me.pnlEditorToolbar.Controls.Add(ImageUploadFormOpenerButton)
-                    Me.pnlEditorToolbar.Controls.Add(DocsUploadFormOpenerButton)
+                    If Me.ImagesUploadPath <> "" Then
+                        Me.pnlEditorToolbar.Controls.Add(ImageUploadFormOpenerButton)
+                    End If
+                    If Me.DocumentsUploadPath <> "" Then
+                        Me.pnlEditorToolbar.Controls.Add(DocsUploadFormOpenerButton)
+                    End If
                     If Me.MarketLookupMode <> MarketLookupModes.SingleMarket Then
                         InitializeLanguageDropDownList()
                         Me.pnlEditorToolbar.Controls.Add(Me.LanguagesDropDownBox)
