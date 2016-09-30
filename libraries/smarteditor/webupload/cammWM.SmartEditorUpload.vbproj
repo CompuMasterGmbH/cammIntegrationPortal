@@ -134,13 +134,13 @@
     <None Include="_CreateNewNuGetPackage\RunMeToUploadNuGetPackage.cmd" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DocumentsBrowser.ascx">
+    <Content Include="se-webupload\DocumentsBrowser.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="ImageBrowser.ascx">
+    <Content Include="se-webupload\ImageBrowser.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="FileBrowser.ascx">
+    <Content Include="se-webupload\FileBrowser.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="se-webupload\images\height.gif" />
