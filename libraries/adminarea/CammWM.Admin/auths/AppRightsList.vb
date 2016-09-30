@@ -38,8 +38,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected gcDisabled As HtmlGenericControl
         Public iFieldCount As Integer
         Public strShowAllUsers, strDeleteLink, strDeleteUserLink As String
-        Private MyDt As DataTable
-        Private dtApps As DataTable
+        Private DataTableAuths As DataTable
+        Private DataTableApps As DataTable
 
         Private Sub AppRightsListLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
             Server.ScriptTimeout = 300
@@ -57,7 +57,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             Dim CurUserIsSecurityOperator As Boolean
             Dim CurUserIsSecurityMaster As Boolean
 
-            MyDt = New DataTable
+            DataTableAuths = New DataTable
 
             CurUserIsSecurityOperator = cammWebManager.System_IsSecurityOperator(cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))
             CurUserIsSecurityMaster = cammWebManager.System_IsSecurityMaster("Applications", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))
@@ -122,7 +122,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             For myCounter As Integer = 0 To searchItems.Length - 1
                 cmd.Parameters.Add("@SearchItem" & myCounter, SqlDbType.NVarChar).Value = searchItems(myCounter)
             Next
-            dtApps = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(cmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+            DataTableApps = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.FillDataTable(cmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
             'MyDt.Dispose()
             WhereClause = Nothing
@@ -136,7 +136,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             CurUserIsSupervisor = cammWebManager.System_IsSuperVisor(cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))
             If CurUserIsSecurityOperator AndAlso (CurUserIsSecurityMaster Or CurUserIsSupervisor) Then CurUserIsSecurityOperator = False
 
-            iFieldCount = CInt(Val(MyDt.Columns.Count & ""))
+            iFieldCount = CInt(Val(DataTableAuths.Columns.Count & ""))
             If Trim(Request.QueryString("Application")) = "" Then tdSearchApp.Visible = True Else tdSearchApp.Visible = False
             Dim strBlr As New Text.StringBuilder
 
@@ -154,13 +154,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             If True Then
                 FirstAppLine = True
 
-                If Not dtApps Is Nothing AndAlso dtApps.Rows.Count > 0 Then
-                    rptAppList.DataSource = dtApps
+                If Not DataTableApps Is Nothing AndAlso DataTableApps.Rows.Count > 0 Then
+                    rptAppList.DataSource = DataTableApps
                     rptAppList.DataBind()
                 Else
                     tdErrMsg.InnerHtml = "There are no applications available for administration."
                 End If
-                MyDt.Dispose()
             End If
         End Sub
 
@@ -171,7 +170,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <param name="e"></param>
         Private Sub rptAppListItemBound(ByVal sender As Object, ByVal e As RepeaterItemEventArgs) Handles rptAppList.ItemDataBound
             If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
-                With dtApps.Rows(e.Item.ItemIndex)
+                With DataTableApps.Rows(e.Item.ItemIndex)
                     Dim NewAppID As Integer = Utils.Nz(.Item("ID_Application"), 0)
 
                     'If FirstAppLine Then FirstAppLine = False Else CType(e.Item.FindControl("trAddBlank"), HtmlTableRow).Style.Add("display", "")
@@ -325,7 +324,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                                 'Show all member users of current group
                                 If Not Request.QueryString("ShowAllUsers") Is Nothing AndAlso Utils.Nz(Request.QueryString("ShowAllUsers"), 0) = 1 Then
-                                    MyDt = New DataTable
+                                    DataTableAuths = New DataTable
                                     strQuery = "SELECT * " & vbNewLine &
                                         "FROM [view_Memberships] " & vbNewLine &
                                         "WHERE ID_Group = " & Utils.Nz(dt.Rows(j)("ID_Group"), 0).ToString & " " & vbNewLine &
@@ -359,8 +358,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                         "           )" & vbNewLine &
                                         "       ) " & vbNewLine &
                                         "ORDER BY Nachname, Name, ID_Group, Vorname"
-                                    MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
-                                    If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 AndAlso Not (MyDt.Rows.Count = 1 AndAlso IsDBNull(MyDt.Rows(0)("ID_User"))) Then
+                                    DataTableAuths = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, Nothing, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+                                    If Not DataTableAuths Is Nothing AndAlso DataTableAuths.Rows.Count > 0 AndAlso Not (DataTableAuths.Rows.Count = 1 AndAlso IsDBNull(DataTableAuths.Rows(0)("ID_User"))) Then
                                         tempStr.Append("<TR><TD>&nbsp;</TD>")
                                         tempStr.Append("<TD colspan=""5"">")
                                         tempStr.Append("<TABLE WIDTH=""100%"" CELLSPACING=""0"" CELLPADDING=""3"" border=""0"">")
@@ -372,22 +371,22 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                         tempStr.Append("<TD class=""boldFontHeader""><P class=""boldFont"">Company&nbsp;</P></TD>")
                                         tempStr.Append("</TR>")
 
-                                        For i As Integer = 0 To MyDt.Rows.Count - 1
+                                        For i As Integer = 0 To DataTableAuths.Rows.Count - 1
                                             Dim MemberRowSeparator As String = ""
                                             If i > 0 Then MemberRowSeparator = " style=""border-top: solid 1px; border-color: lightgray;"""
                                             tempStr.Append("<TR>")
                                             tempStr.Append("<TD>&nbsp;</TD>")
-                                            tempStr.Append("<TD" & MemberRowSeparator & "><P class=""normalFont"">" & Utils.Nz(MyDt.Rows(i)("ID_User"), 0) & "&nbsp;</P></TD>")
+                                            tempStr.Append("<TD" & MemberRowSeparator & "><P class=""normalFont"">" & Utils.Nz(DataTableAuths.Rows(i)("ID_User"), 0) & "&nbsp;</P></TD>")
                                             Dim RuleTitle As String
-                                            If Utils.Nz(MyDt.Rows(i).Item("IsDenyRule"), False) = True Then
+                                            If Utils.Nz(DataTableAuths.Rows(i).Item("IsDenyRule"), False) = True Then
                                                 RuleTitle = "DENY"
                                             Else
                                                 RuleTitle = "GRANT"
                                             End If
                                             tempStr.Append("<TD" & MemberRowSeparator & "><P class=""normalFont"" title=""Membership for this user to this group is set up as " & Server.HtmlEncode(RuleTitle) & """>" & Server.HtmlEncode(RuleTitle) & "&nbsp;</P></TD>")
-                                            tempStr.Append("<TD" & MemberRowSeparator & " WIDTH=""170""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(i)("Nachname"), String.Empty)) & ", " & Server.HtmlEncode(Utils.Nz(MyDt.Rows(i)("Vorname"), String.Empty)) & "&nbsp;</P></TD>")
-                                            tempStr.Append("<TD" & MemberRowSeparator & " WIDTH=""200""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(i)("LoginName"), String.Empty)) & "&nbsp;</P></TD>")
-                                            tempStr.Append("<TD" & MemberRowSeparator & "><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(i)("Company"), String.Empty)) & "&nbsp;</P></TD>")
+                                            tempStr.Append("<TD" & MemberRowSeparator & " WIDTH=""170""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(DataTableAuths.Rows(i)("Nachname"), String.Empty)) & ", " & Server.HtmlEncode(Utils.Nz(DataTableAuths.Rows(i)("Vorname"), String.Empty)) & "&nbsp;</P></TD>")
+                                            tempStr.Append("<TD" & MemberRowSeparator & " WIDTH=""200""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(DataTableAuths.Rows(i)("LoginName"), String.Empty)) & "&nbsp;</P></TD>")
+                                            tempStr.Append("<TD" & MemberRowSeparator & "><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(DataTableAuths.Rows(i)("Company"), String.Empty)) & "&nbsp;</P></TD>")
                                             tempStr.Append("</TR>")
                                         Next
 
@@ -411,7 +410,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         End If
 
                         'Show authorized users
-                        MyDt = New DataTable
+                        DataTableAuths = New DataTable
                         tempStr = New Text.StringBuilder
                         Dim sqlParams1 As SqlParameter() = {New SqlParameter("@AppID", NewAppID)}
                         If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsAdminViewWithCompanyField) < 0 Then
@@ -424,9 +423,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             'Newer / IsDenyRule column available
                             strQuery = "select companyname,name1,LoginDisabled,DevelopmentTeamMember,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_User,Nachname,Vorname,LoginName, IsDenyRule,ID_ServerGroup,IsSupervisorAutoAccessRule from [view_ApplicationRights] where id_application=@AppID and isnull(ID_User,0)<>0 order by Nachname, CompanyName, IsDenyRule"
                         End If
-                        MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, sqlParams1, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
+                        DataTableAuths = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, sqlParams1, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
-                        If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then
+                        If Not DataTableAuths Is Nothing AndAlso DataTableAuths.Rows.Count > 0 Then
                             tempStr.Append("<TABLE WIDTH=""100%"" CELLSPACING=""0"" CELLPADDING=""3"" border=""0"" bordercolor=""#FFFFFF"">")
                             tempStr.Append("<TR>")
                             tempStr.Append("<TD WIDTH=""30"">&nbsp;</TD>")
@@ -444,16 +443,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             End If
                             tempStr.Append("</P></TD></TR>")
 
-                            For RowCounterI As Integer = 0 To MyDt.Rows.Count - 1
+                            For RowCounterI As Integer = 0 To DataTableAuths.Rows.Count - 1
                                 Dim RowSeparator As String = ""
                                 If RowCounterI > 0 Then RowSeparator = " style=""border-top: solid 1px; border-color: lightgray;"""
                                 tempStr.Append("<TR>")
                                 tempStr.Append("<TD>&nbsp;</TD>")
-                                tempStr.Append("<TD" & RowSeparator & "><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("ID_User"), 0).ToString) & IIf(Utils.Nz(MyDt.Rows(RowCounterI)("DevelopmentTeamMember"), False), "<b title=""Authorization for test and development purposes and for inactive security objects"">{Dev}</b>", "").ToString)
-                                If Utils.Nz(MyDt.Rows(RowCounterI)("LoginDisabled"), False) = True Then tempStr.Append("<nobr title=""Disabled user account"">(D)</nobr>")
+                                tempStr.Append("<TD" & RowSeparator & "><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(DataTableAuths.Rows(RowCounterI)("ID_User"), 0).ToString) & IIf(Utils.Nz(DataTableAuths.Rows(RowCounterI)("DevelopmentTeamMember"), False), "<b title=""Authorization for test and development purposes and for inactive security objects"">{Dev}</b>", "").ToString)
+                                If Utils.Nz(DataTableAuths.Rows(RowCounterI)("LoginDisabled"), False) = True Then tempStr.Append("<nobr title=""Disabled user account"">(D)</nobr>")
                                 tempStr.Append("&nbsp;</P></TD>")
                                 Dim RuleTitle As String
-                                If MyDt.Columns.Contains("IsDenyRule") = True AndAlso Utils.Nz(MyDt.Rows(RowCounterI).Item("IsDenyRule"), False) = True Then
+                                If DataTableAuths.Columns.Contains("IsDenyRule") = True AndAlso Utils.Nz(DataTableAuths.Rows(RowCounterI).Item("IsDenyRule"), False) = True Then
                                     RuleTitle = "DENY"
                                 Else
                                     RuleTitle = "GRANT"
@@ -462,17 +461,17 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 tempStr.Append("<TD" & RowSeparator & " WIDTH=""170""><P class=""normalFont"">")
 
                                 If Me.CurrentDbVersion.Build >= WMSystem.MilestoneDBBuildNumber_Build147 Then
-                                    tempStr.Append(Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("Name1"), String.Empty)))
+                                    tempStr.Append(Server.HtmlEncode(Utils.Nz(DataTableAuths.Rows(RowCounterI)("Name1"), String.Empty)))
                                 Else
-                                    tempStr.Append(Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("VorName"), String.Empty)) + " " + Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("NachName"), String.Empty)))
+                                    tempStr.Append(Server.HtmlEncode(Utils.Nz(DataTableAuths.Rows(RowCounterI)("VorName"), String.Empty)) + " " + Server.HtmlEncode(Utils.Nz(DataTableAuths.Rows(RowCounterI)("NachName"), String.Empty)))
                                 End If
 
                                 tempStr.Append("&nbsp;</P></TD>")
-                                tempStr.Append("<TD" & RowSeparator & " WIDTH=""200""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("LoginName"), String.Empty)) & "&nbsp;</P></TD>")
-                                tempStr.Append("<TD" & RowSeparator & " WIDTH=""200""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(MyDt.Rows(RowCounterI)("CompanyName"), String.Empty)) & "&nbsp;</P></TD>")
+                                tempStr.Append("<TD" & RowSeparator & " WIDTH=""200""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(DataTableAuths.Rows(RowCounterI)("LoginName"), String.Empty)) & "&nbsp;</P></TD>")
+                                tempStr.Append("<TD" & RowSeparator & " WIDTH=""200""><P class=""normalFont"">" & Server.HtmlEncode(Utils.Nz(DataTableAuths.Rows(RowCounterI)("CompanyName"), String.Empty)) & "&nbsp;</P></TD>")
                                 tempStr.Append("<TD" & RowSeparator & "><P class=""normalFont"">")
-                                If IsDBNull(MyDt.Rows(RowCounterI)("ThisAuthIsFromAppID")) Then
-                                    If Not IsDBNull(MyDt.Rows(RowCounterI)("ID_AppRight")) Then tempStr.Append("<a href=""apprights_delete_users.aspx?ID=" & Utils.Nz(MyDt.Rows(RowCounterI)("ID_AppRight"), 0) & "&AuthsAsAppID=" & Utils.Nz(MyDt.Rows(RowCounterI)("AuthsAsAppID"), 0).ToString & """>Delete</a>")
+                                If IsDBNull(DataTableAuths.Rows(RowCounterI)("ThisAuthIsFromAppID")) Then
+                                    If Not IsDBNull(DataTableAuths.Rows(RowCounterI)("ID_AppRight")) Then tempStr.Append("<a href=""apprights_delete_users.aspx?ID=" & Utils.Nz(DataTableAuths.Rows(RowCounterI)("ID_AppRight"), 0) & "&AuthsAsAppID=" & Utils.Nz(DataTableAuths.Rows(RowCounterI)("AuthsAsAppID"), 0).ToString & """>Delete</a>")
                                 Else
                                     tempStr.Append("<em>Inherited</em>")
                                 End If
@@ -481,11 +480,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 tempStr.Append("</TR>")
 
                                 'Additional info on single-servergroup-rules
-                                If MyDt.Columns.Contains("ID_ServerGroup") = True AndAlso CType(MyDt.Rows(RowCounterI).Item("ID_ServerGroup"), Integer) <> 0 Then
+                                If DataTableAuths.Columns.Contains("ID_ServerGroup") = True AndAlso CType(DataTableAuths.Rows(RowCounterI).Item("ID_ServerGroup"), Integer) <> 0 Then
                                     tempStr.Append("<TR>")
                                     tempStr.Append("<TD COLSPAN=""3"">&nbsp;</TD>")
                                     tempStr.Append("<TD COLSPAN=""3""><P class=""normalFont"">")
-                                    tempStr.Append("<em>Applies only to server group: " & ServerGroupTitle(CType(MyDt.Rows(RowCounterI).Item("ID_ServerGroup"), Integer)) & "</em>")
+                                    tempStr.Append("<em>Applies only to server group: " & ServerGroupTitle(CType(DataTableAuths.Rows(RowCounterI).Item("ID_ServerGroup"), Integer)) & "</em>")
                                     tempStr.Append("&nbsp;</P></TD>")
                                     tempStr.Append("<TD COLSPAN=""1"">&nbsp;</TD>")
                                     tempStr.Append("</TR>")
