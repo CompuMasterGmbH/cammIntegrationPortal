@@ -269,7 +269,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 If _ImagesUploadPath = Nothing Then
                     Dim configValue As String = Me.Configuration.ImagesUploadPath
                     If configValue = Nothing Then
-                        Return "images/"
+                        Return ""
                     End If
                     Return configValue
                 End If
@@ -291,7 +291,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 If _DocumentsUploadPath = Nothing Then
                     Dim configValue As String = Me.Configuration.DocumentsUploadPath
                     If configValue = Nothing Then
-                        Return "documents/"
+                        Return ""
                     End If
                     Return configValue
                 End If
@@ -305,7 +305,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         Private _Docs As String
 
 
-        Public Property Docs As String
+        <Obsolete("Use DocsUploadPath instead")> Public Property Docs As String
             Get
                 Return Me.DocumentsUploadPath
             End Get
@@ -316,7 +316,7 @@ Namespace CompuMaster.camm.SmartWebEditor
 
         Private _images As String
 
-        Public Property Images As String
+        <Obsolete("Use ImagesUploadPath instead")> Public Property Images As String
             Get
                 Return Me.ImagesUploadPath
             End Get
