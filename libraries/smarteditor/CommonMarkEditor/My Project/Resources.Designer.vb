@@ -59,5 +59,14 @@ Namespace My.Resources
                 resourceCulture = value
             End Set
         End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Help ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_Help() As String
+            Get
+                Return ResourceManager.GetString("Label_Help", resourceCulture)
+            End Get
+        End Property
     End Module
 End Namespace

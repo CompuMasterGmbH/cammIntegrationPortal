@@ -46,9 +46,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
         End Sub
 
-#Region " Protected Variables "
-
-
         Protected CheckBoxImageReduction As System.Web.UI.WebControls.CheckBox
         Protected LabelUploadedImageNames As System.Web.UI.WebControls.Label
 
@@ -67,16 +64,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         Protected LabelOriginalView As System.Web.UI.WebControls.Label
         Protected CheckBoxOriginalView As System.Web.UI.WebControls.CheckBox
 
-
-
-
-
-#End Region
-
-#Region "Properties"
-
-#End Region
-
         Private Sub InitializeControls()
             Dim fileBrowser As FileBrowser = CType(Me.Page.FindControl("FileBrowserControl"), FileBrowser)
             If Not fileBrowser Is Nothing Then
@@ -91,7 +78,6 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
         Private Sub PageOnLoad(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
 
-
             'Initialize text
             Me.InitializeText()
 
@@ -103,12 +89,9 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
             Me.InitializeControls()
 
-
-
-
         End Sub
 
-#Region " Initialize "
+#Region "Initialize "
 
         Protected NoImageChosenJavascriptMessageText As String
         Protected OnlyFollowingExtensionsAreAllowed As String
@@ -118,57 +101,20 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
         ''' </summary>
         Protected Overrides Sub InitializeText()
 
-            'ToDo: localize following strings
             'Localizations
+            Me.LabelFileUploadFolder.Text = My.Resources.Label_FileUploadFolder
+            Me.LabelSelectFileToUpload.Text = My.Resources.Label_SelectFileToUpload
+            Me.ButtonUploadFile.Text = My.Resources.Label_UploadFile
+            Me.LabelProcessingTips.Text = String.Format(My.Resources.Label_ProcessingTips, String.Join(", ", Me.UploadParamters.AllowedFileExtensions))
+            Me.LabelImageDimensionQuestion.Text = My.Resources.Label_ImageDimensionQuestion
 
-            If Me.cammWebManager.UI.LanguageID = 2 Then
-                Me.LabelFileUploadFolder.Text = "Bild-Ablageort:"
-
-                Me.LabelSelectFileToUpload.Text = "Wählen Sie eine Bilddatei zum Hochladen aus"
-                Me.ButtonUploadFile.Text = "Hochladen"
-                Me.LabelProcessingTips.Text = "<b>Bearbeitungshinweise:</b><br><br>" &
-                                            "1. Es können nur folgende Datenformate auf den Server geladen werden: " & String.Join(", ", Me.UploadParamters.AllowedFileExtensions) & "<br><br>" &
-                                            "2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der " &
-                                            "Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. <br><br>" &
-                                            "3. Bitte beachten Sie, dass die Pixelanzahl der Bilddatei, welche hochgeladen wird, stets größer sein sollte als die " &
-                                            "gewünschte Pixelgröße der Normalansicht. Ist dies nicht der Fall, werder die Dateien unverändert auf den Server hochgeladen. <br><br>" &
-                                            ""
-
-
-                Me.LabelImageDimensionQuestion.Text = "<b>Welche Dimensionen benötigen Sie?</b><br>" &
-                                                    "Beim Resampling bleibt das Seitenverhältnis erhalten"
-
-                Me.LabelMiniatureView.Text = "Miniaturansicht"
-                Me.LabelNormalView.Text = "Normalansicht"
-                Me.LabelMaxWidth.Text = "Max. Breite"
-                Me.LabelMaxHeight.Text = "Max. Höhe"
-                Me.NoImageChosenJavascriptMessageText = "Bitte wählen Sie eine Bilddatei zum Hochladen aus."
-                Me.OnlyFollowingExtensionsAreAllowed = "Es können nur folgende Datenformate auf den Server geladen werden:"
-                Me.ltrlInsertSectionHeadline.Text = "Bild einfügen"
-            Else
-                Me.LabelFileUploadFolder.Text = "Upload Folder:"
-
-                Me.LabelSelectFileToUpload.Text = "Please choose an image to upload"
-                Me.ButtonUploadFile.Text = "Upload"
-                Me.LabelProcessingTips.Text = "<b>Edit hints:</b><br><br>" &
-                                            "1. Only the following files can be uploaded: " & String.Join(", ", Me.UploadParamters.AllowedFileExtensions) & "<br><br>" &
-                                            "2. The time it takes to upload the image depends on the bandwith of your internet connection. <br><br>" &
-                                            "3. The dimensions of the file you are uploading should be higher than the selected dimensions. Otherwise the file will be uploaded without chnages.  <br><br>" &
-                                            ""
-
-
-                Me.LabelImageDimensionQuestion.Text = "<b>Which dimensions do you need?</b><br>" &
-                                                    "The resampling retains the aspect ratio"
-
-                Me.LabelMiniatureView.Text = "Miniature view"
-                Me.LabelNormalView.Text = "Normal view"
-                Me.LabelMaxWidth.Text = "Max. Width"
-                Me.LabelMaxHeight.Text = "Max. Height"
-                Me.NoImageChosenJavascriptMessageText = "Please select the file which should be uploaded."
-                Me.OnlyFollowingExtensionsAreAllowed = "Only the following file formats are allowed:"
-                Me.ltrlInsertSectionHeadline.Text = "Insert existing image"
-            End If
-
+            Me.LabelMiniatureView.Text = My.Resources.Label_MiniatureView
+            Me.LabelNormalView.Text = My.Resources.Label_NormalView
+            Me.LabelMaxWidth.Text = My.Resources.Label_MaxWidth
+            Me.LabelMaxHeight.Text = My.Resources.Label_MaxHeight
+            Me.NoImageChosenJavascriptMessageText = My.Resources.Label_NoImageChosenJavascriptMessageText
+            Me.OnlyFollowingExtensionsAreAllowed = My.Resources.Label_OnlyFollowingExtensionsAreAllowed
+            Me.ltrlInsertSectionHeadline.Text = My.Resources.Label_InsertSectionHeadline
 
         End Sub
 

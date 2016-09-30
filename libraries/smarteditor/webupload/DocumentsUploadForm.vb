@@ -46,23 +46,11 @@ Namespace CompuMaster.camm.SmartWebEditor.Pages
 
         End Sub
 
-#Region " Protected Variables "
-
-
         Protected CheckBoxImageReduction As System.Web.UI.WebControls.CheckBox
         Protected LabelUploadedImageNames As System.Web.UI.WebControls.Label
 
         Protected NoImageChosenJavascriptMessageText As String
         Protected OnlyFollowingExtensionsAreAllowed As String
-
-
-
-
-#End Region
-
-#Region "Properties"
-
-#End Region
 
         Private Sub InitializeControls()
             Dim fileBrowser As FileBrowser = CType(Me.Page.FindControl("FileBrowserControl"), FileBrowser)

@@ -59,5 +59,113 @@ Namespace My.Resources
                 resourceCulture = value
             End Set
         End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Bild-Ablageort: ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_FileUploadFolder() As String
+            Get
+                Return ResourceManager.GetString("Label_FileUploadFolder", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die &lt;b&gt;Welche Dimensionen benötigen Sie?&lt;/b&gt;&lt;br&gt;Beim Resampling bleibt das Seitenverhältnis erhalten ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_ImageDimensionQuestion() As String
+            Get
+                Return ResourceManager.GetString("Label_ImageDimensionQuestion", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Bild einfügen ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_InsertSectionHeadline() As String
+            Get
+                Return ResourceManager.GetString("Label_InsertSectionHeadline", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Max. Höhe ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_MaxHeight() As String
+            Get
+                Return ResourceManager.GetString("Label_MaxHeight", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Max. Breite ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_MaxWidth() As String
+            Get
+                Return ResourceManager.GetString("Label_MaxWidth", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Miniaturansicht ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_MiniatureView() As String
+            Get
+                Return ResourceManager.GetString("Label_MiniatureView", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Bitte wählen Sie eine Bilddatei zum Hochladen aus. ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_NoImageChosenJavascriptMessageText() As String
+            Get
+                Return ResourceManager.GetString("Label_NoImageChosenJavascriptMessageText", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Normalansicht ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_NormalView() As String
+            Get
+                Return ResourceManager.GetString("Label_NormalView", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Es können nur folgende Datenformate auf den Server geladen werden: ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_OnlyFollowingExtensionsAreAllowed() As String
+            Get
+                Return ResourceManager.GetString("Label_OnlyFollowingExtensionsAreAllowed", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die &lt;b&gt;Bearbeitungshinweise:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Es können nur folgende Datenformate auf den Server geladen werden: {0}&lt;br&gt;&lt;br&gt;2. Je nach Ihrer Internetanbindung ist die max. Dateigröße sowie die max. Übertragungsdauer limitiert. Falls der Ladevorgang mehrmals automatisch abgebrochen wird, reduzieren Sie die Dateigröße der Datei und versuchen Sie es erneut. &lt;br&gt;&lt;br&gt;3. Bitte beachten Sie, dass die Pixelanzahl der Bilddatei, welche hochgeladen wird, stets größer sein sollte als die gewünschte Pixelgröße der Normalansic [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_ProcessingTips() As String
+            Get
+                Return ResourceManager.GetString("Label_ProcessingTips", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Wählen Sie eine Bilddatei zum Hochladen aus ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_SelectFileToUpload() As String
+            Get
+                Return ResourceManager.GetString("Label_SelectFileToUpload", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Hochladen ähnelt.
+        '''</summary>
+        Friend ReadOnly Property Label_UploadFile() As String
+            Get
+                Return ResourceManager.GetString("Label_UploadFile", resourceCulture)
+            End Get
+        End Property
     End Module
 End Namespace

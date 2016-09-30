@@ -55,7 +55,7 @@ Namespace CompuMaster.camm.SmartWebEditor.Controls
                 Dim linkButtonToHelp As New System.Web.UI.WebControls.Button
                 linkButtonToHelp.EnableViewState = False
                 linkButtonToHelp.OnClientClick = "window.open('http://commonmark.org/help/', '_blank'); return false;"
-                linkButtonToHelp.Text = "Help"
+                linkButtonToHelp.Text = My.Resources.Label_Help
 
                 Dim addAtIndex = 0
                 'perhaps proper solution woudl be to create a  "buttonToolbar"...

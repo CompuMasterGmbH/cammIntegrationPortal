@@ -112,12 +112,45 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Label_Help" xml:space="preserve">
-    <value>Help</value>
+  <data name="Label_FileUploadFolder" xml:space="preserve">
+    <value>Upload Folder:</value>
+  </data>
+  <data name="Label_ImageDimensionQuestion" xml:space="preserve">
+    <value>&lt;b&gt;Which dimensions do you need?&lt;/b&gt;&lt;br&gt;The resampling retains the aspect ratio</value>
+  </data>
+  <data name="Label_InsertSectionHeadline" xml:space="preserve">
+    <value>Insert existing image</value>
+  </data>
+  <data name="Label_MaxHeight" xml:space="preserve">
+    <value>Max. Height</value>
+  </data>
+  <data name="Label_MaxWidth" xml:space="preserve">
+    <value>Max. Width</value>
+  </data>
+  <data name="Label_MiniatureView" xml:space="preserve">
+    <value>Miniature view</value>
+  </data>
+  <data name="Label_NoImageChosenJavascriptMessageText" xml:space="preserve">
+    <value>Please select the file which should be uploaded.</value>
+  </data>
+  <data name="Label_NormalView" xml:space="preserve">
+    <value>Normal view</value>
+  </data>
+  <data name="Label_OnlyFollowingExtensionsAreAllowed" xml:space="preserve">
+    <value>Only the following file formats are allowed:</value>
+  </data>
+  <data name="Label_ProcessingTips" xml:space="preserve">
+    <value>&lt;b&gt;Edit hints:&lt;/b&gt;&lt;br&gt;&lt;br&gt;1. Only the following files can be uploaded: {0}&lt;br&gt;&lt;br&gt;2. The time it takes to upload the image depends on the bandwith of your internet connection. &lt;br&gt;&lt;br&gt;3. The dimensions of the file you are uploading should be higher than the selected dimensions. Otherwise the file will be uploaded without chnages.  &lt;br&gt;&lt;br&gt;</value>
+  </data>
+  <data name="Label_SelectFileToUpload" xml:space="preserve">
+    <value>Please choose an image to upload</value>
+  </data>
+  <data name="Label_UploadFile" xml:space="preserve">
+    <value>Upload</value>
   </data>
 </root>
