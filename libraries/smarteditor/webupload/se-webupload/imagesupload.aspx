@@ -82,7 +82,7 @@
 												<asp:CheckBox Runat="server" ID="CheckBoxOriginalView" Checked="True" onclick="setUploadButtonState()" /></td>
 										</tr>
 										<tr valign="bottom">
-											<td width="150"><img src="/system/modules/smartwcms/images/maxwidth.gif" width="20" height="20">&nbsp;
+											<td width="150"><img src="images/maxwidth.gif" width="20" height="20">&nbsp;
 												<asp:Label Runat="server" ID="LabelMaxWidth" /></td>
 											<td>
 												<asp:TextBox Runat="server" ID="TextBoxMiniatureMaxWidth" Columns="9" />&nbsp;Pixel</td>
@@ -93,7 +93,7 @@
 											<td>&nbsp;</td>
 										</tr>
 										<tr valign="bottom">
-											<td><img src="/system/modules/smartwcms/images/maxheight.gif" width="20" height="20">&nbsp;
+											<td><img src="images/maxheight.gif" width="20" height="20">&nbsp;
 												<asp:Label Runat="server" ID="LabelMaxHeight" /></td>
 											<td>
 												<asp:TextBox Runat="server" ID="TextBoxMiniatureMaxHeight" Columns="9" />&nbsp;Pixel</td>
