@@ -289,7 +289,7 @@ Namespace CompuMaster.camm.WebManager
             ''' <summary>
             '''     A type value for system purposes as well as for custom purposes (0 for normal items, 1 for master server items, 2 for administration server items, negative values for custom values)
             ''' </summary>
-            ''' <value>0 for normal items, 1 for master server items, 2 for administration server items, negative values for custom values</value>
+            ''' <value>0 for normal items, 1 for master server items, 2 for administration server items (no custom authorization possibility), 3 for administration server items (with custom authorization possibility), negative values for custom values</value>
             Public Property SystemType() As Integer
                 Get
                     Return _SystemType
