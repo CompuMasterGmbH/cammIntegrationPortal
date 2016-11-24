@@ -541,7 +541,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             cmd.Parameters.Add("@ID", SqlDbType.Int).Value = SecurityObjectID
             Dim al As ArrayList = CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.ExecuteReaderAndPutFirstColumnIntoArrayList(cmd, Automations.AutoOpenAndCloseAndDisposeConnection)
 
-            If Not al.Item(0) Is DBNull.Value OrElse Not al.Item(0) Is Nothing Then
+            If Not al.Item(0) Is DBNull.Value AndAlso Not al.Item(0) Is Nothing Then
                 Return CStr(al.Item(0)).Split(","c)
             End If
             Return Nothing
