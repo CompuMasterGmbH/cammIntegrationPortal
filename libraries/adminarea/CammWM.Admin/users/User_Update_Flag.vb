@@ -25,15 +25,12 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
     Public Class User_Update_Flag
         Inherits Page
 
-#Region "Variable Declaration"
         Dim dt As New DataTable
         Dim Fieldtype, FieldValue, Field_ID, ErrMsg As String
         Protected lblMsg, lblFlagUser As Label
         Protected txtType, txtValue As TextBox
         Protected WithEvents btnSubmit As Button
-#End Region
 
-#Region "Page Events"
         Private Sub ButtonSubmit_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnSubmit.Click
             If Me.IsPostBack Then
                 SaveChanges()
@@ -52,9 +49,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
                 Dim validator As New CompuMaster.camm.WebManager.FlagValidation(type)
                 If validator.IsCorrectValueForType(value) Then
-                    Dim userinfo As New camm.WebManager.WMSystem.UserInformation(CLng(Request.QueryString("ID")), cammWebManager)
-                    userinfo.AdditionalFlags.Set(type, value)
-                    userinfo.Save()
+                    Try
+                        'following lines might fail if another profile rule is already broken - this might lead to an chick-egg-problem: user profile main data can't be saved until additional flags are valid + additional flags can't be changed until main profile data is fixed
+                        Dim userinfo As New camm.WebManager.WMSystem.UserInformation(CLng(Request.QueryString("ID")), cammWebManager)
+                        userinfo.AdditionalFlags.Set(type, value)
+                        userinfo.Save()
+                    Catch ex As CompuMaster.camm.WebManager.WMSystem.UserInformation.FieldLimitedToAllowedValuesException
+                        'found a situation where the user account has got 2 or more rules failing and additional flag can't be saved by standard workflow 
+                        '--> additional flag must be saved directly without verification
+                        CompuMaster.camm.WebManager.DataLayer.Current.SetUserDetail(Me.cammWebManager, Nothing, CLng(Request.QueryString("ID")), type, value, False)
+                    End Try
                     lblMsg.Text = "Flag saved successfully"
                 Else
                     lblMsg.Text = "Incorrect value for this type. Flag wasn't saved."
@@ -74,8 +78,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 txtValue.Text = userinfo.AdditionalFlags(txtType.Text)
             End If
         End Sub
-
-#End Region
 
     End Class
 
