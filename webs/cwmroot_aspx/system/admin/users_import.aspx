@@ -25,8 +25,8 @@
 			<p>Charset: <asp:Textbox runat="server" id="TextboxStep2Charset" text="UTF-8" /> (e. g. &quot;UTF-8&quot;, &quot;ISO-8859-1&quot;, &quot;WINDOWS-1252&quot;)</p>
 
 			<h5>Please choose the appropriate import culture settings</h5>
-			<p>Charset: <asp:Textbox runat="server" id="TextboxStep2ColumnSeparator" text="," maxlength="0" /> (e. g. &quot;,&quot; or &quot;;&quot; or &quot;TAB&quot;)</p>
-			<p>Charset: <asp:Textbox runat="server" id="TextboxStep2TextIdentifier" text="&quot;" maxlength="0" /> (e. g. &quot; or ' )</p>
+			<p>Column separator: <asp:Textbox runat="server" id="TextboxStep2ColumnSeparator" text="," maxlength="0" /> (e. g. &quot;,&quot; or &quot;;&quot; or &quot;TAB&quot;)</p>
+			<p>Text identifier: <asp:Textbox runat="server" id="TextboxStep2TextIdentifier" text="&quot;" maxlength="0" /> (e. g. &quot; or ' )</p>
 
 			<p><asp:Button runat="server" id="ButtonStep2PreviewData" text="Preview" /></p>
 			<asp:DataGrid runat="server" id="DatagridStep2DataPreview" />
