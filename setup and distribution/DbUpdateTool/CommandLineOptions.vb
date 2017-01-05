@@ -15,25 +15,28 @@
 Imports CommandLine
 Imports CommandLine.Text
 
-Friend Class CommandlineOptions
+'<Assembly: CommandLine.Text.AssemblyUsage("DbUpdateTool.exe {options}")>
 
-    <CommandLine.Option("a"c, "LicenseAccepted", HelpText:="Confirmation of accepted license is required", Required:=True)>
-    Public Property LicenseAccepted As Boolean
+Friend Class CommandlineOptions
 
     Public Enum DatabaseServerTypes As Byte
         MsSqlServer = 1
         MsAzureSql = 2
     End Enum
-    <CommandLine.Option("d"c, "DatabaseServerType", HelpText:="MsSqlServer or MsAzureSql", Required:=True)>
-    Public Property DatabaseServerType As DatabaseServerTypes
 
-    <CommandLine.Option("n"c, "CreateNewDatabaseInstance", HelpText:="Cleanup SQL database and create a new camm Web-Manager database instance")>
+    <CommandLine.Option("d"c, "DatabaseServerType", HelpText:="MsSqlServer or MsAzureSql")>
+    Public Property DatabaseServerType As DatabaseServerTypes
+    <CommandLine.Option("n"c, "CreateNewDatabaseInstance", HelpText:="Cleanup SQL database and create a new camm Web-Manager database instance", MutuallyExclusiveSet:="create/update")>
     Public Property CreateNewDatabaseInstance As Boolean
 
-    <CommandLine.Option("u"c, "UpdateDatabaseInstance", HelpText:="Update an existing camm Web-Manager database instance")>
+    <CommandLine.Option("u"c, "UpdateDatabaseInstance", HelpText:="Update an existing camm Web-Manager database instance", MutuallyExclusiveSet:="create/update")>
     Public Property UpdateDatabaseInstance As Boolean
 
-    <CommandLine.Option("c"c, "ConnectionString", HelpText:="The connectionstring to create/update the database schema in an existing SQL database", Required:=True)>
+    <CommandLine.Option("LicenseAccepted", HelpText:="Accepts the license")>
+    Public Property LicenseAccepted As Boolean
+
+
+    <CommandLine.Option("c"c, "ConnectionString", HelpText:="The connectionstring to create/update the database schema in an existing SQL database")>
     Public Property ConnectionString As String
 
     <CommandLine.Option("ConnectionStringForSqlDatabaseCreation", HelpText:="The connectionstring to the SQL server to initially create an (empty) SQL database")>
@@ -109,5 +112,20 @@ Friend Class CommandlineOptions
 
     <CommandLine.Option("l"c, "LimitUpdatesToDbBuild", HelpText:="Limit the update process to stop at a specific database build no., e.g. to update the datebase till build no. 206. Without this option, updates are always processed up to the latest available version")>
     Public Property LimitUpdatesToDbBuild As Integer
+
+    <CommandLine.Option("ListAvailablePatches", HelpText:="List the patches that are provided by the current version of this update tool")>
+    Public Property ListAvailablePatches As Boolean
+
+    <CommandLine.Option("LatestAvailablePatchVersion", HelpText:="Show the latest update version which can be installed by the current version of this update tool")>
+    Public Property LatestAvailableDbPatchVersion As Boolean
+
+    <CommandLine.Option("CurrentDbVersion", HelpText:="Show the current version of the database (requires -c)")>
+    Public Property CurrentDbVersion As Boolean
+
+    <CommandLine.Option("v"c, "Verbose", HelpText:="Show detailled output")>
+    Public Property Verbose As Boolean
+
+    '<CommandLine.Option("DebugSession", HelpText:="")>
+    Public Property DebugSession As Boolean
 
 End Class

@@ -82,7 +82,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Securi
 DROP VIEW [dbo].[SecurityObjects]
 GO
 CREATE VIEW [dbo].[SecurityObjects]
-WITH ENCRYPTION
+
 AS
 SELECT * 
 FROM dbo.SecurityObjects_CurrentAndInactiveOnes
@@ -93,7 +93,7 @@ if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Securi
 DROP VIEW [dbo].[SecurityObjects_CumulatedAuthsPerUser]
 GO
 CREATE VIEW [dbo].[SecurityObjects_CumulatedAuthsPerUser]
-WITH ENCRYPTION
+
 AS
 -- secobj 2 user
 select securityobjects.id AS ID_SecurityObject, dbo.SecurityObjects_AuthsByUser.ID_ServerGroup, dbo.SecurityObjects_AuthsByUser.ID_User
@@ -257,12 +257,6 @@ from dbo.Applications
 	inner join dbo.System_ServerGroups on dbo.ApplicationsRightsByGroup.ID_GroupOrPerson = dbo.System_ServerGroups.ID_Group_Public
 ) as AppAuths
 group by ID_Application, ID_User
-GO
-if exists (select * from sys.objects where object_id = object_id(N'[dbo].[Languages]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1) 
-UPDATE System_Languages
-SET System_Languages.IsActive = Languages.IsActive
-FROM System_Languages INNER JOIN Languages ON System_Languages.ID = Languages.ID
-
 GO
 
 ----------------------------------------------------

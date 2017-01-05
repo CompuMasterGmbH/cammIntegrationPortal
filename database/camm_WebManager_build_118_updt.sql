@@ -64,7 +64,7 @@ CREATE PROCEDURE dbo.Public_UpdateUserDetails
 	@CustomerNo nvarchar(50) = Null,
 	@SupplierNo nvarchar(50) = Null
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -151,7 +151,7 @@ ALTER PROCEDURE AdminPrivate_UpdateStatusLoginDisabled
 	@Username nvarchar(20),
 	@boolStatus bit
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -179,7 +179,7 @@ ALTER PROCEDURE AdminPrivate_UpdateUserPW
 	@Username nvarchar(20),
 	@NewPasscode varchar(4096)
 )
-WITH ENCRYPTION
+
 AS
 -- Deklaration Variablen/Konstanten
 DECLARE @CurUserID int
@@ -214,7 +214,7 @@ ALTER Procedure Public_GetCompleteName
 (
 	@Username nvarchar(20)
 )
-WITH ENCRYPTION
+
 As
 DECLARE @Vorname nvarchar(30)
 DECLARE @Nachname nvarchar(30)
@@ -239,7 +239,7 @@ ALTER Procedure dbo.Public_GetUserID
 (
 	@Username nvarchar(20)
 )
-WITH ENCRYPTION
+
 As
 declare @UserID int
 
@@ -264,7 +264,7 @@ ALTER Procedure dbo.Public_GetNavPointsOfUser
 	@AnonymousAccess bit = 0,
 	@SearchForAlternativeLanguages bit = 1
 )
-WITH ENCRYPTION
+
 As
 DECLARE @IsSecurityAdmin bit
 DECLARE @AllowedLocation int

@@ -1,0 +1,870 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B534E30C-E3FD-41EA-B212-BBF0BFDD9749}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>cammWM.WebRootAdminApp</RootNamespace>
+    <AssemblyName>cammWM.WebRootAdminApp</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>cammWM.WebRootAdminApp.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>cammWM.WebRootAdminApp.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="cammWM, Version=4.12.209.102, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.4.12.209.102\lib\net20\cammWM.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="cammWM.Admin, Version=4.12.209.102, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.Admin.4.12.209.102\lib\net20\cammWM.Admin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="cammWM.WebApp, Version=4.12.209.101, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.WebApp.4.12.209.101-beta\lib\net20\cammWM.WebApp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="cammWM.WebRootApp, Version=4.12.209.101, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.WebRootApp.4.12.209.101-beta2\lib\net20\cammWM.WebRootApp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="sysdata\config.vb" />
+    <None Include="sysdata\custom_internationalization.vb" />
+    <None Include="system\nav\index_base.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+    <None Include="_CreateNewNuGetPackage\Config.ps1" />
+    <None Include="_CreateNewNuGetPackage\DoNotModify\CreateNuGetPackage.ps1" />
+    <None Include="_CreateNewNuGetPackage\DoNotModify\New-NuGetPackage.ps1" />
+    <None Include="_CreateNewNuGetPackage\DoNotModify\UploadNuGetPackage.ps1" />
+    <None Include="_CreateNewNuGetPackage\RunMeToUploadNuGetPackage.cmd" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_CreateNewNuGetPackage\DoNotModify\NuGet.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sysdata\access_error.aspx" />
+    <Content Include="sysdata\account_register.aspx" />
+    <Content Include="sysdata\account_resetpassword.aspx" />
+    <Content Include="sysdata\account_sendpassword.aspx" />
+    <Content Include="sysdata\account_updatepassword.aspx" />
+    <Content Include="sysdata\account_updateprofile.aspx" />
+    <Content Include="sysdata\admin\about.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\accesslevels.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\accesslevels_delete.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\accesslevels_new.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\accesslevels_update.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\adjust_delegates.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\adminblockcontentline.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\adminblockfooter.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\adminblockheader.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\administrative_delegates.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\adminmenu.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\ajax_passwordconvert.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apprights.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apprights_cleanup.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apprights_delete_groups.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apprights_delete_transmission.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apprights_delete_users.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apprights_new_groups.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apprights_new_transmission.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apprights_new_users.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apps.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apps_clone.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apps_delete.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apps_new.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apps_update.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\apps_users_missing_flags.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\check_file_consistency.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\check_flags_not_required.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\configuration.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\configuration_allowedvalues_country.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\configuration_dataprotection.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\configuration_logging.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\configuration_passwordencryption.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\groups.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\groups_additionalinformation.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\groups_delete.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\groups_new.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\groups_update.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\mailqueue_monitor.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\mailqueue_monitor_action.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\mailqueue_monitor_datepicker.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\mailqueue_monitor_errordetails.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\mailqueue_monitor_showemail.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\markets.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\memberships.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\memberships_delete.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\memberships_new.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\passwordconvert.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\redir\create_link.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\redir\index.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\redir\new_modify.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\servers.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\servers_delete_accesslevelrelation.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\servers_delete_group.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\servers_delete_server.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\servers_new_accesslevelrelation.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\servers_new_group.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\servers_new_server.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\servers_update_group.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\servers_update_server.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\styles_tab.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\system_checkup.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\textmodules.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\textmodules_copymarketid.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\textmodules_copywebsiteareaid.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\textmodules_edit.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\textmodules_overview.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\textmodules_preview.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\textmodules_processcopyofmarketid.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\textmodules_selectitemtoedit.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\textmodules_template.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\textmodules_textblock.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\textmodules_variable.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\TextModule_ToolsFile.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\updateemaildetail.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_additionalflags.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_additionalinformation.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_batchuserflageditor.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_clone.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_delete.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_hotline_support.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_import.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_importprocessing.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_navbar_preview.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_new.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_resetpw.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_update.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\users_update_flag.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\disclaimer.aspx" />
+    <Content Include="sysdata\editorial.aspx" />
+    <Content Include="sysdata\error.aspx" />
+    <Content Include="sysdata\feedback.aspx" />
+    <Content Include="sysdata\feedback_gotit.aspx" />
+    <Content Include="sysdata\frames\cont_banner.aspx" />
+    <Content Include="sysdata\frames\cont_statusline.aspx" />
+    <Content Include="sysdata\frames\frame_banner.aspx" />
+    <Content Include="sysdata\frames\frame_main.aspx" />
+    <Content Include="sysdata\frames\frame_sub.aspx" />
+    <Content Include="sysdata\help.aspx" />
+    <Content Include="sysdata\images\banner\bg_stripe_extranet.gif" />
+    <Content Include="sysdata\images\banner\flags_on_earth.gif" />
+    <Content Include="sysdata\images\banner\logo_extranet.gif" />
+    <Content Include="sysdata\images\feedback\abteilung.gif" />
+    <Content Include="sysdata\images\feedback\background.gif" />
+    <Content Include="sysdata\images\feedback\background_question.gif" />
+    <Content Include="sysdata\images\feedback\email.gif" />
+    <Content Include="sysdata\images\feedback\kommentar.gif" />
+    <Content Include="sysdata\images\feedback\name.gif" />
+    <Content Include="sysdata\images\feedback\smiley_happy.gif" />
+    <Content Include="sysdata\images\feedback\smiley_sorry.gif" />
+    <Content Include="sysdata\images\feedback\thema.gif" />
+    <Content Include="sysdata\images\global\button_csa.gif" />
+    <Content Include="sysdata\images\global\logo_csa.jpg" />
+    <Content Include="sysdata\images\sub\hg_navi_quer.gif" />
+    <Content Include="sysdata\images\sub\hg_navi_quer_links.gif" />
+    <Content Include="sysdata\images\sub\hg_navi_quer_rechts.gif" />
+    <Content Include="sysdata\includes\loginarea.ascx" />
+    <Content Include="sysdata\includes\loginarea.aspx" />
+    <Content Include="sysdata\includes\metalink.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_frameset_serverform.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_frameset_serverform_body.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_frameset_serverform_html.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_frameset_wo_form.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_frameset_wo_form.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_nonframeset_serverform.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_nonframeset_serverform_body.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_nonframeset_serverform_html.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_nonframeset_wo_form.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_nonframeset_wo_form.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_serverform.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_serverform.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_wo_form.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_bottom_wo_form.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top_frameset_serverform.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top_frameset_serverform_body.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_frameset_serverform_html.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_frameset_wo_form.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_frameset_wo_form.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top_nonframeset_serverform.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top_nonframeset_serverform_body.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_nonframeset_serverform_html.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_nonframeset_wo_form.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_nonframeset_wo_form.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top_serverform.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_serverform.aspx" />
+    <Content Include="sysdata\includes\standardtemplate_top_wo_form.ascx" />
+    <Content Include="sysdata\includes\standardtemplate_top_wo_form.aspx" />
+    <Content Include="sysdata\login\checklogin.aspx" />
+    <Content Include="sysdata\login\forcelogin.aspx" />
+    <Content Include="sysdata\login\ldirect.aspx" />
+    <Content Include="sysdata\login\ldirectsubapp.aspx" />
+    <Content Include="sysdata\login\loginprocedurefinished.aspx" />
+    <Content Include="sysdata\login\refreshlogin.aspx" />
+    <Content Include="sysdata\logon.aspx" />
+    <Content Include="sysdata\modules\redir\index.aspx" />
+    <Content Include="sysdata\nav\images\bg_navigation_1690x1.gif" />
+    <Content Include="sysdata\nav\images\bg_progressbar_grey_172x2.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_down_lev2_12x13.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_down_lev2_9x12.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_down_lev3_12x13.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_right_bgyellow_13x13.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_right_lev2_12x13.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_right_lev2_9x12.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_up_bggrey_13x13.gif" />
+    <Content Include="sysdata\nav\images\button_arrow_up_bgyellow_13x13.gif" />
+    <Content Include="sysdata\nav\images\button_disabled_or_underconstruction_13x10.gif" />
+    <Content Include="sysdata\nav\images\button_navpoints_172x23.gif" />
+    <Content Include="sysdata\nav\images\button_new_29x14.gif" />
+    <Content Include="sysdata\nav\images\button_sitename_167x23.jpg" />
+    <Content Include="sysdata\nav\images\button_sitename_177x23.jpg" />
+    <Content Include="sysdata\nav\images\button_sitename_190x23.jpg" />
+    <Content Include="sysdata\nav\images\button_update_40x14.gif" />
+    <Content Include="sysdata\nav\images\button_update_4x13.gif" />
+    <Content Include="sysdata\nav\images\button_update_5x13.gif" />
+    <Content Include="sysdata\nav\images\navline_separator.gif" />
+    <Content Include="sysdata\nav\images\space.gif" />
+    <Content Include="sysdata\nav\images\subnavline_separator.gif" />
+    <Content Include="sysdata\nav\images_style_3\button_red_arrow_right_bgyellow_13x13.gif" />
+    <Content Include="sysdata\nav\images_style_3\button_red_arrow_right_lev2_9x12.gif" />
+    <Content Include="sysdata\nav\index.aspx" />
+    <Content Include="sysdata\servercheck.aspx" />
+    <Content Include="sysdata\servereventlog.aspx" />
+    <Content Include="sysdata\sharedcontent\disclaimer.aspx" />
+    <Content Include="sysdata\sharedcontent\editorial.aspx" />
+    <Content Include="sysdata\style_standard.css" />
+    <Content Include="sysdata\userjustcreated.aspx" />
+    <Content Include="system\access_error.aspx" />
+    <Content Include="system\account_register.aspx" />
+    <Content Include="system\account_resetpassword.aspx" />
+    <Content Include="system\account_sendpassword.aspx" />
+    <Content Include="system\account_updatepassword.aspx" />
+    <Content Include="system\account_updateprofile.aspx" />
+    <Content Include="system\admin\about.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\accesslevels.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\accesslevels_delete.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\accesslevels_new.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\accesslevels_update.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\adjust_delegates.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\adminblockcontentline.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\adminblockfooter.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\adminblockheader.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\administrative_delegates.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\adminmenu.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\ajax_passwordconvert.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apprights.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apprights_cleanup.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apprights_delete_groups.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apprights_delete_transmission.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apprights_delete_users.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apprights_new_groups.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apprights_new_transmission.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apprights_new_users.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apps.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apps_clone.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apps_delete.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apps_new.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apps_update.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\apps_users_missing_flags.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\check_file_consistency.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\check_flags_not_required.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\configuration.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\configuration_allowedvalues_country.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\configuration_dataprotection.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\configuration_logging.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\configuration_passwordencryption.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\file_consistency_check.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\groups.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\groups_additionalinformation.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\groups_delete.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\groups_new.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\groups_update.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\images\comboItemBg.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\images\drop.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\images\drop_hover.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\images\Error.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\images\Info.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\images\logo_camm_biz.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\images\mailqueue_calendar.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\images\Warning.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\install\update.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\mailqueue_monitor.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\mailqueue_monitor_action.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\mailqueue_monitor_datepicker.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\mailqueue_monitor_errordetails.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\mailqueue_monitor_showemail.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\markets.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\memberships.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\memberships_delete.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\memberships_new.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\passwordconvert.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\redir\create_link.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="system\admin\redir\index.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\redir\new_modify.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\scripts\jquery-1.11.1.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\servers.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\servers_delete_accesslevelrelation.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\servers_delete_group.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\servers_delete_server.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\servers_new_accesslevelrelation.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\servers_new_group.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\servers_new_server.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\servers_update_group.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\servers_update_server.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\style\baseStyle.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\style\combobox.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\system_checkup.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\textmodules.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\textmodules_copymarketid.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\textmodules_copywebsiteareaid.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\textmodules_edit.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\textmodules_overview.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\textmodules_preview.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\textmodules_processcopyofmarketid.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\textmodules_selectitemtoedit.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\textmodules_template.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\textmodules_textblock.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\textmodules_variable.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\updateemaildetail.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_additionalflags.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_additionalinformation.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_batchuserflageditor.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_clone.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_clone_additionalflags.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_clone_additionalinformation.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_delete.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_hotline_support.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_import.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_importprocessing.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_navbar_preview.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_new.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_resetpw.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_update.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\users_update_flag.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\definitions.aspx" />
+    <Content Include="system\download.aspx" />
+    <Content Include="system\error.aspx" />
+    <Content Include="system\feedback.aspx" />
+    <Content Include="system\feedback_gotit.aspx" />
+    <Content Include="system\frames\cont_banner.aspx" />
+    <Content Include="system\frames\cont_statusline.aspx" />
+    <Content Include="system\frames\frame_banner.aspx" />
+    <Content Include="system\frames\frame_main.aspx" />
+    <Content Include="system\frames\frame_sub.aspx" />
+    <Content Include="system\help.aspx" />
+    <Content Include="system\images\handshake.gif" />
+    <Content Include="system\images\help.gif" />
+    <Content Include="system\images\passwort.gif" />
+    <Content Include="system\images\space.gif" />
+    <Content Include="system\includes\disclaimer.deu.inc" />
+    <Content Include="system\includes\disclaimer.eng.inc" />
+    <Content Include="system\includes\metalink.aspx" />
+    <Content Include="system\login\checklogin.aspx" />
+    <Content Include="system\login\forcelogin.aspx" />
+    <Content Include="system\login\images\darkbluepixel.gif" />
+    <Content Include="system\login\images\progres.gif" />
+    <Content Include="system\login\images\space.gif" />
+    <Content Include="system\login\ldirect.aspx" />
+    <Content Include="system\login\ldirectsubapp.aspx" />
+    <Content Include="system\login\loginprocedurefinished.aspx" />
+    <Content Include="system\login\refreshlogin.aspx" />
+    <Content Include="system\logon.aspx" />
+    <Content Include="system\modules\redir\index.aspx" />
+    <Content Include="system\nav\index_base.ascx" />
+    <Content Include="system\nav\index_style3.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="system\nav\index_style3_headhtml.ascx" />
+    <Content Include="system\nav\index_style3_jscript.ascx" />
+    <Content Include="system\servercheck.aspx" />
+    <Content Include="system\servereventlog.aspx" />
+    <Content Include="system\userdetails.aspx" />
+    <Content Include="system\userjustcreated.aspx" />
+    <Content Include="system\validate_document.aspx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>REM Create a NuGet package for this project and place the .nupkg file in the project's output directory.
+REM If you see this in Visual Studio's Error List window, check the Output window's Build tab for the actual error.
+ECHO Creating NuGet package in Post-Build event...
+PowerShell -NoProfile -ExecutionPolicy Bypass -Command "&amp; '$(ProjectDir)_CreateNewNuGetPackage\DoNotModify\CreateNuGetPackage.ps1' -ProjectFilePath '$(ProjectPath)' -OutputDirectory '$(TargetDir)' -BuildConfiguration '$(ConfigurationName)' -BuildPlatform '$(PlatformName)'"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

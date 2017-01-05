@@ -24,7 +24,7 @@ ALTER PROCEDURE dbo.Public_GetToDoLogonList
 	@ScriptEngine_SessionID nvarchar(512),
 	@ScriptEngine_ID int
 	)
-WITH ENCRYPTION
+
 AS
 
 -- GUIDs alter Sessions zurücksetzen

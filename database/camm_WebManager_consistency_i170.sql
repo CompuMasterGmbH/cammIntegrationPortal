@@ -51,4 +51,4 @@ GO
 DELETE [dbo].[Memberships]
 FROM [dbo].[Memberships]
 	LEFT JOIN dbo.Benutzer ON [dbo].[Memberships].ID_User = dbo.Benutzer.ID
-WHERE dbo.Benutzer.ID IS NULL
+WHERE [dbo].[Memberships].ID_User <> -1 AND dbo.Benutzer.ID IS NULL

@@ -164,7 +164,6 @@ dim CreateAccount_Descr_Location
 dim CreateAccount_Descr_State
 dim CreateAccount_Descr_Country
 dim CreateAccount_Descr_Motivation
-dim CreateAccount_Descr_MotivItemBOMAGDealer
 dim CreateAccount_Descr_MotivItemDealer
 dim CreateAccount_Descr_MotivItemWebSiteVisitor
 dim UpdateProfile_Descr_MotivItemDealer
@@ -619,7 +618,6 @@ Sub LoadLanguageStrings (IDLanguage)
 				CreateAccount_Descr_Motivation = "Каков ваш мотив для регистрации"
 				CreateAccount_Descr_MotivItemWebSiteVisitor = "Посетитель Веб-сайта"
 				UpdateProfile_Descr_MotivItemWebSiteVisitor = "Посетитель Веб-сайта"
-				CreateAccount_Descr_MotivItemBOMAGDealer = "Дилер"
 				CreateAccount_Descr_MotivItemDealer = "Дилер"
 				UpdateProfile_Descr_MotivItemDealer = "Дилер"
 				CreateAccount_Descr_MotivItemJournalist = "Журналист"
@@ -814,7 +812,7 @@ Sub LoadLanguageStrings (IDLanguage)
 				"[n:1]"
 				CreateAccount_MsgEMail4Admin = "Следующий пользователь вновь зарегистрировался в разделе Secured Area." & ChrW(13) & ChrW(10) & _
 				"Предоставьте необходимые права доступа!" & ChrW(13) & ChrW(10) & _
-				"Для настройки прав доступа посетите " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"Для настройки прав доступа посетите " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_TextWelcome = "Добро пожаловать в Secured Area! Здесь Вы найдёте ежедневную местную информацию." & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
 				"От нашего администратора для Вас создана учётная запись для раздела Secured Area. Этот сервис, разумеется, является для Вас бесплатным." & ChrW(13) & ChrW(10) & _
@@ -839,7 +837,7 @@ Sub LoadLanguageStrings (IDLanguage)
 				"<ul><strong>[n:2]</strong></ul></p>"
 				UserManagement_NewUser_MsgEMail4Admin = "Следующий пользователь создан Вами или одним из Ваших коллег в разделе Secured Area." & ChrW(13) & ChrW(10) & _
 				"Предоставьте необходимые права доступа!" & ChrW(13) & ChrW(10) & _
-				"Для настройки прав доступа посетите " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"Для настройки прав доступа посетите " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_SubjectAuthCheckSuccessfull = "Добро пожаловать в Secured Area!"
 				UserManagement_NewUser_TextAuthCheckSuccessfull = "Добро пожаловать в Secured Area! Здесь Вы найдёте ежедневную местную информацию." & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
@@ -1018,7 +1016,6 @@ Sub LoadLanguageStrings (IDLanguage)
 				CreateAccount_Descr_Motivation = "Qual é o motivo para o seu registo"
 				CreateAccount_Descr_MotivItemWebSiteVisitor = "Visitante do site Web"
 				UpdateProfile_Descr_MotivItemWebSiteVisitor = "Visitante do site Web"
-				CreateAccount_Descr_MotivItemBOMAGDealer = "Negociante"
 				CreateAccount_Descr_MotivItemDealer = "Negociante"
 				UpdateProfile_Descr_MotivItemDealer = "Negociante"
 				CreateAccount_Descr_MotivItemJournalist = "Jornalista"
@@ -1191,10 +1188,10 @@ Sub LoadLanguageStrings (IDLanguage)
 				"[n:1]"
 				CreateAccount_MsgEMail4Admin = "O novo utilizador seguinte foi adicionado à Área Protegida." & ChrW(13) & ChrW(10) & _
 				"Por favor, atribua autorizações relacionadas!" & ChrW(13) & ChrW(10) & _
-				"Para rectificar autorizações, por favor, visite " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"Para rectificar autorizações, por favor, visite " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_MsgEMail4Admin = "O novo utilizador seguinte foi adicionado à Área Protegida por si ou por um colega seu." & ChrW(13) & ChrW(10) & _
 				"Por favor, atribua autorizações relacionadas!" & ChrW(13) & ChrW(10) & _
-				"Para rectificar autorizações, por favor, visite " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"Para rectificar autorizações, por favor, visite " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_TextAuthCheckSuccessfull = "Bem-vindo à nossa Área Protegida! O lugar a visitar todos os dias!" & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
 				"Foi criada a sua autorização de utilizador ""[n:0]"". Visite-nos em:" & ChrW(13) & ChrW(10) & _
@@ -1315,7 +1312,6 @@ Sub LoadLanguageStrings (IDLanguage)
 				CreateAccount_Descr_Motivation = "Co skłoniło Cię do rejestracji"
 				CreateAccount_Descr_MotivItemWebSiteVisitor = "odwiedzający stronę internetową"
 				UpdateProfile_Descr_MotivItemWebSiteVisitor = "odwiedzający stronę internetową"
-				CreateAccount_Descr_MotivItemBOMAGDealer = "dealer"
 				CreateAccount_Descr_MotivItemDealer = "dealer"
 				UpdateProfile_Descr_MotivItemDealer = "dealer"
 				CreateAccount_Descr_MotivItemJournalist = "dziennikarz"
@@ -1510,7 +1506,7 @@ Sub LoadLanguageStrings (IDLanguage)
 				"[n:2]"
 				CreateAccount_MsgEMail4Admin = "Następujący użytkownik zalogował się jako nowy w obszarze Secured Area." & ChrW(13) & ChrW(10) & _
 				"Przypisz mu wymagane prawa dostępu!" & ChrW(13) & ChrW(10) & _
-				"Aby ustawić prawa dostępu, odwiedź " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"Aby ustawić prawa dostępu, odwiedź " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_TextWelcome = "Witamy w Secured Area! Tu znajdziesz codzienne, globalne informacje." & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
 				"Twoje konto w obszarze Secured Area zostało skonfigurowane przez naszego administratora. Ten serwis jest oczywiście bezpłatny." & ChrW(13) & ChrW(10) & _
@@ -1535,7 +1531,7 @@ Sub LoadLanguageStrings (IDLanguage)
 				"<ul><strong>[n:2]</strong></ul></p>"
 				UserManagement_NewUser_MsgEMail4Admin = "Ten użytkownik został założony przez Ciebie lub kolegę w obszarze Secured Area." & ChrW(13) & ChrW(10) & _
 				"Przypisz mu wymagane prawa dostępu!" & ChrW(13) & ChrW(10) & _
-				"Aby ustawić prawa dostępu, odwiedź " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"Aby ustawić prawa dostępu, odwiedź " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_SubjectAuthCheckSuccessfull = "Witamy w Secured Area!"
 				UserManagement_NewUser_TextAuthCheckSuccessfull = "Witamy w Secured Area! Tu znajdziesz codzienne, globalne informacje." & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
@@ -1716,7 +1712,6 @@ Sub LoadLanguageStrings (IDLanguage)
 				CreateAccount_Descr_Motivation = "ご登録の動機をお答えください"
 				CreateAccount_Descr_MotivItemWebSiteVisitor = "ウェブサイト訪問者"
 				UpdateProfile_Descr_MotivItemWebSiteVisitor = "ウェブサイト訪問者"
-				CreateAccount_Descr_MotivItemBOMAGDealer = "ディーラー"
 				CreateAccount_Descr_MotivItemDealer = "ディーラー"
 				UpdateProfile_Descr_MotivItemDealer = "ディーラー"
 				CreateAccount_Descr_MotivItemJournalist = "記者"
@@ -1893,10 +1888,10 @@ Sub LoadLanguageStrings (IDLanguage)
 				"[n:2]"
 				CreateAccount_MsgEMail4Admin = "以下のユーザーがSecured Areaに新登録されました。" & ChrW(13) & ChrW(10) & _
 				"関連する権限を譲渡してください!" & ChrW(13) & ChrW(10) & _
-				"権限の調整には" & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " をご利用ください!"
+				"権限の調整には" & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " をご利用ください!"
 				UserManagement_NewUser_MsgEMail4Admin = "お客様ご自身または同僚の方により、以下のユーザーがSecured Areaに新登録されました。" & ChrW(13) & ChrW(10) & _
 				"関連する権限を譲渡してください!" & ChrW(13) & ChrW(10) & _
-				"権限の調整には" & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & "をご利用ください!"
+				"権限の調整には" & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & "をご利用ください!"
 				UserManagement_NewUser_TextAuthCheckSuccessfull = "当社のSecured Areaへようこそ! ここでは毎日最新情報をお届けしています!" & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
 				"ユーザー""[n:0]""への権限が作成されました。 ご自由に以下をご利用ください:" & ChrW(13) & ChrW(10) & _
@@ -2017,7 +2012,6 @@ ChrW(13) & ChrW(10) & _
 				CreateAccount_Descr_Motivation = "Qual è la Sua motivazione per la registrazione"
 				CreateAccount_Descr_MotivItemWebSiteVisitor = "Visitatore sito web"
 				UpdateProfile_Descr_MotivItemWebSiteVisitor = "Visitatore sito web"
-				CreateAccount_Descr_MotivItemBOMAGDealer = "Concessionario"
 				CreateAccount_Descr_MotivItemDealer = "Concessionario"
 				UpdateProfile_Descr_MotivItemDealer = "Concessionario"
 				CreateAccount_Descr_MotivItemJournalist = "Giornalista"
@@ -2212,7 +2206,7 @@ ChrW(13) & ChrW(10) & _
 				"[n:1]"
 				CreateAccount_MsgEMail4Admin = "Il seguente utente si è registrato alla Secured Area." & ChrW(13) & ChrW(10) & _
 				"Si prega di assegnare le autorizzazioni corrispondenti!" & ChrW(13) & ChrW(10) & _
-				"Per configurare le autorizzazioni di accesso, visiti " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"Per configurare le autorizzazioni di accesso, visiti " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_TextWelcome = "Benvenuto nella Secured Area! Qui Lei trova informazioni quotidiane e locali." & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
 				"Un conto per il settore Secured Area è stato realizzato per Lei dalla nostra amministrazione. Questo servizio per Lei è naturalmente gratuito." & ChrW(13) & ChrW(10) & _
@@ -2237,7 +2231,7 @@ ChrW(13) & ChrW(10) & _
 				"<ul><strong>[n:2]</strong></ul></p>"
 				UserManagement_NewUser_MsgEMail4Admin = "Il seguente utente è stato registrato da Lei o da un Suo collega nel settore Secured Area." & ChrW(13) & ChrW(10) & _
 				"La preghiamo di assegnare i diritti d'accesso necessari!" & ChrW(13) & ChrW(10) & _
-				"Per impostare i diritti d'accesso, La preghiamo di visitare " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"Per impostare i diritti d'accesso, La preghiamo di visitare " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_SubjectAuthCheckSuccessfull = "Benvenuto nella Secured Area!"
 				UserManagement_NewUser_TextAuthCheckSuccessfull = "Benvenuto nella Secured Area! Qui Lei trova informazioni quotidiane e locali." & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
@@ -2367,7 +2361,6 @@ ChrW(13) & ChrW(10) & _
 				CreateAccount_Descr_Motivation = "Mi motiválja a regisztrálásra"
 				CreateAccount_Descr_MotivItemWebSiteVisitor = "Weboldal látogató"
 				UpdateProfile_Descr_MotivItemWebSiteVisitor = "Weboldal látogató"
-				CreateAccount_Descr_MotivItemBOMAGDealer = "Kereskedő"
 				CreateAccount_Descr_MotivItemDealer = "Kereskedő"
 				UpdateProfile_Descr_MotivItemDealer = "Kereskedő"
 				CreateAccount_Descr_MotivItemJournalist = "Újságíró"
@@ -2562,7 +2555,7 @@ ChrW(13) & ChrW(10) & _
 "[n:2]"
 				CreateAccount_MsgEMail4Admin = "Akövetkező felhasználó bejelentkezett a biztonsági területre." & ChrW(13) & ChrW(10) & _
 "Adja meg a szükséges hozzáférési jogokat!" & ChrW(13) & ChrW(10) & _
-"A hozzáférési jogokat nlétrehozni látogassa meg a  " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+"A hozzáférési jogokat nlétrehozni látogassa meg a  " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_TextWelcome = "Üdvözöljük a biztonsági területen! Itt napi és helyhez kötött információkat talál." & ChrW(13) & ChrW(10) & _
 ChrW(13) & ChrW(10) & _
 "Ön irodánktól egy berendezett felhasználói kontót kapott a biztonsági területre. Ez a szolgáltatás Önnek természetesen ingyenes." & ChrW(13) & ChrW(10) & _
@@ -2587,7 +2580,7 @@ ChrW(13) & ChrW(10) & _
 "<ul><strong>[n:2]</strong></ul></p>"
 				UserManagement_NewUser_MsgEMail4Admin = "A következő felhasználó az Ön vagy valamelyik kollégája részéről jelentkezett be a biztonsági területre." & ChrW(13) & ChrW(10) & _
 "Adja meg a szükséges hozzáférési jogokat" & ChrW(13) & ChrW(10) & _
-"A hozzáférési jogokat megadni látogassa meg a következőt: " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+"A hozzáférési jogokat megadni látogassa meg a következőt: " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_SubjectAuthCheckSuccessfull = "Üdvözöljük a biztonsági területen!"
 				UserManagement_NewUser_TextAuthCheckSuccessfull = "Üdvözöljük a biztonsági területen! Itt naprakész és helyhez kötött információkat talál." & ChrW(13) & ChrW(10) & _
 ChrW(13) & ChrW(10) & _
@@ -2768,7 +2761,6 @@ ChrW(13) & ChrW(10) & _
 				CreateAccount_Descr_Motivation = "您注册的动机是什么"
 				CreateAccount_Descr_MotivItemWebSiteVisitor = "网站访客"
 				UpdateProfile_Descr_MotivItemWebSiteVisitor = "网站访客"
-				CreateAccount_Descr_MotivItemBOMAGDealer = "经销商"
 				CreateAccount_Descr_MotivItemDealer = "经销商"
 				UpdateProfile_Descr_MotivItemDealer = "经销商"
 				CreateAccount_Descr_MotivItemJournalist = "新闻记者"
@@ -2945,10 +2937,10 @@ ChrW(13) & ChrW(10) & _
 				"[n:1]"
 				CreateAccount_MsgEMail4Admin = "以下新用户加入了安全区域。" & ChrW(13) & ChrW(10) & _
 				"请分配相应的权限！" & ChrW(13) & ChrW(10) & _
-				"设置权限请访问" & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & "！"
+				"设置权限请访问" & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & "！"
 				UserManagement_NewUser_MsgEMail4Admin = "您或您的同事将以下用户加入了安全区域。" & ChrW(13) & ChrW(10) & _
 				"请分配相应的权限！" & ChrW(13) & ChrW(10) & _
-				"设置权限请访问" & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & "！"
+				"设置权限请访问" & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & "！"
 				UserManagement_NewUser_TextAuthCheckSuccessfull = "欢迎来到安全区域！这是每天都应该来的地方！" & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
 				"您的用户""[n:0]""权限已经创建。欢迎访问：" & ChrW(13) & ChrW(10) & _
@@ -3120,7 +3112,6 @@ ChrW(13) & ChrW(10) & _
 				CreateAccount_Descr_Motivation = "¿Por qué motivo desea registrarse?"
 				CreateAccount_Descr_MotivItemWebSiteVisitor = "Visitante de la página web"
 				UpdateProfile_Descr_MotivItemWebSiteVisitor = "Visitante de la página web"
-				CreateAccount_Descr_MotivItemBOMAGDealer = "Distribuidor"
 				CreateAccount_Descr_MotivItemDealer = "Distribuidor"
 				UpdateProfile_Descr_MotivItemDealer = "Distribuidor"
 				CreateAccount_Descr_MotivItemJournalist = "Periodista"
@@ -3297,10 +3288,10 @@ ChrW(13) & ChrW(10) & _
 				"[n:2]"
 				CreateAccount_MsgEMail4Admin = "El nuevo usuario siguiente se ha incorporado al Área Segura." & ChrW(13) & ChrW(10) & _
 				"Asigne por favor las autorizaciones correspondientes." & ChrW(13) & ChrW(10) & _
-				"Para configurar las autorizaciones, vaya a " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " ."
+				"Para configurar las autorizaciones, vaya a " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " ."
 				UserManagement_NewUser_MsgEMail4Admin = "El siguiente usuario nuevo ha sido incorporado al Área Segura por Ud. o por uno de sus compañeros." & ChrW(13) & ChrW(10) & _
 				"Asigne por favor las autorizaciones correspondientes." & ChrW(13) & ChrW(10) & _
-				"Para configurar las autorizaciones, vaya a " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " ."
+				"Para configurar las autorizaciones, vaya a " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " ."
 				UserManagement_NewUser_TextAuthCheckSuccessfull = "Bienvenido a nuestro Área Segura. Un lugar donde ir todos los días." & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
 				"Sus autorizaciones para el usuario ""[n:0]"" han sido creadas. Con mucho gusto puede visitarnos en:" & ChrW(13) & ChrW(10) & _
@@ -3472,7 +3463,6 @@ ChrW(13) & ChrW(10) & _
 				CreateAccount_Descr_Motivation = "Quelle est la raison pour votre inscription"
 				CreateAccount_Descr_MotivItemWebSiteVisitor = "Visiteur du site web"
 				UpdateProfile_Descr_MotivItemWebSiteVisitor = "Visiteur du site web"
-				CreateAccount_Descr_MotivItemBOMAGDealer = "Revendeur"
 				CreateAccount_Descr_MotivItemDealer = "Revendeur"
 				UpdateProfile_Descr_MotivItemDealer = "Revendeur"
 				CreateAccount_Descr_MotivItemJournalist = "Journaliste"
@@ -3649,10 +3639,10 @@ ChrW(13) & ChrW(10) & _
 				"[n:2]"
 				CreateAccount_MsgEMail4Admin = "Le nouvel utilisateur suivant s'est inscrit à Secured Area." & ChrW(13) & ChrW(10) & _
 				"Veuillez attribuer les droits d'accès requis!" & ChrW(13) & ChrW(10) & _
-				"Pour régler les droits d'accès, veuillez visiter " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"Pour régler les droits d'accès, veuillez visiter " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_MsgEMail4Admin = "Le nouvel utilisateur suivant a été inscrit à l'espace sécurité par vous ou par un de vos collègues." & ChrW(13) & ChrW(10) & _
 				"Veuillez attribuer les droits d'accès requis!" & ChrW(13) & ChrW(10) & _
-				"Pour régler les droits d'accès, veuillez visiter " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"Pour régler les droits d'accès, veuillez visiter " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_TextAuthCheckSuccessfull = "Bienvenue dans l'espace sécurité! L'endroit à visiter quotidiennement!" & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
 				"Vos droits d'Accès pour l'utilisateur ""[n:0]"" ont été attribués. N'hésitez pas à nous visiter à:" & ChrW(13) & ChrW(10) & _
@@ -3772,7 +3762,6 @@ ChrW(13) & ChrW(10) & _
 				CreateAccount_Descr_Motivation = "Was ist Ihre Motivation zur Registrierung"
 				CreateAccount_Descr_MotivItemWebSiteVisitor = "Website Besucher"
 				UpdateProfile_Descr_MotivItemWebSiteVisitor = "Website Besucher"
-				CreateAccount_Descr_MotivItemBOMAGDealer = "Händler"
 				CreateAccount_Descr_MotivItemDealer = "Händler"
 				UpdateProfile_Descr_MotivItemDealer = "Händler"
 				CreateAccount_Descr_MotivItemJournalist = "Journalist"
@@ -3967,7 +3956,7 @@ ChrW(13) & ChrW(10) & _
 				"[n:2]"
 				CreateAccount_MsgEMail4Admin = "Der folgende Benutzer hat sich am Secured Area-Bereich neu angemeldet." & ChrW(13) & ChrW(10) & _
 				"Bitte vergeben Sie die benötigten Zugriffsrechte!" & ChrW(13) & ChrW(10) & _
-				"Um Zugriffsrechte einzustellen, besuchen Sie bitte " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"Um Zugriffsrechte einzustellen, besuchen Sie bitte " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_TextWelcome = "Willkommen bei der Secured Area! Hier finden Sie tägliche und ortsungebundene Informationen." & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
 				"Sie haben ein Benutzerkonto für den Bereich Secured Area von unserer Verwaltung eingerichtet bekommen. Dieser Service ist für Sie natürlich kostenlos." & ChrW(13) & ChrW(10) & _
@@ -3992,7 +3981,7 @@ ChrW(13) & ChrW(10) & _
 				"<ul><strong>[n:2]</strong></ul></p>"
 				UserManagement_NewUser_MsgEMail4Admin = "Der folgende Benutzer wurde von Ihnen oder einem Ihrer Kollegen im Secured Area-Bereich angelegt." & ChrW(13) & ChrW(10) & _
 				"Bitte vergeben Sie die benötigten Zugriffsrechte!" & ChrW(13) & ChrW(10) & _
-				"Um Zugriffsrechte einzustellen, besuchen Sie bitte " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"Um Zugriffsrechte einzustellen, besuchen Sie bitte " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_SubjectAuthCheckSuccessfull = "Willkommen in der Secured Area!"
 				UserManagement_NewUser_TextAuthCheckSuccessfull = "Willkommen bei der Secured Area! Hier finden Sie tägliche und ortsungebundene Informationen." & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
@@ -4173,7 +4162,6 @@ ChrW(13) & ChrW(10) & _
 				CreateAccount_Descr_Motivation = "What is your motivation to register"
 				CreateAccount_Descr_MotivItemWebSiteVisitor = "Website Visitor"
 				UpdateProfile_Descr_MotivItemWebSiteVisitor = "Website Visitor"
-				CreateAccount_Descr_MotivItemBOMAGDealer = "Dealer"
 				CreateAccount_Descr_MotivItemDealer = "Dealer"
 				UpdateProfile_Descr_MotivItemDealer = "Dealer"
 				CreateAccount_Descr_MotivItemJournalist = "Journalist"
@@ -4350,10 +4338,10 @@ ChrW(13) & ChrW(10) & _
 				"[n:2]"
 				CreateAccount_MsgEMail4Admin = "The following new user has joined to the Secured Area." & ChrW(13) & ChrW(10) & _
 				"Please assign related authorizations!" & ChrW(13) & ChrW(10) & _
-				"To adjust authorizations please visit " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"To adjust authorizations please visit " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_MsgEMail4Admin = "The following new user has been joined to the Secured Area by you or one of your collegues." & ChrW(13) & ChrW(10) & _
 				"Please assign related authorizations!" & ChrW(13) & ChrW(10) & _
-				"To adjust authorizations please visit " & OfficialServerGroup_AdminURL & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
+				"To adjust authorizations please visit " & OfficialServerGroup_AdminURL_SecurityAdminNotifications & User_Auth_Config_Files_Administration_DefaultPageInAdminEMails & " !"
 				UserManagement_NewUser_TextAuthCheckSuccessfull = "Welcome to our Secured Area! The place to go on every day!" & ChrW(13) & ChrW(10) & _
 				ChrW(13) & ChrW(10) & _
 				"Your authorizations for user ""[n:0]"" have been created. Please feel free to visit us at:" & ChrW(13) & ChrW(10) & _

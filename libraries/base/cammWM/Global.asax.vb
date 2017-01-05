@@ -23,58 +23,29 @@ Imports System.Web.SessionState
 Namespace CompuMaster.camm.WebManager.Pages.Application
 
 #Region "Base error/warning pages"
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : cammMM
-    ''' Class	 : camm.MediaManager.Pages.Specialized.ErrorPage
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The common error page when an exception raises and doesn't get handled otherwise
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	14.12.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class BaseErrorPage
         Inherits CompuMaster.camm.WebManager.Pages.Page
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The last exception which leaded to this error page
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property LastException() As Exception
             Get
                 Return CType(Context.Items("firedexception"), System.Exception)
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The last exception Guid/Token which leaded to this error page
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property LastExceptionGuid() As String
             Get
                 Return CType(Context.Items("firedexceptionguid"), System.String)
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     An optional error code which can contain a more safe exception message
         ''' </summary>
@@ -82,27 +53,15 @@ Namespace CompuMaster.camm.WebManager.Pages.Application
         ''' <remarks>
         '''     This should be the preferred message string for the user since the regular message string might contain sensitive data
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	09.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property OptionalErrorCode() As String
             Get
                 Return CType(Context.Items("firedexceptioncode"), System.String)
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Log the error of this page only, but don't redirect to an error page as the default error handler does
         ''' </summary>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overrides Sub OnError(ByVal e As System.EventArgs)
             Dim ex As Exception = Server.GetLastError()
             If ex Is Nothing Then ex = New Exception("No exception details found, Server.GetLastError() returned Nothing")
@@ -119,51 +78,24 @@ Namespace CompuMaster.camm.WebManager.Pages.Application
 
     End Class
 
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : cammMM
-    ''' Class	 : camm.MediaManager.Pages.Specialized.ErrorPage
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The common error page when an exception raises and doesn't get handled otherwise
     ''' </summary>
-    ''' <remarks>
-    ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	14.12.2004	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class BaseWarningPage
         Inherits CompuMaster.camm.WebManager.Pages.Page
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The last warning which leaded to this warning page
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property LastWarning() As Exception
             Get
                 Return CType(Context.Items("firedexception"), System.Exception)
             End Get
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The last exception Guid/Token which leaded to this error page
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	14.12.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public ReadOnly Property LastWarningGuid() As String
             Get
                 Return CType(Context.Items("firedexceptionguid"), System.String)
@@ -181,11 +113,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Application
 #End Region
 
 #Region "Customizable error page"
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Pages.Application.ErrorPage
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     The error page which displays a notification to the user
     ''' </summary>
@@ -193,10 +120,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Application
     '''     This is the page class which should be the base for all customizations.
     '''     Please note: all links and resources in the HTML code of this page must be absolute and start with "/". This is since the rendered HTML code will be displayed in the folders of the scripts where the errors occured.
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	10.06.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class ErrorPage
         Inherits BaseErrorPage
 
@@ -207,19 +130,11 @@ Namespace CompuMaster.camm.WebManager.Pages.Application
         Protected TextTemplateErrorTitle As String = "An error has been detected"
         Protected TextTemplateErrorDescription As String = "<p>We're sorry for the inconvenience and apologize. The error has been logged for our development team and we'll take care of it.</p><p>This is the reported error:</p><ul><code><Error></code></ul>"
         Protected TextTemplateNoErrorDescription As String = "<p>We're sorry for the inconvenience and apologize.<br>The error has been logged for our development team and we'll take care of it.</p>"
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Retrieve the exception information and return them with the correct HTTP return code
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	10.06.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub PageOnLoad(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
             Dim ErrorDetails As String
 
@@ -308,17 +223,10 @@ Namespace CompuMaster.camm.WebManager.Application
 
 #Region "cammWebManager object instantiation"
         Private _WebManager As CompuMaster.camm.WebManager.Controls.cammWebManager
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The current instance of camm Web-Manager
         ''' </summary>
         ''' <value></value>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.11.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Property cammWebManager() As CompuMaster.camm.WebManager.Controls.cammWebManager
             Get
                 If _WebManager Is Nothing Then
@@ -331,33 +239,16 @@ Namespace CompuMaster.camm.WebManager.Application
                 _WebManager = Value
             End Set
         End Property
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create a camm Web-Manager instance on the fly
         ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	16.10.2004	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Function OnWebManagerJustInTimeCreation() As CompuMaster.camm.WebManager.Controls.cammWebManager
             Return New CompuMaster.camm.WebManager.Controls.cammWebManagerJIT(True)
         End Function
 #End Region
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Initialize the camm Web-Manager and all related components
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overrides Sub Init()
             MyBase.Init()
 
@@ -414,7 +305,7 @@ Namespace CompuMaster.camm.WebManager.Application
             If Configuration.SuppressProductRegistrationServiceConnection = False Then
                 Try
                     Dim registration As New Registration.ProductRegistration(Me.cammWebManager)
-                    If registration.IsRefreshFromServerRequired(48) Then
+                    If registration.IsRefreshFromRemoteLicenseServerRequired(48) Then
                         Application.Lock()
                         Try
                             registration.CheckRegistration(False)
@@ -466,18 +357,11 @@ Namespace CompuMaster.camm.WebManager.Application
         Inherits InternalBaseHttpApplication
 
 #Region "Exception handling"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Catch the last exception and log it respectively create a notification for the technicians
         ''' </summary>
         ''' <param name="reportException">True reports the exception, false doesn't (for SPAM reasons)</param>
         ''' <returns>The last exception</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Function CatchAndDistributeLastError(ByVal reportException As Boolean) As Exception
             Dim Result As ExceptionResult = CatchAndDistributeLastErrorDetails(reportException)
             If Result Is Nothing Then
@@ -492,8 +376,6 @@ Namespace CompuMaster.camm.WebManager.Application
         ''' </summary>
         ''' <param name="reportException">True reports the exception, false doesn't (for SPAM reasons)</param>
         ''' <returns>The last exception</returns>
-        ''' <remarks>
-        ''' </remarks>
         Friend MustOverride Function CatchAndDistributeLastErrorDetails(reportException As Boolean) As ExceptionResult
 
         ''' <summary>
@@ -510,19 +392,10 @@ Namespace CompuMaster.camm.WebManager.Application
             ResultPlainText = CompuMaster.camm.WebManager.Log.BuildPlainMessage(ResultPlainText, "Conflict warning - failing component associations", "", Nothing, Me.Context, Nothing, Me.cammWebManager, ItemsLoggedInTheLast10Minutes)
             Me.cammWebManager.MessagingEMails.QueueEMail(Me.cammWebManager.TechnicalServiceEMailAccountName, Me.cammWebManager.TechnicalServiceEMailAccountAddress, "Conflict warning - failing component associations", ResultPlainText, ResultHtml, Me.cammWebManager.StandardEMailAccountName, Me.cammWebManager.StandardEMailAccountAddress)
         End Sub
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Convert a compiler error collection into a simple text string
         ''' </summary>
         ''' <param name="errorCollection"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Function ConvertErrorCollectionToString(ByVal errorCollection As System.CodeDom.Compiler.CompilerErrorCollection) As String
             Dim Result As New StringBuilder
             For MyCounter As Integer = 0 To errorCollection.Count - 1
@@ -541,19 +414,11 @@ Namespace CompuMaster.camm.WebManager.Application
         End Sub
 
         Protected Friend ItemsLoggedInTheLast10Minutes As Integer = 0
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Handle all occurances of exceptions
         ''' </summary>
         ''' <param name="sender"></param>
         ''' <param name="e"></param>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Sub OnApplication_Error(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Error
             Log.WriteEventLogTrace("OnApplication_Error:Begin")
             Dim LastExceptionDetails As CompuMaster.camm.WebManager.Application.ExceptionResult = Nothing
@@ -727,16 +592,9 @@ Namespace CompuMaster.camm.WebManager.Application
         End Sub
 
         Private _ErrorCode As String
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     The short HTTP error code text, e. g. "404 File not found"
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         ''' 
         Protected Property ErrorCode() As String
             Get
@@ -748,19 +606,11 @@ Namespace CompuMaster.camm.WebManager.Application
         End Property
 
 #Region "Render exception messages"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Prepare the message text for the exception in plain text format
         ''' </summary>
         ''' <param name="exceptionDetails"></param>
         ''' <param name="exceptionIdentifier"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Function BuildPlainMessage(ByVal exceptionDetails As String, ByVal exceptionIdentifier As String, exceptionGuid As String) As String
             Dim CurrentRequest As System.Web.HttpRequest, CurrentContext As System.Web.HttpContext, CurrentUserPrincipal As System.Security.Principal.IPrincipal
             Try
@@ -780,20 +630,11 @@ Namespace CompuMaster.camm.WebManager.Application
             End Try
             Return CompuMaster.camm.WebManager.Log.BuildPlainMessage(exceptionDetails, exceptionIdentifier, exceptionGuid, CurrentRequest, CurrentContext, CurrentUserPrincipal, Me.cammWebManager, ItemsLoggedInTheLast10Minutes)
         End Function
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Prepare the message text for the exception in HTML output format
         ''' </summary>
         ''' <param name="exceptionDetailsAsHtml">Details on the exception in valid HTML code (and without body or script tags or similar)</param>
         ''' <param name="exceptionIdentifier"></param>
-        ''' <returns></returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overridable Function BuildHtmlMessage(ByVal exceptionDetailsAsHtml As String, ByVal exceptionIdentifier As String, exceptionGuid As String) As String
             Dim CurrentRequest As System.Web.HttpRequest, CurrentContext As System.Web.HttpContext, CurrentUserPrincipal As System.Security.Principal.IPrincipal
             Try
@@ -816,17 +657,9 @@ Namespace CompuMaster.camm.WebManager.Application
 #End Region
 
 #End Region
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Do some cleanup work
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	02.01.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Overrides Sub Dispose()
             'ToDo: look for any uncommitted log items (hits to URLs without security) which need to be replicated
             MyBase.Dispose()
@@ -835,16 +668,9 @@ Namespace CompuMaster.camm.WebManager.Application
 #Region "Authentication/Authorization"
 #If NotImplemented Then
 #Region "ValidateAccessToSecurityObject"
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Perform a document access check for the security object if it has been configured for the current path
         ''' </summary>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	17.02.2006	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Protected Overridable Sub ValidateAccessToSecurityObject()
 
             If cammWebManager.SecurityObject <> Nothing AndAlso cammWebManager.InitializationState >= WMSystem.InitializationStates.ServerCommunicationAvailable Then
@@ -880,11 +706,6 @@ Namespace CompuMaster.camm.WebManager.Application
 #End Region
 
 #Region "Optional HttpApplication handler of camm Web-Manager (e. g. for handling of exceptions)"
-    ''' -----------------------------------------------------------------------------
-    ''' Project	 : camm WebManager
-    ''' Class	 : camm.WebManager.Application.HttpApplication
-    ''' 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     An HttpApplication handler of camm Web-Manager for the handling of thrown exceptions
     ''' </summary>
@@ -901,25 +722,13 @@ Namespace CompuMaster.camm.WebManager.Application
     '''         <item>WebManager.NotifyOnApplicationExceptions (only if you want to change the default)</item>
     '''     </list>
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	10.06.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class HttpApplication
         Inherits BaseHttpApplication
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Catch the last exception and log it respectively create a notification for the technicians
         ''' </summary>
         ''' <param name="reportException">True reports the exception, false doesn't (for SPAM reasons)</param>
         ''' <returns>The last exception</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Overrides Function CatchAndDistributeLastErrorDetails(reportException As Boolean) As ExceptionResult
             Log.WriteEventLogTrace("CatchAndDistributeLastError:Begin")
             Dim LastException As Exception
@@ -1037,24 +846,12 @@ Namespace CompuMaster.camm.WebManager.Application
     '''         <item>WebManager.NotifyOnApplicationExceptions (only if you want to change the default)</item>
     '''     </list>
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminsupport]	10.06.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     <System.Runtime.InteropServices.ComVisible(False)> Public Class ExceptionLogIntoWindowsEventLog
         Inherits BaseHttpApplication
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Catch the last exception and log it respectively send a notification e-mail
         ''' </summary>
         ''' <returns>The last exception</returns>
-        ''' <remarks>
-        ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	20.12.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Friend Overrides Function CatchAndDistributeLastErrorDetails(reportException As Boolean) As ExceptionResult
             Log.WriteEventLogTrace("CatchAndDistributeLastError:Begin")
             Dim LastException As Exception
@@ -1147,8 +944,6 @@ Namespace CompuMaster.camm.WebManager.Application
 #Region "HttpApplication for Single-Sign-On"
     <System.Runtime.InteropServices.ComVisible(False)> Public Class SingleSignOnViaWindowsAuthentification
         Inherits HttpApplication
-
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Catch the 401 errors which can't be catched by web.config or Application_Error
         ''' </summary>
@@ -1157,10 +952,6 @@ Namespace CompuMaster.camm.WebManager.Application
         ''' <remarks>
         '''     Redirect to the error page for status code 401
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	11.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Sub Global_EndRequest(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.EndRequest
             If Response.StatusCode = 401 AndAlso Request.IsAuthenticated = True Then
                 cammWebManager.RedirectTo("notauthorized.aspx")

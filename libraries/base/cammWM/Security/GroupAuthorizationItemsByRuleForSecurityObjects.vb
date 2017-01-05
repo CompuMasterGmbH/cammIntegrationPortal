@@ -26,24 +26,46 @@ Namespace CompuMaster.camm.WebManager.Security
         Inherits BaseGroupAuthorizationItemsByRule
 
         Friend Sub New(currentContextServerGroupID As Integer, _
+                          currentContextGroupID As Integer, _
+                          currentContextSecurityObjectID As Integer, _
                           allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
                           allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
                           denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
-                          denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup())
-            MyBase.New(currentContextServerGroupID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev)
+                          denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
+                          webManager As WMSystem)
+            MyBase.New(currentContextServerGroupID, currentContextGroupID, currentContextSecurityObjectID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev, webManager)
         End Sub
 
-        Friend ReadOnly Property EffectiveStandard As SecurityObjectAuthorizationForGroup()
+        Friend Sub New(currentContextGroupID As Integer, _
+                          currentContextSecurityObjectID As Integer, _
+                          allowRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
+                          allowRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
+                          denyRuleItemsNonDev As SecurityObjectAuthorizationForGroup(), _
+                          denyRuleItemsIsDev As SecurityObjectAuthorizationForGroup(), _
+                          webManager As WMSystem)
+            MyBase.New(currentContextGroupID, currentContextSecurityObjectID, allowRuleItemsNonDev, allowRuleItemsIsDev, denyRuleItemsNonDev, denyRuleItemsIsDev, webManager)
+        End Sub
+
+        Public ReadOnly Property EffectiveByDenyRuleStandard As SecurityObjectAuthorizationForGroup()
             Get
-                Return MyBase.EffectiveStandardInternal(EffectivityType.GroupBySecurityObject)
+                Return MyBase.EffectiveByDenyRuleStandardInternal(EffectivityType.GroupBySecurityObject)
             End Get
         End Property
 
-        Friend ReadOnly Property EffectiveForDevelopment As SecurityObjectAuthorizationForGroup()
+        Public ReadOnly Property EffectiveByDenyRuleForDevelopment As SecurityObjectAuthorizationForGroup()
             Get
-                Return MyBase.EffectiveForDevelopmentInternal(EffectivityType.GroupBySecurityObject)
+                Return MyBase.EffectiveByDenyRuleForDevelopmentInternal(EffectivityType.GroupBySecurityObject)
             End Get
         End Property
+
+        ''' <summary>
+        ''' Real time check for finally effective authorizations
+        ''' </summary>
+        ''' <param name="serverGroupID">The server group where an authorizations will be granted</param>
+        ''' <remarks>Note: Use method cammWebManager.IsUserAuthorized to check a single, finally effective authorization for a user</remarks>
+        Public Function EffectiveFinally(serverGroupID As Integer) As SecurityObjectAuthorizationForGroup()
+            Return MyBase.EffectiveFinallyInternal(EffectivityType.GroupBySecurityObject, serverGroupID)
+        End Function
 
     End Class
 

@@ -8,6 +8,7 @@ ALTER PROCEDURE dbo.AdminPrivate_CreateAdminServerNavPoints
 		@ModifiedBy int,
 		@ForceRewrite bit = 0
 	)
+
 AS
 
 If @NewServerID = @OldServerID AND @ForceRewrite = 0
@@ -30,7 +31,6 @@ DECLARE @AppID_AccessLevels int
 DECLARE @AppID_Trouble int
 DECLARE @AppID_QueueMonitor int
 DECLARE @AppID_NavPreview int
-DECLARE @AppID_Logs int
 DECLARE @AppID_Redirections int
 DECLARE @AppID_Markets int
 DECLARE @AppID_TextModules int
@@ -38,7 +38,6 @@ DECLARE @OldServerIsFurthermoreAdminServer bit
 DECLARE @OldAppID_QueueMonitor int
 DECLARE @OldAppID_Redirections int
 DECLARE @OldAppID_TextModules int
-DECLARE @OldAppID_Logs int
 
 SET NOCOUNT ON
 
@@ -60,12 +59,6 @@ SELECT TOP 1 @OldAppID_Redirections = ID
 FROM dbo.Applications
 WHERE SystemApp = 1 And SystemAppType = 3 AND LanguageID = 1
 	AND Title = 'System - Administration - Redirections'
-	AND LocationID = @OldServerID
--- Log analysis - Get the application ID from where we can move the authorizations/sub delegations (the English one is always the master entry)
-SELECT TOP 1 @OldAppID_Logs = ID
-FROM dbo.Applications
-WHERE SystemApp = 1 And SystemAppType = 3 AND LanguageID = 1
-	AND Title = 'System - User Administration - LogAnalysis'
 	AND LocationID = @OldServerID
 -- Mail queue monitor - Get the application ID from where we can move the authorizations/sub delegations (the English one is always the master entry)
 SELECT TOP 1 @OldAppID_QueueMonitor = ID
@@ -119,45 +112,45 @@ Else
 -- Create base security objects
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Applications','',getdate(),@ModifiedBy,'Web Administration','Setup','Applications',NULL,NULL,NULL,'[ADMINURL]apps.aspx',NULL,NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
-SELECT @AppID_Applications = @@IDENTITY
+SELECT @AppID_Applications = SCOPE_IDENTITY()
 
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Authorizations','',getdate(),@ModifiedBy,'Web Administration','User Administration','Authorizations',NULL,NULL,NULL,'[ADMINURL]apprights.aspx',NULL,NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
-SELECT @AppID_Authorizations = @@IDENTITY
+SELECT @AppID_Authorizations = SCOPE_IDENTITY()
 
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Groups','',getdate(),@ModifiedBy,'Web Administration','User Administration','Groups',NULL,NULL,NULL,'[ADMINURL]groups.aspx',NULL,NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
-SELECT @AppID_Groups = @@IDENTITY
+SELECT @AppID_Groups = SCOPE_IDENTITY()
 
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Memberships','',getdate(),@ModifiedBy,'Web Administration','User Administration','Group memberships',NULL,NULL,NULL,'[ADMINURL]memberships.aspx',NULL,NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
-SELECT @AppID_Memberships = @@IDENTITY
+SELECT @AppID_Memberships = SCOPE_IDENTITY()
 
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Users','',getdate(),@ModifiedBy,'Web Administration','User Administration','Users',NULL,NULL,NULL,'[ADMINURL]users.aspx',NULL,NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
-SELECT @AppID_Users = @@IDENTITY
+SELECT @AppID_Users = SCOPE_IDENTITY()
 
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Users - Reset password','',getdate(),@ModifiedBy,'Web Administration','Trouble Center','Reset user password',NULL,NULL,NULL,'[ADMINURL]users_resetpw.aspx',NULL,NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
-SELECT @AppID_ResetPassword = @@IDENTITY
+SELECT @AppID_ResetPassword = SCOPE_IDENTITY()
 
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - NavPreview','',getdate(),@ModifiedBy,'Web Administration','Navigation preview',NULL,NULL,NULL,NULL,'[ADMINURL]users_navbar_preview.aspx','',NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
-SELECT @AppID_NavPreview = @@IDENTITY
+SELECT @AppID_NavPreview = SCOPE_IDENTITY()
 
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Users','',getdate(),@ModifiedBy,'Web Administration','Trouble Center','User hotline support',NULL,NULL,NULL,'[ADMINURL]users_hotline_support.aspx','',NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
-SELECT @AppID_Trouble= @@IDENTITY
+SELECT @AppID_Trouble= SCOPE_IDENTITY()
 
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - ServerSetup',NULL,getdate(),@ModifiedBy,'Web Administration','Setup','Server administration',NULL,NULL,NULL,'[ADMINURL]servers.aspx',NULL,NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
-SELECT @AppID_ServerSetup = @@IDENTITY
+SELECT @AppID_ServerSetup = SCOPE_IDENTITY()
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - ServerSetup',NULL,getdate(),@ModifiedBy,'Web Administration','Setup','About Web-Manager',NULL,NULL,NULL,'[ADMINURL]about.aspx',NULL,NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,@AppID_ServerSetup ,1000000,NULL,0,NULL,NULL,NULL,1,2)
 
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - AccessLevels',NULL,getdate(),@ModifiedBy,'Web Administration','Setup','Access levels',NULL,NULL,NULL,'[ADMINURL]accesslevels.aspx',NULL,NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
-SELECT @AppID_AccessLevels = @@IDENTITY
+SELECT @AppID_AccessLevels = SCOPE_IDENTITY()
 
 -- Authorizations
 INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Trouble,'7',getdate(),@ModifiedBy)
@@ -171,26 +164,10 @@ INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,Relea
 INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_ServerSetup ,'6',getdate(),@ModifiedBy)
 INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Applications ,'6',getdate(),@ModifiedBy)
 
--- Log analysis
-INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
-VALUES('System - User Administration - LogAnalysis',NULL,getdate(),@ModifiedBy,'Web Administration','Log Analysis','Web-Manager',NULL,NULL,NULL,'[ADMINURL]logs/index.aspx',NULL,NULL,0,0,@NewServerID,1,1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,3)
-SELECT @AppID_Logs = @@IDENTITY
--- Authorizations
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Logs ,7,getdate(),@ModifiedBy)
-INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Logs ,6,getdate(),@ModifiedBy)
--- Move old authorizations and old admin delegation settings to new security object
-IF @OldAppID_Logs IS NOT NULL 
-	BEGIN
-	UPDATE dbo.ApplicationsRightsByGroup SET ID_Application = @AppID_Logs WHERE ID_Application = @OldAppID_Logs 
-		AND ID_GroupOrPerson NOT IN (6,7) -- these ones have already been addded
-	UPDATE dbo.ApplicationsRightsByUser SET ID_Application = @AppID_Logs WHERE ID_Application = @OldAppID_Logs 
-	UPDATE [dbo].[System_SubSecurityAdjustments] SET [TablePrimaryIDValue] = @AppID_Logs WHERE [TableName] = 'Applications' AND [TablePrimaryIDValue] = @OldAppID_Logs 
-	END
-
 -- Redirections - English: not a system app to allow modification of authorizations
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Redirections',NULL,getdate(),@ModifiedBy,'Web Administration','Setup','Redirections',NULL,NULL,NULL,'[ADMINURL]redir/index.aspx',NULL,NULL,0,0,@NewServerID,1,1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,3)
-SELECT @AppID_Redirections = @@IDENTITY
+SELECT @AppID_Redirections = SCOPE_IDENTITY()
 -- Authorizations
 INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Redirections ,6,getdate(),@ModifiedBy)
 -- Move old authorizations and old admin delegation settings to new security object
@@ -205,14 +182,14 @@ IF @OldAppID_Redirections IS NOT NULL
 -- Markets
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Markets',NULL,getdate(),@ModifiedBy,'Web Administration','Setup','Markets/Languages',NULL,NULL,NULL,'[ADMINURL]markets.aspx',NULL,NULL,0,0,@NewServerID,1,1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,2)
-SELECT @AppID_Markets = @@IDENTITY
+SELECT @AppID_Markets = SCOPE_IDENTITY()
 -- Authorizations
 INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_Markets ,6,getdate(),@ModifiedBy)
 
 -- Mail queue monitor - English: not a system app to allow modification of authorizations
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Mail Queue Monitor','',getdate(),@ModifiedBy,'Web Administration','Trouble Center','Mail queue monitor',NULL,NULL,NULL,'[ADMINURL]mailqueue_monitor.aspx','',NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,3)
-SELECT @AppID_QueueMonitor = @@IDENTITY
+SELECT @AppID_QueueMonitor = SCOPE_IDENTITY()
 -- Authorizations
 INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_QueueMonitor,'7',getdate(),@ModifiedBy)
 INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_QueueMonitor,'6',getdate(),@ModifiedBy)
@@ -228,7 +205,7 @@ IF @OldAppID_QueueMonitor IS NOT NULL
 -- Text modules - English: not a system app to allow modification of authorizations
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - TextModules',NULL,getdate(),@ModifiedBy,'Web Administration','Setup','Text Modules',NULL,NULL,NULL,'[ADMINURL]textmodules.aspx',NULL,NULL,0,0,@NewServerID,'1',1,getdate(),@ModifiedBy,0,NULL,1000000,NULL,0,NULL,NULL,NULL,1,3)
-SELECT @AppID_TextModules = @@IDENTITY
+SELECT @AppID_TextModules = SCOPE_IDENTITY()
 -- Authorizations
 INSERT INTO dbo.ApplicationsRightsByGroup (ID_Application,ID_GroupOrPerson,ReleasedOn,ReleasedBy) VALUES(@AppID_TextModules ,'6',getdate(),@ModifiedBy)
 -- Move old authorizations and old admin delegation settings to new security object
@@ -254,9 +231,6 @@ INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,Releas
 VALUES('System - User Administration - Groups',NULL,getdate(),@ModifiedBy,N'Web-Administration',N'Benutzer-Verwaltung',N'Gruppen',NULL,NULL,NULL,'[ADMINURL]groups.aspx',NULL,NULL,0,0,@NewServerID,N'2',1,getdate(),@ModifiedBy,0,@AppID_Groups,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Memberships',NULL,getdate(),@ModifiedBy,N'Web-Administration',N'Benutzer-Verwaltung',N'Mitgliedschaften',NULL,NULL,NULL,'[ADMINURL]memberships.aspx',NULL,NULL,0,0,@NewServerID,N'2',1,getdate(),@ModifiedBy,0,@AppID_Memberships,1000000,NULL,0,NULL,NULL,NULL,1,2)
-
-INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
-VALUES('System - User Administration - LogAnalysis',NULL,getdate(),@ModifiedBy,N'Web-Administration',N'Log Auswertungen',N'Web-Manager',NULL,NULL,NULL,'[ADMINURL]logs/index.aspx',NULL,NULL,0,0,@NewServerID,2,1,getdate(),@ModifiedBy,0,@AppID_Logs ,1000000,NULL,0,NULL,NULL,NULL,1,2)
 
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Users',NULL,getdate(),@ModifiedBy,N'Web-Administration',N'Trouble Center',N'Benutzer Hotline Support',NULL,NULL,NULL,'[ADMINURL]users_hotline_support.aspx',N'',NULL,0,0,@NewServerID,N'2',1,getdate(),@ModifiedBy,0,@AppID_Users,1000000,NULL,0,NULL,NULL,NULL,1,2)
@@ -294,9 +268,6 @@ INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,Releas
 VALUES('System - User Administration - Groups',NULL,getdate(),@ModifiedBy,N'Administracja Web',N'Zarządzanie użytkownikami',N'Grupy',NULL,NULL,NULL,'[ADMINURL]groups.aspx',NULL,NULL,0,0,@NewServerID,N'343',1,getdate(),@ModifiedBy,0,@AppID_Groups,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Memberships',NULL,getdate(),@ModifiedBy,N'Administracja Web',N'Zarządzanie użytkownikami',N'Członkostwa',NULL,NULL,NULL,'[ADMINURL]memberships.aspx',NULL,NULL,0,0,@NewServerID,N'343',1,getdate(),@ModifiedBy,0,@AppID_Memberships,1000000,NULL,0,NULL,NULL,NULL,1,2)
-
-INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
-VALUES('System - User Administration - LogAnalysis',NULL,getdate(),@ModifiedBy,N'Administracja Web',N'Analizy logowań',N'Web-Manager',NULL,NULL,NULL,'[ADMINURL]logs/index.aspx',NULL,NULL,0,0,@NewServerID,343,1,getdate(),@ModifiedBy,0,@AppID_Logs ,1000000,NULL,0,NULL,NULL,NULL,1,2)
 
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Users',NULL,getdate(),@ModifiedBy,N'Administracja Web',N'Centrum pomocy',N'Pomoc telefoniczna dla użytkowników',NULL,NULL,NULL,'[ADMINURL]users_hotline_support.aspx',N'',NULL,0,0,@NewServerID,N'343',1,getdate(),@ModifiedBy,0,@AppID_Users,1000000,NULL,0,NULL,NULL,NULL,1,2)
@@ -346,8 +317,6 @@ VALUES('System - User Administration - Applications',NULL,getdate(),@ModifiedBy,
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - AccessLevels',NULL,getdate(),@ModifiedBy,N'Web管理',N'セットアップ',N'アクセスレベル',NULL,NULL,NULL,'[ADMINURL]accesslevels.aspx',NULL,NULL,0,0,@NewServerID,N'202',1,getdate(),@ModifiedBy,0,@AppID_Applications,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
-VALUES('System - User Administration - LogAnalysis',NULL,getdate(),@ModifiedBy,N'Web管理',N'ログ評価',N'Web-Manager',NULL,NULL,NULL,'[ADMINURL]logs/index.aspx',NULL,NULL,0,0,@NewServerID,202,1,getdate(),@ModifiedBy,0,@AppID_Logs ,1000000,NULL,0,NULL,NULL,NULL,1,2)
-INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Redirections',NULL,getdate(),@ModifiedBy,N'Web管理',N'セットアップ',N'転送',NULL,NULL,NULL,'[ADMINURL]redir/index.aspx',NULL,NULL,0,0,@NewServerID,202,1,getdate(),@ModifiedBy,0,@AppID_Redirections ,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Markets',NULL,getdate(),@ModifiedBy,N'Web管理',N'セットアップ',N'市場/言語',NULL,NULL,NULL,'[ADMINURL]markets.aspx',NULL,NULL,0,0,@NewServerID,202,1,getdate(),@ModifiedBy,0,@AppID_Markets ,1000000,NULL,0,NULL,NULL,NULL,1,2)
@@ -381,8 +350,6 @@ INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,Releas
 VALUES('System - User Administration - Applications',NULL,getdate(),@ModifiedBy,N'Administration web',N'Setup',N'Applications',NULL,NULL,NULL,'[ADMINURL]apps.aspx',NULL,NULL,0,0,@NewServerID,N'3',1,getdate(),@ModifiedBy,0,@AppID_Applications,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - AccessLevels',NULL,getdate(),@ModifiedBy,N'Administration web',N'Setup',N'Niveaux d’accès',NULL,NULL,NULL,'[ADMINURL]accesslevels.aspx',NULL,NULL,0,0,@NewServerID,N'3',1,getdate(),@ModifiedBy,0,@AppID_Applications,1000000,NULL,0,NULL,NULL,NULL,1,2)
-INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
-VALUES('System - User Administration - LogAnalysis',NULL,getdate(),@ModifiedBy,N'Administration web',N'Evaluations Log',N'Web-Manager',NULL,NULL,NULL,'[ADMINURL]logs/index.aspx',NULL,NULL,0,0,@NewServerID,3,1,getdate(),@ModifiedBy,0,@AppID_Logs ,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Redirections',NULL,getdate(),@ModifiedBy,N'Administration web',N'Setup',N'Retransmissions',NULL,NULL,NULL,'[ADMINURL]redir/index.aspx',NULL,NULL,0,0,@NewServerID,3,1,getdate(),@ModifiedBy,0,@AppID_Redirections ,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
@@ -418,8 +385,6 @@ VALUES('System - User Administration - Applications',NULL,getdate(),@ModifiedBy,
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - AccessLevels',NULL,getdate(),@ModifiedBy,N'Web管理',N'设置',N'访问级别',NULL,NULL,NULL,'[ADMINURL]accesslevels.aspx',NULL,NULL,0,0,@NewServerID,N'80',1,getdate(),@ModifiedBy,0,@AppID_Applications,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
-VALUES('System - User Administration - LogAnalysis',NULL,getdate(),@ModifiedBy,N'Web管理',N'日志分析',N'Web-Manager',NULL,NULL,NULL,'[ADMINURL]logs/index.aspx',NULL,NULL,0,0,@NewServerID,80,1,getdate(),@ModifiedBy,0,@AppID_Logs ,1000000,NULL,0,NULL,NULL,NULL,1,2)
-INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Redirections',NULL,getdate(),@ModifiedBy,N'Web管理',N'设置',N'转发',NULL,NULL,NULL,'[ADMINURL]redir/index.aspx',NULL,NULL,0,0,@NewServerID,80,1,getdate(),@ModifiedBy,0,@AppID_Redirections ,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Markets',NULL,getdate(),@ModifiedBy,N'Web管理',N'设置',N'市场/语言',NULL,NULL,NULL,'[ADMINURL]markets.aspx',NULL,NULL,0,0,@NewServerID,80,1,getdate(),@ModifiedBy,0,@AppID_Markets ,1000000,NULL,0,NULL,NULL,NULL,1,2)
@@ -453,8 +418,6 @@ INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,Releas
 VALUES('System - User Administration - Applications',NULL,getdate(),@ModifiedBy,N'Веб-организация',N'Настройка',N'Приложения',NULL,NULL,NULL,'[ADMINURL]apps.aspx',NULL,NULL,0,0,@NewServerID,N'359',1,getdate(),@ModifiedBy,0,@AppID_Applications,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - AccessLevels',NULL,getdate(),@ModifiedBy,N'Веб-организация',N'Настройка',N'Уровни доступа',NULL,NULL,NULL,'[ADMINURL]accesslevels.aspx',NULL,NULL,0,0,@NewServerID,N'359',1,getdate(),@ModifiedBy,0,@AppID_Applications,1000000,NULL,0,NULL,NULL,NULL,1,2)
-INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
-VALUES('System - User Administration - LogAnalysis',NULL,getdate(),@ModifiedBy,N'Веб-организация',N'Анализы регистрации',N'Web-Manager',NULL,NULL,NULL,'[ADMINURL]logs/index.aspx',NULL,NULL,0,0,@NewServerID,359,1,getdate(),@ModifiedBy,0,@AppID_Logs ,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Redirections',NULL,getdate(),@ModifiedBy,N'Веб-организация',N'Настройка',N'Передачи',NULL,NULL,NULL,'[ADMINURL]redir/index.aspx',NULL,NULL,0,0,@NewServerID,359,1,getdate(),@ModifiedBy,0,@AppID_Redirections ,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
@@ -490,8 +453,6 @@ VALUES('System - User Administration - Applications',NULL,getdate(),@ModifiedBy,
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - AccessLevels',NULL,getdate(),@ModifiedBy,N'Amministrazione web',N'Setup',N'Livelli di accesso',NULL,NULL,NULL,'[ADMINURL]accesslevels.aspx',NULL,NULL,0,0,@NewServerID,N'200',1,getdate(),@ModifiedBy,0,@AppID_Applications,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
-VALUES('System - User Administration - LogAnalysis',NULL,getdate(),@ModifiedBy,N'Amministrazione web',N'Valutazioni log',N'Web-Manager',NULL,NULL,NULL,'[ADMINURL]logs/index.aspx',NULL,NULL,0,0,@NewServerID,200,1,getdate(),@ModifiedBy,0,@AppID_Logs ,1000000,NULL,0,NULL,NULL,NULL,1,2)
-INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Redirections',NULL,getdate(),@ModifiedBy,N'Amministrazione web',N'Setup',N'Trasmissioni',NULL,NULL,NULL,'[ADMINURL]redir/index.aspx',NULL,NULL,0,0,@NewServerID,200,1,getdate(),@ModifiedBy,0,@AppID_Redirections ,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Markets',NULL,getdate(),@ModifiedBy,N'Amministrazione web',N'Setup',N'Mercati/Lingue',NULL,NULL,NULL,'[ADMINURL]markets.aspx',NULL,NULL,0,0,@NewServerID,200,1,getdate(),@ModifiedBy,0,@AppID_Markets ,1000000,NULL,0,NULL,NULL,NULL,1,2)
@@ -526,8 +487,6 @@ VALUES('System - User Administration - Applications',NULL,getdate(),@ModifiedBy,
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - AccessLevels',NULL,getdate(),@ModifiedBy,N'Administración del sitio',N'Configuración',N'Niveles de acceso',NULL,NULL,NULL,'[ADMINURL]accesslevels.aspx',NULL,NULL,0,0,@NewServerID,N'4',1,getdate(),@ModifiedBy,0,@AppID_Applications,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
-VALUES('System - User Administration - LogAnalysis',NULL,getdate(),@ModifiedBy,N'Administración del sitio',N'Análisis log',N'Web-Manager',NULL,NULL,NULL,'[ADMINURL]logs/index.aspx',NULL,NULL,0,0,@NewServerID,4,1,getdate(),@ModifiedBy,0,@AppID_Logs ,1000000,NULL,0,NULL,NULL,NULL,1,2)
-INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Redirections',NULL,getdate(),@ModifiedBy,N'Administración del sitio',N'Configuración',N'Redirecciones',NULL,NULL,NULL,'[ADMINURL]redir/index.aspx',NULL,NULL,0,0,@NewServerID,4,1,getdate(),@ModifiedBy,0,@AppID_Redirections ,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - Administration - Markets',NULL,getdate(),@ModifiedBy,N'Administración del sitio',N'Configuración',N'Mercados/Idiomas',NULL,NULL,NULL,'[ADMINURL]markets.aspx',NULL,NULL,0,0,@NewServerID,4,1,getdate(),@ModifiedBy,0,@AppID_Markets ,1000000,NULL,0,NULL,NULL,NULL,1,2)
@@ -550,9 +509,6 @@ INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,Releas
 VALUES('System - User Administration - Groups',NULL,getdate(),@ModifiedBy,N'Administração Web',N'Gestão dos utilizadores',N'Grupos',NULL,NULL,NULL,'[ADMINURL]groups.aspx',NULL,NULL,0,0,@NewServerID,N'345',1,getdate(),@ModifiedBy,0,@AppID_Groups,1000000,NULL,0,NULL,NULL,NULL,1,2)
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Memberships',NULL,getdate(),@ModifiedBy,N'Administração Web',N'Gestão dos utilizadores',N'Qualidades de membro',NULL,NULL,NULL,'[ADMINURL]memberships.aspx',NULL,NULL,0,0,@NewServerID,N'345',1,getdate(),@ModifiedBy,0,@AppID_Memberships,1000000,NULL,0,NULL,NULL,NULL,1,2)
-
-INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
-VALUES('System - User Administration - LogAnalysis',NULL,getdate(),@ModifiedBy,N'Administração Web',N'Análise de protocolo',N'Web-Manager',NULL,NULL,NULL,'[ADMINURL]logs/index.aspx',NULL,NULL,0,0,@NewServerID,345,1,getdate(),@ModifiedBy,0,@AppID_Logs ,1000000,NULL,0,NULL,NULL,NULL,1,2)
 
 INSERT INTO dbo.Applications_CurrentAndInactiveOnes (Title,TitleAdminArea,ReleasedOn,ReleasedBy,Level1Title,Level2Title,Level3Title,Level4Title,Level5Title,Level6Title,NavURL,NavFrame,NavTooltipText,IsNew,IsUpdated,LocationID,LanguageID,SystemApp,ModifiedOn,ModifiedBy,AppDisabled,AuthsAsAppID,Sort,ResetIsNewUpdatedStatusOn,AppDeleted,OnMouseOver,OnMouseOut,OnClick,AddLanguageID2URL,SystemAppType) 
 VALUES('System - User Administration - Users',NULL,getdate(),@ModifiedBy,N'Administração Web',N'Centro de falhas',N'Hotline assistênca ao utilizador',NULL,NULL,NULL,'[ADMINURL]users_hotline_support.aspx',N'',NULL,0,0,@NewServerID,N'345',1,getdate(),@ModifiedBy,0,@AppID_Users,1000000,NULL,0,NULL,NULL,NULL,1,2)

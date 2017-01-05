@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<metadata>
+		<id>$id$</id>
+		<version>$version$</version>
+		<title>$title$</title>
+		<authors>$author$</authors>
+		<owners>$author$</owners>
+		<licenseUrl>https://raw.githubusercontent.com/CompuMasterGmbH/cammIntegrationPortal/master/LICENSE.md</licenseUrl>
+		<projectUrl>https://github.com/CompuMasterGmbH/cammIntegrationPortal/tree/master/libraries/smarteditor</projectUrl>
+		<iconUrl>https://raw.githubusercontent.com/CompuMasterGmbH/cammIntegrationPortal/master/logo_64x64.png</iconUrl>
+		<requireLicenseAcceptance>true</requireLicenseAcceptance>
+		<description>camm Integration Portal (based on camm Web-Manager) for Web Applications</description>
+		<releaseNotes/>
+		<copyright>2005-2016 CompuMaster GmbH</copyright>
+		<tags>SmartEditorUpload SmartEditor CompuMaster camm Integration Portal Web-Manager Web Manager CIP CWM cammIPortal IPortal</tags>
+		<dependencies>
+		  <dependency id="cammWM" version="4.12.209" />
+		  <dependency id="cammWM.SmartEditor" version="4.10.206" />
+		  <dependency id="CompuMaster.Imaging" version="2016.08.26" />
+		</dependencies>
+		<frameworkAssemblies>
+			<frameworkAssembly assemblyName="System.Web" />	
+		</frameworkAssemblies>
+		<contentFiles>
+			<files include="se-webupload/**" buildAction="None" copyToOutput="true" flatten="false" />
+		</contentFiles>
+	</metadata>
+	<files>
+		<file src="se-webupload/**" target="se-webupload" />
+	</files>
+</package>

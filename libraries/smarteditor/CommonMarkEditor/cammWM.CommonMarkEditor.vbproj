@@ -89,6 +89,7 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources.de.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="My Project\Application.myapp">
@@ -108,9 +109,9 @@
     <None Include="_CreateNewNuGetPackage\RunMeToUploadNuGetPackage.cmd" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\baseeditor\cammWM.SmartEditor.VS2012.vbproj">
+    <ProjectReference Include="..\baseeditor\cammWM.SmartEditor.vbproj">
       <Project>{f9f88dee-2014-4668-8c21-0c654d6f439f}</Project>
-      <Name>cammWM.SmartEditor.VS2012</Name>
+      <Name>cammWM.SmartEditor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

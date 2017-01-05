@@ -211,7 +211,258 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property 'SecurityObjectEditMode()
 
+
+
+        Private _ImagesUploadFormUrl As String
+        ''' <summary>
+        ''' The url to the upload form
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property ImagesUploadFormUrl As String
+            Get
+                If _ImagesUploadFormUrl = Nothing Then
+                    Dim configValue As String = Me.Configuration.ImagesUploadFormUrl
+                    If configValue = Nothing Then
+                        Return "/sysdata/modules/smarteditor/imagesupload.aspx"
+                    End If
+                    Return VirtualPathUtilityToAbsolute(configValue)
+                End If
+                Return VirtualPathUtilityToAbsolute(_ImagesUploadFormUrl)
+            End Get
+            Set(value As String)
+                _ImagesUploadFormUrl = value
+            End Set
+        End Property
+
+        Private Function VirtualPathUtilityToAbsolute(path As String) As String
+            If path <> Nothing AndAlso path.StartsWith("~/") Then
+                Return VirtualPathUtility.ToAbsolute(path)
+            Else
+                Return path
+            End If
+        End Function
+
+        Private __DocumentsUploadFormUrl As String
+        ''' <summary>
+        ''' The url to the upload form
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property DocumentsUploadFormUrl As String
+            Get
+                If __DocumentsUploadFormUrl = Nothing Then
+                    Dim configValue As String = Me.Configuration.DocumentsUploadFormUrl
+                    If configValue = Nothing Then
+                        Return "/sysdata/modules/smarteditor/docsupload.aspx"
+                    End If
+                    Return VirtualPathUtilityToAbsolute(configValue)
+                End If
+                Return VirtualPathUtilityToAbsolute(__DocumentsUploadFormUrl)
+            End Get
+            Set(value As String)
+                __DocumentsUploadFormUrl = value
+            End Set
+        End Property
+
+        Private _ImagesUploadPath As String
+
+        ''' <summary>
+        ''' Path to the folder where images should be stored
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property ImagesUploadPath As String
+            Get
+                If _ImagesUploadPath = Nothing Then
+                    Dim configValue As String = Me.Configuration.ImagesUploadPath
+                    If configValue = Nothing Then
+                        Return ""
+                    End If
+                    Return VirtualPathUtilityToAbsolute(configValue)
+                End If
+                Return VirtualPathUtilityToAbsolute(_ImagesUploadPath)
+            End Get
+            Set(value As String)
+                _ImagesUploadPath = value
+            End Set
+        End Property
+
+        Private _DocumentsUploadPath As String
+
+        ''' <summary>
+        ''' Path to the folder where images should be stored
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property DocumentsUploadPath As String
+            Get
+                If _DocumentsUploadPath = Nothing Then
+                    Dim configValue As String = Me.Configuration.DocumentsUploadPath
+                    If configValue = Nothing Then
+                        Return ""
+                    End If
+                    Return VirtualPathUtilityToAbsolute(configValue)
+                End If
+                Return VirtualPathUtilityToAbsolute(_DocumentsUploadPath)
+            End Get
+            Set(value As String)
+                _DocumentsUploadPath = value
+            End Set
+        End Property
+
+        Private _Docs As String
+
+
+        <Obsolete("Use DocsUploadPath instead")> Public Property Docs As String
+            Get
+                Return Me.DocumentsUploadPath
+            End Get
+            Set(value As String)
+                Me.DocumentsUploadPath = value
+            End Set
+        End Property
+
+        Private _images As String
+
+        <Obsolete("Use ImagesUploadPath instead")> Public Property Images As String
+            Get
+                Return Me.ImagesUploadPath
+            End Get
+            Set(value As String)
+                Me.ImagesUploadPath = value
+            End Set
+        End Property
+
+
+        Private _ImagesUploadSizeMax As Integer = 512000
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Max. upload size for images in Bytes
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        Public Property ImagesUploadSizeMax As Integer
+            Get
+                Return _ImagesUploadSizeMax
+            End Get
+            Set(ByVal Value As Integer)
+                _ImagesUploadSizeMax = Value
+            End Set
+        End Property
+
+
+        Private _DocumentsUploadSizeMax As Integer = 512000
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Max. upload size for documents in Bytes
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        Public Property DocumentsUploadSizeMax As Integer
+            Get
+                Return _DocumentsUploadSizeMax
+            End Get
+            Set(ByVal Value As Integer)
+                _DocumentsUploadSizeMax = Value
+            End Set
+        End Property
+
+        Public Property DocsUploadSizeMax As Integer
+            Get
+                Return Me.DocumentsUploadSizeMax
+            End Get
+            Set(value As Integer)
+                Me.DocumentsUploadSizeMax = value
+            End Set
+        End Property
+
+
+        Private _ImagesReadOnly As String() = New String() {}
+
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Contains the control specific readonly folders for images
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.TypeConverter(GetType(StringArrayConverter))> Public Property ImagesReadOnly As String()
+            Get
+                Return _ImagesReadOnly
+            End Get
+            Set(ByVal Value As String())
+                _ImagesReadOnly = Value
+            End Set
+        End Property
+
+        Private _ImagesAllowedFileExtensions As String() = New String() {}
+
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Contains the control specific readonly folders for documents
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.TypeConverter(GetType(StringArrayConverter))> Public Property ImagesAllowedFileExtensions As String()
+            Get
+                If _ImagesAllowedFileExtensions Is Nothing OrElse _DocumentsAllowedFileExtensions.Length = 0 Then
+                    _ImagesAllowedFileExtensions = New String() {".jpg", ".jpeg", ".gif", ".png", ".bmp"}
+                End If
+                Return _ImagesAllowedFileExtensions
+            End Get
+            Set(ByVal Value As String())
+                _ImagesAllowedFileExtensions = Value
+            End Set
+        End Property
+
+
+        Private _DocumentsReadOnly As String() = New String() {}
+
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Contains the control specific readonly folders for documents
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.TypeConverter(GetType(StringArrayConverter))> Public Property DocumentsReadOnly As String()
+            Get
+                Return _DocumentsReadOnly
+            End Get
+            Set(ByVal Value As String())
+                _DocumentsReadOnly = Value
+            End Set
+        End Property
+
+        Private _DocumentsAllowedFileExtensions As String() = New String() {}
+
+        ''' -----------------------------------------------------------------------------
+        ''' <summary>
+        '''     Contains the control specific readonly folders for documents
+        ''' </summary>
+        ''' <value></value>
+        ''' <remarks>
+        ''' </remarks>
+        ''' -----------------------------------------------------------------------------
+        <System.ComponentModel.TypeConverter(GetType(StringArrayConverter))> Public Property DocumentsAllowedFileExtensions As String()
+            Get
+                If _DocumentsAllowedFileExtensions Is Nothing OrElse _DocumentsAllowedFileExtensions.Length = 0 Then
+                    _DocumentsAllowedFileExtensions = New String() {".docx", ".doc", ".odt", ".pdf", ".rtf"}
+                End If
+                Return _DocumentsAllowedFileExtensions
+            End Get
+            Set(ByVal Value As String())
+                _DocumentsAllowedFileExtensions = Value
+            End Set
+        End Property
+
+
 #End Region
+
+
 
     End Class
 

@@ -19,28 +19,69 @@ Module MainCode
     Friend WithEvents DBSetup As New CompuMaster.camm.WebManager.Setup.DatabaseSetup(SetupPackageName, SetupPackageTitle)
 
     Public Sub Main()
+        Try
+            Dim options As New CommandlineOptions()
+            Dim parser As New CommandLine.Parser(Sub(sett)
+                                                     sett.CaseSensitive = False
+                                                     sett.IgnoreUnknownArguments = False
+                                                     sett.MutuallyExclusive = True
+                                                 End Sub)
 
-        Dim options As New CommandlineOptions()
-        If Not CommandLine.Parser.Default.ParseArguments(System.Environment.GetCommandLineArgs, options) Then
-            Environment.Exit(CommandLine.Parser.DefaultExitCodeFail)
-        ElseIf options.ConnectionStringForSqlDatabaseCreation <> "" Xor options.CreateNewDatabaseInstance Xor options.UpdateDatabaseInstance = False Then
-            Console.WriteLine("Either -CreateNewDatabaseInstance or -UpdateDatabaseInstance or -ConnectionStringForSqlDatabaseCreation must be used")
-            Environment.Exit(CommandLine.Parser.DefaultExitCodeFail)
-        ElseIf options.ConnectionStringForSqlDatabaseCreation <> "" AndAlso options.DatabaseNameForSqlDatabaseCreation <> "" Then
-            CommandLineApp.TestConnection(options)
-            CommandLineApp.CreateSqlDatabaseAndCwmInstance(options)
-            CommandLineApp.UpdateWebManagerInstance(options)
-        ElseIf options.CreateNewDatabaseInstance Then
-            CommandLineApp.TestConnection(options)
-            CommandLineApp.CleanupSqlDatabaseAndCreateWebManagerInstance(options)
-            CommandLineApp.UpdateWebManagerInstance(options)
-        ElseIf options.UpdateDatabaseInstance Then
-            CommandLineApp.TestConnection(options)
-            CommandLineApp.UpdateWebManagerInstance(options)
-        Else
-            QuitWithError("Unexpected operation flow")
-        End If
+
+            If Not parser.ParseArguments(System.Environment.GetCommandLineArgs, options) Then
+                Console.WriteLine(options.GetUsage)
+                Environment.Exit(CommandLine.Parser.DefaultExitCodeFail)
+            ElseIf System.Environment.GetCommandLineArgs.Length = 1 Then
+                Console.WriteLine(options.GetUsage)
+                Environment.Exit(CommandLine.Parser.DefaultExitCodeFail)
+            ElseIf options.DebugSession AndAlso WaitForUserToJoinDebugSession() Then
+                'never true, but waiting before continue: WaitForUserToJoinDebugSession
+            ElseIf CheckAndAssignForVerboseMode(options) Then
+                'never true, but assigning debug level if required
+            ElseIf options.LatestAvailableDbPatchVersion Then
+                CommandLineApp.ShowLatestAvailableDbPatchVersion()
+            ElseIf options.ListAvailablePatches Then
+                CommandLineApp.ListAvailablePatches()
+            ElseIf options.DatabaseServerType = Nothing Then
+                Console.WriteLine("Requires additional argument --DatabaseServerType")
+            ElseIf options.ConnectionString = Nothing Then
+                Console.WriteLine("Requires additional argument --ConnectionString")
+            ElseIf options.CurrentDbVersion Then
+                CommandLineApp.TestConnection(options)
+                CommandLineApp.ShowCurrentDbBuildNo(options)
+            ElseIf options.ConnectionStringForSqlDatabaseCreation <> "" Xor options.CreateNewDatabaseInstance Xor options.UpdateDatabaseInstance = False Then
+                Console.WriteLine("Either --CreateNewDatabaseInstance or --UpdateDatabaseInstance or --ConnectionStringForSqlDatabaseCreation must be used")
+                Environment.Exit(CommandLine.Parser.DefaultExitCodeFail)
+            ElseIf options.ConnectionStringForSqlDatabaseCreation <> "" AndAlso options.DatabaseNameForSqlDatabaseCreation <> "" Then
+                CommandLineApp.TestConnection(options)
+                CommandLineApp.CreateSqlDatabaseAndCwmInstance(options)
+                CommandLineApp.UpdateWebManagerInstance(options)
+            ElseIf options.CreateNewDatabaseInstance Then
+                CommandLineApp.TestConnection(options)
+                CommandLineApp.CleanupSqlDatabaseAndCreateWebManagerInstance(options)
+                CommandLineApp.UpdateWebManagerInstance(options)
+            ElseIf options.UpdateDatabaseInstance Then
+                CommandLineApp.TestConnection(options)
+                CommandLineApp.UpdateWebManagerInstance(options)
+            Else
+                QuitWithError("ERROR: Missing arguments")
+            End If
+        Catch ex As Exception
+            QuitWithError("Unexpected exception: " & ex.ToString)
+        End Try
     End Sub
+
+    ''' <summary>
+    ''' Setup verbose mode and always return with False
+    ''' </summary>
+    ''' <param name="options"></param>
+    ''' <returns>False (always)</returns>
+    Private Function CheckAndAssignForVerboseMode(options As CommandlineOptions) As Boolean
+        If options.Verbose Then
+            DBSetup.DebugLevel = 3
+        End If
+        Return False
+    End Function
 
     Private Sub DBSetup_ProgressStepStatusChanged() Handles DBSetup.ProgressStepStatusChanged
         'Do Nothing or TODO: ProgressBar 2
@@ -61,6 +102,12 @@ Module MainCode
     Private Sub DBSetup_WarningsQueueChanged() Handles DBSetup.WarningsQueueChanged
         Console.WriteLine("WARNING: " & DBSetup.Warnings)
     End Sub
+
+    Private Function WaitForUserToJoinDebugSession() As Boolean
+        Console.WriteLine("Please joing with your debugger, then press enter key . . .")
+        Console.ReadLine()
+        Return False
+    End Function
 
     Friend Sub QuitWithError(errorInfo As String)
         Console.WriteLine(errorInfo)

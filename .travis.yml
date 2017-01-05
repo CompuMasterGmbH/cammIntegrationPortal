@@ -1,0 +1,10 @@
+language: csharp
+solution: libraries\base\cammWM\cammWM.VS2015.OpenSource.sln
+mono:
+  - latest
+install:
+  - nuget restore libraries\base\cammWM\cammWM.VS2015.OpenSource.sln
+  - nuget restore libraries\adminarea\CammWM.Admin\cammWM.Admin.VS2005.sln
+script:
+  - xbuild /p:Configuration=Release libraries\base\cammWM\cammWM.VS2015.OpenSource.sln
+  - xbuild /p:Configuration=Release libraries\adminarea\CammWM.Admin\cammWM.Admin.VS2005.sln

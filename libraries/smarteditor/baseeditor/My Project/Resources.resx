@@ -117,7 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="String1" xml:space="preserve">
-    <value>d</value>
+  <data name="Label_DeactivateDeleteMarket" xml:space="preserve">
+    <value>Delete/Deactivate this market</value>
+  </data>
+  <data name="Label_InsertDocument" xml:space="preserve">
+    <value>Insert document</value>
+  </data>
+  <data name="Label_InsertImage" xml:space="preserve">
+    <value>Insert image</value>
+  </data>
+  <data name="Label_JSString_AreYouSureToClose" xml:space="preserve">
+    <value>Do you want to close this site without saving your changes?</value>
+  </data>
+  <data name="Label_JSString_AreYouSureToLeave" xml:space="preserve">
+    <value>Do you want to leave? All your changes will be lost!</value>
+  </data>
+  <data name="Label_NewVersion" xml:space="preserve">
+    <value>New Version</value>
+  </data>
+  <data name="Label_NoVersionsAvailable" xml:space="preserve">
+    <value>No versions available</value>
+  </data>
+  <data name="Label_Option_NeutralMarket" xml:space="preserve">
+    <value>Neutral / All</value>
+  </data>
+  <data name="Label_Option_New" xml:space="preserve">
+    <value>(new)</value>
+  </data>
+  <data name="Label_Option_NoRelease" xml:space="preserve">
+    <value>(no release)</value>
+  </data>
+  <data name="Label_Preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="Label_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Label_SaveNActivate" xml:space="preserve">
+    <value>Save &amp; Activate</value>
+  </data>
+  <data name="Label_SaveNActivate_Tooltip" xml:space="preserve">
+    <value>Save &amp; Activate all languages/markets of this version</value>
+  </data>
+  <data name="Label_Suffix_Inactive" xml:space="preserve">
+    <value> (inactive)</value>
+  </data>
+  <data name="Label_WithChanges" xml:space="preserve">
+    <value>With changes</value>
+  </data>
+  <data name="Label_WithoutChangesSinceVersion" xml:space="preserve">
+    <value>Without changes since version </value>
   </data>
 </root>

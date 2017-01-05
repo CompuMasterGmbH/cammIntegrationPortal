@@ -194,101 +194,101 @@ Imports CompuMaster.camm.WebManager.Controls.Administration
                         For MyCount = 0 To dt.Columns.Count - 1
                             Select Case UCase(dt.Columns.Item(MyCount).ToString())
                                 Case "ID"
-                                    CType(e.Item.FindControl("lblID"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblID"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
                                 Case "LOGINNAME"
-                                    CType(e.Item.FindControl("ancLoginName"), HtmlAnchor).HRef = "users_update.aspx?ID=" & Utils.Nz(.Item("ID"), String.Empty)
-                                    CType(e.Item.FindControl("ancLoginName"), HtmlAnchor).InnerHtml = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("ancLoginName"), HtmlAnchor).HRef = "users_update.aspx?ID=" & CompuMaster.camm.WebManager.Utils.Nz(.Item("ID"), String.Empty)
+                                    CType(e.Item.FindControl("ancLoginName"), HtmlAnchor).InnerHtml = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "LOGINPW"
                                 Case "CUSTOMERNO"
                                     CType(e.Item.FindControl("lblCustomerHadline"), Label).Text = cammWebManager.Internationalization.UpdateProfile_Descr_CustomerSupplierData
                                     CType(e.Item.FindControl("lblUpdateCustomerNO"), Label).Text = cammWebManager.Internationalization.UpdateProfile_Descr_CustomerNo
-                                    CType(e.Item.FindControl("lblCustomerNO"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblCustomerNO"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "SUPPLIERNO"
                                     CType(e.Item.FindControl("lblUpdateSupplierNO"), Label).Text = cammWebManager.Internationalization.UpdateProfile_Descr_SupplierNo
-                                    CType(e.Item.FindControl("lblSupplierNO"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblSupplierNO"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "COMPANY"
-                                    CType(e.Item.FindControl("lblCompany"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblCompany"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "ANREDE"
-                                    CType(e.Item.FindControl("lblAnrede"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblAnrede"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "TITEL"
-                                    CType(e.Item.FindControl("lblTitel"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblTitel"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "VORNAME"
-                                    CType(e.Item.FindControl("lblVorname"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblVorname"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "NACHNAME"
-                                    CType(e.Item.FindControl("lblNachname"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblNachname"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "NAMENSZUSATZ"
-                                    CType(e.Item.FindControl("lblNamenszusatz"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblNamenszusatz"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "E-MAIL"
-                                    CType(e.Item.FindControl("ancEmail"), HtmlAnchor).HRef = "mailto:" & Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
-                                    CType(e.Item.FindControl("ancEmail"), HtmlAnchor).InnerHtml = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("ancEmail"), HtmlAnchor).HRef = "mailto:" & Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("ancEmail"), HtmlAnchor).InnerHtml = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
                                 Case "STRASSE"
-                                    CType(e.Item.FindControl("lblStrasse"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblStrasse"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "PLZ"
-                                    CType(e.Item.FindControl("lblPLZ"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblPLZ"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "ORT"
-                                    CType(e.Item.FindControl("lblORT"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblORT"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "STATE"
-                                    CType(e.Item.FindControl("lblState"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblState"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "LAND"
-                                    CType(e.Item.FindControl("lblLand"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblLand"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "LOGINCOUNT"
-                                    CType(e.Item.FindControl("lblLoginCount"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblLoginCount"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "LOGINFAILURES"
-                                    CType(e.Item.FindControl("lblLoginFailures"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblLoginFailures"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "LOGINLOCKEDTILL"
-                                    CType(e.Item.FindControl("lblLoginLockedTill"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblLoginLockedTill"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "LOGINDISABLED"
-                                    CType(e.Item.FindControl("lblLoginDisabled"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblLoginDisabled"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "ACCOUNTACCESSABILITY"
-                                    Dim MyAccessLevel As New CompuMaster.camm.WebManager.WMSystem.AccessLevelInformation(Utils.Nz(.Item(MyCount), 0), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
+                                    Dim MyAccessLevel As New CompuMaster.camm.WebManager.WMSystem.AccessLevelInformation(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), 0), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
                                     CType(e.Item.FindControl("lblAccountAccessability"), Label).Text = Server.HtmlEncode(MyAccessLevel.Title)
 
                                 Case "CREATEDON"
-                                    CType(e.Item.FindControl("lblCreatedOn"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblCreatedOn"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "MODIFIEDON"
-                                    CType(e.Item.FindControl("lblModifiedOn"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblModifiedOn"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "LASTLOGINON"
-                                    CType(e.Item.FindControl("lblLastLoginOn"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblLastLoginOn"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "LASTLOGINVIAREMOTEIP"
-                                    CType(e.Item.FindControl("lblLastLoginViaremoteIP"), Label).Text = Server.HtmlEncode(Utils.Nz(.Item(MyCount), String.Empty))
+                                    CType(e.Item.FindControl("lblLastLoginViaremoteIP"), Label).Text = Server.HtmlEncode(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), String.Empty))
 
                                 Case "1STPREFERREDLANGUAGE"
                                     Dim MyLanguageInfo As CompuMaster.camm.WebManager.WMSystem.LanguageInformation
-                                    MyLanguageInfo = New CompuMaster.camm.WebManager.WMSystem.LanguageInformation(Utils.Nz(.Item(MyCount), 0), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
+                                    MyLanguageInfo = New CompuMaster.camm.WebManager.WMSystem.LanguageInformation(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), 0), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
                                     CType(e.Item.FindControl("lblFirstPreferredLanguage"), Label).Text = Server.HtmlEncode(MyLanguageInfo.LanguageName_English)
 
                                 Case "2NDPREFERREDLANGUAGE"
                                     If Not IsDBNull(.Item(MyCount)) Then
                                         Dim MyLanguageInfo As CompuMaster.camm.WebManager.WMSystem.LanguageInformation
-                                        MyLanguageInfo = New CompuMaster.camm.WebManager.WMSystem.LanguageInformation(Utils.Nz(.Item(MyCount), 0), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
+                                        MyLanguageInfo = New CompuMaster.camm.WebManager.WMSystem.LanguageInformation(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), 0), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
                                         CType(e.Item.FindControl("lblSecondPreferredLanguage"), Label).Text = Server.HtmlEncode(MyLanguageInfo.LanguageName_English)
                                     End If
 
                                 Case "3RDPREFERREDLANGUAGE"
                                     If Not IsDBNull(.Item(MyCount)) Then
                                         Dim MyLanguageInfo As CompuMaster.camm.WebManager.WMSystem.LanguageInformation
-                                        MyLanguageInfo = New CompuMaster.camm.WebManager.WMSystem.LanguageInformation(Utils.Nz(.Item(MyCount), 0), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
+                                        MyLanguageInfo = New CompuMaster.camm.WebManager.WMSystem.LanguageInformation(CompuMaster.camm.WebManager.Utils.Nz(.Item(MyCount), 0), CType(cammWebManager, CompuMaster.camm.webmanager.WMSystem))
                                         CType(e.Item.FindControl("lblThirdPreferredLanguage"), Label).Text = Server.HtmlEncode(MyLanguageInfo.LanguageName_English)
                                     End If
                             End Select

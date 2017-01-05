@@ -25,7 +25,7 @@ ALTER PROCEDURE dbo.Public_ValidateUser
 	@ScriptEngine_SessionID nvarchar(512),
 	@ForceLogin bit
 )
-WITH ENCRYPTION
+
 AS
 
 -- Deklaration Variablen/Konstanten
@@ -354,7 +354,7 @@ ALTER PROCEDURE dbo.Public_Logout
 	@ScriptEngine_ID int = NULL,
 	@ScriptEngine_SessionID nvarchar(512) = NULL
 )
-WITH ENCRYPTION
+
 AS
 
 SET NOCOUNT ON

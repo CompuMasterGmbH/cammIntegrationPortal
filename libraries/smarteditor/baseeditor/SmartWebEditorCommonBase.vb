@@ -154,6 +154,20 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property
 
+        Private _NoteForEditor As String
+        ''' <summary>
+        ''' An optional note for the editor how to edit page content correctly (e.g. to update on which markets/servergroups)
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property NoteForEditor As String
+            Get
+                Return _NoteForEditor
+            End Get
+            Set(value As String)
+                _NoteForEditor = value
+            End Set
+        End Property
+
         ''' <summary>
         '''     The edit mode as it is defined in the viewstate
         ''' </summary>
@@ -309,9 +323,9 @@ Namespace CompuMaster.camm.SmartWebEditor
             Get
                 If ViewState("WebEditorXXL.showlanguage") Is Nothing Then
                     If Me.MarketLookupMode = MarketLookupModes.SingleMarket Then
-                        LanguageToShow = 0
+                        Me.LanguageToShow = 0
                     Else
-                        LanguageToShow = Me.cammWebManager.UI.MarketID
+                        Me.LanguageToShow = Me.cammWebManager.UI.MarketID
                     End If
                 End If
                 Return CType(ViewState("WebEditorXXL.showlanguage"), Integer)
@@ -370,7 +384,9 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' </remarks>
         Private ReadOnly Property HtmlCodeCurrentEditInformation() As String
             Get
-                If CurrentVersion = 0 Then
+                Dim languageToShow As Integer = Me.LanguageToShow
+                Dim currentVersion As Integer = Me.CurrentVersion
+                If currentVersion = 0 Then
                     If Me.ShowWithEditRights = False Then
                         'No version info available in this case
                         Return String.Empty
@@ -378,68 +394,69 @@ Namespace CompuMaster.camm.SmartWebEditor
                         If Me.MarketLookupMode = MarketLookupModes.SingleMarket Then
                             Return "Language/Market - Neutral / " & "<font color=""green"">Predefined default version</font>"
                         Else
-                            If LanguageToShow < 0 Then
-                                Throw New Exception("Invalid language/market " & LanguageToShow)
+                            If languageToShow < 0 Then
+                                Throw New Exception("Invalid language/market " & languageToShow)
                             End If
                             Dim MarketName As String
-                            If LanguageToShow = 0 Then
+                            If languageToShow = 0 Then
                                 MarketName = "All unconfigured languages/markets"
                             Else
-                                MarketName = GetWMLanguageDescriptionByLanguageID(CType(LanguageToShow, Integer))
+                                MarketName = GetWMLanguageDescriptionByLanguageID(languageToShow)
                             End If
                             Return "Language/Market - " & MarketName & " / " & "<font color=""green"">International, predefined default version</font>"
                         End If
                     End If
                 Else
                     Dim activeVersion As Integer = Me.Database.ReleasedVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
-                    If activeVersion = CurrentVersion Then
+                    If activeVersion = currentVersion Then
                         If Me.MarketLookupMode = MarketLookupModes.SingleMarket Then
                             Return "Language/Market - Neutral / " & "<font color=""green"">Released version</font>"
                         Else
-                            If LanguageToShow < 0 Then
-                                Throw New Exception("Invalid language/market " & LanguageToShow)
+                            If languageToShow < 0 Then
+                                Throw New Exception("Invalid language/market " & languageToShow)
                             End If
                             Dim MarketName As String
-                            If LanguageToShow = 0 Then
+                            If languageToShow = 0 Then
                                 MarketName = "All unconfigured languages/markets"
                             Else
-                                MarketName = GetWMLanguageDescriptionByLanguageID(CType(LanguageToShow, Integer))
+                                MarketName = GetWMLanguageDescriptionByLanguageID(languageToShow)
                             End If
                             Return "Language/Market - " & MarketName & " / " & "<font color=""green"">Released version</font>"
                         End If
-                    ElseIf activeVersion < CurrentVersion Then
+                    ElseIf activeVersion < currentVersion Then
                         If Me.IsEditVersionAvailable Then
                             If Me.MarketLookupMode = MarketLookupModes.SingleMarket Then
                                 Return "Language/Market - Neutral / " & "<font color=""red"">Edit version</font>"
                             Else
-                                If LanguageToShow < 0 Then
-                                    Throw New Exception("Invalid language/market " & LanguageToShow)
+
+                                If languageToShow < 0 Then
+                                    Throw New Exception("Invalid language/market " & languageToShow)
                                 End If
                                 Dim MarketName As String
-                                If LanguageToShow = 0 Then
+                                If languageToShow = 0 Then
                                     MarketName = "All unconfigured languages/markets"
                                 Else
-                                    MarketName = GetWMLanguageDescriptionByLanguageID(CType(LanguageToShow, Integer))
+                                    MarketName = GetWMLanguageDescriptionByLanguageID(languageToShow)
                                 End If
                                 Return "Language/Market - " & MarketName & " / " & "<font color=""red"">Edit version</font>"
                             End If
                         Else
-                            Throw New Exception("Error: CurrentVersion " & CurrentVersion & " is higher than ActiveVersion " & activeVersion & ", but IsEditVersionAvailable = False!")
+                            Throw New Exception("Error: CurrentVersion " & currentVersion & " is higher than ActiveVersion " & activeVersion & ", but IsEditVersionAvailable = False!")
                         End If
                     Else
                         If Me.MarketLookupMode = MarketLookupModes.SingleMarket Then
-                            Return "Language/Market - Neutral / " & "<font color=""red"">Former version (V" & Me.CurrentVersion & ")</font>"
+                            Return "Language/Market - Neutral / " & "<font color=""red"">Former version (V" & currentVersion & ")</font>"
                         Else
-                            If LanguageToShow < 0 Then
-                                Throw New Exception("Invalid language/market " & LanguageToShow)
+                            If languageToShow < 0 Then
+                                Throw New Exception("Invalid language/market " & languageToShow)
                             End If
                             Dim MarketName As String
-                            If LanguageToShow = 0 Then
+                            If languageToShow = 0 Then
                                 MarketName = "All unconfigured languages/markets"
                             Else
-                                MarketName = GetWMLanguageDescriptionByLanguageID(CType(LanguageToShow, Integer))
+                                MarketName = GetWMLanguageDescriptionByLanguageID(languageToShow)
                             End If
-                            Return "Language/Market - " & MarketName & " / " & "<font color=""red"">Former version (V" & Me.CurrentVersion & ")</font>"
+                            Return "Language/Market - " & MarketName & " / " & "<font color=""red"">Former version (V" & currentVersion & ")</font>"
                         End If
                     End If
                 End If
@@ -465,6 +482,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 'Switch version to edit version!
                 Me.CurrentVersion = Me.Database.MaxVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID)
                 editorMain.Editable = CanEditCurrentVersion()
+
             End If
         End Sub
 
@@ -822,13 +840,13 @@ Namespace CompuMaster.camm.SmartWebEditor
         End Function
 
         ''' <summary>
-        '''     Generates a url conform string to pass trough url as parameter for later usement
+        '''     Generates an encrypted url conform string 
         ''' </summary>
         ''' <param name="sourceString"></param>
         ''' <returns></returns>
         ''' <remarks>
         ''' </remarks>
-        Protected Function EncryptAStringForUrlUsement(ByVal sourceString As String) As String
+        Protected Function EncryptStringForUrlUsage(ByVal sourceString As String) As String
             Dim result As String = Nothing
             Try
                 Dim myCryptingEngine As CompuMaster.camm.WebManager.ICrypt = New CompuMaster.camm.WebManager.TripleDesBase64Encryption
@@ -838,6 +856,55 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Try
             Return HttpUtility.UrlEncode(result)
         End Function    'EncryptAStringForUrlUsement(ByVal sourceString As String) As String
+
+        Protected Function GenerateImageUploadFormUrl() As String
+            Dim parameters As New UploadFormParameters
+            parameters.RefPath = DocumentID 'I am just using the old logic for now, it used document id for ref...
+            parameters.DocumentID = DocumentID
+            parameters.UploadPath = Utils.FullyInterpretedVirtualPath(Me.ImagesUploadPath)
+            parameters.SecurityObject = Me.SecurityObjectEditMode
+            parameters.EditorClientId = Me.editorMain.ClientID
+            parameters.MaxUploadSize = Me.ImagesUploadSizeMax
+            parameters.ReadOnlyDirectories = Me.ImagesReadOnly
+            parameters.JavaScriptCallBackFunctionName = "pasteImageToEditor"
+            parameters.AllowedFileExtensions = Me.ImagesAllowedFileExtensions
+            Dim guid As Guid = New Guid()
+            Dim guidStr As String = Guid.NewGuid().ToString().Replace("-"c, "")
+            Dim memStream As New System.IO.MemoryStream()
+            Dim formatter As New System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            formatter.Serialize(memStream, parameters)
+
+            Dim base64 As String = Convert.ToBase64String(memStream.ToArray())
+            Dim key As String = "WebEditorUpload_" & guidStr
+            Me.cammWebManager.System_SetSessionValue(key, base64)
+
+            Return Me.ImagesUploadFormUrl & "?key=" & key
+        End Function
+
+        Protected Function GenerateDocumentsUploadUrl() As String
+            Dim parameters As New UploadFormParameters
+            parameters.RefPath = DocumentID 'I am just using the old logic for now, it used document id for ref...
+            parameters.DocumentID = DocumentID
+            parameters.UploadPath = Utils.FullyInterpretedVirtualPath(Me.DocumentsUploadPath)
+            parameters.SecurityObject = Me.SecurityObjectEditMode
+            parameters.EditorClientId = Me.editorMain.ClientID
+            parameters.MaxUploadSize = Me.DocumentsUploadSizeMax
+            parameters.ReadOnlyDirectories = Me.DocumentsReadOnly
+            parameters.JavaScriptCallBackFunctionName = "pasteDocumentToEditor"
+            parameters.AllowedFileExtensions = Me.DocumentsAllowedFileExtensions
+            Dim guid As Guid = New Guid()
+            Dim guidStr As String = Guid.NewGuid().ToString().Replace("-"c, "")
+            Dim memStream As New System.IO.MemoryStream()
+            Dim formatter As New System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            formatter.Serialize(memStream, parameters)
+
+            Dim base64 As String = Convert.ToBase64String(memStream.ToArray())
+            Dim key As String = "WebEditorUpload_" & guidStr
+            Me.cammWebManager.System_SetSessionValue(key, base64)
+
+            Return Me.DocumentsUploadFormUrl & "?key=" & key
+        End Function
+
 
         ''' <summary>
         '''     Update an already existing document in given language or create a new language for the document, depends on several parameters
@@ -922,41 +989,42 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <returns></returns>
         ''' <remarks>
         ''' </remarks>
-        Private Function FindSWcmsControlsInEditModeOnThisPage() As Boolean
-            Dim Result As Boolean
+        Private Function HasPageAnotherEditorInEditMode() As Boolean
 #If NetFrameWork = "1_1" Then
             Dim EditorControls As New ArrayList
 #Else
             Dim EditorControls As New List(Of System.Web.UI.Control)
 #End If
-            FindSWcmsControlsOnThisPage(EditorControls, Me.Page.Controls)
+            FindEditors(EditorControls, Me.Page.Controls)
             For MyCounter As Integer = 0 To EditorControls.Count - 1
-                If EditorControls(MyCounter) Is Me Then
-                    'do nothing
-                ElseIf Me.EditModeActive = True Then
-                    Result = True
+                'TODO: we maybe should find a proper interface...
+                Dim editorControl As SmartWebEditorCommonBase = CType(EditorControls(MyCounter), SmartWebEditorCommonBase)
+                If Not editorControl Is Me Then
+                    If editorControl.EditModeActive Then
+                        Return True
+                    End If
                 End If
             Next
-            Return Result
+            Return False
         End Function
 
         ''' <summary>
         '''     Walk recursive through all children controls and collect all SmartWebEditor items
         ''' </summary>
-        ''' <param name="results">An arraylist which will contain all positive matches</param>
+        ''' <param name="results">A list which will contain all positive matches</param>
         ''' <param name="controlsCollection">The control collection which shall be browsed</param>
         ''' <remarks>
         ''' </remarks>
 #If NetFrameWork = "1_1" Then
         Private Sub FindSWcmsControlsOnThisPage(ByVal results As ArrayList, ByVal controlsCollection As System.Web.UI.ControlCollection)
 #Else
-        Protected Sub FindSWcmsControlsOnThisPage(ByVal results As List(Of System.Web.UI.Control), ByVal controlsCollection As System.Web.UI.ControlCollection)
+        Protected Sub FindEditors(ByVal results As List(Of System.Web.UI.Control), ByVal controlsCollection As System.Web.UI.ControlCollection)
 #End If
-            For MyCounter As Integer = 0 To controlsCollection.Count - 1
-                If Me.GetType.IsInstanceOfType(controlsCollection(MyCounter)) Then
-                    results.Add(controlsCollection(MyCounter))
-                ElseIf controlsCollection(MyCounter).Controls.Count > 0 Then
-                    FindSWcmsControlsOnThisPage(results, controlsCollection(MyCounter).Controls)
+            For Each control As System.Web.UI.Control In controlsCollection
+                If TypeOf control Is SmartWebEditorCommonBase Then
+                    results.Add(control)
+                ElseIf control.Controls.Count > 0 Then
+                    FindEditors(results, control.Controls)
                 End If
             Next
         End Sub
@@ -1085,7 +1153,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 AlreadyRun = True
             End If
 
-            LanguageToShow = 0
+            ' LanguageToShow = 0
 
             'Initialze the editors id for internal usage right now
             If Me.ID = "" Then
@@ -1397,7 +1465,7 @@ Namespace CompuMaster.camm.SmartWebEditor
             If Me.ShowWithEditRights Then
 
                 'Update visibility of main controls
-                If Me.Enabled = False OrElse FindSWcmsControlsInEditModeOnThisPage() Then
+                If Me.Enabled = False OrElse HasPageAnotherEditorInEditMode() Then
                     Me.EditModeSwitchAvailable = False
                     Me.editorMain.Visible = False
                     Me.ibtnSwitchToEditMode.Visible = False
@@ -1418,10 +1486,16 @@ Namespace CompuMaster.camm.SmartWebEditor
                 lblCurrentEditInformation.Visible = Me.editorMain.Visible
                 Me.lblCurrentEditInformation.ForeColor = System.Drawing.Color.Black
                 Me.lblCurrentEditInformation.Font.Bold = True
-                If Trim(HtmlCodeCurrentEditInformation) = Nothing Then
+
+                Dim currentEditInformation As String = HtmlCodeCurrentEditInformation
+
+                If Trim(currentEditInformation) = Nothing Then
                     Me.lblCurrentEditInformation.Text = Nothing
                 Else
-                    Me.lblCurrentEditInformation.Text = HtmlCodeCurrentEditInformation & "<br>"
+                    Me.lblCurrentEditInformation.Text = currentEditInformation & "<br>"
+                End If
+                If Trim(Me.NoteForEditor) <> Nothing Then
+                    Me.lblCurrentEditInformation.Text = Me.NoteForEditor & "<br>" & Me.lblCurrentEditInformation.Text
                 End If
 
                 'Initialize ToolbarSetting who indicates which toolbar shall be used

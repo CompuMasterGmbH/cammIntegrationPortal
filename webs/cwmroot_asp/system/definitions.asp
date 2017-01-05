@@ -11,7 +11,7 @@
 
 const System_ProductName = "camm WebManager Enterprise"
 const System_Version = "4.10"
-const System_Build = "178"
+const System_Build = "206"
 const System_Licence = "ah3dkjf7JHSLIeuzw2ah94kEMAq"
 
 const User_Auth_Config_Paths_Login = "/sysdata/login/"
@@ -29,6 +29,7 @@ dim User_Auth_Config_CurServerURL
 dim User_Auth_Validation_CheckLoginURL
 dim OfficialServerGroup_URL
 dim OfficialServerGroup_AdminURL
+dim OfficialServerGroup_AdminURL_SecurityAdminNotifications
 dim OfficialServerGroup_Title
 dim OfficialServerGroup_Company_FormerTitle
 dim PageTitle
@@ -103,7 +104,8 @@ const adWChar = 130 'Null-terminated Unicode character string
 	User_Auth_Validation_TerminateOldSessionScriptURL = User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_Login & "forcelogin.aspx"
 	User_Auth_Validation_CheckLoginURL = User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_Login & "checklogin.aspx"
 	OfficialServerGroup_URL = User_Auth_Config_UserAuthMasterServer & User_Auth_Config_Paths_UserAuthSystem
-	OfficialServerGroup_AdminURL= System_GetUserAdminServer_SystemURL(GetCurrentServerIdentString)
+	OfficialServerGroup_AdminURL = System_GetUserAdminServer_SystemURL(GetCurrentServerIdentString)
+	OfficialServerGroup_AdminURL_SecurityAdminNotifications = OfficialServerGroup_AdminURL
 	OfficialServerGroup_Title = System_GetServerGroupTitle(GetCurrentServerIdentString)
 	OfficialServerGroup_Company_FormerTitle = System_GetServerConfig(GetCurrentServerIdentString, "AreaCompanyFormerTitle")
 	User_Auth_Config_Files_Administration_DefaultPageInAdminEMails = "memberships.aspx"
