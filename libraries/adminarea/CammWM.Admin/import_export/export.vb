@@ -41,9 +41,11 @@ Namespace CompuMaster.camm.WebManager.Administration
             rawSingleFile.Filename = fileName
             rawSingleFile.MimeType = "application/octet-stream"
             rawSingleFile.Data = bytes
+            System.Web.HttpContext.Current.Response.Clear()
             _webmanager.DownloadHandler.Clear()
             _webmanager.DownloadHandler.Add(rawSingleFile, subFolder)
             _webmanager.DownloadHandler.ProcessDownload(DownloadHandler.DownloadLocations.WebManagerUserSession, Nothing, True)
+            System.Web.HttpContext.Current.Response.End()
 
         End Sub
 
