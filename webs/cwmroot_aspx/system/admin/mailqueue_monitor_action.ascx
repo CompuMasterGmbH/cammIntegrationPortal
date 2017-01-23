@@ -1,4 +1,4 @@
-<%@ Control Language="vb" AutoEventWireup="false" Codebehind="ctrl_action.ascx.vb" Inherits="CompuMaster.camm.WebManager.Controls.Administration.MailQueueMonitorActionControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
+﻿<%@ Control Language="vb" AutoEventWireup="false" Codebehind="ctrl_action.ascx.vb" Inherits="CompuMaster.camm.WebManager.Controls.Administration.MailQueueMonitorActionControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
 		<td><nobr><asp:HyperLink Runat="server" ID="HyperLinkShowEmailText" NavigateUrl="#" >e-mail text</asp:HyperLink></nobr></td>
