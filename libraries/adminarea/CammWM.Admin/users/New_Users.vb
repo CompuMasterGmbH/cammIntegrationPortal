@@ -106,20 +106,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
             End If
 
-            Try
-                Dim temp1 As String
-                If cmbAnrede.Items.Count > 0 Then
-                    If cmbAnrede.SelectedItem.Text = "Ms." Then
-                        MyUserInfoSex = CompuMaster.camm.WebManager.WMSystem.Sex.Feminine
-                        temp1 = Utils.Nz(MyUserInfoSex, String.Empty)
-                    ElseIf cmbAnrede.SelectedItem.Text = "Mr." Then
-                        MyUserInfoSex = CompuMaster.camm.WebManager.WMSystem.Sex.Masculine
-                        temp1 = Utils.Nz(MyUserInfoSex, String.Empty)
-                    End If
+            If cmbAnrede.Items.Count > 0 Then
+                If cmbAnrede.SelectedItem.Text = "Ms." Then
+                    MyUserInfoSex = CompuMaster.camm.WebManager.WMSystem.Sex.Feminine
+                ElseIf cmbAnrede.SelectedItem.Text = "Mr." Then
+                    MyUserInfoSex = CompuMaster.camm.WebManager.WMSystem.Sex.Masculine
                 End If
-            Catch ex As Exception
-                ErrMsg = ex.Message
-            End Try
+            End If
 
             Update_Data(UpdateSuccessfull, ErrMsg)
 
@@ -159,9 +152,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                cmbFirstPreferredLanguage.SelectedItem.Text <> "Please Select!" AndAlso _
                cmbAccountAccessability.SelectedItem.Text <> "Please Select!" Then
 
-                If Me.cmbAnrede.SelectedValue = "1" Then
+                If Me.cmbAnrede.SelectedIndex = 1 Then
                     MyUserInfoSex = WMSystem.Sex.Masculine
-                ElseIf Me.cmbAnrede.SelectedValue = "2" Then
+                ElseIf Me.cmbAnrede.SelectedIndex = 2 Then
                     MyUserInfoSex = WMSystem.Sex.Feminine
                 Else
                     MyUserInfoSex = WMSystem.Sex.Undefined
