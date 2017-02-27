@@ -735,7 +735,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     lblStatusMsg.Text = "Cloning was successful! New userID: " & ClonedUser.IDLong & ". <a href=""users_update.aspx?ID=" & ClonedUser.IDLong & """>>>Update UserProfile</a><br />"
                     'Add list of user-details that could not be copied to status message
                     Dim sb As New Text.StringBuilder
-                    If notCopiedData.Rows.Count > 0 Then
+                    If notCopiedData IsNot Nothing AndAlso notCopiedData.Rows.Count > 0 Then
                         sb.Append("The following user details couldn't be copied:<br/>")
                         sb.Append("<lu>")
                         For Each row As DataRow In notCopiedData.Rows
