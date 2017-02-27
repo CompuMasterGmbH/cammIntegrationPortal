@@ -378,7 +378,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                             tempStr.Append("<TD>&nbsp;</TD>")
                                             tempStr.Append("<TD" & MemberRowSeparator & "><P class=""normalFont"">" & Utils.Nz(DataTableAuths.Rows(i)("ID_User"), 0) & "&nbsp;</P></TD>")
                                             Dim RuleTitle As String
-                                            If Utils.Nz(DataTableAuths.Rows(i).Item("IsDenyRule"), False) = True Then
+                                            If DataTableAuths.Columns.Contains("IsDenyRule") AndAlso Utils.Nz(DataTableAuths.Rows(i).Item("IsDenyRule"), False) = True Then
                                                 RuleTitle = "DENY"
                                             Else
                                                 RuleTitle = "GRANT"
