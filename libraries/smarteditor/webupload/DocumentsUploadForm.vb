@@ -21,7 +21,7 @@ Imports CompuMaster.camm.WebManager
 Namespace CompuMaster.camm.SmartWebEditor.Pages
 
     ''' <summary>
-    ''' Image upload form (page is centrally positioned in /system/... folder)
+    ''' Image upload form (page is often centrally positioned in /system/... folder)
     ''' </summary>
     Public Class DocumentsUploadForm
         Inherits CompuMaster.camm.SmartWebEditor.Pages.Upload.GeneralUploadForm

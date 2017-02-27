@@ -450,7 +450,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         <System.ComponentModel.TypeConverter(GetType(StringArrayConverter))> Public Property DocumentsAllowedFileExtensions As String()
             Get
                 If _DocumentsAllowedFileExtensions Is Nothing OrElse _DocumentsAllowedFileExtensions.Length = 0 Then
-                    _DocumentsAllowedFileExtensions = New String() {".docx", ".doc", ".odt", ".pdf", ".rtf"}
+                    _DocumentsAllowedFileExtensions = New String() {".pdf", ".docx", ".doc", ".odt", ".rtf"}
                 End If
                 Return _DocumentsAllowedFileExtensions
             End Get

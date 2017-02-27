@@ -11,7 +11,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Provides the camm SmartEditor for plain text")>
 <Assembly: AssemblyCompany("CompuMaster GmbH")>
 <Assembly: AssemblyProduct("camm Integration Portal (base on camm Web-Manager) SmartEditor")>
-<Assembly: AssemblyCopyright("2001-2016 CompuMaster GmbH")>
+<Assembly: AssemblyCopyright("2001-2017 CompuMaster GmbH")>
 <Assembly: AssemblyTrademark("camm")>
 <Assembly: CLSCompliant(True)>
 <Assembly: ComVisible(False)>

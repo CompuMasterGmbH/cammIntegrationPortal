@@ -11,9 +11,9 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Support of file/image uploads for camm SmartEditor")>
 <Assembly: AssemblyCompany("CompuMaster GmbH")>
 <Assembly: AssemblyProduct("camm Integration Portal (base on camm Web-Manager) SmartEditor")>
-<Assembly: AssemblyCopyright("2001-2016 CompuMaster GmbH")>
+<Assembly: AssemblyCopyright("2001-2017 CompuMaster GmbH")>
 <Assembly: AssemblyTrademark("camm")>
 <Assembly: ComVisible(False)>
 <Assembly: Guid("42559734-17bb-4a95-bc8b-d4271580a5b3")>
 
-<Assembly: AssemblyVersion("4.12.209.102")>
+<Assembly: AssemblyVersion("4.12.209.104")>
