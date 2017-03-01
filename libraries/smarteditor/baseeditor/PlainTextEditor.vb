@@ -74,7 +74,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                                                                    "}" & vbNewLine &
                                                                    "function EncodeRawData (item) " & vbNewLine &
                                                                    "{ " & vbNewLine &
-                                                                   "    return String.fromCharCode(27) + 'ESC' + String.fromCharCode(27) + item.value.replace(/%/g,escape('%')).replace(/</g,escape('<')).replace(/>/g,escape('>')); " & vbNewLine &
+                                                                   "   return String.fromCharCode(27) + 'ESC' + String.fromCharCode(27) + item.value.replace(/%/g,escape('%')).replace(/</g,escape('<')).replace(/>/g,escape('>')).replace(/+/g,escape('+')); " & vbNewLine &
                                                                    "}" & vbNewLine &
                                                                    "")
                     Me.Page.RegisterOnSubmitStatement("EncodeRawData_" & Me.ClientID, String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}'));", Me.ClientID))
@@ -88,7 +88,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                                                                    "}" & vbNewLine &
                                                                    "function EncodeRawData (item) " & vbNewLine &
                                                                    "{ " & vbNewLine &
-                                                                   "    return String.fromCharCode(27) + 'ESC' + String.fromCharCode(27) + item.value.replace(/%/g,escape('%')).replace(/</g,escape('<')).replace(/>/g,escape('>')); " & vbNewLine &
+                                                                   "    return String.fromCharCode(27) + 'ESC' + String.fromCharCode(27) + item.value.replace(/%/g,escape('%')).replace(/</g,escape('<')).replace(/>/g,escape('>')).replace(/+/g,escape('+')); " & vbNewLine &
                                                                    "}" & vbNewLine &
                                                                    "", True)
                     Me.Page.ClientScript.RegisterOnSubmitStatement(Me.GetType, "EncodeRawData_" & Me.ClientID, String.Format("EncodeRawDataIfNotEncoded (document.getElementById('{0}'));", Me.ClientID))
