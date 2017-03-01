@@ -20,18 +20,18 @@ Imports System.Web
 Namespace CompuMaster.camm.WebManager.Pages
 
     ''' <summary>
-    '''     A protected page which requires an access validation on Page_Prerender event
+    '''     A protected page which requires an access validation on before Page_Load event fires
     ''' </summary>
     ''' <remarks>
-    '''     If the security object name hasn't been set via the property cammWebManager.SecurityObject and it also hasn't been validated by performing an access check, this page will throw an exception in Render event.
+    '''     If the security object name hasn't been set via the property cammWebManager.SecurityObject and it also hasn't been validated by performing an access check, this page will throw an exception before the Load event.
     '''     The security objects "Anonymous" or "@@Anonymous" would be accepted also when they allow access to everybody. This is okay since it is ensured by the non-empty string that the developer hasn't forgotten to add a security object check to his page.
     ''' </remarks>
-    <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class ProtectedPage
-        Inherits Page
+    <System.Runtime.InteropServices.ComVisible(False)> Public MustInherit Class ProtectedPageBeforePageLoad
+        Inherits ProtectedPage
 
-        Protected Overrides Sub OnInit(e As EventArgs)
-            Me.EnableProtectedPageRequirement()
-            MyBase.OnInit(e)
+        Protected Overrides Sub OnLoad(e As EventArgs)
+            Me.EnsureUserAuthorizedSuccessfully()
+            MyBase.OnLoad(e)
         End Sub
 
     End Class
