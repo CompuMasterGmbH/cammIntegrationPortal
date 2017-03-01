@@ -1644,6 +1644,8 @@ Namespace CompuMaster.camm.WebManager
                 'Validate the information before writing back to the database
                 If userInfo.LoginDeleted = True And userInfo.IDLong = Nothing Then
                     Throw New Exception("Login cannot be deleted when the Login ID is not existent")
+                ElseIf userInfo.LoginDeleted = True Then
+                    'ignore all following checks
                 ElseIf userInfo.IDLong = Nothing AndAlso Not newPassword Is Nothing Then
                     'Validate password first
                     newPassword = Trim(newPassword)
@@ -1662,7 +1664,9 @@ Namespace CompuMaster.camm.WebManager
                 ElseIf userInfo.IDLong <> Nothing AndAlso Not newPassword Is Nothing Then
                     Throw New ArgumentException("Password cannot be set by this method. Please use System_SetUserPassword instead.", "NewPassword")
                 End If
-                Me.Validate(ValidationItem.All, True, newPassword)
+                If userInfo.LoginDeleted = False Then
+                    Me.Validate(ValidationItem.All, True, newPassword)
+                End If
 
                 'Prepare data if action = delete
                 If userInfo.LoginDeleted = True Then

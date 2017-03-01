@@ -63,6 +63,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Private Sub User_Delete_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
             Dim token As String = GetToken()
             If Request.QueryString("ID") <> "" AndAlso Request.QueryString("DEL") = "NOW" AndAlso Request.QueryString("token") = token Then
+                Dim Success As Boolean = False
                 Try
                     MyUserInfo = cammWebManager.System_GetUserInfo(CType(Request.QueryString("ID"), Long))
                     If MyUserInfo Is Nothing Then
@@ -71,11 +72,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     End If
                     MyUserInfo.LoginDeleted = True
                     MyUserInfo.Save()
+                    Success = True
                 Catch ex As Exception
                     ErrMsg = "User erasing failed!"
-                    If cammWebManager.System_DebugLevel >= 3 Then ErrMsg &= " (" & ex.Message & ")"
+                    If cammWebManager.System_DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                        ErrMsg &= "<br />" & ex.ToString.Replace(System.Environment.NewLine, "<br />")
+                    Else
+                        ErrMsg &= " (" & ex.Message & ")"
+                    End If
                 End Try
-                Response.Redirect("users.aspx")
+                If Success Then Response.Redirect("users.aspx")
             End If
 
             Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", CInt(Request.QueryString("ID")))}
