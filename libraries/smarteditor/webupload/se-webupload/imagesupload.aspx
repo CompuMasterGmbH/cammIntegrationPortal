@@ -31,8 +31,8 @@
 						return true;
 					}
 					else {
-						alert('<%=Me.OnlyFollowingExtensionsAreAllowed%> <%=String.Join(""",""", Me.UploadParamters.AllowedFileExtensions)%>');
-						e.value = "";
+                        alert('<%=Me.OnlyFollowingExtensionsAreAllowed%> <%=String.Join(", ",Me.UploadParamters.AllowedFileExtensions)%>');
+                        e.value = "";
 						thisForm.reset();
 						e.focus();
 						return false;		
