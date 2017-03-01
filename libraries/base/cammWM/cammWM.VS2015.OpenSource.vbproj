@@ -192,6 +192,9 @@
     <Compile Include="Pages\Page.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Pages\ProtectedPageBeforePageLoad.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Pages\ProtectedPage.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
