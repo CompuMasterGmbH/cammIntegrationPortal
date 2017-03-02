@@ -395,6 +395,37 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property
 
+        ''' <summary>
+        ''' Takes a string array like .jpg,.png, jpg,png, .*jpg,*.png or mixed and converts it to the .jpg,.png format
+        ''' </summary>
+        ''' <returns>The array in the format .jpg,.png</returns>
+        Private Function CreateAllowedExtensionsArray(ByVal extensions As String()) As String()
+            If Not extensions Is Nothing Then
+                Dim result As String() = New String(extensions.Length - 1) {}
+                For i As Integer = 0 To extensions.Length - 1
+                    Dim current As String = extensions(i)
+                    'Starts with *
+                    If current.Chars(0) = "*" Then
+                        current = current.Remove(0, 1)
+                        'Is of format *.[extensions], ok
+                        If current.Chars(0) = "." Then
+                            result(i) = current
+                        Else
+                            'Is of format *[extension]
+                            result(i) = "." + current
+                        End If
+                        'Is already correct
+                    ElseIf current.Chars(0) = "." Then
+                        result(i) = current
+                        'Is of format jpg,png
+                    ElseIf current.Chars(0) <> "." AndAlso current.Chars(0) <> "*" Then
+                        result(i) = "." + current
+                    End If
+                Next
+                Return result
+            End If
+            Return Nothing
+        End Function
         Private _ImagesAllowedFileExtensions As String() = New String() {}
 
         ''' -----------------------------------------------------------------------------
@@ -413,7 +444,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Return _ImagesAllowedFileExtensions
             End Get
             Set(ByVal Value As String())
-                _ImagesAllowedFileExtensions = Value
+                _ImagesAllowedFileExtensions = CreateAllowedExtensionsArray(Value)
             End Set
         End Property
 
@@ -455,7 +486,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Return _DocumentsAllowedFileExtensions
             End Get
             Set(ByVal Value As String())
-                _DocumentsAllowedFileExtensions = Value
+                _DocumentsAllowedFileExtensions = CreateAllowedExtensionsArray(Value)
             End Set
         End Property
 
