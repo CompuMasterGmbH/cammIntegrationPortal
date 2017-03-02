@@ -347,6 +347,20 @@ Namespace CompuMaster.camm.SmartWebEditor
 
             End Sub
 
+            Protected Const CreateHtmlLinkSnippet As String = "function createHtmlLink(url, title, target, linktext)" & vbNewLine &
+                 "{" & vbNewLine &
+                 "var link = '<a href=""' + url + '""';" & vbNewLine &
+                            "if(title != null && title != '')" & vbNewLine &
+                            "{" & vbNewLine &
+                                "link += ' title=""' + title + '""';" & vbNewLine &
+                            "}" & vbNewLine &
+                            "if(target != null && target != '')" & vbNewLine &
+                            "{" & vbNewLine &
+                                "link += ' target=""' + target + '""';" & vbNewLine &
+                            "}" & vbNewLine &
+                            "link += '>' + linktext + '</a>';" & vbNewLine &
+                            "return link;" & vbNewLine &
+                 "}" & vbNewLine
 
             Protected Overridable Sub AddUploadInsertionsJavaScript()
                 Const pasteImage As String = "function pasteImageToEditor(editorid, imageurl, alttext) { " & vbNewLine &
@@ -355,26 +369,17 @@ Namespace CompuMaster.camm.SmartWebEditor
                              "else { pasteAtPosition(document.getElementById(editorid),""<img src='"" + imageurl + ""' />"");  }" & vbNewLine &
                              "}" & vbNewLine
 
-                Const pasteDocument As String = "function pasteDocumentToEditor(editorId, url, title, target, linktext)" & vbNewLine &
+                Const pasteDocument As String = "function pasteDocumentToEditor(editorid, url, title, target, linktext)" & vbNewLine &
             "{" & vbNewLine &
-            "var link = '<a href=""' + url + '""';" & vbNewLine &
-            "if(title != null && title != '')" & vbNewLine &
-            "{" & vbNewLine &
-                "link += ' title=""' + title + '""';" & vbNewLine &
-            "}" & vbNewLine &
-            "if(target != null && target != '')" & vbNewLine &
-            "{" & vbNewLine &
-                "link += ' target=""' + target + '""';" & vbNewLine &
-            "}" & vbNewLine &
-            "link += '>' + linktext + '</a>';" & vbNewLine &
-            "pasteAtPosition(editorId, link);" & vbNewLine &
+            "var link = createHtmlLink(url,title,target,linktext);" & vbNewLine &
+            "pasteAtPosition(document.getElementById(editorid), link);" & vbNewLine &
             "}" & vbNewLine
 #If NetFrameWork = "1_1" Then
-                
+                    Me.Page.RegisterClientScriptBlock("CreateHtmlLinkSnippet", CreateHtmlLinkSnippet)
                     Me.Page.RegisterClientScriptBlock("pasteImageToEditor", pasteImage)
                     Me.Page.RegisterClientScriptBlock("pasteDocument", pasteDocument)
 #Else
-
+                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CreateHtmlLinkSnippet", CreateHtmlLinkSnippet, True)
                 Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteImageToEditor", pasteImage, True)
                 Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteDocument", pasteDocument, True)
 #End If
@@ -387,6 +392,8 @@ Namespace CompuMaster.camm.SmartWebEditor
             ''' Always provide client scripts (only in Edit mode) for IsDirty detection
             ''' </summary>
             Private Sub SmartPlainHtmlEditor_PreRender(sender As Object, e As EventArgs) Handles MyBase.PreRender
+
+
                 If Me.EditModeActive Then
                     'following isDirty check must check for all editors (and not just editor with name of EditorMain.ClientID)
 #If NetFrameWork = "1_1" Then
