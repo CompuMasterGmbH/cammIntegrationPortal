@@ -223,7 +223,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 If _ImagesUploadFormUrl = Nothing Then
                     Dim configValue As String = Me.Configuration.ImagesUploadFormUrl
                     If configValue = Nothing Then
-                        Return "/sysdata/modules/smarteditor/imagesupload.aspx"
+                        configValue = "~/system/se-webupload/imagesupload.aspx"
                     End If
                     Return VirtualPathUtilityToAbsolute(configValue)
                 End If
@@ -252,7 +252,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 If __DocumentsUploadFormUrl = Nothing Then
                     Dim configValue As String = Me.Configuration.DocumentsUploadFormUrl
                     If configValue = Nothing Then
-                        Return "/sysdata/modules/smarteditor/docsupload.aspx"
+                        configValue = "~/system/se-webupload/docsupload.aspx"
                     End If
                     Return VirtualPathUtilityToAbsolute(configValue)
                 End If
