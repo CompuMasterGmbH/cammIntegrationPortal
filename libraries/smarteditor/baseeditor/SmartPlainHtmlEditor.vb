@@ -352,7 +352,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 Const pasteImage As String = "function pasteImageToEditor(editorid, imageurl, alttext) { " & vbNewLine &
                               "if(alttext != null && alttext != ''){" & vbNewLine &
                              "document.getElementById(editorid).value += ""<img src='"" + imageurl + ""'  alt='"" + alttext + ""' />""; }" & vbNewLine &
-                             "else { document.getElementById(editorid).value += ""<img src='"" + imageurl + ""' />"";  }" & vbNewLine &
+                             "else { pasteAtPosition(document.getElementById(editorid),""<img src='"" + imageurl + ""' />"");  }" & vbNewLine &
                              "}" & vbNewLine
 
                 Const pasteDocument As String = "function pasteDocumentToEditor(editorId, url, title, target, linktext)" & vbNewLine &
@@ -367,7 +367,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 "link += ' target=""' + target + '""';" & vbNewLine &
             "}" & vbNewLine &
             "link += '>' + linktext + '</a>';" & vbNewLine &
-            "document.getElementById(editorId).value += link;" & vbNewLine &
+            "pasteAtPosition(editorId, link);" & vbNewLine &
             "}" & vbNewLine
 #If NetFrameWork = "1_1" Then
                 
@@ -475,7 +475,17 @@ Namespace CompuMaster.camm.SmartWebEditor
                                                                        "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine &
                                                                        ""
 
-
+                    Const PasteAtPositionSnippet As String = "function pasteAtPosition(editor, pastedText)" & vbNewLine &
+"{" & vbNewLine &
+    "var start = editor.selectionStart;" & vbNewLine &
+    "var end = editor.selectionEnd;" & vbNewLine &
+    "var beforeStart = editor.value.substring(0, start);" & vbNewLine &
+   " var afterInsertion = editor.value.substring(end, editor.value.length);" & vbNewLine &
+   "editor.value = beforeStart + pastedText + afterInsertion;" & vbNewLine &
+   " editor.selectionStart = start + pastedText.length;" & vbNewLine &
+   "editor.selectionEnd = editor.selectionStart;" & vbNewLine &
+    "editor.focus();" & vbNewLine &
+"}"
 
 #If NetFrameWork = "1_1" Then
                     Me.Page.RegisterClientScriptBlock("ExecPostBack", ExecPostBackSnippet)
@@ -485,12 +495,14 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.Page.RegisterClientScriptBlock("CloseCheck", CloseCheckSnippet)
                     Me.Page.RegisterClientScriptBlock("pasteImageToEditor", pasteImage)
                     Me.Page.RegisterClientScriptBlock("pasteDocument", pasteDocument)
+                    Me.Page.RegisterClientScriptBlock("pasteAtPosition", PasteAtPositionSnippet)
 #Else
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ExecPostBack", ExecPostBackSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "UnbindCloseCheck", UnbindCloseCheckSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "confirmPageClose", ConfirmPageCloseSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ResetSelectBox", ResetSelectBoxSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CloseCheck", CloseCheckSnippet, True)
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "PasteAtPosition", PasteAtPositionSnippet, True)
 
 #End If
 
