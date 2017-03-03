@@ -417,7 +417,7 @@ Namespace CompuMaster.camm.SmartWebEditor
 #Else
                         Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "IsDirty_" & Editor.ClientID, EditorInstanceIsDirtyScript, True)
 #End If
-                        If IsDirtyChecksJScriptSnippet <> "" Then IsDirtyChecksJScriptSnippet &= " && "
+                        If IsDirtyChecksJScriptSnippet <> "" Then IsDirtyChecksJScriptSnippet &= " || "
                         IsDirtyChecksJScriptSnippet &= "(isDirty_" & Editor.ClientID & "())"
                     Next
                     Dim IsDirtySnippet As String = "function isDirty() " & vbNewLine &
