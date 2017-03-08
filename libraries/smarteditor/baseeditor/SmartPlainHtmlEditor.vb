@@ -484,6 +484,7 @@ Namespace CompuMaster.camm.SmartWebEditor
 
                     Const PasteAtPositionSnippet As String = "function pasteAtPosition(editor, pastedText)" & vbNewLine &
 "{" & vbNewLine &
+    "if(document.selection) { editor.focus(); var selection = document.selection.createRange(); selection.text = pastedText; } else {" & vbNewLine &
     "var start = editor.selectionStart;" & vbNewLine &
     "var end = editor.selectionEnd;" & vbNewLine &
     "var beforeStart = editor.value.substring(0, start);" & vbNewLine &
@@ -491,7 +492,7 @@ Namespace CompuMaster.camm.SmartWebEditor
    "editor.value = beforeStart + pastedText + afterInsertion;" & vbNewLine &
    " editor.selectionStart = start + pastedText.length;" & vbNewLine &
    "editor.selectionEnd = editor.selectionStart;" & vbNewLine &
-    "editor.focus();" & vbNewLine &
+    "editor.focus(); }" & vbNewLine &
 "}"
 
 #If NetFrameWork = "1_1" Then
