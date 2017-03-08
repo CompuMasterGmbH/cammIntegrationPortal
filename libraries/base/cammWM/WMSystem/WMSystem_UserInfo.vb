@@ -1425,12 +1425,18 @@ Namespace CompuMaster.camm.WebManager
                             Throw New PasswordComplexityException("The password requires to be not bigger than " & Me._WebManager.PasswordSecurity(Me.AccessLevel.ID).RequiredMaximumPasswordLength & " characters!", ValidationResult)
                         Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_LengthMinimum
                             Throw New PasswordComplexityException("The password requires to be not smaller than " & Me._WebManager.PasswordSecurity(Me.AccessLevel.ID).RequiredPasswordLength & " characters!", ValidationResult)
+                        Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_ForbiddenChar
+                            Throw New PasswordComplexityException("The password must not contain one of the following characters: " & Me._WebManager.PasswordSecurity(Me.AccessLevel.ID).ForbiddenChars, ValidationResult)
+                        Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_OnlyWhiteListedCharsAllowed
+                            Throw New PasswordComplexityException("The password must use following characters only: " & Me._WebManager.PasswordSecurity(Me.AccessLevel.ID).AllowedChars, ValidationResult)
                         Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_PartOfProfileInformation
                             Throw New PasswordComplexityException("The password shouldn't contain pieces of the user account profile, especially login name, first or last name!", ValidationResult)
                         Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_Unspecified
                             Throw New PasswordComplexityException("There are some unknown errors when validating with the security policy for passwords!", ValidationResult)
                         Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Success
                             'everything fine
+                        Case Else
+                            Throw New PasswordComplexityException("Unkown validation failure", ValidationResult)
                     End Select
                 End If
                 If checks = ValidationItem.All Or checks = ValidationItem.RequiredFlags Then
