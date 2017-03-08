@@ -441,10 +441,12 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Dim UnbindCloseCheckSnippet As String = "function unbindCloseCheck() " & vbNewLine &
                                                                    "{ " & vbNewLine &
                                                                    "    if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); " & vbNewLine &
+                                                                        "else if(window.detachEvent) window.detachEvent('onbeforeunload', closeCheck);" & vbNewLine &
                                                                    "} " & vbNewLine &
                                                                    "var documentForm = document.forms['" & LookupParentServerFormName() & "']; " & vbNewLine &
                                                                    "if(documentForm.addEventListener) " & vbNewLine &
                                                                    "    documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });" & vbNewLine &
+                                                                   "else if(documentForm.attachEvent)  documentForm.attachEvent('onsubmit', function(e) { if(window.detachEvent) window.detachEvent('onbeforeunload', closeCheck);}); " & vbNewLine &
                                                                    ""
                     Dim ConfirmPageCloseSnippet As String = "function confirmPageClose() " & vbNewLine &
                                                                    "{" & vbNewLine &
@@ -480,6 +482,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                                                                        "} " & vbNewLine &
                                                                        "if(window.addEventListener) " & vbNewLine &
                                                                        "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine &
+                                                                       "else if(window.attachEvent) window.attachEvent(""onbeforeunload"", closeCheck);" & vbNewLine &
                                                                        ""
 
                     Const PasteAtPositionSnippet As String = "function pasteAtPosition(editor, pastedText)" & vbNewLine &
