@@ -55,6 +55,24 @@ Namespace CompuMaster.camm.WebManager
 
     End Class
 
+    ''' <summary>
+    ''' An exception which occurs when a user account can't be found/loaded and has been deleted
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Class UserHasBeenDeletedException
+        Inherits Exception
+
+        Public Sub New(ByVal userID As Long)
+            MyBase.New("User account with the requested ID has been deleted: " & userID.ToString)
+        End Sub
+
+        Public Sub New(ByVal userName As String)
+            MyBase.New("User account with the requested login name has been deleted: " & userName)
+        End Sub
+
+    End Class
+
+
     Public Class ImpersonationUserNotAbleToStartLoginProcessException
         Inherits Exception
 
