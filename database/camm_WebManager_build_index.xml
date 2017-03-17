@@ -428,5 +428,10 @@
       <ID>98</ID>
       <file>camm_WebManager_build_2109_navitems.xml</file>
     </files>
+	<files>
+      <ID>99</ID>
+      <file>camm_WebManager_build_2110_trigger.xml</file>
+    </files>
+	
   </dataroot>
 </NewDataSet>
