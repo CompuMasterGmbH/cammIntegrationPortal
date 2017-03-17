@@ -114,6 +114,8 @@ Namespace CompuMaster.camm.WebManager
         Dim _RequiredPasswordLength As Integer = 3
         Dim _RequiredMaximumPasswordLength As Integer = 20
         Dim _RecommendedPasswordLength As Integer = 8
+        Dim _AllowedChars As Char() = Nothing
+        Dim _ForbiddenChars As Char() = Nothing
         Dim _WebManager As WMSystem
         Dim _ErrorMessageComplexityPoints As New Collections.SortedList
         ''' <summary>
@@ -199,6 +201,30 @@ Namespace CompuMaster.camm.WebManager
             End Get
             Set(ByVal Value As Integer)
                 _RecommendedPasswordLength = Value
+            End Set
+        End Property
+        ''' <summary>
+        '''     A list of forbidden characters
+        ''' </summary>
+        ''' <value>The number of characters for randomly generated passwords</value>
+        Public Property ForbiddenChars() As Char()
+            Get
+                Return _ForbiddenChars
+            End Get
+            Set(ByVal Value As Char())
+                _ForbiddenChars = Value
+            End Set
+        End Property
+        ''' <summary>
+        '''     A list of allowed characters or null/Nothing to allow all characters
+        ''' </summary>
+        ''' <value>The number of characters for randomly generated passwords</value>
+        Public Property AllowedChars() As Char()
+            Get
+                Return _AllowedChars
+            End Get
+            Set(ByVal Value As Char())
+                _AllowedChars = Value
             End Set
         End Property
         ''' <summary>
@@ -323,6 +349,8 @@ Namespace CompuMaster.camm.WebManager
             Failure_LengthMaximum = 2
             Failure_HigherPasswordComplexityRequired = 3
             Failure_NotAllowed_PartOfProfileInformation = 4
+            Failure_NotAllowed_ForbiddenChar = 5
+            Failure_NotAllowed_OnlyWhiteListedCharsAllowed = 6
         End Enum
         ''' <summary>
         '''     Validates the complexity of a password with the user information
@@ -377,8 +405,8 @@ Namespace CompuMaster.camm.WebManager
         '''     To prevent a user from creating those lazy passwords, there is the need to validate it against the data of his user profile.
         ''' </remarks>
         Public Overridable Function ValidatePasswordComplexity(ByVal password As String, ByVal textExcludes As String()) As PasswordComplexityValidationResult
-            Const specchars As String = "@#$?!,.+~%=;:()_-\/*&"
-            Const specchars_increasingsecurity As String = " ‰ˆ¸ƒ÷‹ﬂß{}[]¥`^∞ÈÛÌ˙·‡ÚÏ˘ËÍÓÙ˚‚|'""µÄ≤≥"
+            Const SpecChars As String = "@#$?!,.+~%=;:()_-\/*&"
+            Const SpecChars_IncreasingSecurity As String = " ‰ˆ¸ƒ÷‹ﬂß{}[]¥`^∞ÈÛÌ˙·‡ÚÏ˘ËÍÓÙ˚‚|'""µÄ≤≥"
             Const SmallLetters As String = "abcdefghijklmnopqrstuvwxyz"
             Const LargeLetters As String = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             Const Numbers As String = "0123456789"

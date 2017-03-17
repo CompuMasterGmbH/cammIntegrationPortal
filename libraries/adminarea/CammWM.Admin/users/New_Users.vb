@@ -170,6 +170,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         ErrMsg = "The password requires to be not bigger than " & cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).RequiredMaximumPasswordLength & " characters!"
                     Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_LengthMinimum
                         ErrMsg = "The password requires to be not smaller than " & cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).RequiredPasswordLength & " characters!"
+                    Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_ForbiddenChar
+                        ErrMsg = "The password must not contain one of the following characters: " & cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).ForbiddenChars
+                    Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_OnlyWhiteListedCharsAllowed
+                        ErrMsg = "The password must use following characters only: " & cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).AllowedChars
                     Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_PartOfProfileInformation
                         ErrMsg = "The password shouldn't contain pieces of the user account profile, especially login name, first or last name!"
                     Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Success
