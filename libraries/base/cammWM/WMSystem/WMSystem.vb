@@ -5507,16 +5507,58 @@ Namespace CompuMaster.camm.WebManager
 
         End Function
 
+        ' <see cref="ValidateLoginCredentials(String, String)"/>
+        ''' <summary>
+        ''' Pre-validate user login credentials without loggin in
+        ''' </summary>
+        ''' <param name="loginName">The login name of a user</param>
+        ''' <param name="password">The password of this user</param>
+        ''' <remarks>In case of mistypings, the login failure count will be increased.</remarks>
+        Public Function PreValidateLoginCredentials(ByVal loginName As String, ByVal password As String) As ReturnValues_UserValidation
+            Return PreValidateLoginCredentials(loginName, password, Nothing, True)
+        End Function
+
+        ' <see cref="ValidateLoginCredentials(String, String)"/>
         ''' <summary>
         ''' Pre-validate user login credentials without loggin in
         ''' </summary>
         ''' <param name="loginName">The login name of a user</param>
         ''' <param name="password">The password of this user</param>
         ''' <param name="ignoreCurrentlyLoggedOnState">If True, a currently logged in user will successfully validate, if False it will return with a AlreadyLoggedIn value</param>
-        ''' <remarks>In case of mistypings, the login failure number will be increased anyway.</remarks>
-        Public Function PreValidateLoginCredentials(ByVal loginName As String, ByVal password As String, ByVal ignoreCurrentlyLoggedOnState As Boolean) As ReturnValues_UserValidation
+        ''' <remarks>In case of mistypings, the login failure count will be increased.</remarks>
+        <Obsolete("Use another overload if working with database version 4.12 or higher: parameter ignoreCurrentlyLoggedOnState obsolete since multiple login support (previously only 1 concurrent login)")> Public Function PreValidateLoginCredentials(ByVal loginName As String, ByVal password As String, ByVal ignoreCurrentlyLoggedOnState As Boolean) As ReturnValues_UserValidation
+            Return PreValidateLoginCredentials(loginName, password, Nothing, ignoreCurrentlyLoggedOnState)
+        End Function
 
-            If CurrentServerIdentString = "" Then
+        ' <see cref="ValidateLoginCredentials(String, String)"/>
+        ''' <summary>
+        ''' Pre-validate user login credentials without loggin in
+        ''' </summary>
+        ''' <param name="loginName">The login name of a user</param>
+        ''' <param name="password">The password of this user</param>
+        ''' <param name="serverIdentString">Pre-validate with this server ident string instead of the current environment's one</param>
+        ''' <remarks>In case of mistypings, the login failure count will be increased.</remarks>
+        Public Function PreValidateLoginCredentials(ByVal loginName As String, ByVal password As String, serverIdentString As String) As ReturnValues_UserValidation
+            Return PreValidateLoginCredentials(loginName, password, serverIdentString, True)
+        End Function
+
+        ' <see cref="ValidateLoginCredentials(String, String)"/>
+        ''' <summary>
+        ''' Pre-validate user login credentials without loggin in
+        ''' </summary>
+        ''' <param name="loginName">The login name of a user</param>
+        ''' <param name="password">The password of this user</param>
+        ''' <param name="serverIdentString">Pre-validate with this server ident string instead of the current environment's one</param>
+        ''' <param name="ignoreCurrentlyLoggedOnState">If True, a currently logged in user will successfully validate, if False it will return with a AlreadyLoggedIn value</param>
+        ''' <remarks>In case of mistypings, the login failure count will be increased.</remarks>
+        Private Function PreValidateLoginCredentials(ByVal loginName As String, ByVal password As String, serverIdentString As String, ByVal ignoreCurrentlyLoggedOnState As Boolean) As ReturnValues_UserValidation
+            Dim TestForServerIdentString As String
+            If serverIdentString = Nothing Then
+                TestForServerIdentString = Me.CurrentServerIdentString
+            Else
+                TestForServerIdentString = serverIdentString
+            End If
+            If TestForServerIdentString = "" Then
                 Dim Message As String = "Login can't be processed since this server hasn't been configured with a proper server ID"
                 Me.Log.RuntimeException(Message)
             ElseIf loginName = "" Then
@@ -5548,7 +5590,7 @@ Namespace CompuMaster.camm.WebManager
                         'Login with username and password - the standard case
                         .Parameters.Add("@Passcode", SqlDbType.VarChar).Value = transformedPassword
                     End If
-                    .Parameters.Add("@ServerIP", SqlDbType.NVarChar).Value = CurrentServerIdentString
+                    .Parameters.Add("@ServerIP", SqlDbType.NVarChar).Value = TestForServerIdentString
                     .Parameters.Add("@RemoteIP", SqlDbType.NVarChar).Value = CurrentRemoteClientAddress
                     If HttpContext.Current Is Nothing Then
                         .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.NetClient
@@ -5591,6 +5633,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="loginName">The username</param>
         ''' <param name="password">The password to check</param>
         ''' <returns>True if successful else False if not matching</returns>
+        ''' <see cref="PreValidateLoginCredentials(String, String, Boolean)"/>
         <Obsolete("Not used yet", True)> Private Function ValidateLoginCredentials(ByVal loginName As String, ByVal password As String) As Boolean
 
             If loginName = "" Or password = "" Then
@@ -5606,7 +5649,7 @@ Namespace CompuMaster.camm.WebManager
 
             'Get parameter value and append parameter
             With MyCmd
-                .CommandText = "SELECT LoginName FROM Benutzer WHERE LoginName = @Username AND LoginPW = @Passcode COLLATE Latin1_General_CS_AS"
+                .CommandText = "SELECT LoginName FROM Benutzer WHERE LoginName = @Username AND LoginPW = @Passcode"
                 .CommandType = CommandType.Text
                 .Parameters.Add("@Username", SqlDbType.NVarChar).Value = loginName
                 .Parameters.Add("@Passcode", SqlDbType.VarChar).Value = transformedPassword
