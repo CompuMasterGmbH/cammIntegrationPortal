@@ -7259,7 +7259,7 @@ Namespace CompuMaster.camm.WebManager
             Dim MyCmd As SqlCommand
             If alsoFindInactiveLanguages = True Then
                 'return all languages
-                MyCmd = New SqlCommand("select * from languages", MyConn)
+                MyCmd = New SqlCommand("select * from languages Where 1 = 1", MyConn) 'added pseudo-where-clause for later extension with 'AND ...'
             Else
                 'only search for activated languages
                 MyCmd = New SqlCommand("select * from languages Where [isactive] = @IsActive", MyConn)
