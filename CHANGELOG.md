@@ -16,6 +16,10 @@
 
 ## Changes while developing in following builds
 
+### Build 2111 → 2112 (ASP.NET Engine)
+* :arrows_clockwise: fixed several db build checks which might cause login process to logout again before completed
+* :arrows_clockwise: fixed internal conversion error for user ID (int32 instead of int64)
+
 ### Build 206 → 2111 (ASP.NET Engine)
 * :heavy_plus_sign: optional SmartEditor components and SmartEditor-Upload: several improvements and fixes
 * :heavy_plus_sign: added ProtectedPageBeforePageLoad

@@ -3889,7 +3889,7 @@ Namespace CompuMaster.camm.WebManager
                     Return WMSystem.SpecialUsers.User_Code
                 Else
                     'raises error when is null
-                    Return CInt(System_GetUserID(Me.CurrentUserLoginName))
+                    Return CLng(System_GetUserID(Me.CurrentUserLoginName))
                 End If
             Else
                 'raises error when is null
