@@ -2035,15 +2035,8 @@ Namespace CompuMaster.camm.WebManager
                     End If
 
                     'Since DB Build 110, there is an additional parameter
-                    If Not HttpContext.Current Is Nothing AndAlso Utils.TryCInt(HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast")) >= 110 Then
+                    If Setup.DatabaseUtils.Version(Me, True).Build >= 110 Then
                         .Parameters.Add("@ServerID", SqlDbType.Int).Value = Me.System_GetServerID()
-                    Else
-                        If Setup.DatabaseUtils.Version(Me, True).Build >= 110 Then
-                            .Parameters.Add("@ServerID", SqlDbType.Int).Value = Me.System_GetServerID()
-                            If Not HttpContext.Current Is Nothing Then
-                                HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast") = Setup.DatabaseUtils.Version(Me, True).Build
-                            End If
-                        End If
                     End If
 
                 End With
@@ -2054,7 +2047,7 @@ Namespace CompuMaster.camm.WebManager
 
                 MyBuffer = ""
                 If MyRecSet.Read Then
-                    If Configuration.CookieLess = False OrElse Utils.TryCInt(HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast")) < 121 Then
+                    If Configuration.CookieLess = False OrElse Setup.DatabaseUtils.Version(Me, True).Build < 121 Then
                         'Fast URL construction
                         MyBuffer = CType(MyRecSet("ServerProtocol"), String) & "://" & CType(MyRecSet("ServerName"), String)
                         If Not IsDBNull(MyRecSet("ServerPort")) Then
@@ -2295,18 +2288,15 @@ Namespace CompuMaster.camm.WebManager
                     .Parameters.Add("@Username", SqlDbType.NVarChar).Value = LoginNameOfUser
 
                     'Since DB Build 110, there is an additional parameter
-                    If Not HttpContext.Current Is Nothing AndAlso Utils.TryCInt(HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast")) >= 110 Then
-                        .Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = CurrentScriptEngineSessionID
-                        .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.ASPNet
-                        .Parameters.Add("@ServerID", SqlDbType.Int).Value = Me.System_GetServerID()
-                    Else
-                        If Setup.DatabaseUtils.Version(Me, True).Build >= 110 Then
+                    If Setup.DatabaseUtils.Version(Me, True).Build >= 110 Then
+                        If Not HttpContext.Current Is Nothing Then
+                            .Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = CurrentScriptEngineSessionID
+                            .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.ASPNet
+                            .Parameters.Add("@ServerID", SqlDbType.Int).Value = Me.System_GetServerID()
+                        Else
                             .Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = CurrentScriptEngineSessionID
                             .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.NetClient
                             .Parameters.Add("@ServerID", SqlDbType.Int).Value = Me.System_GetServerID()
-                            If Not HttpContext.Current Is Nothing Then
-                                HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast") = Setup.DatabaseUtils.Version(Me, True).Build
-                            End If
                         End If
                     End If
 
@@ -2397,7 +2387,7 @@ Namespace CompuMaster.camm.WebManager
                 Do While MyRecSet.Read And Not MyCounter >= Jump2RecordNo
                     MyCounter = MyCounter + 1
                     If MyCounter >= Jump2RecordNo Then
-                        If Configuration.CookieLess = False OrElse Utils.TryCInt(HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast")) < 121 Then
+                        If Configuration.CookieLess = False OrElse Setup.DatabaseUtils.Version(Me, True).Build < 121 Then
                             'Fast URL construction
                             MyBuffer = CType(MyRecSet("ServerProtocol"), String) & "://" & CType(MyRecSet("ServerName"), String)
                             If Not IsDBNull(MyRecSet("ServerPort")) Then
@@ -5733,16 +5723,12 @@ Namespace CompuMaster.camm.WebManager
                         .Parameters.Add("@RemoteIP", SqlDbType.VarChar).Value = CStr(strRemoteIP)
 
                         'Since DB Build 111, there is an additional parameter
-                        If Not HttpContext.Current Is Nothing AndAlso Utils.TryCInt(HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast")) >= 111 Then
+                        If Setup.DatabaseUtils.Version(Me, True).Build >= 111 Then
                             .Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = CurrentScriptEngineSessionID
-                            .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.ASPNet
-                        Else
-                            If Setup.DatabaseUtils.Version(Me, True).Build >= 111 Then
-                                .Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = CurrentScriptEngineSessionID
+                            If Not HttpContext.Current Is Nothing Then
+                                .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.ASPNet
+                            Else
                                 .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.NetClient
-                                If Not HttpContext.Current Is Nothing Then
-                                    HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast") = Setup.DatabaseUtils.Version(Me, True).Build
-                                End If
                             End If
                         End If
 
