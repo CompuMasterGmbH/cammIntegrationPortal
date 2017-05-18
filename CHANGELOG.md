@@ -20,6 +20,7 @@
 * :arrows_clockwise: fixed several db build checks which might cause login process to logout again before completed
 * :arrows_clockwise: fixed internal conversion error for user ID (int32 instead of int64)
 * :arrows_clockwise: fixed session termination detection on newer assemblies with older databases
+* :arrows_clockwise: fixed backwards compatiblity with db builds not supporting multiple logins
 
 ### Build 206 → 2111 (ASP.NET Engine)
 * :heavy_plus_sign: optional SmartEditor components and SmartEditor-Upload: several improvements and fixes
