@@ -3413,9 +3413,9 @@ DECLARE @FoundFirstIDApplication int
 DECLARE @IsDevUser bit
 SELECT TOP 1 @FoundFirstIDApplication = ID_SecurityObject, @IsDevUser = IsDevRule
     FROM dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules WITH (NOLOCK)
-	WHERE ID_User = IsNull(2, -1)
-		AND ID_ServerGroup = 1
-		AND ID_SecurityObject IN (SELECT ID FROM dbo.Applications WITH (NOLOCK) WHERE Title = 'rmmh Wiki')
+	WHERE ID_User = IsNull(@CurUserID, -1)
+		AND ID_ServerGroup = @ServerGroupID
+		AND ID_SecurityObject IN (SELECT ID FROM dbo.Applications WITH (NOLOCK) WHERE Title = @WebApplication)
 ORDER BY IsDevRule DESC          
 
 ----------------------------------------------------------------
