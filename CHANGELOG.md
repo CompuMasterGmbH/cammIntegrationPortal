@@ -17,10 +17,13 @@
 ## Changes while developing in following builds
 
 ### Build 2111 → 2112 (ASP.NET Engine)
+* :heavy_plus_sign: added support for MS SQL Server 2016/v13
+* :arrows_clockwise: fixed missing support for MS SQL Azure Server 2014/v12
 * :arrows_clockwise: fixed several db build checks which might cause login process to logout again before completed
 * :arrows_clockwise: fixed internal conversion error for user ID (int32 instead of int64)
 * :arrows_clockwise: fixed session termination detection on newer assemblies with older databases
 * :arrows_clockwise: fixed backwards compatiblity with db builds not supporting multiple logins
+* :arrows_clockwise: fixed immediate logout after login with newester assembly and newest db build: EnsureSession regardless of db build + use the very same SQL in System_IsSessionTerminated regardless of db build (solution with SP GetLogonList seemed to fail (at least with 1 server in server group))
 
 ### Build 206 → 2111 (ASP.NET Engine)
 * :heavy_plus_sign: optional SmartEditor components and SmartEditor-Upload: several improvements and fixes

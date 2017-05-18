@@ -2273,7 +2273,7 @@ Namespace CompuMaster.camm.WebManager
                 'Get parameter value and append parameter
                 With MyCmd
 
-                    If Me.System_DBVersion_Ex.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) > 0 Then 'Newer
+                    If False AndAlso Me.System_DBVersion_Ex.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) > 0 Then 'Newer 'NOTE: currently deactivated - not working anyways (at least not working when only 1 server in servergroup)
                         .CommandText = "Public_GetLogonList"
                         .CommandType = CommandType.StoredProcedure
                     Else
@@ -5481,7 +5481,7 @@ Namespace CompuMaster.camm.WebManager
             If Result = ReturnValues_UserValidation.ValidationSuccessfull OrElse Result = ReturnValues_UserValidation.ValidationSuccessfull_ButNoAuthorizationForRequiredSecurityObject Then
                 Me.SetUserLoginName(loginName) '_CurrentUserLoginName = loginName
                 'EnsureSession(scriptEngineID As ScriptEngines, scriptEngineSessionID As String, userID As Long, serverID As Integer) As Long
-                If Me.System_DBVersion_Ex.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
+                If True OrElse Me.System_DBVersion_Ex.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older 'NOTE: always ensure - seems to be required at least at 1 server environments
                     'Ensure that there is a session - backwards compatibility must at least allow an admin to update the database to latest version and for this to login, first 
                     EnsureSession(CurrentScriptEngine, CurrentScriptEngineSessionID, Me.CurrentUserID(SpecialUsers.User_Anonymous), Me.CurrentServerInfo.ID)
                 End If
