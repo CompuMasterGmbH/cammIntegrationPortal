@@ -1,0 +1,50 @@
+Suche *.xml
+ohne Unterordner
+RegEx-Suche: Punkt passt auf Newline
+
+Suche nach:
+        <requires>
+\s*<product>MSSQLServerAzure</product>
+\s*<version_major>12</version_major>
+\s*<version_minor>0</version_minor>
+\s*<file>(?<data>.*?)</file>
+\s*<execfile>(?<execdata>.*?)</execfile>
+\s*</requires>
+\s*<requires>
+\s*<product>MSSQLServer</product>
+\s*<version_major>12</version_major>
+\s*<version_minor>0</version_minor>
+\s*<file>(?<data2>.*?)</file>
+\s*<execfile>(?<execdata2>.*?)</execfile>
+\s*</requires>
+
+
+Ersetzen mit:
+        <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>12</version_major>
+            <version_minor>0</version_minor>
+            <file>$1</file>
+            <execfile>$2</execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServer</product>
+            <version_major>12</version_major>
+            <version_minor>0</version_minor>
+            <file>$3</file>
+            <execfile>$4</execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>13</version_major>
+            <version_minor>0</version_minor>
+            <file>$1</file>
+            <execfile>$2</execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServer</product>
+            <version_major>13</version_major>
+            <version_minor>0</version_minor>
+            <file>$3</file>
+            <execfile>$4</execfile>
+        </requires>
