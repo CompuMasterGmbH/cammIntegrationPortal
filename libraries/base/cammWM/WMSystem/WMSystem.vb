@@ -2008,12 +2008,12 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="LoginNameOfUser">Login name of the user</param>
         ''' <returns>A URL where to redirect to</returns>
         Public Function System_GetNextLogonURI(ByVal LoginNameOfUser As String) As String
+            If LoginNameOfUser = "" Then Return Nothing
+
             Dim MyBuffer As String
             Dim MyDBConn As New SqlConnection
             Dim MyRecSet As SqlDataReader = Nothing
             Dim MyCmd As New SqlCommand
-
-            If LoginNameOfUser = "" Then Return Nothing
 
             'Create connection
             MyDBConn.ConnectionString = ConnectionString
@@ -2059,24 +2059,13 @@ Namespace CompuMaster.camm.WebManager
                         MyBuffer = CalculateUrl(Me.CurrentServerInfo.ID, CType(MyRecSet("ScriptEngine_ID"), Integer), Internationalization.User_Auth_Config_Paths_Login & CType(MyRecSet("FileName_EngineLogin"), String) & "?GUID=" & System.Web.HttpUtility.UrlEncode(CType(MyRecSet("ScriptEngine_LogonGUID"), String)) & "&User=" & System.Web.HttpUtility.UrlEncode(LoginNameOfUser) & "&Dat=" & Hour(Now) & Minute(Now) & Second(Now))
                     End If
                 End If
-
-                System_GetNextLogonURI = MyBuffer
-
             Finally
                 If Not MyRecSet Is Nothing AndAlso Not MyRecSet.IsClosed Then
                     MyRecSet.Close()
                 End If
-                If Not MyCmd Is Nothing Then
-                    MyCmd.Dispose()
-                End If
-                If Not MyDBConn Is Nothing Then
-                    If MyDBConn.State <> ConnectionState.Closed Then
-                        MyDBConn.Close()
-                    End If
-                    MyDBConn.Dispose()
-                End If
+                Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeCommandAndConnection(MyCmd)
             End Try
-
+            Return MyBuffer
         End Function
 
         ''' <summary>
@@ -2263,27 +2252,39 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="LoginNameOfUser">The login name to be checked</param>
         ''' <returns>True when the session has ended</returns>
-        <Obsolete("Doesn't work as expected"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
+        <Obsolete("Doesn't work as expected"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
         Public Function System_IsSessionTerminated(ByVal LoginNameOfUser As String) As Boolean
 
             If HttpContext.Current Is Nothing Then
+                'Net client context
                 Return System_GetInternalUserSessionId() = 0
+            Else
+                'Web context
             End If
 
-            Dim MyDBConn As New SqlConnection
-            Dim MyRecSet As SqlDataReader = Nothing
-            Dim MyCmd As New SqlCommand
+            Dim MyRecSet As IDataReader = Nothing
+            Dim MyCmd As New SqlCommand("", New SqlConnection(Me.ConnectionString))
+            Dim Result As Boolean
 
             'Create connection
-            MyDBConn.ConnectionString = ConnectionString
             Try
-                MyDBConn.Open()
-
                 'Get parameter value and append parameter
                 With MyCmd
 
-                    .CommandText = "Public_GetLogonList"
-                    .CommandType = CommandType.StoredProcedure
+                    If Me.System_DBVersion_Ex.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) > 0 Then 'Newer
+                        .CommandText = "Public_GetLogonList"
+                        .CommandType = CommandType.StoredProcedure
+                    Else
+                        'Use backwards compatibility mode by not using Public_GetLogonList's implementation but an own separate check
+                        .CommandText =
+                                "SELECT System_WebAreasAuthorizedForSession.ID, System_WebAreasAuthorizedForSession.SessionID" & vbNewLine &
+                                "FROM System_WebAreasAuthorizedForSession " & vbNewLine &
+                                "WHERE System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID IS NOT NULL" & vbNewLine &
+                                "		AND System_WebAreasAuthorizedForSession.ScriptEngine_SessionID = @ScriptEngine_SessionID" & vbNewLine &
+                                "       AND System_WebAreasAuthorizedForSession.ScriptEngine_ID = @ScriptEngine_ID" & vbNewLine &
+                                "		AND System_WebAreasAuthorizedForSession.Server = @ServerID"
+                        .CommandType = CommandType.Text
+                    End If
 
                     .Parameters.Add("@Username", SqlDbType.NVarChar).Value = LoginNameOfUser
 
@@ -2303,30 +2304,23 @@ Namespace CompuMaster.camm.WebManager
                 End With
 
                 'Create recordset by executing the command
-                MyCmd.Connection = MyDBConn
-                MyRecSet = MyCmd.ExecuteReader()
+                MyRecSet = Tools.Data.DataQuery.AnyIDataProvider.ExecuteReader(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
 
-                If MyRecSet.Read Then
-                    System_IsSessionTerminated = False
+                If MyRecSet.Read Then 'is there a 1st row?
+                    'Yeah, LogonList with rows resp. System_WebAreasAuthorizedForSession with rows -> session available
+                    Result = False
                 Else
-                    System_IsSessionTerminated = True
+                    'No session avaiable
+                    Result = True
                 End If
 
             Finally
                 If Not MyRecSet Is Nothing AndAlso Not MyRecSet.IsClosed Then
                     MyRecSet.Close()
                 End If
-                If Not MyCmd Is Nothing Then
-                    MyCmd.Dispose()
-                End If
-                If Not MyDBConn Is Nothing Then
-                    If MyDBConn.State <> ConnectionState.Closed Then
-                        MyDBConn.Close()
-                    End If
-                    MyDBConn.Dispose()
-                End If
+                Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeCommandAndConnection(MyCmd)
             End Try
-
+            Return Result
         End Function
 
         ''' <summary>
@@ -5432,6 +5426,13 @@ Namespace CompuMaster.camm.WebManager
             Dim transformer As IWMPasswordTransformation = PasswordTransformerFactory.ProduceCryptographicTransformer(transformationResult.Algorithm)
             Dim transformedPassword As String = transformer.TransformString(password, transformationResult.Noncevalue)
 
+            Dim CurrentScriptEngine As WMSystem.ScriptEngines
+            If HttpContext.Current Is Nothing Then
+                CurrentScriptEngine = ScriptEngines.NetClient
+            Else
+                CurrentScriptEngine = ScriptEngines.ASPNet
+            End If
+
             'Create connection
             MyDBConn.ConnectionString = ConnectionString
             Try
@@ -5453,11 +5454,7 @@ Namespace CompuMaster.camm.WebManager
                     End If
                     .Parameters.Add("@ServerIP", SqlDbType.NVarChar).Value = CurrentServerIdentString
                     .Parameters.Add("@RemoteIP", SqlDbType.NVarChar).Value = CurrentRemoteClientAddress
-                    If HttpContext.Current Is Nothing Then
-                        .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.NetClient
-                    Else
-                        .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.ASPNet
-                    End If
+                    .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = CurrentScriptEngine
                     .Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar, 512).Value = CurrentScriptEngineSessionID
                     .Parameters.Add("@ForceLogin", SqlDbType.Bit).Value = forceLogin
                 End With
@@ -5481,6 +5478,12 @@ Namespace CompuMaster.camm.WebManager
             'Reset navigation cache
             If Result = ReturnValues_UserValidation.ValidationSuccessfull OrElse Result = ReturnValues_UserValidation.ValidationSuccessfull_ButNoAuthorizationForRequiredSecurityObject Then
                 Me.SetUserLoginName(loginName) '_CurrentUserLoginName = loginName
+                'EnsureSession(scriptEngineID As ScriptEngines, scriptEngineSessionID As String, userID As Long, serverID As Integer) As Long
+                If Me.System_DBVersion_Ex.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
+                    'Ensure that there is a session - backwards compatibility must at least allow an admin to update the database to latest version and for this to login, first 
+                    EnsureSession(CurrentScriptEngine, CurrentScriptEngineSessionID, Me.CurrentUserID(SpecialUsers.User_Anonymous), Me.CurrentServerInfo.ID)
+                End If
+
                 If Not HttpContext.Current Is Nothing Then
                     Dim CacheObjectName As String
                     If Configuration.CookieLess = False Then
