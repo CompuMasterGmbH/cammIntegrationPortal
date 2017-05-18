@@ -16,6 +16,20 @@
 
 ## Changes while developing in following builds
 
+### Build 206 → 2111 (ASP.NET Engine)
+* :heavy_plus_sign: optional SmartEditor components and SmartEditor-Upload: several improvements and fixes
+* :heavy_plus_sign: added ProtectedPageBeforePageLoad
+* :heavy_plus_sign: introduced IsDeletedUser flag
+* :heavy_plus_sign: exceptions splitted into more separate exception classes to better reflext the cause/type of an exception
+* :heavy_plus_sign: additional minor improvements and bugfixes
+* :arrows_clockwise: Fixed exception on LanguageInfo query with given market IDs and searching for inactive langauges as well
+* :arrows_clockwise: Fixed exception at AppRightsList caused by IsDenyRule implementation
+* :arrows_clockwise: Fixed exception at user cloning
+* :arrows_clockwise: Fixed user deletion form
+
+### Build 2111 (DB Engine)
+* :heavy_plus_sign: introduced IsDeletedUser flag
+
 ### Build 2104 (DB Engine)
 * :heavy_minus_sign:	remove all obsolete data from user table
 * :heavy_minus_sign::warning:	deactivate all active sessions for safety between user session handling phase 1 "single login" and phase 2 "multiple simultaneous logins"
