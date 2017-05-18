@@ -214,3 +214,4 @@ libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifes
 /webs/debug_rootadminapp/*.asax
 /libraries/smarteditor/CommonMarkEditor/system
 s.bat
+setup and distribution/DbUpdateTool/devsql-2016.SENSITIVEDATAWARNING.cmd

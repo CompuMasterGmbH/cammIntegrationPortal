@@ -820,40 +820,40 @@ Namespace CompuMaster.camm.WebManager
             If Me.System_DBVersion_Ex.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
                 MyCmd.CommandType = CommandType.StoredProcedure
             Else
-                Dim Sql As String = "-- Deklaration Variablen/Konstanten" & vbNewLine &
-                        "DECLARE @CurrentSessionID int" & vbNewLine &
-                        "" & vbNewLine &
-                        "---------------------------------------------------------------------------------" & vbNewLine &
-                        "-- Versuch der Auffindung einer vorhandenen Session" & vbNewLine &
-                        "---------------------------------------------------------------------------------" & vbNewLine &
-                        "-- Lookup internal session ID" & vbNewLine &
-                        "SELECT TOP 1 @CurrentSessionID = SessionID" & vbNewLine &
-                        "	FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) " & vbNewLine &
-                        "	WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID " & vbNewLine &
-                        "		AND ScriptEngine_ID = @ScriptEngine_ID" & vbNewLine &
-                        "		AND Server = @ServerID" & vbNewLine &
-                        "		AND SessionID IN (" & vbNewLine &
-                        "							SELECT ID_Session " & vbNewLine &
-                        "							FROM [dbo].[System_UserSessions] WITH (NOLOCK) " & vbNewLine &
-                        "							WHERE ID_User = @CurUserID" & vbNewLine &
-                        "							)" & vbNewLine &
-                        "If @CurrentSessionID IS NULL" & vbNewLine &
-                        "	BEGIN" & vbNewLine &
-                        "		-- Interne SessionID erstellen" & vbNewLine &
-                        "		INSERT INTO System_UserSessions (ID_User) VALUES (@CurUserID)" & vbNewLine &
-                        "		SELECT @CurrentSessionID = SCOPE_IDENTITY()" & vbNewLine &
-                        "		-- An welchen Systemen ist noch eine Anmeldung erforderlich?" & vbNewLine &
-                        "		INSERT INTO dbo.System_WebAreasAuthorizedForSession" & vbNewLine &
-                        "								(ServerGroup, Server, ScriptEngine_ID, SessionID, ScriptEngine_LogonGUID, ScriptEngine_SessionID)" & vbNewLine &
-                        "		SELECT     dbo.System_Servers.ServerGroup, dbo.System_servers.id, @ScriptEngine_ID, @CurrentSessionID AS InternalSessionID, cast(rand() * 1000000000 as int) AS RandomGUID, @ScriptEngine_SessionID" & vbNewLine &
-                        "		FROM         dbo.System_Servers " & vbNewLine &
-                        "		WHERE     (dbo.System_Servers.Enabled <> 0) AND (dbo.System_Servers.ID = @ServerID)" & vbNewLine &
-                        "	END" & vbNewLine &
-                        "-- for compatibility with older db versions, update of Benutzer table is required" & vbNewLine &
-                        "UPDATE dbo.Benutzer SET System_SessionID = @CurrentSessionID WHERE ID = @CurUserID" & vbNewLine &
-                        "" & vbNewLine &
-                        "-- return the current/new inernal session ID" & vbNewLine &
-                        "SELECT @CurrentSessionID;" & vbNewLine &
+                Dim Sql As String = "-- Deklaration Variablen/Konstanten" & vbNewLine & _
+                        "DECLARE @CurrentSessionID int" & vbNewLine & _
+                        "" & vbNewLine & _
+                        "---------------------------------------------------------------------------------" & vbNewLine & _
+                        "-- Versuch der Auffindung einer vorhandenen Session" & vbNewLine & _
+                        "---------------------------------------------------------------------------------" & vbNewLine & _
+                        "-- Lookup internal session ID" & vbNewLine & _
+                        "SELECT TOP 1 @CurrentSessionID = SessionID" & vbNewLine & _
+                        "	FROM System_WebAreasAuthorizedForSession WITH (NOLOCK) " & vbNewLine & _
+                        "	WHERE ScriptEngine_SessionID = @ScriptEngine_SessionID " & vbNewLine & _
+                        "		AND ScriptEngine_ID = @ScriptEngine_ID" & vbNewLine & _
+                        "		AND Server = @ServerID" & vbNewLine & _
+                        "		AND SessionID IN (" & vbNewLine & _
+                        "							SELECT ID_Session " & vbNewLine & _
+                        "							FROM [dbo].[System_UserSessions] WITH (NOLOCK) " & vbNewLine & _
+                        "							WHERE ID_User = @CurUserID" & vbNewLine & _
+                        "							)" & vbNewLine & _
+                        "If @CurrentSessionID IS NULL" & vbNewLine & _
+                        "	BEGIN" & vbNewLine & _
+                        "		-- Interne SessionID erstellen" & vbNewLine & _
+                        "		INSERT INTO System_UserSessions (ID_User) VALUES (@CurUserID)" & vbNewLine & _
+                        "		SELECT @CurrentSessionID = SCOPE_IDENTITY()" & vbNewLine & _
+                        "		-- An welchen Systemen ist noch eine Anmeldung erforderlich?" & vbNewLine & _
+                        "		INSERT INTO dbo.System_WebAreasAuthorizedForSession" & vbNewLine & _
+                        "								(ServerGroup, Server, ScriptEngine_ID, SessionID, ScriptEngine_LogonGUID, ScriptEngine_SessionID)" & vbNewLine & _
+                        "		SELECT     dbo.System_Servers.ServerGroup, dbo.System_servers.id, @ScriptEngine_ID, @CurrentSessionID AS InternalSessionID, cast(rand() * 1000000000 as int) AS RandomGUID, @ScriptEngine_SessionID" & vbNewLine & _
+                        "		FROM         dbo.System_Servers " & vbNewLine & _
+                        "		WHERE     (dbo.System_Servers.Enabled <> 0) AND (dbo.System_Servers.ID = @ServerID)" & vbNewLine & _
+                        "	END" & vbNewLine & _
+                        "-- for compatibility with older db versions, update of Benutzer table is required" & vbNewLine & _
+                        "UPDATE dbo.Benutzer SET System_SessionID = @CurrentSessionID WHERE ID = @CurUserID" & vbNewLine & _
+                        "" & vbNewLine & _
+                        "-- return the current/new inernal session ID" & vbNewLine & _
+                        "SELECT @CurrentSessionID;" & vbNewLine & _
                         ""
                 MyCmd.CommandText = Sql
                 MyCmd.CommandType = CommandType.Text
@@ -2254,7 +2254,7 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <param name="LoginNameOfUser">The login name to be checked</param>
         ''' <returns>True when the session has ended</returns>
-        <Obsolete("Doesn't work as expected"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)>
+        <Obsolete("Doesn't work as expected"), System.ComponentModel.EditorBrowsable(ComponentModel.EditorBrowsableState.Never)> _
         Public Function System_IsSessionTerminated(ByVal LoginNameOfUser As String) As Boolean
 
             If HttpContext.Current Is Nothing Then
@@ -2278,12 +2278,12 @@ Namespace CompuMaster.camm.WebManager
                         .CommandType = CommandType.StoredProcedure
                     Else
                         'Use backwards compatibility mode by not using Public_GetLogonList's implementation but an own separate check
-                        .CommandText =
-                                "SELECT System_WebAreasAuthorizedForSession.ID, System_WebAreasAuthorizedForSession.SessionID" & vbNewLine &
-                                "FROM System_WebAreasAuthorizedForSession " & vbNewLine &
-                                "WHERE System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID IS NOT NULL" & vbNewLine &
-                                "		AND System_WebAreasAuthorizedForSession.ScriptEngine_SessionID = @ScriptEngine_SessionID" & vbNewLine &
-                                "       AND System_WebAreasAuthorizedForSession.ScriptEngine_ID = @ScriptEngine_ID" & vbNewLine &
+                        .CommandText = _
+                                "SELECT System_WebAreasAuthorizedForSession.ID, System_WebAreasAuthorizedForSession.SessionID" & vbNewLine & _
+                                "FROM System_WebAreasAuthorizedForSession " & vbNewLine & _
+                                "WHERE System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID IS NOT NULL" & vbNewLine & _
+                                "		AND System_WebAreasAuthorizedForSession.ScriptEngine_SessionID = @ScriptEngine_SessionID" & vbNewLine & _
+                                "       AND System_WebAreasAuthorizedForSession.ScriptEngine_ID = @ScriptEngine_ID" & vbNewLine & _
                                 "		AND System_WebAreasAuthorizedForSession.Server = @ServerID"
                         .CommandType = CommandType.Text
                     End If
