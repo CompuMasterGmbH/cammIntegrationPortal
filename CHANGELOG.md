@@ -1,6 +1,6 @@
-﻿#ChangeLog for camm Integration Portal / camm Web-Manager
+﻿# ChangeLog for camm Integration Portal / camm Web-Manager
 
-##Note on updates
+## Note on updates
 * camm Web-Manager is build up to provide most compatibility with old version. But there may be some modifications which need to be tested on your current instance.
 * We strongly recommend a small test environment with same content in /sysdata as in your production environment (except the config.vb and web.config which may differ).
 * Changes in /sysdata do not automatically apply for already installed camm Web-Manager instances. This folder contains project dependent content and has to be updated manually.
@@ -14,16 +14,16 @@
 * :construction: Known issues
   * With .Net2 you can setup the security/trust level from Full down to Medium (=Microsoft’s recommendation). This will break functionality for following modules: DownloadHandler, WebEditor, and all related components
 
-##Changes while developing in following builds
+## Changes while developing in following builds
 
-###Build 2104 (DB Engine)
+### Build 2104 (DB Engine)
 * :heavy_minus_sign:	remove all obsolete data from user table
 * :heavy_minus_sign::warning:	deactivate all active sessions for safety between user session handling phase 1 "single login" and phase 2 "multiple simultaneous logins"
 
-###Build 178 → 206 (ASP Engine)
+### Build 178 → 206 (ASP Engine)
 * :heavy_plus_sign:	Splitted OfficialServerGroup_AdminURL to support separate value for e-mail notifications (OfficialServerGroup_AdminURL_SecurityAdminNotifications)
 
-###Build 205 → 206 (ASP.NET Engine)
+### Build 205 → 206 (ASP.NET Engine)
 * :arrows_clockwise::warning: security fix: public server check only under special circumstances
 * :heavy_plus_sign:	product registration service: added auth statistics
 * :heavy_plus_sign:	update DB build to a customizable DB version
@@ -53,7 +53,7 @@
 * :heavy_minus_sign:	removed Telerik.Rad components – replaced by stable SmartPlainTextEditor with always-warning to technician asking for replacing by another SmartEditor control
 * :heavy_minus_sign:	removed obsolete assembly dependency to CompuMaster.Imaging
 
-###Build 205 → 2109 (DB Engine)
+### Build 205 → 2109 (DB Engine)
 * :warning:	requires restart of all web applications (e.g. by iisreset or re-saving/re-upload of web.config on all connected servers and web applications)
 * :arrows_clockwise::warning:	splitted anonymous group ID 58 into separate ones for each server group
 * :heavy_plus_sign:	prepared memberships inherition
@@ -64,7 +64,7 @@
 * :heavy_minus_sign:	view/sp/function encryption
 * :heavy_minus_sign:	separated/removed module for log analysis from standard for reduced dependencies
 
-###Build 202 → 205 (ASP.NET Engine)
+### Build 202 → 205 (ASP.NET Engine)
 * :warning: the server for processing the asynchronous tasks (running the "core" webservice) must be able to connect directly to the internet (to www.camm.biz by https and http) for the introduced product registration service (without proxy support)
 * :heavy_plus_sign:	product registration service
 * :heavy_plus_sign:	support for simultaneous login
@@ -79,14 +79,14 @@
 * :heavy_minus_sign:	removed CyberAkt dependency
 * :heavy_minus_sign:	removed RadChart dependency
 
-###Build 204 → 205 (DB Engine)
+### Build 204 → 205 (DB Engine)
 * :heavy_plus_sign:	support for simultaneous login
 * :heavy_plus_sign:	added support for Azure SQL V12
 * :arrows_clockwise:	migrated azure v11 improvements of sql statements into standard sql files
 * :heavy_minus_sign:	removed support for SQL Server 7 and 2000 in complete
 * :heavy_minus_sign:	removed support for Azure SQL V11
 
-###Build 200 → 204 (DB Engine)
+### Build 200 → 204 (DB Engine)
 * :heavy_plus_sign:	anonymization rules
 * :heavy_plus_sign:	added columns for AuthDenyRules and AuthDevGroup
   *	IsAllowedStandard = (AllowIsDev – DenyIsDev) + (AllowStandard – DenyStandard)
@@ -94,7 +94,7 @@
 * :heavy_plus_sign:	added basic support IsDenyRule for memberships
   *	IsEffectiveMember = Allow - Deny
 
-###Build 200 → 202 (ASP.NET Engine)
+### Build 200 → 202 (ASP.NET Engine)
 * :heavy_plus_sign:	improved exception handling with exception token for reference purposes
 * :heavy_plus_sign:	IIS sometimes replaced error pages by its own custom page – so it replaced the prepared error page for the user of the error handling system by an IIS error page. Additional configuration can be set up in web.config using the app setting WebManager.NotifyOnApplicationExceptions.ReplaceResponseStatusCode to False or – more recommended if it fits for your environment - 
   ```
@@ -104,22 +104,22 @@
   ```
 * :arrows_clockwise:	fixed several deadlock situations
 
-###Build 199 → 200 (ASP.NET Engine)
+### Build 199 → 200 (ASP.NET Engine)
 * :warning:	redesigned service interfaces (requires update of trigger service application)
 * :heavy_plus_sign:	added support for strong typed additional flags for optional application requirements 
 * :arrows_clockwise:	fixed several deadlock situations
 
-###Build 199 → 200 (DB Engine)
+### Build 199 → 200 (DB Engine)
 * :arrows_clockwise:	fixed several deadlock situations
 
-###Build 197 → 199 (ASP.NET Engine)
+### Build 197 → 199 (ASP.NET Engine)
 * :heavy_plus_sign:	added basic support for community edition and online license verification (unstable)
 * :arrows_clockwise:	some minor internal changes and fixes
 
-###Build 197 → 199 (DB Engine)
+### Build 197 → 199 (DB Engine)
 * :heavy_plus_sign:	(re)created indexes and views for improved performance
 
-###Build 194 → 197 (ASP.NET Engine)
+### Build 194 → 197 (ASP.NET Engine)
 * :heavy_plus_sign:	added support for enhanced password security
 * :heavy_plus_sign: 	CreateUser/UpdateUser/-PW also logs current admin user
 * :heavy_plus_sign:	added support for administration priviledges ViewRelations, ViewAllItems and ViewAllRelations for Group objects
@@ -129,7 +129,7 @@
 * :arrows_clockwise: 	required DB build no. for System_SupportsMultiplePasswordAlgorithms corrected to 195 (instead of 193)
 * :arrows_clockwise:	fixed some minor bugs in administration area
 
-###Build 193 → 197 (DB Engine)
+### Build 193 → 197 (DB Engine)
 * :heavy_plus_sign:	added support for enhanced password security
 * :heavy_plus_sign:	added basic support for data protection module
 * :heavy_plus_sign:	on create group, automatically setup creator as group owner
@@ -138,10 +138,10 @@
 * :arrows_clockwise: 	recreation of all function+sp+trigger
 * :arrows_clockwise: 	fixed group name field size from 50 to 100 chars at SP CreateGroup
 
-###Build 193 → 194 (ASP.NET Engine)
+### Build 193 → 194 (ASP.NET Engine)
 * :heavy_plus_sign: 	UpdateUserDetails and UpdateUserPW now save the admin user ID into the log
 
-###Build 192 → 193 (ASP.NET Engine)
+### Build 192 → 193 (ASP.NET Engine)
 * :warning: 	An additional e-mail template has been added for sending password reset links (instead of password itself). Add your customized template to your /sysdata/custom_internationalization.vb if required.
 * :heavy_plus_sign: 	Added support for multiple password algorithms (requires .NET 2.0 or higher at all of your root web applications and ADS-SSO web applications). You can chose at Web Administration >> Setup >> About Web-Manager >> Advanced configuration between old EncDecMod, TripleDES, AES256, and PBKDF2 (recommended)
 * :heavy_plus_sign: 	Added password reset form.
@@ -150,21 +150,21 @@
 * :heavy_plus_sign: 	Added password recovery behaviours. Either try to decrypt password if algorithm allows it and send it to the user, or always send a link to the reset form.
 * :arrows_clockwise: 	index_frameset.aspx has been changed to fix a potential XSS.
 
-###Build 190 → 193 (DB Engine)
+### Build 190 → 193 (DB Engine)
 * :heavy_plus_sign: 	Added two columns to users table, storing password algorithm and nonce (IV/Salt)
 * :heavy_plus_sign: 	Default values for password rest behaviour and to be used algorithm.
 * :arrows_clockwise: 	Changed procedures so they work together with these two columns
 
-###Build 189 → 190 (DB Engine)
+### Build 189 → 190 (DB Engine)
 * :heavy_plus_sign:	Added support for MS SQL-Server 2014
 * :heavy_plus_sign:	Added support for MS SQL-Azure (V11)
 
-###Build 188 → 189 (DB Engine)
+### Build 188 → 189 (DB Engine)
 * :heavy_plus_sign:	Added support for MS SQL-Server 2012
 * :heavy_plus_sign:	Enabled error page also for ASP.NET/IIS with integrated mode (requires ASP.Net >= 3)
 * :arrows_clockwise:	Workaround: Reset all existing user account to “InitAuthorizationsDone” (haven’t been correctly updated in past)
 
-###Build 179 → 192 (ASP.NET Engine) (unstable)
+### Build 179 → 192 (ASP.NET Engine) (unstable)
 * :warning:	Update account_updateprofile.aspx with its base class to allow easy modification of available motivation reasons as well (like the register form)
 * :heavy_plus_sign:	Added partial support for MS SQL Azure as database server
 * :heavy_plus_sign:	Added support and base classes for supporting the Master page concept
@@ -177,18 +177,18 @@
 * :arrows_clockwise:	Fixed download handler file name compatibility issue with invalid control chars like tab, null-char, etc.
 * :arrows_clockwise:	Improved exception details on failed hard link creation
 
-###Build 186 → 188 (DB Engine)
+### Build 186 → 188 (DB Engine)
 * :arrows_clockwise:	Fixed issues caused by changes in build 180 to 184 regarding returned ID values of new rows
 * :arrows_clockwise:	Full rewrite of all views and procedures
 
-###Build 185 → 186 (DB Engine)
+### Build 185 → 186 (DB Engine)
 * :heavy_plus_sign:	Increased performance on message queue table by adding additional column indexes
 
-###Build 184 → 185 (DB Engine)
+### Build 184 → 185 (DB Engine)
 * :heavy_plus_sign:	Extended data on feature user profile flag
 * :arrows_clockwise:	Application cloning and application rights improved/fixed
 
-###Build 179 → 184 (DB Engine)
+### Build 179 → 184 (DB Engine)
 * :warning:	Support for SQL Server 7 ends with build 179; beginning with build 180, support is not available anymore (but productive usage is still possible with build 179 without problems)!
 * :heavy_plus_sign:	Introduction of additional tables and columns for splitted management of navigation items and security objects inclusive automatic filling possibility by triggers
 * :heavy_plus_sign:	Option to select security delegates while copying an application
@@ -196,15 +196,15 @@
 * :arrows_clockwise:	Several small fixes in admin area
 * :arrows_clockwise:	Show only first 50 apps in application list in default view
 
-###Build 177 → 179 (DB Engine)
+### Build 177 → 179 (DB Engine)
 * :heavy_plus_sign:	Introduction of fast SP for cumulated authorizations of a user
 * :heavy_plus_sign:	Introduction of new SP for renaming login names
 
-###Build 131 → 178 (ASP Engine)
+### Build 131 → 178 (ASP Engine)
 * :heavy_plus_sign:	Added MailQueue technology
 * :arrows_clockwise:	Redirected SMTP e-mail methods to MailQueue methods to support 64 bit platforms (the existing 32-bit Chilkat ActiveX component (which caused the problem because it’s not available for 64 bit) is not required any more)
 
-###Build 177 → 178 (ASP.NET Engine) (unstable – in process)
+### Build 177 → 178 (ASP.NET Engine) (unstable – in process)
 * :warning:	Changed property type in UserInformation class for Authorizations from SecurityObjectInformation array to SecurityObjectAuthorizationForUser array
 * :heavy_plus_sign:	Handling protected flags in clone users
 * :heavy_plus_sign:	Some minor improvements in admin area
@@ -228,42 +228,42 @@
 * :arrows_clockwise:	Some internal changes in download handler module – may fix a few errors
 * :arrows_clockwise:	Fixed DownloadHandler redirection to use own redirection implementation and to not use ASP.NET 2.x's integrated Response.Redirect which uses an incorrectly encoded redirection body (usually not considered, but may be considered by some simple search robots) 
 
-###Build 174 → 177 (ASP.NET Engine) (unstable – in process)
+### Build 174 → 177 (ASP.NET Engine) (unstable – in process)
 * :heavy_plus_sign:	Add/RemoveMemberships/Authorizations now ensures the current admin user to be authorized to administer the relationships (by UpdateReleations, Owner, SecurityMaster or Supervisor rights)
 
-###Build 169 → 177 (DB Engine)
+### Build 169 → 177 (DB Engine)
 * :heavy_plus_sign:	Introduction of SPs IsAdministratorForAuthorizations and IsAdministratorForMemberships and altered SPs like AdminPrivate_CreateMemberships, dbo.AdminPrivate_CreateApplicationRightsByGroup to ensure the current admin user to be authorized to administer the relationships (by UpdateReleations, Owner, SecurityMaster or Supervisor rights)
 * :arrows_clockwise:	Fixed SP [AdminPrivate_UpdateSubSecurityAdjustment] for correct parameter data types
 * :arrows_clockwise:	LogMissingExternalUserAssignment now ensured with schema name [dbo]
 
-###Build 173 → 174 (ASP.NET Engine) (unstable – in process)
+### Build 173 → 174 (ASP.NET Engine) (unstable – in process)
 * :arrows_clockwise:	caching of encrypted ServerIdentstring in Downloadhandler class. This was necessary because the old caching logic did not support the changing of ServerIdenstring in environments where the ServerIdentstring can be changed during application lifetime.
 
-###Build 172 → 173 (ASP.NET Engine) (unstable – in process)
+### Build 172 → 173 (ASP.NET Engine) (unstable – in process)
 * :heavy_plus_sign:	With ASP.NET 2 or higher, there might be some assembly load exceptions for security reasons (the webserver is configured to run e. g. with medium trust instead of full trust). Those errors lead to a notification mail to the technical contact. By using the config setting “WebManager.Application.IgnoreSecurityExceptionsForLoadingAssemblies”, it is possible to ignore those security exceptions for defined components if they’re not required.
 
-###Build 169 → 172 (ASP.NET Engine) (unstable – in process)
+### Build 169 → 172 (ASP.NET Engine) (unstable – in process)
 * :heavy_plus_sign:	Introduced gender field to be one of the following values: UndefinedGender (if a user has got a first and family name, but the gender is unknown) and MissingNameOrGroupOfPersons (if the gender is unknown as well as there is first name or last name missing; those accounts are treated as group account and those users are welcomed e. g. with “Hello together”)
 * :heavy_plus_sign:	Introduces writing direction information in market/language info object
 
-###Build 166 → 169 (ASP.NET Engine) (unstable – in process)
+### Build 166 → 169 (ASP.NET Engine) (unstable – in process)
 * :heavy_plus_sign:	Several improvements in Admin Area
 * :heavy_plus_sign: Added method for doing a prevalidation of user credentials for usage in custom login forms
 
-###Build 166 → 169 (DB Engine) (unstable – in process)
+### Build 166 → 169 (DB Engine) (unstable – in process)
 * :heavy_plus_sign:	Added procedure for PreValidation of user credentials
 
-###Build 164 → 166 (ASP.NET Engine) (unstable – in process)
+### Build 164 → 166 (ASP.NET Engine) (unstable – in process)
 * :heavy_plus_sign:	Added HttpApplication ExceptionLogIntoWindowsEventLog
 
-###Build 164 → 166 (DB Engine) (unstable – in process)
+### Build 164 → 166 (DB Engine) (unstable – in process)
 * :heavy_plus_sign:	Added navigation points
 * :heavy_plus_sign:	Allowed authorization and membership creation also for the anonymous user (e.g. to be used in user creation forms where the user shall be created and authorized in one step)
 
-###Build 163 → 164 (DB Engine) (unstable – in process)
+### Build 163 → 164 (DB Engine) (unstable – in process)
 * :heavy_plus_sign:	Added stored procedure to return navigation items by group
 
-###Build 163 → 164 (ASP.NET Engine) (unstable – in process)
+### Build 163 → 164 (ASP.NET Engine) (unstable – in process)
 * :heavy_plus_sign:	Added group navigation preview in admin area (requires /sysdata/nav/index.aspx to use the new data structure as in delivered example)
 * :arrows_clockwise:	Fixed compilation errors with the update profile form
 * :arrows_clockwise:-	Several minor changes in DownloadHandler
@@ -287,15 +287,15 @@
 * :arrows_clockwise:	Fixed issue with multiple CWM-Lang-Cookies for different paths (in this case, the market ID didn’t change any more)
 * :arrows_clockwise:	Fixed some issues in exception catching and logging
 
-###Build 162 → 163 (DB Engine)
+### Build 162 → 163 (DB Engine)
 * :arrows_clockwise:	Support adding of authorizations by code-user (-33)
 
-###Build 161 → 162 (DB Engine)
+### Build 161 → 162 (DB Engine)
 * :heavy_plus_sign:	Added support for SQL Server 2008
 * :arrows_clockwise:	Fixed SQL setup/update statements for SQL Server 7
 * :arrows_clockwise:	Strip down of very early (and for newer releases unnecessary) update statements to reduce file size of cammWM.dll
 
-###Build 161 → 162 (ASP.NET Engine) (unstable – in process)
+### Build 161 → 162 (ASP.NET Engine) (unstable – in process)
 * :warning:	Control sWcms has been splitted internally into a base class and a UI class. Caused by this change there is the need to recompile assemblies which use the sWcms functionality (if you don’t do, you would receive e.g. property/method doesn’t exist exceptions)
 * :warning:	Update of component ICSharpCodeZipLib to version 0.85.5 and now in versions for .NET 1.1 and 2.0 to support medium trust level environments. Consider carefully this point if you use this library in your own solutions, too: the public key token of this library has changed and requires a recompilation of your solution referencing this DLL.
 * :heavy_plus_sign:	Support for language hungary
@@ -316,10 +316,10 @@
 * :construction: Known issues
   *	With .Net2 you can setup the security/trust level from Full down to Medium (=Microsoft’s recommendation). This will break functionality for following modules: DownloadHandler, WebEditor, and all related components
 
-###Build 157 → 161 (DB Engine)
+### Build 157 → 161 (DB Engine)
 * :arrows_clockwise:	Removed unnecessary and inconsistent data
 
-###Build 160 → 161 (ASP.NET Engine) (unstable – in process)
+### Build 160 → 161 (ASP.NET Engine) (unstable – in process)
 * :heavy_plus_sign:	Separated builds for .NET 1.1 and 2.0
 * :arrows_clockwise:	Smart WebEditor uses the webmanager configuration value “WebManager. WebEditorContentOfServerID” for loading content as a defined server ID (so you can load content from another server ID instead the current server)
 * :arrows_clockwise:	Some minor bug fixes
@@ -327,7 +327,7 @@
 * :construction: Known issues
   * With .Net2 you can setup the security/trust level from Full down to Medium (=Microsoft’s recommendation). This will break functionality for following modules: DownloadHandler, WebEditor, and all related components
 
-###Build 159 → 160 (ASP.NET Engine) (unstable – in process)
+### Build 159 → 160 (ASP.NET Engine) (unstable – in process)
 * :heavy_plus_sign:	Changed Configuration.ProcessMailQueue to TripleState and switched Auto or blank config value to auto-detect and false to be really false
 * :heavy_plus_sign:	Introduction of exchangebale data layer (to be configured by app.config/web.config in future releases)
 * :heavy_plus_sign:	Introduced new property AutoSecurityCheckLogsPageAccess
@@ -335,17 +335,17 @@
 * :construction: Known issues
   * With .Net2 you can setup the security/trust level from Full down to Medium (=Microsoft’s recommendation). This will break functionality for following modules: DownloadHandler, WebEditor, and all related components
 
-###Build 158 → 159 (ASP.NET Engine) (unstable – in process)
+### Build 158 → 159 (ASP.NET Engine) (unstable – in process)
 * :heavy_plus_sign:	Improved handling of POST data in exception notification e-mails sent by the global.asax handler by limiting all fields to a maximum of 10,000 characters
 * :arrows_clockwise:	Fixed issue with sending e-mails with the EasyMail component
 * :construction: Known issues
   * With .Net2 you can setup the security/trust level from Full down to Medium (=Microsoft’s recommendation). This will break functionality for following modules: DownloadHandler, WebEditor, and all related components
 
-###Build 157 → 158 (ASP.NET Engine) (unstable – in process)
+### Build 157 → 158 (ASP.NET Engine) (unstable – in process)
 * :heavy_plus_sign:	Added configuration option “WebManager.WebEditor.ContentOfServerID" to force a server ID for WebEditor where to read/save the content from/to (without specifying, it will always be the current server ID)
 * :arrows_clockwise:	Fixed missing/wrongly configured member for overloaded method System_SendEmail_Ex2
 
-###Build 155 → 157 (ASP.NET Engine) (unstable – in process)
+### Build 155 → 157 (ASP.NET Engine) (unstable – in process)
 * :heavy_plus_sign:	Added Polish language
 * :heavy_plus_sign:	Support for Apache reverse proxy scenarios with non-standard port number
 * :heavy_plus_sign:	Updated library ComponentArt Web.UI to V2007.2.1272
@@ -357,14 +357,14 @@
 * :arrows_clockwise:	Reegineered account_register.aspx
 * :arrows_clockwise:	Fixed issue with missing e-mail notifications for administrators when another security admin created a new user account
 
-###Build 153 → 155 (DB Engine)
+### Build 153 → 155 (DB Engine)
 * :heavy_plus_sign:	Added error details field in mail queue table for storing last error in case of errors
 
-###Build 154 → 155 (ASP.NET Engine) (unstable – in process)
+### Build 154 → 155 (ASP.NET Engine) (unstable – in process)
 * :heavy_plus_sign:	Added function for SalutationUnformalWithFirstName in user information object
 * :heavy_plus_sign:	Fixed user data search: SearchMethod.All will lead to all records instead to those records which have got an entry (in technical words: there will be a left join instead of an inner join)
 
-###Build 153 → 154 (ASP.NET Engine) (unstable – in process)
+### Build 153 → 154 (ASP.NET Engine) (unstable – in process)
 * :warning:	Additional overloads of Messaging.SendMail might break down running application with method calls in dynamically compiled sources (e.g. if used in ASPX pages)
 * :warning:	Added boolean configuration parameter “WebManager.DataBindAutomaticallyWhilePageOnLoad” defaults to False if not present (in past it had been an internal default to True)
 * :heavy_plus_sign:	Added global.asax exception notification for developers (instead of the technical contact of the whole website) or for both developer and technical contact
@@ -379,19 +379,19 @@
 * :arrows_clockwise:	Corrected, safe HTML output in exception notification e-mails sent by global.asax
 * :arrows_clockwise:	SmartWcmsControl: Automatically remove the server URL part from links if it is the current server
 
-###Build 152 → 153 (DB Engine)
+### Build 152 → 153 (DB Engine)
 * :heavy_plus_sign:	Drop old session values (batch command)
 * :heavy_plus_sign:	Drop old session values (periodically)
 
-###Build 152 → 153 (ASP.NET Engine)
+### Build 152 → 153 (ASP.NET Engine)
 * :heavy_plus_sign:	Completed localizations with remaining languages Chinese (Mandarin) and Italian
 * :arrows_clockwise:	Optimizations and bug fixing in CWM admin area
 * :arrows_clockwise:	Crypt result made independent from current thread culture
 
-###Build 150 → 152 (DB Engine)
+### Build 150 → 152 (DB Engine)
 * :heavy_plus_sign:	Added navigation items for administration area for languages Spanish, Portuguese , Russian, Japanese, Chinese (Mandarin), Italian
 
-###Build 144 → 152 (ASP.NET Engine)
+### Build 144 → 152 (ASP.NET Engine)
 * :heavy_plus_sign:	Added localizations for languages Spanish, Portuguese , Russian, Japanese, Chinese (Mandarin), Italian (some languages still need further translations)
 * :heavy_plus_sign:	The known bug documented in build 144 has been fixed
 * :heavy_plus_sign:	The admin area has improved for basic handling of required user flags (still missing some features)
@@ -410,13 +410,13 @@
 * :construction: Known issues
   * With .Net2 you can setup the security/trust level from Full down to Medium (=Microsoft’s recommendation). This will break functionality for following modules: DownloadHandler, WebEditor, Chilkat MailComponent and all related components
 
-###Build 144 → 150 (DB Engine)
+### Build 144 → 150 (DB Engine)
 * :heavy_plus_sign:	Updated market/language descriptions
 * :heavy_plus_sign:	Added Spanish navigation items for administration area
 * :heavy_plus_sign:	Update of markets/languages list with additional virtual markets
 * :heavy_plus_sign:	Added field RequiredUserProfileFlags in applications table
 
-###Build 143 → 144 (ASP.NET Engine)
+### Build 143 → 144 (ASP.NET Engine)
 * :heavy_plus_sign:	Improved caching of list of LanguageInfos + DBVersion
 * :heavy_plus_sign:	Improved performance in some SQL commands
 * :heavy_plus_sign:	Improved admin area (especially the drop down boxes in add/authorize user/group forms)
@@ -428,7 +428,7 @@
 * :arrows_clockwise:	Some code refactoring in configuration class
 * :arrows_clockwise:	Changed System_SendEMail* methods to be obsolete, use MessagingEMails.SendEMail instead
 
-###Build 141 → 143 (ASP.NET Engine)
+### Build 141 → 143 (ASP.NET Engine)
 * :warning:	Web-Explorer project has been splitted from camm Web-Manager; the old classes in CWM’s assembly are marked as obsolete. The new implementation can be found in separate project “camm Web-Explorer.Base” 
 * :arrows_clockwise:	Fixed issues with cammWM.TextModules: preview area has thrown compilation error
 * :arrows_clockwise:	Fixed admin account ID after database setup
@@ -437,22 +437,22 @@
 * :heavy_plus_sign:	Security Object can be defined in web.config, as following: <configuration><appSettings><add key="WebManager.Securityobject" value="@@Public" /></appSettings></configuration>
 * :heavy_plus_sign:	New additional markets, which have got a more “virtual” character like “Latin America/Caribbean”
 
-###Build 140 → 141 (ASP.NET Engine)
+### Build 140 → 141 (ASP.NET Engine)
 * :heavy_plus_sign:	Authorization checks with prefixed “@@” check against the group memberships instead of authorization for a security object, see also “@@Public” and “@@Anonymous”
 * :arrows_clockwise:	Admin account now initialized with accesslevel “Extranet + Intranet” instead of “Extranet only”
 * :arrows_clockwise:	Some internal code improvements
 
-###Build 139 → 140 (ASP.NET Engine)
+### Build 139 → 140 (ASP.NET Engine)
 * :arrows_clockwise:	Fixed auto-login-feature of Single-Sign-On application which broke down by changes in Build 139
 * :arrows_clockwise:	Fixed auto-account-registration of Single-Sign-On application which was caused by an earlier build
 * :arrows_clockwise:	some smaller changes for better logging
 * :arrows_clockwise:	Fixed removal of users (since build 138)
 
-###Build 138 → 139 (ASP.NET Engine)
+### Build 138 → 139 (ASP.NET Engine)
 * :heavy_plus_sign:	Support for IIS-sub-applications below of the IIS-root-application
 * :heavy_plus_sign:	Support for mixed .NET environments on one virtual webserver by using separate IIS-applications with separate application pools for each version of the used .NET frameworks
 
-###Build 137 → 138 (ASP.NET Engine)
+### Build 137 → 138 (ASP.NET Engine)
 * :heavy_plus_sign:	Fixes in WebEditor for better support of .NET Framework version 2
 * :heavy_plus_sign:	Changed DefaultNotifications class to provide overridable subs
 * :heavy_plus_sign:	Mail methods now provide additional overloads for simplified usage of reply-to addresses
@@ -462,28 +462,28 @@
 * :arrows_clockwise:	Moved code from aspx to library for sending password to user via e-mail
 * :arrows_clockwise:	Some minor bug fixes in administration area in user creation form
 
-###Build 136 → 137 (ASP.NET Engine)
+### Build 136 → 137 (ASP.NET Engine)
 * :arrows_clockwise:	Cloning of applications now resets the entries for system application
 * :arrows_clockwise:	Setup page for market activation now always show current (instead of cached) data
 
-###Build 135 → 136 (ASP.NET Engine)
+### Build 135 → 136 (ASP.NET Engine)
 * :heavy_plus_sign:	Web Editor XXL (rc1 code)
 
-###Build 134 → 135 (ASP.NET Engine)
+### Build 134 → 135 (ASP.NET Engine)
 * :heavy_plus_sign:	Web Editor XXL (beta2 code)
 * :arrows_clockwise:	Minor changes in security checks on database: IsUserAuthorized-Check now returns a false for Supervisors, too, if the security object doesn’t exist
 * :heavy_plus_sign:	Text Modules (alpha code)
 * :heavy_plus_sign:	Login form always opens in frameset when frameset is enabled
 * :heavy_plus_sign:	Setup mechanism now knows system applications with custom authorizations (e. g. Mail Queue Monitor) and is able to handle those. The administration forms are certainly able to handle this new system application type, too.
 
-###Build 133 → 134 (ASP.NET Engine)
+### Build 133 → 134 (ASP.NET Engine)
 * :heavy_plus_sign:	Web Editor XXL (beta code)
 * :heavy_plus_sign:	ComponentArt will be unlocked by the camm Web-Manager’s HttpApplication implementation when the application starts (before, it had been unlocked in the first camm-WebManager enabled page access)
 * :heavy_plus_sign:	New method to read the number of redirections; allows the creation of e. g. self-written page hit counters
 * :arrows_clockwise:	Fixed internal logging
 * :arrows_clockwise:	Fixed some path issues in Download Handler module with RawData/RawSingleData
 
-###Build 132 → 133 (ASP.NET Engine)
+### Build 132 → 133 (ASP.NET Engine)
 * :heavy_plus_sign:	Logging now with more details (URL) and unlimited error descriptions
 * :heavy_plus_sign:	Update mechanism is now able to execute longer than only for 30 seconds (up to 15 minutes); by this feature, update support for heavily filled databases is available
 * :heavy_plus_sign:	Support for pages which require server forms by the include files for top and bottom html code; in /sysdata/includes/ you’ll find a few additional files for the new form versions
@@ -493,19 +493,19 @@
 * :arrows_clockwise:	Web Editor CMS (beta code)
 * :arrows_clockwise:	Several minor bugs fixed
 
-###Build 131 → 132 (ASP.NET Engine)
+### Build 131 → 132 (ASP.NET Engine)
 * :heavy_plus_sign:	Mail queue monitor (alpha code)
 
-###Build 130 → 131 (Database server)
+### Build 130 → 131 (Database server)
 * :heavy_plus_sign:	Support for MS SQL Server 2005 editions
 
-###Build 130 → 131 (ASP Engine)
+### Build 130 → 131 (ASP Engine)
 * :arrows_clockwise:	Stack overflow bug in internationalization.asp fixed
 * :arrows_clockwise:	ldirect.asp now redirects to /sysdata/login/loginprocedurefinished.aspx instead of the server group start URL
 * :arrows_clockwise:	Fixed some Unicode issues
 * :arrows_clockwise:	Fixed components check
 
-###Build 130 → 131 (ASP.NET Engine)
+### Build 130 → 131 (ASP.NET Engine)
 * :warning:	New file required: /sysdata/login/loginprocedurefinished.aspx
 * :warning:	When your project is a frameset project, you have to add a new item to your web.config: 
    ```
@@ -530,7 +530,7 @@
   * Web setup procedure undocumented/maybe buggy or incomplete
   * Documentation is missing some items
 
-###Build 129 → 130
+### Build 129 → 130
 * :arrows_clockwise:	Send forgotten password page required case sensitive spelling of username and e-mail address as it had been saved in the database; now it’s case in-sensitive
 * :arrows_clockwise:	Fixed error (object can’t be converted to WMNotifications) when sending mail with forgotten password
 * :heavy_plus_sign:	Export to CSV file of single users or the complete users list
@@ -544,7 +544,7 @@
   * Web setup procedure undocumented/maybe buggy or incomplete
   * Documentation is missing some items
 
-###Build 128 → 129
+### Build 128 → 129
 * :arrows_clockwise:	Fixed login via URL: permission check for login with method GET now returns the correct value (was always false)
 * :heavy_plus_sign:	Export feature to CSV file in administration of memberships as well as authorizations
 * :arrows_clockwise:	Security objects inherition state change had been wrongly shown in the log analysis as user-self-creation
@@ -554,7 +554,7 @@
   * Logfile analysis run into errors if you have configured more than 11 server groups or servers in a server group
   * Setup procedure undocumented/maybe buggy or incomplete
 
-###Build 127 → 128
+### Build 127 → 128
 * :heavy_plus_sign:	Automatic and single sign on with ADS now available (but still limited to one single logon simultaneously)
 * :arrows_clockwise:	Fixed security issue: when loading the list of authorization for a group, no user authorizations shall be loaded (and vice versa)
 * :arrows_clockwise:	Fixed bug when no user login credentials were supplied in the login form (bug was created in build 127)
@@ -564,7 +564,7 @@
   * Logfile analysis run into errors if you have configured more than 11 server groups or servers in a server group
   * Setup procedure undocumented/maybe buggy or incomplete
 
-###Build 126 → 127
+### Build 126 → 127
 * :arrows_clockwise:	Update server group failed because on CreateAdminNavigationPoints procedure; now fixed
 * :arrows_clockwise:	Some internal changes in update profile form to use the UserInformation object for data update instead of old sql commands
 * :heavy_plus_sign:	Update profile form now allows maintenance of fields phone number, fax, mobile and also position
@@ -576,7 +576,7 @@
   * Logfile analysis run into errors if you have configured more than 11 server groups or servers in a server group
   * Setup procedure undocumented/maybe buggy or incomplete
 
-###Build 125a → 126
+### Build 125a → 126
 * :heavy_plus_sign:	In administration forms, the application authorizations dialog for adding new users, the dialog for adding new groups as well as the dialog to add new memberships now contain only the list of applications, for which the current user is authorized to update the relations
 * :heavy_plus_sign:	All base controls of camm Web-Manager now implement the interface CompuMaster.camm.WebManager.Controls.IControl; this interface can be used to detect whether an object implementd the cammWebManager property or not. In this case, the initialization process of the CompuMaster.camm.WebManager.Pages.Page (the base page for all other pages) inherits its cammWebManager property to all sub controls.
 * :heavy_plus_sign:	The new CompuMaster.camm.WebManager.Pages.IPage interface provides a common interface to access the camm WebManager property from outside of the page class
@@ -587,7 +587,7 @@
   * Logfile analysis run into errors if you have configured more than 11 server groups or servers in a server group
   * Setup procedure undocumented/maybe buggy or incomplete
 
-###Build 125 → 125a
+### Build 125 → 125a
 * :heavy_plus_sign:	camm RadEditor and RadSpell now choose the optimal GUI and dictionary language based on the best match between the current culture and the available data files
 * :heavy_plus_sign:	New image resize controls in namespaces CompuMaster.camm.Controls.WebControls and CompuMaster.camm.Controls.WebControls.StyleTemplates for automatic, just-in-time, on-demand resizing of images (=cached and advanced by download handler)
 * :heavy_plus_sign:	New supported query string parameter “PLang”: In comparison to the “Lang” parameter which switches the current market/language for the current page request and all following page requests, the “PLang” parameter changes the current market/language only for the current page request.
@@ -595,14 +595,14 @@
   * Logfile analysis run into errors if you have configured more than 11 server groups or servers in a server group
   * Setup procedure undocumented/maybe buggy or incomplete
 
-###Build 124 → 125
+### Build 124 → 125
 * :heavy_plus_sign:	New CompuMaster.camm.WebManager.Application.HttpApplication class for inherition by the global.asax file; this HttpApplication handles all exceptions thrown by a web application and sends e-mail messages to the technical contact – up to a limit of 10 e-mails per 10 minutes. All other error mails will be dropped to prevent a DoS of the SMTP server
 * :arrows_clockwise:	Link to preview page for user navigation now corrected
 * Known Bugs
   * Logfile analysis run into errors if you have configured more than 11 server groups or servers in a server group
   * Setup procedure undocumented/maybe buggy or incomplete
 
-###Build 123 → 124
+### Build 123 → 124
 * :arrows_clockwise:	SetUserDetail method now saves the value correctly (it saved the DoNotLogSuccess parameter accidentially)
 * :arrows_clockwise:	System_SetUserDetails does not log anymore if DoNotLogSuccess parameter is true
 * :heavy_plus_sign:	Mails in queue now get repeatedly tried to be send up to 3 times when there are send errors (e. g. SMTP server down)
@@ -615,7 +615,7 @@
   * Logfile analysis run into errors if you have configured more than 11 server groups or servers in a server group
   * Setup procedure undocumented/maybe buggy or incomplete
 
-###Build 122 → 123
+### Build 122 → 123
 * :heavy_plus_sign:	Support for the navigation filling of ComponentArt’s Web.UI.SiteMap
 * :heavy_plus_sign:	Automatic replacement if navigation URLs of string “[NAVID]” by the ID value of the navigation item
 * :heavy_plus_sign:	Added new configuration setting “CookieLess” which leads to changed caching behaviour in cookie-less environments as well as changed default paths values for links or link elements (don’t forget to add the required session ID value into the navigation URLs in camm Web-Manager administration and to track this session ID from and to everywhere in your whole website; otherwise you would loose all session content and your logon status)
@@ -639,7 +639,7 @@
   * Logfile analysis run into errors if you have configured more than 11 server groups or servers in a server group
   * Setup procedure undocumented/maybe buggy or incomplete
 
-###Build 120 → 122
+### Build 120 → 122
 * :heavy_plus_sign:	Web editor now defaults to use session instead of cookies to avoid dropping of the ASP.NET session ID when the cookie gets too long
 * :heavy_plus_sign:	LabelLine control now also supports other child controls than LiteralControls
 * :heavy_plus_sign:	LabelLine control now supports a variable number of linebreaks before and after the text label (default keeps at one line break after the label content)
@@ -650,7 +650,7 @@
   * Logfile analysis run into errors if you have configured more than 11 server groups or servers in a server group
   * Setup procedure undocumented/maybe buggy or incomplete
 
-###Build 119 → 120
+### Build 119 → 120
 * :heavy_plus_sign:	New utility function IsHostFromLanOrPrivateNetwork to e. g. allow simple detection of the remote client trust state (intranet users might see more than extranet users)
 * :heavy_plus_sign:	Performance tunings in SQL statements/database
 * :arrows_clockwise:	Download handler (beta) table structure on database changed
@@ -665,7 +665,7 @@
   * Logfile analysis run into errors if you have configured more than 11 server groups or servers in a server group
   * Setup procedure undocumented/maybe buggy or incomplete
 
-###Build 118 → 119
+### Build 118 → 119
 * :heavy_plus_sign:	BaseControl now automatically accesses the cammWebManager object of the page; a manual assignment is not more needed
 * :heavy_plus_sign:	Setup: all the database update scripts are now included in the DLL in compressed form to save size
 * :arrows_clockwise:	Several bug fixes and improvements in logs module
@@ -688,36 +688,36 @@
   * Logfile analysis run into errors if you have configured more than 11 server groups or servers in a server group
   * Setup procedure undocumented/maybe buggy or incomplete
 
-###Build 117 → 118
+### Build 117 → 118
 * :arrows_clockwise:	Logfile application enabled per default
 * :arrows_clockwise:	Pages/Controls in sysdata: internal structure of custom_internationalization.vb changed completely
 * :arrows_clockwise:	DLL: WMSettingsAndData methods now overridable to allow inherition from that class
 * :arrows_clockwise:	Fixed compilation errors in /system/feedback.aspx and /system/help.aspx
 * :arrows_clockwise:	Setup: separate /system/admin/install/update.aspx for patch management for the database (no possibility to accidentially overwrite/recreate an existent camm Web-Manager database)
 
-###Build 116a → 117
+### Build 116a → 117
 * :arrows_clockwise:	System_IsUserAuthorizedForApp: Bug fixed with public users
 * :heavy_plus_sign:	Logfile analysis
 
-###Build 116 → 116a
+### Build 116 → 116a
 * :heavy_plus_sign:	Configurable Redirections
 * :heavy_plus_sign:	Additional field “ReviewedAndClosed” in table “Log”
 * :heavy_plus_sign:	Support for Chilkat components version 6
 
-###Build 115 → 116
+### Build 115 → 116
 * :heavy_plus_sign:	Authentification on SMTP server now possible
 
-#Build no. up to 111
+# Build no. up to 111
 
-##Legend
+## Legend
 * :heavy_plus_sign: Added feature
 * :heavy_minus_sign: Removed
 * :arrows_clockwise: Changed
 * :warning: Breaking changes; pay attention!
 
-##Changes while developing in following builds
+## Changes while developing in following builds
 
-###Build 111
+### Build 111
 * Database structure/content
   * :heavy_plus_sign: Added table for new module "Download Handler"
   * :heavy_plus_sign: Added new navigation item for new module "Logfiles"
@@ -731,7 +731,7 @@
   * :arrows_clockwise::warning: Include files (default templates in /sysdata) are using controls, now. If you've got pages with the same include for several times, you'll get compilation errors because of the existance of duplicated web controls with same name
   * :arrows_clockwise::warning: Internal Structure of /sysdata/editorial.aspx and /sysdata/disclaimer.aspx changed to handle with the new control based logic
 
-###Build 110
+### Build 110
 * Database
   * :arrows_clockwise::warning: Additional parameters for stored procedures dbo.Public_GetToDoLogonList and dbo.Public_GetLogonList
   * :arrows_clockwise: Some bug fixes
@@ -741,12 +741,12 @@
 * Pages/Controls
   * :heavy_plus_sign: New chart generator for easy purposes available in /system/modules/charts/chartgenerator.aspx, a sample on how to use is in /modules/charts/index.aspx
 
-###Build 109
+### Build 109
 * Database
   * Some bug fixes
 * Library
   * Some bug fixes
 * Pages/Controls
 
-###Build 108
+### Build 108
 * First stable release
