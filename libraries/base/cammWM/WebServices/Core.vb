@@ -191,6 +191,10 @@ Namespace CompuMaster.camm.WebManager.WebServices
             productRegistration.CheckRegistration(False)
         End Sub
 
+        ''' <summary>
+        ''' Delete deactivated users
+        ''' </summary>
+        ''' <param name="deleteAfterDays">0 for never delete any users, 1 or higher to delete inactive user accounts with no change/update within specified amount of days</param>
         Private Sub DeleteDeactivatedUsers(ByVal deleteAfterDays As Integer)
             If deleteAfterDays > 0 Then
                 Dim connection As New System.Data.SqlClient.SqlConnection(Me.cammWebManager.ConnectionString)
@@ -219,7 +223,10 @@ Namespace CompuMaster.camm.WebManager.WebServices
             End If
         End Sub
 
-
+        ''' <summary>
+        ''' Delete e-mails in one of the mail queue states Cancelled, Successful, FailureAfterLastTrial or FailureAccepted
+        ''' </summary>
+        ''' <param name="deleteAfterDays"></param>
         Private Sub DeleteMails(ByVal deleteAfterDays As Integer)
             If deleteAfterDays > 0 Then
                 Dim sql As String = "DELETE FROM [dbo].[Log_eMailMessages] WHERE State IN (" & CType(Messaging.QueueMonitoring.QueueStates.Cancelled, Integer) & "," & CType(Messaging.QueueMonitoring.QueueStates.Successfull, Integer) & "," & CType(Messaging.QueueMonitoring.QueueStates.FailureAfterLastTrial, Integer) & "," & CType(Messaging.QueueMonitoring.QueueStates.FailureAccepted, Integer) & ") AND DateAdd(dd, @days, DateTime) < GETDATE()"

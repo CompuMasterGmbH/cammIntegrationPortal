@@ -22,7 +22,7 @@ Namespace CompuMaster.camm.WebManager
         Private LogTypeDeletionList As New ArrayList
 
         Const PropertyName_AnonymizeIPs As String = "AnonymizeIPsAfterDays"
-        Const PropertyName_DeleteUsersAfterDays As String = "DeleteUsersAfterDays"
+        Const PropertyName_DeleteUsersAfterDays As String = "DeleteUsersAfterDays" 'means: delete DEACTIVATED users after X days
         Const PropertyName_DeleteMailsAfterDays As String = "DeleteMailsAfterDays"
         Const PropertyName_LogTypeDeletion As String = "LogTypeDeletionSetting"
 
@@ -31,7 +31,10 @@ Namespace CompuMaster.camm.WebManager
         Private _deleteMailsAfterDays As Integer
 
 
-
+        ''' <summary>
+        ''' Anonymize logged IP addresses after specified amount of days (value 0 anonymizes IP addresses shortly after logging)
+        ''' </summary>
+        ''' <returns></returns>
         Public Property AnonymizeIPsAfterDays As Integer
             Get
                 Return _anonymizeIPsAfterDays
@@ -41,6 +44,10 @@ Namespace CompuMaster.camm.WebManager
             End Set
         End Property
 
+        ''' <summary>
+        ''' Delete deactivated users without any change/update after specified amount of days OR value 0 to deactivate this feature
+        ''' </summary>
+        ''' <returns></returns>
         Public Property DeleteDeactivatedUsersAfterDays As Integer
             Get
                 Return _deleteDeactivatedUsersAfterDays
@@ -50,6 +57,10 @@ Namespace CompuMaster.camm.WebManager
             End Set
         End Property
 
+        ''' <summary>
+        ''' Delete e-mails in one of the mail queue states Cancelled, Successful, FailureAfterLastTrial or FailureAccepted after specified amount of days
+        ''' </summary>
+        ''' <returns></returns>
         Public Property DeleteMailsAfterDays As Integer
             Get
                 Return _deleteMailsAfterDays
