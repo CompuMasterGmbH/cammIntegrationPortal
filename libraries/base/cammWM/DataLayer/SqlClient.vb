@@ -36,8 +36,8 @@ Namespace CompuMaster.camm.WebManager
                     MyConn = CType(dbConnection, SqlClient.SqlConnection)
                 End If
 
-                Dim sql As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDateTime=GetDate(), ValueNText = @VersionString WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager' " & vbNewLine & _
-                    "IF @@ROWCOUNT = 0 " & vbNewLine & _
+                Dim sql As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDateTime=GetDate(), ValueNText = @VersionString WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = N'camm WebManager' " & vbNewLine &
+                    "IF @@ROWCOUNT = 0 " & vbNewLine &
                     "INSERT INTO [dbo].[System_GlobalProperties] (PropertyName, ValueNVarChar, ValueNText, ValueDateTime) VALUES ('LastWebServiceExecutionDate', 'camm WebManager', @VersionString, GetDate()) "
                 Dim cmd As New System.Data.SqlClient.SqlCommand(sql, MyConn)
                 cmd.CommandType = CommandType.Text
@@ -66,7 +66,7 @@ Namespace CompuMaster.camm.WebManager
                 End If
 
                 Dim cmd As System.Data.SqlClient.SqlCommand
-                cmd = New SqlClient.SqlCommand("SELECT ValueDateTime FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager'", MyConn)
+                cmd = New SqlClient.SqlCommand("SELECT ValueDateTime FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = N'camm WebManager'", MyConn)
                 Dim result As Object = Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
                 If result Is Nothing OrElse CompuMaster.camm.WebManager.Utils.Nz(result) Is Nothing Then
                     Return Nothing

@@ -264,7 +264,7 @@ Namespace CompuMaster.camm.WebManager.Registration
                 cmd.CommandText = "Set TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;"
                 Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.None)
 
-                cmd.CommandText = "Select count(*) As AppInstancesCount FROM system_globalproperties WHERE propertyname Like 'AppInstance_%' and valuenvarchar = 'camm WebManager' and valuedatetime > dateadd(mm, -1, getdate()) and propertyname not like 'AppInstance_{ERROR detecting AssemblyLocation: %}' and ValueNText not like 'ServerIdentString={not yet configured at execution time}%Request={Nothing}' and ValueNText not like 'Error while looking up current assembly location'"
+                cmd.CommandText = "Select count(*) As AppInstancesCount FROM system_globalproperties WHERE propertyname Like 'AppInstance_%' and valuenvarchar = N'camm WebManager' and valuedatetime > dateadd(mm, -1, getdate()) and propertyname not like 'AppInstance_{ERROR detecting AssemblyLocation: %}' and ValueNText not like 'ServerIdentString={not yet configured at execution time}%Request={Nothing}' and ValueNText not like 'Error while looking up current assembly location'"
                 result.appInstancesCount = GetIntegerResult(cmd)
 
                 cmd.CommandText = "SELECT count(ID) FROM System_ServerGroups"
@@ -334,16 +334,16 @@ Namespace CompuMaster.camm.WebManager.Registration
 
                 result.WebAppInstanceID = cammWebManger.CurrentWebAppInstanceID
 
-                cmd.CommandText = "SELECT ValueDateTime FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager'"
+                cmd.CommandText = "SELECT ValueDateTime FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = N'camm WebManager'"
                 result.WebCronLastExecution = GetDatetimeNzResult(cmd)
                 If result.WebCronLastExecution = Nothing Then
                     'no full webcron activated, watch for last mail processing meaning version 1 or 4.10 of CWM WebCron (no)trigger service (or JIT mail processing without service) 
-                    cmd.CommandText = "SELECT ValueDateTime FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastMailQueueProcessing' AND ValueNVarChar = 'camm WebManager'"
+                    cmd.CommandText = "SELECT ValueDateTime FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastMailQueueProcessing' AND ValueNVarChar = N'camm WebManager'"
                     result.WebCronLastExecution = GetDatetimeNzResult(cmd)
                     result.webCronVersion = New Version(4, 10, 0, 0)
                 Else
                     'try to find a version info from trigger service
-                    cmd.CommandText = "SELECT ValueNText FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = 'camm WebManager'"
+                    cmd.CommandText = "SELECT ValueNText FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = N'camm WebManager'"
                     Dim versionString As String = GetStringNzResult(cmd)
                     If versionString = Nothing Then
                         result.webCronVersion = Nothing
@@ -769,8 +769,8 @@ Namespace CompuMaster.camm.WebManager.Registration
         End Function
 
         Private Sub UpdateExpirationMailSendingDateInGlobalPropertiesDbTable(ByVal key As String, ByVal dateSent As DateTime)
-            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @dateSent WHERE PropertyName = @key AND ValueNVarchar = 'camm WebManager'" & _
-                    "IF @@ROWCOUNT = 0 " & _
+            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @dateSent WHERE PropertyName = @key AND ValueNVarchar = N'camm WebManager'" &
+                    "IF @@ROWCOUNT = 0 " &
                     "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarchar, ValueDateTime) VALUES(@key, 'camm WebManager', @dateSent) "
 
             Dim cmd As New SqlClient.SqlCommand(sql)
@@ -787,7 +787,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         Private Function FetchDateFromGlobalPropertiesDbTable(ByVal key As String) As DateTime
             'TODO: this method should probably be in a class specialy made for this purpose...
             Dim cmd As New SqlClient.SqlCommand
-            cmd.CommandText = "SELECT ValueDateTime FROM [dbo].[System_GlobalProperties] WHERE PropertyName = @key AND ValueNVarchar = 'camm WebManager'"
+            cmd.CommandText = "SELECT ValueDateTime FROM [dbo].[System_GlobalProperties] WHERE PropertyName = @key AND ValueNVarchar = N'camm WebManager'"
             cmd.CommandType = CommandType.Text
             cmd.Connection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
             cmd.Parameters.Add("@key", SqlDbType.VarChar).Value = key
@@ -985,8 +985,8 @@ Namespace CompuMaster.camm.WebManager.Registration
 
         Private Sub SaveDate2GlobalPropertiesDbTable(ByVal key As String, ByVal datevalue As DateTime)
 
-            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @date WHERE PropertyName = @propertyname AND ValueNVarchar = 'camm WebManager' " & _
-                    "IF @@ROWCOUNT = 0 " & _
+            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @date WHERE PropertyName = @propertyname AND ValueNVarchar = N'camm WebManager' " &
+                    "IF @@ROWCOUNT = 0 " &
                     "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarchar, ValueDateTime) VALUES(@propertyname, 'camm WebManager', @date) "
 
             Dim cmd As New SqlClient.SqlCommand(sql)
@@ -1085,25 +1085,25 @@ Namespace CompuMaster.camm.WebManager.Registration
 
         Public Sub Save(ByVal validationResult As InstanceValidationResult)
             If Not validationResult Is Nothing Then
-                Dim sql As String = "UPDATE System_GlobalProperties SET ValueInt = @licenceType WHERE PropertyName = 'LicenceType' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine & _
-                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine & _
-                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueInt) VALUES('LicenceType', 'camm WebManager', @licenceType) " & System.Environment.NewLine & System.Environment.NewLine & _
-                    "UPDATE System_GlobalProperties SET ValueDateTime = @licenceExpirationDate WHERE PropertyName = 'LicenceExpirationDate' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine & _
-                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine & _
-                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueDateTime) VALUES('LicenceExpirationDate', 'camm WebManager', @licenceExpirationDate) " & System.Environment.NewLine & _
-                     "UPDATE System_GlobalProperties SET ValueInt = @licenceModel WHERE PropertyName = 'LicenceModel' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine & _
-                     "IF @@ROWCOUNT = 0 " & System.Environment.NewLine & _
-                     "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueInt) VALUES('LicenceModel', 'camm WebManager', @licenceModel) " & System.Environment.NewLine & System.Environment.NewLine & _
-                    "UPDATE System_GlobalProperties SET ValueDateTime = @supportContractExpirationDate WHERE PropertyName = 'SnMContractExpires' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine & _
-                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine & _
-                    "INSERT INTO System_GlobalProperties (PropertyName,ValueNVarChar,  ValueDateTime) VALUES('SnMContractExpires', 'camm WebManager', @supportContractExpirationDate) " & System.Environment.NewLine & _
-                   "UPDATE System_GlobalProperties SET ValueDateTime = @updateContractExpires WHERE PropertyName = 'UpdateContractExpires' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine & _
-                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine & _
-                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueDateTime) VALUES('UpdateContractExpires', 'camm WebManager', @updateContractExpires) " & System.Environment.NewLine & _
-                   "UPDATE System_GlobalProperties SET ValueBoolean = @UpdatesAvailable WHERE PropertyName = 'UpdatesAvailable' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine & _
-                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine & _
-                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueBoolean) VALUES('UpdatesAvailable', 'camm WebManager', @UpdatesAvailable) " & System.Environment.NewLine & _
-                   "UPDATE System_GlobalProperties SET ValueBoolean = @SecurityUpdatesAvailable WHERE PropertyName = 'SecurityUpdatesAvailable' AND ValueNVarchar = 'camm WebManager'" & System.Environment.NewLine
+                Dim sql As String = "UPDATE System_GlobalProperties SET ValueInt = @licenceType WHERE PropertyName = 'LicenceType' AND ValueNVarchar = N'camm WebManager'" & System.Environment.NewLine &
+                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine &
+                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueInt) VALUES('LicenceType', 'camm WebManager', @licenceType) " & System.Environment.NewLine & System.Environment.NewLine &
+                    "UPDATE System_GlobalProperties SET ValueDateTime = @licenceExpirationDate WHERE PropertyName = 'LicenceExpirationDate' AND ValueNVarchar = N'camm WebManager'" & System.Environment.NewLine &
+                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine &
+                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueDateTime) VALUES('LicenceExpirationDate', 'camm WebManager', @licenceExpirationDate) " & System.Environment.NewLine &
+                     "UPDATE System_GlobalProperties SET ValueInt = @licenceModel WHERE PropertyName = 'LicenceModel' AND ValueNVarchar = N'camm WebManager'" & System.Environment.NewLine &
+                     "IF @@ROWCOUNT = 0 " & System.Environment.NewLine &
+                     "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueInt) VALUES('LicenceModel', 'camm WebManager', @licenceModel) " & System.Environment.NewLine & System.Environment.NewLine &
+                    "UPDATE System_GlobalProperties SET ValueDateTime = @supportContractExpirationDate WHERE PropertyName = 'SnMContractExpires' AND ValueNVarchar = N'camm WebManager'" & System.Environment.NewLine &
+                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine &
+                    "INSERT INTO System_GlobalProperties (PropertyName,ValueNVarChar,  ValueDateTime) VALUES('SnMContractExpires', 'camm WebManager', @supportContractExpirationDate) " & System.Environment.NewLine &
+                   "UPDATE System_GlobalProperties SET ValueDateTime = @updateContractExpires WHERE PropertyName = 'UpdateContractExpires' AND ValueNVarchar = N'camm WebManager'" & System.Environment.NewLine &
+                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine &
+                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueDateTime) VALUES('UpdateContractExpires', 'camm WebManager', @updateContractExpires) " & System.Environment.NewLine &
+                   "UPDATE System_GlobalProperties SET ValueBoolean = @UpdatesAvailable WHERE PropertyName = 'UpdatesAvailable' AND ValueNVarchar = N'camm WebManager'" & System.Environment.NewLine &
+                    "IF @@ROWCOUNT = 0 " & System.Environment.NewLine &
+                    "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarChar, ValueBoolean) VALUES('UpdatesAvailable', 'camm WebManager', @UpdatesAvailable) " & System.Environment.NewLine &
+                   "UPDATE System_GlobalProperties SET ValueBoolean = @SecurityUpdatesAvailable WHERE PropertyName = 'SecurityUpdatesAvailable' AND ValueNVarchar = N'camm WebManager'" & System.Environment.NewLine
                 Dim cmd As New SqlClient.SqlCommand(sql)
                 Dim connection As SqlClient.SqlConnection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
                 cmd.Connection = connection
@@ -1127,7 +1127,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' TODO: this doesn't belong to this class, it should probably be in one which is made for this purpose...
         Private Function GetExpirationDate(ByVal key As String) As DateTime
             Dim cmd As New SqlClient.SqlCommand
-            cmd.CommandText = "SELECT ValueDateTime FROM [dbo].[System_GlobalProperties] WHERE PropertyName = @key AND ValueNVarchar = 'camm WebManager'"
+            cmd.CommandText = "SELECT ValueDateTime FROM [dbo].[System_GlobalProperties] WHERE PropertyName = @key AND ValueNVarchar = N'camm WebManager'"
             cmd.CommandType = CommandType.Text
             cmd.Connection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
             cmd.Parameters.Add("@key", SqlDbType.VarChar).Value = key
@@ -1147,7 +1147,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' TODO: this doesn't belong to this class, it should probably be in one which is made for this purpose...
         Private Function GetBooleanValue(ByVal key As String, defaultValue As Boolean) As Boolean
             Dim cmd As New SqlClient.SqlCommand
-            cmd.CommandText = "SELECT ValueBoolean FROM [dbo].[System_GlobalProperties] WHERE PropertyName = @key AND ValueNVarchar = 'camm WebManager'"
+            cmd.CommandText = "SELECT ValueBoolean FROM [dbo].[System_GlobalProperties] WHERE PropertyName = @key AND ValueNVarchar = N'camm WebManager'"
             cmd.CommandType = CommandType.Text
             cmd.Connection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
             cmd.Parameters.Add("@key", SqlDbType.VarChar).Value = key
@@ -1164,7 +1164,7 @@ Namespace CompuMaster.camm.WebManager.Registration
         ''' </summary>
         Private Function GetLicenceModel() As LicenceData.LicenseModel
             Dim cmd As New SqlClient.SqlCommand
-            cmd.CommandText = "SELECT ValueInt FROM [dbo].[System_GlobalProperties] WHERE PropertyName = 'LicenceModel' AND ValueNVarchar = 'camm WebManager'"
+            cmd.CommandText = "SELECT ValueInt FROM [dbo].[System_GlobalProperties] WHERE PropertyName = 'LicenceModel' AND ValueNVarchar = N'camm WebManager'"
             cmd.CommandType = CommandType.Text
             cmd.Connection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
 
@@ -1178,7 +1178,7 @@ Namespace CompuMaster.camm.WebManager.Registration
 
         Private Function GetLicenceType() As LicenceData.LicenceType
             Dim cmd As New SqlClient.SqlCommand
-            cmd.CommandText = "SELECT ValueInt FROM [dbo].[System_GlobalProperties] WHERE PropertyName = 'LicenceType' AND ValueNVarchar = 'camm WebManager'"
+            cmd.CommandText = "SELECT ValueInt FROM [dbo].[System_GlobalProperties] WHERE PropertyName = 'LicenceType' AND ValueNVarchar = N'camm WebManager'"
             cmd.CommandType = CommandType.Text
             cmd.Connection = New SqlClient.SqlConnection(Me.cammWebManger.ConnectionString)
 
@@ -1204,8 +1204,8 @@ Namespace CompuMaster.camm.WebManager.Registration
         End Function
 
         Public Sub SetLicenceModel(ByVal model As LicenceData.LicenseModel)
-            Dim sql As String = "UPDATE System_GlobalProperties SET ValueInt = @licenceModel WHERE PropertyName = 'LicenceModel' AND ValueNVarchar = 'camm WebManager' " & _
-                    "IF @@ROWCOUNT = 0 " & _
+            Dim sql As String = "UPDATE System_GlobalProperties SET ValueInt = @licenceModel WHERE PropertyName = 'LicenceModel' AND ValueNVarchar = N'camm WebManager' " &
+                    "IF @@ROWCOUNT = 0 " &
                     "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarchar, ValueInt) VALUES('LicenceModel', 'camm WebManager', @licenceModel) "
 
             Dim cmd As New SqlClient.SqlCommand(sql)
@@ -1216,8 +1216,8 @@ Namespace CompuMaster.camm.WebManager.Registration
         End Sub
 
         Public Sub SetLicenceExpirationDate(ByVal expirationDate As DateTime)
-            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @expirationDate WHERE PropertyName = 'LicenceExpirationDate' AND ValueNVarchar = 'camm WebManager' " & _
-                    "IF @@ROWCOUNT = 0 " & _
+            Dim sql As String = "UPDATE System_GlobalProperties SET ValueDateTime = @expirationDate WHERE PropertyName = 'LicenceExpirationDate' AND ValueNVarchar = N'camm WebManager' " &
+                    "IF @@ROWCOUNT = 0 " &
                     "INSERT INTO System_GlobalProperties (PropertyName, ValueNVarchar, ValueDateTime) VALUES('LicenceExpirationDate', 'camm WebManager', @expirationDate) "
 
             Dim cmd As New SqlClient.SqlCommand(sql)

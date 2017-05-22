@@ -206,7 +206,7 @@ Namespace CompuMaster.camm.WebManager
         Public Property Licencee() As String
             Get
                 If CachedLicencee = Nothing Then
-                    Dim Result As String = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(_WebManager.ConnectionString), "SELECT [ValueNText] FROM [dbo].[System_GlobalProperties] WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = 'camm WebManager'", CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, String))
+                    Dim Result As String = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(New SqlConnection(_WebManager.ConnectionString), "SELECT [ValueNText] FROM [dbo].[System_GlobalProperties] WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = N'camm WebManager'", CommandType.Text, Nothing, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), CType(Nothing, String))
                     If Result <> Nothing Then
                         CachedLicencee = Result
                     Else
@@ -221,16 +221,16 @@ Namespace CompuMaster.camm.WebManager
                 Return CachedLicencee
             End Get
             Set(ByVal Value As String)
-                Dim MyCmd As New SqlCommand( _
-                    "declare @ExistingValue bit" & vbNewLine & _
-                        "SELECT TOP 1 @ExistingValue  = 1" & vbNewLine & _
-                        "FROM [dbo].[System_GlobalProperties] " & vbNewLine & _
-                        "WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = 'camm WebManager'" & vbNewLine & _
-                        "IF @ExistingValue IS NULL" & vbNewLine & _
-                        "	INSERT INTO [dbo].[System_GlobalProperties]([PropertyName], [ValueNVarChar], [ValueNText])" & vbNewLine & _
-                        "	VALUES ('LicenceeName', 'camm WebManager', @Name)" & vbNewLine & _
-                        "ELSE" & vbNewLine & _
-                        "	UPDATE [dbo].[System_GlobalProperties] SET [ValueNText] = @Name WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = 'camm WebManager'", _
+                Dim MyCmd As New SqlCommand(
+                    "declare @ExistingValue bit" & vbNewLine &
+                        "SELECT TOP 1 @ExistingValue  = 1" & vbNewLine &
+                        "FROM [dbo].[System_GlobalProperties] " & vbNewLine &
+                        "WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = N'camm WebManager'" & vbNewLine &
+                        "IF @ExistingValue IS NULL" & vbNewLine &
+                        "	INSERT INTO [dbo].[System_GlobalProperties]([PropertyName], [ValueNVarChar], [ValueNText])" & vbNewLine &
+                        "	VALUES ('LicenceeName', 'camm WebManager', @Name)" & vbNewLine &
+                        "ELSE" & vbNewLine &
+                        "	UPDATE [dbo].[System_GlobalProperties] SET [ValueNText] = @Name WHERE [PropertyName] = 'LicenceeName' AND ValueNVarChar = N'camm WebManager'",
                     New SqlConnection(_WebManager.ConnectionString))
                 MyCmd.Parameters.Add("@Name", SqlDbType.NText).Value = Value
                 CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteNonQuery(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
