@@ -19,6 +19,7 @@
         <asp:label runat="server" id="lblErrMsg" />
     </font>
 </p>
+<form name="FORM1" runat="server">
 <table cellspacing="0" cellpadding="0" bgcolor="#ffffff" border="0">
     <tbody>
         <tr>
@@ -239,9 +240,7 @@
                                             <p>
                                                 <font face="Arial" size="2">
                                                     <% Me.FindFilesToBeRemoved()%><asp:label runat="server" id="lblInstallLinks" /><br>
-                                                    <form name="FORM1" runat="server">
                                                     <asp:linkbutton id="lnkBtn" runat="server" text="Delete Now" />
-                                                    </form>
                                                 </font>
                                             </p>
                                         </td>
@@ -262,12 +261,23 @@
                             </td>
                         </tr>
 						<tr>
-							<td valign="Top" width="160">
+                            <td colspan="2">
 							 <p>
-                                    <font face="Arial" size="2"> <a href="about.aspx?forceserverrefresh=1">Refresh data from server</a></font></p>
-									
-							
+                                    <font face="Arial" size="2"> <a href="about.aspx?forceserverrefresh=1">Refresh data from server</a></font>
+                                    <font face="Arial" size="2"> <asp:linkbutton id="LoginToLicenseServer" runat="server" text="Manage license / login to license server" /></font>
+                                    <font face="Arial" size="2"> <asp:linkbutton id="EnterLicenseData" runat="server" text="Input license data manually" /> </font>
+                             </p>
 							</td>
+						</tr>
+                        <tr runat="server" ID="EnterLicenseDataManuallyArea" visible="false">
+                            <td colspan="2">
+							 <p><font face="Arial" size="2"> 
+									Enter license data from license server: <br /><asp:Textbox runat="server" ID="LicenseData" TextMode="MultiLine" style="width:390px; height:120px;" />
+									<br /><asp:Label runat="server" ID="ErrorLicenseUpdate" EnableViewstate="false" forecolor="red" />
+									<br /><asp:button id="SubmitLicenseData" runat="server" text="Submit license data" /> <asp:button id="CancelSubmitLicenseData" runat="server" text="Cancel license data update" />
+                             </font></p>
+							</td>
+						</tr>
                         <tr>
                             <td valign="Top" width="160">
                                 <p>
@@ -351,6 +361,16 @@
                             </td>
 						</tr>
 						
+                        <tr>
+                            <td valign="Top" width="160">
+                                <p>
+                                    <font face="Arial" size="2">Automatic updates</font></p>
+                            </td>
+                            <td valign="Top" width="240">
+                                <p>
+                                    <font face="Arial" size="2"><asp:Literal runat="server" id="lblAutomaticUpdates"/></font></p>
+                            </td>
+                        </tr>
 						
                         <tr>
                             <td valign="Top" width="160">
@@ -377,6 +397,7 @@
         </tr>
     </tbody>
 </table>
+</form>
 <%@ Register TagPrefix="camm" TagName="WebManagerAdminMenu" Src="adminmenu.ascx" %>
 <camm:WebManagerAdminMenu HRef="users.aspx" id="cammWebManagerAdminMenu" runat="server" />
 <!--#include virtual="/sysdata/includes/standardtemplate_bottom_wo_form.aspx"-->
