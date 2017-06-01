@@ -2112,7 +2112,7 @@ Namespace CompuMaster.camm.WebManager
             If System_SupportsMultiplePasswordAlgorithms() Then
                 Dim MyCmd As New SqlClient.SqlCommand
                 MyCmd.Connection = New SqlClient.SqlConnection(ConnectionString)
-                MyCmd.CommandText = "UPDATE [dbo].System_GlobalProperties SET ValueInt = @algo WHERE PropertyName = 'LoginPWAlgorithm' AND ValueNVarChar = N'camm WebManager'" & vbNewLine &
+                MyCmd.CommandText = "UPDATE [dbo].System_GlobalProperties SET ValueInt = @algo WHERE PropertyName = 'LoginPWAlgorithm' AND ValueNVarChar = N'camm WebManager'" & vbNewLine & _
                     "IF @@ROWCOUNT = 0 INSERT INTO [dbo].System_GlobalProperties (PropertyName, ValueNVarChar, ValueInt) VALUES ('LoginPWAlgorithm', N'camm WebManager', @algo)"
                 MyCmd.CommandType = CommandType.Text
                 MyCmd.Parameters.Add("@algo", SqlDbType.Int).Value = algo
@@ -2150,7 +2150,7 @@ Namespace CompuMaster.camm.WebManager
             If System_SupportsMultiplePasswordAlgorithms() Then
                 Dim MyCmd As New SqlClient.SqlCommand
                 MyCmd.Connection = New SqlClient.SqlConnection(ConnectionString)
-                MyCmd.CommandText = "UPDATE [dbo].System_GlobalProperties SET ValueInt = @behavior WHERE PropertyName = 'PasswordResetBehavior' AND ValueNVarChar = N'camm WebManager'" & vbNewLine &
+                MyCmd.CommandText = "UPDATE [dbo].System_GlobalProperties SET ValueInt = @behavior WHERE PropertyName = 'PasswordResetBehavior' AND ValueNVarChar = N'camm WebManager'" & vbNewLine & _
                     "IF @@ROWCOUNT = 0 INSERT INTO [dbo].System_GlobalProperties (PropertyName, ValueNVarChar, ValueInt) VALUES ('PasswordResetBehavior', N'camm WebManager', @behavior)"
                 MyCmd.CommandType = CommandType.Text
                 MyCmd.Parameters.Add("@behavior", SqlDbType.Int).Value = behavior

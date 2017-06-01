@@ -36,8 +36,8 @@ Namespace CompuMaster.camm.WebManager
                     MyConn = CType(dbConnection, SqlClient.SqlConnection)
                 End If
 
-                Dim sql As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDateTime=GetDate(), ValueNText = @VersionString WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = N'camm WebManager' " & vbNewLine &
-                    "IF @@ROWCOUNT = 0 " & vbNewLine &
+                Dim sql As String = "UPDATE [dbo].[System_GlobalProperties] SET ValueDateTime=GetDate(), ValueNText = @VersionString WHERE PropertyName = 'LastWebServiceExecutionDate' AND ValueNVarChar = N'camm WebManager' " & vbNewLine & _
+                    "IF @@ROWCOUNT = 0 " & vbNewLine & _
                     "INSERT INTO [dbo].[System_GlobalProperties] (PropertyName, ValueNVarChar, ValueNText, ValueDateTime) VALUES ('LastWebServiceExecutionDate', 'camm WebManager', @VersionString, GetDate()) "
                 Dim cmd As New System.Data.SqlClient.SqlCommand(sql, MyConn)
                 cmd.CommandType = CommandType.Text
