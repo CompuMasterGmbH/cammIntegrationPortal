@@ -215,3 +215,4 @@ libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifes
 /libraries/smarteditor/CommonMarkEditor/system
 s.bat
 setup and distribution/DbUpdateTool/devsql-2016.SENSITIVEDATAWARNING.cmd
+/libraries/cammWM.WebApp/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
