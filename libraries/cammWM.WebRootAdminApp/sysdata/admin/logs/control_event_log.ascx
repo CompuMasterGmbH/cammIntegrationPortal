@@ -1,0 +1,1 @@
+<!--#include virtual="/system/admin/logs/control_event_log.ascx"-->
