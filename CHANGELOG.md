@@ -17,6 +17,7 @@
 ## Changes while developing in following builds
 
 ### Build 2112 (DB Engine)
+* :heavy_plus_sign:  re-introduced log analysis (event log, redirections)
 * :arrows_clockwise: :warning: fixed wrong check data at SP Public_ValidateDocument when checking for authorization (security issue applies to all db builds since 204 to 2111)
 
 ### Build 2111 → 2112 (ASP.NET Engine)
