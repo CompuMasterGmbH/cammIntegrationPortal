@@ -1041,9 +1041,9 @@ Namespace CompuMaster.camm.WebManager.Modules.LogAnalysis.Controls
                     End If
                 End If
             Next
-            selectSQL = "Select id,userid,logindate,conflicttype,conflictdescription,isnull(reviewedandclosed,0) from log where " &
-               "logindate between @DateFrom and @DateTo " &
-               serverIP & " and (" & conflict &
+            selectSQL = "Select id,userid,logindate,conflicttype,conflictdescription,isnull(reviewedandclosed,0) from log where " & _
+               "logindate between @DateFrom and @DateTo " & _
+               serverIP & " and (" & conflict & _
                ") and isnull(reviewedandclosed,0)=0 order by logindate desc"
             Dim myCon As New SqlClient.SqlConnection(constr)
             Dim cmd1 As New SqlClient.SqlCommand(selectSQL, myCon)
@@ -1174,8 +1174,8 @@ Namespace CompuMaster.camm.WebManager.Modules.LogAnalysis.Controls
         ''' </history>
         ''' -----------------------------------------------------------------------------
         Sub LoadData(ByVal DateToable As DataTable)
-            LabelDescription.Text = "This chart shows all selected events for current periods. Every row refers to the " &
-                  "page with information about a user which has called a event, date, server group and application. " &
+            LabelDescription.Text = "This chart shows all selected events for current periods. Every row refers to the " & _
+                  "page with information about a user which has called a event, date, server group and application. " & _
                   "The events marked by checkboxes are not displayed during following invocations."
 
             If DateToable.Rows.Count = 0 Then
@@ -1277,7 +1277,7 @@ Namespace CompuMaster.camm.WebManager.Modules.LogAnalysis.Controls
                 Session("ClickOrder") = "desc"
             End If
             Dim title As String = "Redirections"
-            LabelDescription.Text = "All redirections for the selected periods are shown here. The number of clicks " &
+            LabelDescription.Text = "All redirections for the selected periods are shown here. The number of clicks " & _
         "for every redirection are shown as horizontal diagrams."
             ReportNameCell.Controls.Add(guiTable(title))
         End Sub
@@ -1326,11 +1326,11 @@ Namespace CompuMaster.camm.WebManager.Modules.LogAnalysis.Controls
             If IsPrintView Then
                 Dim selectSQL1 As String
                 Dim constr As String = cammWebManager.ConnectionString
-                selectSQL1 = "Select description, clicks from redirects_toaddr, " &
-                   "(Select id_redirector, count(*) as clicks from redirects_log " &
-                   "where accessdatetime between @DateFrom and @DateTo" &
-                   " group by id_redirector) as t" &
-                   " where redirects_toaddr.id=id_redirector" & vbNewLine &
+                selectSQL1 = "Select description, clicks from redirects_toaddr, " & _
+                   "(Select id_redirector, count(*) as clicks from redirects_log " & _
+                   "where accessdatetime between @DateFrom and @DateTo" & _
+                   " group by id_redirector) as t" & _
+                   " where redirects_toaddr.id=id_redirector" & vbNewLine & _
                    "ORDER by " & sortList
                 Dim myCon As New SqlClient.SqlConnection(constr)
                 Dim cmd1 As New SqlClient.SqlCommand(selectSQL1, myCon)
