@@ -427,7 +427,6 @@ Namespace CompuMaster.camm.WebManager.Application
             If (CompuMaster.camm.WebManager.Configuration.NotifyOnApplicationExceptions = Configuration.NotificationLevelOnApplicationException.On OrElse CompuMaster.camm.WebManager.Configuration.NotifyOnApplicationExceptions = Configuration.NotificationLevelOnApplicationException.NoSourceCode OrElse CompuMaster.camm.WebManager.Configuration.NotifyOnApplicationExceptions = Configuration.NotificationLevelOnApplicationException.Developer) AndAlso Not Me.cammWebManager Is Nothing Then
                 'Distribute notification of this exception
                 Try
-
                     Application.Lock()
                     Try
                         ItemsLoggedInTheLast10Minutes = CType(Context.Cache.Item("WebManager.NotifyOnApplicationExceptions.LoggedItems"), Integer)
@@ -813,13 +812,14 @@ Namespace CompuMaster.camm.WebManager.Application
             If reportException Then
                 Dim BodyHtmlText As String = Me.BuildHtmlMessage(LastExceptionHtmlString, ErrorCode, ExceptionGuid)
                 Dim BodyPlainText As String = Me.BuildPlainMessage(LastExceptionPlainString, ErrorCode, ExceptionGuid)
+                Dim RequestUrlHostName As String = RequestUrlHost(Request)
 
                 If CompuMaster.camm.WebManager.Configuration.NotifyOnApplicationExceptions = Configuration.NotificationLevelOnApplicationException.TechnicalContactAndDeveloper Then
-                    cammWebManager.MessagingEMails.SendEMail(Messaging.EMails.CreateReceipientString(cammWebManager.DevelopmentEMailAccountAddress, cammWebManager.DevelopmentEMailAccountAddress) & "," & cammWebManager.TechnicalServiceEMailAccountAddress, "", "", "Page error @ " & Request.Url.Host, BodyPlainText, BodyHtmlText, cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
+                    cammWebManager.MessagingEMails.SendEMail(Messaging.EMails.CreateReceipientString(cammWebManager.DevelopmentEMailAccountAddress, cammWebManager.DevelopmentEMailAccountAddress) & "," & cammWebManager.TechnicalServiceEMailAccountAddress, "", "", "Page error @ " & RequestUrlHostName, BodyPlainText, BodyHtmlText, cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                 ElseIf CompuMaster.camm.WebManager.Configuration.NotifyOnApplicationExceptions = Configuration.NotificationLevelOnApplicationException.Developer Then
-                    cammWebManager.MessagingEMails.SendEMail(cammWebManager.DevelopmentEMailAccountAddress, cammWebManager.DevelopmentEMailAccountAddress, "Page error @ " & Request.Url.Host, BodyPlainText, BodyHtmlText, cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
+                    cammWebManager.MessagingEMails.SendEMail(cammWebManager.DevelopmentEMailAccountAddress, cammWebManager.DevelopmentEMailAccountAddress, "Page error @ " & RequestUrlHostName, BodyPlainText, BodyHtmlText, cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                 Else
-                    cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress, "Page error @ " & Request.Url.Host, BodyPlainText, BodyHtmlText, cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
+                    cammWebManager.MessagingEMails.SendEMail(cammWebManager.TechnicalServiceEMailAccountName, cammWebManager.TechnicalServiceEMailAccountAddress, "Page error @ " & RequestUrlHostName, BodyPlainText, BodyHtmlText, cammWebManager.StandardEMailAccountName, cammWebManager.StandardEMailAccountAddress)
                 End If
             End If
 
@@ -828,6 +828,18 @@ Namespace CompuMaster.camm.WebManager.Application
             Log.WriteEventLogTrace("CatchAndDistributeLastError:End")
             Return New ExceptionResult(LastException, ExceptionGuid)
 
+        End Function
+
+        Friend Shared Function RequestUrlHost(Request As System.Web.HttpRequest) As String
+            Try
+                If Request IsNot Nothing Then
+                    Return Request.Url.Host
+                Else
+                    Return "{Machine: " & System.Environment.MachineName & "}"
+                End If
+            Catch ex As Exception
+                Return "{RequestHost not resolvable: " & ex.Message & "}"
+            End Try
         End Function
 
     End Class
@@ -917,7 +929,8 @@ Namespace CompuMaster.camm.WebManager.Application
             Dim ExceptionGuid As String = Guid.NewGuid.ToString()
             Dim BodyPlainText As String = Me.BuildPlainMessage(LastExceptionPlainString, ErrorCode, ExceptionGuid)
             If reportException Then
-                Log.WriteEventLogTrace("Page error @ " & Request.Url.Host & vbNewLine & BodyPlainText, System.Diagnostics.EventLogEntryType.Error, True)
+                Dim RequestUrlHostName As String = HttpApplication.RequestUrlHost(Request)
+                Log.WriteEventLogTrace("Page error @ " & RequestUrlHostName & vbNewLine & BodyPlainText, System.Diagnostics.EventLogEntryType.Error, True)
             End If
 
             Log.WriteEventLogTrace("CatchAndDistributeLastError:ErrorData:" & LastException.ToString & vbNewLine & "ExceptionGuid: " & ExceptionGuid)
