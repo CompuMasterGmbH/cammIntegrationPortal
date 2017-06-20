@@ -22,6 +22,9 @@
 
 ### Build 2111 → 2112 (ASP.NET Engine)
 * :heavy_plus_sign: added support for MS SQL Server 2016/v13
+* :heavy_plus_sign: added feature: abort queued mail from mail queue
+* :heavy_plus_sign: added feature: provide UI for processing pending items of mail queue manually
+* :arrows_clockwise: fixed check for wrong security object on checks at about page
 * :arrows_clockwise: fixed missing support for MS SQL Azure Server 2014/v12
 * :arrows_clockwise: fixed several db build checks which might cause login process to logout again before completed
 * :arrows_clockwise: fixed internal conversion error for user ID (int32 instead of int64)

@@ -2,7 +2,7 @@
 
 <%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
 <camm:WebManager PageTitle="Administration - Modify application" id="cammWebManager"
-    SecurityObject="System - User Administration - Applications" runat="server" />
+    SecurityObject="System - User Administration - ServerSetup" runat="server" />
 <!--#include virtual="/sysdata/includes/standardtemplate_top_serverform.aspx"-->
 <h3>Additional flags not required by any security object</h3>
 <asp:datagrid runat="server" id="NotRequiredFlags" autogeneratecolumns="false" width="600">

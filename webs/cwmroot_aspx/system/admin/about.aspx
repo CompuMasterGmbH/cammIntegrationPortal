@@ -205,7 +205,7 @@
 							</font>
 							</td>
 						</tr>
-                        
+                        <tr>                            <td colspan="2" valign="Top">                                <p>                                    <font face="Arial" size="2"><a href="check_processmailqueue.aspx">Check for pending items in e-mail queue and send queued items</a></font></p>                            </td>                        </tr>
                         <tr>                            <td colspan="2" valign="Top">                                <p>                                    <font face="Arial" size="2"><a href="check_flags_not_required.aspx">Check for additional flags in use by userprofiles not required by security objects</a></font></p>                            </td>                        </tr>                      <%'  <tr>                            <td colspan="2" valign="Top">                                <p>                                    <font face="Arial" size="2"><a href="#">Check for missing external account assignment</a></font></p>                            </td>                        </tr>                        %>
                         <tr>
                             <td colspan="2" valign="Top">

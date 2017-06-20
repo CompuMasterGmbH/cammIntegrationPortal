@@ -10,6 +10,9 @@
 		<td><nobr><asp:LinkButton Runat="server" ID="LinkbuttonFailure" Visible=False >Failure</asp:LinkButton></nobr></td>
 	</tr>
 	<tr>
+		<td><nobr><asp:LinkButton Runat="server" ID="LinkbuttonCancel" Visible=False >Abort</asp:LinkButton></nobr></td>
+	</tr>
+	<tr>
 		<td><nobr><asp:LinkButton Runat="server" ID="LinkbuttonSendThisEmailToMe" Visible=False >Send to me</asp:LinkButton></nobr></td>
 	</tr>
 </table>
