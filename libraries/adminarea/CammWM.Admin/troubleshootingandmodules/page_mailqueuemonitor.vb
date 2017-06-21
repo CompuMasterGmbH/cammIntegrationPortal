@@ -183,12 +183,12 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
 
             Dim userInfo As CompuMaster.camm.WebManager.WMSystem.UserInformation = Me.cammWebManager.CurrentUserInfo
 
-            Me.cammWebManager.MessagingEMails.QueueEMail(userInfo.FullName,
-                userInfo.EMailAddress,
-                Mail.Subject,
-                Mail.BodyPlainText,
-                Mail.BodyHtml,
-                userInfo.FullName,
+            Me.cammWebManager.MessagingEMails.QueueEMail(userInfo.FullName, _
+                userInfo.EMailAddress, _
+                Mail.Subject, _
+                Mail.BodyPlainText, _
+                Mail.BodyHtml, _
+                userInfo.FullName, _
                 userInfo.EMailAddress)
 
             'set status to Failure accepted
@@ -675,7 +675,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim bcc As String = Server.HtmlEncode(Utils.Nz(dRow("Bcc"), ""))
                 Dim ToType As ToType = dRow("ToType")
 
-                myCounter = Me.AddRowToAnalysisTable(AddHiddenArea, ToAddressCount, Counter, EMailID, Subject,
+                myCounter = Me.AddRowToAnalysisTable(AddHiddenArea, ToAddressCount, Counter, EMailID, Subject, _
                    State, Sender, ToAddress, SentTime, fromAddress, cc, bcc, ToType)
             Next
         End Sub
