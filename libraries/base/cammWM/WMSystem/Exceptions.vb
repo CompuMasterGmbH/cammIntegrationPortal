@@ -17,6 +17,35 @@ Option Strict On
 
 Namespace CompuMaster.camm.WebManager
 
+    Public Class AssemblyOlderThanDatabaseException
+        Inherits Exception
+
+        Friend Sub New(databaseVersion As Version, assemblyVersion As Version, databaseCompatibilityBuildNo As Integer)
+            MyBase.New()
+            Me.DatabaseVersion = databaseVersion
+            Me.AssemblyVersion = assemblyVersion
+        End Sub
+
+        Public Overrides ReadOnly Property Message As String
+            Get
+                If DatabaseVersion IsNot Nothing AndAlso AssemblyVersion IsNot Nothing Then
+                    Dim Result As String = "Database (v" & DatabaseVersion.ToString & ") has a newer build no. than this assembly (v" & AssemblyVersion.ToString & ")."
+                    If DatabaseCompatibilityBuildNo <> AssemblyVersion.Build Then
+                        Result &= " Application compatibility has been configured to database build no. up to " & DatabaseCompatibilityBuildNo & "."
+                    End If
+                    Result &= " Access denied to prevent data corruption."
+                Else
+                    Return "Database has a newer build no. than this assembly. Access denied to prevent data corruption."
+                End If
+            End Get
+        End Property
+
+        Public Property AssemblyVersion As Version
+        Public Property DatabaseVersion As Version
+        Public Property DatabaseCompatibilityBuildNo As Integer
+
+    End Class
+
 #If NotImplemented Then
     Public Class AuthorizationMissingException
         Inherits Exception

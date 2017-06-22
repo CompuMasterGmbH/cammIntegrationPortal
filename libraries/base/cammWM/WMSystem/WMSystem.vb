@@ -1596,8 +1596,9 @@ Namespace CompuMaster.camm.WebManager
         ''' </remarks>
         Private Sub CheckCompatibilityToDatabaseByBuildNumber()
             WebManager.Log.WriteEventLogTrace("CheckCompatibilityToDatabaseByBuildNumber:Begin")
+            Dim MyDBVersion As System.Version = Nothing
             If Me.DatabaseIsNewerBuildThanWebManagerApplication = TripleState.Undefined Then
-                Dim MyDBVersion As System.Version = Setup.DatabaseUtils.Version(Me, False)
+                MyDBVersion = Setup.DatabaseUtils.Version(Me, False)
                 If Not MyDBVersion Is Nothing AndAlso MyDBVersion.Build > System.Math.Max(Me.System_Version_Ex.Build, Configuration.CompatibilityWithDatabaseBuild) Then
                     DatabaseIsNewerBuildThanWebManagerApplication = TripleState.True
                 Else
@@ -1605,7 +1606,11 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End If
             If Me.DatabaseIsNewerBuildThanWebManagerApplication = TripleState.True Then
-                Throw New Exception("Database has a newer build no. than this application. Access denied to prevent data corruption.")
+                If Me.DebugLevel >= DebugLevels.Low_WarningMessagesOnAccessError_AdditionalDetails Then
+                    Throw New AssemblyOlderThanDatabaseException(MyDBVersion, Me.System_Version_Ex, Configuration.CompatibilityWithDatabaseBuild)
+                Else
+                    Throw New AssemblyOlderThanDatabaseException(Nothing, Nothing, Nothing)
+                End If
             End If
             WebManager.Log.WriteEventLogTrace("CheckCompatibilityToDatabaseByBuildNumber:End")
         End Sub
