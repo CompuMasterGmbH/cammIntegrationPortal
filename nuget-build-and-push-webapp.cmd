@@ -1,7 +1,7 @@
 @echo off
 ::REM -UpdateNuGetExecutable not required since it's updated by VS.NET mechanisms
 
-set /p PackageVersion=Enter version no. for NuGet package:
+set /p PackageVersion=Enter version no. for NuGet package (e.g.: 4.12.1234.100):
 
 echo Build+Push cammWM.WebApp Library ?
 choice /n /c "YN" /m "(Y)es, (N)o"
