@@ -82,15 +82,13 @@
     <Content Include="system\images\editor.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="system\nav\index_base.vb">
+    <None Include="system\nav\index_base.vb" />
+    <None Include="sysdata\config.vb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="sysdata\config.vb">
+    </None>
+    <None Include="sysdata\custom_internationalization.vb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="sysdata\custom_internationalization.vb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="system\access_error.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -198,18 +196,20 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="system\nav\index_base.ascx">
+    <None Include="system\nav\index_base.ascx">
       <SubType>ASPXCodeBehind</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="system\nav\index_style3.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="system\nav\index_style3_headhtml.ascx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="system\nav\index_style3_jscript.ascx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="system\servercheck.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
