@@ -216,3 +216,4 @@ libraries/base/Internationalizations/bin/Internationalization.vshost.exe.manifes
 s.bat
 setup and distribution/DbUpdateTool/devsql-2016.SENSITIVEDATAWARNING.cmd
 /libraries/cammWM.WebApp/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+sensitive code parts scanner.bat
