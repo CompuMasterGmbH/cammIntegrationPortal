@@ -15,6 +15,8 @@ PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& 'libraries\cammWM.WebA
 :FinishedBuildCWMWebApp
 echo Task completed.
 echo.
+echo Refresh NuGet packages of depending project cammWM.WebRootApp NOW!
+echo.
 ::goto AbortNoPause
 
 echo Build+Push cammWM.WebRootApp Library ?
@@ -26,6 +28,8 @@ PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& 'libraries\cammWM.WebR
 :FinishedBuildCWMWebRootApp
 echo Task completed.
 echo.
+echo Refresh NuGet packages of depending project cammWM.WebRootAdminApp NOW!
+echo.
 
 echo Build+Push cammWM.WebRootAdminApp Library ?
 choice /n /c "YN" /m "(Y)es, (N)o"
@@ -35,6 +39,9 @@ PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& 'libraries\cammWM.WebR
 ::PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& 'libraries\cammWM.WebRootAdminApp\_CreateNewNuGetPackage\DoNotModify\New-NuGetPackage.ps1' -ProjectFilePath '.\libraries\cammWM.WebRootAdminApp\cammWM.WebRootAdminApp.vbproj' -verbose -NoPrompt -DoNotUpdateNuSpecFile" 
 :FinishedBuildCWMWebRootAdminApp
 echo Task completed.
+echo.
+
+echo OPTIONALLY refresh NuGet packages of depending sample/debug projects NOW!
 echo.
 
 pause
