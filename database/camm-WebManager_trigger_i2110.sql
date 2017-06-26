@@ -387,17 +387,6 @@ GO
 IF OBJECT_ID ('dbo.U_Memberships', 'TR') IS NOT NULL
    DROP TRIGGER dbo.U_Memberships;
 GO
-CREATE TRIGGER [dbo].U_Memberships 
-   ON  [dbo].Memberships 
-   FOR UPDATE
-AS 
-BEGIN
-	SET NOCOUNT ON;
-	RAISERROR ('Memberships can''t be updated, only inserted or deleted', 16, 1)
-	ROLLBACK TRANSACTION 		
-	RETURN	
-END
-GO
 IF OBJECT_ID ('dbo.ID_Memberships', 'TR') IS NOT NULL
    DROP TRIGGER dbo.ID_Memberships;
 GO
