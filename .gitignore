@@ -217,3 +217,7 @@ s.bat
 setup and distribution/DbUpdateTool/devsql-2016.SENSITIVEDATAWARNING.cmd
 /libraries/cammWM.WebApp/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 sensitive code parts scanner.bat
+/webs/cwmroot_aspx/bin/cammWM.Admin.xml
+/webs/cwmroot_aspx/bin/cammWM.dll
+/webs/cwmroot_aspx/bin/cammWM.xml
+/webs/cwmroot_aspx/bin/cammWM.Admin.dll
