@@ -16,6 +16,11 @@
 
 ## Changes while developing in following builds
 
+### Build 2112 → 2113 (ASP.NET Engine)
+
+### Build 2113 (DB Engine)
+* :arrows_clockwise: fix missing effective memberships
+
 ### Build 2112 (DB Engine)
 * :heavy_plus_sign:  re-introduced log analysis (event log, redirections)
 * :arrows_clockwise: :warning: fixed wrong check data at SP Public_ValidateDocument when checking for authorization (security issue applies to all db builds since 204 to 2111)
@@ -30,7 +35,7 @@
 * :arrows_clockwise: fixed internal conversion error for user ID (int32 instead of int64)
 * :arrows_clockwise: fixed session termination detection on newer assemblies with older databases
 * :arrows_clockwise: fixed backwards compatiblity with db builds not supporting multiple logins
-* :arrows_clockwise: fixed immediate logout after login with newester assembly and newest db build: EnsureSession regardless of db build + use the very same SQL in System_IsSessionTerminated regardless of db build (solution with SP GetLogonList seemed to fail (at least with 1 server in server group))
+* :arrows_clockwise: fixed immediate logout after login with newest assembly and newest db build: EnsureSession regardless of db build + use the very same SQL in System_IsSessionTerminated regardless of db build (solution with SP GetLogonList seemed to fail (at least with 1 server in server group))
 
 ### Build 206 → 2111 (ASP.NET Engine)
 * :heavy_plus_sign: optional SmartEditor components and SmartEditor-Upload: several improvements and fixes
@@ -44,6 +49,7 @@
 * :arrows_clockwise: Fixed user deletion form
 
 ### Build 2111 (DB Engine)
+* :warning: All users will be kicked out of their current user sessions
 * :heavy_plus_sign: introduced IsDeletedUser flag
 
 ### Build 2104 (DB Engine)
