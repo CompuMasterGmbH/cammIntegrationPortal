@@ -34,15 +34,53 @@ Namespace CompuMaster.camm.WebManager
                         Result &= " Application compatibility has been configured to database build no. up to " & DatabaseCompatibilityBuildNo & "."
                     End If
                     Result &= " Access denied to prevent data corruption."
+                    Return Result
                 Else
                     Return "Database has a newer build no. than this assembly. Access denied to prevent data corruption."
                 End If
             End Get
         End Property
 
+        Private _AssemblyVersion As Version
+        Private _DatabaseVersion As Version
+        Private _DatabaseCompatibilityBuildNo As Integer
+
+        ''' <summary>
+        ''' Current application/assembly version
+        ''' </summary>
+        ''' <returns></returns>
         Public Property AssemblyVersion As Version
+            Get
+                Return Me._AssemblyVersion
+            End Get
+            Set(value As Version)
+                Me._AssemblyVersion = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' Current database version
+        ''' </summary>
+        ''' <returns></returns>
         Public Property DatabaseVersion As Version
+            Get
+                Return Me._DatabaseVersion
+            End Get
+            Set(value As Version)
+                Me._DatabaseVersion = value
+            End Set
+        End Property
+        ''' <summary>
+        ''' web.config/app.config setting for compatibility up to database build no. 
+        ''' </summary>
+        ''' <returns></returns>
         Public Property DatabaseCompatibilityBuildNo As Integer
+            Get
+                Return Me._DatabaseCompatibilityBuildNo
+            End Get
+            Set(value As Integer)
+                Me._DatabaseCompatibilityBuildNo = value
+            End Set
+        End Property
 
     End Class
 
