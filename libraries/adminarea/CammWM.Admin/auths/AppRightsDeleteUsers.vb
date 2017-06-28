@@ -80,7 +80,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim MyDt As New DataTable
 
                 Dim sqlParams As SqlParameter() = {New SqlParameter("@ID", Field_UserID)}
-                MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString),
+                MyDt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), _
                                     "SELECT ID, Loginname, ISNULL(Namenszusatz, '') + SPACE({ fn LENGTH(SUBSTRING(ISNULL(Namenszusatz, ''), 1, 1)) }) + Nachname + ', ' + Vorname AS Name,[E-MAIL] FROM dbo.Benutzer WHERE ID = @ID", CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
 
                 If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then
