@@ -38,7 +38,7 @@ If @CurUserID Is Not Null
 				                      (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])
 				SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @NewAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application
 				FROM         dbo.ApplicationsRightsByGroup
-				WHERE     (ID_Application = @AppID)
+				WHERE     ID_Application = @AppID AND IsSupervisorAutoAccessRule = 0
 
 				-- Add User Authorizations
 				INSERT INTO dbo.ApplicationsRightsByUser
