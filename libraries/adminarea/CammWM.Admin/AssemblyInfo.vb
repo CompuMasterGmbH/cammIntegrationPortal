@@ -9,7 +9,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("CompuMaster GmbH")> 
 <Assembly: AssemblyProduct("camm Web-Manager")>
-<Assembly: AssemblyCopyright("2001-2016 CompuMaster GmbH")>
+<Assembly: AssemblyCopyright("2001-2017 CompuMaster GmbH")>
 <Assembly: AssemblyTrademark("")>
 <Assembly: CLSCompliant(True)> 
 

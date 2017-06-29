@@ -3581,7 +3581,7 @@ Namespace CompuMaster.camm.WebManager
             Dim ResultValue As Integer = Configuration.GlobalizationDefaultMarket
             'Default-Sprache setzen
             Try
-                If IsNothing(HttpContext.Current.Session("CurLanguage")) Then
+                If HttpContext.Current IsNot Nothing AndAlso HttpContext.Current.Session IsNot Nothing AndAlso IsNothing(HttpContext.Current.Session("CurLanguage")) Then
                     HttpContext.Current.Session("CurLanguage") = GetBrowserPreferredLanguage()
                     System_DebugTraceWrite("CurLanguage: Get: GetBrowserPreferredLanguage = " & CType(HttpContext.Current.Session("CurLanguage"), Integer).ToString)
                 End If
@@ -3644,11 +3644,13 @@ Namespace CompuMaster.camm.WebManager
                         HttpContext.Current.Response.Cookies.Add(co2)
                     End If
                 End If
-                If CType(HttpContext.Current.Session("CurLanguage"), Integer) <= 0 Then
-                    HttpContext.Current.Session("CurLanguage") = Configuration.GlobalizationDefaultMarket
-                    System_DebugTraceWrite("CurLanguage: Get: Return value would be <= 0 and invalid; corrected to Configuration.LanguagesDefault")
+                If HttpContext.Current IsNot Nothing AndAlso HttpContext.Current.Session IsNot Nothing Then
+                    If CType(HttpContext.Current.Session("CurLanguage"), Integer) <= 0 Then
+                        HttpContext.Current.Session("CurLanguage") = Configuration.GlobalizationDefaultMarket
+                        System_DebugTraceWrite("CurLanguage: Get: Return value would be <= 0 and invalid; corrected to Configuration.LanguagesDefault")
+                    End If
+                    ResultValue = CType(HttpContext.Current.Session("CurLanguage"), Integer)
                 End If
-                ResultValue = CType(HttpContext.Current.Session("CurLanguage"), Integer)
                 'RedirectionParams = System_GetRequestQueryStringComplete(New String() {"Lang"})
             Catch ex As Exception
                 System_DebugTraceWrite("CurLanguage: Get: Error = " & ex.Message)

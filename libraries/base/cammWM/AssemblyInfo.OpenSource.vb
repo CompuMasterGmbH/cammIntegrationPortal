@@ -16,7 +16,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("camm Integration Portal Core Library")>
 <Assembly: AssemblyCompany("CompuMaster GmbH")>
 <Assembly: AssemblyProduct("camm Integration Portal (based on camm Web-Manager)")>
-<Assembly: AssemblyCopyright("2001-2016 CompuMaster GmbH")>
+<Assembly: AssemblyCopyright("2001-2017 CompuMaster GmbH")>
 <Assembly: AssemblyTrademark("camm")>
 
 <Assembly: CLSCompliant(True)>
