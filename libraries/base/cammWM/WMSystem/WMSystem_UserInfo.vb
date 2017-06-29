@@ -63,7 +63,23 @@ Namespace CompuMaster.camm.WebManager
             Private _AdditionalFlags As New Collections.Specialized.NameValueCollection
             Private _AccessLevel As AccessLevelInformation
             Private _AccessLevelID As Integer = Integer.MinValue
-            Private _System_InitOfAuthorizationsDone As Boolean
+            Private __System_InitOfAuthorizationsDone As TriState = TriState.UseDefault
+            Private Property _System_InitOfAuthorizationsDone As Boolean
+                Get
+                    If __System_InitOfAuthorizationsDone = TriState.UseDefault Then
+                        Dim InitDone As Boolean = ReadInitAuthorizationsDoneValue()
+                        If InitDone Then __System_InitOfAuthorizationsDone = TriState.True Else __System_InitOfAuthorizationsDone = TriState.False
+                    End If
+                    If __System_InitOfAuthorizationsDone = TriState.True Then
+                        Return True
+                    Else
+                        Return False
+                    End If
+                End Get
+                Set(value As Boolean)
+                    If value Then __System_InitOfAuthorizationsDone = TriState.True Else __System_InitOfAuthorizationsDone = TriState.False
+                End Set
+            End Property
             Private _AccountProfileValidatedByEMailTest As Boolean
             Private _AutomaticLogonAllowedByMachineToMachineCommunication As Boolean
             Private _ExternalAccount As String
@@ -145,7 +161,6 @@ Namespace CompuMaster.camm.WebManager
                 If UserID <> Nothing Then
                     'Quick fill mode
                     _PartiallyLoadedDataCurrently = True
-                    _System_InitOfAuthorizationsDone = ReadInitAuthorizationsDoneValue()
                     'Else 'Data for a new user
                 End If
             End Sub
@@ -266,7 +281,6 @@ Namespace CompuMaster.camm.WebManager
                 If UserID <> Nothing Then
                     'Quick fill mode
                     _PartiallyLoadedDataCurrently = True
-                    _System_InitOfAuthorizationsDone = ReadInitAuthorizationsDoneValue()
                     'Else 'Data for a new user
                 End If
             End Sub
