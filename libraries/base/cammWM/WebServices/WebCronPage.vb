@@ -20,17 +20,33 @@ Namespace CompuMaster.camm.WebManager.Pages.Specialized
     Public Class WebCron
         Inherits CompuMaster.camm.WebManager.Pages.Page
 
+        Private _HttpStatusCodeAlways200OK As Boolean = False
         ''' <summary>
         ''' The HTTP response status code will be 500 if the webcron request fails for some reason if set to False (default), but will always be 200 OK if set to True
         ''' </summary>
         ''' <returns></returns>
-        Public Property HttpStatusCodeAlways200OK As Boolean = False
+        Public Property HttpStatusCodeAlways200OK As Boolean
+            Get
+                Return _HttpStatusCodeAlways200OK
+            End Get
+            Set(value As Boolean)
+                _HttpStatusCodeAlways200OK = value
+            End Set
+        End Property
 
+        Private _LogErrorsIntoDatabase As Boolean = False
         ''' <summary>
         ''' In case of errors, the exception details will be logged into the database (if set to True) or will just be displayed as message in response body (if set to false)
         ''' </summary>
         ''' <returns></returns>
-        Public Property LogErrorsIntoDatabase As Boolean = False
+        Public Property LogErrorsIntoDatabase As Boolean
+            Get
+                Return _LogErrorsIntoDatabase
+            End Get
+            Set(value As Boolean)
+                _LogErrorsIntoDatabase = value
+            End Set
+        End Property
 
         Private Sub WebCron_Load(sender As Object, e As EventArgs) Handles Me.Load
             Try

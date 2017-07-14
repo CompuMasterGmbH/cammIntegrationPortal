@@ -74,8 +74,8 @@ Namespace CompuMaster.camm.WebManager.WebServices
             Me.Context = httpContext
         End Sub
 
-        Private Property cammWebManager As WMSystem
-        Private Property Context As HttpContext
+        Private cammWebManager As WMSystem
+        Private Context As HttpContext
 
         ''' <summary>
         ''' Send 1 mail from mail queue
@@ -230,11 +230,11 @@ Namespace CompuMaster.camm.WebManager.WebServices
         ''' </summary>
         ''' <param name="maxNumberOfDeletedRows"></param>
         Private Sub DeleteExpiredUserSessions(maxNumberOfDeletedRows As Integer)
-            Dim Sql As String = "DELETE FROM [dbo].[System_UserSessions]" & vbNewLine &
-                "WHERE ID_Session IN (" & vbNewLine &
-                "  SELECT TOP " & maxNumberOfDeletedRows & " [ID_Session]" & vbNewLine &
-                "  FROM [dbo].[System_UserSessions]" & vbNewLine &
-                "  where ID_Session not in (select SessionID from [dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes])" & vbNewLine &
+            Dim Sql As String = "DELETE FROM [dbo].[System_UserSessions]" & vbNewLine & _
+                "WHERE ID_Session IN (" & vbNewLine & _
+                "  SELECT TOP " & maxNumberOfDeletedRows & " [ID_Session]" & vbNewLine & _
+                "  FROM [dbo].[System_UserSessions]" & vbNewLine & _
+                "  where ID_Session not in (select SessionID from [dbo].[System_WebAreasAuthorizedForSession_CurrentAndInactiveOnes])" & vbNewLine & _
                 "  )"
             Dim connection As New System.Data.SqlClient.SqlConnection(Me.cammWebManager.ConnectionString)
             Dim cmd As New System.Data.SqlClient.SqlCommand(Sql, connection)
