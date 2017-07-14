@@ -1,12 +1,25 @@
-Imports System
 Imports System.Resources
-Imports System.Collections
+Imports System.Collections.Generic
+Imports System.Security.Cryptography
 Imports System.Text
 Imports System.IO
-Imports ICSharpCode.SharpZipLib
-Module Module1
 
-    Dim fl As New ArrayList
+Module Main
+
+    Dim fl As New System.Collections.Generic.List(Of flInfo)
+    Class flInfo
+        Private Shared _MD5Hasher As MD5 = System.Security.Cryptography.MD5.Create
+
+        Public Sub New(fileNameRelative As String, fileNameRooted As String)
+            Me.FileName = fileNameRelative
+            Dim fi As New System.IO.FileInfo(fileNameRelative)
+            Me.FileSize = fi.Length
+            Me.MD5 = _MD5Hasher.ComputeHash(System.IO.File.ReadAllBytes(fi.FullName))
+        End Sub
+        Public Property FileName As String
+        Public Property FileSize As Integer
+        Public Property MD5 As Byte()
+    End Class
 
     Private VerboseLevel As VerboseLevels = VerboseLevels.FullDetails
     Private Enum VerboseLevels
@@ -72,9 +85,12 @@ Module Module1
 
             Dim dt As New DataTable("filesList")
             dt.Columns.Add("relativeFilePath", GetType(String))
+            dt.Columns.Add("size", GetType(Integer))
+            dt.Columns.Add("md5", GetType(Byte()))
             Dim ds As New DataSet("filesListDataSet")
-            dirSearch(source)
-            For Each fileName As String In fl.ToArray
+            dirSearch(source, True)
+            For Each fileItem As flInfo In fl
+                Dim fileName As String = fileItem.FileName
                 If VerboseLevel = VerboseLevels.FullDetails Then Console.WriteLine(fileName)
                 Dim row As DataRow = dt.NewRow
                 If fileName.IndexOf(".svn") = -1 Then
@@ -84,6 +100,8 @@ Module Module1
                         row("relativeFilePath") = fileName.Remove(0, fileName.IndexOf("\system\")).Replace("\", "/")
                     End If
                     If Not row("relativeFilePath") Is DBNull.Value Then
+                        row("size") = fileItem.FileSize
+                        row("md5") = fileItem.MD5
                         dt.Rows.Add(row)
                     End If
                 End If
@@ -109,14 +127,21 @@ Module Module1
 
     End Sub
 
-    Private Sub dirSearch(ByVal strDir As String)
+    Private Sub dirSearch(ByVal strDir As String, isInitLevel As Boolean)
         If strDir.IndexOf(".svn") = -1 Then
+            If isInitLevel Then
+                'only on very first call, take the files from root dir, too
+                For Each strFile As String In Directory.GetFiles(strDir)
+                    If VerboseLevel = VerboseLevels.FullDetails Then Console.WriteLine(strFile)
+                    fl.Add(New flInfo(strFile, System.IO.Path.Combine(strDir, strFile)))
+                Next
+            End If
             For Each strDirectory As String In Directory.GetDirectories(strDir)
                 For Each strFile As String In Directory.GetFiles(strDirectory)
                     If VerboseLevel = VerboseLevels.FullDetails Then Console.WriteLine(strFile)
-                    fl.Add(strFile)
+                    fl.Add(New flInfo(strFile, System.IO.Path.Combine(strDirectory, strFile)))
                 Next
-                dirSearch(strDirectory)
+                dirSearch(strDirectory, False)
             Next
         End If
     End Sub

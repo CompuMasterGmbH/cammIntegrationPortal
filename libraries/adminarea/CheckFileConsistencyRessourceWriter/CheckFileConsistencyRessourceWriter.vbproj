@@ -21,7 +21,7 @@
     <OptionExplicit>On</OptionExplicit>
     <OptionStrict>Off</OptionStrict>
     <RootNamespace>CheckFileConsistencyRessourceWriter</RootNamespace>
-    <StartupObject>CheckFileConsistencyRessourceWriter.Module1</StartupObject>
+    <StartupObject>Sub Main</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <MyType>Console</MyType>
@@ -97,9 +97,12 @@
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Module1.vb">
+    <Compile Include="Main.vb">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="My Project\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

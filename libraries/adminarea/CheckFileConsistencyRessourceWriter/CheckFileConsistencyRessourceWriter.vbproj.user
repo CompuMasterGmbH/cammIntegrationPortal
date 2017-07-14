@@ -19,7 +19,7 @@
     <RemoteDebugEnabled>false</RemoteDebugEnabled>
     <RemoteDebugMachine />
     <StartAction>Project</StartAction>
-    <StartArguments>-v:1 -s:R:\camm.biz\camm Web-Manager\Dev\Sources\Current\cwmsources\cammWM.Admin\CammWM.Admin</StartArguments>
+    <StartArguments>-v:2 -s:..\..\..\..\webs\cwmroot_aspx</StartArguments>
     <StartPage />
     <StartProgram />
     <StartURL />
