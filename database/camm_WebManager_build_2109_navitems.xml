@@ -3,7 +3,7 @@
     <dataroot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" generated="2003-05-26T23:40:50">
         <version>
             <major>4</major>
-            <minor>10</minor>
+            <minor>12</minor>
             <build>2109</build>
         </version>
         <updatedetails>
