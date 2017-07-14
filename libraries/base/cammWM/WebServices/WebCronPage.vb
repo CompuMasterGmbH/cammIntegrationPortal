@@ -15,31 +15,47 @@
 Option Strict On
 Option Explicit On
 
-Namespace CompuMaster.camm.WebManager.WebServices
+Namespace CompuMaster.camm.WebManager.Pages.Specialized
 
-    ''' <summary>
-    '''     camm Web-Manager core web service
-    ''' </summary>
-    <Web.Services.WebService(Name:="camm Web-Manager core web services", _
-                Description:="Core camm Web-Manager service for event triggering of queued or scheduled tasks", _
-                [Namespace]:="http://www.camm.biz/webmanager/core/"), System.Runtime.InteropServices.ComVisible(False)> _
-    Public Class Core
-        Inherits BaseWebService
-
-        <Web.Services.WebMethod()> Public Sub MailQueueProcessOneItem()
-            cammWebManager.MessagingQueueMonitoring.ProcessOneMail()
-        End Sub
-
-        <Web.Services.WebMethod()> Public Function MailQueueNumberOfItems() As Integer
-            Return cammWebManager.MessagingQueueMonitoring.MailsInQueue()
-        End Function
-
+    Public Class WebCron
+        Inherits CompuMaster.camm.WebManager.Pages.Page
 
         ''' <summary>
-        ''' Execute several processes which are timed asynchronously
+        ''' The HTTP response status code will be 500 if the webcron request fails for some reason if set to False (default), but will always be 200 OK if set to True
         ''' </summary>
-        <Web.Services.WebMethod()> Public Sub ExecutePendingProcesses()
-            CompuMaster.camm.WebManager.WebServices.CoreWebCronJobRunner.ExecuteNextWebCronJob(Me.Context, Me.cammWebManager)
+        ''' <returns></returns>
+        Public Property HttpStatusCodeAlways200OK As Boolean = False
+
+        ''' <summary>
+        ''' In case of errors, the exception details will be logged into the database (if set to True) or will just be displayed as message in response body (if set to false)
+        ''' </summary>
+        ''' <returns></returns>
+        Public Property LogErrorsIntoDatabase As Boolean = False
+
+        Private Sub WebCron_Load(sender As Object, e As EventArgs) Handles Me.Load
+            Try
+                CompuMaster.camm.WebManager.WebServices.CoreWebCronJobRunner.ExecuteNextWebCronJob(Me.Context, Me.cammWebManager)
+                Response.Clear()
+                Response.Write("200 OK")
+            Catch ex As Exception
+                Response.Clear()
+                If Me.HttpStatusCodeAlways200OK = False Then
+                    Response.StatusCode = 500
+                End If
+                If Me.cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                    Response.Write("500 Internal Error: " & ex.ToString)
+                Else
+                    Response.Write("500 Internal Error: " & ex.Message)
+                End If
+                If Me.LogErrorsIntoDatabase Then
+                    Try
+                        Me.cammWebManager.Log.Exception(ex, False)
+                    Catch
+                        'ignore exceptions here
+                    End Try
+                End If
+            End Try
+            Response.End()
         End Sub
 
     End Class

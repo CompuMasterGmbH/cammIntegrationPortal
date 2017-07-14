@@ -314,7 +314,7 @@ Namespace CompuMaster.camm.WebManager.Application
                         End Try
                     End If
                 Catch ex As Exception
-                    Dim text As String = "Page_EndRequest: ERROR: " & ex.ToString()
+                    Dim text As String = "HttpApplication_Page_EndRequest: ERROR: " & ex.ToString()
                     Me.cammWebManager.Log.Exception(ex, False)
                 End Try
             End If
@@ -405,13 +405,13 @@ Namespace CompuMaster.camm.WebManager.Application
         End Function
 
 
-        Private Function GetLoggedExceptionItems() As Integer
+        'Private Function GetLoggedExceptionItems() As Integer
 
-        End Function
+        'End Function
 
-        Private Sub SetLoggedExceptionItems()
+        'Private Sub SetLoggedExceptionItems()
 
-        End Sub
+        'End Sub
 
         Protected Friend ItemsLoggedInTheLast10Minutes As Integer = 0
         ''' <summary>
@@ -984,13 +984,13 @@ Namespace CompuMaster.camm.WebManager.Application
             End If
         End Sub
 
-        Private Sub Page_AuthenticateRequest(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.AuthenticateRequest
+        'Private Sub Page_AuthenticateRequest(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.AuthenticateRequest
 
-        End Sub
+        'End Sub
 
-        Private Sub Page_AuthorizeRequest(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.AuthorizeRequest
+        'Private Sub Page_AuthorizeRequest(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.AuthorizeRequest
 
-        End Sub
+        'End Sub
 
     End Class
 #End Region
