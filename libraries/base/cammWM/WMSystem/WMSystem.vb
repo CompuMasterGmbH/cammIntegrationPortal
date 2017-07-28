@@ -756,8 +756,9 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <value></value>
         ''' <remarks>
-        ''' May throw an exception in web environments if no session ID can be looked up from cookie or ASP.NET session handler
-        ''' In windows or console applications, there will be returned a self-created session ID
+        ''' May throw an exception in web environments if no session ID can be looked up from cookie or ASP.NET session handler.
+        ''' In windows or console applications, there will be returned a self-created session ID.
+        ''' This session ID stays stable even if no data has been written into the session object (default behaviour of modern ASP.NET framework versions: always create a new session ID on every client request as long as there is no data in session object)
         ''' </remarks>
         Public Overridable ReadOnly Property CurrentScriptEngineSessionID() As String
             Get
