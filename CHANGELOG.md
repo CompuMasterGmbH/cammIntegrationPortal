@@ -20,6 +20,7 @@
 * :heavy_plus_sign: added /system/webcron.aspx for simplified web call for execution of async webcron tasks (obsoletes separate trigger service which needed to be installed as a service/daemon at a server or remote machine)
 
 ### Build 2115 (DB Engine)
+* :arrows_clockwise: :warning: fixed authorization calculation for inheritions (security issue applies to all db builds since 2107 to 2114)
 * :arrows_clockwise: fixed patches' version no. 4.10 => 4.12
 
 ### Build 2112 → 2114 (ASP.NET Engine)

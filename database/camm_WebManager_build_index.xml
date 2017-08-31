@@ -448,5 +448,9 @@
       <ID>103</ID>
       <file>camm_WebManager_build_2114_func+sp.xml</file>
     </files>
+	<files>
+      <ID>104</ID>
+      <file>camm_WebManager_build_2115_trigger.xml</file>
+    </files>
   </dataroot>
 </NewDataSet>
