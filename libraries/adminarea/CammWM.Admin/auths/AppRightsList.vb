@@ -259,7 +259,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             strQuery = "select LoginDisabled,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_Group,DevelopmentTeamMember,Name,Vorname,Description,CAST (0 AS bit) AS IsDenyRule,CAST(0 AS int) AS ID_ServerGroup from [view_ApplicationRights] where id_application=@AppID and isnull(ID_Group,0)<>0 order by Name"
                         Else
                             'Newer / IsDenyRule column available
-                            strQuery = "select LoginDisabled,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_Group,DevelopmentTeamMember,Name,Vorname,Description,IsDenyRule,ID_ServerGroup,IsSupervisorAutoAccessRule from [view_ApplicationRights] where id_application=@AppID and isnull(ID_Group,0)<>0 order by Name, IsDenyRule"
+                            strQuery = "select LoginDisabled,AuthsAsAppID,ThisAuthIsFromAppID,ID_AppRight,ID_Group,DevelopmentTeamMember,Name,Vorname,Description,IsDenyRule,ID_ServerGroup,IsSupervisorAutoAccessRule from [view_ApplicationRights] where id_application=@AppID and isnull(ID_Group,0)<>0 AND (IsSupervisorAutoAccessRule = 0 OR (IsSupervisorAutoAccessRule = 1 AND ThisAuthIsFromAppID IS NULL)) order by Name, IsDenyRule"
                         End If
 
                         dt = FillDataTable(New SqlConnection(cammWebManager.ConnectionString), strQuery, CommandType.Text, sqlParams, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection, "data")
@@ -268,6 +268,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                             'strDeleteLink = String.Empty
                             'CType(e.Item.FindControl("rptShowGroups"), Repeater).DataSource = MyDt
                             'CType(e.Item.FindControl("rptShowGroups"), Repeater).DataBind()
+
 
                             tempStr.Append("<TABLE WIDTH=""100%"" CELLSPACING=""0"" CELLPADDING=""3"" border=""0"">")
                             tempStr.Append("<TR>")
