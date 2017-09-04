@@ -35,6 +35,52 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected hypNoDelete, hypDelete, hypDeleteButCopyAuths As HyperLink
 #End Region
 
+        Protected Sub CopyGroupAuthorizations(ByVal currentUser As Long, ByVal targetApp As Integer, ByVal sourceApp As Integer)
+            Dim Sql As String = ""
+            If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
+                Sql = "INSERT INTO dbo.ApplicationsRightsByGroup (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application )" & vbNewLine &
+                                "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID AS ID_Application" & vbNewLine &
+                                "FROM         dbo.ApplicationsRightsByGroup" & vbNewLine &
+                                "WHERE     (ID_Application = @SourceAppID)"
+            Else
+                Sql = "INSERT INTO dbo.ApplicationsRightsByGroup (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])" & vbNewLine &
+                                "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application" & vbNewLine &
+                                "FROM         dbo.ApplicationsRightsByGroup" & vbNewLine &
+                                "WHERE     (ID_Application = @SourceAppID)"
+            End If
+            Dim MyCmd As New System.Data.SqlClient.SqlCommand(Sql, New SqlConnection(cammWebManager.ConnectionString))
+            MyCmd.CommandType = CommandType.Text
+            MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.BigInt).Value = currentUser
+            MyCmd.Parameters.Add("@TargetAppID", SqlDbType.Int).Value = targetApp
+            MyCmd.Parameters.Add("@SourceAppID", SqlDbType.Int).Value = sourceApp
+            AnyIDataProvider.ExecuteNonQuery(MyCmd, Automations.AutoOpenAndCloseAndDisposeConnection)
+        End Sub
+
+        Protected Sub CopyUserAuthorizations(ByVal currentUser As Long, ByVal targetApp As Integer, ByVal sourceApp As Integer)
+            Dim Sql As String = ""
+            If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
+                Sql = "INSERT INTO dbo.ApplicationsRightsByUser (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application )" & vbNewLine &
+                                "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID AS ID_Application" & vbNewLine &
+                                "FROM         dbo.ApplicationsRightsByUser" & vbNewLine &
+                                "WHERE     (ID_Application = @SourceAppID)"
+            Else
+                Sql = "INSERT INTO dbo.ApplicationsRightsByUser (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember])" & vbNewLine &
+                                "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID, [DevelopmentTeamMember]" & vbNewLine &
+                                "FROM         dbo.ApplicationsRightsByUser" & vbNewLine &
+                                "WHERE     (ID_Application = @SourceAppID)"
+            End If
+            Dim MyCmd As New System.Data.SqlClient.SqlCommand(Sql, New SqlConnection(cammWebManager.ConnectionString))
+            MyCmd.CommandType = CommandType.Text
+            MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.BigInt).Value = currentUser
+            MyCmd.Parameters.Add("@TargetAppID", SqlDbType.Int).Value = targetApp
+            MyCmd.Parameters.Add("@SourceAppID", SqlDbType.Int).Value = sourceApp
+            AnyIDataProvider.ExecuteNonQuery(MyCmd, Automations.AutoOpenAndCloseAndDisposeConnection)
+        End Sub
+        Protected Sub CopyAuthorizations(ByVal currentUser As Long, ByVal targetApp As Integer, ByVal sourceApp As Integer)
+            CopyGroupAuthorizations(currentUser, targetApp, sourceApp)
+            CopyUserAuthorizations(currentUser, targetApp, sourceApp)
+        End Sub
+
 #Region "Page Events"
         Private Sub AppRightsDeleteTransmission_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
             Dim CurUserID As Long
@@ -64,17 +110,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End Try
                 If Success AndAlso Request.QueryString("CopyAuths") = "1" Then
                     Try
-                        Dim Sql As String = "-- Add Group Authorizations" & vbNewLine & _
-                                            "INSERT INTO dbo.ApplicationsRightsByGroup (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])" & vbNewLine & _
-                                            "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application" & vbNewLine & _
-                                            "FROM         dbo.ApplicationsRightsByGroup" & vbNewLine & _
-                                            "WHERE     (ID_Application = @SourceAppID)"
-                        Dim MyCmd As New System.Data.SqlClient.SqlCommand(Sql, New SqlConnection(cammWebManager.ConnectionString))
-                        MyCmd.CommandType = CommandType.Text
-                        MyCmd.Parameters.Add("@ReleasedByUserID", SqlDbType.BigInt).Value = CurUserID
-                        MyCmd.Parameters.Add("@TargetAppID", SqlDbType.Int).Value = CInt(Request.QueryString("ID"))
-                        MyCmd.Parameters.Add("@SourceAppID", SqlDbType.Int).Value = CInt(Request.QueryString("AuthsAsAppID"))
-                        AnyIDataProvider.ExecuteNonQuery(MyCmd, Automations.AutoOpenAndCloseAndDisposeConnection)
+                        CopyAuthorizations(CurUserID, CInt(Request.QueryString("ID")), CInt(Request.QueryString("AuthsAsAppID")))
+
                     Catch ex As Exception
                         If lblErrMsg.Text <> Nothing Then lblErrMsg.Text &= "<br />"
                         lblErrMsg.Text = "Copying authorizations from inherited security object failed (" & ex.Message & ")!"
