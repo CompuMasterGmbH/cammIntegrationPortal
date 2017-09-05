@@ -207,15 +207,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ListOfUsers(CInt(CType(sender, DropDownList).SelectedValue))
         End Sub
 
-        Public Function IsUserAlreadyAuthorized(ByVal userID As Long, ByVal applicationID As Integer) As Boolean
+        Public Function IsUserAlreadyAuthorized(ByVal userID As Long, ByVal applicationID As Integer, isDev As Boolean) As Boolean
             If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
                 Throw New NotSupportedException("DbVersion.Build >= " & WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule.ToString & " requires calling an overloaded version of this method")
             End If
-            Dim commandText As String = "SELECT count([ID]) FROM [dbo].[ApplicationsRightsByUser] WHERE [ID_GroupOrPerson] = @UserID  AND [ID_Application] =  @AppID"
+            Dim commandText As String = "SELECT count([ID]) FROM [dbo].[ApplicationsRightsByUser] WHERE [ID_GroupOrPerson] = @UserID  AND [ID_Application] =  @AppID AND IsNull(DevelopmentTeamMember, 0) = @IsDev"
             Dim MyCmd As New System.Data.SqlClient.SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
             MyCmd.CommandType = CommandType.Text
             MyCmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = userID
             MyCmd.Parameters.Add("@AppID", SqlDbType.Int).Value = applicationID
+            MyCmd.Parameters.Add("@IsDev", SqlDbType.Bit).Value = isDev
             Dim RecordCount As Integer = CType(ExecuteScalar(MyCmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
             Return CInt(RecordCount) > 0
         End Function
@@ -294,7 +295,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 'Hint: what is:
                                 ' - If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
                                 ' - If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Equal OR Newer
-                                If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 AndAlso IsUserAlreadyAuthorized(dropUserID, dropAppID) Then
+                                If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 AndAlso IsUserAlreadyAuthorized(dropUserID, dropAppID, IsChecked(checkBoxDevteam)) Then
                                     lblErr.Text &= "User " + dropUserText.ToString() + " is already authorized for application " + dropAppText.Trim & "<br />"
                                     authorize = False
                                 ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso checkBoxDeny IsNot Nothing AndAlso IsUserAlreadyAuthorized(dropUserID, dropAppID, dropServerGroupID, IsChecked(checkBoxDevteam), IsChecked(checkBoxDeny)) Then
