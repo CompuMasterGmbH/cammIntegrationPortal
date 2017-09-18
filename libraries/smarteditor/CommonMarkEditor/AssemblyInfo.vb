@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Support of CommonMark markup language for camm SmartEditor")>
 <Assembly: AssemblyCompany("CompuMaster GmbH")>
 <Assembly: AssemblyProduct("camm Integration Portal (base on camm Web-Manager) SmartEditor")>
-<Assembly: AssemblyCopyright("2001-2016 CompuMaster GmbH")>
+<Assembly: AssemblyCopyright("2001-2017 CompuMaster GmbH")>
 <Assembly: AssemblyTrademark("camm")>
 <Assembly: CLSCompliant(True)>
 <Assembly: ComVisible(False)>

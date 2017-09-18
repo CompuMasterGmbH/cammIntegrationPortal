@@ -12,7 +12,7 @@ There are several editor components available. Please use the one which is appro
 <body>
 <form runat="server">
 <cammWebEdit:SmartPlainHtmlEditor marketlookupmode="3" runat="server" id="MainEditor" 
-      securityobjecteditmode="{Security Object for Editors}" 
+      SecurityObjectEditMode="{Security Object for Editors}" 
       AlternativeDataMarkets="1,10000" />
 </form>
 </body>
@@ -28,7 +28,7 @@ There are several editor components available. Please use the one which is appro
 <body>
 <form runat="server">
 <cammWebEdit:SmartCommonMarkEditor marketlookupmode="3" runat="server" id="MainEditor" 
-      securityobjecteditmode="{Security Object for Editors}"
+      SecurityObjectEditMode="{Security Object for Editors}"
       AlternativeDataMarkets="1,10000" />
 </form>
 </body>
@@ -93,7 +93,7 @@ There are several editor components available. Please use the one which is appro
 So, for a single text for every UI language/market, you might want to use:
 ``` asp
 <cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
-      securityobjecteditmode="{Security Object for Editors}" />
+      SecurityObjectEditMode="{Security Object for Editors}" />
 ```
 
 ## Additional samples
@@ -101,20 +101,20 @@ So, for a single text for every UI language/market, you might want to use:
 ### Display a custom note for editors when editing the content
 ``` asp
 <cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
-      securityobjecteditmode="{Security Object for Editors}" 
+      SecurityObjectEditMode="{Security Object for Editors}" 
       NoteForEditor="EDITOR-NOTE: Please always update markets English and Spanish and Russian" />
 ```
 
 ### Sizing of edit textbox using style attributes
 ``` asp
 <cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
-      securityobjecteditmode="{Security Object for Editors}" 
+      SecurityObjectEditMode="{Security Object for Editors}" 
       CssWidth="100%" CssHeight="280px" />
 ```
 ### Sizing of edit textbox using HTML textbox columns/rows attributes
 ``` asp
 <cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
-      securityobjecteditmode="{Security Object for Editors}" 
+      SecurityObjectEditMode="{Security Object for Editors}" 
       Columns=80 Rows=25 />
 ```
 
@@ -123,7 +123,7 @@ By default, the address (e. g.) "/content.aspx" provides different content on di
 In some cases, you might want to override this behaviour and you want to show on the same URL the same content in the extranet as well as in the intranet. In this case, you would setup this property on the extranet server's scripts to show the content of the intranet server.
 ``` asp
 <cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
-      securityobjecteditmode="{Security Object for Editors}" 
+      SecurityObjectEditMode="{Security Object for Editors}" 
       ContentOfServerID="2" />
 ```
 
@@ -140,7 +140,7 @@ Alternatively, you can assign the ContentOfServerID value by web.config settings
 An identifier of the current document, by default its URL
 ``` asp
 <cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
-      securityobjecteditmode="{Security Object for Editors}" 
+      SecurityObjectEditMode="{Security Object for Editors}" 
       DocumentID="HttpServerError404DefaultMessage" />
 ```
 
@@ -148,17 +148,30 @@ An identifier of the current document, by default its URL
 Requires a deployed cammWM.SmartEditorUpload at root web application at /sysdata/modules/smarteditor
 ```asp
 <cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
-      securityobjecteditmode="{Security Object for Editors}" 
-	Images="~/images" Docs="~/docs"
-	>{enter here...}</cammWebEdit:SmartCommonMarkEditor>
+      SecurityObjectEditMode="{Security Object for Editors}" 
+      Images="~/images" Docs="~/docs"
+      >{enter here...}</cammWebEdit:SmartCommonMarkEditor>
 ```
 
 ### Customize upload form URLs to further reduce potenial risks of vulnerabilities/hacks
 Requires a deployed cammWM.SmartEditorUpload 
 ```asp
 <cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
-      securityobjecteditmode="{Security Object for Editors}" 
-	Images="~/images" Docs="~/docs"
-	ImagesUploadFormUrl="~/smarteditor/imagesupload.aspx" DocumentsUploadFormUrl="~/smarteditor/docsupload.aspx"
-	>{enter here...}</cammWebEdit:SmartCommonMarkEditor>
+      SecurityObjectEditMode="{Security Object for Editors}" 
+      Images="~/images" Docs="~/docs"
+      ImagesUploadFormUrl="~/smarteditor/imagesupload.aspx" DocumentsUploadFormUrl="~/smarteditor/docsupload.aspx"
+      >{enter here...}</cammWebEdit:SmartCommonMarkEditor>
+```
+
+### Customize upload file extensions and size limits
+Requires a deployed cammWM.SmartEditorUpload 
+```asp
+<cammWebEdit:SmartCommonMarkEditor marketlookupmode="0" runat="server" id="MainEditor" 
+      SecurityObjectEditMode="{Security Object for Editors}" 
+      Images="~/images" Docs="~/docs"
+      ImagesAllowedFileExtensions=".jpg,.gif" 
+      ImagesUploadSizeMax="10485760"
+      DocumentsAllowedFileExtensions=".pdf,.txt,.doc,.docx,.rtf,.xls,.xlsx,.ppt,.pptx"
+      DocumentsUploadSizeMax="10485760"
+      >{enter here...}</cammWebEdit:SmartCommonMarkEditor>
 ```

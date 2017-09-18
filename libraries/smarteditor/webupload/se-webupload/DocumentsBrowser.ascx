@@ -24,7 +24,7 @@
                 var linktext = document.getElementById('<%=Me.txtBoxLinkText.ClientID%>').value;
                 if(linktext === "" )
                     linktext = filePath.split('/').pop();
-                window.opener.<%=ParentWindowCallbackFunction%>("<%= Me.EditorId %>", filePath, descriptionText, target, linktext);
+                window.opener.<%=ParentWindowCallbackFunction%>("<%= Me.EditorId %>", encodeURI(filePath), descriptionText, target, linktext);
             }
 	        return true;
 		}

@@ -106,20 +106,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 End If
             End If
 
-            Try
-                Dim temp1 As String
-                If cmbAnrede.Items.Count > 0 Then
-                    If cmbAnrede.SelectedItem.Text = "Ms." Then
-                        MyUserInfoSex = CompuMaster.camm.WebManager.WMSystem.Sex.Feminine
-                        temp1 = Utils.Nz(MyUserInfoSex, String.Empty)
-                    ElseIf cmbAnrede.SelectedItem.Text = "Mr." Then
-                        MyUserInfoSex = CompuMaster.camm.WebManager.WMSystem.Sex.Masculine
-                        temp1 = Utils.Nz(MyUserInfoSex, String.Empty)
-                    End If
+            If cmbAnrede.Items.Count > 0 Then
+                If cmbAnrede.SelectedItem.Text = "Ms." Then
+                    MyUserInfoSex = CompuMaster.camm.WebManager.WMSystem.Sex.Feminine
+                ElseIf cmbAnrede.SelectedItem.Text = "Mr." Then
+                    MyUserInfoSex = CompuMaster.camm.WebManager.WMSystem.Sex.Masculine
                 End If
-            Catch ex As Exception
-                ErrMsg = ex.Message
-            End Try
+            End If
 
             Update_Data(UpdateSuccessfull, ErrMsg)
 
@@ -159,9 +152,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                cmbFirstPreferredLanguage.SelectedItem.Text <> "Please Select!" AndAlso _
                cmbAccountAccessability.SelectedItem.Text <> "Please Select!" Then
 
-                If Me.cmbAnrede.SelectedValue = "1" Then
+                If Me.cmbAnrede.SelectedIndex = 1 Then
                     MyUserInfoSex = WMSystem.Sex.Masculine
-                ElseIf Me.cmbAnrede.SelectedValue = "2" Then
+                ElseIf Me.cmbAnrede.SelectedIndex = 2 Then
                     MyUserInfoSex = WMSystem.Sex.Feminine
                 Else
                     MyUserInfoSex = WMSystem.Sex.Undefined
@@ -177,6 +170,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         ErrMsg = "The password requires to be not bigger than " & cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).RequiredMaximumPasswordLength & " characters!"
                     Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_LengthMinimum
                         ErrMsg = "The password requires to be not smaller than " & cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).RequiredPasswordLength & " characters!"
+                    Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_ForbiddenChar
+                        ErrMsg = "The password must not contain one of the following characters: " & cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).ForbiddenChars
+                    Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_OnlyWhiteListedCharsAllowed
+                        ErrMsg = "The password must use following characters only: " & cammWebManager.PasswordSecurity(MyUserInfo.AccessLevel.ID).AllowedChars
                     Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_PartOfProfileInformation
                         ErrMsg = "The password shouldn't contain pieces of the user account profile, especially login name, first or last name!"
                     Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Success

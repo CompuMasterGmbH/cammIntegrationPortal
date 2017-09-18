@@ -35,21 +35,32 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
         Private Const nameCheckBoxTypes As String = "chckBxTypeName"
 
+        'Those should never be under control of the user, because they are used internally by the application
+        'TODO: maybe specify in config file?
+        Private ignoredTypeNames As String() = {"deletedon", "isdeleteduser"}
 
-        Private Sub SetLiteralTypeList()
+        Private Sub CreateCheckBoxes()
             For Each logTypeName As DictionaryEntry In dataProtection.GetLogTypes()
                 Dim name As String = CStr(logTypeName.Key)
                 Dim keep As Boolean = CBool(logTypeName.Value)
 
+                Dim enabled As Boolean = Not (Array.IndexOf(ignoredTypeNames, name.ToLower()) > -1)
                 Dim checkBox As New CheckBox
-                checkBox.ID = "chckBxTypeName" & name
+                checkBox.ID = nameCheckBoxTypes & name
                 checkBox.Checked = keep
-                checkBox.Text = name
+                If enabled Then
+                    checkBox.Text = name
+                Else
+                    checkBox.Text = name & " <i>(internal system flag, setting can't be modified)</i>"
+                End If
+
+                checkBox.Enabled = enabled
 
                 Dim brLiteral As New Literal
                 brLiteral.Text = "<br>"
                 ltrlTypeList.Controls.Add(checkBox)
                 ltrlTypeList.Controls.Add(brLiteral)
+
             Next
         End Sub
 
@@ -61,7 +72,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
         Private Sub Page_Init(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Init
             dataProtection = New CompuMaster.camm.WebManager.DataProtectionSettings(Me.cammWebManager.ConnectionString)
-            SetLiteralTypeList()
+            CreateCheckBoxes()
         End Sub
 
         Private Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
@@ -85,7 +96,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         If ctrl.ID.IndexOf(nameCheckBoxTypes) > -1 Then
                             Dim checkBox As CheckBox = CType(ctrl, CheckBox)
                             Dim keepAlive As Boolean = checkBox.Checked
-                            dataProtection.AddLogTypeDeletionSetting(checkBox.Text, keepAlive)
+                            If checkBox.Enabled Then
+                                dataProtection.AddLogTypeDeletionSetting(checkBox.Text, keepAlive)
+                            End If
                         End If
                     End If
                 Next

@@ -666,6 +666,10 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 lblErrMsg.Text = "Password is too long."
                             Case PasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_LengthMinimum
                                 lblErrMsg.Text = "Password is too short."
+                            Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_ForbiddenChar
+                                lblErrMsg.Text = "The password must not contain one of the following characters: " & cammWebManager.PasswordSecurity(NewUser.AccessLevel.ID).ForbiddenChars
+                            Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_OnlyWhiteListedCharsAllowed
+                                lblErrMsg.Text = "The password must use following characters only: " & cammWebManager.PasswordSecurity(NewUser.AccessLevel.ID).AllowedChars
                             Case PasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_PartOfProfileInformation
                                 lblErrMsg.Text = "Password must not contain parts of the username."
                             Case PasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_Unspecified
@@ -735,7 +739,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     lblStatusMsg.Text = "Cloning was successful! New userID: " & ClonedUser.IDLong & ". <a href=""users_update.aspx?ID=" & ClonedUser.IDLong & """>>>Update UserProfile</a><br />"
                     'Add list of user-details that could not be copied to status message
                     Dim sb As New Text.StringBuilder
-                    If notCopiedData.Rows.Count > 0 Then
+                    If notCopiedData IsNot Nothing AndAlso notCopiedData.Rows.Count > 0 Then
                         sb.Append("The following user details couldn't be copied:<br/>")
                         sb.Append("<lu>")
                         For Each row As DataRow In notCopiedData.Rows

@@ -36,6 +36,21 @@ Namespace CompuMaster.camm.WebManager.Pages
             End Get
         End Property
 
+        Public Sub EnsureUserAuthorizedSuccessfully()
+            If Me.cammWebManager Is Nothing Then
+                Throw New Exception("Page hasn't got a reference to a camm Web-Manager instance, but it is required")
+            ElseIf Trim(Me.cammWebManager.SecurityObject) = "" Then
+                Throw New Exception("Missing security object name")
+            Else
+                'Require valid authorization
+                cammWebManager.AuthorizeDocumentAccess(Me.cammWebManager.SecurityObject)
+                'Test security check result
+                If Me.cammWebManager.SecurityObjectSuccessfullyTested = Nothing Then
+                    Throw New Exception("This page must be protected by a defined security object")
+                End If
+            End If
+        End Sub
+
         ''' <summary>
         ''' Activate the ProtectedPage logic as indicated by IsProtectedPage
         ''' </summary>

@@ -1475,6 +1475,7 @@ Namespace CompuMaster.camm.SmartWebEditor
                 ElseIf Me.editorMain.Visible = True Then
                     Me.ibtnSwitchToEditMode.Visible = False
                     Me.lblViewOnlyContent.Visible = False
+                    Me.lblViewOnlyContent.Text = ""
                 ElseIf Me.editorMain.Visible = False Then
                     Me.ibtnSwitchToEditMode.Visible = True
                     Me.lblCurrentEditInformation.Visible = False

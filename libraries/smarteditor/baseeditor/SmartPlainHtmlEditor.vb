@@ -347,34 +347,39 @@ Namespace CompuMaster.camm.SmartWebEditor
 
             End Sub
 
+            Protected Const CreateHtmlLinkSnippet As String = "function createHtmlLink(url, title, target, linktext)" & vbNewLine &
+                 "{" & vbNewLine &
+                 "var link = '<a href=""' + url + '""';" & vbNewLine &
+                            "if(title != null && title != '')" & vbNewLine &
+                            "{" & vbNewLine &
+                                "link += ' title=""' + title + '""';" & vbNewLine &
+                            "}" & vbNewLine &
+                            "if(target != null && target != '')" & vbNewLine &
+                            "{" & vbNewLine &
+                                "link += ' target=""' + target + '""';" & vbNewLine &
+                            "}" & vbNewLine &
+                            "link += '>' + linktext + '</a>';" & vbNewLine &
+                            "return link;" & vbNewLine &
+                 "}" & vbNewLine
 
             Protected Overridable Sub AddUploadInsertionsJavaScript()
                 Const pasteImage As String = "function pasteImageToEditor(editorid, imageurl, alttext) { " & vbNewLine &
                               "if(alttext != null && alttext != ''){" & vbNewLine &
                              "document.getElementById(editorid).value += ""<img src='"" + imageurl + ""'  alt='"" + alttext + ""' />""; }" & vbNewLine &
-                             "else { document.getElementById(editorid).value += ""<img src='"" + imageurl + ""' />"";  }" & vbNewLine &
+                             "else { pasteAtPosition(document.getElementById(editorid),""<img src='"" + imageurl + ""' />"");  }" & vbNewLine &
                              "}" & vbNewLine
 
-                Const pasteDocument As String = "function pasteDocumentToEditor(editorId, url, title, target, linktext)" & vbNewLine &
+                Const pasteDocument As String = "function pasteDocumentToEditor(editorid, url, title, target, linktext)" & vbNewLine &
             "{" & vbNewLine &
-            "var link = '<a href=""' + url + '""';" & vbNewLine &
-            "if(title != null && title != '')" & vbNewLine &
-            "{" & vbNewLine &
-                "link += ' title=""' + title + '""';" & vbNewLine &
-            "}" & vbNewLine &
-            "if(target != null && target != '')" & vbNewLine &
-            "{" & vbNewLine &
-                "link += ' target=""' + target + '""';" & vbNewLine &
-            "}" & vbNewLine &
-            "link += '>' + linktext + '</a>';" & vbNewLine &
-            "document.getElementById(editorId).value += link;" & vbNewLine &
+            "var link = createHtmlLink(url,title,target,linktext);" & vbNewLine &
+            "pasteAtPosition(document.getElementById(editorid), link);" & vbNewLine &
             "}" & vbNewLine
 #If NetFrameWork = "1_1" Then
-                
+                    Me.Page.RegisterClientScriptBlock("CreateHtmlLinkSnippet", CreateHtmlLinkSnippet)
                     Me.Page.RegisterClientScriptBlock("pasteImageToEditor", pasteImage)
                     Me.Page.RegisterClientScriptBlock("pasteDocument", pasteDocument)
 #Else
-
+                Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CreateHtmlLinkSnippet", CreateHtmlLinkSnippet, True)
                 Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteImageToEditor", pasteImage, True)
                 Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteDocument", pasteDocument, True)
 #End If
@@ -387,6 +392,8 @@ Namespace CompuMaster.camm.SmartWebEditor
             ''' Always provide client scripts (only in Edit mode) for IsDirty detection
             ''' </summary>
             Private Sub SmartPlainHtmlEditor_PreRender(sender As Object, e As EventArgs) Handles MyBase.PreRender
+
+
                 If Me.EditModeActive Then
                     'following isDirty check must check for all editors (and not just editor with name of EditorMain.ClientID)
 #If NetFrameWork = "1_1" Then
@@ -410,7 +417,7 @@ Namespace CompuMaster.camm.SmartWebEditor
 #Else
                         Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "IsDirty_" & Editor.ClientID, EditorInstanceIsDirtyScript, True)
 #End If
-                        If IsDirtyChecksJScriptSnippet <> "" Then IsDirtyChecksJScriptSnippet &= " && "
+                        If IsDirtyChecksJScriptSnippet <> "" Then IsDirtyChecksJScriptSnippet &= " || "
                         IsDirtyChecksJScriptSnippet &= "(isDirty_" & Editor.ClientID & "())"
                     Next
                     Dim IsDirtySnippet As String = "function isDirty() " & vbNewLine &
@@ -434,10 +441,12 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Dim UnbindCloseCheckSnippet As String = "function unbindCloseCheck() " & vbNewLine &
                                                                    "{ " & vbNewLine &
                                                                    "    if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); " & vbNewLine &
+                                                                        "else if(window.detachEvent) window.detachEvent('onbeforeunload', closeCheck);" & vbNewLine &
                                                                    "} " & vbNewLine &
                                                                    "var documentForm = document.forms['" & LookupParentServerFormName() & "']; " & vbNewLine &
                                                                    "if(documentForm.addEventListener) " & vbNewLine &
                                                                    "    documentForm.addEventListener('submit', function(e) { if(window.removeEventListener) window.removeEventListener('beforeunload', closeCheck); });" & vbNewLine &
+                                                                   "else if(documentForm.attachEvent)  documentForm.attachEvent('onsubmit', function(e) { if(window.detachEvent) window.detachEvent('onbeforeunload', closeCheck);}); " & vbNewLine &
                                                                    ""
                     Dim ConfirmPageCloseSnippet As String = "function confirmPageClose() " & vbNewLine &
                                                                    "{" & vbNewLine &
@@ -473,9 +482,21 @@ Namespace CompuMaster.camm.SmartWebEditor
                                                                        "} " & vbNewLine &
                                                                        "if(window.addEventListener) " & vbNewLine &
                                                                        "    window.addEventListener(""beforeunload"", closeCheck);" & vbNewLine &
+                                                                       "else if(window.attachEvent) window.attachEvent(""onbeforeunload"", closeCheck);" & vbNewLine &
                                                                        ""
 
-
+                    Const PasteAtPositionSnippet As String = "function pasteAtPosition(editor, pastedText)" & vbNewLine &
+"{" & vbNewLine &
+    "if(document.selection) { editor.focus(); var selection = document.selection.createRange(); selection.text = pastedText; } else {" & vbNewLine &
+    "var start = editor.selectionStart;" & vbNewLine &
+    "var end = editor.selectionEnd;" & vbNewLine &
+    "var beforeStart = editor.value.substring(0, start);" & vbNewLine &
+   " var afterInsertion = editor.value.substring(end, editor.value.length);" & vbNewLine &
+   "editor.value = beforeStart + pastedText + afterInsertion;" & vbNewLine &
+   " editor.selectionStart = start + pastedText.length;" & vbNewLine &
+   "editor.selectionEnd = editor.selectionStart;" & vbNewLine &
+    "editor.focus(); }" & vbNewLine &
+"}"
 
 #If NetFrameWork = "1_1" Then
                     Me.Page.RegisterClientScriptBlock("ExecPostBack", ExecPostBackSnippet)
@@ -485,12 +506,14 @@ Namespace CompuMaster.camm.SmartWebEditor
                     Me.Page.RegisterClientScriptBlock("CloseCheck", CloseCheckSnippet)
                     Me.Page.RegisterClientScriptBlock("pasteImageToEditor", pasteImage)
                     Me.Page.RegisterClientScriptBlock("pasteDocument", pasteDocument)
+                    Me.Page.RegisterClientScriptBlock("pasteAtPosition", PasteAtPositionSnippet)
 #Else
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ExecPostBack", ExecPostBackSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "UnbindCloseCheck", UnbindCloseCheckSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "confirmPageClose", ConfirmPageCloseSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "ResetSelectBox", ResetSelectBoxSnippet, True)
                     Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CloseCheck", CloseCheckSnippet, True)
+                    Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "PasteAtPosition", PasteAtPositionSnippet, True)
 
 #End If
 

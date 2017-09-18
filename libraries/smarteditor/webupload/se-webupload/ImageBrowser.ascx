@@ -21,7 +21,7 @@
 
             if (window.opener.<%=ParentWindowCallbackFunction%>)
 		    {
-		        window.opener.<%=ParentWindowCallbackFunction%>("<%= Me.EditorId %>", filePath, altText);
+                window.opener.<%=ParentWindowCallbackFunction%>("<%= Me.EditorId %>", encodeURI(filePath), altText);
             }
 	        return true;
 		}

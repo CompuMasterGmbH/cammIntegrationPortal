@@ -72,32 +72,42 @@ Namespace CompuMaster.camm.SmartWebEditor.Controls
         End Sub
 
         Private Sub CommonMarkEditor_PreRender(sender As Object, e As EventArgs) Handles Me.PreRender
+
             Me.lblViewOnlyContent.Text = CommonMark.CommonMarkConverter.Convert(Me.MainEditor.Html)
         End Sub
 
         Protected Overrides Sub AddUploadInsertionsJavaScript()
+            Const CreateMarkdownLinkSnippet As String = "function createMarkdownLink(url, title, linktext)" & vbNewLine &
+                 "{" & vbNewLine &
+                       "var link = '';" & vbNewLine &
+                        "if(title != null && title != '')" & vbNewLine &
+                         "{" & vbNewLine &
+                            "link = '[' + linktext + '](' + url + ' ""' + title + '"")';" & vbNewLine &
+                         "}" & vbNewLine &
+                        "else" & vbNewLine &
+                        "{" & vbNewLine &
+                            "link = '[' + linktext + '](' + url + ')';" & vbNewLine &
+                        "}" & vbNewLine &
+                         "return link;" & vbNewLine &
+                 "}" & vbNewLine
+
             Const pasteImage As String = "function pasteImageToEditor(editorid, imageurl, alttext) { " & vbNewLine &
-                                "document.getElementById(editorid).value += ""!["" + alttext + ""]("" + imageurl + "")""; }" & vbNewLine
+                                "pasteAtPosition(document.getElementById(editorid), ""!["" + alttext + ""]("" + imageurl + "")""); }" & vbNewLine
 
             Const pasteDocument As String = "function pasteDocumentToEditor(editorId, url, title, target, linktext)" & vbNewLine &
             "{" & vbNewLine &
-                 "var link = '';" & vbNewLine &
-                "if(title != null)" & vbNewLine &
-                 "{" & vbNewLine &
-                    "link = '[' + linktext + '](' + url + ' ""' + title + '"")';" & vbNewLine &
-                 "}" & vbNewLine &
-                "else" & vbNewLine &
-                "{" & vbNewLine &
-                    "link = '[' + linktext + '](' + url + ')';" & vbNewLine &
-                "}" & vbNewLine &
-                "document.getElementById(editorId).value += link;" & vbNewLine &
+                "var link = '';" & vbNewLine &
+                "if(target != null && target !='') link = createHtmlLink(url,title,target,linktext); else link = createMarkdownLink(url,title,linktext);" & vbNewLine &
+                "pasteAtPosition(document.getElementById(editorId),link);" & vbNewLine &
             "}" & vbNewLine
 #If NetFrameWork = "1_1" Then
-                
+                    Me.Page.RegisterClientScriptBlock("CreateHtmlLinkSnippet", CreateHtmlLinkSnippet)
+                    Me.Page.RegisterClientScriptBlock("CreateMarkdownLinkSnippet", CreateMarkdownLinkSnippet)
                     Me.Page.RegisterClientScriptBlock("pasteImageToEditor", pasteImage)
                     Me.Page.RegisterClientScriptBlock("pasteDocument", pasteDocument)
 #Else
-
+            Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CreateHtmlLinkSnippet", CreateHtmlLinkSnippet, True)
+            Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "CreateMarkdownLinkSnippet", CreateMarkdownLinkSnippet, True)
             Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteImageToEditor", pasteImage, True)
             Me.Page.ClientScript.RegisterClientScriptBlock(Me.GetType(), "pasteDocument", pasteDocument, True)
 #End If

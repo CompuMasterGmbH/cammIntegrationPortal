@@ -493,7 +493,7 @@ Namespace CompuMaster.camm.WebManager
                 ReadCompleteUserInformation()
             End Sub
 
-            Friend Shared ReservedFlagNames As String() = New String() {"Type", "CompleteName", "CompleteNameInclAddresses", "email", "Sex", "Addresses", "1stPreferredLanguage", "2ndPreferredLanguage", "3rdPreferredLanguage", "Company", "FirstName", "LastName", "NameAddition", "Street", "ZIPCode", "Location", "State", "Country", "AccountProfileValidatedByEMailTest", "InitAuthorizationsDone", "ExternalAccount", "AutomaticLogonAllowedByMachineToMachineCommunication", "Phone", "Fax", "Mobile", "Position", "IsImpersonationUser", "DeletedOn"}
+            Friend Shared ReservedFlagNames As String() = New String() {"Type", "CompleteName", "CompleteNameInclAddresses", "email", "Sex", "Addresses", "1stPreferredLanguage", "2ndPreferredLanguage", "3rdPreferredLanguage", "Company", "FirstName", "LastName", "NameAddition", "Street", "ZIPCode", "Location", "State", "Country", "AccountProfileValidatedByEMailTest", "InitAuthorizationsDone", "ExternalAccount", "AutomaticLogonAllowedByMachineToMachineCommunication", "Phone", "Fax", "Mobile", "Position", "IsImpersonationUser", "DeletedOn", "IsDeletedUser"}
 
             ''' <summary>
             '''     Read all the account data from database
@@ -1425,12 +1425,18 @@ Namespace CompuMaster.camm.WebManager
                             Throw New PasswordComplexityException("The password requires to be not bigger than " & Me._WebManager.PasswordSecurity(Me.AccessLevel.ID).RequiredMaximumPasswordLength & " characters!", ValidationResult)
                         Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_LengthMinimum
                             Throw New PasswordComplexityException("The password requires to be not smaller than " & Me._WebManager.PasswordSecurity(Me.AccessLevel.ID).RequiredPasswordLength & " characters!", ValidationResult)
+                        Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_ForbiddenChar
+                            Throw New PasswordComplexityException("The password must not contain one of the following characters: " & Me._WebManager.PasswordSecurity(Me.AccessLevel.ID).ForbiddenChars, ValidationResult)
+                        Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_OnlyWhiteListedCharsAllowed
+                            Throw New PasswordComplexityException("The password must use following characters only: " & Me._WebManager.PasswordSecurity(Me.AccessLevel.ID).AllowedChars, ValidationResult)
                         Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_NotAllowed_PartOfProfileInformation
                             Throw New PasswordComplexityException("The password shouldn't contain pieces of the user account profile, especially login name, first or last name!", ValidationResult)
                         Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Failure_Unspecified
                             Throw New PasswordComplexityException("There are some unknown errors when validating with the security policy for passwords!", ValidationResult)
                         Case CompuMaster.camm.WebManager.WMSystem.WMPasswordSecurityInspectionSeverity.PasswordComplexityValidationResult.Success
                             'everything fine
+                        Case Else
+                            Throw New PasswordComplexityException("Unkown validation failure", ValidationResult)
                     End Select
                 End If
                 If checks = ValidationItem.All Or checks = ValidationItem.RequiredFlags Then
@@ -1644,6 +1650,8 @@ Namespace CompuMaster.camm.WebManager
                 'Validate the information before writing back to the database
                 If userInfo.LoginDeleted = True And userInfo.IDLong = Nothing Then
                     Throw New Exception("Login cannot be deleted when the Login ID is not existent")
+                ElseIf userInfo.LoginDeleted = True Then
+                    'ignore all following checks
                 ElseIf userInfo.IDLong = Nothing AndAlso Not newPassword Is Nothing Then
                     'Validate password first
                     newPassword = Trim(newPassword)
@@ -1662,7 +1670,9 @@ Namespace CompuMaster.camm.WebManager
                 ElseIf userInfo.IDLong <> Nothing AndAlso Not newPassword Is Nothing Then
                     Throw New ArgumentException("Password cannot be set by this method. Please use System_SetUserPassword instead.", "NewPassword")
                 End If
-                Me.Validate(ValidationItem.All, True, newPassword)
+                If userInfo.LoginDeleted = False Then
+                    Me.Validate(ValidationItem.All, True, newPassword)
+                End If
 
                 'Prepare data if action = delete
                 If userInfo.LoginDeleted = True Then
@@ -1928,6 +1938,8 @@ Namespace CompuMaster.camm.WebManager
                         DataLayer.Current.SetUserDetail(Me._WebManager, MyConn, WriteForUserID, "AutomaticLogonAllowedByMachineToMachineCommunication", CType(IIf(userInfo.AutomaticLogonAllowedByMachineToMachineCommunication = True, "1", Nothing), String), True)  'WARNING: flag name too long, saved in table as: "AutomaticLogonAllowedByMachineToMachineCommunicati"
                         DataLayer.Current.SetUserDetail(Me._WebManager, MyConn, WriteForUserID, "ExternalAccount", userInfo.ExternalAccount, True)
                         DataLayer.Current.SetUserDetail(Me._WebManager, MyConn, WriteForUserID, "IsImpersonationUser", userInfo.AdditionalFlags("IsImpersonationUser"), True)
+                        DataLayer.Current.SetUserDetail(Me._WebManager, MyConn, WriteForUserID, "IsDeletedUser", "0", True)
+
                     End If
                 Finally
                     CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeConnection(MyConn)

@@ -1,4 +1,4 @@
-<%@ Control Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Controls.TextModules_Template" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
+﻿<%@ Control Language="vb" AutoEventWireup="false" Inherits="CompuMaster.camm.WebManager.Modules.Text.Administration.Controls.TextModules_Template" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <TABLE cellSpacing="0" cellPadding="3" width="100%" border="0">
 	<tr>
 		<td><asp:Label ID="LabelTitle" Runat="server"></asp:Label></td>

@@ -26,13 +26,13 @@
 				else {
 					var ext = '.' + e.value.split('.').pop();
 			        var allowedExtensions = ["<%=String.Join(""",""", Me.UploadParamters.AllowedFileExtensions)%>"];
-					if ( allowedExtensions.indexOf(ext) > -1)
+				    if (allowedExtensions.indexOf(ext) > -1 || allowedExtensions.indexOf(ext.toLowerCase()) > -1)
 					{
 						return true;
 					}
 					else {
-						alert('<%=Me.OnlyFollowingExtensionsAreAllowed%> <%=String.Join(""",""", Me.UploadParamters.AllowedFileExtensions)%>');
-						e.value = "";
+                        alert('<%=Me.OnlyFollowingExtensionsAreAllowed%> <%=String.Join(", ",Me.UploadParamters.AllowedFileExtensions)%>');
+                        e.value = "";
 						thisForm.reset();
 						e.focus();
 						return false;		
