@@ -25,3 +25,8 @@ GO
 	UPDATE [dbo].[Applications_CurrentAndInactiveOnes] 
 	SET TitleAdminArea = TitleAdminArea
 GO
+------------------------------------------------------------------------------------------------------------
+-- Fixes effective memberships
+------------------------------------------------------------------------------------------------------------
+UPDATE Memberships set id_user=id_user
+GO
