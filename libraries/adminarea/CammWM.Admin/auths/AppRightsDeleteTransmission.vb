@@ -38,14 +38,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected Sub CopyGroupAuthorizations(ByVal currentUser As Long, ByVal targetApp As Integer, ByVal sourceApp As Integer)
             Dim Sql As String = ""
             If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
-                Sql = "INSERT INTO dbo.ApplicationsRightsByGroup (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application )" & vbNewLine &
-                                "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID AS ID_Application" & vbNewLine &
-                                "FROM         dbo.ApplicationsRightsByGroup" & vbNewLine &
+                Sql = "INSERT INTO dbo.ApplicationsRightsByGroup (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application )" & vbNewLine & _
+                                "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID AS ID_Application" & vbNewLine & _
+                                "FROM         dbo.ApplicationsRightsByGroup" & vbNewLine & _
                                 "WHERE     (ID_Application = @SourceAppID)"
             Else
-                Sql = "INSERT INTO dbo.ApplicationsRightsByGroup (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])" & vbNewLine &
-                                "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application" & vbNewLine &
-                                "FROM         dbo.ApplicationsRightsByGroup" & vbNewLine &
+                Sql = "INSERT INTO dbo.ApplicationsRightsByGroup (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])" & vbNewLine & _
+                                "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application" & vbNewLine & _
+                                "FROM         dbo.ApplicationsRightsByGroup" & vbNewLine & _
                                 "WHERE     (ID_Application = @SourceAppID)"
             End If
             Dim MyCmd As New System.Data.SqlClient.SqlCommand(Sql, New SqlConnection(cammWebManager.ConnectionString))
@@ -59,14 +59,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected Sub CopyUserAuthorizations(ByVal currentUser As Long, ByVal targetApp As Integer, ByVal sourceApp As Integer)
             Dim Sql As String = ""
             If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then
-                Sql = "INSERT INTO dbo.ApplicationsRightsByUser (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application )" & vbNewLine &
-                                "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID AS ID_Application" & vbNewLine &
-                                "FROM         dbo.ApplicationsRightsByUser" & vbNewLine &
+                Sql = "INSERT INTO dbo.ApplicationsRightsByUser (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application )" & vbNewLine & _
+                                "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID AS ID_Application" & vbNewLine & _
+                                "FROM         dbo.ApplicationsRightsByUser" & vbNewLine & _
                                 "WHERE     (ID_Application = @SourceAppID)"
             Else
-                Sql = "INSERT INTO dbo.ApplicationsRightsByUser (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember])" & vbNewLine &
-                                "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID, [DevelopmentTeamMember]" & vbNewLine &
-                                "FROM         dbo.ApplicationsRightsByUser" & vbNewLine &
+                Sql = "INSERT INTO dbo.ApplicationsRightsByUser (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember])" & vbNewLine & _
+                                "SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @TargetAppID, [DevelopmentTeamMember]" & vbNewLine & _
+                                "FROM         dbo.ApplicationsRightsByUser" & vbNewLine & _
                                 "WHERE     (ID_Application = @SourceAppID)"
             End If
             Dim MyCmd As New System.Data.SqlClient.SqlCommand(Sql, New SqlConnection(cammWebManager.ConnectionString))
