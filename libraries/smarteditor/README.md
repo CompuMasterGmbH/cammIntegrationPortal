@@ -6,6 +6,8 @@ There are several editor components available. Please use the one which is appro
 ### SmartPlainHtmlEditor
 ``` asp
 <%@ Page ValidateRequest="false" EnableEventValidation="false" %>
+<%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
+<camm:WebManager id="cammWebManager" runat="server" />
 <%@ Register TagPrefix="cammWebEdit" Namespace="CompuMaster.camm.SmartWebEditor.Controls" 
       Assembly="cammWM.SmartEditor" %>
 <html>
@@ -22,6 +24,8 @@ There are several editor components available. Please use the one which is appro
 ### SmartCommonMarkEditor
 ``` asp
 <%@ Page ValidateRequest="false" EnableEventValidation="false" %>
+<%@ Register TagPrefix="camm" TagName="WebManager" Src="~/system/cammWebManager.ascx" %>
+<camm:WebManager id="cammWebManager" runat="server" />
 <%@ Register TagPrefix="cammWebEdit" Namespace="CompuMaster.camm.SmartWebEditor.Controls" 
       Assembly="cammWM.CommonMarkEditor" %>
 <html>
