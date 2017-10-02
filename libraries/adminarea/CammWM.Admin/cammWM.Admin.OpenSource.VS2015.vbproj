@@ -288,6 +288,9 @@
     <Compile Include="securityobjects\ApplicationUpdate.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="troubleshootingandmodules\page_loganalysis.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="troubleshootingandmodules\page_mailqueuemonitor.vb">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
