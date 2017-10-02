@@ -134,47 +134,47 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
             If WhereClause <> String.Empty Then WhereClause &= " and "
 
-            Dim SqlQuery As String =
-                "select ID_Group, m.[Name], m.Description, g.ReleasedOn, g.ReleasedBy ID_ReleasedBy," & vbNewLine &
-                "   (select b.nachname from benutzer b where b.id=g.ReleasedBy) ReleasedByLastName," & vbNewLine &
-                "   (select b.vorname from benutzer b where b.id=g.ReleasedBy) ReleasedByFirstName " & vbNewLine &
-                "from [view_Memberships] m " & vbNewLine &
-                "   left outer join gruppen g on m.ID_Group=g.id " & vbNewLine &
-                "where " & WhereClause & " g.id in (" & vbNewLine &
-                "   SELECT ID_Group " & vbNewLine &
-                "   FROM [view_Memberships] " & vbNewLine &
-                "   WHERE  ID_Group not in " & vbNewLine &
-                "       (" & vbNewLine &
-                "           Select id_group_public " & vbNewLine &
-                "           from system_servergroups" & vbNewLine &
-                "       ) " & vbNewLine &
-                "       and ID_Group not in " & vbNewLine &
-                "       (" & vbNewLine &
-                "           Select id_group_anonymous " & vbNewLine &
-                "           from system_servergroups" & vbNewLine &
-                "       ) " & vbNewLine &
-                "       and " & vbNewLine &
-                "       (" & vbNewLine &
-                "           0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Groups", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) &
-                "           OR 0 in " & vbNewLine &
-                "           (" & vbNewLine &
-                "               select tableprimaryidvalue " & vbNewLine &
-                "               from System_SubSecurityAdjustments " & vbNewLine &
-                "               where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & "" & vbNewLine &
-                "                   AND TableName = 'Groups' " & vbNewLine &
-                "                   AND AuthorizationType In ('SecurityMaster','ViewAllRelations')" & vbNewLine &
-                "           ) " & vbNewLine &
-                "           OR id_group in " & vbNewLine &
-                "           (" & vbNewLine &
-                "               select tableprimaryidvalue " & vbNewLine &
-                "               from System_SubSecurityAdjustments " & vbNewLine &
-                "               where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & "" & vbNewLine &
-                "                   AND TableName = 'Groups' " & vbNewLine &
-                "                   AND AuthorizationType In ('UpdateRelations','ViewRelations','Owner')" & vbNewLine &
-                "           )" & vbNewLine &
-                "       ) " & vbNewLine &
-                "   ) " & vbNewLine &
-                "group by ID_Group, m.[Name], m.Description, g.ReleasedOn, g.ReleasedBy " & vbNewLine &
+            Dim SqlQuery As String = _
+                "select ID_Group, m.[Name], m.Description, g.ReleasedOn, g.ReleasedBy ID_ReleasedBy," & vbNewLine & _
+                "   (select b.nachname from benutzer b where b.id=g.ReleasedBy) ReleasedByLastName," & vbNewLine & _
+                "   (select b.vorname from benutzer b where b.id=g.ReleasedBy) ReleasedByFirstName " & vbNewLine & _
+                "from [view_Memberships] m " & vbNewLine & _
+                "   left outer join gruppen g on m.ID_Group=g.id " & vbNewLine & _
+                "where " & WhereClause & " g.id in (" & vbNewLine & _
+                "   SELECT ID_Group " & vbNewLine & _
+                "   FROM [view_Memberships] " & vbNewLine & _
+                "   WHERE  ID_Group not in " & vbNewLine & _
+                "       (" & vbNewLine & _
+                "           Select id_group_public " & vbNewLine & _
+                "           from system_servergroups" & vbNewLine & _
+                "       ) " & vbNewLine & _
+                "       and ID_Group not in " & vbNewLine & _
+                "       (" & vbNewLine & _
+                "           Select id_group_anonymous " & vbNewLine & _
+                "           from system_servergroups" & vbNewLine & _
+                "       ) " & vbNewLine & _
+                "       and " & vbNewLine & _
+                "       (" & vbNewLine & _
+                "           0 <> " & CLng(cammWebManager.System_IsSecurityMaster("Groups", cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous))) & _
+                "           OR 0 in " & vbNewLine & _
+                "           (" & vbNewLine & _
+                "               select tableprimaryidvalue " & vbNewLine & _
+                "               from System_SubSecurityAdjustments " & vbNewLine & _
+                "               where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & "" & vbNewLine & _
+                "                   AND TableName = 'Groups' " & vbNewLine & _
+                "                   AND AuthorizationType In ('SecurityMaster','ViewAllRelations')" & vbNewLine & _
+                "           ) " & vbNewLine & _
+                "           OR id_group in " & vbNewLine & _
+                "           (" & vbNewLine & _
+                "               select tableprimaryidvalue " & vbNewLine & _
+                "               from System_SubSecurityAdjustments " & vbNewLine & _
+                "               where userid = " & cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous) & "" & vbNewLine & _
+                "                   AND TableName = 'Groups' " & vbNewLine & _
+                "                   AND AuthorizationType In ('UpdateRelations','ViewRelations','Owner')" & vbNewLine & _
+                "           )" & vbNewLine & _
+                "       ) " & vbNewLine & _
+                "   ) " & vbNewLine & _
+                "group by ID_Group, m.[Name], m.Description, g.ReleasedOn, g.ReleasedBy " & vbNewLine & _
                 "ORDER BY m.[Name], ID_Group, ReleasedByLastName, ReleasedByFirstName"
 
 
