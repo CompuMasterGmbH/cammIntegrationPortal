@@ -67,6 +67,7 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyVersion.vb" />
     <Compile Include="ConfigurationUploadSettings.vb" />
     <Compile Include="ConfigurationUploadWebManager.vb" />
     <Compile Include="DocumentsBrowser.vb">
