@@ -721,7 +721,6 @@ Namespace CompuMaster.camm.SmartWebEditor
             End Set
         End Property
 
-
         ''' <summary>
         '''     Detect the LanguageToShow for view-only requests
         ''' </summary>
@@ -729,7 +728,17 @@ Namespace CompuMaster.camm.SmartWebEditor
         ''' <remarks>
         ''' </remarks>
         Private Sub LookupMatchingMarketDataForReleasedContent(ByVal returnCode404InCaseOfMissingData As Boolean)
-            Dim myLangs() As Integer = Database.AvailableMarketsInData(Me.ContentOfServerID, DocumentID, Me.EditorID, Me.Database.ReleasedVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID))
+            LookupMatchingMarketDataForContentOfVersion(Me.Database.ReleasedVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID), returnCode404InCaseOfMissingData)
+        End Sub
+
+        ''' <summary>
+        '''     Detect the LanguageToShow for view-only requests
+        ''' </summary>
+        ''' <param name="returnCode404InCaseOfMissingData">True raises a 404 error when it can't be looked up</param>
+        ''' <remarks>
+        ''' </remarks>
+        Private Sub LookupMatchingMarketDataForContentOfVersion(version As Integer, ByVal returnCode404InCaseOfMissingData As Boolean)
+            Dim myLangs() As Integer = Database.AvailableMarketsInData(Me.ContentOfServerID, DocumentID, Me.EditorID, version)
             Dim IsLangExisting As Boolean = False
             Dim ErrorMessageInCaseOfMissingData As String = Nothing
             If Me.MarketLookupMode = MarketLookupModes.BestMatchingLanguage Then
@@ -1375,8 +1384,30 @@ Namespace CompuMaster.camm.SmartWebEditor
                         Me.CurrentVersionSetWithoutInternalChangeFlag(ActiveVersion)
                     Else
                         'ActiveVersion = 0, but InnerHtml is empty
-                        Throw New Exception("Unexpected decision workflow of operation")
-                        'Me.CurrentVersionSetWithoutInternalChangeFlag(GetHighestAvailableEditorControlVersion(DocumentID))
+                        'Throw New Exception("Unexpected decision workflow of operation")
+                        If Me.ShowWithEditRights Then
+                            Dim LatestUnreleasedVersionInDb As Integer = Me.Database.MaxVersion(Me.ContentOfServerID, Me.DocumentID, Me.EditorID) 'GetHighestAvailableEditorControlVersion(DocumentID)
+                            If LatestUnreleasedVersionInDb = 0 Then
+                                Me.CurrentVersionSetWithoutInternalChangeFlag(0)
+                                Me.editorMain.Html = ""
+                            Else
+                                Me.CurrentVersionSetWithoutInternalChangeFlag(LatestUnreleasedVersionInDb)
+                                If Me.MarketLookupMode = MarketLookupModes.SingleMarket Then
+                                    Me.editorMain.Html = Me.Database.ReadContent(Me.ContentOfServerID, Me.DocumentID, Me.EditorID, 0, LatestUnreleasedVersionInDb)
+                                Else
+                                    Try
+                                        LookupMatchingMarketDataForContentOfVersion(LatestUnreleasedVersionInDb, False)
+                                    Catch ex As UseInnerHtmlException
+                                        'Use inner html 
+                                        lblViewOnlyContent.Text = Me.InnerHtml
+                                    End Try
+                                    Me.editorMain.Html = Me.Database.ReadContent(Me.ContentOfServerID, Me.DocumentID, Me.EditorID, Me.LanguageToShow, LatestUnreleasedVersionInDb)
+                                End If
+                            End If
+                        Else
+                            Raise404("Document not found")
+                            'Throw New HttpException(404, "Document not found")
+                        End If
                     End If
                 End If
                 If Not Page.IsPostBack Then
@@ -1800,8 +1831,6 @@ Namespace CompuMaster.camm.SmartWebEditor
                                     Catch ex As UseInnerHtmlException
                                         'Use inner html 
                                         lblViewOnlyContent.Text = Me.InnerHtml
-                                    Catch
-                                        Throw
                                     End Try
                                     lblViewOnlyContent.Text = Database.ReadReleasedContent(Me.ContentOfServerID, DocumentID, Me.EditorID, Me.LanguageToShow)
                                 End If
