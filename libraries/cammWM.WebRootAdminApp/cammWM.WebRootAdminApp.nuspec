@@ -12,10 +12,10 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>WebScripts for all WebApplications using camm Integration Portal (based on camm Web-Manager) for Web Applications</description>
     <releaseNotes/>
-    <copyright>2001-2016 CompuMaster GmbH</copyright>
+    <copyright>2001-2017 CompuMaster GmbH</copyright>
     <tags>CompuMaster camm Integration Portal Web-Manager Web Manager CIP CWM cammIPortal IPortal</tags>
     <dependencies>
-      <dependency id="cammWM" version="[4.12.209, 4.13)" />
+      <dependency id="cammWM" version="[4.12.2115, 4.13)" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Web" targetFramework="" />

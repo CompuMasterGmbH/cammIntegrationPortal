@@ -12,7 +12,7 @@
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>camm Integration Portal (based on camm Web-Manager) for Web Applications</description>
 		<releaseNotes/>
-		<copyright>2001-2016 CompuMaster GmbH</copyright>
+		<copyright>2001-2017 CompuMaster GmbH</copyright>
 		<tags>CompuMaster camm Integration Portal Web-Manager Web Manager CIP CWM cammIPortal IPortal</tags>
 		<!--
     <dependencies>
