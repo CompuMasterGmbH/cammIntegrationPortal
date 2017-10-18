@@ -16,6 +16,12 @@
 
 ## Changes while developing in following builds
 
+### Build 2115 → 2116 (ASP.NET Engine)
+* :arrows_clockwise: minor changes
+
+### Build 2116 (DB Engine)
+* :arrows_clockwise: fixed deletion of multiple users at once
+
 ### Build 2114 → 2115 (ASP.NET Engine)
 * :heavy_plus_sign: added /system/webcron.aspx for simplified web call for execution of async webcron tasks (obsoletes separate trigger service which needed to be installed as a service/daemon at a server or remote machine)
 

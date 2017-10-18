@@ -452,5 +452,9 @@
       <ID>104</ID>
       <file>camm_WebManager_build_2115_trigger.xml</file>
     </files>
+	<files>
+      <ID>105</ID>
+      <file>camm_WebManager_build_2116_trigger.xml</file>
+    </files>
   </dataroot>
 </NewDataSet>

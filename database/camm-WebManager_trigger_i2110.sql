@@ -1498,7 +1498,7 @@ BEGIN
 			INSERT INTO dbo.Log_Users (ID_USER, Type, VALUE, ModifiedOn)
 			SELECT ID, 'DeletedOn', CONVERT(datetime, GETDATE(), 121), GETDATE() FROM deleted
 			
-			UPDATE dbo.Log_Users SET VALUE = '1' WHERE ID_USER = ( SELECT ID FROM deleted ) AND Type = 'IsDeletedUser' AND VALUE='0'
+			UPDATE dbo.Log_Users SET VALUE = '1' WHERE ID_USER IN ( SELECT ID FROM deleted ) AND Type = 'IsDeletedUser' AND VALUE='0'
 			IF @@ROWCOUNT = 0 
 				INSERT INTO dbo.Log_Users(ID_USER, Type, VALUE, ModifiedOn)	SELECT ID, 'IsDeletedUser', '1', GETDATE() FROM deleted
 		END
