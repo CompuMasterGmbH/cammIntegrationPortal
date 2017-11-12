@@ -48,9 +48,8 @@
       <HintPath>..\baseeditor\libs\cammWM.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CompuMaster.Imaging, Version=2016.9.7.101, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompuMaster.Imaging.2016.9.7.101\lib\net20\CompuMaster.Imaging.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CompuMaster.Imaging, Version=2017.9.18.100, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompuMaster.Imaging.2017.9.18.100\lib\net20\CompuMaster.Imaging.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
