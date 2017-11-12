@@ -223,3 +223,4 @@ sensitive code parts scanner.bat
 /webs/cwmroot_aspx/bin/cammWM.Admin.dll
 libraries/adminarea/CammWM.Admin/nightly_start_manually_verbose.log
 /libraries/adminarea/CheckFileConsistencyRessourceWriter/obj
+/libraries/packages
