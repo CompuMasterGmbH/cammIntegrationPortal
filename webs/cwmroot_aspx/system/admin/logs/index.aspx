@@ -1,0 +1,1 @@
+﻿<% Response.Redirect("event_log.aspx") %>

@@ -43,9 +43,8 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="cammWM, Version=4.12.209.102, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\base\cammWM\packages\cammWM.4.12.209.102\lib\net20\cammWM.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="cammWM, Version=4.12.2112.100, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.4.12.2112.100\lib\net20\cammWM.dll</HintPath>
     </Reference>
     <Reference Include="cammWM.WebApp, Version=4.12.209.101, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\base\cammWM\packages\cammWM.WebApp.4.12.209.101-beta\lib\net20\cammWM.WebApp.dll</HintPath>
@@ -80,15 +79,20 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Content Include="system\nav\index_base.vb">
+    <Content Include="system\images\editor.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="sysdata\config.vb">
+    <Content Include="system\webcron.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="sysdata\custom_internationalization.vb">
+    <None Include="system\nav\index_base.vb" />
+    <None Include="sysdata\config.vb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
+    <None Include="sysdata\custom_internationalization.vb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="system\access_error.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -196,18 +200,20 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="system\nav\index_base.ascx">
+    <None Include="system\nav\index_base.ascx">
       <SubType>ASPXCodeBehind</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="system\nav\index_style3.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="system\nav\index_style3_headhtml.ascx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="system\nav\index_style3_jscript.ascx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="system\servercheck.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -223,6 +229,7 @@
     </Content>
     <Content Include="system\validate_document.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>

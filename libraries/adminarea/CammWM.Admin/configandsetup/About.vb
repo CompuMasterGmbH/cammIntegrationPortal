@@ -36,6 +36,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected lblLastWebCronExecution As Label
         Protected lblWebCronServer As Label
         Protected lblLicenceDescription As Literal
+        Protected lblAutomaticUpdates As Literal
 
         Protected ltrlUpdateContractExpirationDate As Literal
         Protected ltrlSupportContractExpirationDate As Literal
@@ -43,6 +44,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected ltrlUpdateHint As Literal
         Protected ltrlLicenceModel As Literal
         Protected ltrlLicenceType As Literal
+
+        Protected WithEvents LoginToLicenseServer As LinkButton
+        Protected WithEvents EnterLicenseData As LinkButton
+        Protected WithEvents SubmitLicenseData As Button
+        Protected WithEvents CancelSubmitLicenseData As Button
+        Protected EnterLicenseDataManuallyArea As HtmlControl
+        Protected ErrorLicenseUpdate As Label
+        Protected LicenseData As TextBox
 
         Protected instanceValidationData As Registration.InstanceValidationResult
 
@@ -153,9 +162,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
 
             SetLastWebCronExecutionDate()
+            RefreshLicenseInfoControls(False)
+        End Sub
 
+        ''' <summary>
+        ''' Refresh all license controls/labels with latest license information
+        ''' </summary>
+        ''' <param name="onlyLocalQuery">False will do an HTTP(S) access to the remote license server of camm.biz if required/asked, True will only query the local database</param>
+        Private Sub RefreshLicenseInfoControls(onlyLocalQuery As Boolean)
             Try
-                LoadLicenceData()
+                LoadLicenceData(onlyLocalQuery)
                 SetLabelsWithExpirationDates()
                 SetLicenceDescription()
                 SetLabelsLicenseDetailsAndUpdateHint()
@@ -182,7 +198,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                     'Me.lblErrMsg.Text = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(ex.ToString))
                 End If
             End Try
-
         End Sub
 
         Private Sub About_PreRender(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.PreRender
@@ -197,13 +212,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         ''' <summary>
         ''' Load license data from database cache or from CompuMaster license/registration server
         ''' </summary>
-        Private Sub LoadLicenceData()
+        ''' <param name="onlyLocalQuery">False will do an HTTP(S) access to the remote license server of camm.biz if required/asked, True will only query the local database</param>
+        Private Sub LoadLicenceData(onlyLocalQuery As Boolean)
             Dim productRegistration As New CompuMaster.camm.WebManager.Registration.ProductRegistration(Me.cammWebManager)
 
-            Dim forceFetch As String = Request.Item("forceserverrefresh")
-            Dim forceFetchFromServer As Boolean = forceFetch <> Nothing AndAlso CType(forceFetch, Boolean)
-            If forceFetchFromServer Then
-                productRegistration.RefreshValidationDataFromRemoteLicenseServer(True)
+            If onlyLocalQuery = False Then
+                Dim forceFetch As String = Request.Item("forceserverrefresh")
+                Dim forceFetchFromServer As Boolean = forceFetch <> Nothing AndAlso CType(forceFetch, Boolean)
+                If forceFetchFromServer Then
+                    productRegistration.RefreshValidationDataFromRemoteLicenseServer(True)
+                End If
             End If
             Me.instanceValidationData = productRegistration.GetCachedValidationResult()
             If Me.instanceValidationData Is Nothing Then
@@ -266,6 +284,14 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
             If Not Me.ltrlLicenceType Is Nothing AndAlso Not Me.instanceValidationData Is Nothing AndAlso Not Me.instanceValidationData.LicenceData Is Nothing Then
                 ltrlLicenceType.Text = [Enum].GetName(Me.instanceValidationData.LicenceData.Type.GetType(), Me.instanceValidationData.LicenceData.Type)
+            End If
+            If Not Me.lblAutomaticUpdates Is Nothing AndAlso Not Me.instanceValidationData Is Nothing Then
+                If Me.instanceValidationData.ManualLicenseRevalidationOnly Then
+                    lblAutomaticUpdates.Text = "automatic contract updates disabled<br />automatic license updates disabled"
+                Else
+                    lblAutomaticUpdates.Text = "automatic contract updates enabled<br />automatic license updates enabled"
+                End If
+                lblAutomaticUpdates.Text &= "<br />automatic software updates disabled"
             End If
         End Sub
 
@@ -360,6 +386,43 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Return cammWebManager.DownloadHandler.ProcessAndGetPlainDownloadLink(DownloadHandler.DownloadLocations.PublicCache, "camm")
             End If
         End Function
+
+        Private Sub LoginToLicenseServer_Click(sender As Object, e As EventArgs) Handles LoginToLicenseServer.Click
+            Dim productRegistration As New CompuMaster.camm.WebManager.Registration.ProductRegistration(Me.cammWebManager)
+            Dim PostData As New System.Collections.Specialized.NameValueCollection
+            PostData.Add("key", cammWebManager.Environment.LicenceKey)
+            PostData.Add("data", productRegistration.CreateLicenseInfoTransmissionRequestData)
+            Utils.RedirectWithPostData(HttpContext.Current, "https://www.camm.biz/support/cim/services/registration-rest.aspx?action=loginwithlicense", postData)
+        End Sub
+
+        Private Sub EnterLicenseData_Click(sender As Object, e As EventArgs) Handles EnterLicenseData.Click
+            Me.EnterLicenseDataManuallyArea.Visible = True
+            Me.EnterLicenseData.Visible = False
+        End Sub
+
+        Private Sub SubmitLicenseData_Click(sender As Object, e As EventArgs) Handles SubmitLicenseData.Click
+            Try
+                Dim productRegistration As New CompuMaster.camm.WebManager.Registration.ProductRegistration(Me.cammWebManager)
+                productRegistration.RefreshValidationDataManuallyFromLicenseDataFromLicenseServer(CompuMaster.camm.WebManager.Utils.ConvertBase64StringToString(Me.LicenseData.Text, True))
+                Me.EnterLicenseDataManuallyArea.Visible = False
+                Me.EnterLicenseData.Visible = True
+            Catch ex As Exception
+                If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
+                    ErrorLicenseUpdate.Text = ex.ToString
+                Else
+                    'ErrorLicenseUpdate.Text = ex.Message
+                    ErrorLicenseUpdate.Text = ex.ToString
+                End If
+                Me.EnterLicenseDataManuallyArea.Visible = True
+                Me.EnterLicenseData.Visible = False
+            End Try
+            RefreshLicenseInfoControls(True)
+        End Sub
+
+        Private Sub CancelSubmitLicenseData_Click(sender As Object, e As EventArgs) Handles CancelSubmitLicenseData.Click
+            Me.EnterLicenseDataManuallyArea.Visible = False
+            Me.EnterLicenseData.Visible = True
+        End Sub
 
     End Class
 

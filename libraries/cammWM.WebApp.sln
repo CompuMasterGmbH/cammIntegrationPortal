@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "cammWM.WebApp", "cammWM.WebApp\", "{08B372B1-36BD-49A1-8EBA-4A3ED7ADF617}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_5051"
+		Debug.AspNetCompiler.PhysicalPath = "cammWM.WebApp\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_5051\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_5051"
+		Release.AspNetCompiler.PhysicalPath = "cammWM.WebApp\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_5051\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "5051"
+		SlnRelativePath = "cammWM.WebApp\"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{08B372B1-36BD-49A1-8EBA-4A3ED7ADF617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08B372B1-36BD-49A1-8EBA-4A3ED7ADF617}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DA5C0517-362A-4D31-8E8D-90A5D230C960}
+	EndGlobalSection
+EndGlobal

@@ -756,8 +756,9 @@ Namespace CompuMaster.camm.WebManager
         ''' </summary>
         ''' <value></value>
         ''' <remarks>
-        ''' May throw an exception in web environments if no session ID can be looked up from cookie or ASP.NET session handler
-        ''' In windows or console applications, there will be returned a self-created session ID
+        ''' May throw an exception in web environments if no session ID can be looked up from cookie or ASP.NET session handler.
+        ''' In windows or console applications, there will be returned a self-created session ID.
+        ''' This session ID stays stable even if no data has been written into the session object (default behaviour of modern ASP.NET framework versions: always create a new session ID on every client request as long as there is no data in session object)
         ''' </remarks>
         Public Overridable ReadOnly Property CurrentScriptEngineSessionID() As String
             Get
@@ -849,6 +850,8 @@ Namespace CompuMaster.camm.WebManager
                         "		FROM         dbo.System_Servers " & vbNewLine & _
                         "		WHERE     (dbo.System_Servers.Enabled <> 0) AND (dbo.System_Servers.ID = @ServerID)" & vbNewLine & _
                         "	END" & vbNewLine & _
+                        "-- for compatibility with older db versions, update of Benutzer table is required" & vbNewLine & _
+                        "UPDATE dbo.Benutzer SET System_SessionID = @CurrentSessionID WHERE ID = @CurUserID" & vbNewLine & _
                         "" & vbNewLine & _
                         "-- return the current/new inernal session ID" & vbNewLine & _
                         "SELECT @CurrentSessionID;" & vbNewLine & _
@@ -1594,8 +1597,9 @@ Namespace CompuMaster.camm.WebManager
         ''' </remarks>
         Private Sub CheckCompatibilityToDatabaseByBuildNumber()
             WebManager.Log.WriteEventLogTrace("CheckCompatibilityToDatabaseByBuildNumber:Begin")
+            Dim MyDBVersion As System.Version = Nothing
             If Me.DatabaseIsNewerBuildThanWebManagerApplication = TripleState.Undefined Then
-                Dim MyDBVersion As System.Version = Setup.DatabaseUtils.Version(Me, False)
+                MyDBVersion = Setup.DatabaseUtils.Version(Me, False)
                 If Not MyDBVersion Is Nothing AndAlso MyDBVersion.Build > System.Math.Max(Me.System_Version_Ex.Build, Configuration.CompatibilityWithDatabaseBuild) Then
                     DatabaseIsNewerBuildThanWebManagerApplication = TripleState.True
                 Else
@@ -1603,7 +1607,11 @@ Namespace CompuMaster.camm.WebManager
                 End If
             End If
             If Me.DatabaseIsNewerBuildThanWebManagerApplication = TripleState.True Then
-                Throw New Exception("Database has a newer build no. than this application. Access denied to prevent data corruption.")
+                If Me.DebugLevel >= DebugLevels.Low_WarningMessagesOnAccessError_AdditionalDetails Then
+                    Throw New AssemblyOlderThanDatabaseException(MyDBVersion, Me.System_Version_Ex, Configuration.CompatibilityWithDatabaseBuild)
+                Else
+                    Throw New AssemblyOlderThanDatabaseException(Nothing, Nothing, Nothing)
+                End If
             End If
             WebManager.Log.WriteEventLogTrace("CheckCompatibilityToDatabaseByBuildNumber:End")
         End Sub
@@ -2008,12 +2016,12 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="LoginNameOfUser">Login name of the user</param>
         ''' <returns>A URL where to redirect to</returns>
         Public Function System_GetNextLogonURI(ByVal LoginNameOfUser As String) As String
+            If LoginNameOfUser = "" Then Return Nothing
+
             Dim MyBuffer As String
             Dim MyDBConn As New SqlConnection
             Dim MyRecSet As SqlDataReader = Nothing
             Dim MyCmd As New SqlCommand
-
-            If LoginNameOfUser = "" Then Return Nothing
 
             'Create connection
             MyDBConn.ConnectionString = ConnectionString
@@ -2035,15 +2043,8 @@ Namespace CompuMaster.camm.WebManager
                     End If
 
                     'Since DB Build 110, there is an additional parameter
-                    If Not HttpContext.Current Is Nothing AndAlso Utils.TryCInt(HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast")) >= 110 Then
+                    If Setup.DatabaseUtils.Version(Me, True).Build >= 110 Then
                         .Parameters.Add("@ServerID", SqlDbType.Int).Value = Me.System_GetServerID()
-                    Else
-                        If Setup.DatabaseUtils.Version(Me, True).Build >= 110 Then
-                            .Parameters.Add("@ServerID", SqlDbType.Int).Value = Me.System_GetServerID()
-                            If Not HttpContext.Current Is Nothing Then
-                                HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast") = Setup.DatabaseUtils.Version(Me, True).Build
-                            End If
-                        End If
                     End If
 
                 End With
@@ -2054,7 +2055,7 @@ Namespace CompuMaster.camm.WebManager
 
                 MyBuffer = ""
                 If MyRecSet.Read Then
-                    If Configuration.CookieLess = False OrElse Utils.TryCInt(HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast")) < 121 Then
+                    If Configuration.CookieLess = False OrElse Setup.DatabaseUtils.Version(Me, True).Build < 121 Then
                         'Fast URL construction
                         MyBuffer = CType(MyRecSet("ServerProtocol"), String) & "://" & CType(MyRecSet("ServerName"), String)
                         If Not IsDBNull(MyRecSet("ServerPort")) Then
@@ -2066,24 +2067,13 @@ Namespace CompuMaster.camm.WebManager
                         MyBuffer = CalculateUrl(Me.CurrentServerInfo.ID, CType(MyRecSet("ScriptEngine_ID"), Integer), Internationalization.User_Auth_Config_Paths_Login & CType(MyRecSet("FileName_EngineLogin"), String) & "?GUID=" & System.Web.HttpUtility.UrlEncode(CType(MyRecSet("ScriptEngine_LogonGUID"), String)) & "&User=" & System.Web.HttpUtility.UrlEncode(LoginNameOfUser) & "&Dat=" & Hour(Now) & Minute(Now) & Second(Now))
                     End If
                 End If
-
-                System_GetNextLogonURI = MyBuffer
-
             Finally
                 If Not MyRecSet Is Nothing AndAlso Not MyRecSet.IsClosed Then
                     MyRecSet.Close()
                 End If
-                If Not MyCmd Is Nothing Then
-                    MyCmd.Dispose()
-                End If
-                If Not MyDBConn Is Nothing Then
-                    If MyDBConn.State <> ConnectionState.Closed Then
-                        MyDBConn.Close()
-                    End If
-                    MyDBConn.Dispose()
-                End If
+                Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeCommandAndConnection(MyCmd)
             End Try
-
+            Return MyBuffer
         End Function
 
         ''' <summary>
@@ -2105,7 +2095,7 @@ Namespace CompuMaster.camm.WebManager
 
             Dim MyCmd As New SqlClient.SqlCommand
             MyCmd.Connection = New SqlClient.SqlConnection(ConnectionString)
-            MyCmd.CommandText = "SELECT ValueInt FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LoginPWAlgorithm' AND ValueNVarChar = 'camm WebManager'"
+            MyCmd.CommandText = "SELECT ValueInt FROM [dbo].System_GlobalProperties WHERE PropertyName = 'LoginPWAlgorithm' AND ValueNVarChar = N'camm WebManager'"
             MyCmd.CommandType = CommandType.Text
 
             Dim fallbackAlgorithm As PasswordAlgorithm
@@ -2128,7 +2118,8 @@ Namespace CompuMaster.camm.WebManager
             If System_SupportsMultiplePasswordAlgorithms() Then
                 Dim MyCmd As New SqlClient.SqlCommand
                 MyCmd.Connection = New SqlClient.SqlConnection(ConnectionString)
-                MyCmd.CommandText = "UPDATE [dbo].System_GlobalProperties SET ValueInt = @algo WHERE PropertyName = 'LoginPWAlgorithm' AND ValueNVarChar = 'camm WebManager'"
+                MyCmd.CommandText = "UPDATE [dbo].System_GlobalProperties SET ValueInt = @algo WHERE PropertyName = 'LoginPWAlgorithm' AND ValueNVarChar = N'camm WebManager'" & vbNewLine & _
+                    "IF @@ROWCOUNT = 0 INSERT INTO [dbo].System_GlobalProperties (PropertyName, ValueNVarChar, ValueInt) VALUES ('LoginPWAlgorithm', N'camm WebManager', @algo)"
                 MyCmd.CommandType = CommandType.Text
                 MyCmd.Parameters.Add("@algo", SqlDbType.Int).Value = algo
 
@@ -2148,7 +2139,7 @@ Namespace CompuMaster.camm.WebManager
 
             Dim MyCmd As New SqlClient.SqlCommand
             MyCmd.Connection = New SqlClient.SqlConnection(ConnectionString)
-            MyCmd.CommandText = "SELECT ValueInt FROM [dbo].System_GlobalProperties WHERE PropertyName = 'PasswordResetBehavior' AND ValueNVarChar = 'camm WebManager'"
+            MyCmd.CommandText = "SELECT ValueInt FROM [dbo].System_GlobalProperties WHERE PropertyName = 'PasswordResetBehavior' AND ValueNVarChar = N'camm WebManager'"
             MyCmd.CommandType = CommandType.Text
 
             Dim behavior As Integer = CType(CompuMaster.camm.WebManager.Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), PasswordRecoveryBehavior.DecryptIfPossible), Integer)
@@ -2165,7 +2156,8 @@ Namespace CompuMaster.camm.WebManager
             If System_SupportsMultiplePasswordAlgorithms() Then
                 Dim MyCmd As New SqlClient.SqlCommand
                 MyCmd.Connection = New SqlClient.SqlConnection(ConnectionString)
-                MyCmd.CommandText = "UPDATE [dbo].System_GlobalProperties SET ValueInt = @behavior WHERE PropertyName = 'PasswordResetBehavior' AND ValueNVarChar = 'camm WebManager'"
+                MyCmd.CommandText = "UPDATE [dbo].System_GlobalProperties SET ValueInt = @behavior WHERE PropertyName = 'PasswordResetBehavior' AND ValueNVarChar = N'camm WebManager'" & vbNewLine & _
+                    "IF @@ROWCOUNT = 0 INSERT INTO [dbo].System_GlobalProperties (PropertyName, ValueNVarChar, ValueInt) VALUES ('PasswordResetBehavior', N'camm WebManager', @behavior)"
                 MyCmd.CommandType = CommandType.Text
                 MyCmd.Parameters.Add("@behavior", SqlDbType.Int).Value = behavior
 
@@ -2274,69 +2266,71 @@ Namespace CompuMaster.camm.WebManager
         Public Function System_IsSessionTerminated(ByVal LoginNameOfUser As String) As Boolean
 
             If HttpContext.Current Is Nothing Then
+                'Net client context
                 Return System_GetInternalUserSessionId() = 0
+            Else
+                'Web context
             End If
 
-            Dim MyDBConn As New SqlConnection
-            Dim MyRecSet As SqlDataReader = Nothing
-            Dim MyCmd As New SqlCommand
+            Dim MyRecSet As IDataReader = Nothing
+            Dim MyCmd As New SqlCommand("", New SqlConnection(Me.ConnectionString))
+            Dim Result As Boolean
 
             'Create connection
-            MyDBConn.ConnectionString = ConnectionString
             Try
-                MyDBConn.Open()
-
                 'Get parameter value and append parameter
                 With MyCmd
 
-                    .CommandText = "Public_GetLogonList"
-                    .CommandType = CommandType.StoredProcedure
+                    If False AndAlso Me.System_DBVersion_Ex.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) > 0 Then 'Newer 'NOTE: currently deactivated - not working anyways (at least not working when only 1 server in servergroup)
+                        .CommandText = "Public_GetLogonList"
+                        .CommandType = CommandType.StoredProcedure
+                    Else
+                        'Use backwards compatibility mode by not using Public_GetLogonList's implementation but an own separate check
+                        .CommandText = _
+                                "SELECT System_WebAreasAuthorizedForSession.ID, System_WebAreasAuthorizedForSession.SessionID" & vbNewLine & _
+                                "FROM System_WebAreasAuthorizedForSession " & vbNewLine & _
+                                "WHERE System_WebAreasAuthorizedForSession.ScriptEngine_LogonGUID IS NOT NULL" & vbNewLine & _
+                                "		AND System_WebAreasAuthorizedForSession.ScriptEngine_SessionID = @ScriptEngine_SessionID" & vbNewLine & _
+                                "       AND System_WebAreasAuthorizedForSession.ScriptEngine_ID = @ScriptEngine_ID" & vbNewLine & _
+                                "		AND System_WebAreasAuthorizedForSession.Server = @ServerID"
+                        .CommandType = CommandType.Text
+                    End If
 
                     .Parameters.Add("@Username", SqlDbType.NVarChar).Value = LoginNameOfUser
 
                     'Since DB Build 110, there is an additional parameter
-                    If Not HttpContext.Current Is Nothing AndAlso Utils.TryCInt(HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast")) >= 110 Then
-                        .Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = CurrentScriptEngineSessionID
-                        .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.ASPNet
-                        .Parameters.Add("@ServerID", SqlDbType.Int).Value = Me.System_GetServerID()
-                    Else
-                        If Setup.DatabaseUtils.Version(Me, True).Build >= 110 Then
+                    If Setup.DatabaseUtils.Version(Me, True).Build >= 110 Then
+                        If Not HttpContext.Current Is Nothing Then
+                            .Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = CurrentScriptEngineSessionID
+                            .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.ASPNet
+                            .Parameters.Add("@ServerID", SqlDbType.Int).Value = Me.System_GetServerID()
+                        Else
                             .Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = CurrentScriptEngineSessionID
                             .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.NetClient
                             .Parameters.Add("@ServerID", SqlDbType.Int).Value = Me.System_GetServerID()
-                            If Not HttpContext.Current Is Nothing Then
-                                HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast") = Setup.DatabaseUtils.Version(Me, True).Build
-                            End If
                         End If
                     End If
 
                 End With
 
                 'Create recordset by executing the command
-                MyCmd.Connection = MyDBConn
-                MyRecSet = MyCmd.ExecuteReader()
+                MyRecSet = Tools.Data.DataQuery.AnyIDataProvider.ExecuteReader(MyCmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection)
 
-                If MyRecSet.Read Then
-                    System_IsSessionTerminated = False
+                If MyRecSet.Read Then 'is there a 1st row?
+                    'Yeah, LogonList with rows resp. System_WebAreasAuthorizedForSession with rows -> session available
+                    Result = False
                 Else
-                    System_IsSessionTerminated = True
+                    'No session avaiable
+                    Result = True
                 End If
 
             Finally
                 If Not MyRecSet Is Nothing AndAlso Not MyRecSet.IsClosed Then
                     MyRecSet.Close()
                 End If
-                If Not MyCmd Is Nothing Then
-                    MyCmd.Dispose()
-                End If
-                If Not MyDBConn Is Nothing Then
-                    If MyDBConn.State <> ConnectionState.Closed Then
-                        MyDBConn.Close()
-                    End If
-                    MyDBConn.Dispose()
-                End If
+                Tools.Data.DataQuery.AnyIDataProvider.CloseAndDisposeCommandAndConnection(MyCmd)
             End Try
-
+            Return Result
         End Function
 
         ''' <summary>
@@ -2397,7 +2391,7 @@ Namespace CompuMaster.camm.WebManager
                 Do While MyRecSet.Read And Not MyCounter >= Jump2RecordNo
                     MyCounter = MyCounter + 1
                     If MyCounter >= Jump2RecordNo Then
-                        If Configuration.CookieLess = False OrElse Utils.TryCInt(HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast")) < 121 Then
+                        If Configuration.CookieLess = False OrElse Setup.DatabaseUtils.Version(Me, True).Build < 121 Then
                             'Fast URL construction
                             MyBuffer = CType(MyRecSet("ServerProtocol"), String) & "://" & CType(MyRecSet("ServerName"), String)
                             If Not IsDBNull(MyRecSet("ServerPort")) Then
@@ -3588,7 +3582,7 @@ Namespace CompuMaster.camm.WebManager
             Dim ResultValue As Integer = Configuration.GlobalizationDefaultMarket
             'Default-Sprache setzen
             Try
-                If IsNothing(HttpContext.Current.Session("CurLanguage")) Then
+                If HttpContext.Current IsNot Nothing AndAlso HttpContext.Current.Session IsNot Nothing AndAlso IsNothing(HttpContext.Current.Session("CurLanguage")) Then
                     HttpContext.Current.Session("CurLanguage") = GetBrowserPreferredLanguage()
                     System_DebugTraceWrite("CurLanguage: Get: GetBrowserPreferredLanguage = " & CType(HttpContext.Current.Session("CurLanguage"), Integer).ToString)
                 End If
@@ -3651,11 +3645,13 @@ Namespace CompuMaster.camm.WebManager
                         HttpContext.Current.Response.Cookies.Add(co2)
                     End If
                 End If
-                If CType(HttpContext.Current.Session("CurLanguage"), Integer) <= 0 Then
-                    HttpContext.Current.Session("CurLanguage") = Configuration.GlobalizationDefaultMarket
-                    System_DebugTraceWrite("CurLanguage: Get: Return value would be <= 0 and invalid; corrected to Configuration.LanguagesDefault")
+                If HttpContext.Current IsNot Nothing AndAlso HttpContext.Current.Session IsNot Nothing Then
+                    If CType(HttpContext.Current.Session("CurLanguage"), Integer) <= 0 Then
+                        HttpContext.Current.Session("CurLanguage") = Configuration.GlobalizationDefaultMarket
+                        System_DebugTraceWrite("CurLanguage: Get: Return value would be <= 0 and invalid; corrected to Configuration.LanguagesDefault")
+                    End If
+                    ResultValue = CType(HttpContext.Current.Session("CurLanguage"), Integer)
                 End If
-                ResultValue = CType(HttpContext.Current.Session("CurLanguage"), Integer)
                 'RedirectionParams = System_GetRequestQueryStringComplete(New String() {"Lang"})
             Catch ex As Exception
                 System_DebugTraceWrite("CurLanguage: Get: Error = " & ex.Message)
@@ -3899,7 +3895,7 @@ Namespace CompuMaster.camm.WebManager
                     Return WMSystem.SpecialUsers.User_Code
                 Else
                     'raises error when is null
-                    Return CInt(System_GetUserID(Me.CurrentUserLoginName))
+                    Return CLng(System_GetUserID(Me.CurrentUserLoginName))
                 End If
             Else
                 'raises error when is null
@@ -5442,6 +5438,13 @@ Namespace CompuMaster.camm.WebManager
             Dim transformer As IWMPasswordTransformation = PasswordTransformerFactory.ProduceCryptographicTransformer(transformationResult.Algorithm)
             Dim transformedPassword As String = transformer.TransformString(password, transformationResult.Noncevalue)
 
+            Dim CurrentScriptEngine As WMSystem.ScriptEngines
+            If HttpContext.Current Is Nothing Then
+                CurrentScriptEngine = ScriptEngines.NetClient
+            Else
+                CurrentScriptEngine = ScriptEngines.ASPNet
+            End If
+
             'Create connection
             MyDBConn.ConnectionString = ConnectionString
             Try
@@ -5463,11 +5466,7 @@ Namespace CompuMaster.camm.WebManager
                     End If
                     .Parameters.Add("@ServerIP", SqlDbType.NVarChar).Value = CurrentServerIdentString
                     .Parameters.Add("@RemoteIP", SqlDbType.NVarChar).Value = CurrentRemoteClientAddress
-                    If HttpContext.Current Is Nothing Then
-                        .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.NetClient
-                    Else
-                        .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.ASPNet
-                    End If
+                    .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = CurrentScriptEngine
                     .Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar, 512).Value = CurrentScriptEngineSessionID
                     .Parameters.Add("@ForceLogin", SqlDbType.Bit).Value = forceLogin
                 End With
@@ -5491,6 +5490,12 @@ Namespace CompuMaster.camm.WebManager
             'Reset navigation cache
             If Result = ReturnValues_UserValidation.ValidationSuccessfull OrElse Result = ReturnValues_UserValidation.ValidationSuccessfull_ButNoAuthorizationForRequiredSecurityObject Then
                 Me.SetUserLoginName(loginName) '_CurrentUserLoginName = loginName
+                'EnsureSession(scriptEngineID As ScriptEngines, scriptEngineSessionID As String, userID As Long, serverID As Integer) As Long
+                If True OrElse Me.System_DBVersion_Ex.CompareTo(MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older 'NOTE: always ensure - seems to be required at least at 1 server environments
+                    'Ensure that there is a session - backwards compatibility must at least allow an admin to update the database to latest version and for this to login, first 
+                    EnsureSession(CurrentScriptEngine, CurrentScriptEngineSessionID, Me.CurrentUserID(SpecialUsers.User_Anonymous), Me.CurrentServerInfo.ID)
+                End If
+
                 If Not HttpContext.Current Is Nothing Then
                     Dim CacheObjectName As String
                     If Configuration.CookieLess = False Then
@@ -5507,16 +5512,58 @@ Namespace CompuMaster.camm.WebManager
 
         End Function
 
+        ' <see cref="ValidateLoginCredentials(String, String)"/>
+        ''' <summary>
+        ''' Pre-validate user login credentials without loggin in
+        ''' </summary>
+        ''' <param name="loginName">The login name of a user</param>
+        ''' <param name="password">The password of this user</param>
+        ''' <remarks>In case of mistypings, the login failure count will be increased.</remarks>
+        Public Function PreValidateLoginCredentials(ByVal loginName As String, ByVal password As String) As ReturnValues_UserValidation
+            Return PreValidateLoginCredentials(loginName, password, Nothing, True)
+        End Function
+
+        ' <see cref="ValidateLoginCredentials(String, String)"/>
         ''' <summary>
         ''' Pre-validate user login credentials without loggin in
         ''' </summary>
         ''' <param name="loginName">The login name of a user</param>
         ''' <param name="password">The password of this user</param>
         ''' <param name="ignoreCurrentlyLoggedOnState">If True, a currently logged in user will successfully validate, if False it will return with a AlreadyLoggedIn value</param>
-        ''' <remarks>In case of mistypings, the login failure number will be increased anyway.</remarks>
-        Public Function PreValidateLoginCredentials(ByVal loginName As String, ByVal password As String, ByVal ignoreCurrentlyLoggedOnState As Boolean) As ReturnValues_UserValidation
+        ''' <remarks>In case of mistypings, the login failure count will be increased.</remarks>
+        <Obsolete("Use another overload if working with database version 4.12 or higher: parameter ignoreCurrentlyLoggedOnState obsolete since multiple login support (previously only 1 concurrent login)")> Public Function PreValidateLoginCredentials(ByVal loginName As String, ByVal password As String, ByVal ignoreCurrentlyLoggedOnState As Boolean) As ReturnValues_UserValidation
+            Return PreValidateLoginCredentials(loginName, password, Nothing, ignoreCurrentlyLoggedOnState)
+        End Function
 
-            If CurrentServerIdentString = "" Then
+        ' <see cref="ValidateLoginCredentials(String, String)"/>
+        ''' <summary>
+        ''' Pre-validate user login credentials without loggin in
+        ''' </summary>
+        ''' <param name="loginName">The login name of a user</param>
+        ''' <param name="password">The password of this user</param>
+        ''' <param name="serverIdentString">Pre-validate with this server ident string instead of the current environment's one</param>
+        ''' <remarks>In case of mistypings, the login failure count will be increased.</remarks>
+        Public Function PreValidateLoginCredentials(ByVal loginName As String, ByVal password As String, serverIdentString As String) As ReturnValues_UserValidation
+            Return PreValidateLoginCredentials(loginName, password, serverIdentString, True)
+        End Function
+
+        ' <see cref="ValidateLoginCredentials(String, String)"/>
+        ''' <summary>
+        ''' Pre-validate user login credentials without loggin in
+        ''' </summary>
+        ''' <param name="loginName">The login name of a user</param>
+        ''' <param name="password">The password of this user</param>
+        ''' <param name="serverIdentString">Pre-validate with this server ident string instead of the current environment's one</param>
+        ''' <param name="ignoreCurrentlyLoggedOnState">If True, a currently logged in user will successfully validate, if False it will return with a AlreadyLoggedIn value</param>
+        ''' <remarks>In case of mistypings, the login failure count will be increased.</remarks>
+        Private Function PreValidateLoginCredentials(ByVal loginName As String, ByVal password As String, serverIdentString As String, ByVal ignoreCurrentlyLoggedOnState As Boolean) As ReturnValues_UserValidation
+            Dim TestForServerIdentString As String
+            If serverIdentString = Nothing Then
+                TestForServerIdentString = Me.CurrentServerIdentString
+            Else
+                TestForServerIdentString = serverIdentString
+            End If
+            If TestForServerIdentString = "" Then
                 Dim Message As String = "Login can't be processed since this server hasn't been configured with a proper server ID"
                 Me.Log.RuntimeException(Message)
             ElseIf loginName = "" Then
@@ -5548,7 +5595,7 @@ Namespace CompuMaster.camm.WebManager
                         'Login with username and password - the standard case
                         .Parameters.Add("@Passcode", SqlDbType.VarChar).Value = transformedPassword
                     End If
-                    .Parameters.Add("@ServerIP", SqlDbType.NVarChar).Value = CurrentServerIdentString
+                    .Parameters.Add("@ServerIP", SqlDbType.NVarChar).Value = TestForServerIdentString
                     .Parameters.Add("@RemoteIP", SqlDbType.NVarChar).Value = CurrentRemoteClientAddress
                     If HttpContext.Current Is Nothing Then
                         .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.NetClient
@@ -5591,6 +5638,7 @@ Namespace CompuMaster.camm.WebManager
         ''' <param name="loginName">The username</param>
         ''' <param name="password">The password to check</param>
         ''' <returns>True if successful else False if not matching</returns>
+        ''' <see cref="PreValidateLoginCredentials(String, String, Boolean)"/>
         <Obsolete("Not used yet", True)> Private Function ValidateLoginCredentials(ByVal loginName As String, ByVal password As String) As Boolean
 
             If loginName = "" Or password = "" Then
@@ -5606,7 +5654,7 @@ Namespace CompuMaster.camm.WebManager
 
             'Get parameter value and append parameter
             With MyCmd
-                .CommandText = "SELECT LoginName FROM Benutzer WHERE LoginName = @Username AND LoginPW = @Passcode COLLATE Latin1_General_CS_AS"
+                .CommandText = "SELECT LoginName FROM Benutzer WHERE LoginName = @Username AND LoginPW = @Passcode"
                 .CommandType = CommandType.Text
                 .Parameters.Add("@Username", SqlDbType.NVarChar).Value = loginName
                 .Parameters.Add("@Passcode", SqlDbType.VarChar).Value = transformedPassword
@@ -5690,16 +5738,12 @@ Namespace CompuMaster.camm.WebManager
                         .Parameters.Add("@RemoteIP", SqlDbType.VarChar).Value = CStr(strRemoteIP)
 
                         'Since DB Build 111, there is an additional parameter
-                        If Not HttpContext.Current Is Nothing AndAlso Utils.TryCInt(HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast")) >= 111 Then
+                        If Setup.DatabaseUtils.Version(Me, True).Build >= 111 Then
                             .Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = CurrentScriptEngineSessionID
-                            .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.ASPNet
-                        Else
-                            If Setup.DatabaseUtils.Version(Me, True).Build >= 111 Then
-                                .Parameters.Add("@ScriptEngine_SessionID", SqlDbType.NVarChar).Value = CurrentScriptEngineSessionID
+                            If Not HttpContext.Current Is Nothing Then
+                                .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.ASPNet
+                            Else
                                 .Parameters.Add("@ScriptEngine_ID", SqlDbType.Int).Value = ScriptEngines.NetClient
-                                If Not HttpContext.Current Is Nothing Then
-                                    HttpContext.Current.Application("WebManager.CurrentDBBuildAtLeast") = Setup.DatabaseUtils.Version(Me, True).Build
-                                End If
                             End If
                         End If
 
@@ -7216,7 +7260,7 @@ Namespace CompuMaster.camm.WebManager
             Dim MyCmd As SqlCommand
             If alsoFindInactiveLanguages = True Then
                 'return all languages
-                MyCmd = New SqlCommand("select * from languages", MyConn)
+                MyCmd = New SqlCommand("select * from languages Where 1 = 1", MyConn) 'added pseudo-where-clause for later extension with 'AND ...'
             Else
                 'only search for activated languages
                 MyCmd = New SqlCommand("select * from languages Where [isactive] = @IsActive", MyConn)

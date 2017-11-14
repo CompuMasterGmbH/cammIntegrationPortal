@@ -207,15 +207,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             ListOfUsers(CInt(CType(sender, DropDownList).SelectedValue))
         End Sub
 
-        Public Function IsUserAlreadyAuthorized(ByVal userID As Long, ByVal applicationID As Integer) As Boolean
+        Public Function IsUserAlreadyAuthorized(ByVal userID As Long, ByVal applicationID As Integer, isDev As Boolean) As Boolean
             If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Newer
                 Throw New NotSupportedException("DbVersion.Build >= " & WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule.ToString & " requires calling an overloaded version of this method")
             End If
-            Dim commandText As String = "SELECT count([ID]) FROM [dbo].[ApplicationsRightsByUser] WHERE [ID_GroupOrPerson] = @UserID  AND [ID_Application] =  @AppID"
+            Dim commandText As String = "SELECT count([ID]) FROM [dbo].[ApplicationsRightsByUser] WHERE [ID_GroupOrPerson] = @UserID  AND [ID_Application] =  @AppID AND IsNull(DevelopmentTeamMember, 0) = @IsDev"
             Dim MyCmd As New System.Data.SqlClient.SqlCommand(commandText, New SqlConnection(cammWebManager.ConnectionString))
             MyCmd.CommandType = CommandType.Text
             MyCmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = userID
             MyCmd.Parameters.Add("@AppID", SqlDbType.Int).Value = applicationID
+            MyCmd.Parameters.Add("@IsDev", SqlDbType.Bit).Value = isDev
             Dim RecordCount As Integer = CType(ExecuteScalar(MyCmd, CompuMaster.camm.WebManager.Administration.Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), Integer)
             Return CInt(RecordCount) > 0
         End Function
@@ -275,6 +276,18 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 Dim dropUserText As String = CType(MyListItem.FindControl("lblLoginName"), UI.HtmlControls.HtmlAnchor).InnerText
                                 Dim dropUserID As Integer = CInt(CType(MyListItem.FindControl("lblID"), Label).Text)
 
+                                Dim checkBoxDeny As CheckBox = Nothing
+                                Dim checkBoxDevteam As CheckBox = Nothing
+
+                                If MyListItem.FindControl("chk_deny") IsNot Nothing Then
+                                    checkBoxDeny = CType(MyListItem.FindControl("chk_deny"), CheckBox)
+                                End If
+
+                                If MyListItem.FindControl("chk_devteam") IsNot Nothing Then
+                                    checkBoxDevteam = CType(MyListItem.FindControl("chk_devteam"), CheckBox)
+                                End If
+
+
                                 Dim userInfo As WMSystem.UserInformation = cammWebManager.System_GetUserInfo(CType(dropUserID, Long))
 
                                 'Show or hide controls for MilestoneDBVersion_AuthsWithSupportForDenyRule depending on environment support
@@ -282,13 +295,13 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                 'Hint: what is:
                                 ' - If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
                                 ' - If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 Then 'Equal OR Newer
-                                If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 AndAlso IsUserAlreadyAuthorized(dropUserID, dropAppID) Then
+                                If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 AndAlso IsUserAlreadyAuthorized(dropUserID, dropAppID, IsChecked(checkBoxDevteam)) Then
                                     lblErr.Text &= "User " + dropUserText.ToString() + " is already authorized for application " + dropAppText.Trim & "<br />"
                                     authorize = False
-                                ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso MyListItem.FindControl("chk_deny") IsNot Nothing AndAlso IsUserAlreadyAuthorized(dropUserID, dropAppID, dropServerGroupID, IsChecked(CType(MyListItem.FindControl("chk_devteam"), CheckBox)), IsChecked(CType(MyListItem.FindControl("chk_deny"), CheckBox))) Then
-                                    lblErr.Text &= "User " + dropUserText.ToString() + " (development access: " & IsChecked(CType(MyListItem.FindControl("chk_devteam"), CheckBox)).ToString.ToLower & ", deny rule: " & IsChecked(CType(MyListItem.FindControl("chk_deny"), CheckBox)).ToString.ToLower & ") is already authorized for application " + dropAppText.Trim & "<br />"
+                                ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso checkBoxDeny IsNot Nothing AndAlso IsUserAlreadyAuthorized(dropUserID, dropAppID, dropServerGroupID, IsChecked(checkBoxDevteam), IsChecked(checkBoxDeny)) Then
+                                    lblErr.Text &= "User " + dropUserText.ToString() + " (development access: " & IsChecked(checkBoxDevteam).ToString.ToLower & ", deny rule: " & IsChecked(checkBoxDeny).ToString.ToLower & ") is already authorized for application " + dropAppText.Trim & "<br />"
                                     authorize = False
-                                ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso MyListItem.FindControl("chk_deny") Is Nothing AndAlso IsUserAlreadyAuthorized(dropUserID, dropAppID, dropServerGroupID, IsChecked(CType(MyListItem.FindControl("chk_devteam"), CheckBox)), False) Then
+                                ElseIf Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) >= 0 AndAlso checkBoxDeny Is Nothing AndAlso IsUserAlreadyAuthorized(dropUserID, dropAppID, dropServerGroupID, IsChecked(checkBoxDevteam), False) Then
                                     lblErr.Text &= "User " + dropUserText.ToString() + " is already authorized for application " + dropAppText.Trim & "<br />"
                                     authorize = False
                                 ElseIf Not ((cammWebManager.System_GetSubAuthorizationStatus("Applications", CInt(Request("ID")), cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "Owner") Or cammWebManager.System_GetSubAuthorizationStatus("Applications", CInt(Request("ID")), cammWebManager.CurrentUserID(WMSystem.SpecialUsers.User_Anonymous), "UpdateRelations"))) Then
@@ -312,9 +325,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                                             'Use implemented workflow of camm WebManager to send Authorization-Mail if user is authorized the first time
                                             'HINT: SapFlag checks will be checked continually, but no information on missing flag name is given here any more
                                             If Me.CurrentDbVersion.CompareTo(WMSystem.MilestoneDBVersion_AuthsWithSupportForDenyRule) < 0 Then 'Older
-                                                userInfo.AddAuthorization(dropAppID, CType(Nothing, Integer), CType(MyListItem.FindControl("chk_devteam"), CheckBox).Checked, False, CType(Nothing, Notifications.INotifications))
+                                                userInfo.AddAuthorization(dropAppID, CType(Nothing, Integer), checkBoxDevteam.Checked, False, CType(Nothing, Notifications.INotifications))
                                             Else
-                                                userInfo.AddAuthorization(dropAppID, dropServerGroupID, CType(MyListItem.FindControl("chk_devteam"), CheckBox).Checked, IsChecked(CType(MyListItem.FindControl("chk_deny"), CheckBox)), CType(Nothing, Notifications.INotifications))
+                                                userInfo.AddAuthorization(dropAppID, dropServerGroupID, checkBoxDevteam.Checked, IsChecked(checkBoxDeny), CType(Nothing, Notifications.INotifications))
                                             End If
 
                                             lblMsg.Text &= dropUserText + " has been authorized for application " + dropAppText & "<br />"

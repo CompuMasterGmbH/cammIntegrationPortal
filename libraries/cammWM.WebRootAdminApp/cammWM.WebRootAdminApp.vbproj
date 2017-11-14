@@ -43,13 +43,11 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="cammWM, Version=4.12.209.102, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\base\cammWM\packages\cammWM.4.12.209.102\lib\net20\cammWM.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="cammWM, Version=4.12.2112.100, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.4.12.2112.100\lib\net20\cammWM.dll</HintPath>
     </Reference>
-    <Reference Include="cammWM.Admin, Version=4.12.209.102, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\base\cammWM\packages\cammWM.Admin.4.12.209.102\lib\net20\cammWM.Admin.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="cammWM.Admin, Version=4.12.2111.100, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\base\cammWM\packages\cammWM.Admin.4.12.2111.100\lib\net20\cammWM.Admin.dll</HintPath>
     </Reference>
     <Reference Include="cammWM.WebApp, Version=4.12.209.101, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\base\cammWM\packages\cammWM.WebApp.4.12.209.101-beta\lib\net20\cammWM.WebApp.dll</HintPath>
@@ -210,6 +208,10 @@
     </Content>
     <Content Include="sysdata\admin\check_flags_not_required.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="sysdata\admin\check_processmailqueue.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="sysdata\admin\configuration.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -239,6 +241,31 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="sysdata\admin\groups_update.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\logs\control_event_log.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\logs\control_redirections.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\logs\default.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\logs\event_log.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\logs\event_log_datagrid.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\logs\event_log_info.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\logs\index.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sysdata\admin\logs\redirections.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="sysdata\admin\mailqueue_monitor.aspx">
@@ -588,6 +615,9 @@
     <Content Include="system\admin\check_flags_not_required.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="system\admin\check_processmailqueue.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="system\admin\configuration.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -621,6 +651,9 @@
     <Content Include="system\admin\groups_update.aspx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="system\admin\images\blue.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="system\admin\images\comboItemBg.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -647,6 +680,32 @@
     </Content>
     <Content Include="system\admin\install\update.aspx">
       <SubType>ASPXCodeBehind</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\logs\control_event_log.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="system\admin\logs\control_redirections.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\logs\event_log.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\logs\event_log_datagrid.ascx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="system\admin\logs\event_log_info.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\logs\index.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\logs\redirections.aspx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="system\admin\logs\styles.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="system\admin\mailqueue_monitor.aspx">

@@ -11,8 +11,8 @@
 		<iconUrl>https://raw.githubusercontent.com/CompuMasterGmbH/cammIntegrationPortal/master/logo_64x64.png</iconUrl>
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>camm Integration Portal (based on camm Web-Manager) for Web Applications</description>
-		<releaseNotes/>
-		<copyright>2001-2016 CompuMaster GmbH</copyright>
+		<releaseNotes>Requires .NET Framework 4.5.2 or higher</releaseNotes>
+		<copyright>2001-2017 CompuMaster GmbH</copyright>
 		<tags>SmartEditor CommonMark CompuMaster camm Integration Portal Web-Manager Web Manager CIP CWM cammIPortal IPortal</tags>
 		<dependencies>
 		  <dependency id="cammWM" version="4.10.206" />

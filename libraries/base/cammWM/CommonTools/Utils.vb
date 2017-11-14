@@ -1348,7 +1348,45 @@ Namespace CompuMaster.camm.WebManager
         ''' The byte encoding is based on UTF-8 encoding
         ''' </remarks>
         Public Shared Function ConvertStringToBase64String(ByVal text As String) As String
-            Return ConvertBytesToBase64String(ConvertStringToBytes(text))
+            If text Is Nothing Then
+                Return Nothing
+            ElseIf text = Nothing Then
+                Return ""
+            Else
+                Return ConvertBytesToBase64String(ConvertStringToBytes(text))
+            End If
+        End Function
+        ''' <summary>
+        ''' Convert a normal string into base64 string
+        ''' </summary>
+        ''' <param name="text">A normal string</param>
+        ''' <returns>The base64 string </returns>
+        ''' <remarks>
+        ''' The byte encoding is based on UTF-8 encoding
+        ''' </remarks>
+        Public Shared Function ConvertStringToBase64String(ByVal text As String, insertLineBreaks As Boolean) As String
+            Return ConvertStringToBase64String(text, 70)
+        End Function
+        ''' <summary>
+        ''' Convert a normal string into base64 string
+        ''' </summary>
+        ''' <param name="text">A normal string</param>
+        ''' <returns>The base64 string </returns>
+        ''' <remarks>
+        ''' The byte encoding is based on UTF-8 encoding
+        ''' </remarks>
+        Public Shared Function ConvertStringToBase64String(ByVal text As String, insertLineBreaksAfterNumberOfChars As Integer) As String
+            If text Is Nothing Then
+                Return Nothing
+            Else
+                Dim Result As New System.Text.StringBuilder(ConvertStringToBase64String(text))
+                Dim MyCounter As Integer = insertLineBreaksAfterNumberOfChars
+                Do While MyCounter <= Result.Length - 1
+                    Result.Insert(MyCounter, vbNewLine)
+                    MyCounter += insertLineBreaksAfterNumberOfChars + 2 '+2 because of vbCrLf are 2 chars!
+                Loop
+                Return Result.ToString
+            End If
         End Function
         ''' <summary>
         ''' Convert a base64 string into a normal string
@@ -1359,26 +1397,79 @@ Namespace CompuMaster.camm.WebManager
         ''' The byte encoding is based on UTF-8 encoding
         ''' </remarks>
         Public Shared Function ConvertBase64StringToString(ByVal base64String As String) As String
-            Return ConvertBytesToString(ConvertBase64StringToBytes(base64String))
+            If base64String Is Nothing Then
+                Return Nothing
+            Else
+                Return ConvertBytesToString(ConvertBase64StringToBytes(base64String))
+            End If
         End Function
-
+        ''' <summary>
+        ''' Convert a base64 string into a normal string
+        ''' </summary>
+        ''' <param name="base64String">A base64 string</param>
+        ''' <returns>A normal string</returns>
+        ''' <remarks>
+        ''' The byte encoding is based on UTF-8 encoding
+        ''' </remarks>
+        Public Shared Function ConvertBase64StringToString(ByVal base64String As String, autoRemoveLineBreaks As Boolean) As String
+            If base64String Is Nothing Then
+                Return Nothing
+            ElseIf base64String = Nothing Then
+                Return ""
+            ElseIf autoRemoveLineBreaks Then
+                Return ConvertBytesToString(ConvertBase64StringToBytes(Replace(Replace(Replace(Replace(base64String, " ", ""), ChrW(9), ""), ControlChars.Cr, ""), ControlChars.Lf, "")))
+            Else
+                Return ConvertBytesToString(ConvertBase64StringToBytes(base64String))
+            End If
+        End Function
+        ''' <summary>
+        ''' Convert a base64 string into a normal string
+        ''' </summary>
+        ''' <param name="base64String">A base64 string</param>
+        ''' <returns>A normal string</returns>
+        ''' <remarks>
+        ''' </remarks>
         Private Shared Function ConvertBase64StringToBytes(ByVal base64String As String) As Byte()
-            Return System.Convert.FromBase64String(base64String)
+            If base64String Is Nothing Then
+                Return Nothing
+            ElseIf base64String = Nothing Then
+                Return New Byte() {}
+            Else
+                Return System.Convert.FromBase64String(base64String)
+            End If
         End Function
         Private Shared Function ConvertBytesToString(ByVal data As Byte()) As String
-            ' Declare a UTF8Encoding object so we may use the GetByte 
-            ' method to transform the plainText into a Byte array. 
-            Dim utf8encoder As New System.Text.UTF8Encoding
-            Return utf8encoder.GetString(data, 0, data.Length)
+            If data Is Nothing Then
+                Return Nothing
+            ElseIf data.Length = 0 Then
+                Return ""
+            Else
+                ' Declare a UTF8Encoding object so we may use the GetByte 
+                ' method to transform the plainText into a Byte array. 
+                Dim utf8encoder As New System.Text.UTF8Encoding
+                Return utf8encoder.GetString(data, 0, data.Length)
+            End If
         End Function
         Private Shared Function ConvertBytesToBase64String(ByVal byteData As Byte()) As String
-            Return System.Convert.ToBase64String(byteData)
+            If byteData Is Nothing Then
+                Return Nothing
+            ElseIf byteData.Length = 0 Then
+                Return ""
+            Else
+                Return System.Convert.ToBase64String(byteData)
+            End If
         End Function
         Private Shared Function ConvertStringToBytes(ByVal text As String) As Byte()
-            ' Declare a UTF8Encoding object so we may use the GetByte 
-            ' method to transform the plainText into a Byte array. 
-            Dim utf8encoder As New System.Text.UTF8Encoding
-            Return utf8encoder.GetBytes(text)
+            If text Is Nothing Then
+                Return Nothing
+            ElseIf text = Nothing Then
+                Return New Byte() {}
+            Else
+                ' Declare a UTF8Encoding object so we may use the GetByte 
+                ' method to transform the plainText into a Byte array. 
+                Dim utf8encoder As New System.Text.UTF8Encoding
+                Return utf8encoder.GetBytes(text)
+            End If
         End Function
 #End Region
 

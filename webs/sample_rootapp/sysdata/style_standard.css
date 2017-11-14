@@ -1,0 +1,139 @@
+﻿/* Die erste Anweisung wird nicht immer vom Browser bearbeitet */
+SPAN.Dummy
+{
+}
+
+p, h1, h2, h3, h4, ul, ol, li, div, td, th, address, blockquote, nobr, b, i, strong
+{ 	
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+}
+
+A:active
+{
+    FONT-WEIGHT: bold;
+    COLOR: #0000ff;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: underline
+}
+A:link
+{
+    FONT-WEIGHT: normal;
+    COLOR: #000080;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: underline
+}
+A:visited
+{
+    FONT-WEIGHT: normal;
+    COLOR: #888888;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: underline
+}
+A:hover
+{
+    FONT-WEIGHT: normal;
+    COLOR: #585888;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: underline
+}
+A.Bold:active
+{
+    FONT-WEIGHT: bold;
+    COLOR: #00426B;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: none
+}
+A.Bold:link
+{
+    FONT-WEIGHT: bold;
+    COLOR: #00426B;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: none
+}
+A.Bold:visited
+{
+    FONT-WEIGHT: bold;
+    COLOR: #00426B;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: none
+}
+A.Footer:hover
+{
+    FONT-WEIGHT: normal;
+    COLOR: #888888;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: underline
+}
+A.Footer:active
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: underline
+}
+A.Footer:link
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: underline
+}
+A.Footer:visited
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: underline
+}
+A.NavHeader2:active
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 10pt;
+    COLOR: #000000;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: none
+}
+A.NavHeader2:link
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 10pt;
+    COLOR: #000000;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: none
+}
+A.NavHeader2:visited
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 10pt;
+    COLOR: #000000;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    TEXT-DECORATION: none
+}
+P.NavHeader1
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 12pt;
+    MARGIN-LEFT: 9px;
+    FONT-FAMILY: Arial
+}
+P.NavHeader2
+{
+    MARGIN-LEFT: 15px;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+}
+BODY
+{
+    COLOR: #000000;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    BACKGROUND-COLOR: #ffffff
+}
+.titlebar
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 12px;
+    COLOR: #ffffff;
+    LINE-HEIGHT: 19px;
+	font-family:Arial, Helvetica, Verdana, sans-serif; 
+    BACKGROUND-COLOR: #000080;
+    TEXT-ALIGN: center;
+}

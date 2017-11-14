@@ -510,7 +510,7 @@ Namespace CompuMaster.camm.SmartWebEditor
         '''     Read the HTML in a requested version for the requested document from the database
         ''' </summary>
         ''' <param name="serverID"></param>
-        ''' <param name="marketID"></param>
+        ''' <param name="marketID">The exact market ID (no market lookup mode applied)</param>
         ''' <param name="url"></param>
         ''' <param name="editorID"></param>
         ''' <param name="version"></param>

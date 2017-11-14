@@ -87,6 +87,16 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Sub
 #End Region
 
+        Private Sub SetErrorMessage()
+            Dim groupId As String = Request.QueryString("GROUPID")
+            If groupId <> "" Then
+                lblErrMsg.Text = "No users have been added to this group yet. <a href='memberships_new.aspx?ID=" & groupId & "'>Add user</a>"
+            Else
+                lblErrMsg.Text = "There are no groups available for administration."
+            End If
+        End Sub
+
+
 #Region "User-Defined Methods"
         ''' <summary>
         ''' Bind the data for the group headlines to the control with the list of records (indirectly bind the list of users, too)
@@ -182,9 +192,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             rptMembershipList.DataSource = MyDt
             rptMembershipList.DataBind()
 
-            If Not MyDt Is Nothing AndAlso MyDt.Rows.Count > 0 Then
-            Else
-                lblErrMsg.Text = "There are no groups available for administration."
+            If MyDt Is Nothing OrElse MyDt.Rows.Count = 0 Then
+                SetErrorMessage()
             End If
         End Sub
 #End Region

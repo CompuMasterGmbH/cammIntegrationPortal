@@ -35,11 +35,7 @@
         '========================
 
         If AdditionalFeaturesEnabled = False Then 'only in standard mode
-            Try
-                CurUserID = CInt(cammWebManager.System_GetUserID(HttpContext.Current.Session("System_Username"))) 'raises error when is null
-            Catch
-                CurUserID = CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous
-            End Try
+            CurUserID = cammWebManager.CurrentUserID(CompuMaster.camm.WebManager.WMSystem.SpecialUsers.User_Anonymous)
         End If
 
         MyDataTable = cammWebManager.System_GetNavItems(CurUserID, Nothing, strServerIP)

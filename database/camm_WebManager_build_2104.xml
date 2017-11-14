@@ -42,8 +42,32 @@
             </execfile>
         </requires>
         <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>12</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_2104.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
             <product>MSSQLServer</product>
             <version_major>12</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_2104.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>13</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_2104.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServer</product>
+            <version_major>13</version_major>
             <version_minor>0</version_minor>
             <file>camm_WebManager_build_2104.sql</file>
             <execfile>

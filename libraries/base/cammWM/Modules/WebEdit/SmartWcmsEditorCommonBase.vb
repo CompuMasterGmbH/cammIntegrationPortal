@@ -439,7 +439,7 @@ Namespace CompuMaster.camm.WebManager.Modules.WebEdit.Controls
             ibtnSwitchToEditMode.Visible = False
             ibtnSwitchToEditMode.EnableViewState = False
             ibtnSwitchToEditMode.AlternateText = "Edit"
-            ibtnSwitchToEditMode.ImageUrl = "/RadControls/Editor/Img/editor.gif"
+            ibtnSwitchToEditMode.ImageUrl = "/system/images/editor.gif"
             ibtnSwitchToEditMode.ToolTip = "Edit"
             Controls.Add(ibtnSwitchToEditMode)
 

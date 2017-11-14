@@ -31,54 +31,68 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
         Protected WithEvents LinkbuttonResend As System.Web.UI.WebControls.LinkButton
         Protected WithEvents LinkbuttonFailure As System.Web.UI.WebControls.LinkButton
         Protected WithEvents LinkbuttonSendThisEmailToMe As System.Web.UI.WebControls.LinkButton
+        Protected WithEvents LinkbuttonCancel As System.Web.UI.WebControls.LinkButton
 
         Private Sub PageOnLoad(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
 
             Select Case Me._SecurityRole
                 Case CompuMaster.camm.WebManager.Pages.Administration.MailQueueMonitor.SecurityRoles.Supervisor
+                    Me.LinkbuttonCancel.ToolTip = "Cancel"
                     Me.LinkbuttonFailure.ToolTip = "Accept failure"
                     Me.LinkbuttonResend.ToolTip = "Send this e-mail again"
                     Me.LinkbuttonSendThisEmailToMe.ToolTip = "Send this e-mail to me"
                     Select Case Me._QueueState
                         Case Messaging.QueueMonitoring.QueueStates.FailureAfter1Trial, Messaging.QueueMonitoring.QueueStates.FailureAfter2Trials, Messaging.QueueMonitoring.QueueStates.FailureAfterLastTrial
+                            Me.LinkbuttonCancel.Visible = False
                             Me.LinkbuttonResend.Visible = True
                             Me.LinkbuttonFailure.Visible = True
                             Me.LinkbuttonSendThisEmailToMe.Visible = True
                         Case Messaging.QueueMonitoring.QueueStates.FailureAccepted
+                            Me.LinkbuttonCancel.Visible = False
                             Me.LinkbuttonResend.Visible = True
                             Me.LinkbuttonFailure.Visible = False
                             Me.LinkbuttonSendThisEmailToMe.Visible = False
+                        Case Messaging.QueueMonitoring.QueueStates.Queued, Messaging.QueueMonitoring.QueueStates.WaitingForReleaseBeforeQueuing
+                            Me.LinkbuttonCancel.Visible = True
+                            Me.LinkbuttonResend.Visible = False
+                            Me.LinkbuttonFailure.Visible = False
+                            Me.LinkbuttonSendThisEmailToMe.Visible = False
                         Case Else
+                            Me.LinkbuttonCancel.Visible = False
                             Me.LinkbuttonResend.Visible = False
                             Me.LinkbuttonFailure.Visible = False
                             Me.LinkbuttonSendThisEmailToMe.Visible = False
                     End Select
                 Case Pages.Administration.MailQueueMonitor.SecurityRoles.SecurityOperator
+                    Me.LinkbuttonCancel.ToolTip = "Cancel"
                     Me.LinkbuttonFailure.ToolTip = "Accept failure"
                     Me.LinkbuttonResend.ToolTip = "Send this e-mail again"
                     Me.LinkbuttonSendThisEmailToMe.ToolTip = "Send this e-mail to me"
                     Select Case Me._QueueState
                         Case Messaging.QueueMonitoring.QueueStates.FailureAfter1Trial, Messaging.QueueMonitoring.QueueStates.FailureAfter2Trials, Messaging.QueueMonitoring.QueueStates.FailureAfterLastTrial
+                            Me.LinkbuttonCancel.Visible = False
                             Me.LinkbuttonResend.Visible = True
                             Me.LinkbuttonFailure.Visible = True
                             Me.LinkbuttonSendThisEmailToMe.Visible = False
                         Case Messaging.QueueMonitoring.QueueStates.FailureAccepted
+                            Me.LinkbuttonCancel.Visible = False
                             Me.LinkbuttonResend.Visible = True
                             Me.LinkbuttonFailure.Visible = False
                             Me.LinkbuttonSendThisEmailToMe.Visible = False
                         Case Else
+                            Me.LinkbuttonCancel.Visible = False
                             Me.LinkbuttonResend.Visible = False
                             Me.LinkbuttonFailure.Visible = False
                             Me.LinkbuttonSendThisEmailToMe.Visible = False
                     End Select
-
                 Case Else
+                    Me.LinkbuttonCancel.Visible = False
                     Me.LinkbuttonFailure.Visible = False
                     Me.LinkbuttonResend.Visible = False
                     Me.LinkbuttonSendThisEmailToMe.Visible = False
             End Select
 
-            If Me._IsAuthorisedToSeeEmailText Then
+            If Me._IsAuthorizedToSeeEmailText Then
                 Me.HyperLinkShowEmailText.ToolTip = "Show e-mail text"
                 Me.HyperLinkShowEmailText.Attributes.Add("onclick", ("window.open('mailqueue_monitor_showemail.aspx?eid=" & Me._EmailID.ToString & "', '1', 'width=550, height=350, resizable=yes scrollbars=yes'); return (false);"))
             Else
@@ -109,14 +123,14 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
             End Set
         End Property
 
-        Private _IsAuthorisedToSeeEmailText As Boolean
+        Private _IsAuthorizedToSeeEmailText As Boolean
         ''' <summary>
         '''     Is user authorised to view/moderate this email
         ''' </summary>
         ''' <value></value>
-        Friend WriteOnly Property IsAuthorisedToSeeEmailText() As Boolean
+        Friend WriteOnly Property IsAuthorizedToSeeEmailText() As Boolean
             Set(ByVal Value As Boolean)
-                Me._IsAuthorisedToSeeEmailText = Value
+                Me._IsAuthorizedToSeeEmailText = Value
             End Set
         End Property
 
@@ -139,6 +153,15 @@ Namespace CompuMaster.camm.WebManager.Controls.Administration
             d.ConnectionString = cammWebManager.ConnectionString
             Me.cammWebManager.MessagingQueueMonitoring.UpdateQueueState(Me._EmailID, Messaging.QueueMonitoring.QueueStates.Queued)
 
+            Me.ResultPage.LoadData(cammWebManager.ConnectionString)
+        End Sub
+        ''' <summary>
+        '''     Cancel a queued email
+        ''' </summary>
+        ''' <param name="sender"></param>
+        ''' <param name="e"></param>
+        Private Sub LinkbuttonCancel_Clicked(ByVal sender As Object, ByVal e As EventArgs) Handles LinkbuttonCancel.Click
+            Me.cammWebManager.MessagingQueueMonitoring.UpdateQueueState(Me._EmailID, Messaging.QueueMonitoring.QueueStates.Cancelled)
             Me.ResultPage.LoadData(cammWebManager.ConnectionString)
         End Sub
         ''' <summary>
@@ -859,7 +882,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             action.ID = "ActionControl_" & emailID
             action.EmailID = emailID
             action.QueueState = state
-            action.IsAuthorisedToSeeEmailText = Me.IsAuthorisedToSeeEmailText(fromAddress, toAddress, cc, bcc)
+            action.IsAuthorizedToSeeEmailText = Me.IsAuthorisedToSeeEmailText(fromAddress, toAddress, cc, bcc)
             action.SecurityRole = Me.SecurityRole(MyBase.cammWebManager)
             action.ResultPage = Me
 

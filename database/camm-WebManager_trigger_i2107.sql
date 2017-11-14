@@ -934,7 +934,7 @@ BEGIN
 			SELECT ID_SecurityObject, ID_Group, ID_ServerGroup, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, NULL
 			FROM inserted
 			UNION ALL
-			SELECT dbo.ApplicationsRights_Inheriting.ID_Inheriting, ID_ServerGroup, ID_Group, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, dbo.ApplicationsRights_Inheriting.ID
+			SELECT dbo.ApplicationsRights_Inheriting.ID_Inheriting, ID_Group, ID_ServerGroup, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, dbo.ApplicationsRights_Inheriting.ID
 			FROM inserted
 				INNER JOIN dbo.ApplicationsRights_Inheriting
 					ON inserted.ID_SecurityObject = dbo.ApplicationsRights_Inheriting.ID_Source;
@@ -976,7 +976,7 @@ BEGIN
 			SELECT ID_SecurityObject, ID_User, ID_ServerGroup, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, NULL
 			FROM inserted
 			UNION ALL
-			SELECT dbo.ApplicationsRights_Inheriting.ID_Inheriting, ID_ServerGroup, ID_User, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, dbo.ApplicationsRights_Inheriting.ID
+			SELECT dbo.ApplicationsRights_Inheriting.ID_Inheriting, ID_User, ID_ServerGroup, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, dbo.ApplicationsRights_Inheriting.ID
 			FROM inserted
 				INNER JOIN dbo.ApplicationsRights_Inheriting
 					ON inserted.ID_SecurityObject = dbo.ApplicationsRights_Inheriting.ID_Source;

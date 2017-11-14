@@ -12,10 +12,10 @@
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>camm Integration Portal (based on camm Web-Manager) for Web Applications</description>
 		<releaseNotes/>
-		<copyright>2005-2016 CompuMaster GmbH</copyright>
+		<copyright>2005-2017 CompuMaster GmbH</copyright>
 		<tags>SmartEditorUpload SmartEditor CompuMaster camm Integration Portal Web-Manager Web Manager CIP CWM cammIPortal IPortal</tags>
 		<dependencies>
-		  <dependency id="cammWM" version="4.12.209" />
+		  <dependency id="cammWM" version="4.12.2115" />
 		  <dependency id="cammWM.SmartEditor" version="4.10.206" />
 		  <dependency id="CompuMaster.Imaging" version="2016.08.26" />
 		</dependencies>

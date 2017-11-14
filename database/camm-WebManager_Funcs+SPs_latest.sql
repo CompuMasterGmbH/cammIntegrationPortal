@@ -38,7 +38,7 @@ If @CurUserID Is Not Null
 				                      (ID_GroupOrPerson, ReleasedOn, ReleasedBy, ID_Application, [DevelopmentTeamMember], [IsDenyRule])
 				SELECT     ID_GroupOrPerson, GETDATE() AS ReleasedOn, @ReleasedByUserID AS ReleasedBy, @NewAppID, [DevelopmentTeamMember], [IsDenyRule] AS ID_Application
 				FROM         dbo.ApplicationsRightsByGroup
-				WHERE     (ID_Application = @AppID)
+				WHERE     ID_Application = @AppID AND IsSupervisorAutoAccessRule = 0
 
 				-- Add User Authorizations
 				INSERT INTO dbo.ApplicationsRightsByUser
@@ -3413,9 +3413,9 @@ DECLARE @FoundFirstIDApplication int
 DECLARE @IsDevUser bit
 SELECT TOP 1 @FoundFirstIDApplication = ID_SecurityObject, @IsDevUser = IsDevRule
     FROM dbo.ApplicationsRightsByUser_PreStaging4AllowDenyRules WITH (NOLOCK)
-	WHERE ID_User = IsNull(2, -1)
-		AND ID_ServerGroup = 1
-		AND ID_SecurityObject IN (SELECT ID FROM dbo.Applications WITH (NOLOCK) WHERE Title = 'rmmh Wiki')
+	WHERE ID_User = IsNull(@CurUserID, -1)
+		AND ID_ServerGroup = @ServerGroupID
+		AND ID_SecurityObject IN (SELECT ID FROM dbo.Applications WITH (NOLOCK) WHERE Title = @WebApplication)
 ORDER BY IsDevRule DESC          
 
 ----------------------------------------------------------------

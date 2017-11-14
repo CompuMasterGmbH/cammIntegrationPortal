@@ -276,6 +276,10 @@
     <Compile Include="WebServices\Core.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="WebServices\CoreWebCronJobs.vb" />
+    <Compile Include="WebServices\WebCronPage.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="WMSystem\Exceptions.vb" />
     <Compile Include="WMSystem\IWebManager.vb" />
     <Compile Include="WMSystem\NetClient.vb" />

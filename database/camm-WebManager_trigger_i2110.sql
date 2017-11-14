@@ -387,17 +387,6 @@ GO
 IF OBJECT_ID ('dbo.U_Memberships', 'TR') IS NOT NULL
    DROP TRIGGER dbo.U_Memberships;
 GO
-CREATE TRIGGER [dbo].U_Memberships 
-   ON  [dbo].Memberships 
-   FOR UPDATE
-AS 
-BEGIN
-	SET NOCOUNT ON;
-	RAISERROR ('Memberships can''t be updated, only inserted or deleted', 16, 1)
-	ROLLBACK TRANSACTION 		
-	RETURN	
-END
-GO
 IF OBJECT_ID ('dbo.ID_Memberships', 'TR') IS NOT NULL
    DROP TRIGGER dbo.ID_Memberships;
 GO
@@ -934,7 +923,7 @@ BEGIN
 			SELECT ID_SecurityObject, ID_Group, ID_ServerGroup, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, NULL
 			FROM inserted
 			UNION ALL
-			SELECT dbo.ApplicationsRights_Inheriting.ID_Inheriting, ID_ServerGroup, ID_Group, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, dbo.ApplicationsRights_Inheriting.ID
+			SELECT dbo.ApplicationsRights_Inheriting.ID_Inheriting, ID_Group, ID_ServerGroup, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, dbo.ApplicationsRights_Inheriting.ID
 			FROM inserted
 				INNER JOIN dbo.ApplicationsRights_Inheriting
 					ON inserted.ID_SecurityObject = dbo.ApplicationsRights_Inheriting.ID_Source;
@@ -976,7 +965,7 @@ BEGIN
 			SELECT ID_SecurityObject, ID_User, ID_ServerGroup, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, NULL
 			FROM inserted
 			UNION ALL
-			SELECT dbo.ApplicationsRights_Inheriting.ID_Inheriting, ID_ServerGroup, ID_User, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, dbo.ApplicationsRights_Inheriting.ID
+			SELECT dbo.ApplicationsRights_Inheriting.ID_Inheriting, ID_User, ID_ServerGroup, IsDenyRule, IsDevRule, DerivedFromAppRightsID, inserted.ID, dbo.ApplicationsRights_Inheriting.ID
 			FROM inserted
 				INNER JOIN dbo.ApplicationsRights_Inheriting
 					ON inserted.ID_SecurityObject = dbo.ApplicationsRights_Inheriting.ID_Source;
@@ -1509,7 +1498,7 @@ BEGIN
 			INSERT INTO dbo.Log_Users (ID_USER, Type, VALUE, ModifiedOn)
 			SELECT ID, 'DeletedOn', CONVERT(datetime, GETDATE(), 121), GETDATE() FROM deleted
 			
-			UPDATE dbo.Log_Users SET VALUE = '1' WHERE ID_USER = ( SELECT ID FROM deleted ) AND Type = 'IsDeletedUser' AND VALUE='0'
+			UPDATE dbo.Log_Users SET VALUE = '1' WHERE ID_USER IN ( SELECT ID FROM deleted ) AND Type = 'IsDeletedUser' AND VALUE='0'
 			IF @@ROWCOUNT = 0 
 				INSERT INTO dbo.Log_Users(ID_USER, Type, VALUE, ModifiedOn)	SELECT ID, 'IsDeletedUser', '1', GETDATE() FROM deleted
 		END

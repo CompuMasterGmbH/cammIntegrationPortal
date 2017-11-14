@@ -50,7 +50,7 @@ GO
 		INNER JOIN [dbo].[ApplicationsRightsByGroup] 
 			ON applications.id = [ApplicationsRightsByGroup].ID_Application
 	WHERE IsSupervisorAutoAccessRule = 0
-		AND id_grouporperson = 6
+		AND id_grouporperson in (-6,6)
 		AND SystemApp <> 0;
 ------------------------------------------------------------------------------------------------------------
 -- Force first table filling (or full update on repetitions)

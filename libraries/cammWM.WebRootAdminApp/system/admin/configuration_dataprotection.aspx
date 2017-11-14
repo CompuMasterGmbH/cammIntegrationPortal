@@ -18,7 +18,7 @@ Choose the additional flags and account data that should be <strong><em>deleted<
 <asp:Placeholder runat="server" id="ltrlTypeList" />
 <br>	
 Delete deactivated users after<br>
-<asp:TextBox runat="server" id="txtBoxDeleteAfterDays" /> days without any profile modification or login<br>
+<asp:TextBox runat="server" id="txtBoxDeleteAfterDays" /> days without any profile modification or login (or 0 to never delete inactive accounts)<br>
 <asp:CompareValidator runat="server" id="validatetxtBoxDeleteAfterDays" ControlTovalidate="txtBoxDeleteAfterDays" ErrorMessage="field must be a number" Type="Integer" Operator="DataTypeCheck" />
 <br>
 

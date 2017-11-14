@@ -17,7 +17,7 @@ public cammWebManager as CompuMaster.camm.WebManager.WMSystem
 		Dim MyKeyName as string = MyUserInfo.AdditionalFlags.Keys.Item(mycounter-1)
 		Dim MyItemValue as string = MyUserInfo.AdditionalFlags.Item(mycounter-1)
 
-		If MyItemValue = "" OrElse LCase(MyKeyName) = "phone" OrElse LCase(MyKeyName) = "mobile" OrElse LCase(MyKeyName) = "fax" OrElse LCase(MyKeyName) = "position" Then
+		If MyItemValue = "" OrElse LCase(MyKeyName) = "isdeleteduser" OrElse LCase(MyKeyName) = "phone" OrElse LCase(MyKeyName) = "mobile" OrElse LCase(MyKeyName) = "fax" OrElse LCase(MyKeyName) = "position" Then
 			%><!-- <TR><TD VAlign="Top" Width="200"><P><FONT face="Arial" size=2><%= Server.HtmlEncode(MyKeyName) %></FONT></P></TD><TD VAlign="Top" Width="200"><P><FONT face="Arial" size=2><a target="_blank" href="users_update_flag.aspx<%= "?ID=" & Request.QueryString ("ID") & "&Type=" & Server.URLEncode(MyKeyName) %>"><em>(empty)</em></a></FONT></P></TD> --><%
 		Else
 			%><TR><TD VAlign="Top" Width="200"><P><FONT face="Arial" size=2><%= Server.HtmlEncode(MyKeyName) %></FONT></P></TD><TD VAlign="Top" Width="200"><P><FONT face="Arial" size=2><a target="_blank" href="users_update_flag.aspx<%= "?ID=" & Request.QueryString ("ID") & "&Type=" & Server.URLEncode(MyKeyName) %>"><%= Server.HtmlEncode(MyItemValue) %></a></FONT></P></TD><%
