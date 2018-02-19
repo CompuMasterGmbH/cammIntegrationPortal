@@ -120,6 +120,8 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim ht As New Hashtable(values.Length)
                 For Each val As Integer In values
                     Dim control As Web.UI.Control = Me.Page.FindControl("txtBox" + val.ToString())
+                    If control Is Nothing Then control = Me.Page.FindControl("txtBox" + val.ToString().Replace("-"c, "_"c)) 'Workaround for .NET 4 behaviour
+                    If control Is Nothing Then Throw New Exception("Control ""txtBox" & val.ToString() & """ expected but not found")
                     Dim txtBox As TextBox = CType(control, TextBox)
                     Dim txtBoxValue As String = Trim(txtBox.Text)
                     If txtBoxValue = String.Empty Then
