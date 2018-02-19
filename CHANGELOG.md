@@ -17,6 +17,7 @@
 ## Changes while developing in following builds
 
 ### Build 2115 → 2116 (ASP.NET Engine)
+* :arrows_clockwise: fixed options config page for logging not being able to save on newer .NET framework environments
 * :arrows_clockwise: minor changes
 
 ### Build 2116 (DB Engine)
