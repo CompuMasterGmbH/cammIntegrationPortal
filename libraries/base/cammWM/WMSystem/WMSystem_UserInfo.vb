@@ -1663,7 +1663,7 @@ Namespace CompuMaster.camm.WebManager
 
                 'Validate the information before writing back to the database
                 If userInfo.LoginDeleted = True And userInfo.IDLong = Nothing Then
-                    Throw New Exception("Login cannot be deleted when the Login ID is not existent")
+                    Throw New CompuMaster.camm.WebManager.UserDeleteException(userInfo.IDLong, "Login cannot be deleted when the Login ID is not existent (ID 0)")
                 ElseIf userInfo.LoginDeleted = True Then
                     'ignore all following checks
                 ElseIf userInfo.IDLong = Nothing AndAlso Not newPassword Is Nothing Then

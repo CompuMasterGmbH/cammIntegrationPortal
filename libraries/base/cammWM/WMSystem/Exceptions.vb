@@ -123,6 +123,35 @@ Namespace CompuMaster.camm.WebManager
     End Class
 
     ''' <summary>
+    ''' An exception which occurs when a user account can't be deleted
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Class UserDeleteException
+        Inherits Exception
+
+        Public Sub New(ByVal userID As Long, exceptionMessage As String)
+            MyBase.New("User account with the requested ID can't be found: " & userID.ToString & "; " & exceptionMessage)
+        End Sub
+
+    End Class
+    ''' <summary>
+    ''' An exception which occurs when a user account shall deleted by itself (admin can't delete himself)
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Class UserDeleteByHimselfException
+        Inherits Exception
+
+        Public Sub New(ByVal userID As Long)
+            MyBase.New("User account with the requested ID can't be deleted by itself: " & userID.ToString)
+        End Sub
+
+        Public Sub New(ByVal userName As String)
+            MyBase.New("User account with the requested login name can't be deleted by itself: " & userName)
+        End Sub
+
+    End Class
+
+    ''' <summary>
     ''' An exception which occurs when a user account can't be found/loaded and has been deleted
     ''' </summary>
     ''' <remarks></remarks>

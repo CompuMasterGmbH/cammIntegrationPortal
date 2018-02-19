@@ -70,6 +70,9 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                         SetUserDoesNotExistErrorMessage()
                         Return
                     End If
+                    If MyUserInfo.LoginName = Me.cammWebManager.CurrentUserLoginName Then
+                        Throw New CompuMaster.camm.WebManager.UserDeleteByHimselfException(MyUserInfo.LoginName)
+                    End If
                     MyUserInfo.LoginDeleted = True
                     MyUserInfo.Save()
                     Success = True
