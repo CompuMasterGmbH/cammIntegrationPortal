@@ -18,6 +18,7 @@
 
 ### Build 2117 (DB Engine)
 * :arrows_clockwise: limit retention time for log type RuntimeInformation to max 30 days (for high load reasons because of regular webcron cleanup log entries increasing table size to too large values for typical shared hostings)
+* :arrows_clockwise: fixed cleanup of deactivated user accounts with missing last login date
 
 ### Build 2115 → 2116 (ASP.NET Engine)
 * :arrows_clockwise: fixed options config page for logging not being able to save on newer .NET framework environments
