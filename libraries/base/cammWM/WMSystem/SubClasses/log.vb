@@ -1859,6 +1859,7 @@ Namespace CompuMaster.camm.WebManager
                     Dim cmd As New SqlCommand("DELETE FROM dbo.Log WHERE ID IN (SELECT TOP " & RowsToRemove & " ID FROM [dbo].[Log] ORDER BY ID ASC); SELECT @@ROWCOUNT", connection)
                     cmd.CommandType = CommandType.Text
                     Dim Result As Integer = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), 0)
+                    Me.RowsInLogTable -= Result
                     LogCleanupAction("Log truncated by " & Result & " rows to keep compliant with the limit of " & MaxRowsInLogTable & " rows; currently present approx. " & Me.RowsInLogTable & " rows")
                     Return Result
                 End If
@@ -1872,19 +1873,20 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks></remarks>
         Private Function DeleteExpiredEntries(maxNumberOfDeletedRows As Integer) As Integer
             Dim connection As New SqlConnection(_WebManager.ConnectionString)
-            Dim Sql As String = "DELETE FROM [dbo].[Log] WHERE ID IN " & vbNewLine & _
-                "    (" & vbNewLine & _
-                "        SELECT TOP " & maxNumberOfDeletedRows & " ID " & vbNewLine & _
-                "        FROM dbo.Log" & vbNewLine & _
-                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine & _
-                "                ON Log.ConflictType = RetentionConfig.ConflictTypeID" & vbNewLine & _
-                "        WHERE LoginDate < DateAdd(dd, -COALESCE(RetentionDays, @DefaultRetentionDays), GETDATE())" & vbNewLine & _
-                "    )" & vbNewLine & _
+            Dim Sql As String = "DELETE FROM [dbo].[Log] WHERE ID IN " & vbNewLine &
+                "    (" & vbNewLine &
+                "        SELECT TOP " & maxNumberOfDeletedRows & " ID " & vbNewLine &
+                "        FROM dbo.Log" & vbNewLine &
+                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine &
+                "                ON Log.ConflictType = RetentionConfig.ConflictTypeID" & vbNewLine &
+                "        WHERE LoginDate < DateAdd(dd, -COALESCE(RetentionDays, @DefaultRetentionDays), GETDATE())" & vbNewLine &
+                "    )" & vbNewLine &
                 "SELECT @@ROWCOUNT"
             Dim cmd As New SqlCommand(Sql, connection)
             cmd.CommandType = CommandType.Text
             cmd.Parameters.Add("@DefaultRetentionDays", SqlDbType.Int).Value = Me.MaxRetentionDays
             Dim Result As Integer = Utils.Nz(CompuMaster.camm.WebManager.Tools.Data.DataQuery.AnyIDataProvider.ExecuteScalar(cmd, Tools.Data.DataQuery.AnyIDataProvider.Automations.AutoOpenAndCloseAndDisposeConnection), 0)
+            Me.RowsInLogTable -= Result
             LogCleanupAction("Removed " & Result & " expired log entries (delete max. " & maxNumberOfDeletedRows & " rows; max. retention days: " & Me.MaxRetentionDays & "; max. total rows in log table: " & Me.MaxRowsInLogTable & ")")
             Return Result
         End Function
@@ -1916,7 +1918,6 @@ Namespace CompuMaster.camm.WebManager
                 If DeletedRecords < 500 Then 'lesser than 500 rows deleted, yet - so it was pretty fast - still more time to delete a few more rows
                     DeletedRecords = DeletedRecords + ShrinkTableToMaxRows(500)
                 End If
-                RowsInLogTable = Nothing
             Finally
                 IsCleanUpLogTableRunning = False
             End Try
