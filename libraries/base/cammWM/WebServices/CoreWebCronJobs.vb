@@ -269,7 +269,7 @@ Namespace CompuMaster.camm.WebManager.WebServices
         Private Sub DeleteDeactivatedUsers(ByVal deleteAfterDays As Integer)
             If deleteAfterDays > 0 Then
                 Dim connection As New System.Data.SqlClient.SqlConnection(Me.cammWebManager.ConnectionString)
-                Dim sql As String = "SELECT ID FROM dbo.Benutzer WHERE LoginDisabled = 1 AND DateAdd(dd, @days, ModifiedOn) < GETDATE() AND DateAdd(dd, @days, LastLoginOn) < GETDATE()"
+                Dim sql As String = "SELECT ID FROM dbo.Benutzer WHERE LoginDisabled = 1 AND DateAdd(dd, @days, ModifiedOn) < GETDATE() AND ( LastLoginOn IS NULL OR DateAdd(dd, @days, LastLoginOn) < GETDATE() )"
                 Dim cmd As New System.Data.SqlClient.SqlCommand(sql, connection)
                 cmd.CommandType = CommandType.Text
                 cmd.Parameters.Add("@days", SqlDbType.Int).Value = deleteAfterDays
