@@ -52,8 +52,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         End Function
 
         Private Sub BuildConflictTypesTable()
-            Dim index As Integer = 0
-            Dim conflictTypeValues As Integer() = CType([Enum].GetValues(GetType(camm.WebManager.WMSystem.Logging_ConflictTypes)), Integer())
             Dim conflictTypeNames As String() = CType([Enum].GetNames(GetType(camm.WebManager.WMSystem.Logging_ConflictTypes)), String())
 #If NetFramework <> "1_1" Then
             System.Array.Sort(Of String)(conflictTypeNames)
@@ -70,7 +68,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 cell.Text = conflictname
 
                 Dim daysTextBox As New TextBox
-                Dim enumvalue As Integer = conflictTypeValues(index)
+                Dim enumvalue As Integer = CType([Enum].Parse(GetType(camm.WebManager.WMSystem.Logging_ConflictTypes), conflictname), Integer)
                 Dim txtBoxValue As String
                 If lifeTimeTable Is Nothing Then
                     txtBoxValue = defaultMaxAgeInDays
@@ -88,7 +86,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 row.Cells.Add(cell)
                 row.Cells.Add(txtCell)
                 tblConflictTypes.Rows.Add(row)
-                index += 1
             Next
 
 
