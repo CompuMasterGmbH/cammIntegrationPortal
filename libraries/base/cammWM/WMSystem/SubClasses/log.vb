@@ -1876,8 +1876,8 @@ Namespace CompuMaster.camm.WebManager
             Dim Sql As String = "DELETE FROM [dbo].[Log] WHERE ID IN " & vbNewLine & _
                 "    (" & vbNewLine & _
                 "        SELECT TOP " & maxNumberOfDeletedRows & " ID " & vbNewLine & _
-                "        FROM dbo.Log" & vbNewLine & _
-                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine & _
+                "        FROM dbo.Log WITH (NOLOCK)" & vbNewLine & _
+                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WITH (NOLOCK) WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine & _
                 "                ON Log.ConflictType = RetentionConfig.ConflictTypeID" & vbNewLine & _
                 "        WHERE LoginDate < DateAdd(dd, -COALESCE(RetentionDays, @DefaultRetentionDays), GETDATE())" & vbNewLine & _
                 "    )" & vbNewLine & _
