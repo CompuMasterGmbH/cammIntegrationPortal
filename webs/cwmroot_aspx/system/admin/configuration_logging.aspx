@@ -23,7 +23,7 @@ Current Log-Entries in database:
 Maximum number of Log-Entries in database:
 <asp:textbox runat="server" id="txtMaxRowsInLogTable" />
 <br />
-Maximum age of Log-Entries in database:
+Maximum age of Log-Entries in database (applies if no other value has been defined in list below):
 <asp:textbox runat="server" id="txtMaxDaysOfLogEntries" /> days 
 <br /><br />
 <asp:button runat="server" id="btnSaveSettings" text="Save settings" />
