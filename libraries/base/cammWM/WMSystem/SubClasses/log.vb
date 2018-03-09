@@ -1873,14 +1873,14 @@ Namespace CompuMaster.camm.WebManager
         ''' <remarks></remarks>
         Private Function DeleteExpiredEntries(maxNumberOfDeletedRows As Integer) As Integer
             Dim connection As New SqlConnection(_WebManager.ConnectionString)
-            Dim Sql As String = "DELETE FROM [dbo].[Log] WHERE ID IN " & vbNewLine &
-                "    (" & vbNewLine &
-                "        SELECT TOP " & maxNumberOfDeletedRows & " ID " & vbNewLine &
-                "        FROM dbo.Log" & vbNewLine &
-                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine &
-                "                ON Log.ConflictType = RetentionConfig.ConflictTypeID" & vbNewLine &
-                "        WHERE LoginDate < DateAdd(dd, -COALESCE(RetentionDays, @DefaultRetentionDays), GETDATE())" & vbNewLine &
-                "    )" & vbNewLine &
+            Dim Sql As String = "DELETE FROM [dbo].[Log] WHERE ID IN " & vbNewLine & _
+                "    (" & vbNewLine & _
+                "        SELECT TOP " & maxNumberOfDeletedRows & " ID " & vbNewLine & _
+                "        FROM dbo.Log" & vbNewLine & _
+                "            INNER JOIN (SELECT ValueInt as ConflictTypeID, ValueDecimal as RetentionDays FROM dbo.System_GlobalProperties WHERE PropertyName='ConflictTypeAge') AS RetentionConfig" & vbNewLine & _
+                "                ON Log.ConflictType = RetentionConfig.ConflictTypeID" & vbNewLine & _
+                "        WHERE LoginDate < DateAdd(dd, -COALESCE(RetentionDays, @DefaultRetentionDays), GETDATE())" & vbNewLine & _
+                "    )" & vbNewLine & _
                 "SELECT @@ROWCOUNT"
             Dim cmd As New SqlCommand(Sql, connection)
             cmd.CommandType = CommandType.Text
