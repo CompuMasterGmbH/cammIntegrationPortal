@@ -224,3 +224,4 @@ sensitive code parts scanner.bat
 libraries/adminarea/CammWM.Admin/nightly_start_manually_verbose.log
 /libraries/adminarea/CheckFileConsistencyRessourceWriter/obj
 /libraries/packages
+/setup and distribution/DbUpdateTool/devsql-2017.SENSITIVEDATAWARNING.cmd

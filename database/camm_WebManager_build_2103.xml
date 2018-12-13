@@ -61,13 +61,45 @@
             <product>MSSQLServerAzure</product>
             <version_major>13</version_major>
             <version_minor>0</version_minor>
-			<file>camm_WebManager_build_2103.sql</file>
+            <file>camm_WebManager_build_2103.sql</file>
             <execfile>
             </execfile>
         </requires>
         <requires>
             <product>MSSQLServer</product>
             <version_major>13</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_2103.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>14</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_2103.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServer</product>
+            <version_major>14</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_2103.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>15</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_2103.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServer</product>
+            <version_major>15</version_major>
             <version_minor>0</version_minor>
             <file>camm_WebManager_build_2103.sql</file>
             <execfile>

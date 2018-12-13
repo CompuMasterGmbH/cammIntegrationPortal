@@ -58,5 +58,33 @@
             <file>camm_WebManager_build_101_compl.sql</file>
             <execfile>camm_WebManager_build_101_init.sql</execfile>
         </requires>
+        <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>14</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_101_compl.sql</file>
+            <execfile>camm_WebManager_build_101_init.sql</execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServer</product>
+            <version_major>14</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_101_compl.sql</file>
+            <execfile>camm_WebManager_build_101_init.sql</execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>15</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_101_compl.sql</file>
+            <execfile>camm_WebManager_build_101_init.sql</execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServer</product>
+            <version_major>15</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_101_compl.sql</file>
+            <execfile>camm_WebManager_build_101_init.sql</execfile>
+        </requires>
 </dataroot>
 </root>

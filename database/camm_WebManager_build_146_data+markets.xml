@@ -66,6 +66,38 @@
             </execfile>
         </requires>
         <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>14</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_146_datamod.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServer</product>
+            <version_major>14</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_146_datamod.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>15</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_146_datamod.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServer</product>
+            <version_major>15</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_build_146_datamod.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
             <product>MSSQLServer</product>
             <version_major>9</version_major>
             <version_minor>0</version_minor>
@@ -116,6 +148,38 @@
         <requires>
             <product>MSSQLServer</product>
             <version_major>13</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_markets.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>14</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_markets.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServer</product>
+            <version_major>14</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_markets.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServerAzure</product>
+            <version_major>15</version_major>
+            <version_minor>0</version_minor>
+            <file>camm_WebManager_markets.sql</file>
+            <execfile>
+            </execfile>
+        </requires>
+        <requires>
+            <product>MSSQLServer</product>
+            <version_major>15</version_major>
             <version_minor>0</version_minor>
             <file>camm_WebManager_markets.sql</file>
             <execfile>

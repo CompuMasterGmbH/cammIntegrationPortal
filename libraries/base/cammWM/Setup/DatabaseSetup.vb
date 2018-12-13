@@ -1117,8 +1117,8 @@ Namespace CompuMaster.camm.WebManager.Setup
 
                 'No SQL has been run - this might happen if no patch files were found, typically if a new sql server version is available, but XMLs haven't been updated yet to support the new sql server version
                 If SqlExecuted = False Then
-                    Me.WriteToLog("Missing support for current database server " & SqlServerVersion.ProductName & " V" & SqlServerVersion.VersionMajor.ToString() & " at patch file for CWM DB build " & SQLCodeBuildNo.ToString())
-                    Throw New Exception("Missing support for current SQL server " & SqlServerVersion.ProductName & " V" & SqlServerVersion.VersionMajor.ToString() & " at patch file for CWM DB build " & SQLCodeBuildNo.ToString())
+                    Me.WriteToLog("Missing support for current database server """ & SqlServerVersion.ProductName & """ V" & SqlServerVersion.VersionMajor.ToString() & " at patch file for CWM DB build " & SQLCodeBuildNo.ToString())
+                    Throw New Exception("Missing support for current SQL server """ & SqlServerVersion.ProductName & """ V" & SqlServerVersion.VersionMajor.ToString() & " at patch file for CWM DB build " & SQLCodeBuildNo.ToString())
                 End If
 
             Next

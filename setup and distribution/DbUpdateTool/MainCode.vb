@@ -20,6 +20,11 @@ Module MainCode
 
     Public Sub Main()
         Try
+#If UseLocalSQLs = True Then 'For debug/dev mode in DB Update wizard solution
+            Console.WriteLine("DEBUG-INFO: Running in debug/development mode for using local SQL files")
+            Console.WriteLine()
+#End If
+
             Dim options As New CommandlineOptions()
             Dim parser As New CommandLine.Parser(Sub(sett)
                                                      sett.CaseSensitive = False
