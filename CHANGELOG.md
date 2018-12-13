@@ -17,6 +17,8 @@
 ## Changes while developing in following builds
 
 ### Build 2117 → 2118 (ASP.NET Engine)
+* :heavy_plus_sign: added support for MS SQL Server 2019/v15 (beta/unsupported)
+* :heavy_plus_sign: added support for MS SQL Server 2017/v14
 * :arrows_clockwise: fixed deadlocks on cleanup of log table (by retention timeout)
 
 ### Build 2116 → 2117 (ASP.NET Engine)
