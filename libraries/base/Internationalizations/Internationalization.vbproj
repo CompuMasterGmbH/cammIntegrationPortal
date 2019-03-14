@@ -81,10 +81,8 @@
     <DebugType>none</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CompuMaster.Data, Version=2.8.2016.818, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\CompuMaster.Data.2.8.2016.818\lib\net20\CompuMaster.Data.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CompuMaster.Data, Version=2.8.2019.313, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\CompuMaster.Data.2.8.2019.313\lib\net20\CompuMaster.Data.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
