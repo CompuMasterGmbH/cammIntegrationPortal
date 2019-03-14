@@ -36,7 +36,7 @@
 <p><b>Quick import of allowed values</b><br>
 PLEASE NOTE: before importing these external data sources, you have to accept the license of the external party.
 <ul>
-<li>https://github.com/datasets/country-codes, column &quot;name&quot; <asp:Button runat="server" id="ButtonImportGithubDatasetsCountryCodesByName" text="Import" /></li>
+<li>https://github.com/datasets/country-codes, column &quot;CLDR display name&quot; <asp:Button runat="server" id="ButtonImportGithubDatasetsCountryCodesByName" text="Import" /></li>
 <li>https://github.com/datasets/country-codes, column &quot;ISO3166-1-Alpha-2&quot; <asp:Button runat="server" id="ButtonImportGithubDatasetsCountryCodesByISO3166_1_Alpha2" text="Import" /></li>
 </ul>
 </p>

@@ -119,7 +119,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Dim CsvOriginUrl As String = "https://raw.githubusercontent.com/datasets/country-codes/master/data/country-codes.csv"
                 Dim CountryCodes As DataTable = CompuMaster.camm.WebManager.Administration.Tools.Data.Csv.ReadDataTableFromCsvFile(CsvOriginUrl, True, System.Text.Encoding.UTF8, System.Globalization.CultureInfo.InvariantCulture, """"c, False, False)
                 For MyCounter As Integer = 0 To CountryCodes.Rows.Count - 1
-                    Me.AllowedValues.Add(Utils.Nz(CountryCodes.Rows(MyCounter)("name"), ""))
+                    Me.AllowedValues.Add(Utils.Nz(CountryCodes.Rows(MyCounter)("CLDR display name"), ""))
                 Next
                 Me.AllowedValues.Sort()
             Catch ex As Exception
