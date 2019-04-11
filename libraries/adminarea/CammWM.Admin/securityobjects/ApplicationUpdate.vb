@@ -232,7 +232,7 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
 
         Private Sub SetSubmitErrorText(ByVal requiredFlags As ArrayList)
 
-            lblErrMsg.Text = Server.HtmlDecode("<hr><p><b>You changed the Required user flags,</b><br>but there are some users authorized For this app which Do Not have one Or more Of the required user flags, Or the value Of a flag Is invalid For its type. You need To <b>add these flags</b> To all listed users <b>before</b> you can update this application.</p>")
+            lblErrMsg.Text = Server.HtmlDecode("<hr><p><b>You changed the required user flags,</b><br>but there are some users authorized for this app which do not have one or more of the required user flags, or the value of a flag is invalid for its type. You need to <b>add these flags</b> to all listed users <b>before</b> you can update this application.</p>")
             lblErrMsg.Text &= "<p>The following flags are affected:<br>"
             Dim HtmlCode As New System.Text.StringBuilder
             For Each rFlag As String In requiredFlags
