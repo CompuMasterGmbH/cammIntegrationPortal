@@ -1,0 +1,122 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+UserExportFromCwmDB
+</name>
+</assembly>
+<members>
+<member name="T:My.Resources.Resources">
+<summary>
+  Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.ResourceManager">
+<summary>
+  Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
+</summary>
+</member>
+<member name="P:My.Resources.Resources.Culture">
+<summary>
+  Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
+  Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
+</summary>
+</member>
+<member name="T:CompuMaster.camm.WebManager.Administration.Export">
+ <summary>
+     Export of data
+ </summary>
+</member>
+<member name="M:CompuMaster.camm.WebManager.Administration.Export.MembershipsOfUser(CompuMaster.camm.WebManager.WMSystem,System.Int64)">
+ <summary>
+     A table with all group memberships of the requested user
+ </summary>
+ <param name="webmanager">An instance of a valid camm Web-Manager</param>
+ <param name="userID">The requested user ID</param>
+ <returns>A data table containing groups and users information</returns>
+</member>
+<member name="M:CompuMaster.camm.WebManager.Administration.Export.MembersOfGroup(CompuMaster.camm.WebManager.WMSystem,System.Int32)">
+ <summary>
+     A table with all users of the requested user group
+ </summary>
+ <param name="webmanager">An instance of a valid camm Web-Manager</param>
+ <param name="groupID">The requested user group ID</param>
+ <returns>A data table containing groups and users information</returns>
+</member>
+<member name="M:CompuMaster.camm.WebManager.Administration.Export.MembersOfGroup(CompuMaster.camm.WebManager.WMSystem,System.Int32,System.Boolean)">
+ <summary>
+     A table with active/ all users of the requested user group
+ </summary>
+ <param name="webmanager"></param>
+ <param name="groupID"></param>
+ <param name="includeDisabledUsers"></param>
+</member>
+<member name="M:CompuMaster.camm.WebManager.Administration.Export.MembershipsTableAddRow(System.Data.DataTable,CompuMaster.camm.WebManager.WMSystem.GroupInformation,CompuMaster.camm.WebManager.WMSystem.UserInformation,System.Boolean)">
+ <summary>
+     Attach one line to the output table
+ </summary>
+ <param name="memberships">The output table</param>
+ <param name="groupInfo">One group information object</param>
+ <param name="userInfo">One user information object</param>
+</member>
+<member name="M:CompuMaster.camm.WebManager.Administration.Export.MembershipsTableCreate(System.String)">
+ <summary>
+     Create an empty datatable for output
+ </summary>
+ <param name="tableName"></param>
+</member>
+<member name="M:CompuMaster.camm.WebManager.Administration.Export.AuthorizedGroupsAndPersons(CompuMaster.camm.WebManager.WMSystem,System.Int32,System.Boolean)">
+ <summary>
+     Load the list of directly and inherited authorizations for a security object
+ </summary>
+ <param name="webmanager"></param>
+ <param name="securityObjectID"></param>
+</member>
+<member name="M:CompuMaster.camm.WebManager.Administration.Export.AuthorizationsTableAddRow(System.Data.DataTable,CompuMaster.camm.WebManager.WMSystem.SecurityObjectInformation,CompuMaster.camm.WebManager.WMSystem.GroupInformation,CompuMaster.camm.WebManager.WMSystem.UserInformation,CompuMaster.camm.WebManager.WMSystem.ServerGroupInformation,System.Boolean)">
+ <summary>
+     Attach one line to the output table
+ </summary>
+ <param name="authorizations">The output table</param>
+ <param name="securityObjectInfo"></param>
+ <param name="groupInfo">One group information object</param>
+ <param name="userInfo">One user information object</param>
+ <param name="serverGroupInfo"></param>
+ <param name="isInherited"></param>
+</member>
+<member name="M:CompuMaster.camm.WebManager.Administration.Export.AuthorizationsTableCreate(System.String)">
+ <summary>
+     Create an empty datatable for output
+ </summary>
+ <param name="tableName"></param>
+</member>
+<member name="M:CompuMaster.camm.WebManager.Administration.Export.Users(CompuMaster.camm.WebManager.WMSystem,CompuMaster.camm.WebManager.WMSystem.UserInformation[])">
+ <summary>
+     A table with all users of the requested user group
+ </summary>
+ <param name="webmanager">An instance of a valid camm Web-Manager</param>
+ <param name="userInfos">The requested users</param>
+ <returns>A data table containing groups and users information</returns>
+</member>
+<member name="M:CompuMaster.camm.WebManager.Administration.Export.Users(CompuMaster.camm.WebManager.WMSystem,CompuMaster.camm.WebManager.WMSystem.UserInformation[],System.Boolean)">
+ <summary>
+     A table with active/ all users of the requested user group
+ </summary>
+ <param name="webmanager"></param>
+ <param name="userInfos"></param>
+ <param name="includeDisabledUsers"></param>
+</member>
+<member name="M:CompuMaster.camm.WebManager.Administration.Export.UsersTableAddRow(System.Data.DataTable,CompuMaster.camm.WebManager.WMSystem.UserInformation)">
+ <summary>
+     Attach one line to the output table
+ </summary>
+ <param name="users">The output table</param>
+ <param name="userInfo">One user information object</param>
+</member>
+<member name="M:CompuMaster.camm.WebManager.Administration.Export.UsersTableCreate(System.String)">
+ <summary>
+     Create an empty datatable for output
+ </summary>
+ <param name="tableName"></param>
+</member>
+</members>
+</doc>
