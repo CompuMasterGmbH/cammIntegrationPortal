@@ -3586,7 +3586,7 @@ Namespace CompuMaster.camm.WebManager
                     HttpContext.Current.Session("CurLanguage") = GetBrowserPreferredLanguage()
                     System_DebugTraceWrite("CurLanguage: Get: GetBrowserPreferredLanguage = " & CType(HttpContext.Current.Session("CurLanguage"), Integer).ToString)
                 End If
-                If Not HttpContext.Current.Request.Cookies("CWM") Is Nothing AndAlso Not HttpContext.Current.Request.Cookies("CWM")("Lang") Is Nothing Then
+                If HttpContext.Current IsNot Nothing AndAlso Not HttpContext.Current.Request.Cookies("CWM") Is Nothing AndAlso Not HttpContext.Current.Request.Cookies("CWM")("Lang") Is Nothing Then
                     CookieSavedValue_Language = CType(HttpContext.Current.Request.Cookies("CWM")("Lang"), Integer)
                     If CookieSavedValue_Language <> 0 Then
                         'something is defined - validate against the activated markets
@@ -3602,7 +3602,7 @@ Namespace CompuMaster.camm.WebManager
                     HttpContext.Current.Session("CurLanguage") = CookieSavedValue_Language
                     System_DebugTraceWrite("CurLanguage: Get: CookieSavedValue = " & CookieSavedValue_Language)
                 End If
-                If HttpContext.Current.Request.QueryString("Lang") <> "" Then
+                If HttpContext.Current IsNot Nothing AndAlso HttpContext.Current.Request.QueryString("Lang") <> "" Then
                     HttpContext.Current.Session("CurLanguage") = CLng(HttpContext.Current.Request.QueryString("Lang"))
                     System_DebugTraceWrite("CurLanguage: Get: QueryString(""Lang"") = " & CType(HttpContext.Current.Session("CurLanguage"), String))
                     If Configuration.CookieLess = False Then

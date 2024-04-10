@@ -23,7 +23,7 @@ Namespace CompuMaster.camm.WebManager
     Public Class UserInterface
 
         Private _webManager As CompuMaster.camm.WebManager.WMSystem
-        Friend Sub New(ByVal webManager As CompuMaster.camm.WebManager.WMSystem)
+        Public Sub New(ByVal webManager As CompuMaster.camm.WebManager.WMSystem)
             _webManager = webManager
         End Sub
 

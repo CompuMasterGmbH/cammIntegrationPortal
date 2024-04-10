@@ -19,7 +19,7 @@ Namespace CompuMaster.camm.WebManager
 
     Public Class PerformanceMethods
         Private _WebManager As WMSystem
-        Sub New(ByVal WebManager As WMSystem)
+        Public Sub New(ByVal WebManager As WMSystem)
             _WebManager = WebManager
         End Sub
 
