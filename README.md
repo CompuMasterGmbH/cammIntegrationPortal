@@ -1,6 +1,9 @@
 # camm Integration Portal
 based on camm Web-Manager
 
+## Project status
+This project has been archived. It won't be continued.
+
 ## Components
 
 * libraries/base         - sources for the main library [![NuGet CompuMaster.CIP.Core](https://img.shields.io/nuget/v/cammWM.svg?label=NuGet%20CIP.Core)](https://www.nuget.org/packages/cammWM/) 
