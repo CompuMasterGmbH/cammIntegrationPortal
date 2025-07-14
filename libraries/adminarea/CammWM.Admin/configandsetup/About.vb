@@ -35,26 +35,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
         Protected brDbUpdate As Literal
         Protected lblLastWebCronExecution As Label
         Protected lblWebCronServer As Label
-        Protected lblLicenceDescription As Literal
-        Protected lblAutomaticUpdates As Literal
-
-        Protected ltrlUpdateContractExpirationDate As Literal
-        Protected ltrlSupportContractExpirationDate As Literal
-        Protected ltrlLicenceExpirationDate As Literal
-        Protected ltrlUpdateHint As Literal
-        Protected ltrlLicenceModel As Literal
-        Protected ltrlLicenceType As Literal
-
-        Protected WithEvents LoginToLicenseServer As LinkButton
-        Protected WithEvents EnterLicenseData As LinkButton
-        Protected WithEvents SubmitLicenseData As Button
-        Protected WithEvents CancelSubmitLicenseData As Button
-        Protected EnterLicenseDataManuallyArea As HtmlControl
-        Protected ErrorLicenseUpdate As Label
-        Protected LicenseData As TextBox
-
-        Protected instanceValidationData As Registration.InstanceValidationResult
-
 
         ''' <summary>
         ''' The last version informaton on the update build which is available
@@ -162,42 +142,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
 
             SetLastWebCronExecutionDate()
-            RefreshLicenseInfoControls(False)
-        End Sub
-
-        ''' <summary>
-        ''' Refresh all license controls/labels with latest license information
-        ''' </summary>
-        ''' <param name="onlyLocalQuery">False will do an HTTP(S) access to the remote license server of camm.biz if required/asked, True will only query the local database</param>
-        Private Sub RefreshLicenseInfoControls(onlyLocalQuery As Boolean)
-            Try
-                LoadLicenceData(onlyLocalQuery)
-                SetLabelsWithExpirationDates()
-                SetLicenceDescription()
-                SetLabelsLicenseDetailsAndUpdateHint()
-            Catch ex As CompuMaster.camm.WebManager.Log.SystemException
-                cammWebManager.Log.Exception(ex, False)
-                If Not Me.lblErrMsg Is Nothing Then
-                    If ex.InnerException Is Nothing Then
-                        Me.lblErrMsg.Text &= "<p>ERROR ON LICENSE QUERY: " & Server.HtmlEncode(ex.Message) & "</p>"
-                        'Me.lblErrMsg.Text = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(ex.ToString))
-                    ElseIf ex.InnerException.Message = "Data layer exception" AndAlso Not ex.InnerException.InnerException Is Nothing Then
-                        Me.lblErrMsg.Text &= "<p>ERROR ON LICENSE QUERY: " & Server.HtmlEncode(ex.InnerException.InnerException.Message) & "</p>"
-                        'Me.lblErrMsg.Text = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(ex.ToString))
-                    Else
-                        'Me.lblErrMsg.Text &= "<p>ERROR ON LICENSE QUERY: " & Server.HtmlEncode(ex.InnerException.Message) & "</p>"
-                        Me.lblErrMsg.Text &= "<p>ERROR ON LICENSE QUERY: " & Server.HtmlEncode(ex.ToString) & "</p>"
-                        'Me.lblErrMsg.Text = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(ex.ToString))
-                    End If
-                End If
-            Catch ex As Exception
-                cammWebManager.Log.Exception(ex, False)
-                If Not Me.lblErrMsg Is Nothing Then
-                    'Me.lblErrMsg.Text &= "<p>ERROR ON LICENSE QUERY: " & Server.HtmlEncode(ex.Message) & "</p>"
-                    Me.lblErrMsg.Text &= "<p>ERROR ON LICENSE QUERY: " & Server.HtmlEncode(ex.ToString) & "</p>"
-                    'Me.lblErrMsg.Text = Utils.HTMLEncodeLineBreaks(System.Web.HttpUtility.HtmlEncode(ex.ToString))
-                End If
-            End Try
         End Sub
 
         Private Sub About_PreRender(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.PreRender
@@ -209,26 +153,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             End If
         End Sub
 
-        ''' <summary>
-        ''' Load license data from database cache or from CompuMaster license/registration server
-        ''' </summary>
-        ''' <param name="onlyLocalQuery">False will do an HTTP(S) access to the remote license server of camm.biz if required/asked, True will only query the local database</param>
-        Private Sub LoadLicenceData(onlyLocalQuery As Boolean)
-            Dim productRegistration As New CompuMaster.camm.WebManager.Registration.ProductRegistration(Me.cammWebManager)
-
-            If onlyLocalQuery = False Then
-                Dim forceFetch As String = Request.Item("forceserverrefresh")
-                Dim forceFetchFromServer As Boolean = forceFetch <> Nothing AndAlso CType(forceFetch, Boolean)
-                If forceFetchFromServer Then
-                    productRegistration.RefreshValidationDataFromRemoteLicenseServer(True)
-                End If
-            End If
-            Me.instanceValidationData = productRegistration.GetCachedValidationResult()
-            If Me.instanceValidationData Is Nothing Then
-                Throw New Exception("failed to fetch validation data")
-            End If
-        End Sub
-
         Private Sub SetLastWebCronExecutionDate()
             If Not Me.lblLastWebCronExecution Is Nothing Then
                 Dim lastServiceExecution As Date = DataLayer.Current.QueryLastServiceExecutionDate(Me.cammWebManager, Nothing)
@@ -237,90 +161,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
                 Else
                     lblLastWebCronExecution.Text = lastServiceExecution.ToString()
                 End If
-            End If
-        End Sub
-
-        Private Function CreateContractExpirationString(ByVal expirationDate As DateTime) As String
-            Dim currentDate As DateTime = DateTime.Now.ToUniversalTime()
-            Const expirationAppendix As String = " - <b>expired!</b>"
-            Dim result As String
-            If expirationDate = Nothing Then
-                result = "No contract/subscription ordered"
-            Else
-                result = expirationDate.ToString()
-                If expirationDate < currentDate Then
-                    result &= expirationAppendix
-                End If
-            End If
-            Return result
-        End Function
-
-        Private Sub SetLabelsWithExpirationDates()
-            If Not Me.instanceValidationData Is Nothing Then
-                If Not Me.ltrlSupportContractExpirationDate Is Nothing Then Me.ltrlSupportContractExpirationDate.Text = CreateContractExpirationString(Me.instanceValidationData.SupportContractExpirationDate)
-                If Not Me.ltrlUpdateContractExpirationDate Is Nothing Then Me.ltrlUpdateContractExpirationDate.Text = CreateContractExpirationString(Me.instanceValidationData.UpdateContractExpirationDate)
-                If Not Me.ltrlLicenceExpirationDate Is Nothing Then Me.ltrlLicenceExpirationDate.Text = CreateContractExpirationString(Me.instanceValidationData.LicenceData.ExpirationDate)
-            End If
-        End Sub
-
-        Private Sub SetLabelsLicenseDetailsAndUpdateHint()
-            If Not Me.ltrlUpdateHint Is Nothing Then
-                If Me.instanceValidationData Is Nothing Then 'No updates
-                    Me.ltrlUpdateHint.Text = "" '"no service info from server available"
-                ElseIf Not Me.instanceValidationData Is Nothing AndAlso Now.ToUniversalTime < Me.instanceValidationData.UpdateContractExpirationDate Then
-                    If Me.instanceValidationData.SecurityUpdateAvailable = True Then
-                        Me.ltrlUpdateHint.Text = "(security update available, please update as soon as possible)"
-                    ElseIf Me.instanceValidationData.UpdateAvailable = True Then
-                        Me.ltrlUpdateHint.Text = "(update available)"
-                    Else 'current contract, but no updates
-                        Me.ltrlUpdateHint.Text = "" '"update subscription active, but no updates available"
-                    End If
-                Else 'old contract, no updates
-                    Me.ltrlUpdateHint.Text = "" '"service info available, but update subscription outdated"
-                End If
-            End If
-            If Not Me.ltrlLicenceModel Is Nothing AndAlso Not Me.instanceValidationData Is Nothing AndAlso Not Me.instanceValidationData.LicenceData Is Nothing Then
-                Me.ltrlLicenceModel.Text = [Enum].GetName(Me.instanceValidationData.LicenceData.Model.GetType(), Me.instanceValidationData.LicenceData.Model)
-            End If
-            If Not Me.ltrlLicenceType Is Nothing AndAlso Not Me.instanceValidationData Is Nothing AndAlso Not Me.instanceValidationData.LicenceData Is Nothing Then
-                ltrlLicenceType.Text = [Enum].GetName(Me.instanceValidationData.LicenceData.Type.GetType(), Me.instanceValidationData.LicenceData.Type)
-            End If
-            If Not Me.lblAutomaticUpdates Is Nothing AndAlso Not Me.instanceValidationData Is Nothing Then
-                If Me.instanceValidationData.ManualLicenseRevalidationOnly Then
-                    lblAutomaticUpdates.Text = "automatic contract updates disabled<br />automatic license updates disabled"
-                Else
-                    lblAutomaticUpdates.Text = "automatic contract updates enabled<br />automatic license updates enabled"
-                End If
-                lblAutomaticUpdates.Text &= "<br />automatic software updates disabled"
-            End If
-        End Sub
-
-        Private Sub SetLicenceDescription()
-            Dim text As String = ""
-            If Not instanceValidationData Is Nothing Then
-                Dim currentDate As DateTime = DateTime.Now.ToUniversalTime()
-                If CompuMaster.camm.WebManager.Registration.LicenceInfo.IsLicenceModelWithSupport(instanceValidationData.LicenceData.Model) Then
-                    If instanceValidationData.UpdateContractExpirationDate = Nothing Then
-                        text &= "without updates (contract missing)"
-                    ElseIf currentDate < instanceValidationData.UpdateContractExpirationDate Then
-                        text &= "with updates"
-                    Else
-                        text &= "without updates (contract expired)"
-                    End If
-
-                    If instanceValidationData.SupportContractExpirationDate = Nothing Then
-                        text &= ", without support and maintenance service (contract missing) "
-                    ElseIf currentDate < instanceValidationData.SupportContractExpirationDate Then
-                        text &= ", with support and maintenance service "
-                    Else
-                        text &= ", without support and maintenance service (contract expired) "
-                    End If
-                Else
-                    text = "Without updates, without support and maintenance service "
-                End If
-            End If
-            If Not Me.lblLicenceDescription Is Nothing Then
-                lblLicenceDescription.Text = text
             End If
         End Sub
 
@@ -359,70 +199,6 @@ Namespace CompuMaster.camm.WebManager.Pages.Administration
             lblInstallLinks.Text = ""
             Return errors
         End Function
-
-        Public Function LicenseFile() As String
-            Dim LicenceFileName As String
-            Select Case cammWebManager.UI.LanguageID
-                Case 2
-                    LicenceFileName = "licence-de.rtf"
-                Case Else
-                    LicenceFileName = "licence.rtf"
-            End Select
-            Dim FileUrl As String = cammWebManager.DownloadHandler.CreatePlainDownloadLink(DownloadHandler.DownloadLocations.PublicCache, "camm/webmanager", LicenceFileName)
-            If System.IO.File.Exists(Server.MapPath(FileUrl)) = True Then
-                Return FileUrl
-            Else
-                Dim LicenseRtf As Byte()
-                LicenseRtf = CompuMaster.camm.WebManager.Setup.DatabaseSetup.ResourceDataDatabaseSetup(LicenceFileName)
-                If LicenseRtf Is Nothing Then
-                    Throw New Exception("Missing resource for " & LicenceFileName)
-                End If
-                Dim rawData As New CompuMaster.camm.WebManager.DownloadHandler.RawDataSingleFile
-                rawData.Data = LicenseRtf
-                rawData.Filename = LicenceFileName
-                rawData.MimeType = CompuMaster.camm.WebManager.MimeTypes.MimeTypeByFileName(rawData.Filename)
-                cammWebManager.DownloadHandler.Clear()
-                cammWebManager.DownloadHandler.Add(rawData, "webmanager")
-                Return cammWebManager.DownloadHandler.ProcessAndGetPlainDownloadLink(DownloadHandler.DownloadLocations.PublicCache, "camm")
-            End If
-        End Function
-
-        Private Sub LoginToLicenseServer_Click(sender As Object, e As EventArgs) Handles LoginToLicenseServer.Click
-            Dim productRegistration As New CompuMaster.camm.WebManager.Registration.ProductRegistration(Me.cammWebManager)
-            Dim PostData As New System.Collections.Specialized.NameValueCollection
-            PostData.Add("key", cammWebManager.Environment.LicenceKey)
-            PostData.Add("data", productRegistration.CreateLicenseInfoTransmissionRequestData)
-            Utils.RedirectWithPostData(HttpContext.Current, "https://www.camm.biz/support/cim/services/registration-rest.aspx?action=loginwithlicense", postData)
-        End Sub
-
-        Private Sub EnterLicenseData_Click(sender As Object, e As EventArgs) Handles EnterLicenseData.Click
-            Me.EnterLicenseDataManuallyArea.Visible = True
-            Me.EnterLicenseData.Visible = False
-        End Sub
-
-        Private Sub SubmitLicenseData_Click(sender As Object, e As EventArgs) Handles SubmitLicenseData.Click
-            Try
-                Dim productRegistration As New CompuMaster.camm.WebManager.Registration.ProductRegistration(Me.cammWebManager)
-                productRegistration.RefreshValidationDataManuallyFromLicenseDataFromLicenseServer(CompuMaster.camm.WebManager.Utils.ConvertBase64StringToString(Me.LicenseData.Text, True))
-                Me.EnterLicenseDataManuallyArea.Visible = False
-                Me.EnterLicenseData.Visible = True
-            Catch ex As Exception
-                If cammWebManager.DebugLevel >= WMSystem.DebugLevels.Medium_LoggingOfDebugInformation Then
-                    ErrorLicenseUpdate.Text = ex.ToString
-                Else
-                    'ErrorLicenseUpdate.Text = ex.Message
-                    ErrorLicenseUpdate.Text = ex.ToString
-                End If
-                Me.EnterLicenseDataManuallyArea.Visible = True
-                Me.EnterLicenseData.Visible = False
-            End Try
-            RefreshLicenseInfoControls(True)
-        End Sub
-
-        Private Sub CancelSubmitLicenseData_Click(sender As Object, e As EventArgs) Handles CancelSubmitLicenseData.Click
-            Me.EnterLicenseDataManuallyArea.Visible = False
-            Me.EnterLicenseData.Visible = True
-        End Sub
 
     End Class
 

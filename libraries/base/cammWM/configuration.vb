@@ -815,7 +815,8 @@ Namespace CompuMaster.camm.WebManager
 
         Friend Shared ReadOnly Property SuppressProductRegistrationServiceConnection As Boolean
             Get
-                Return LoadBooleanSetting("WebManager.SuppressProductRegistrationServiceConnection", False, True)
+                'DISABLE PRODUCT REGISTRATION SERVICE CONNECTION
+                Return True
             End Get
         End Property
 

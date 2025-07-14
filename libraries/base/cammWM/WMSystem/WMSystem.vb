@@ -1745,21 +1745,6 @@ Namespace CompuMaster.camm.WebManager
             InitializeEnvironment() 'Ensure that this webmanager instance has been initialized even if ConnectionString or CurrentServerIdentString have never been assigned by the customized configuration load
         End Sub
 
-
-
-        Friend Sub PageOnUnLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Unload
-            If Configuration.SuppressProductRegistrationServiceConnection = False Then
-                Try
-                    Dim registration As New Registration.ProductRegistration(Me)
-                    If registration.IsRefreshFromRemoteLicenseServerRequired(48) Then
-                        registration.CheckRegistration(False)
-                    End If
-                Catch ex As Exception
-                    Me.Log.Exception(ex, False)
-                End Try
-            End If
-        End Sub
-
         Friend Sub PageOnLoad(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
             For Each MyAttr As String In Me.Attributes.Keys
                 'System.Environment.StackTrace doesn't work with medium-trust --> work around it using a new exception class

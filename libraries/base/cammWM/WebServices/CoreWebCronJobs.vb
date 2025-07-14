@@ -127,12 +127,6 @@ Namespace CompuMaster.camm.WebManager.WebServices
             Catch ex As Exception
                 If FoundException Is Nothing Then FoundException = ex 'nur neuen Fehler schreiben, wenn nicht bereits ein Fehler auftrat
             End Try
-
-            Try
-                VerifyProductRegistration()
-            Catch ex As Exception
-                If FoundException Is Nothing Then FoundException = ex
-            End Try
             If Now.Subtract(requestStartTime).TotalSeconds > maxTotalSecondsTimeout Then Return 'if request already consumed to much time, return here and run this step on one of the next requests (when previous steps processed more fast because of nothing/lesser to do there)
 
             Try
@@ -255,11 +249,6 @@ Namespace CompuMaster.camm.WebManager.WebServices
         Private Sub RunCleanups()
             cammWebManager.Log.CleanUpLogTable()
             DeleteExpiredUserSessions(1000)
-        End Sub
-
-        Private Sub VerifyProductRegistration()
-            Dim productRegistration As New Registration.ProductRegistration(Me.cammWebManager)
-            productRegistration.CheckRegistration(False)
         End Sub
 
         ''' <summary>
